@@ -1,0 +1,4 @@
+**/*.js
+dist/
+node_modules/
+src/assembly
