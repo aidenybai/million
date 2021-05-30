@@ -1,14 +1,11 @@
 import { h } from './h';
-import { createElement, patch } from './patch';
+import { diff } from './diff';
+import { base64ToWASM, wasmPayload } from './wasm';
+import { createElement } from './createElement';
 
-export const runWASM = (): void => {
-  const raw = atob('__wasm');
-  const buffer = new Uint8Array(new ArrayBuffer(raw.length));
-  for (let i = 0; i < raw.length; i++) {
-    buffer[i] = raw.charCodeAt(i);
-  }
-  // @ts-expect-error it exists.
-  WebAssembly.instantiate(buffer).then(obj => alert(obj.instance.exports.main()));
+const runWASM = async (): Promise<void> => {
+  // @ts-expect-error This function exists in WASM
+  alert((await base64ToWASM(wasmPayload)).fib(10));
 };
 
-export { h, createElement, patch };
+export { h, diff, createElement, runWASM };

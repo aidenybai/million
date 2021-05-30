@@ -24,7 +24,7 @@ const suite = async (input, output) => {
         include: '**/*.(ts)',
       }),
       replace({
-        __wasm: () => Buffer.from(buffer, 'binary').toString('base64'),
+        __INSERT_BASE64_WASM_HERE__: Buffer.from(buffer, 'binary').toString('base64'),
       }),
       beep(),
     ],

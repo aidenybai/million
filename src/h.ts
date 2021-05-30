@@ -1,19 +1,13 @@
+export type Attributes = Record<string, string>;
+export type VNodeChildren = (VNode | string)[];
 export interface VNode {
   tag: string;
-  text?: string;
-  attributes?: Record<string, string>;
-  children?: (VNode | string)[];
-  el?: HTMLElement;
+  attributes?: Attributes;
+  children?: VNodeChildren;
 }
 
-export const h = (
-  tag: string,
-  text: string,
-  attributes: Record<string, string>,
-  children: (VNode | string)[],
-): VNode => ({
+export const h = (tag: string, attributes: Attributes, children: VNodeChildren): VNode => ({
   tag,
-  text,
   attributes,
   children,
 });
