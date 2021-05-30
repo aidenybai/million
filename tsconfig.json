@@ -18,5 +18,5 @@
     "strict": true
   },
   "include": ["./src/**/*.ts"],
-  "exclude": ["node_modules", "dist", "./src/**/*.js", "./src/**/*.spec.ts", "./vite.config.ts"]
+  "exclude": ["node_modules", "dist", "./src/**/*.js", "./src/**/*.spec.ts"]
 }
