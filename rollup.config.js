@@ -6,23 +6,32 @@ import strip from '@rollup/plugin-strip';
 import ts from '@wessberg/rollup-plugin-ts';
 import filesize from 'rollup-plugin-filesize';
 import { terser } from 'rollup-plugin-terser';
+import replace from '@rollup/plugin-replace';
+import fs from 'fs';
+const { readFile } = fs.promises;
 
-const suite = (input, output) => ({
-  input,
-  plugins: [
-    eslint(),
-    commonjs(),
-    resolve({ extensions: ['.ts'] }),
-    ts(),
-    // strip({
-    //   functions: ['console.log'],
-    //   include: '**/*.(ts)',
-    // }),
-    beep(),
-  ],
-  output,
-  onwarn: () => {},
-});
+const suite = async (input, output) => {
+  const buffer = await readFile('./dist/million.wasm');
+  return {
+    input,
+    plugins: [
+      eslint(),
+      commonjs(),
+      resolve({ extensions: ['.ts'] }),
+      ts(),
+      strip({
+        functions: ['console.log'],
+        include: '**/*.(ts)',
+      }),
+      replace({
+        __wasm: () => Buffer.from(buffer, 'binary').toString('base64'),
+      }),
+      beep(),
+    ],
+    output,
+    onwarn: () => {},
+  };
+};
 
 export const unit = ({ file, format, minify }) => ({
   file,
