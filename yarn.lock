@@ -2,16 +2,6 @@
 # yarn lockfile v1
 
 
-"@assemblyscript/loader@^0.14.9":
-  version "0.14.13"
-  resolved "https://registry.yarnpkg.com/@assemblyscript/loader/-/loader-0.14.13.tgz#a0d0acad5130cbb533477716d8d7fb3871f77c24"
-  integrity sha512-D772X1nUJLWBArGB8Y82dgUnXcZGS7eGdCvgj/9GqKI0w3/lq6vjF+9DqXITu+m25Hd0YVBFbotkU1BfgRKTLw==
-
-"@assemblyscript/loader@^0.19.0":
-  version "0.19.0"
-  resolved "https://registry.yarnpkg.com/@assemblyscript/loader/-/loader-0.19.0.tgz#84fba6bee39be90246256c373d9516cd89dc3a81"
-  integrity sha512-vy1A6TdCiIsEhuW5PCDB3oM4I+OxQoy6JkcUiU31Sh0S+ZKChucoWwheqXP+4ocjYCiZfmISA9MQOJk1JSClOA==
-
 "@babel/code-frame@7.12.11":
   version "7.12.11"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.12.11.tgz#f4ad435aa263db935b8f10f2c552d23fb716a63f"
@@ -1277,15 +1267,6 @@
     estree-walker "^2.0.1"
     picomatch "^2.2.2"
 
-"@sebastianspeitel/rollup-plugin-assemblyscript-loader@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@sebastianspeitel/rollup-plugin-assemblyscript-loader/-/rollup-plugin-assemblyscript-loader-0.1.1.tgz#e675dd7fe2bb741fecdb2820cb96c858540c1169"
-  integrity sha512-Tdyvk9Tt/NvrXTK6IH/rWjp+i35pM9GvuJoi+x5iQAtlDHThRYmxer4e4V9l/FMKdwtnqy/Qj1AaSbwvbxgkrQ==
-  dependencies:
-    "@assemblyscript/loader" "^0.14.9"
-    "@rollup/pluginutils" "^3.1.0"
-    ts-node "^9.0.0"
-
 "@sinonjs/commons@^1.7.0":
   version "1.8.3"
   resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.8.3.tgz#3802ddd21a50a949b6721ddd72da36e67e7f1b2d"
@@ -1797,14 +1778,6 @@ asn1@~0.2.3:
   dependencies:
     safer-buffer "~2.1.0"
 
-assemblyscript@^0.19.0:
-  version "0.19.0"
-  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.19.0.tgz#bcf68d9fb640bd04d3af2eae40945f8df45e4bb9"
-  integrity sha512-Lr9TJPPVoJtKfN/lQApkcXtDjlT+gsbhtgjHVxANuFP7ZtAkkYRaper9w8Osk2DiwEpSUwk7wUCriXPRby+bww==
-  dependencies:
-    binaryen "101.0.0-nightly.20210527"
-    long "^4.0.0"
-
 assert-plus@1.0.0, assert-plus@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/assert-plus/-/assert-plus-1.0.0.tgz#f12e0f3c5d77b0b1cdd9146942e4e96c1e4dd525"
@@ -1956,11 +1929,6 @@ bcrypt-pbkdf@^1.0.0:
   integrity sha1-pDAdOJtqQ/m2f/PKEaP2Y342Dp4=
   dependencies:
     tweetnacl "^0.14.3"
-
-binaryen@101.0.0-nightly.20210527:
-  version "101.0.0-nightly.20210527"
-  resolved "https://registry.yarnpkg.com/binaryen/-/binaryen-101.0.0-nightly.20210527.tgz#7677155efc965e0276dd206ed30f2d9e216ed6e2"
-  integrity sha512-dbKentJwA6H0LfI+pRuzNNzAooJwYFNrg1L8rRw8j6rlfkU815ytNLO+uDzGNcltYehUa5ERZFJHPIdqX12n0w==
 
 boxen@^5.0.0:
   version "5.0.1"
@@ -4190,11 +4158,6 @@ lodash@4.x, lodash@^4.17.15, lodash@^4.7.0:
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
-long@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/long/-/long-4.0.0.tgz#9a7b71cfb7d361a194ea555241c92f7468d5bf28"
-  integrity sha512-XsP+KhQif4bjX1kbuSiySJFNAehNxgLb6hPRGJ9QsUr8ajHkuXGdrHmFUTUUXhDwVX2R5bY4JNZEwbUiMhV+MA==
-
 lru-cache@^6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-6.0.0.tgz#6d6fe6570ebd96aaf90fcad1dafa3b2566db3a94"
@@ -5781,7 +5744,7 @@ ts-jest@^26.4.2:
     semver "7.x"
     yargs-parser "20.x"
 
-ts-node@^9.0.0, ts-node@^9.1.1:
+ts-node@^9.1.1:
   version "9.1.1"
   resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-9.1.1.tgz#51a9a450a3e959401bda5f004a72d54b936d376d"
   integrity sha512-hPlt7ZACERQGf03M253ytLY3dHbGNGrAq9qIHWUY9XHYl1z7wYngSr3OQ5xmui8o2AaxsONxIzjafLUiWBo1Fg==
