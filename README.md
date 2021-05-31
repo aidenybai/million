@@ -3,17 +3,20 @@ just a virtual dom for now
 usage:
 
 ```js
-patch(newVNode, HTMLElement);
-patch(h('div', { id: 'app' }, ['yo']), document.querySelector('#app'));
+import { h, patch } from 'million';
+
+const myButtonComponent = (count: number) => {
+  patch(
+    h('button', { id: 'millapp', onclick: () => myButtonComponent(count + 1) }, [String(count)]),
+    document.querySelector('#millapp'),
+  );
+};
+
+myButtonComponent(0);
 ```
 
-
-
 Todo:
-- class, style handling
-- synthetic events
 - hooks
-- components
 - jsx?
 - svg (ns)
 - xml
