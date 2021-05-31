@@ -1,4 +1,5 @@
-export type Props = Record<string, string | Record<string, string | boolean>>;
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type Props = Record<string, string | Record<string, string | boolean> | Function>;
 export type VNodeChildren = (VNode | string)[];
 
 export interface VNode {
