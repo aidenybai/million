@@ -1,5 +1,4 @@
-import { h } from './h';
-import { diff } from './diff';
-import { element } from './element';
-
-export { h, diff, element };
+export const _ = undefined;
+export { h } from './h';
+export { patch } from './patch';
+export { element } from './element';
