@@ -7,7 +7,7 @@
   "browser": "dist/million.min.js",
   "types": "dist/million.d.ts",
   "scripts": {
-    "build": "sh scripts/build.sh",
+    "build": "rollup -c",
     "lint": "eslint src/**",
     "cleanup": "prettier --write src --parser typescript",
     "test": "jest --silent --runInBand"
