@@ -67,8 +67,10 @@ export const patch = (
     newVNode &&
     !(el instanceof Text)
   ) {
-    if (oldVNode.mutable) diffProps(el, oldVNode.props, newVNode.props);
-    diffChildren(el, oldVNode.children, newVNode.children);
+    if (!oldVNode.skip) {
+      diffProps(el, oldVNode.props, newVNode.props);
+      diffChildren(el, oldVNode.children, newVNode.children);
+    }
   }
 
   el[OLD_VNODE_FLAG] = newVNode;

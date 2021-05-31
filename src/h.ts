@@ -6,17 +6,17 @@ export interface VNode {
   tag: string;
   props?: Props;
   children?: VNodeChildren;
-  mutable: boolean;
+  skip?: boolean;
 }
 
-export const h = (tag: string, props: Props, children: VNodeChildren): VNode => {
-  if ('style' in props) {
+export const h = (tag: string, props?: Props, children?: VNodeChildren, skip?: boolean): VNode => {
+  if (props && 'style' in props) {
     props.style = Object.entries(props.style)
       .map((style) => style.join(':'))
       .join(';');
   }
 
-  if ('class' in props) {
+  if (props && 'class' in props) {
     delete props.class;
     props.className = Object.values(props)
       .filter((classEnabled) => classEnabled)
@@ -27,6 +27,6 @@ export const h = (tag: string, props: Props, children: VNodeChildren): VNode => 
     tag,
     props,
     children,
-    mutable: !Object.values(props).some((propValue) => typeof propValue === 'function'),
+    skip,
   };
 };
