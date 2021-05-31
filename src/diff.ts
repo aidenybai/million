@@ -1,5 +1,5 @@
 import { Attributes, VNode, VNodeChildren } from './h';
-import { createElement } from './createElement';
+import { createElement } from './element';
 
 type Patch = (el: HTMLElement) => HTMLElement | Text | undefined;
 

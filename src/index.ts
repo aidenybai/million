@@ -1,5 +1,5 @@
 import { h } from './h';
 import { diff } from './diff';
-import { createElement } from './createElement';
+import { element } from './element';
 
-export { h, diff, createElement };
+export { h, diff, element };
