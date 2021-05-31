@@ -7,10 +7,13 @@ patch(newVNode, HTMLElement);
 patch(h('div', { id: 'app' }, ['yo']), document.querySelector('#app'));
 ```
 
+
+
 Todo:
-- synthetic events
 - class, style handling
 - synthetic events
 - hooks
 - components
 - jsx?
+- svg (ns)
+- xml

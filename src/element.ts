@@ -4,9 +4,9 @@ export const element = (vnode: VNode | string): HTMLElement | Text => {
   if (typeof vnode === 'string') return document.createTextNode(vnode);
   const el = document.createElement(vnode?.tag);
 
-  if (vnode.attributes) {
-    Object.entries(vnode.attributes).forEach(([name, value]) => {
-      el.setAttribute(name, value);
+  if (vnode.props) {
+    Object.entries(vnode.props).forEach(([name, value]) => {
+      el[name] = value;
     });
   }
 
