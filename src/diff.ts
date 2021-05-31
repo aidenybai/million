@@ -1,5 +1,5 @@
 import { Attributes, VNode, VNodeChildren } from './h';
-import { createElement } from './element';
+import { element } from './element';
 
 type Patch = (el: HTMLElement) => HTMLElement | Text | undefined;
 
@@ -49,9 +49,9 @@ const diffChildren = (oldVNodeChildren: VNodeChildren, newVNodeChildren: VNodeCh
   });
 
   newVNodeChildren.slice(oldVNodeChildren.length).forEach((unresolvedVNodeChild) => {
-    patchCleanupQueue.push((element: HTMLElement): HTMLElement => {
-      element.appendChild(createElement(unresolvedVNodeChild));
-      return element;
+    patchCleanupQueue.push((el: HTMLElement): HTMLElement => {
+      el.appendChild(element(unresolvedVNodeChild));
+      return el;
     });
   });
 
@@ -82,9 +82,9 @@ export const diff = (
   const tagsNotEqual = (oldVNode as VNode)?.tag !== (newVNode as VNode)?.tag;
 
   if (stringsNotEqual || tagsNotEqual) {
-    return (element: HTMLElement): HTMLElement | Text => {
-      const newElement = createElement(newVNode);
-      element.replaceWith(newElement);
+    return (el: HTMLElement): HTMLElement | Text => {
+      const newElement = element(newVNode);
+      el.replaceWith(newElement);
       return newElement;
     };
   }
