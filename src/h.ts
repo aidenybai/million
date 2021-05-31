@@ -1,5 +1,6 @@
 export type Attributes = Record<string, string>;
 export type VNodeChildren = (VNode | string)[];
+
 export interface VNode {
   tag: string;
   attributes?: Attributes;
