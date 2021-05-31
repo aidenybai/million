@@ -1,1 +1,1 @@
-WASM-based Virtual DOM
+just a virtual dom for now
