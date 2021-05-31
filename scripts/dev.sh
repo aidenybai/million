@@ -11,6 +11,7 @@ index_html_content="<!DOCTYPE html>
     <script type=\"module\" src=\"./script.ts\"></script>
   </head>
   <body>
+    <div id=\"app\"></div>
     <!-- Your code here -->
   </body>
 </html>"

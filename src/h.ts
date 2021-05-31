@@ -14,6 +14,7 @@ export const h = (tag: string, props: Props, children: VNodeChildren): VNode => 
       .map((style) => style.join(':'))
       .join(';');
   }
+
   if ('class' in props) {
     delete props.class;
     props.className = Object.values(props)
