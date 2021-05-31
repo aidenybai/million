@@ -3,18 +3,26 @@ just a virtual dom for now
 usage:
 
 ```js
-// <div id="app"></div>
-
 import { h, patch } from 'million';
 
-const myButtonComponent = (count: number) => {
-  patch(
-    h('button', { id: 'app', onclick: () => myButtonComponent(count + 1) }, [String(count)]),
-    document.querySelector('#app'),
-  );
-};
+const getRandomColor = () => {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
 
-myButtonComponent(0);
+const Button = (color: string) => {
+  return h('button', { onclick: () => App(getRandomColor()), style: { color } }, [String(color)])
+}
+
+const App = (color: string = getRandomColor()) => {
+  patch(h('div', { id: 'app', style: { 'background-color': color } }, [Button(color)]), document.querySelector('#app'));
+}
+
+App();
 ```
 
 Todo:
