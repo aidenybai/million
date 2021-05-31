@@ -6,12 +6,8 @@ import strip from '@rollup/plugin-strip';
 import ts from '@wessberg/rollup-plugin-ts';
 import filesize from 'rollup-plugin-filesize';
 import { terser } from 'rollup-plugin-terser';
-import replace from '@rollup/plugin-replace';
-import fs from 'fs';
-const { readFile } = fs.promises;
 
 const suite = async (input, output) => {
-  const buffer = await readFile('./dist/million.wasm');
   return {
     input,
     plugins: [
@@ -22,9 +18,6 @@ const suite = async (input, output) => {
       strip({
         functions: ['console.log'],
         include: '**/*.(ts)',
-      }),
-      replace({
-        __INSERT_BASE64_WASM_HERE__: Buffer.from(buffer, 'binary').toString('base64'),
       }),
       beep(),
     ],

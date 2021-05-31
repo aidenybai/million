@@ -58,10 +58,10 @@ const diffChildren = (oldVNodeChildren: VNodeChildren, newVNodeChildren: VNodeCh
   return (parentElement: HTMLElement) => {
     entrifyPatchAndChildNodes(patchQueue, parentElement.childNodes).forEach(([patch, child]) => {
       (patch as Patch)(child as HTMLElement);
-    })
+    });
     patchCleanupQueue.forEach((patch: Patch) => {
       patch(parentElement);
-    })
+    });
     return parentElement;
   };
 };
