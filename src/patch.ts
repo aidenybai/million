@@ -1,29 +1,16 @@
-import { Attributes, VNode, VNodeChildren } from './h';
+import { Props, VNode, VNodeChildren } from './h';
 import { element } from './element';
 
 const OLD_VNODE_FLAG = '__old_v_node';
 
-const diffAttributes = (
-  el: HTMLElement,
-  oldAttributes: Attributes = {},
-  newAttributes: Attributes = {},
-): void => {
-  const oldAttributesKeys = Object.keys(oldAttributes);
-  const newAttributesEntries = Object.entries(newAttributes);
-
-  if (oldAttributesKeys.length > newAttributesEntries.length) {
-    oldAttributesKeys.forEach((key) => {
-      const attribute = newAttributes[key];
-      if (attribute) el.setAttribute(key, attribute);
-      else el.removeAttribute(key);
+const diffProps = (el: HTMLElement, oldProps: Props = {}, newProps: Props = {}): void => {
+  Object.keys(oldProps).forEach((propName) => {
+    const newPropValue = newProps[propName];
+    if (newPropValue) {
+      if (newPropValue !== oldProps[propName]) el[propName] = newPropValue;
       return;
-    });
-  }
-
-  newAttributesEntries.forEach(([key, value]) => {
-    if (oldAttributes[key] !== value) {
-      el.setAttribute(key, value);
     }
+    el[propName] = undefined;
   });
 };
 
@@ -49,7 +36,6 @@ export const patch = (
   if (!newVNode) return el.remove();
 
   const oldVNode: VNode | string | undefined = prevVNode ?? el[OLD_VNODE_FLAG];
-  el[OLD_VNODE_FLAG] = newVNode;
 
   if (oldVNode !== newVNode || (oldVNode as VNode)?.tag !== (newVNode as VNode)?.tag) {
     const newElement = element(newVNode);
@@ -58,7 +44,9 @@ export const patch = (
   }
 
   if (typeof oldVNode !== 'string' && typeof newVNode !== 'string' && oldVNode && newVNode) {
-    diffAttributes(el, oldVNode.attributes, newVNode.attributes);
+    if (oldVNode.mutable && newVNode.mutable) diffProps(el, oldVNode.props, newVNode.props);
     diffChildren(el, oldVNode.children, newVNode.children);
   }
+
+  el[OLD_VNODE_FLAG] = newVNode;
 };
