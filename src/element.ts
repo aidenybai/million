@@ -9,6 +9,7 @@ export const element = (vnode: VNode | string): HTMLElement | Text => {
       el.setAttribute(name, value);
     });
   }
+
   if (vnode.children) {
     vnode.children.forEach((child: VNode | string) => {
       el.appendChild(element(child));

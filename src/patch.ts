@@ -10,19 +10,21 @@ const diffAttributes = (
 ): void => {
   const oldAttributesKeys = Object.keys(oldAttributes);
   const newAttributesEntries = Object.entries(newAttributes);
+
   if (oldAttributesKeys.length > newAttributesEntries.length) {
     oldAttributesKeys.forEach((key) => {
       const attribute = newAttributes[key];
       if (attribute) el.setAttribute(key, attribute);
       else el.removeAttribute(key);
-    });
-  } else {
-    newAttributesEntries.forEach(([key, value]) => {
-      if (oldAttributes[key] !== value) {
-        el.setAttribute(key, value);
-      }
+      return;
     });
   }
+
+  newAttributesEntries.forEach(([key, value]) => {
+    if (oldAttributes[key] !== value) {
+      el.setAttribute(key, value);
+    }
+  });
 };
 
 const diffChildren = (
@@ -33,6 +35,7 @@ const diffChildren = (
   oldVNodeChildren.forEach((oldVChild, i) => {
     patch(newVNodeChildren[i], el.children[i] as HTMLElement, oldVChild);
   });
+
   newVNodeChildren.slice(oldVNodeChildren.length).forEach((unresolvedVNodeChild) => {
     el.appendChild(element(unresolvedVNodeChild));
   });
@@ -43,7 +46,7 @@ export const patch = (
   el: HTMLElement,
   prevVNode: VNode | string | undefined,
 ): void => {
-  if (newVNode === undefined) return el.remove();
+  if (!newVNode) return el.remove();
 
   const oldVNode: VNode | string | undefined = prevVNode ?? el[OLD_VNODE_FLAG];
   el[OLD_VNODE_FLAG] = newVNode;
