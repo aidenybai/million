@@ -44,7 +44,7 @@ export const patch = (
   }
 
   if (typeof oldVNode !== 'string' && typeof newVNode !== 'string' && oldVNode && newVNode) {
-    if (oldVNode.mutable && newVNode.mutable) diffProps(el, oldVNode.props, newVNode.props);
+    if (oldVNode.mutable) diffProps(el, oldVNode.props, newVNode.props);
     diffChildren(el, oldVNode.children, newVNode.children);
   }
 
