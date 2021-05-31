@@ -7,7 +7,8 @@
   "browser": "dist/million.min.js",
   "types": "dist/million.d.ts",
   "scripts": {
-    "build": "rollup -c",
+    "dev": "sh scripts/dev.sh",
+    "build": "sh scripts/build.sh",
     "lint": "eslint src/**",
     "cleanup": "prettier --write src --parser typescript",
     "test": "jest --silent --runInBand"
@@ -62,6 +63,7 @@
     "ts-jest": "^26.4.2",
     "ts-node": "^9.1.1",
     "tslib": "^2.2.0",
-    "typescript": "^4.2.4"
+    "typescript": "^4.2.4",
+    "vite": "^2.3.4"
   }
 }
