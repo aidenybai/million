@@ -32,9 +32,9 @@ fi
 
 if [ ! -d dev ]; then
   mkdir dev
-  echo -e "$index_html_content" >> dev/index.html
-  echo -e "$script_ts_content" >> dev/script.ts
-  echo -e "$style_css_content" >> dev/style.css
+  echo "$index_html_content" > dev/index.html
+  echo "$script_ts_content" > dev/script.ts
+  echo "$style_css_content" > dev/style.css
   info "Couldn't find an the \`dev\` directory, creating one for you..."
 fi
 
