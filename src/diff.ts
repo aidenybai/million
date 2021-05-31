@@ -41,7 +41,7 @@ const diffAttributes = (oldAttributes: Attributes = {}, newAttributes: Attribute
   };
 };
 
-const diffChildren = (oldVNodeChildren: VNodeChildren, newVNodeChildren: VNodeChildren): Patch => {
+const diffChildren = (oldVNodeChildren: VNodeChildren = [], newVNodeChildren: VNodeChildren = []): Patch => {
   const patchQueue: Patch[] = [];
   const patchCleanupQueue: Patch[] = [];
   oldVNodeChildren.forEach((oldVChild, i) => {
@@ -92,9 +92,7 @@ export const diff = (
   return (element: HTMLElement): HTMLElement => {
     if (typeof oldVNode !== 'string' && typeof newVNode !== 'string' && oldVNode) {
       diffAttributes(oldVNode.attributes, newVNode.attributes)(element);
-      if (oldVNode.children && newVNode.children) {
-        diffChildren(oldVNode.children, newVNode.children)(element);
-      }
+      diffChildren(oldVNode.children, newVNode.children)(element);
     }
     return element;
   };
