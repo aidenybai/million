@@ -14,7 +14,7 @@ index_html_content="<!DOCTYPE html>
     <!-- Your code here -->
   </body>
 </html>"
-script_ts_content="import { h, diff, element } from 'million';"
+script_ts_content="import { h, patch } from 'million';"
 style_css_content="body {
   font-size: 2em;
   display: flex;
