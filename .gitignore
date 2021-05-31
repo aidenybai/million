@@ -2,3 +2,4 @@ dist/
 node_modules/
 *.html
 yarn-error.log
+dev
