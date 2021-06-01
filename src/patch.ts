@@ -57,17 +57,17 @@ export const patch = (
 
   const oldVNode: VNode | string | undefined = prevVNode ?? el[OLD_VNODE_FLAG];
 
-  if (oldVNode && newVNode) {
-    if (oldVNode !== newVNode || (oldVNode as VNode)?.tag !== (newVNode as VNode)?.tag) {
-      el.replaceWith(createElement(newVNode));
-    } else if (
-      typeof oldVNode !== 'string' &&
-      typeof newVNode !== 'string' &&
-      !(el instanceof Text)
-    ) {
-      diffProps(el, oldVNode.props, newVNode.props);
-      diffChildren(el, oldVNode.children, newVNode.children);
-    }
+  if (oldVNode !== newVNode || (oldVNode as VNode)?.tag !== (newVNode as VNode)?.tag) {
+    el.replaceWith(createElement(newVNode));
+  } else if (
+    oldVNode &&
+    newVNode &&
+    typeof oldVNode !== 'string' &&
+    typeof newVNode !== 'string' &&
+    !(el instanceof Text)
+  ) {
+    diffProps(el, oldVNode.props, newVNode.props);
+    diffChildren(el, oldVNode.children, newVNode.children);
   }
 
   el[OLD_VNODE_FLAG] = newVNode;
