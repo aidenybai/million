@@ -6,10 +6,9 @@ export interface VNode {
   tag: string;
   props?: Props;
   children?: VNodeChildren;
-  skip?: boolean;
 }
 
-export const h = (tag: string, props?: Props, children?: VNodeChildren, skip?: boolean): VNode => {
+export const m = (tag: string, props?: Props, children?: VNodeChildren): VNode => {
   if (props && 'style' in props) {
     props.style = Object.entries(props.style)
       .map((style) => style.join(':'))
@@ -27,6 +26,5 @@ export const h = (tag: string, props?: Props, children?: VNodeChildren, skip?: b
     tag,
     props,
     children,
-    skip,
   };
 };

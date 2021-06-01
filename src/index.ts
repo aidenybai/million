@@ -1,4 +1,4 @@
 export const _ = undefined;
-export { h } from './h';
+export { m } from './m';
 export { patch } from './patch';
-export { element } from './element';
+export { createElement } from './createElement';

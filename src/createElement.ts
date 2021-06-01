@@ -1,6 +1,6 @@
-import { VNode } from './h';
+import { VNode } from './m';
 
-export const element = (vnode: VNode | string): HTMLElement | Text => {
+export const createElement = (vnode: VNode | string): HTMLElement | Text => {
   if (typeof vnode === 'string') return document.createTextNode(vnode);
   const el = document.createElement(vnode?.tag);
 
@@ -12,7 +12,7 @@ export const element = (vnode: VNode | string): HTMLElement | Text => {
 
   if (vnode.children) {
     vnode.children.forEach((child: VNode | string) => {
-      el.appendChild(element(child));
+      el.appendChild(createElement(child));
     });
   }
 

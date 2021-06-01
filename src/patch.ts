@@ -1,5 +1,5 @@
-import { Props, VNode, VNodeChildren } from './h';
-import { element } from './element';
+import { Props, VNode, VNodeChildren } from './m';
+import { createElement } from './createElement';
 
 const OLD_VNODE_FLAG = '__old_v_node';
 
@@ -44,7 +44,7 @@ const diffChildren = (
   });
 
   newVNodeChildren.slice(oldVNodeChildren.length).forEach((unresolvedVNodeChild) => {
-    el.appendChild(element(unresolvedVNodeChild));
+    el.appendChild(createElement(unresolvedVNodeChild));
   });
 };
 
@@ -57,17 +57,14 @@ export const patch = (
 
   const oldVNode: VNode | string | undefined = prevVNode ?? el[OLD_VNODE_FLAG];
 
-  if (oldVNode !== newVNode || (oldVNode as VNode)?.tag !== (newVNode as VNode)?.tag) {
-    const newElement = element(newVNode);
-    el.replaceWith(newElement);
-  } else if (
-    typeof oldVNode !== 'string' &&
-    typeof newVNode !== 'string' &&
-    oldVNode &&
-    newVNode &&
-    !(el instanceof Text)
-  ) {
-    if (!oldVNode.skip) {
+  if (oldVNode && newVNode) {
+    if (oldVNode !== newVNode || (oldVNode as VNode)?.tag !== (newVNode as VNode)?.tag) {
+      el.replaceWith(createElement(newVNode));
+    } else if (
+      typeof oldVNode !== 'string' &&
+      typeof newVNode !== 'string' &&
+      !(el instanceof Text)
+    ) {
       diffProps(el, oldVNode.props, newVNode.props);
       diffChildren(el, oldVNode.children, newVNode.children);
     }
