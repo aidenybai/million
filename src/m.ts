@@ -8,7 +8,7 @@ export interface VNode {
   children?: VNodeChildren;
 }
 
-export const m = (tag: string, props?: Props, children?: VNodeChildren): VNode => {
+export const m = (tag: string, props?: Props, ...children: VNodeChildren): VNode => {
   if (props && 'style' in props) {
     props.style = Object.entries(props.style)
       .map((style) => style.join(':'))
