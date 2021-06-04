@@ -1,6 +1,6 @@
 # <img src="https://raw.githubusercontent.com/millionjs/million/main/.github/assets/logo.svg" height="60" alt="Million Logo" aria-label="Million Logo" />
 
-### 1kb virtual DOM - it's fast!
+### <1kb virtual DOM - it's fast!
 
 Sometimes, all you want to do is to try and do something—No boilerplate, bundlers, or complex build processes. Million aims to do this, providing an augmentation layer for your logic, allowing you to bind attributes to your HTML to add interactivity without writing any extra JavaScript.
 
