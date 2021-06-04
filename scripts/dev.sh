@@ -15,7 +15,7 @@ index_html_content="<!DOCTYPE html>
     <!-- Your code here -->
   </body>
 </html>"
-script_ts_content="import { m, patch, _ } from '../src//index';"
+script_ts_content="import { m, patch, _ } from '../src/index';"
 style_css_content="body {
   font-size: 2em;
   display: flex;
