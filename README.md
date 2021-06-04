@@ -2,7 +2,7 @@
 
 ### 1kb virtual DOM - it's fast!
 
-Sometimes, all you want to do is to try and do something—No boilerplate, bundlers, or complex build processes. Lucia aims to do this, providing an augmentation layer for your logic, allowing you to bind attributes to your HTML to add interactivity without writing any extra JavaScript.
+Current Virtual DOM implementations are too complicated—Whether it be a fully featured yet bloated Virtual DOM in React, or the deprecated `virtual-dom` package on NPM, they are basically unusable without sacrificing raw performance and size. Million aims to do this, providing a library-agnostic Virtual DOM to serve as the core for Javascript libraries.
 
 ![Code Size](https://badgen.net/badgesize/brotli/https/unpkg.com/million?style=flat-square&label=size) ![NPM Version](https://img.shields.io/npm/v/million?style=flat-square)
 
