@@ -6,9 +6,9 @@ Sometimes, all you want to do is to try and do something—No boilerplate, bundl
 
 ![Code Size](https://badgen.net/badgesize/brotli/https/unpkg.com/million?style=flat-square&label=size) ![NPM Version](https://img.shields.io/npm/v/million?style=flat-square)
 
-## Installing Lucia
+## Installing Million
 
-Lucia doesn't require build tools by default, feel free to just drop a script tag in the head of your webpage.
+Million doesn't require build tools by default, feel free to just drop a script tag in the head of your webpage.
 
 ```html
 <script src="https://unpkg.com/million"></script>
