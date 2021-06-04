@@ -15,10 +15,10 @@ const suite = async (input, output) => {
       commonjs(),
       resolve({ extensions: ['.ts'] }),
       ts(),
-      // strip({
-      //   functions: ['console.log'],
-      //   include: '**/*.(ts)',
-      // }),
+      strip({
+        functions: ['console.log'],
+        include: '**/*.(ts)',
+      }),
       beep(),
     ],
     output,
