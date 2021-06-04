@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <script src="https://cdn.jsdelivr.net/combine/npm/lodash@4.17.21,npm/platform@1.3.6,npm/benchmark@2.1.4"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/snabbdom/0.7.4/snabbdom.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/virtual-dom@2.1.1/dist/virtual-dom.min.js"></script>
     <script src="../dist/million.js"></script>
   </head>
@@ -13,17 +12,8 @@
     <div id="app"></div>
 
     <script>
-      const { m, _, patch } = Million;
-      const { h, init } = snabbdom;
-      const snabPatch = init([]);
-      let snabVDomBefore = h(
-        'div',
-        {
-          id: 'app',
-        },
-        [],
-      );
-      let vDomBefore;
+      const { m, _, patch, $ } = Million;
+      let vNodeBefore;
 
       const suite = new Benchmark.Suite();
 
@@ -33,53 +23,35 @@
             document.body.innerHTML = '<div id="app"></div>';
           },
           fn() {
-            patch(m('div', { id: 'app' }, [String(Date.now())]), document.querySelector('#app'));
+            patch(document.querySelector('#app'), m('div', { id: 'app' }, [String(Date.now())]));
           },
         })
         .add('virtual-dom', {
           setup() {
-            document.body.innerHTML = '<div id="app"></div>';
+            const { diff, patch, h, createElement } = virtualDom;
+            document.body.innerHTML = '';
+            vNodeBefore = h(
+              'div',
+              {
+                id: 'app',
+              },
+              [],
+            );
+            document.body.appendChild(createElement(vNodeBefore));
           },
           fn() {
             const { diff, patch, h } = virtualDom;
             const newVal = String(Date.now());
-            const patches = diff(
-              h(
-                'div',
-                {
-                  id: 'app',
-                },
-                [vDomBefore],
-              ),
-              h(
-                'div',
-                {
-                  id: 'app',
-                },
-                [newVal],
-              ),
-            );
-            vDomBefore = newVal;
-            patch(document.querySelector('#app'), patches);
-          },
-        })
-        .add('snabbdom', {
-          setup() {
-            document.body.innerHTML = '<div id="app"></div>';
-            snabPatch(document.body.firstChild, snabVDomBefore);
-            document.body.firstChild._ = snabVDomBefore;
-          },
-          fn() {
-            const newVal = String(Date.now());
-            const newVNode = h(
+            const vNodeAfter = h(
               'div',
               {
                 id: 'app',
               },
               [newVal],
             );
-            snabPatch(document.body.firstChild._, newVNode);
-            document.body.firstChild._ = newVNode;
+            const patches = diff(vNodeBefore, vNodeAfter);
+            vNodeBefore = vNodeAfter;
+            patch(document.querySelector('#app'), patches);
           },
         })
         .add('vanilla', {
@@ -95,7 +67,7 @@
             }
           },
         })
-        .add('raw', {
+        .add('vanilla smart', {
           setup() {
             document.body.innerHTML = '<div id="app"></div>';
           },

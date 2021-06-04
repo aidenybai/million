@@ -2,7 +2,7 @@
 
 ### <1kb virtual DOM - it's fast!
 
-Current Virtual DOM implementations are too complicated—Whether it be a fully featured yet bloated Virtual DOM in React, or the deprecated `virtual-dom` package on NPM, they are basically unusable without sacrificing raw performance and size. Million aims to do this, providing a library-agnostic Virtual DOM to serve as the core for Javascript libraries.
+Current Virtual DOM implementations are inadequate—Ranging from overcomplicated to abandoned, most are unusable without sacrificing raw performance and size. Million aims to fix this, providing a library-agnostic Virtual DOM to serve as the core for Javascript libraries.
 
 ![Code Size](https://badgen.net/badgesize/brotli/https/unpkg.com/million?style=flat-square&label=size) ![NPM Version](https://img.shields.io/npm/v/million?style=flat-square)
 
@@ -16,19 +16,18 @@ Million doesn't require build tools by default, feel free to just drop a script 
 
 It also integrates well with module bundlers like [Webpack](https://webpack.js.org/) or [Rollup](https://rollupjs.org/), just install via npm.
 
-## Hello World Example
+## Hello/Goodbye World Example
 
 Below is an extremely simple implementation of a Hello World page using Million.
 
-```html
-<div id="app"></div>
+```js
+import { m, createElement, patch } from 'million';
 
-<script>
-  const { m, patch } = Million;
-  const newVNode = m('div', { id: 'app' }, ['Hello World']);
-  const el = document.querySelector('#app');
-  patch(newVNode, el);
-</script>
+// Initialize app
+const app = createElement(m('div', { id: 'app' }, ['Hello World']));
+document.body.appendChild(app);
+// Patch content
+patch(app, m('div', { id: 'app' }, ['Goodbye World']));
 ```
 
 ## Resources & Contributing Back

@@ -42,7 +42,7 @@ const diffChildren = (
   }
   if (oldVNodeChildren) {
     oldVNodeChildren.forEach((oldVChild, i) => {
-      patch(newVNodeChildren[i], <HTMLElement | Text>el.childNodes[i], oldVChild);
+      patch(<HTMLElement | Text>el.childNodes[i], newVNodeChildren[i], oldVChild);
     });
   }
   newVNodeChildren.slice(oldVNodeChildren?.length ?? 0).forEach((unresolvedVNodeChild) => {
@@ -51,19 +51,23 @@ const diffChildren = (
 };
 
 export const patch = (
-  newVNode: VNode | string,
   el: HTMLElement | Text,
+  newVNode: VNode | string,
   prevVNode?: VNode | string,
-): void => {
-  if (!newVNode) return el.remove();
+): HTMLElement | Text => {
+  if (!newVNode) {
+    el.remove();
+    return el;
+  }
 
   const oldVNode: VNode | string | undefined = prevVNode ?? el[OLD_VNODE_FIELD];
   const hasString = typeof oldVNode === 'string' || typeof newVNode === 'string';
 
-  const replaceElement = (): void => {
+  const replaceElement = (): HTMLElement | Text => {
     const newElement = createElement(newVNode);
     if (!hasString && !prevVNode) newElement[OLD_VNODE_FIELD] = newVNode;
     el.replaceWith(newElement);
+    return newElement;
   };
 
   if (hasString && oldVNode !== newVNode) return replaceElement();
@@ -84,4 +88,5 @@ export const patch = (
   }
 
   if (!prevVNode) el[OLD_VNODE_FIELD] = newVNode;
+  return el;
 };

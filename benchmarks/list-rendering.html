@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <script src="https://cdn.jsdelivr.net/combine/npm/lodash@4.17.21,npm/platform@1.3.6,npm/benchmark@2.1.4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/virtual-dom@2.1.1/dist/virtual-dom.min.js"></script>
     <script src="../dist/million.min.js"></script>
   </head>
   <body>
@@ -17,7 +18,7 @@
       let children = [];
 
       suite
-        .add('Million', {
+        .add('million', {
           setup() {
             document.querySelector('#app').outerHTML = '<div id="app"></div>';
             children = [];
@@ -25,10 +26,37 @@
           fn() {
             children.push(m('div', _, [String(Date.now())]));
 
-            patch(m('div', { id: 'app' }, [...children]), document.querySelector('#app'));
+            patch(document.querySelector('#app'), m('div', { id: 'app' }, [...children]));
           },
         })
-        .add('JavaScript Normal', {
+        .add('virtual-dom', {
+          setup() {
+            document.body.innerHTML = '<div id="app"></div>';
+            children = [];
+          },
+          fn() {
+            const { diff, patch, h } = virtualDom;
+            children.push(String(Date.now()));
+            const patches = diff(
+              h(
+                'div',
+                {
+                  id: 'app',
+                },
+                [...children.splice(-1, 1)],
+              ),
+              h(
+                'div',
+                {
+                  id: 'app',
+                },
+                [...children],
+              ),
+            );
+            patch(document.querySelector('#app'), patches);
+          },
+        })
+        .add('vanilla', {
           setup() {
             document.querySelector('#app').outerHTML = '<div id="app"></div>';
             children = [];
@@ -38,7 +66,7 @@
             document.querySelector('#app').innerHTML = `<div>${children.join('')}</div>`;
           },
         })
-        .add('JavaScript Perf', {
+        .add('vanilla smart', {
           setup() {
             document.querySelector('#app').outerHTML = '<div id="app"></div>';
             children = [];
