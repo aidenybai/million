@@ -58,26 +58,29 @@ export const patch = (
   if (!newVNode) return el.remove();
 
   const oldVNode: VNode | string | undefined = prevVNode ?? el[OLD_VNODE_FIELD];
+  const replaceElement = (): void => {
+    const newElement = createElement(newVNode);
+    newElement[OLD_VNODE_FIELD] = newVNode;
+    el.replaceWith(newElement);
+  };
 
-  if (
-    oldVNode !== newVNode ||
-    (<VNode>oldVNode).tag !== (<VNode>newVNode).tag ||
-    (!(<VNode>newVNode).children && !(<VNode>newVNode).props)
-  ) {
-    // newVNode has no props/children is replaced because it is generally
-    // faster to create a empty HTMLElement rather than iteratively/recursively
-    // remove props/children
-    el.replaceWith(createElement(newVNode));
-  } else if (
-    oldVNode &&
-    typeof oldVNode !== 'string' &&
-    typeof newVNode !== 'string' &&
-    !(el instanceof Text)
-  ) {
-    diffProps(el, oldVNode.props, newVNode.props);
-    diffChildren(el, oldVNode.children, newVNode.children);
+  const hasString = typeof oldVNode === 'string' || typeof newVNode === 'string';
+  if (hasString && oldVNode !== newVNode) return replaceElement();
+  if (!hasString) {
+    if (
+      (<VNode>oldVNode)?.tag !== (<VNode>newVNode)?.tag ||
+      (!(<VNode>newVNode).children && !(<VNode>newVNode).props)
+    ) {
+      // newVNode has no props/children is replaced because it is generally
+      // faster to create a empty HTMLElement rather than iteratively/recursively
+      // remove props/children
+      return replaceElement();
+    }
+    if (oldVNode && !(el instanceof Text)) {
+      diffProps(el, (<VNode>oldVNode).props, (<VNode>newVNode).props);
+      diffChildren(el, (<VNode>oldVNode).children, (<VNode>newVNode).children);
+    }
   }
 
-  // The oldVNode is put into a custom field for later reference
   el[OLD_VNODE_FIELD] = newVNode;
 };

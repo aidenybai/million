@@ -37,7 +37,7 @@ names.forEach((name: string) => {
 });
 
 export default elements;"
-script_ts_content="import { patch } from '../src/index';
+script_ts_content="import { patch, _ } from '../src/index';
 import helpers from './helpers';
 const { div } = helpers;"
 style_css_content="body {
