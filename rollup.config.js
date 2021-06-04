@@ -15,10 +15,10 @@ const suite = async (input, output) => {
       commonjs(),
       resolve({ extensions: ['.ts'] }),
       ts(),
-      strip({
-        functions: ['console.log'],
-        include: '**/*.(ts)',
-      }),
+      // strip({
+      //   functions: ['console.log'],
+      //   include: '**/*.(ts)',
+      // }),
       beep(),
     ],
     output,
@@ -44,25 +44,25 @@ export const unit = ({ file, format, minify }) => ({
     : [],
 });
 
-export default suite('./src//index.ts', [
+export default suite('./src/index.ts', [
   unit({
-    file: './dist//million.esm.js',
+    file: './dist/million.esm.js',
     format: 'esm',
   }),
   unit({
-    file: './dist//million.cjs.js',
+    file: './dist/million.cjs.js',
     format: 'cjs',
   }),
   unit({
-    file: './dist//million.umd.js',
+    file: './dist/million.umd.js',
     format: 'umd',
   }),
   unit({
-    file: './dist//million.js',
+    file: './dist/million.js',
     format: 'iife',
   }),
   unit({
-    file: './dist//million.min.js',
+    file: './dist/million.min.js',
     format: 'iife',
     minify: true,
   }),

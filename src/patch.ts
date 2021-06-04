@@ -58,13 +58,14 @@ export const patch = (
   if (!newVNode) return el.remove();
 
   const oldVNode: VNode | string | undefined = prevVNode ?? el[OLD_VNODE_FIELD];
+  const hasString = typeof oldVNode === 'string' || typeof newVNode === 'string';
+
   const replaceElement = (): void => {
     const newElement = createElement(newVNode);
-    newElement[OLD_VNODE_FIELD] = newVNode;
+    if (!hasString && !prevVNode) newElement[OLD_VNODE_FIELD] = newVNode;
     el.replaceWith(newElement);
   };
 
-  const hasString = typeof oldVNode === 'string' || typeof newVNode === 'string';
   if (hasString && oldVNode !== newVNode) return replaceElement();
   if (!hasString) {
     if (
@@ -82,5 +83,5 @@ export const patch = (
     }
   }
 
-  el[OLD_VNODE_FIELD] = newVNode;
+  if (!prevVNode) el[OLD_VNODE_FIELD] = newVNode;
 };

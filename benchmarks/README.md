@@ -1,15 +1,15 @@
 **`text-interop`**
 
-| Test               | Result                                     |
-| ------------------ | ------------------------------------------ |
-| Million            | 453,256 ops/sec ±61.79% (39 runs sampled)  |
-| JavaScript Fair    | 36,359 ops/sec ±9.19% (39 runs sampled)    |
-| JavaScript Optimal | 1,393,847 ops/sec ±5.09% (50 runs sampled) |
+| Test              | Result                                     |
+| ----------------- | ------------------------------------------ |
+| Million           | 784,125 ops/sec ±36.85% (52 runs sampled)  |
+| JavaScript Normal | 42,008 ops/sec ±7.76% (45 runs sampled)    |
+| JavaScript Perf   | 1,780,965 ops/sec ±5.77% (50 runs sampled) |
 
 **`list-rendering`**
 
-| Test               | Result                                   |
-| ------------------ | ---------------------------------------- |
-| Million            | 66.76 ops/sec ±94.43% (5 runs sampled)   |
-| JavaScript Fair    | 30,677 ops/sec ±16.63% (49 runs sampled) |
-| JavaScript Optimal | 48,062 ops/sec ±8.06% (51 runs sampled)  |
+| Test              | Result                                  |
+| ----------------- | --------------------------------------- |
+| Million           | 2,687 ops/sec ±8.65% (19 runs sampled)  |
+| JavaScript Normal | 696 ops/sec ±57.62% (9 runs sampled)    |
+| JavaScript Perf   | 43,592 ops/sec ±8.64% (41 runs sampled) |
