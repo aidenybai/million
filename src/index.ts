@@ -1,4 +1,4 @@
 export const _ = undefined;
-export { m } from './m';
+export { m, VNode, VNodeChildren, Props } from './m';
 export { patch } from './patch';
 export { createElement } from './createElement';
