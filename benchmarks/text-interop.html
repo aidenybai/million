@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <script src="https://cdn.jsdelivr.net/combine/npm/lodash@4.17.21,npm/platform@1.3.6,npm/benchmark@2.1.4"></script>
+    <script src="https://unpkg.com/million"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script>
+      const { m, _, patch } = Million;
+
+      const suite = new Benchmark.Suite();
+
+      suite
+        .add('Million', {
+          setup() {
+            document.querySelector('#app').outerHTML = '<div id="app"></div>';
+          },
+          fn() {
+            patch(m('div', { id: 'app' }, [String(Date.now())]), document.querySelector('#app'));
+          },
+        })
+        .add('JavaScript Fair', {
+          setup() {
+            document.querySelector('#app').outerHTML = '<div id="app"></div>';
+          },
+          fn() {
+            const textNode = document.createTextNode(String(Date.now()));
+            if (document.querySelector('#app').firstChild) {
+              document.querySelector('#app').firstChild.replaceWith(textNode);
+            } else {
+              document.querySelector('#app').appendChild(textNode);
+            }
+          },
+        })
+        .add('JavaScript Optimal', {
+          setup() {
+            document.querySelector('#app').outerHTML = '<div id="app"></div>';
+          },
+          fn() {
+            document.querySelector('#app').textContent = String(Date.now());
+          },
+        })
+        .on('cycle', ({ target }) => {
+          console.log(String(target));
+        })
+        .on('complete', function () {
+          console.log(`Fastest is ${this.filter('fastest').map('name')}`);
+        })
+        .run({ async: true });
+    </script>
+  </body>
+</html>
