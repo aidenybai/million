@@ -44,25 +44,25 @@ export const unit = ({ file, format, minify }) => ({
     : [],
 });
 
-export default suite('./src/index.ts', [
+export default suite('./src/vdom/index.ts', [
   unit({
-    file: './dist/million.esm.js',
+    file: './dist/vdom/million.esm.js',
     format: 'esm',
   }),
   unit({
-    file: './dist/million.cjs.js',
+    file: './dist/vdom/million.cjs.js',
     format: 'cjs',
   }),
   unit({
-    file: './dist/million.umd.js',
+    file: './dist/vdom/million.umd.js',
     format: 'umd',
   }),
   unit({
-    file: './dist/million.js',
+    file: './dist/vdom/million.js',
     format: 'iife',
   }),
   unit({
-    file: './dist/million.min.js',
+    file: './dist/vdom/million.min.js',
     format: 'iife',
     minify: true,
   }),
