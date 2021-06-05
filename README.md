@@ -4,7 +4,7 @@
 
 Current Virtual DOM implementations are inadequate—Ranging from overcomplicated to abandoned, most are unusable without sacrificing raw performance and size. Million aims to fix this, providing a library-agnostic Virtual DOM to serve as the core for Javascript libraries.
 
-![Code Size](https://badgen.net/badgesize/brotli/https/unpkg.com/million?style=flat-square&label=size) ![NPM Version](https://img.shields.io/npm/v/million?style=flat-square)
+![Code Size](https://badgen.net/badgesize/brotli/https/unpkg.com/million?style=flat-square&label=size&color=674AE3&labelColor=000) ![NPM Version](https://img.shields.io/npm/v/million?style=flat-square&color=674AE3&labelColor=000)
 
 ## Installing Million
 
@@ -16,7 +16,7 @@ Million doesn't require build tools by default, feel free to just drop a script 
 
 It also integrates well with module bundlers like [Webpack](https://webpack.js.org/) or [Rollup](https://rollupjs.org/), just install via npm.
 
-## Hello/Goodbye World Example
+## Hello World Example
 
 Below is an extremely simple implementation of a Hello World page using Million.
 
