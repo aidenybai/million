@@ -1,3 +1,5 @@
+export PATH="$(dirname "$0")/../node_modules/.bin:$PATH"
+
 YELLOW_COLOR="\u001b[33m"
 GREEN_COLOR="\033[0;32m"
 RED_COLOR='\033[0;31m'
