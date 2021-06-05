@@ -73,8 +73,9 @@ export const patch = (
   if (hasString && oldVNode !== newVNode) return replaceElement();
   if (!hasString) {
     if (
-      (<VNode>oldVNode)?.tag !== (<VNode>newVNode)?.tag ||
-      (!(<VNode>newVNode).children && !(<VNode>newVNode).props)
+      !(<VNode>oldVNode)?.skip &&
+      ((<VNode>oldVNode)?.tag !== (<VNode>newVNode)?.tag ||
+        (!(<VNode>newVNode).children && !(<VNode>newVNode).props))
     ) {
       // newVNode has no props/children is replaced because it is generally
       // faster to create a empty HTMLElement rather than iteratively/recursively
@@ -82,8 +83,12 @@ export const patch = (
       return replaceElement();
     }
     if (oldVNode && !(el instanceof Text)) {
-      diffProps(el, (<VNode>oldVNode).props, (<VNode>newVNode).props);
-      diffChildren(el, (<VNode>oldVNode).children, (<VNode>newVNode).children);
+      if (!(<VNode>oldVNode)?.skip) {
+        diffProps(el, (<VNode>oldVNode).props, (<VNode>newVNode).props);
+      }
+      if ((<VNode>newVNode)?.skipChildren) {
+        diffChildren(el, (<VNode>oldVNode).children, (<VNode>newVNode).children);
+      }
     }
   }
 
