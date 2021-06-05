@@ -5,6 +5,8 @@ export interface VNode {
   tag: string;
   props?: Props;
   children?: VNodeChildren;
+  skip?: boolean;
+  skipChildren?: boolean;
 }
 
 export const style = (styleObject: Record<string, string>): string => {
@@ -19,8 +21,16 @@ export const className = (classObject: Record<string, boolean>): string => {
     .join(' ');
 };
 
-export const m = (tag: string, props?: Props, children?: VNodeChildren): VNode => ({
+export const m = (
+  tag: string,
+  props?: Props,
+  children?: VNodeChildren,
+  skip?: boolean,
+  skipChildren?: boolean,
+): VNode => ({
   tag,
   props,
   children,
+  skip,
+  skipChildren,
 });
