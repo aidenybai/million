@@ -1,3 +1,5 @@
+> Current benchmarks are outdated
+
 **`text-interop`**
 
 | Test          | Result                                     |
