@@ -6,7 +6,7 @@ Current Virtual DOM implementations are inadequate—Ranging from overcomplicate
 
 ![Code Size](https://badgen.net/badgesize/brotli/https/unpkg.com/million?style=flat-square&label=size&color=674AE3&labelColor=000) ![NPM Version](https://img.shields.io/npm/v/million?style=flat-square&color=674AE3&labelColor=000)
 
-[→ Check out the Million documentation](https://github.com/millionjs/million/wiki)
+[**→ Check out the Million documentation**](https://github.com/millionjs/million/wiki)
 
 ## Installing Million
 
