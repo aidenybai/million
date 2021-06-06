@@ -3,6 +3,13 @@ import { createElement } from './createElement';
 
 const OLD_VNODE_FIELD = '_';
 
+const hooks = (hook: string, vnode: VNode | string): void => {
+  if (typeof vnode === 'string') return;
+  if (!vnode.hooks) return;
+  if (!vnode.hooks[hook]) return;
+  vnode.hooks[hook]();
+};
+
 const patchProps = (el: HTMLElement, oldProps: Props = {}, newProps: Props = {}): void => {
   const oldPropKeys = Object.keys(oldProps);
   const newPropEntries = Object.entries(newProps);
@@ -62,8 +69,11 @@ export const patch = (
   newVNode: VNode | string,
   prevVNode?: VNode | string,
 ): HTMLElement | Text => {
+  hooks('init', <VNode>newVNode);
+
   if (!newVNode) {
     el.remove();
+    hooks('update', newVNode);
     return el;
   }
 
@@ -72,8 +82,11 @@ export const patch = (
 
   const replaceElement = (): HTMLElement | Text => {
     const newElement = createElement(newVNode);
-    if (!hasString && !prevVNode) newElement[OLD_VNODE_FIELD] = newVNode;
+    if (!hasString && !prevVNode) {
+      newElement[OLD_VNODE_FIELD] = newVNode;
+    }
     el.replaceWith(newElement);
+    hooks('update', <VNode>newVNode);
     return newElement;
   };
 
@@ -92,13 +105,16 @@ export const patch = (
     if (oldVNode && !(el instanceof Text)) {
       if (!(<VNode>oldVNode)?.skip) {
         patchProps(el, (<VNode>oldVNode).props, (<VNode>newVNode).props);
+        hooks('update', <VNode>newVNode);
       }
       if ((<VNode>newVNode)?.skipChildren) {
         patchChildren(el, (<VNode>oldVNode).children, (<VNode>newVNode).children);
+        hooks('update', <VNode>newVNode);
       }
     }
   }
 
   if (!prevVNode) el[OLD_VNODE_FIELD] = newVNode;
+
   return el;
 };

@@ -1,10 +1,12 @@
 export type Props = Record<string, string | (() => void)>;
 export type VNodeChildren = (VNode | string)[];
+export type Hooks = Record<string, () => void>;
 
 export interface VNode {
   tag: string;
   props?: Props;
   children?: VNodeChildren;
+  hooks?: Hooks;
   skip?: boolean;
   skipChildren?: boolean;
 }
@@ -54,6 +56,7 @@ export const m = (
   tag: string,
   props?: Props,
   children?: VNodeChildren,
+  hooks?: Hooks,
   skip?: boolean,
   skipChildren?: boolean,
 ): VNode => {
@@ -62,6 +65,7 @@ export const m = (
     tag,
     props,
     children,
+    hooks,
     skip,
     skipChildren,
   };
