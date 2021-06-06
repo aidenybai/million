@@ -3,7 +3,7 @@ import { createElement } from './createElement';
 
 const OLD_VNODE_FIELD = '_';
 
-const diffProps = (el: HTMLElement, oldProps: Props = {}, newProps: Props = {}): void => {
+const patchProps = (el: HTMLElement, oldProps: Props = {}, newProps: Props = {}): void => {
   const oldPropKeys = Object.keys(oldProps);
   const newPropEntries = Object.entries(newProps);
 
@@ -30,7 +30,7 @@ const diffProps = (el: HTMLElement, oldProps: Props = {}, newProps: Props = {}):
   }
 };
 
-const diffChildren = (
+const patchChildren = (
   el: HTMLElement,
   oldVNodeChildren: VNodeChildren | undefined,
   newVNodeChildren: VNodeChildren | undefined,
@@ -91,10 +91,10 @@ export const patch = (
     }
     if (oldVNode && !(el instanceof Text)) {
       if (!(<VNode>oldVNode)?.skip) {
-        diffProps(el, (<VNode>oldVNode).props, (<VNode>newVNode).props);
+        patchProps(el, (<VNode>oldVNode).props, (<VNode>newVNode).props);
       }
       if ((<VNode>newVNode)?.skipChildren) {
-        diffChildren(el, (<VNode>oldVNode).children, (<VNode>newVNode).children);
+        patchChildren(el, (<VNode>oldVNode).children, (<VNode>newVNode).children);
       }
     }
   }
