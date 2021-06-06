@@ -50,6 +50,13 @@ const diffChildren = (
   });
 };
 
+/**
+ * Diffs two Virtual Nodes and modifies the DOM node based on the necessary changes
+ * @param {HTMLElement|Text} el - Target element to be modified
+ * @param {VNode|string} newVNode - Newest Virtual Node
+ * @param {VNode|string} [prevVNode] - Previous Virtual Node
+ * @returns {HTMLElement|Text}
+ */
 export const patch = (
   el: HTMLElement | Text,
   newVNode: VNode | string,

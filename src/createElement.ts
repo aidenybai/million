@@ -1,5 +1,10 @@
 import { VNode } from './m';
 
+/**
+ * Creates an element from a Virtual Node
+ * @param {VNode|string} vnode - Virtual Node to convert to HTMLElement or Text
+ * @returns {HTMLElement|Text}
+ */
 export const createElement = (vnode: VNode | string): HTMLElement | Text => {
   if (typeof vnode === 'string') return document.createTextNode(vnode);
   const el = document.createElement(vnode.tag);
