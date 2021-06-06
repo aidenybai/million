@@ -36,9 +36,9 @@
   "author": "Aiden Bai <hello@aidenybai.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/aidenybai/million/issues"
+    "url": "https://github.com/millionjs/million/issues"
   },
-  "homepage": "https://github.com/aidenybai/million",
+  "homepage": "https://github.com/millionjs/million",
   "engines": {
     "node": ">=14.0.0"
   },
