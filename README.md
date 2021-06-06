@@ -16,7 +16,7 @@ Million doesn't require build tools by default, feel free to just drop a script 
 
 It also integrates well with module bundlers like [Webpack](https://webpack.js.org/) or [Rollup](https://rollupjs.org/), just install via npm.
 
-**Yarn:** `yarn add million`
+**Yarn:** `yarn add million`\
 **NPM:** `npm install million`
 
 ## Hello World Example
