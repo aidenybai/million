@@ -9,6 +9,16 @@ export interface VNode {
   skipChildren?: boolean;
 }
 
+const ns = (tag: string, props: Props = {}, children?: VNodeChildren): void => {
+  props.ns = 'http://www.w3.org/2000/svg';
+  if (children && tag !== 'foreignObject') {
+    children.forEach((child: VNode | string) => {
+      if (typeof child === 'string') return;
+      if (child.props) ns(child.tag, child.props, child.children);
+    });
+  }
+};
+
 /**
  * Generates a style string based on a styleObject
  * @param {Object} styleObject - Object with styles
@@ -46,10 +56,13 @@ export const m = (
   children?: VNodeChildren,
   skip?: boolean,
   skipChildren?: boolean,
-): VNode => ({
-  tag,
-  props,
-  children,
-  skip,
-  skipChildren,
-});
+): VNode => {
+  if (tag === 'svg') ns(tag, props, children);
+  return {
+    tag,
+    props,
+    children,
+    skip,
+    skipChildren,
+  };
+};
