@@ -89,9 +89,9 @@ describe('.m', () => {
     );
   });
 
-  it('should attach ns to props', () => {
+  it('should attach ns to props with children with props', () => {
     const vnode = {
-      tag: 'div',
+      tag: 'svg',
       props: {},
       children: [
         'foo',
@@ -105,7 +105,7 @@ describe('.m', () => {
     };
     ns(vnode.tag, vnode.props, vnode.children);
     expect(vnode).toEqual({
-      tag: 'div',
+      tag: 'svg',
       props: { ns: 'http://www.w3.org/2000/svg' },
       children: [
         'foo',
@@ -115,6 +115,30 @@ describe('.m', () => {
             id: 'app',
             ns: 'http://www.w3.org/2000/svg',
           },
+        },
+      ],
+    });
+  });
+
+  it('should attach ns to props with children without props', () => {
+    const vnode = {
+      tag: 'svg',
+      props: {},
+      children: [
+        'foo',
+        {
+          tag: 'div',
+        },
+      ],
+    };
+    ns(vnode.tag, vnode.props, vnode.children);
+    expect(vnode).toEqual({
+      tag: 'svg',
+      props: { ns: 'http://www.w3.org/2000/svg' },
+      children: [
+        'foo',
+        {
+          tag: 'div',
         },
       ],
     });
