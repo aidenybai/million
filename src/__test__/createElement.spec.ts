@@ -10,8 +10,8 @@ describe('.createElement', () => {
   it('creates HTMLElement from vNode', () => {
     expect(createElement(m('div'))).toEqual(document.createElement('div') as HTMLElement);
 
-    let created = createElement(m('div', { id: 't' }, ['test element']));
-    let manual = document.createElement('div') as HTMLElement;
+    const created = createElement(m('div', { id: 't' }, ['test element']));
+    const manual = document.createElement('div') as HTMLElement;
     manual.id = 't';
     manual.innerHTML = 'test element';
 
