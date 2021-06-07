@@ -2,9 +2,9 @@ export default {
   root: 'dev',
   esbuild: {
     jsxInject: `
-      import { m as millionHyperscript } from '../src/m';
-      const jsx = (tag, props = {}, ...children) => millionHyperscript(tag, props, children);
+      import { m as __million_hyperscript } from '../src/m';
+      const __jsx_factory = (tag, props = {}, ...children) => __million_hyperscript(tag, props, children);
     `,
-    jsxFactory: 'jsx',
+    jsxFactory: '__jsx_factory',
   },
 };
