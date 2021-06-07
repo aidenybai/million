@@ -4,7 +4,7 @@
 
 Current Virtual DOM implementations are inadequate—Ranging from overcomplicated to abandoned, most are unusable without sacrificing raw performance and size. Million aims to fix this, providing a library-agnostic Virtual DOM to serve as the core for Javascript libraries.
 
-[![CI](https://img.shields.io/github/workflow/status/millionjs/million/CI?color=9148B0&labelColor=000&style=flat-square&label=build)](https://img.shields.io/github/workflow/status/millionjs/million)
+[![CI](https://img.shields.io/github/workflow/status/millionjs/million/CI?color=FD9336&labelColor=000&style=flat-square&label=build)](https://img.shields.io/github/workflow/status/millionjs/million)
 ![Code Size](https://badgen.net/badgesize/brotli/https/unpkg.com/million?style=flat-square&label=size&color=A04A9C&labelColor=000) ![NPM Version](https://img.shields.io/npm/v/million?style=flat-square&color=4E82EE&labelColor=000) ![Code Coverage](https://img.shields.io/coveralls/github/millionjs/million?color=3CF5EB&labelColor=000&style=flat-square)
 
 [**→ Check out the Million documentation**](https://github.com/millionjs/million/wiki)
