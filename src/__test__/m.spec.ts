@@ -77,6 +77,7 @@ describe('.m', () => {
 
   it('should create vnode with deeply nested children', () => {
     expect(m('svg').props?.ns).toBeDefined();
+    expect(m('svg', { id: 'app' }).props?.ns).toBeDefined();
   });
 
   it('should create className from class object', () => {
