@@ -11,7 +11,7 @@ export interface VNode {
   skipChildren?: boolean;
 }
 
-const ns = (tag: string, props: Props = {}, children?: VNodeChildren): void => {
+export const ns = (tag: string, props: Props, children?: VNodeChildren): void => {
   props.ns = 'http://www.w3.org/2000/svg';
   if (children && tag !== 'foreignObject') {
     children.forEach((child: VNode | string) => {
@@ -60,7 +60,10 @@ export const m = (
   skip?: boolean,
   skipChildren?: boolean,
 ): VNode => {
-  if (tag === 'svg') ns(tag, props, children);
+  if (tag === 'svg') {
+    if (!props) props = {};
+    ns(tag, props, children);
+  }
   return {
     tag,
     props,
