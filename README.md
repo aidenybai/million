@@ -7,7 +7,7 @@ Current Virtual DOM implementations are inadequate—Ranging from overcomplicate
 [![CI](https://img.shields.io/github/workflow/status/millionjs/million/CI?color=FD9336&labelColor=000&style=flat-square&label=build)](https://img.shields.io/github/workflow/status/millionjs/million)
 ![Code Size](https://badgen.net/badgesize/brotli/https/unpkg.com/million?style=flat-square&label=size&color=A04A9C&labelColor=000) ![NPM Version](https://img.shields.io/npm/v/million?style=flat-square&color=4E82EE&labelColor=000) ![Code Coverage](https://img.shields.io/coveralls/github/millionjs/million?color=3CF5EB&labelColor=000&style=flat-square)
 
-[**→ Check out the Million documentation**](https://github.com/millionjs/million/wiki)
+[**→ Check out the Million documentation for examples and howtos**](https://github.com/millionjs/million/wiki)
 
 ## Installing Million
 
