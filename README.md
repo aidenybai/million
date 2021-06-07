@@ -40,11 +40,15 @@ patch(app, m('div', { id: 'app' }, ['Goodbye World']));
 
 ## Resources & Contributing Back
 
+Looking for the docs? Check the [documentation](https://github.com/millionjs/million/wiki) out.
+
 Have a question about Million? Post it on the [GitHub Discussions](https://github.com/millionjs/million/discussions) and ask the community for help.
 
 Find a bug? Head over to our [issue tracker](https://github.com/millionjs/million/issues) and we'll do our best to help. We love pull requests, too!
 
-[**→ Check out how-to's**](https://github.com/millionjs/million/wiki)
+We expect all Million contributors to abide by the terms of our [Code of Conduct](https://github.com/millionjs/million/blob/main/.github/CODE_OF_CONDUCT.md).
+
+[**→ Start contributing on GitHub**](https://github.com/millionjs/million/blob/main/.github/CONTRIBUTING.md)
 
 ## Acknowledgments
 
