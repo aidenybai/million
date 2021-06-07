@@ -26,14 +26,20 @@ It also integrates well with module bundlers like [Webpack](https://webpack.js.o
 
 Below is an extremely simple implementation of a Hello World page using Million.
 
-```js
-import { m, createElement, patch } from 'million';
+```jsx
+import { createElement, patch } from 'million';
 
-// Initialize app
-const app = createElement(m('div', { id: 'app' }, ['Hello World']));
+// Initialize app component
+const App = (text: string) => {
+  return <div id="app">{text}</div>;
+};
+
+// Create million HTMLElement from App
+const app = createElement(App('Hello World'));
 document.body.appendChild(app);
-// Patch content
-patch(app, m('div', { id: 'app' }, ['Goodbye World']));
+
+// patch app with new text
+patch(app, App('Goodbye World'));
 ```
 
 ## Resources & Contributing Back
