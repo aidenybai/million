@@ -3,11 +3,4 @@ import { patch } from './patch';
 import { createElement } from './createElement';
 const _ = undefined;
 
-export default {
-  _,
-  m,
-  style,
-  className,
-  patch,
-  createElement,
-};
+export { _, m, style, className, patch, createElement };
