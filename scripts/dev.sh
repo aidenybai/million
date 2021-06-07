@@ -8,11 +8,20 @@ index_html_content="<!DOCTYPE html>
     <meta charset=\"utf-8\" />
     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />
     <link rel=\"stylesheet\" href=\"./style.css\">
-    <script type=\"module\" src=\"./script.ts\"></script>
+    <script type=\"module\" src=\"./script.tsx\"></script>
   </head>
   <body></body>
 </html>"
-script_ts_content="import { patch, m, createElement, _ } from '../src/index';"
+script_tsx_content="import { createElement, patch } from '../src/index';
+
+const App = (text: string) => {
+  return <div id=\"app\">{text}</div>;
+};
+
+const app = createElement(App('Hello World'));
+document.body.appendChild(app);
+patch(app, App('Goodbye World'));
+"
 style_css_content="body {
   font-size: 2em;
   display: flex;
@@ -31,7 +40,7 @@ fi
 if [ ! -d dev ]; then
   mkdir dev
   echo "$index_html_content" > dev/index.html
-  echo "$script_ts_content" > dev/script.ts
+  echo "$script_tsx_content" > dev/script.tsx
   echo "$style_css_content" > dev/style.css
   info "Couldn't find an the \`dev\` directory, creating one for you..."
 fi
