@@ -1,19 +1,18 @@
-// import { _ } from '../index';
 import { m } from '../m';
 import { createElement } from '../createElement';
 
 describe('.createElement', () => {
-  it('creates text element', () => {
+  it('should create Text', () => {
     expect(createElement('hello')).toEqual(document.createTextNode('hello'));
   });
 
-  it('creates HTMLElement from vNode', () => {
+  it('should create HTMLElement from vnode', () => {
     expect(createElement(m('div'))).toEqual(document.createElement('div') as HTMLElement);
 
-    const created = createElement(m('div', { id: 't' }, ['test element']));
+    const created = createElement(m('div', { id: 'app' }, ['foo']));
     const manual = document.createElement('div') as HTMLElement;
-    manual.id = 't';
-    manual.innerHTML = 'test element';
+    manual.id = 'app';
+    manual.innerHTML = 'foo';
 
     expect(created).toEqual(manual);
   })
