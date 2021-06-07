@@ -1,17 +1,17 @@
 name: Auto Merge
 
 on:
-  # Trigger on Pull Requests against the master branch.
+  # Trigger on Pull Requests against the main branch.
   pull_request_target:
     branches:
-      - master
+      - main
     types:
       - opened
       - synchronize
-  # Trigger on Pull Requests to the master branch.
+  # Trigger on Pull Requests to the main branch.
   push:
     branches:
-      - master
+      - main
 
 jobs:
   merge-me:
