@@ -1,40 +1,40 @@
-# name: CI
+name: CI
 
-# on:
-#   push:
-#     branches: [master]
-#   pull_request:
-#     branches: [master]
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
 
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
-#     strategy:
-#       matrix:
-#         node-version: [15.x]
-#     steps:
-#       - uses: actions/checkout@v2
-#       - name: Use Node.js ${{ matrix.node-version }}
-#         uses: actions/setup-node@v1
-#         with:
-#           node-version: ${{ matrix.node-version }}
-#       - run: yarn install --frozen-lockfile
-#       - run: yarn lint
-#       - run: yarn test
-#       - run: yarn build
-#       - name: Coveralls Parallel
-#         uses: coverallsapp/github-action@master
-#         with:
-#           github-token: ${{ secrets.github_token }}
-#           flag-name: run-${{ matrix.test_number }}
-#           parallel: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [15.x]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: yarn install --frozen-lockfile
+      - run: yarn lint
+      - run: yarn test
+      - run: yarn build
+      - name: Coveralls Parallel
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.github_token }}
+          flag-name: run-${{ matrix.test_number }}
+          parallel: true
 
-#   finish:
-#     needs: build
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Coveralls Finished
-#         uses: coverallsapp/github-action@master
-#         with:
-#           github-token: ${{ secrets.GITHUB_TOKEN }}
-#           parallel-finished: true
+  finish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Coveralls Finished
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          parallel-finished: true
