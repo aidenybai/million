@@ -3,7 +3,7 @@ import { m } from '../m';
 
 describe('.createElement', () => {
   it('should create Text', () => {
-    expect(createElement('hello')).toEqual(document.createTextNode('hello'));
+    expect(createElement('foo')).toEqual(document.createTextNode('foo'));
   });
 
   it('should create HTMLElement from vnode', () => {
