@@ -1,5 +1,5 @@
-import { m } from '../m';
 import { createElement } from '../createElement';
+import { m } from '../m';
 
 describe('.createElement', () => {
   it('should create Text', () => {
@@ -15,5 +15,5 @@ describe('.createElement', () => {
     manual.innerHTML = 'foo';
 
     expect(created).toEqual(manual);
-  })
+  });
 });

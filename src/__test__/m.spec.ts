@@ -1,5 +1,5 @@
 import { _ } from '../index';
-import { m, style, className, ns } from '../m';
+import { className, m, ns, style } from '../m';
 
 describe('.m', () => {
   it('should create empty vnode with tag', () => {
