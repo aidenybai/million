@@ -7,8 +7,6 @@ export interface VNode {
   props?: Props;
   children?: VNodeChildren;
   hooks?: Hooks;
-  skip?: boolean;
-  skipChildren?: boolean;
 }
 
 export const ns = (tag: string, props: Props, children?: VNodeChildren): void => {
@@ -48,18 +46,9 @@ export const className = (classObject: Record<string, boolean>): string => {
  * @param {string} tag - The tagName of an HTMLElement
  * @param {Props} props - DOM properties and attributes of an HTMLElement
  * @param {VNodeChildren} children - Children of an HTMLElement
- * @param {boolean} skip - Flag to skip diffing of the tag and props of an HTMLElement
- * @param {boolean} skipChildren - Flag to skip the children of the HTMLElement
  * @returns {VNode}
  */
-export const m = (
-  tag: string,
-  props?: Props,
-  children?: VNodeChildren,
-  hooks?: Hooks,
-  skip?: boolean,
-  skipChildren?: boolean,
-): VNode => {
+export const m = (tag: string, props?: Props, children?: VNodeChildren, hooks?: Hooks): VNode => {
   if (tag === 'svg') {
     if (!props) props = {};
     ns(tag, props, children);
@@ -69,7 +58,5 @@ export const m = (
     props,
     children,
     hooks,
-    skip,
-    skipChildren,
   };
 };
