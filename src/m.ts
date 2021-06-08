@@ -1,18 +1,16 @@
-export type Props = Record<string, string | (() => void)>;
-export type VNodeChildren = (VNode | string)[];
-export type Hooks = Record<string, () => void>;
+export type VProps = Record<string, string | (() => void)>;
+export type VNode = VElement | string;
 
-export interface VNode {
+export interface VElement {
   tag: string;
-  props?: Props;
-  children?: VNodeChildren;
-  hooks?: Hooks;
+  props?: VProps;
+  children?: VNode[];
 }
 
-export const ns = (tag: string, props: Props, children?: VNodeChildren): void => {
+export const ns = (tag: string, props: VProps, children?: VNode[]): void => {
   props.ns = 'http://www.w3.org/2000/svg';
   if (children && tag !== 'foreignObject') {
-    children.forEach((child: VNode | string) => {
+    children.forEach((child: VNode) => {
       if (typeof child === 'string') return;
       if (child.props) ns(child.tag, child.props, child.children);
     });
@@ -44,11 +42,11 @@ export const className = (classObject: Record<string, boolean>): string => {
 /**
  * Helper method for creating a Virtual Node
  * @param {string} tag - The tagName of an HTMLElement
- * @param {Props} props - DOM properties and attributes of an HTMLElement
- * @param {VNodeChildren} children - Children of an HTMLElement
- * @returns {VNode}
+ * @param {VProps} props - DOM properties and attributes of an HTMLElement
+ * @param {VNode[]} children - Children of an HTMLElement
+ * @returns {VElement}
  */
-export const m = (tag: string, props?: Props, children?: VNodeChildren, hooks?: Hooks): VNode => {
+export const m = (tag: string, props?: VProps, children?: VNode[]): VElement => {
   if (tag === 'svg') {
     if (!props) props = {};
     ns(tag, props, children);
@@ -57,6 +55,5 @@ export const m = (tag: string, props?: Props, children?: VNodeChildren, hooks?: 
     tag,
     props,
     children,
-    hooks,
   };
 };
