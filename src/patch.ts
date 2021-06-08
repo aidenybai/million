@@ -1,7 +1,7 @@
 import { Props, VNode, VNodeChildren } from './m';
 import { createElement } from './createElement';
 
-const OLD_VNODE_FIELD = '_';
+export const OLD_VNODE_FIELD = '_';
 
 const hooks = (hook: string, vnode: VNode | string): void => {
   if (typeof vnode === 'string') return;
@@ -11,8 +11,8 @@ const hooks = (hook: string, vnode: VNode | string): void => {
 };
 
 const patchProps = (el: HTMLElement, oldProps: Props = {}, newProps: Props = {}): void => {
-  const oldPropKeys = Object.keys(oldProps);
-  const newPropEntries = Object.entries(newProps);
+  const oldPropKeys = Object.keys(oldProps ?? {});
+  const newPropEntries = Object.entries(newProps ?? {});
 
   if (oldPropKeys.length > newPropEntries.length) {
     // Deletion has occured
@@ -53,7 +53,7 @@ const patchChildren = (
     });
   }
   newVNodeChildren.slice(oldVNodeChildren?.length ?? 0).forEach((unresolvedVNodeChild) => {
-    el.appendChild(createElement(unresolvedVNodeChild));
+    el.appendChild(createElement(unresolvedVNodeChild, false));
   });
 };
 
@@ -70,7 +70,6 @@ export const patch = (
   prevVNode?: VNode | string,
 ): HTMLElement | Text => {
   hooks('init', <VNode>newVNode);
-
   if (!newVNode) {
     el.remove();
     hooks('update', newVNode);
@@ -93,9 +92,9 @@ export const patch = (
   if (hasString && oldVNode !== newVNode) return replaceElement();
   if (!hasString) {
     if (
-      !(<VNode>oldVNode)?.skip &&
-      ((<VNode>oldVNode)?.tag !== (<VNode>newVNode)?.tag ||
-        (!(<VNode>newVNode).children && !(<VNode>newVNode).props))
+      (<VNode>oldVNode)?.tag !== (<VNode>newVNode)?.tag &&
+      !(<VNode>newVNode).children &&
+      !(<VNode>newVNode).props
     ) {
       // newVNode has no props/children is replaced because it is generally
       // faster to create a empty HTMLElement rather than iteratively/recursively
@@ -103,14 +102,9 @@ export const patch = (
       return replaceElement();
     }
     if (oldVNode && !(el instanceof Text)) {
-      if (!(<VNode>oldVNode)?.skip) {
-        patchProps(el, (<VNode>oldVNode).props, (<VNode>newVNode).props);
-        hooks('update', <VNode>newVNode);
-      }
-      if ((<VNode>newVNode)?.skipChildren) {
-        patchChildren(el, (<VNode>oldVNode).children, (<VNode>newVNode).children);
-        hooks('update', <VNode>newVNode);
-      }
+      patchProps(el, (<VNode>oldVNode).props, (<VNode>newVNode).props);
+      patchChildren(el, (<VNode>oldVNode).children, (<VNode>newVNode).children);
+      hooks('update', <VNode>newVNode);
     }
   }
 
