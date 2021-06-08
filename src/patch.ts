@@ -89,9 +89,8 @@ export const patch = (
   if (hasString && oldVNode !== newVNode) return replaceElement();
   if (!hasString) {
     if (
-      (<VElement>oldVNode)?.props?.key !== (<VElement>newVNode)?.props?.key &&
-      (<VElement>oldVNode)?.props?.key &&
-      (<VElement>newVNode)?.props?.key
+      (!(<VElement>oldVNode)?.props?.key && !(<VElement>newVNode)?.props?.key) ||
+      (<VElement>oldVNode)?.props?.key !== (<VElement>newVNode)?.props?.key
     ) {
       if (
         (<VElement>oldVNode)?.tag !== (<VElement>newVNode)?.tag &&
