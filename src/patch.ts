@@ -1,7 +1,7 @@
-import { VElement, VProps, VNode } from './m';
 import { createElement } from './createElement';
+import { VElement, VNode, VProps } from './m';
 
-export const OLD_VNODE_FIELD = '_';
+export const OLD_VNODE_FIELD = '__old_vnode';
 
 const patchProps = (el: HTMLElement, oldProps: VProps = {}, newProps: VProps = {}): void => {
   const oldPropKeys = Object.keys(oldProps ?? {});
