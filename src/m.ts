@@ -19,7 +19,7 @@ export const ns = (tag: string, props: VProps, children?: VNode[]): void => {
 
 /**
  * Generates a style string based on a styleObject
- * @param {Object} styleObject - Object with styles
+ * @param {object} styleObject - Object with styles
  * @returns
  */
 export const style = (styleObject: Record<string, string>): string => {
@@ -30,7 +30,7 @@ export const style = (styleObject: Record<string, string>): string => {
 
 /**
  * Generates a className string based on a classObject
- * @param {Object} classObject - Object with classes paired with boolean values to toggle
+ * @param {object} classObject - Object with classes paired with boolean values to toggle
  * @returns {string}
  */
 export const className = (classObject: Record<string, boolean>): string => {
