@@ -14,8 +14,8 @@ describe('.patch', () => {
       createElement(m('div', { id: 'el' }, ['after content'])),
     );
 
-    expect(patch(el, m('div', { id: 'el', class: 'new' }, ['new content']))).toEqual(
-      createElement(m('div', { id: 'el', class: 'new' }, ['new content'])),
+    expect(patch(el, m('div', { id: 'el', className: 'new' }, ['new content']))).toEqual(
+      createElement(m('div', { id: 'el', className: 'new' }, ['new content'])),
     );
   });
 
