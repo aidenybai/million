@@ -1,7 +1,17 @@
 import { createElement } from './createElement';
 import { VElement, VNode, VProps } from './m';
 
-export const OLD_VNODE_FIELD = '__old_vnode';
+export const OLD_VNODE_FIELD = '__m_old_vnode';
+
+const props = ['checked', 'value', 'className', 'style', 'key'];
+
+const setProp = (el: HTMLElement, name: string, value: string | (() => void)): void => {
+  if ((typeof value == 'function' && name.startsWith('on')) || props.includes(name)) {
+    el[name] = value;
+  } else {
+    el.setAttribute(name, <string>value);
+  }
+};
 
 const patchProps = (el: HTMLElement, oldProps: VProps = {}, newProps: VProps = {}): void => {
   const oldPropKeys = Object.keys(oldProps ?? {});
@@ -12,7 +22,7 @@ const patchProps = (el: HTMLElement, oldProps: VProps = {}, newProps: VProps = {
     oldPropKeys.forEach((propName) => {
       const newPropValue = newProps[propName];
       if (newPropValue) {
-        if (newPropValue !== oldProps[propName]) el[propName] = newPropValue;
+        if (newPropValue !== oldProps[propName]) setProp(el, propName, newPropValue);
         return;
       }
       delete el[propName];
@@ -22,10 +32,10 @@ const patchProps = (el: HTMLElement, oldProps: VProps = {}, newProps: VProps = {
     newPropEntries.forEach(([propName, propValue]) => {
       const oldPropValue = oldProps[propName];
       if (oldPropValue) {
-        if (oldPropValue !== oldProps[propName]) el[propName] = propValue;
+        if (oldPropValue !== oldProps[propName]) setProp(el, propName, propValue);
         return;
       }
-      el[propName] = propValue;
+      setProp(el, propName, propValue);
     });
   }
 };
@@ -78,19 +88,21 @@ export const patch = (
 
   if (hasString && oldVNode !== newVNode) return replaceElement();
   if (!hasString) {
-    if (
-      (<VElement>oldVNode)?.tag !== (<VElement>newVNode)?.tag &&
-      !(<VElement>newVNode).children &&
-      !(<VElement>newVNode).props
-    ) {
-      // newVNode has no props/children is replaced because it is generally
-      // faster to create a empty HTMLElement rather than iteratively/recursively
-      // remove props/children
-      return replaceElement();
-    }
-    if (oldVNode && !(el instanceof Text)) {
-      patchProps(el, (<VElement>oldVNode).props, (<VElement>newVNode).props);
-      patchChildren(el, (<VElement>oldVNode).children, (<VElement>newVNode).children);
+    if ((<VElement>oldVNode)?.props?.key === (<VElement>newVNode)?.props?.key) {
+      if (
+        (<VElement>oldVNode)?.tag !== (<VElement>newVNode)?.tag &&
+        !(<VElement>newVNode).children &&
+        !(<VElement>newVNode).props
+      ) {
+        // newVNode has no props/children is replaced because it is generally
+        // faster to create a empty HTMLElement rather than iteratively/recursively
+        // remove props/children
+        return replaceElement();
+      }
+      if (oldVNode && !(el instanceof Text)) {
+        patchProps(el, (<VElement>oldVNode).props, (<VElement>newVNode).props);
+        patchChildren(el, (<VElement>oldVNode).children, (<VElement>newVNode).children);
+      }
     }
   }
 
