@@ -81,9 +81,6 @@ export const patch = (
 
   const replaceElement = (): HTMLElement | Text => {
     const newElement = createElement(newVNode);
-    if (!hasString && !prevVNode) {
-      newElement[OLD_VNODE_FIELD] = newVNode;
-    }
     el.replaceWith(newElement);
     hooks('update', <VNode>newVNode);
     return newElement;
