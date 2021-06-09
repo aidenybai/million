@@ -4,18 +4,18 @@ import { patch } from '../patch';
 
 describe('.patch', () => {
   it('patches element and updates inner text content', () => {
-    const el = createElement(m('div', { id: 'el' }, ['before content']));
+    const el = createElement(m('div', { id: 'el' }, 'before content'));
     document.body.appendChild(el);
 
-    expect(patch(el, m('div', { id: 'el' }, ['after content']))).toEqual(
-      createElement(m('div', { id: 'el' }, ['after content'])),
+    expect(patch(el, m('div', { id: 'el' }, 'after content'))).toEqual(
+      createElement(m('div', { id: 'el' }, 'after content')),
     );
     expect(document.querySelector('#el') as HTMLElement).toEqual(
-      createElement(m('div', { id: 'el' }, ['after content'])),
+      createElement(m('div', { id: 'el' }, 'after content')),
     );
 
-    expect(patch(el, m('div', { id: 'el', className: 'new' }, ['new content']))).toEqual(
-      createElement(m('div', { id: 'el', className: 'new' }, ['new content'])),
+    expect(patch(el, m('div', { id: 'el', className: 'new' }, 'new content'))).toEqual(
+      createElement(m('div', { id: 'el', className: 'new' }, 'new content')),
     );
   });
 
@@ -28,7 +28,7 @@ describe('.patch', () => {
 
   it('patches props', () => {
     const child = m('div', { id: 'child' });
-    const el = createElement(m('div', { id: 'el' }, [child]));
+    const el = createElement(m('div', { id: 'el' }, child));
 
     document.body.appendChild(el);
 
@@ -40,7 +40,7 @@ describe('.patch', () => {
 
     manual.appendChild(manualChild);
 
-    expect(patch(el, m('div', { id: 'el' }, [m('div', { id: 'child' }, ['Hello Child'])]))).toEqual(
+    expect(patch(el, m('div', { id: 'el' }, m('div', { id: 'child' }, 'Hello Child')))).toEqual(
       manual,
     );
   });
