@@ -3,9 +3,9 @@ import { VElement, VNode, VProps } from './m';
 
 export const OLD_VNODE_FIELD = '__m_old_vnode';
 
-const props = ['checked', 'value', 'className', 'style', 'key'];
+const props = ['checked', 'value', 'className', 'style', 'ns', 'key'];
 
-const setProp = (el: HTMLElement, name: string, value: string | (() => void)): void => {
+const setProp = (el: HTMLElement, name: string, value: string | unknown | (() => void)): void => {
   if ((typeof value == 'function' && name.startsWith('on')) || props.includes(name)) {
     el[name] = value;
   } else {
