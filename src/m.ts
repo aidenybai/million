@@ -1,4 +1,4 @@
-export type VProps = Record<string, string | (() => void)>;
+export type VProps = Record<string, string | unknown | (() => void)>;
 export type VNode = VElement | string;
 
 export interface VElement {
@@ -54,6 +54,6 @@ export const m = (tag: string, props?: VProps, ...children: VNode[]): VElement =
   return {
     tag,
     props,
-    children: children.length ? children : undefined,
+    children: children.length ? children.flat().filter((child: VNode) => child) : undefined,
   };
 };
