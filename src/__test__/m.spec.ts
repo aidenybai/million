@@ -11,18 +11,18 @@ describe('.m', () => {
   });
 
   it('should create vnode with tag and one string child', () => {
-    expect(m('div', _, ['foo'])).toEqual({ tag: 'div', children: ['foo'] });
+    expect(m('div', _, 'foo')).toEqual({ tag: 'div', children: ['foo'] });
   });
 
   it('should create vnode with tag and multiple string children', () => {
-    expect(m('div', _, ['foo', 'bar', 'baz'])).toEqual({
+    expect(m('div', _, 'foo', 'bar', 'baz')).toEqual({
       tag: 'div',
       children: ['foo', 'bar', 'baz'],
     });
   });
 
   it('should create vnode with tag and one vnode child', () => {
-    expect(m('div', _, [m('div')])).toEqual({
+    expect(m('div', _, m('div'))).toEqual({
       tag: 'div',
       children: [
         {
@@ -33,7 +33,7 @@ describe('.m', () => {
   });
 
   it('should create vnode with tag and multiple vnode and string children', () => {
-    expect(m('div', _, [m('div'), 'foo', m('div'), 'bar'])).toEqual({
+    expect(m('div', _, m('div'), 'foo', m('div'), 'bar')).toEqual({
       tag: 'div',
       children: [
         {
@@ -49,9 +49,7 @@ describe('.m', () => {
   });
 
   it('should create vnode with deeply nested children', () => {
-    expect(
-      m('div', _, ['foo', m('div', _, ['bar', m('div', _, ['baz', m('div', _, ['boo'])])])]),
-    ).toEqual({
+    expect(m('div', _, 'foo', m('div', _, 'bar', m('div', _, 'baz', m('div', _, 'boo'))))).toEqual({
       tag: 'div',
       children: [
         'foo',
