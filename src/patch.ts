@@ -88,6 +88,7 @@ export const patch = (
 
   if (hasString && oldVNode !== newVNode) return replaceElement();
   if (!hasString) {
+    // Check if (oldVNode|newVNode).props.key exists, then diff them
     if (
       (!(<VElement>oldVNode)?.props?.key && !(<VElement>newVNode)?.props?.key) ||
       (<VElement>oldVNode)?.props?.key !== (<VElement>newVNode)?.props?.key

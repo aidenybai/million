@@ -46,7 +46,7 @@ export const className = (classObject: Record<string, boolean>): string => {
  * @param {VNode[]} children - Children of an HTMLElement
  * @returns {VElement}
  */
-export const m = (tag: string, props?: VProps, children?: VNode[]): VElement => {
+export const m = (tag: string, props?: VProps, ...children: VNode[]): VElement => {
   if (tag === 'svg') {
     if (!props) props = {};
     ns(tag, props, children);
@@ -54,6 +54,6 @@ export const m = (tag: string, props?: VProps, children?: VNode[]): VElement => 
   return {
     tag,
     props,
-    children,
+    children: children.length ? children : undefined,
   };
 };
