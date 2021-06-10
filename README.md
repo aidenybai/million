@@ -51,7 +51,7 @@ Million is [MIT-licensed](LICENSE) open-source software by [Aiden Bai](https://g
 
 Million takes heavy inspiration from [React](https://github.com/facebook/react), and believes in the core philosophies and values behind [Lucia](https://github.com/aidenybai/lucia) and [Inferno](https://github.com/infernojs/inferno). Feel free to check them out if you interested in an alternative library to use.
 
-_Why is it called "Million"? The name originated with the goal of being able to handle [1M+ ops/s for benchmarks](https://github.com/millionjs/million/tree/main/benchmark)_
+_Why is it called "Million"? The name originated with the goal of being able to handle [1M+ ops/sec for benchmarks](https://github.com/millionjs/million/tree/main/benchmark)_
 
 ---
 
