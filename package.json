@@ -2,7 +2,7 @@
   "name": "million",
   "version": "0.0.7",
   "description": "3kb library for tiny web apps",
-  "main": "dist/million.umd.js",
+  "main": "dist/million.js",
   "module": "dist/million.esm.js",
   "browser": "dist/million.min.js",
   "types": "dist/million.d.ts",
