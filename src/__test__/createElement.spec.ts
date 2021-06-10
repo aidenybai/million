@@ -1,6 +1,6 @@
 import { createElement } from '../createElement';
 import { m, VNode, VProps } from '../m';
-import { OLD_VNODE_FIELD } from '../patch';
+import { OLD_VNODE_FIELD } from '..';
 
 const h = (tag: string, props?: VProps, ...children: VNode[]) =>
   m(
