@@ -5,28 +5,28 @@ export const OLD_VNODE_FIELD = '__m_old_vnode';
 
 const patchProps = (el: HTMLElement, oldProps: VProps = {}, newProps: VProps = {}): void => {
   const oldPropKeys = Object.keys(oldProps ?? {});
-  const newPropEntries = Object.entries(newProps ?? {});
+  const newPropKeys = Object.keys(newProps ?? {});
 
-  if (oldPropKeys.length > newPropEntries.length) {
+  if (oldPropKeys.length > newPropKeys.length) {
     // Deletion has occured
-    oldPropKeys.forEach((propName) => {
+    for (const propName of newPropKeys) {
       const newPropValue = newProps[propName];
       if (newPropValue) {
         if (newPropValue !== oldProps[propName]) el[propName] = newPropValue;
         return;
       }
-      delete el[propName];
-    });
+      el[propName] = undefined;
+    }
   } else {
     // Addition/No change/Content modification has occured
-    newPropEntries.forEach(([propName, propValue]) => {
+    for (const propName of newPropKeys) {
       const oldPropValue = oldProps[propName];
       if (oldPropValue) {
-        if (oldPropValue !== oldProps[propName]) el[propName] = propValue;
+        if (oldPropValue !== oldProps[propName]) el[propName] = newProps[propName];
         return;
       }
-      el[propName] = propValue;
-    });
+      el[propName] = newProps[propName];
+    }
   }
 };
 
@@ -35,19 +35,23 @@ const patchChildren = (
   oldVNodeChildren: VNode[] | undefined,
   newVNodeChildren: VNode[] | undefined,
 ): void => {
+  // TODO: Efficient VNode reordering
+
+  const childNodes = el.childNodes;
   if (!newVNodeChildren) {
     // Fastest way to remove all children
     el.textContent = '';
     return;
   }
   if (oldVNodeChildren) {
-    oldVNodeChildren.forEach((oldVChild, i) => {
-      patch(<HTMLElement | Text>el.childNodes[i], newVNodeChildren[i], oldVChild);
-    });
+    for (let i = 0; i < oldVNodeChildren.length; ++i) {
+      patch(<HTMLElement | Text>childNodes[i], newVNodeChildren[i], oldVNodeChildren[i]);
+    }
   }
-  newVNodeChildren.slice(oldVNodeChildren?.length ?? 0).forEach((unresolvedVNodeChild) => {
-    el.appendChild(createElement(unresolvedVNodeChild, false));
-  });
+  const slicedNewVNodeChildren = newVNodeChildren.slice(oldVNodeChildren?.length ?? 0);
+  for (let i = 0; i < slicedNewVNodeChildren.length; ++i) {
+    el.appendChild(createElement(slicedNewVNodeChildren[i], false));
+  }
 };
 
 const replaceElementWithVNode = (el: HTMLElement | Text, newVNode: VNode): HTMLElement | Text => {

@@ -15,7 +15,7 @@ const listRender = (() => {
       },
       fn() {
         children.push(Million.m('div', { key: 'foo' }, [String(Date.now())]));
-        Million.patch(app, Million.m('div', { id: 'app', key: 'foo' }, [...children]));
+        Million.patch(app, Million.m('div', { id: 'app' }, [...children]));
       },
     })
     .add('virtual-dom', {

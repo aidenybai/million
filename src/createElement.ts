@@ -6,23 +6,20 @@ import { OLD_VNODE_FIELD } from './patch';
  * @param {VNode} vnode - Virtual Node to convert to HTMLElement or Text
  * @returns {HTMLElement|Text}
  */
-export const createElement = (
-  vnode: VNode,
-  attachFlag = true,
-): HTMLElement | Text => {
+export const createElement = (vnode: VNode, attachFlag = true): HTMLElement | Text => {
   if (typeof vnode === 'string') return document.createTextNode(vnode);
   const el = document.createElement(vnode.tag);
 
   if (vnode.props) {
-    Object.entries(vnode.props).forEach(([name, value]) => {
-      el[name] = value;
-    });
+    for (const name of Object.keys(vnode.props)) {
+      el[name] = vnode.props[name];
+    }
   }
 
   if (vnode.children) {
-    vnode.children.forEach((child: VNode) => {
-      el.appendChild(createElement(child));
-    });
+    for (let i = 0; i < vnode.children.length; i++) {
+      el.appendChild(createElement(vnode.children[i]));
+    }
   }
 
   if (attachFlag) el[OLD_VNODE_FIELD] = vnode;
