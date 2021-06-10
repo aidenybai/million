@@ -12,7 +12,7 @@ const textInterop = (() => {
         app = el;
       },
       fn() {
-        Million.patch(app, Million.m('div', { id: 'app' }, [String(Date.now())]));
+        Million.patch(app, Million.m('div', { id: 'app' }, [Date.now()]));
       },
     })
     .add('virtual-dom', {
@@ -32,7 +32,7 @@ const textInterop = (() => {
           {
             id: 'app',
           },
-          [String(Date.now())],
+          [Date.now()],
         );
         const patches = virtualDom.diff(app._, vnode);
         virtualDom.patch(app, patches);
@@ -48,7 +48,29 @@ const textInterop = (() => {
         app = el;
       },
       fn() {
-        app.textContent = Date.now();
+        const el = virtualDom.create(
+          virtualDom.h(
+            'div',
+            {
+              id: 'app',
+            },
+            [Date.now()],
+          ),
+        );
+        app.replaceWith(el);
+        app = el;
+      },
+    })
+    .add('baseline', {
+      setup() {
+        document.body.innerHTML = '';
+        const el = document.createElement('div');
+        el.id = 'app';
+        document.body.appendChild(el);
+        app = el;
+      },
+      fn() {
+        app.innerText = Date.now();
       },
     })
     .on('cycle', ({ target }) => {
