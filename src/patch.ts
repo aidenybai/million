@@ -3,19 +3,20 @@ import { VElement, VNode, VProps } from './m';
 
 export const OLD_VNODE_FIELD = '__m_old_vnode';
 
-const patchProps = (el: HTMLElement, oldProps: VProps = {}, newProps: VProps = {}): void => {
+export const patchProps = (el: HTMLElement, oldProps: VProps = {}, newProps: VProps = {}): void => {
   const oldPropKeys = Object.keys(oldProps ?? {});
   const newPropKeys = Object.keys(newProps ?? {});
 
   if (oldPropKeys.length > newPropKeys.length) {
     // Deletion has occured
-    for (const propName of newPropKeys) {
+    for (const propName of oldPropKeys) {
       const newPropValue = newProps[propName];
       if (newPropValue) {
         if (newPropValue !== oldProps[propName]) el[propName] = newPropValue;
         return;
       }
-      el[propName] = undefined;
+      delete el[propName];
+      el.removeAttribute(propName);
     }
   } else {
     // Addition/No change/Content modification has occured
@@ -30,7 +31,7 @@ const patchProps = (el: HTMLElement, oldProps: VProps = {}, newProps: VProps = {
   }
 };
 
-const patchChildren = (
+export const patchChildren = (
   el: HTMLElement,
   oldVNodeChildren: VNode[] | undefined,
   newVNodeChildren: VNode[] | undefined,
