@@ -1,5 +1,5 @@
 import { VNode } from './m';
-import { OLD_VNODE_FIELD } from './patch';
+import { OLD_VNODE_FIELD } from '.';
 
 /**
  * Creates an element from a Virtual Node

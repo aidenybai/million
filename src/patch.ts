@@ -1,13 +1,14 @@
+import { OLD_VNODE_FIELD } from '.';
 import { createElement } from './createElement';
 import { VElement, VNode, VProps } from './m';
 
-export const OLD_VNODE_FIELD = '__m_old_vnode';
-
 export const patchProps = (el: HTMLElement, oldProps: VProps = {}, newProps: VProps = {}): void => {
-  const oldPropKeys = Object.keys(oldProps ?? {});
-  const newPropKeys = Object.keys(newProps ?? {});
+  if (!oldProps && !newProps) return;
 
-  if (oldPropKeys.length > newPropKeys.length) {
+  const oldPropKeys = Object.keys(oldProps);
+  const newPropKeys = Object.keys(newProps);
+
+  if ((newProps && !oldProps) || oldPropKeys.length > newPropKeys.length) {
     // Deletion has occured
     for (const propName of oldPropKeys) {
       const newPropValue = newProps[propName];
@@ -38,7 +39,7 @@ export const patchChildren = (
 ): void => {
   // TODO: Efficient VNode reordering
 
-  const childNodes = el.childNodes;
+  const childNodes = [...el.childNodes];
   if (!newVNodeChildren) {
     // Fastest way to remove all children
     el.textContent = '';
