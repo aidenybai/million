@@ -1,28 +1,35 @@
 import { _ } from '../index';
-import { className, m, ns, style } from '../m';
+import { className, m, ns, style, VProps, VNode } from '../m';
+
+const h = (tag: string, props?: VProps, ...children: VNode[]) =>
+  m(
+    tag,
+    props,
+    children.length ? children.flat().filter((child) => child !== undefined) : undefined,
+  );
 
 describe('.m', () => {
   it('should create empty vnode with tag', () => {
-    expect(m('div')).toEqual({ tag: 'div' });
+    expect(h('div')).toEqual({ tag: 'div' });
   });
 
   it('should create vnode with tag and props', () => {
-    expect(m('div', { id: 'app' })).toEqual({ tag: 'div', props: { id: 'app' } });
+    expect(h('div', { id: 'app' })).toEqual({ tag: 'div', props: { id: 'app' } });
   });
 
   it('should create vnode with tag and one string child', () => {
-    expect(m('div', _, 'foo')).toEqual({ tag: 'div', children: ['foo'] });
+    expect(h('div', _, 'foo')).toEqual({ tag: 'div', children: ['foo'] });
   });
 
   it('should create vnode with tag and multiple string children', () => {
-    expect(m('div', _, 'foo', 'bar', 'baz')).toEqual({
+    expect(h('div', _, 'foo', 'bar', 'baz')).toEqual({
       tag: 'div',
       children: ['foo', 'bar', 'baz'],
     });
   });
 
   it('should create vnode with tag and one vnode child', () => {
-    expect(m('div', _, m('div'))).toEqual({
+    expect(h('div', _, h('div'))).toEqual({
       tag: 'div',
       children: [
         {
@@ -33,7 +40,7 @@ describe('.m', () => {
   });
 
   it('should create vnode with tag and multiple vnode and string children', () => {
-    expect(m('div', _, m('div'), 'foo', m('div'), 'bar')).toEqual({
+    expect(h('div', _, h('div'), 'foo', h('div'), 'bar')).toEqual({
       tag: 'div',
       children: [
         {
@@ -49,7 +56,7 @@ describe('.m', () => {
   });
 
   it('should create vnode with deeply nested children', () => {
-    expect(m('div', _, 'foo', m('div', _, 'bar', m('div', _, 'baz', m('div', _, 'boo'))))).toEqual({
+    expect(h('div', _, 'foo', h('div', _, 'bar', h('div', _, 'baz', h('div', _, 'boo'))))).toEqual({
       tag: 'div',
       children: [
         'foo',
@@ -74,8 +81,8 @@ describe('.m', () => {
   });
 
   it('should attach ns to vnode if svg', () => {
-    expect(m('svg').props?.ns).toBeDefined();
-    expect(m('svg', { id: 'app' }).props?.ns).toBeDefined();
+    expect(h('svg').props?.ns).toBeDefined();
+    expect(h('svg', { id: 'app' }).props?.ns).toBeDefined();
   });
 
   it('should create className from class object', () => {

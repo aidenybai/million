@@ -3,16 +3,6 @@ import { VElement, VNode, VProps } from './m';
 
 export const OLD_VNODE_FIELD = '__m_old_vnode';
 
-const props = ['checked', 'value', 'className', 'style', 'ns', 'key'];
-
-const setProp = (el: HTMLElement, name: string, value: string | unknown | (() => void)): void => {
-  if ((typeof value == 'function' && name.startsWith('on')) || props.includes(name)) {
-    el[name] = value;
-  } else {
-    el.setAttribute(name, <string>value);
-  }
-};
-
 const patchProps = (el: HTMLElement, oldProps: VProps = {}, newProps: VProps = {}): void => {
   const oldPropKeys = Object.keys(oldProps ?? {});
   const newPropEntries = Object.entries(newProps ?? {});
@@ -22,7 +12,7 @@ const patchProps = (el: HTMLElement, oldProps: VProps = {}, newProps: VProps = {
     oldPropKeys.forEach((propName) => {
       const newPropValue = newProps[propName];
       if (newPropValue) {
-        if (newPropValue !== oldProps[propName]) setProp(el, propName, newPropValue);
+        if (newPropValue !== oldProps[propName]) el[propName] = newPropValue;
         return;
       }
       delete el[propName];
@@ -32,10 +22,10 @@ const patchProps = (el: HTMLElement, oldProps: VProps = {}, newProps: VProps = {
     newPropEntries.forEach(([propName, propValue]) => {
       const oldPropValue = oldProps[propName];
       if (oldPropValue) {
-        if (oldPropValue !== oldProps[propName]) setProp(el, propName, propValue);
+        if (oldPropValue !== oldProps[propName]) el[propName] = propValue;
         return;
       }
-      setProp(el, propName, propValue);
+      el[propName] = propValue;
     });
   }
 };
@@ -60,6 +50,12 @@ const patchChildren = (
   });
 };
 
+const replaceElementWithVNode = (el: HTMLElement | Text, newVNode: VNode): HTMLElement | Text => {
+  const newElement = createElement(newVNode);
+  el.replaceWith(newElement);
+  return newElement;
+};
+
 /**
  * Diffs two Virtual Nodes and modifies the DOM node based on the necessary changes
  * @param {HTMLElement|Text} el - Target element to be modified
@@ -80,13 +76,7 @@ export const patch = (
   const oldVNode: VNode | undefined = prevVNode ?? el[OLD_VNODE_FIELD];
   const hasString = typeof oldVNode === 'string' || typeof newVNode === 'string';
 
-  const replaceElement = (): HTMLElement | Text => {
-    const newElement = createElement(newVNode);
-    el.replaceWith(newElement);
-    return newElement;
-  };
-
-  if (hasString && oldVNode !== newVNode) return replaceElement();
+  if (hasString && oldVNode !== newVNode) return replaceElementWithVNode(el, newVNode);
   if (!hasString) {
     // Check if (oldVNode|newVNode).props.key exists, then diff them
     if (
@@ -101,7 +91,7 @@ export const patch = (
         // newVNode has no props/children is replaced because it is generally
         // faster to create a empty HTMLElement rather than iteratively/recursively
         // remove props/children
-        return replaceElement();
+        return replaceElementWithVNode(el, newVNode);
       }
       if (oldVNode && !(el instanceof Text)) {
         patchProps(el, (<VElement>oldVNode).props, (<VElement>newVNode).props);
