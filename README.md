@@ -11,16 +11,11 @@ Current Virtual DOM implementations are inadequate—Ranging from overcomplicate
 
 ## Installing Million
 
-Million doesn't require build tools by default, feel free to just drop a script tag in the head of your webpage. You can access it via the `Million` namespace.
+Million doesn't require build tools by default, but it is highly recommended you use NPM to install.
 
-```html
-<script src="https://unpkg.com/million"></script>
+```sh
+npm install million
 ```
-
-It also integrates well with module bundlers like [Webpack](https://webpack.js.org/) or [Rollup](https://rollupjs.org/), just install via npm.
-
-**Yarn:** `yarn add million`\
-**NPM:** `npm install million`
 
 ## Hello World Example
 
@@ -28,7 +23,6 @@ Below is an extremely simple implementation of a Hello World page using Million.
 
 ```js
 import { m, createElement, patch } from 'million';
-// browser: const { m, createElement, patch } = Million;
 
 // Initialize app
 const app = createElement(m('div', { id: 'app' }, ['Hello World']));
