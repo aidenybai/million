@@ -1,26 +1,25 @@
-const listRender = (() => {
+const conditionalRender = (() => {
   const suite = new Benchmark.Suite();
   let app;
   let output = '';
-  let children = [];
 
   const benchmark = suite
     .add('million', {
       setup() {
-        children = [];
         document.body.innerHTML = '';
         const el = Million.createElement(Million.m('div', { id: 'app' }));
         document.body.appendChild(el);
         app = el;
       },
       fn() {
-        children.push(Million.m('div', { key: 'foo' }, [String(Date.now())]));
-        Million.patch(app, Million.m('div', { id: 'app' }, [...children]));
+        Million.patch(
+          app,
+          Million.m('div', { id: 'app' }, Date.now() % 2 === 0 ? [String(Date.now())] : undefined),
+        );
       },
     })
     .add('virtual-dom', {
       setup() {
-        children = [];
         document.body.innerHTML = '';
         const vnode = virtualDom.h('div', {
           id: 'app',
@@ -31,13 +30,12 @@ const listRender = (() => {
         app = el;
       },
       fn() {
-        children.push(virtualDom.h('div', {}, String(Date.now())));
         const vnode = virtualDom.h(
           'div',
           {
             id: 'app',
           },
-          [...children],
+          Date.now() % 2 === 0 ? [Date.now()] : [],
         );
         const patches = virtualDom.diff(app._, vnode);
         virtualDom.patch(app, patches);
@@ -46,7 +44,6 @@ const listRender = (() => {
     })
     .add('vanilla', {
       setup() {
-        children = [];
         document.body.innerHTML = '';
         const el = document.createElement('div');
         el.id = 'app';
@@ -54,24 +51,21 @@ const listRender = (() => {
         app = el;
       },
       fn() {
-        children.push(virtualDom.h('div', {}, [String(Date.now())]));
         const el = virtualDom.create(
           virtualDom.h(
             'div',
             {
               id: 'app',
             },
-            [...children],
+            Date.now() % 2 === 0 ? [Date.now()] : [],
           ),
         );
-
         app.replaceWith(el);
         app = el;
       },
     })
     .add('baseline', {
       setup() {
-        children = [];
         document.body.innerHTML = '';
         const el = document.createElement('div');
         el.id = 'app';
@@ -79,9 +73,7 @@ const listRender = (() => {
         app = el;
       },
       fn() {
-        const div = document.createElement('div');
-        div.textContent = Date.now();
-        app.appendChild(div);
+        app.innerText = Date.now() % 2 === 0 ? [Date.now()] : null;
       },
     })
     .on('cycle', ({ target }) => {

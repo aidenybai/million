@@ -6,12 +6,15 @@
     <script src="https://cdn.jsdelivr.net/combine/npm/lodash@4.17.21,npm/platform@1.3.6,npm/benchmark@2.1.4"></script>
     <script src="https://cdn.jsdelivr.net/npm/virtual-dom@2.1.1/dist/virtual-dom.min.js"></script>
     <script src="https://unpkg.com/million"></script>
+    <!-- <script src="../dist/million.min.js"></script> -->
     <script src="./text-interop.js"></script>
     <script src="./list-render.js"></script>
+    <script src="./conditional-render.js"></script>
     <title>Million Benchmarks</title>
   </head>
   <body>
-    <button onclick="textInterop()">text-interop</button>
-    <button onclick="listRender()">list-render</button>
+    <button onclick="textInterop()"><code>text-interop</code></button>
+    <button onclick="listRender()"><code>list-render</code></button>
+    <button onclick="conditionalRender()"><code>conditional-render</code></button>
   </body>
 </html>
