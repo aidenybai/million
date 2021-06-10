@@ -5,6 +5,7 @@ export interface VElement {
   tag: string;
   props?: VProps;
   children?: VNode[];
+  key?: string;
 }
 
 export const ns = (tag: string, props: VProps, children?: VNode[]): void => {
@@ -47,13 +48,19 @@ export const className = (classObject: Record<string, boolean>): string => {
  * @returns {VElement}
  */
 export const m = (tag: string, props?: VProps, children?: VNode[]): VElement => {
+  let key;
   if (tag === 'svg') {
     if (!props) props = {};
     ns(tag, props, children);
+  }
+  if (props?.key) {
+    key = <string | undefined>props.key;
+    props.key = undefined;
   }
   return {
     tag,
     props,
     children,
+    key,
   };
 };
