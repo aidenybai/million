@@ -103,9 +103,7 @@ describe('.m', () => {
         'foo',
         {
           tag: 'div',
-          props: {
-            id: 'app',
-          },
+          props: {},
         },
       ],
     };
@@ -118,7 +116,6 @@ describe('.m', () => {
         {
           tag: 'div',
           props: {
-            id: 'app',
             ns: 'http://www.w3.org/2000/svg',
           },
         },
@@ -147,6 +144,20 @@ describe('.m', () => {
           tag: 'div',
         },
       ],
+    });
+  });
+
+  it('should move key to distinct property', () => {
+    expect(h('div', { key: 'foo' }, 'foo', h('div'))).toEqual({
+      tag: 'div',
+      props: {},
+      children: [
+        'foo',
+        {
+          tag: 'div',
+        },
+      ],
+      key: 'foo',
     });
   });
 });

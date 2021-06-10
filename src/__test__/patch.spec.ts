@@ -1,6 +1,6 @@
 import { createElement } from '../createElement';
 import { m, VProps, VNode } from '../m';
-import { patch } from '../patch';
+import { patch, patchChildren, patchProps } from '../patch';
 
 const h = (tag: string, props?: VProps, ...children: VNode[]) =>
   m(
@@ -10,45 +10,43 @@ const h = (tag: string, props?: VProps, ...children: VNode[]) =>
   );
 
 describe('.patch', () => {
-  it('patches element and updates inner text content', () => {
-    const el = createElement(h('div', { id: 'el' }, 'before content'));
+  it('should patch element with text as children', () => {
+    const el = createElement(h('div', { id: 'el' }, 'foo'));
     document.body.appendChild(el);
 
-    expect(patch(el, h('div', { id: 'el' }, 'after content'))).toEqual(
-      createElement(h('div', { id: 'el' }, 'after content')),
+    expect(patch(el, h('div', { id: 'el' }, 'bar'))).toEqual(
+      createElement(h('div', { id: 'el' }, 'bar')),
     );
-    expect(document.querySelector('#el') as HTMLElement).toEqual(
-      createElement(h('div', { id: 'el' }, 'after content')),
+    expect(<HTMLElement>document.querySelector('#el')).toEqual(
+      createElement(h('div', { id: 'el' }, 'bar')),
+    );
+    expect(patch(el, h('div', { id: 'el', class: 'new' }, 'baz'))).toEqual(
+      createElement(h('div', { id: 'el', class: 'new' }, 'baz')),
     );
 
-    expect(patch(el, h('div', { id: 'el', className: 'new' }, 'new content'))).toEqual(
-      createElement(h('div', { id: 'el', className: 'new' }, 'new content')),
-    );
+    document.body.textContent = '';
   });
 
-  it('patches text', () => {
-    const el = createElement('hello world');
+  it('should patch text', () => {
+    const el = createElement('foo');
     document.body.appendChild(el);
 
-    expect(patch(el, 'goodbye world').textContent).toEqual('goodbye world');
+    expect(patch(el, 'bar').textContent).toEqual('bar');
   });
 
-  it('patches props', () => {
-    const child = h('div', { id: 'child' });
-    const el = createElement(h('div', { id: 'el' }, child));
+  it('should patch props', () => {
+    const el = document.createElement('div');
+    el.id = 'app';
 
-    document.body.appendChild(el);
+    patchProps(<HTMLElement>el, { id: 'app' }, { title: 'bar', id: 'app' });
 
-    const manual = document.createElement('div');
-    manual.id = 'el';
-    const manualChild = document.createElement('div');
-    manualChild.id = 'child';
-    manualChild.innerHTML = 'Hello Child';
+    expect(el.id).toEqual('app');
+    expect(el.title).toEqual('bar');
 
-    manual.appendChild(manualChild);
+    patchProps(<HTMLElement>el, { title: 'bar', id: 'app' });
 
-    expect(patch(el, h('div', { id: 'el' }, h('div', { id: 'child' }, 'Hello Child')))).toEqual(
-      manual,
-    );
+    expect(el.id).toEqual('');
+    expect(el.title).toEqual('');
   });
+  patchChildren;
 });

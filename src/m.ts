@@ -55,7 +55,7 @@ export const m = (tag: string, props?: VProps, children?: VNode[]): VElement => 
   }
   if (props?.key) {
     key = <string | undefined>props.key;
-    props.key = undefined;
+    delete props.key;
   }
   return {
     tag,
