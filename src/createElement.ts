@@ -2,8 +2,8 @@ import { VNode } from './m';
 import { OLD_VNODE_FIELD } from '.';
 
 /**
- * Creates an element from a Virtual Node
- * @param {VNode} vnode - Virtual Node to convert to HTMLElement or Text
+ * Creates an element from a VNode
+ * @param {VNode} vnode - VNode to convert to HTMLElement or Text
  * @returns {HTMLElement|Text}
  */
 export const createElement = (vnode: VNode, attachFlag = true): HTMLElement | Text => {

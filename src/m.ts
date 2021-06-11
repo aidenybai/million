@@ -8,6 +8,12 @@ export interface VElement {
   key?: string;
 }
 
+/**
+ * Attaches ns props to svg element
+ * @param {string} tag - Tag of VNode
+ * @param {VProps} props - Props of VNode
+ * @param {VProps=} children - Children of VNode
+ */
 export const ns = (tag: string, props: VProps, children?: VNode[]): void => {
   props.ns = 'http://www.w3.org/2000/svg';
   if (children && tag !== 'foreignObject') {
@@ -41,7 +47,7 @@ export const className = (classObject: Record<string, boolean>): string => {
 };
 
 /**
- * Helper method for creating a Virtual Node
+ * Helper method for creating a VNode
  * @param {string} tag - The tagName of an HTMLElement
  * @param {VProps} props - DOM properties and attributes of an HTMLElement
  * @param {VNode[]} children - Children of an HTMLElement
@@ -56,6 +62,12 @@ export const m = (tag: string, props?: VProps, children?: VNode[]): VElement => 
   if (props?.key) {
     key = <string | undefined>props.key;
     delete props.key;
+  }
+  if (typeof props?.className === 'object') {
+    props.className = className(<Record<string, boolean>>props.className);
+  }
+  if (typeof props?.style === 'object') {
+    props.style = style(<Record<string, string>>props.className);
   }
   return {
     tag,
