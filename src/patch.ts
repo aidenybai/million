@@ -2,6 +2,12 @@ import { OLD_VNODE_FIELD } from '.';
 import { createElement } from './createElement';
 import { VElement, VNode, VProps } from './m';
 
+/**
+ * Diffs two VNode props and modifies the DOM node based on the necessary changes
+ * @param {HTMLElement} el - Target element to be modified
+ * @param {VProps} oldProps - Old VNode props
+ * @param {VProps} newProps - New VNode props
+ */
 export const patchProps = (el: HTMLElement, oldProps: VProps = {}, newProps: VProps = {}): void => {
   if (!oldProps && !newProps) return;
 
@@ -32,6 +38,12 @@ export const patchProps = (el: HTMLElement, oldProps: VProps = {}, newProps: VPr
   }
 };
 
+/**
+ * Diffs two VNode children and modifies the DOM node based on the necessary changes
+ * @param {HTMLElement} el - Target element to be modified
+ * @param {VNode[]|undefined} oldVNodeChildren - Old VNode children
+ * @param {VNode[]|undefined} newVNodeChildren - New VNode children
+ */
 export const patchChildren = (
   el: HTMLElement,
   oldVNodeChildren: VNode[] | undefined,
@@ -63,10 +75,10 @@ const replaceElementWithVNode = (el: HTMLElement | Text, newVNode: VNode): HTMLE
 };
 
 /**
- * Diffs two Virtual Nodes and modifies the DOM node based on the necessary changes
+ * Diffs two VNodes and modifies the DOM node based on the necessary changes
  * @param {HTMLElement|Text} el - Target element to be modified
- * @param {VNode} newVNode - Newest Virtual Node
- * @param {VNode=} prevVNode - Previous Virtual Node
+ * @param {VNode} newVNode - New VNode
+ * @param {VNode=} prevVNode - Previous VNode
  * @returns {HTMLElement|Text}
  */
 export const patch = (
