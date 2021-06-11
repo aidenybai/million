@@ -7,7 +7,7 @@ Current Virtual DOM implementations are inadequate—Ranging from overcomplicate
 [![CI](https://img.shields.io/github/workflow/status/millionjs/million/CI?color=FD9336&labelColor=000&style=flat-square&label=build)](https://img.shields.io/github/workflow/status/millionjs/million)
 ![Code Size](https://badgen.net/badgesize/brotli/https/unpkg.com/million?style=flat-square&label=size&color=A04A9C&labelColor=000) [![NPM Version](https://img.shields.io/npm/v/million?style=flat-square&color=4E82EE&labelColor=000)](https://www.npmjs.com/package/million) ![Code Coverage](https://img.shields.io/coveralls/github/millionjs/million?color=3CF5EB&labelColor=000&style=flat-square)
 
-[**→ Check out the Million documentation**](https://github.com/millionjs/million/wiki)
+[**→ Check out the Million documentation**](https://million.js.org)
 
 ## Installing Million
 
@@ -35,7 +35,7 @@ patch(app, m('div', { id: 'app' }, ['Goodbye World']));
 
 ## Resources & Contributing Back
 
-Looking for the docs? Check the [documentation](https://github.com/millionjs/million/wiki) out.
+Looking for the docs? Check the [documentation](https://million.js.org) out.
 
 Have a question about Million? Post it on the [GitHub Discussions](https://github.com/millionjs/million/discussions) and ask the community for help.
 
@@ -51,7 +51,7 @@ Million is [MIT-licensed](LICENSE) open-source software by [Aiden Bai](https://g
 
 Million takes heavy inspiration from [React](https://github.com/facebook/react), and believes in the core philosophies and values behind [Lucia](https://github.com/aidenybai/lucia) and [Inferno](https://github.com/infernojs/inferno). Feel free to check them out if you interested in an alternative library to use.
 
-_Why is it called "Million"? The name originated with the goal of being able to handle [1M+ ops/sec for benchmarks](https://github.com/millionjs/million/tree/main/benchmark)_
+_Why is it called "Million"? The name originated with the goal of being able to handle [1M+ ops/sec for benchmarks](https://github.com/millionjs/million/tree/main/benchmark#readme)_
 
 ---
 
