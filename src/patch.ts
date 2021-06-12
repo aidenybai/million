@@ -18,6 +18,7 @@ export const patchProps = (el: HTMLElement, oldProps: VProps = {}, newProps: VPr
     // Deletion has occured
     for (const propName of oldPropKeys) {
       const newPropValue = newProps[propName];
+      /* istanbul ignore if */
       if (newPropValue) {
         if (newPropValue !== oldProps[propName]) el[propName] = newPropValue;
         return;
@@ -52,6 +53,7 @@ export const patchChildren = (
   // TODO: Efficient VNode reordering
 
   const childNodes = [...el.childNodes];
+  /* istanbul ignore if */
   if (!newVNodeChildren) {
     // Fastest way to remove all children
     el.textContent = '';
@@ -100,6 +102,7 @@ export const patch = (
       (!(<VElement>oldVNode)?.key && !(<VElement>newVNode)?.key) ||
       (<VElement>oldVNode)?.key !== (<VElement>newVNode)?.key
     ) {
+      /* istanbul ignore if */
       if (
         (<VElement>oldVNode)?.tag !== (<VElement>newVNode)?.tag &&
         !(<VElement>newVNode).children &&
