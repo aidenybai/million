@@ -9,7 +9,6 @@
   "scripts": {
     "dev": "sh scripts/dev.sh",
     "build": "sh scripts/build.sh",
-    "docs": "typedoc src/index.ts",
     "lint": "eslint src/**",
     "cleanup": "prettier --write src --parser typescript",
     "test": "jest --silent --runInBand",
@@ -69,7 +68,6 @@
     "ts-jest": "^26.4.2",
     "ts-node": "^9.1.1",
     "tslib": "^2.2.0",
-    "typedoc": "^0.20.36",
     "typescript": "^4.2.4",
     "vite": "^2.3.4"
   }
