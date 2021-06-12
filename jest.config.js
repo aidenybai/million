@@ -4,4 +4,8 @@ module.exports = {
   transform: {
     '.(ts)': 'ts-jest',
   },
+  collectCoverageFrom: [
+    "<rootDir>/src/**/*.ts",
+    '!src/**/index.*',
+  ]
 };
