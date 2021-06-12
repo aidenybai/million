@@ -67,7 +67,7 @@ export const m = (tag: string, props?: VProps, children?: VNode[]): VElement => 
     props.className = className(<Record<string, boolean>>props.className);
   }
   if (typeof props?.style === 'object') {
-    props.style = style(<Record<string, string>>props.className);
+    props.style = style(<Record<string, string>>props.style);
   }
   return {
     tag,
