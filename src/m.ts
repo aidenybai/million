@@ -6,6 +6,13 @@ export interface VElement {
   props?: VProps;
   children?: VNode[];
   key?: string;
+  flag?: VFlags;
+}
+
+export enum VFlags {
+  NO_CHILDREN = 0,
+  ONLY_TEXT_CHILDREN = 1,
+  ONLY_KEYED_VNODE_CHILDREN = 2,
 }
 
 /**
@@ -53,26 +60,17 @@ export const className = (classObject: Record<string, boolean>): string => {
  * @param {VNode[]} children - Children of an HTMLElement
  * @returns {VElement}
  */
-export const m = (tag: string, props?: VProps, children?: VNode[]): VElement => {
+export const m = (tag: string, props?: VProps, children?: VNode[], flag?: VFlags): VElement => {
   let key;
-  if (tag === 'svg') {
-    if (!props) props = {};
-    ns(tag, props, children);
-  }
   if (props?.key) {
     key = <string | undefined>props.key;
     delete props.key;
-  }
-  if (typeof props?.className === 'object') {
-    props.className = className(<Record<string, boolean>>props.className);
-  }
-  if (typeof props?.style === 'object') {
-    props.style = style(<Record<string, string>>props.className);
   }
   return {
     tag,
     props,
     children,
     key,
+    flag,
   };
 };

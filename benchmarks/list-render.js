@@ -14,8 +14,8 @@ const listRender = (() => {
         app = el;
       },
       fn() {
-        children.push(Million.m('div', { key: 'foo' }, [String(Date.now())]));
-        Million.patch(app, Million.m('div', { id: 'app' }, [...children]));
+        children.push(String(Date.now()));
+        Million.patch(app, Million.m('div', { id: 'app' }, [...children], 2));
       },
     })
     .add('virtual-dom', {
@@ -31,7 +31,7 @@ const listRender = (() => {
         app = el;
       },
       fn() {
-        children.push(virtualDom.h('div', {}, String(Date.now())));
+        children.push(String(Date.now()));
         const vnode = virtualDom.h(
           'div',
           {
@@ -54,7 +54,7 @@ const listRender = (() => {
         app = el;
       },
       fn() {
-        children.push(virtualDom.h('div', {}, [String(Date.now())]));
+        children.push(String(Date.now()));
         const el = virtualDom.create(
           virtualDom.h(
             'div',
@@ -79,9 +79,7 @@ const listRender = (() => {
         app = el;
       },
       fn() {
-        const div = document.createElement('div');
-        div.textContent = Date.now();
-        app.appendChild(div);
+        div.innerText += Date.now();
       },
     })
     .on('cycle', ({ target }) => {
