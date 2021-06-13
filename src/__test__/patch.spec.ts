@@ -1,3 +1,4 @@
+import { _ } from '..';
 import { createElement } from '../createElement';
 import { m, VNode, VProps } from '../m';
 import { patch, patchChildren, patchProps } from '../patch';
@@ -32,6 +33,14 @@ describe('.patch', () => {
     document.body.appendChild(el);
 
     expect(patch(el, 'bar').textContent).toEqual('bar');
+  });
+
+  it('should remove textContent if no children', () => {
+    const el = createElement('foo');
+    document.body.appendChild(el);
+    el.textContent = 'foo';
+
+    expect(patch(el, m('div', _, _, 0)).textContent).toEqual('');
   });
 
   it('should patch props', () => {
