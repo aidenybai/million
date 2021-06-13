@@ -17,10 +17,15 @@ export enum VFlags {
 
 /**
  * Attaches ns props to svg element
- * @param {string} tag - Tag of VNode
- * @param {VProps} props - Props of VNode
- * @param {VProps=} children - Children of VNode
+ * @param {VElement} vnode - SVG VNode
+ * @returns {VElement}
  */
+export const svg = (vnode: VElement): VElement => {
+  if (!vnode.props) vnode.props = {};
+  ns(vnode.tag, vnode.props, vnode.children);
+  return vnode;
+};
+
 export const ns = (tag: string, props: VProps, children?: VNode[]): void => {
   props.ns = 'http://www.w3.org/2000/svg';
   if (children && tag !== 'foreignObject') {
