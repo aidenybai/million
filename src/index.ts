@@ -1,5 +1,5 @@
 import { createElement } from './createElement';
-import { className, m, style, ns } from './m';
+import { className, m, style, svg, VFlags } from './m';
 import { patch, patchProps, patchChildren } from './patch';
 
 /**
@@ -16,10 +16,11 @@ export {
   className,
   m,
   style,
-  ns,
+  svg,
   patch,
   patchProps,
   patchChildren,
   _,
   OLD_VNODE_FIELD,
+  VFlags,
 };
