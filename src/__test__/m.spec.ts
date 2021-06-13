@@ -80,11 +80,6 @@ describe('.m', () => {
     });
   });
 
-  it('should attach ns to vnode if svg', () => {
-    expect(h('svg').props?.ns).toBeDefined();
-    expect(h('svg', { id: 'app' }).props?.ns).toBeDefined();
-  });
-
   it('should create className from class object', () => {
     expect(className({ class1: true, class2: false, class3: true })).toEqual('class1 class3');
   });

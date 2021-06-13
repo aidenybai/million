@@ -1,6 +1,6 @@
 import { OLD_VNODE_FIELD } from '.';
 import { createElement } from './createElement';
-import { VElement, VNode, VProps } from './m';
+import { VElement, VNode, VProps, VFlags } from './m';
 
 /**
  * Diffs two VNode props and modifies the DOM node based on the necessary changes
@@ -47,31 +47,34 @@ export const patchProps = (el: HTMLElement, oldProps: VProps = {}, newProps: VPr
 export const patchChildren = (
   el: HTMLElement,
   oldVNodeChildren: VNode[] | undefined,
-  newVNodeChildren: VNode[] | undefined,
+  newVNodeChildren: VNode[],
+  isKeyed: boolean,
 ): void => {
-  // TODO: Efficient VNode reordering
-
   const childNodes = [...el.childNodes];
-  if (!newVNodeChildren) {
-    // Fastest way to remove all children
-    el.textContent = '';
-    return;
-  }
-  if (oldVNodeChildren) {
-    for (let i = 0; i < oldVNodeChildren.length; ++i) {
-      patch(<HTMLElement | Text>childNodes[i], newVNodeChildren[i], oldVNodeChildren[i]);
+  if (isKeyed) {
+    // TODO: Efficient VNode reordering
+  } else {
+    if (oldVNodeChildren) {
+      for (let i = 0; i < oldVNodeChildren.length; ++i) {
+        patch(<HTMLElement | Text>childNodes[i], newVNodeChildren[i], oldVNodeChildren[i]);
+      }
     }
-  }
-  const slicedNewVNodeChildren = newVNodeChildren.slice(oldVNodeChildren?.length ?? 0);
-  for (let i = 0; i < slicedNewVNodeChildren.length; ++i) {
-    el.appendChild(createElement(slicedNewVNodeChildren[i], false));
+    const slicedNewVNodeChildren = newVNodeChildren.slice(oldVNodeChildren?.length ?? 0);
+    for (let i = 0; i < slicedNewVNodeChildren.length; ++i) {
+      el.appendChild(createElement(slicedNewVNodeChildren[i], false));
+    }
   }
 };
 
 const replaceElementWithVNode = (el: HTMLElement | Text, newVNode: VNode): HTMLElement | Text => {
-  const newElement = createElement(newVNode);
-  el.replaceWith(newElement);
-  return newElement;
+  if (typeof newVNode === 'string') {
+    el.textContent = newVNode;
+    return el;
+  } else {
+    const newElement = createElement(newVNode);
+    el.replaceWith(newElement);
+    return newElement;
+  }
 };
 
 /**
@@ -112,7 +115,24 @@ export const patch = (
       }
       if (oldVNode && !(el instanceof Text)) {
         patchProps(el, (<VElement>oldVNode).props, (<VElement>newVNode).props);
-        patchChildren(el, (<VElement>oldVNode).children, (<VElement>newVNode).children);
+
+        const flag = <VFlags>(<VElement>newVNode).flag;
+        switch (flag) {
+          case VFlags.NO_CHILDREN:
+            el.textContent = '';
+            break;
+          case VFlags.ONLY_TEXT_CHILDREN:
+            el.textContent = <string>(<VElement>newVNode).children!.join('');
+            break;
+          default:
+            patchChildren(
+              el,
+              (<VElement>oldVNode).children,
+              (<VElement>newVNode).children!,
+              flag === VFlags.ONLY_KEYED_VNODE_CHILDREN,
+            );
+            break;
+        }
       }
     }
   }

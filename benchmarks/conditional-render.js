@@ -57,7 +57,8 @@ const conditionalRender = (() => {
             {
               id: 'app',
             },
-            Date.now() % 2 === 0 ? [Date.now()] : [],
+            Date.now() % 2 === 0 ? [String(Date.now())] : [],
+            1,
           ),
         );
         app.replaceWith(el);
