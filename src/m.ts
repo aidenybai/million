@@ -20,6 +20,7 @@ export enum VFlags {
  * @param {VElement} vnode - SVG VNode
  * @returns {VElement}
  */
+/* istanbul ignore next */
 export const svg = (vnode: VElement): VElement => {
   if (!vnode.props) vnode.props = {};
   ns(vnode.tag, vnode.props, vnode.children);
