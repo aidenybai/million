@@ -80,6 +80,37 @@ describe('.m', () => {
     });
   });
 
+  it('should attach ns to vnode if svg', () => {
+    expect(h('svg').props?.ns).toBeDefined();
+    expect(h('svg', { id: 'app' }).props?.ns).toBeDefined();
+  });
+
+  it('should create a tag with className from class object', () => {
+    expect(h('div', {className: { class1: true, class2: false, class3: true }})).toEqual(
+      {
+        tag: 'div',
+        props: {
+          className: "class1 class3",
+        },
+        children: undefined,
+        key: undefined
+      }
+    );
+  });
+  
+  it('should create a tag with style object', () => {
+    expect(h('div', {style: { color: 'tomato', margin: '1rem' }})).toEqual(
+      {
+        tag: 'div',
+        props: {
+          style: "color:tomato;margin:1rem",
+        },
+        children: undefined,
+        key: undefined
+      }
+    );
+  });
+
   it('should create className from class object', () => {
     expect(className({ class1: true, class2: false, class3: true })).toEqual('class1 class3');
   });

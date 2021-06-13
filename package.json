@@ -34,7 +34,10 @@
     "ui",
     "browser"
   ],
-  "author": "Aiden Bai <hello@aidenybai.com>",
+  "contributors": [
+    "Aiden Bai <hello@aidenybai.com>",
+    "William Lane <williamlane923@gmail.com>"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/millionjs/million/issues"
