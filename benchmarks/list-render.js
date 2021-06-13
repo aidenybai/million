@@ -15,7 +15,7 @@ const listRender = (() => {
       },
       fn() {
         children.push(String(Date.now()));
-        Million.patch(app, Million.m('div', { id: 'app' }, [...children], 2));
+        Million.patch(app, Million.m('div', { id: 'app' }, [...children], 1));
       },
     })
     .add('virtual-dom', {
@@ -79,7 +79,7 @@ const listRender = (() => {
         app = el;
       },
       fn() {
-        div.innerText += Date.now();
+        app.textContent += Date.now();
       },
     })
     .on('cycle', ({ target }) => {

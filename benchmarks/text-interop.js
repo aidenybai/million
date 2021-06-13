@@ -70,7 +70,7 @@ const textInterop = (() => {
         app = el;
       },
       fn() {
-        app.innerText = Date.now();
+        app.textContent = Date.now();
       },
     })
     .on('cycle', ({ target }) => {

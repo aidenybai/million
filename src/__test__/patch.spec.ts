@@ -56,14 +56,14 @@ describe('.patch', () => {
     (<Text[]>virtualArrayToDOMNodes(['foo', 'bar', 'baz'])).forEach((textNode: Text) => {
       el.appendChild(textNode);
     });
-    patchChildren(<HTMLElement>el, ['foo', 'bar', 'baz'], ['foo'], false);
+    patchChildren(<HTMLElement>el, ['foo', 'bar', 'baz'], ['foo']);
 
     expect([...el.childNodes]).toEqual(virtualArrayToDOMNodes(['foo']));
 
-    patchChildren(<HTMLElement>el, ['foo'], ['foo', 'bar', 'baz'], false);
+    patchChildren(<HTMLElement>el, ['foo'], ['foo', 'bar', 'baz']);
 
     expect([...el.childNodes]).toEqual(virtualArrayToDOMNodes(['foo', 'bar', 'baz']));
-    patchChildren(<HTMLElement>el, ['foo', 'bar', 'baz'], ['foo', m('div'), 'baz'], false);
+    patchChildren(<HTMLElement>el, ['foo', 'bar', 'baz'], ['foo', m('div'), 'baz']);
 
     expect([...el.childNodes]).toEqual(virtualArrayToDOMNodes(['foo', m('div'), 'baz']));
   });
