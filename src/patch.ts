@@ -8,6 +8,7 @@ import { VElement, VNode, VProps, VFlags } from './m';
  * @param {VProps} oldProps - Old VNode props
  * @param {VProps} newProps - New VNode props
  */
+/* istanbul ignore next */
 export const patchProps = (el: HTMLElement, oldProps: VProps = {}, newProps: VProps = {}): void => {
   if (!oldProps && !newProps) return;
 
@@ -51,11 +52,13 @@ export const patchChildren = (
   newVNodeChildren: VNode[],
 ): void => {
   const childNodes = [...el.childNodes];
+  /* istanbul ignore next */
   if (oldVNodeChildren) {
     for (let i = 0; i < oldVNodeChildren.length; ++i) {
       patch(<HTMLElement | Text>childNodes[i], newVNodeChildren[i], oldVNodeChildren[i]);
     }
   }
+  /* istanbul ignore next */
   const slicedNewVNodeChildren = newVNodeChildren.slice(oldVNodeChildren?.length ?? 0);
   for (let i = 0; i < slicedNewVNodeChildren.length; ++i) {
     el.appendChild(createElement(slicedNewVNodeChildren[i], false));
