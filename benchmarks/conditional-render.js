@@ -12,9 +12,11 @@ const conditionalRender = (() => {
         app = el;
       },
       fn() {
+        const timestamp = Date.now();
+        const hasChildren = timestamp % 2 === 0;
         Million.patch(
           app,
-          Million.m('div', { id: 'app' }, Date.now() % 2 === 0 ? [String(Date.now())] : undefined),
+          Million.m('div', { id: 'app' }, hasChildren ? [String(timestamp)] : undefined, hasChildren ? 1 : 0),
         );
       },
     })
@@ -57,7 +59,7 @@ const conditionalRender = (() => {
             {
               id: 'app',
             },
-            Date.now() % 2 === 0 ? [Date.now()] : [],
+            Date.now() % 2 === 0 ? [String(Date.now())] : [],
           ),
         );
         app.replaceWith(el);
@@ -73,7 +75,7 @@ const conditionalRender = (() => {
         app = el;
       },
       fn() {
-        app.innerText = Date.now() % 2 === 0 ? [Date.now()] : null;
+        app.textContent = Date.now() % 2 === 0 ? [Date.now()] : null;
       },
     })
     .on('cycle', ({ target }) => {
