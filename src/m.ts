@@ -12,7 +12,7 @@ export interface VElement {
 export enum VFlags {
   NO_CHILDREN = 0,
   ONLY_TEXT_CHILDREN = 1,
-  ONLY_KEYED_VNODE_CHILDREN = 2,
+  ANY_CHILDREN = 2,
 }
 
 /**

@@ -48,21 +48,16 @@ export const patchChildren = (
   el: HTMLElement,
   oldVNodeChildren: VNode[] | undefined,
   newVNodeChildren: VNode[],
-  isKeyed: boolean,
 ): void => {
   const childNodes = [...el.childNodes];
-  if (isKeyed) {
-    // TODO: Efficient VNode reordering
-  } else {
-    if (oldVNodeChildren) {
-      for (let i = 0; i < oldVNodeChildren.length; ++i) {
-        patch(<HTMLElement | Text>childNodes[i], newVNodeChildren[i], oldVNodeChildren[i]);
-      }
+  if (oldVNodeChildren) {
+    for (let i = 0; i < oldVNodeChildren.length; ++i) {
+      patch(<HTMLElement | Text>childNodes[i], newVNodeChildren[i], oldVNodeChildren[i]);
     }
-    const slicedNewVNodeChildren = newVNodeChildren.slice(oldVNodeChildren?.length ?? 0);
-    for (let i = 0; i < slicedNewVNodeChildren.length; ++i) {
-      el.appendChild(createElement(slicedNewVNodeChildren[i], false));
-    }
+  }
+  const slicedNewVNodeChildren = newVNodeChildren.slice(oldVNodeChildren?.length ?? 0);
+  for (let i = 0; i < slicedNewVNodeChildren.length; ++i) {
+    el.appendChild(createElement(slicedNewVNodeChildren[i], false));
   }
 };
 
@@ -116,8 +111,7 @@ export const patch = (
       if (oldVNode && !(el instanceof Text)) {
         patchProps(el, (<VElement>oldVNode).props, (<VElement>newVNode).props);
 
-        const flag = <VFlags>(<VElement>newVNode).flag;
-        switch (flag) {
+        switch (<VFlags>(<VElement>newVNode).flag) {
           case VFlags.NO_CHILDREN:
             el.textContent = '';
             break;
@@ -125,12 +119,7 @@ export const patch = (
             el.textContent = <string>(<VElement>newVNode).children!.join('');
             break;
           default:
-            patchChildren(
-              el,
-              (<VElement>oldVNode).children,
-              (<VElement>newVNode).children!,
-              flag === VFlags.ONLY_KEYED_VNODE_CHILDREN,
-            );
+            patchChildren(el, (<VElement>oldVNode).children, (<VElement>newVNode).children!);
             break;
         }
       }
