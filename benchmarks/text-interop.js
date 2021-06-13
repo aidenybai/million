@@ -12,7 +12,7 @@ const textInterop = (() => {
         app = el;
       },
       fn() {
-        Million.patch(app, Million.m('div', { id: 'app' }, [Date.now()]));
+        Million.patch(app, Million.m('div', { id: 'app' }, [Date.now()], 1));
       },
     })
     .add('virtual-dom', {
@@ -70,7 +70,7 @@ const textInterop = (() => {
         app = el;
       },
       fn() {
-        app.innerText = Date.now();
+        app.textContent = Date.now();
       },
     })
     .on('cycle', ({ target }) => {
