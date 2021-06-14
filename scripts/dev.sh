@@ -7,6 +7,7 @@ index_html_content="<!DOCTYPE html>
   <head>
     <meta charset=\"utf-8\" />
     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />
+    <title>million - demo</title>
     <link rel=\"stylesheet\" href=\"./style.css\">
     <script type=\"module\" src=\"./script.tsx\"></script>
   </head>
@@ -20,7 +21,10 @@ const App = (text: string) => {
 
 const app = createElement(App('Hello World'));
 document.body.appendChild(app);
-patch(app, App('Goodbye World'));
+
+setTimeout(() => {
+  patch(app, App('Goodbye World'));
+}, 1000);
 "
 style_css_content="body {
   font-size: 2em;
