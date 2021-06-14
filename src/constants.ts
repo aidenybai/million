@@ -3,4 +3,4 @@
  */
 const OLD_VNODE_FIELD = '__m_old_vnode';
 
-export { OLD_VNODE_FIELD }
+export { OLD_VNODE_FIELD };

@@ -1,6 +1,6 @@
 import { OLD_VNODE_FIELD } from './constants';
 import { createElement } from './createElement';
-import { VElement, VFlags, VNode, VProps } from "./structs";
+import { VElement, VFlags, VNode, VProps } from './structs';
 
 /**
  * Diffs two VNode props and modifies the DOM node based on the necessary changes
@@ -24,7 +24,7 @@ export const patchProps = (el: HTMLElement, oldProps: VProps = {}, newProps: VPr
       }
       delete el[propName];
       el.removeAttribute(propName);
-    })
+    });
   } else {
     // Addition/No change/Content modification has occured
     [...newPropKeys].forEach((propName) => {
@@ -34,7 +34,7 @@ export const patchProps = (el: HTMLElement, oldProps: VProps = {}, newProps: VPr
         return;
       }
       el[propName] = newProps[propName];
-    })
+    });
   }
 };
 
