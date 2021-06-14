@@ -1,15 +1,6 @@
 import { createElement } from './createElement';
-import { className, m, style, svg, VFlags } from './m';
-import { patch, patchProps, patchChildren } from './patch';
-
-/**
- * Placeholder for undefined
- */
-const _ = undefined;
-/**
- * Field on DOM node that stores the previous VNode
- */
-const OLD_VNODE_FIELD = '__m_old_vnode';
+import { className, m, style, svg } from './m';
+import { patch, patchChildren, patchProps } from './patch';
 
 export {
   createElement,
@@ -20,7 +11,4 @@ export {
   patch,
   patchProps,
   patchChildren,
-  _,
-  OLD_VNODE_FIELD,
-  VFlags,
 };
