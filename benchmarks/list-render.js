@@ -1,14 +1,14 @@
 const listRender = (() => {
   const suite = new Benchmark.Suite();
   let app;
-  let output = '';
+  let output = '<b>list-render:</b><br />';
   let children = [];
 
   const benchmark = suite
     .add('million', {
       setup() {
         children = [];
-        document.body.innerHTML = '';
+        document.body.innerHTML = '<b>list-render</b>: Running <code>million</code> benchmarks... (Check console for realtime results)';
         const el = Million.createElement(Million.m('div', { id: 'app' }));
         document.body.appendChild(el);
         app = el;
@@ -21,7 +21,7 @@ const listRender = (() => {
     .add('virtual-dom', {
       setup() {
         children = [];
-        document.body.innerHTML = '';
+        document.body.innerHTML = '<b>list-render</b>: Running <code>virtual-dom</code> benchmarks... (Check console for realtime results)';
         const vnode = virtualDom.h('div', {
           id: 'app',
         });
@@ -47,7 +47,7 @@ const listRender = (() => {
     .add('vanilla', {
       setup() {
         children = [];
-        document.body.innerHTML = '';
+        document.body.innerHTML = '<b>list-render</b>: Running <code>vanilla</code> benchmarks... (Check console for realtime results)';
         const el = document.createElement('div');
         el.id = 'app';
         document.body.appendChild(el);
@@ -72,7 +72,7 @@ const listRender = (() => {
     .add('baseline', {
       setup() {
         children = [];
-        document.body.innerHTML = '';
+        document.body.innerHTML = '<b>list-render</b>: Running <code>baseline</code> benchmarks... (Check console for realtime results)';
         const el = document.createElement('div');
         el.id = 'app';
         document.body.appendChild(el);
@@ -84,13 +84,14 @@ const listRender = (() => {
     })
     .on('cycle', ({ target }) => {
       console.log(String(target));
-      output += `${String(target)}\n`;
+      output += `${String(target)}<br />`;
     })
     .on('complete', () => {
-      const message = `Fastest is ${benchmark.filter('fastest').map('name')}`;
+      const message = `<i>Fastest is <b>${benchmark.filter('fastest').map('name').join(', ')}</b></i>`;
       console.log(message);
-      output += `${message}\n`;
-      document.body.innerText = output;
+      output += `${message}<br /><br />`;
+      output += `<button onclick="window.location.reload()">Reload</button><br />`;
+      document.body.innerHTML = output;
     });
 
   return () => benchmark.run({ async: true });
