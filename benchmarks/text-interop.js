@@ -1,12 +1,12 @@
 const textInterop = (() => {
   const suite = new Benchmark.Suite();
   let app;
-  let output = '';
+  let output = '<b>text-interop:</b><br />';
 
   const benchmark = suite
     .add('million', {
       setup() {
-        document.body.innerHTML = '';
+        document.body.innerHTML = '<b>text-interop</b>: Running <code>million</code> benchmarks... (Check console for realtime results)';
         const el = Million.createElement(Million.m('div', { id: 'app' }));
         document.body.appendChild(el);
         app = el;
@@ -17,7 +17,7 @@ const textInterop = (() => {
     })
     .add('virtual-dom', {
       setup() {
-        document.body.innerHTML = '';
+        document.body.innerHTML = '<b>text-interop</b>: Running <code>virtual-dom</code> benchmarks... (Check console for realtime results)';
         const vnode = virtualDom.h('div', {
           id: 'app',
         });
@@ -41,7 +41,7 @@ const textInterop = (() => {
     })
     .add('vanilla', {
       setup() {
-        document.body.innerHTML = '';
+        document.body.innerHTML = '<b>text-interop</b>: Running <code>vanilla</code> benchmarks... (Check console for realtime results)';
         const el = document.createElement('div');
         el.id = 'app';
         document.body.appendChild(el);
@@ -63,7 +63,7 @@ const textInterop = (() => {
     })
     .add('baseline', {
       setup() {
-        document.body.innerHTML = '';
+        document.body.innerHTML = '<b>text-interop</b>: Running <code>baseline</code> benchmarks... (Check console for realtime results)';
         const el = document.createElement('div');
         el.id = 'app';
         document.body.appendChild(el);
@@ -75,13 +75,14 @@ const textInterop = (() => {
     })
     .on('cycle', ({ target }) => {
       console.log(String(target));
-      output += `${String(target)}\n`;
+      output += `${String(target)}<br />`;
     })
     .on('complete', () => {
-      const message = `Fastest is ${benchmark.filter('fastest').map('name')}`;
+      const message = `<i>Fastest is <b>${benchmark.filter('fastest').map('name').join(', ')}</b></i>`;
       console.log(message);
-      output += `${message}\n`;
-      document.body.innerText = output;
+      output += `${message}<br /><br />`;
+      output += `<button onclick="window.location.reload()">Reload</button><br />`;
+      document.body.innerHTML = output;
     });
 
   return () => benchmark.run({ async: true });
