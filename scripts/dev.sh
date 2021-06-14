@@ -13,17 +13,15 @@ index_html_content="<!DOCTYPE html>
   </head>
   <body></body>
 </html>"
-script_tsx_content="import { createElement, patch } from '../src/index';
+script_tsx_content="import { m, createElement, patch } from '../src/index';
 
-const App = (text: string) => {
-  return <div id=\"app\">{text}</div>;
-};
-
-const app = createElement(App('Hello World'));
+// Initialize app
+const app = createElement(m('div', { id: 'app' }, ['Hello World']));
 document.body.appendChild(app);
 
 setTimeout(() => {
-  patch(app, App('Goodbye World'));
+  // Patch content
+  patch(app, m('div', { id: 'app' }, ['Goodbye World']));
 }, 1000);
 "
 style_css_content="body {

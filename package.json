@@ -1,6 +1,6 @@
 {
   "name": "million",
-  "version": "0.0.8",
+  "version": "0.0.10",
   "description": "3kb library for tiny web apps",
   "main": "dist/million.js",
   "module": "dist/million.esm.js",
@@ -34,7 +34,10 @@
     "ui",
     "browser"
   ],
-  "author": "Aiden Bai <hello@aidenybai.com>",
+  "contributors": [
+    "Aiden Bai <hello@aidenybai.com>",
+    "William Lane <williamlane923@gmail.com>"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/millionjs/million/issues"

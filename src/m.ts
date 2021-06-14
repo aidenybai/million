@@ -6,14 +6,27 @@ export interface VElement {
   props?: VProps;
   children?: VNode[];
   key?: string;
+  flag?: VFlags;
+}
+
+export enum VFlags {
+  NO_CHILDREN = 0,
+  ONLY_TEXT_CHILDREN = 1,
+  ANY_CHILDREN = 2,
 }
 
 /**
  * Attaches ns props to svg element
- * @param {string} tag - Tag of VNode
- * @param {VProps} props - Props of VNode
- * @param {VProps=} children - Children of VNode
+ * @param {VElement} vnode - SVG VNode
+ * @returns {VElement}
  */
+/* istanbul ignore next */
+export const svg = (vnode: VElement): VElement => {
+  if (!vnode.props) vnode.props = {};
+  ns(vnode.tag, vnode.props, vnode.children);
+  return vnode;
+};
+
 export const ns = (tag: string, props: VProps, children?: VNode[]): void => {
   props.ns = 'http://www.w3.org/2000/svg';
   if (children && tag !== 'foreignObject') {
@@ -53,26 +66,17 @@ export const className = (classObject: Record<string, boolean>): string => {
  * @param {VNode[]} children - Children of an HTMLElement
  * @returns {VElement}
  */
-export const m = (tag: string, props?: VProps, children?: VNode[]): VElement => {
+export const m = (tag: string, props?: VProps, children?: VNode[], flag?: VFlags): VElement => {
   let key;
-  if (tag === 'svg') {
-    if (!props) props = {};
-    ns(tag, props, children);
-  }
   if (props?.key) {
     key = <string | undefined>props.key;
     delete props.key;
-  }
-  if (typeof props?.className === 'object') {
-    props.className = className(<Record<string, boolean>>props.className);
-  }
-  if (typeof props?.style === 'object') {
-    props.style = style(<Record<string, string>>props.style);
   }
   return {
     tag,
     props,
     children,
     key,
+    flag,
   };
 };
