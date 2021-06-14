@@ -1,7 +1,7 @@
-import { _ } from '..';
 import { createElement } from '../createElement';
-import { m, VNode, VProps } from '../m';
+import { m } from '../m';
 import { patch, patchChildren, patchProps } from '../patch';
+import { VNode, VProps } from '../structs';
 
 const h = (tag: string, props?: VProps, ...children: VNode[]) =>
   m(
@@ -40,7 +40,7 @@ describe('.patch', () => {
     document.body.appendChild(el);
     el.textContent = 'foo';
 
-    expect(patch(el, m('div', _, _, 0)).textContent).toEqual('');
+    expect(patch(el, m('div', undefined, undefined, 0)).textContent).toEqual('');
   });
 
   it('should patch props', () => {
