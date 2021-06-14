@@ -7,6 +7,7 @@ index_html_content="<!DOCTYPE html>
   <head>
     <meta charset=\"utf-8\" />
     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />
+    <title>million - demo</title>
     <link rel=\"stylesheet\" href=\"./style.css\">
     <script type=\"module\" src=\"./script.tsx\"></script>
   </head>
@@ -17,8 +18,11 @@ script_tsx_content="import { m, createElement, patch } from '../src/index';
 // Initialize app
 const app = createElement(m('div', { id: 'app' }, ['Hello World']));
 document.body.appendChild(app);
-// Patch content
-patch(app, m('div', { id: 'app' }, ['Goodbye World']));
+
+setTimeout(() => {
+  // Patch content
+  patch(app, m('div', { id: 'app' }, ['Goodbye World']));
+}, 1000);
 "
 style_css_content="body {
   font-size: 2em;
