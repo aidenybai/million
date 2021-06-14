@@ -7,5 +7,7 @@ module.exports = {
   collectCoverageFrom: [
     "<rootDir>/src/**/*.ts",
     '!src/**/index.*',
+    '!src/**/constants.ts',
+    '!src/**/structs.ts',
   ]
 };
