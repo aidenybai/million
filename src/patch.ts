@@ -9,14 +9,12 @@ import { VElement, VNode, VProps } from './m';
  * @param {VProps} newProps - New VNode props
  */
 export const patchProps = (el: HTMLElement, oldProps: VProps = {}, newProps: VProps = {}): void => {
-  if (!oldProps && !newProps) return;
-
   const oldPropKeys = Object.keys(oldProps);
   const newPropKeys = Object.keys(newProps);
 
   if ((newProps && !oldProps) || oldPropKeys.length > newPropKeys.length) {
     // Deletion has occured
-    for (const propName of oldPropKeys) {
+    [...oldPropKeys].forEach((propName) => {
       const newPropValue = newProps[propName];
       /* istanbul ignore if */
       if (newPropValue) {
@@ -25,17 +23,17 @@ export const patchProps = (el: HTMLElement, oldProps: VProps = {}, newProps: VPr
       }
       delete el[propName];
       el.removeAttribute(propName);
-    }
+    })
   } else {
     // Addition/No change/Content modification has occured
-    for (const propName of newPropKeys) {
+    [...newPropKeys].forEach((propName) => {
       const oldPropValue = oldProps[propName];
-      if (oldPropValue) {
-        if (oldPropValue !== oldProps[propName]) el[propName] = newProps[propName];
+      if (oldPropValue && !newProps[propName]) {
+        el[propName] = oldPropValue;
         return;
       }
       el[propName] = newProps[propName];
-    }
+    })
   }
 };
 
