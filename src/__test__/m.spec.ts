@@ -1,5 +1,5 @@
-import { _ } from '../index';
-import { className, m, ns, style, VProps, VNode } from '../m';
+import { className, m, ns, style } from '../m';
+import { VNode, VProps } from '../structs';
 
 const h = (tag: string, props?: VProps, ...children: VNode[]) =>
   m(
@@ -18,18 +18,18 @@ describe('.m', () => {
   });
 
   it('should create vnode with tag and one string child', () => {
-    expect(h('div', _, 'foo')).toEqual({ tag: 'div', children: ['foo'] });
+    expect(h('div', undefined, 'foo')).toEqual({ tag: 'div', children: ['foo'] });
   });
 
   it('should create vnode with tag and multiple string children', () => {
-    expect(h('div', _, 'foo', 'bar', 'baz')).toEqual({
+    expect(h('div', undefined, 'foo', 'bar', 'baz')).toEqual({
       tag: 'div',
       children: ['foo', 'bar', 'baz'],
     });
   });
 
   it('should create vnode with tag and one vnode child', () => {
-    expect(h('div', _, h('div'))).toEqual({
+    expect(h('div', undefined, h('div'))).toEqual({
       tag: 'div',
       children: [
         {
@@ -40,7 +40,7 @@ describe('.m', () => {
   });
 
   it('should create vnode with tag and multiple vnode and string children', () => {
-    expect(h('div', _, h('div'), 'foo', h('div'), 'bar')).toEqual({
+    expect(h('div', undefined, h('div'), 'foo', h('div'), 'bar')).toEqual({
       tag: 'div',
       children: [
         {
@@ -56,7 +56,7 @@ describe('.m', () => {
   });
 
   it('should create vnode with deeply nested children', () => {
-    expect(h('div', _, 'foo', h('div', _, 'bar', h('div', _, 'baz', h('div', _, 'boo'))))).toEqual({
+    expect(h('div', undefined, 'foo', h('div', undefined, 'bar', h('div', undefined, 'baz', h('div', undefined, 'boo'))))).toEqual({
       tag: 'div',
       children: [
         'foo',
