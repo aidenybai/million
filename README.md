@@ -31,7 +31,7 @@ document.body.appendChild(app);
 patch(app, m('div', { id: 'app' }, ['Goodbye World']));
 ```
 
-[**→ Check out more examples**](https://github.com/millionjs/million/wiki)
+[**→ Check out more examples**](https://million.js.org)
 
 ## Resources & Contributing Back
 
