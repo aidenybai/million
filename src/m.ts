@@ -1,4 +1,4 @@
-import { VElement, VFlags, VNode, VProps } from "./structs";
+import { VElement, VFlags, VNode, VProps } from './structs';
 
 /**
  * Attaches ns props to svg element

@@ -56,7 +56,14 @@ describe('.m', () => {
   });
 
   it('should create vnode with deeply nested children', () => {
-    expect(h('div', undefined, 'foo', h('div', undefined, 'bar', h('div', undefined, 'baz', h('div', undefined, 'boo'))))).toEqual({
+    expect(
+      h(
+        'div',
+        undefined,
+        'foo',
+        h('div', undefined, 'bar', h('div', undefined, 'baz', h('div', undefined, 'boo'))),
+      ),
+    ).toEqual({
       tag: 'div',
       children: [
         'foo',
