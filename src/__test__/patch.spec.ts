@@ -58,6 +58,24 @@ describe('.patch', () => {
     expect(el.title).toEqual('');
   });
 
+  it('should keep old props and add new ones', () => {
+    const el = document.createElement('div');
+    el.id = 'app';
+
+    patchProps(<HTMLElement>el, { id: 'app' }, { title: 'bar', id: 'app' });
+
+    expect(el.id).toEqual('app');
+    expect(el.title).toEqual('bar');
+
+    patchProps(<HTMLElement>el, { title: 'bar', id: 'app', lang: 'pt', spellcheck: false }, { title: 'foo', id: '', lang: '', hidden: true});
+
+    expect(el.id).toEqual('app'); // keeped
+    expect(el.lang).toEqual('pt'); // keeped
+    expect(el.title).toEqual('foo'); // updated
+    expect(el.hidden).toEqual(true);  // setted
+    expect(el.spellcheck).toBeFalsy(); // removed
+  });
+
   it('should patch children', () => {
     const virtualArrayToDOMNodes = (children: (string | VNode)[]): (HTMLElement | Text)[] =>
       children.map((child: string | VNode) => createElement(child));
