@@ -60,23 +60,30 @@ describe('.patch', () => {
 
   it('should keep old props and add new ones', () => {
     const el = document.createElement('div');
+    const props = { title: 'bar', id: 'app', hidden: false };
     el.id = 'app';
 
-    patchProps(<HTMLElement>el, { id: 'app' }, { title: 'bar', id: 'app' });
+    patchProps(<HTMLDivElement>el, { id: 'app' }, props);
 
     expect(el.id).toEqual('app');
     expect(el.title).toEqual('bar');
+    expect(el.hidden).toEqual(false);
+
+    const func = () => void(0);
 
     patchProps(
-      <HTMLElement>el,
-      { title: 'bar', id: 'app' },
-      { title: 'foo', id: 'app1', lang: 'pt', hidden: true },
+      <HTMLDivElement>el,
+      { ...props, lang: 'pt', spellcheck: true },
+      { ...props, id: 'new-app', hidden: true, translate: false, addEventListener: func },
     );
 
-    expect(el.id).toEqual('app1');
-    expect(el.lang).toEqual('pt');
-    expect(el.title).toEqual('foo');
-    expect(el.hidden).toEqual(true);
+    expect(el.id).toEqual('new-app'); // updated
+    expect(el.lang).toBeFalsy(); // removed
+    expect(el.title).toEqual('bar'); // keeped
+    expect(el.hidden).toEqual(true); // updated
+    expect(el.translate).toEqual(false); // created
+    expect(el.spellcheck).toBeFalsy(); // removed
+    expect(typeof el.addEventListener).toBe('function'); // created
   });
 
   it('should patch children', () => {
