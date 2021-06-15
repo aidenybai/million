@@ -69,15 +69,14 @@ describe('.patch', () => {
 
     patchProps(
       <HTMLElement>el,
-      { title: 'bar', id: 'app', lang: 'pt', spellcheck: false },
-      { title: 'foo', id: '', lang: '', hidden: true },
+      { title: 'bar', id: 'app' },
+      { title: 'foo', id: 'app1', lang: 'pt', hidden: true },
     );
 
-    expect(el.id).toEqual('app'); // keeped
-    expect(el.lang).toEqual('pt'); // keeped
-    expect(el.title).toEqual('foo'); // updated
-    expect(el.hidden).toEqual(true); // setted
-    expect(el.spellcheck).toBeFalsy(); // removed
+    expect(el.id).toEqual('app1');
+    expect(el.lang).toEqual('pt');
+    expect(el.title).toEqual('foo');
+    expect(el.hidden).toEqual(true);
   });
 
   it('should patch children', () => {

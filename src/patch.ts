@@ -13,9 +13,9 @@ export const patchProps = (el: HTMLElement, oldProps: VProps = {}, newProps: VPr
   const oldPropKeys = Object.keys(oldProps);
   const newPropKeys = Object.keys(newProps);
 
-  if ((newProps && !oldProps) || oldPropKeys.length > newPropKeys.length) {
+  if (oldPropKeys.length > newPropKeys.length) {
     // Deletion has occured
-    [...oldPropKeys].forEach((propName) => {
+    for (const propName of oldPropKeys) {
       const newPropValue = newProps[propName];
       /* istanbul ignore if */
       if (newPropValue) {
@@ -24,17 +24,17 @@ export const patchProps = (el: HTMLElement, oldProps: VProps = {}, newProps: VPr
       }
       delete el[propName];
       el.removeAttribute(propName);
-    });
+    }
   } else {
     // Addition/No change/Content modification has occured
-    [...newPropKeys].forEach((propName) => {
+    for (const propName of newPropKeys) {
       const oldPropValue = oldProps[propName];
-      if (oldPropValue && !newProps[propName]) {
-        el[propName] = oldPropValue;
-        return;
-      }
-      el[propName] = newProps[propName];
-    });
+      const newPropValue = newProps[propName];
+
+      if (oldPropValue) {
+        if (oldPropValue !== newPropValue) el[propName] = newPropValue;
+      } else el[propName] = newPropValue;
+    }
   }
 };
 
