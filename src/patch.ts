@@ -10,30 +10,21 @@ import { VElement, VFlags, VNode, VProps } from './structs';
  */
 /* istanbul ignore next */
 export const patchProps = (el: HTMLElement, oldProps: VProps = {}, newProps: VProps = {}): void => {
-  const oldPropKeys = Object.keys(oldProps);
-  const newPropKeys = Object.keys(newProps);
-
-  if (oldPropKeys.length > newPropKeys.length) {
-    // Deletion has occured
-    for (const propName of oldPropKeys) {
-      const newPropValue = newProps[propName];
-      /* istanbul ignore if */
-      if (newPropValue) {
-        if (newPropValue !== oldProps[propName]) el[propName] = newPropValue;
-        return;
-      }
-      delete el[propName];
-      el.removeAttribute(propName);
+  const cache = [];
+  for (const oldPropName of Object.keys(oldProps)) {
+    const newPropValue = newProps[oldPropName];
+    if (newPropValue) {
+      el[oldPropName] = newPropValue;
+      cache.push(oldPropName);
+    } else {
+      el.removeAttribute(oldPropName);
+      delete el[oldPropName];
     }
-  } else {
-    // Addition/No change/Content modification has occured
-    for (const propName of newPropKeys) {
-      const oldPropValue = oldProps[propName];
-      const newPropValue = newProps[propName];
+  }
 
-      if (oldPropValue) {
-        if (oldPropValue !== newPropValue) el[propName] = newPropValue;
-      } else el[propName] = newPropValue;
+  for (const newPropName of Object.keys(newProps)) {
+    if (!cache.includes(newPropName)) {
+      el[newPropName] = newProps[newPropName];
     }
   }
 };
