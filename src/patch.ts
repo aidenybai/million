@@ -9,7 +9,7 @@ import { VElement, VFlags, VNode, VProps } from './structs';
  * @param {VProps} newProps - New VNode props
  */
 /* istanbul ignore next */
-export const patchProps = (el: HTMLElement, oldProps: VProps = {}, newProps: VProps = {}): void => {
+export const patchProps = (el: HTMLElement, oldProps: VProps, newProps: VProps): void => {
   const cache = [];
   for (const oldPropName of Object.keys(oldProps)) {
     const newPropValue = newProps[oldPropName];
@@ -103,7 +103,7 @@ export const patch = (
         return replaceElementWithVNode(el, newVNode);
       }
       if (oldVNode && !(el instanceof Text)) {
-        patchProps(el, (<VElement>oldVNode).props, (<VElement>newVNode).props);
+        patchProps(el, (<VElement>oldVNode).props || {}, (<VElement>newVNode).props || {});
 
         /* istanbul ignore next */
         switch (<VFlags>(<VElement>newVNode).flag) {
