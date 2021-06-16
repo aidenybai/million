@@ -69,12 +69,15 @@ describe('.patch', () => {
     expect(el.title).toEqual('bar');
     expect(el.hidden).toEqual(false);
 
-    const func = () => void(0);
+    const func = () => void 0;
+
+    el.lang = 'pt';
+    el.spellcheck = true;
 
     patchProps(
       <HTMLDivElement>el,
       { ...props, lang: 'pt', spellcheck: true },
-      { ...props, id: 'new-app', hidden: true, translate: false, addEventListener: func },
+      { ...props, id: 'new-app', hidden: true, translate: false, onclick: func },
     );
 
     expect(el.id).toEqual('new-app'); // updated
@@ -83,7 +86,7 @@ describe('.patch', () => {
     expect(el.hidden).toEqual(true); // updated
     expect(el.translate).toEqual(false); // created
     expect(el.spellcheck).toBeFalsy(); // removed
-    expect(typeof el.addEventListener).toBe('function'); // created
+    expect(typeof el.onclick).toBe('function'); // created
   });
 
   it('should patch children', () => {
