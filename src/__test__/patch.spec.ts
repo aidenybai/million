@@ -52,7 +52,7 @@ describe('.patch', () => {
     expect(el.id).toEqual('app');
     expect(el.title).toEqual('bar');
 
-    patchProps(<HTMLElement>el, { title: 'bar', id: 'app' });
+    patchProps(<HTMLElement>el, { title: 'bar', id: 'app' }, {});
 
     expect(el.id).toEqual('');
     expect(el.title).toEqual('');
