@@ -5,7 +5,6 @@ import { VElement, VFlags, VNode, VProps } from './structs';
  * @param {VElement} vnode - SVG VNode
  * @returns {VElement}
  */
-/* istanbul ignore next */
 export const svg = (vnode: VElement): VElement => {
   if (!vnode.props) vnode.props = {};
   ns(vnode.tag, vnode.props, vnode.children);
@@ -47,8 +46,9 @@ export const className = (classObject: Record<string, boolean>): string => {
 /**
  * Helper method for creating a VNode
  * @param {string} tag - The tagName of an HTMLElement
- * @param {VProps} props - DOM properties and attributes of an HTMLElement
- * @param {VNode[]} children - Children of an HTMLElement
+ * @param {VProps=} props - DOM properties and attributes of an HTMLElement
+ * @param {VNode[]=} children - Children of an HTMLElement
+ * @param {VFlags=} flag - Compiler flag for VNode
  * @returns {VElement}
  */
 export const m = (tag: string, props?: VProps, children?: VNode[], flag?: VFlags): VElement => {
