@@ -54,12 +54,16 @@ export default suite('./src/index.ts', [
     format: 'cjs',
   }),
   unit({
-    file: './dist/million.js',
+    file: './dist/million.umd.js',
     format: 'umd',
   }),
   unit({
+    file: './dist/million.js',
+    format: 'iife',
+  }),
+  unit({
     file: './dist/million.min.js',
-    format: 'umd',
+    format: 'iife',
     minify: true,
   }),
 ]);

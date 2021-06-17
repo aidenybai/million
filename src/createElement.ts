@@ -18,7 +18,7 @@ export const createElement = (vnode: VNode, attachField = true): HTMLElement | T
   }
 
   if (vnode.children) {
-    for (let i = 0; i < vnode.children.length; i++) {
+    for (let i = 0; i < vnode.children.length; ++i) {
       el.appendChild(createElement(vnode.children[i]));
     }
   }

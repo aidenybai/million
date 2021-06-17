@@ -2,9 +2,9 @@
   "name": "million",
   "version": "0.1.0",
   "description": "3kb library for tiny web apps",
-  "main": "dist/million.js",
+  "main": "dist/million.umd.js",
   "module": "dist/million.esm.js",
-  "browser": "dist/million.min.js",
+  "browser": "dist/million.umd.js",
   "types": "dist/million.d.ts",
   "scripts": {
     "dev": "sh scripts/dev.sh",
@@ -20,7 +20,7 @@
     "url": "git+https://github.com/millionjs/million.git"
   },
   "exports": {
-    "browser": "./dist/million.min.js",
+    "browser": "./dist/million.umd.js",
     "require": "./dist/million.cjs.js",
     "import": "./dist/million.esm.js"
   },
