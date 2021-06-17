@@ -1,6 +1,6 @@
 import { OLD_VNODE_FIELD } from './constants';
 import { createElement } from './createElement';
-import { VElement, VFlags, VNode, VProps } from './structs';
+import { VActions, VElement, VFlags, VNode, VProps } from './structs';
 
 /**
  * Diffs two VNode props and modifies the DOM node based on the necessary changes
@@ -32,12 +32,12 @@ export const patchProps = (el: HTMLElement, oldProps: VProps, newProps: VProps):
 /**
  * Diffs two VNode children and modifies the DOM node based on the necessary changes
  * @param {HTMLElement} el - Target element to be modified
- * @param {VNode[]|undefined} oldVNodeChildren - Old VNode children
- * @param {VNode[]|undefined} newVNodeChildren - New VNode children
+ * @param {VNode[]} oldVNodeChildren - Old VNode children
+ * @param {VNode[]} newVNodeChildren - New VNode children
  */
 export const patchChildren = (
   el: HTMLElement,
-  oldVNodeChildren: VNode[] | undefined,
+  oldVNodeChildren: VNode[],
   newVNodeChildren: VNode[],
 ): void => {
   const childNodes = [...el.childNodes];
@@ -91,7 +91,6 @@ export const patch = (
       (!(<VElement>oldVNode)?.key && !(<VElement>newVNode)?.key) ||
       (<VElement>oldVNode)?.key !== (<VElement>newVNode)?.key
     ) {
-      /* istanbul ignore if */
       if (
         (<VElement>oldVNode)?.tag !== (<VElement>newVNode)?.tag &&
         !(<VElement>newVNode).children &&
@@ -105,17 +104,55 @@ export const patch = (
       if (oldVNode && !(el instanceof Text)) {
         patchProps(el, (<VElement>oldVNode).props || {}, (<VElement>newVNode).props || {});
 
-        /* istanbul ignore next */
         switch (<VFlags>(<VElement>newVNode).flag) {
-          case VFlags.NO_CHILDREN:
+          case VFlags.NO_CHILDREN: {
             el.textContent = '';
             break;
-          case VFlags.ONLY_TEXT_CHILDREN:
+          }
+          case VFlags.ONLY_TEXT_CHILDREN: {
             el.textContent = <string>(<VElement>newVNode).children!.join('');
             break;
-          default:
-            patchChildren(el, (<VElement>oldVNode).children, (<VElement>newVNode).children!);
+          }
+          case VFlags.ANY_CHILDREN:
+          default: {
+            const [action, numberOfNodes] = (<VElement>newVNode).action ?? [VActions.ANY_ACTION, 0];
+            switch (action) {
+              case VActions.INSERT_TOP: {
+                for (let i = numberOfNodes - 1; i >= 0; --i) {
+                  el.insertBefore(createElement((<VElement>newVNode).children![i]), el.firstChild);
+                }
+                break;
+              }
+              case VActions.INSERT_BOTTOM: {
+                for (let i = 0; i < numberOfNodes; i++) {
+                  el.appendChild(createElement((<VElement>newVNode).children![i]));
+                }
+                break;
+              }
+              case VActions.DELETE_TOP: {
+                for (let i = numberOfNodes - 1; i >= 0; --i) {
+                  el.removeChild(el.firstChild!);
+                }
+                break;
+              }
+              case VActions.DELETE_BOTTOM: {
+                for (let i = 0; i < numberOfNodes; i++) {
+                  el.removeChild(el.lastChild!);
+                }
+                break;
+              }
+              case VActions.ANY_ACTION:
+              default: {
+                patchChildren(
+                  el,
+                  (<VElement>oldVNode).children || [],
+                  (<VElement>newVNode).children!,
+                );
+                break;
+              }
+            }
             break;
+          }
         }
       }
     }
