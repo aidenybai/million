@@ -1,4 +1,4 @@
-import { className, m, ns, style } from '../m';
+import { className, m, ns, svg, style } from '../m';
 import { VNode, VProps } from '../structs';
 
 const h = (tag: string, props?: VProps, ...children: VNode[]) =>
@@ -162,6 +162,28 @@ describe('.m', () => {
     };
     ns(vnode.tag, vnode.props, vnode.children);
     expect(vnode).toEqual({
+      tag: 'svg',
+      props: { ns: 'http://www.w3.org/2000/svg' },
+      children: [
+        'foo',
+        {
+          tag: 'div',
+        },
+      ],
+    });
+  });
+
+  it('should attach ns to props using svg helper', () => {
+    const vnode = {
+      tag: 'svg',
+      children: [
+        'foo',
+        {
+          tag: 'div',
+        },
+      ],
+    };
+    expect(svg(vnode)).toEqual({
       tag: 'svg',
       props: { ns: 'http://www.w3.org/2000/svg' },
       children: [
