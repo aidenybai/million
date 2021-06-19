@@ -10,12 +10,12 @@ import { VActions, VElement, VFlags, VNode, VProps } from './structs';
  */
 /* istanbul ignore next */
 export const patchProps = (el: HTMLElement, oldProps: VProps, newProps: VProps): void => {
-  const cache = [];
+  const cache = new Set<string>();
   for (const oldPropName of Object.keys(oldProps)) {
     const newPropValue = newProps[oldPropName];
     if (newPropValue) {
       el[oldPropName] = newPropValue;
-      cache.push(oldPropName);
+      cache.add(oldPropName);
     } else {
       el.removeAttribute(oldPropName);
       delete el[oldPropName];
@@ -23,7 +23,7 @@ export const patchProps = (el: HTMLElement, oldProps: VProps, newProps: VProps):
   }
 
   for (const newPropName of Object.keys(newProps)) {
-    if (!cache.includes(newPropName)) {
+    if (!cache.has(newPropName)) {
       el[newPropName] = newProps[newPropName];
     }
   }
