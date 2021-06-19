@@ -3,7 +3,8 @@ import { OLD_VNODE_FIELD } from '../constants';
 import { m } from '../m';
 import { VNode, VProps } from '../structs';
 
-const createManual = (tag: string, props: unknown) => Object.assign(document.createElement(tag), props);
+const createManual = (tag: string, props: unknown) =>
+  Object.assign(document.createElement(tag), props);
 
 const h = (tag: string, props?: VProps, ...children: VNode[]) =>
   m(
