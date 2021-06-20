@@ -6,6 +6,7 @@ import { VActions, VElement, VFlags, VNode, VProps } from './structs';
  * @returns {VElement}
  */
 export const svg = (vnode: VElement): VElement => {
+  /* istanbul ignore next */
   if (!vnode.props) vnode.props = {};
   ns(vnode.tag, vnode.props, vnode.children);
   return vnode;

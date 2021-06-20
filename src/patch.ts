@@ -88,6 +88,7 @@ export const patch = (
   if (hasString && oldVNode !== newVNode) return replaceElementWithVNode(el, newVNode);
   if (!hasString) {
     if (
+      /* istanbul ignore next */
       (!(<VElement>oldVNode)?.key && !(<VElement>newVNode)?.key) ||
       (<VElement>oldVNode)?.key !== (<VElement>newVNode)?.key
     ) {
@@ -104,6 +105,7 @@ export const patch = (
       if (oldVNode && !(el instanceof Text)) {
         patchProps(el, (<VElement>oldVNode).props || {}, (<VElement>newVNode).props || {});
 
+        /* istanbul ignore next */
         switch (<VFlags>(<VElement>newVNode).flag) {
           case VFlags.NO_CHILDREN: {
             el.textContent = '';
