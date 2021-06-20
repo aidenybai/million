@@ -10,12 +10,12 @@ import { VActions, VElement, VFlags, VNode, VProps } from './structs';
  */
 /* istanbul ignore next */
 export const patchProps = (el: HTMLElement, oldProps: VProps, newProps: VProps): void => {
-  const cache = [];
+  const cache = new Set<string>();
   for (const oldPropName of Object.keys(oldProps)) {
     const newPropValue = newProps[oldPropName];
     if (newPropValue) {
       el[oldPropName] = newPropValue;
-      cache.push(oldPropName);
+      cache.add(oldPropName);
     } else {
       el.removeAttribute(oldPropName);
       delete el[oldPropName];
@@ -23,7 +23,7 @@ export const patchProps = (el: HTMLElement, oldProps: VProps, newProps: VProps):
   }
 
   for (const newPropName of Object.keys(newProps)) {
-    if (!cache.includes(newPropName)) {
+    if (!cache.has(newPropName)) {
       el[newPropName] = newProps[newPropName];
     }
   }
@@ -88,6 +88,7 @@ export const patch = (
   if (hasString && oldVNode !== newVNode) return replaceElementWithVNode(el, newVNode);
   if (!hasString) {
     if (
+      /* istanbul ignore next */
       (!(<VElement>oldVNode)?.key && !(<VElement>newVNode)?.key) ||
       (<VElement>oldVNode)?.key !== (<VElement>newVNode)?.key
     ) {
@@ -104,6 +105,7 @@ export const patch = (
       if (oldVNode && !(el instanceof Text)) {
         patchProps(el, (<VElement>oldVNode).props || {}, (<VElement>newVNode).props || {});
 
+        /* istanbul ignore next */
         switch (<VFlags>(<VElement>newVNode).flag) {
           case VFlags.NO_CHILDREN: {
             el.textContent = '';
