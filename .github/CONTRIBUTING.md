@@ -8,7 +8,7 @@
 
 ## Required Steps
 
-- Test all of your code and ignore any lines that do not need to be tested.
+- Write tests for all of your code and ignore any lines that do not need to be tested.
 - Do not commit your `package-lock.json` files from NPM
 - Before submitting a pull request run `yarn cleanup`, `yarn lint`, and `yarn test`
 
