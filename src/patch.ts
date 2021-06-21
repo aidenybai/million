@@ -115,9 +115,8 @@ export const patch = (
             el.textContent = <string>(<VElement>newVNode).children!.join('');
             break;
           }
-          case VFlags.ANY_CHILDREN:
           default: {
-            const [action, numberOfNodes] = (<VElement>newVNode).action ?? [VActions.ANY_ACTION, 0];
+            const [action, numberOfNodes = 0] = (<VElement>newVNode).action ?? [];
             switch (action) {
               case VActions.INSERT_TOP: {
                 for (let i = numberOfNodes - 1; i >= 0; --i) {
@@ -143,7 +142,6 @@ export const patch = (
                 }
                 break;
               }
-              case VActions.ANY_ACTION:
               default: {
                 patchChildren(
                   el,
