@@ -1,5 +1,3 @@
-#!/bin/bash
-
 source $(dirname "$0")/helpers.sh
 
 index_html_content="<!DOCTYPE html>
