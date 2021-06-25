@@ -1,5 +1,3 @@
-#!/bin/bash
-
 source $(dirname "$0")/helpers.sh
 
 rm -rf dist
