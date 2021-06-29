@@ -1,6 +1,6 @@
 {
   "name": "million",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "3kb library for tiny web apps",
   "main": "dist/million.umd.js",
   "module": "dist/million.esm.js",
