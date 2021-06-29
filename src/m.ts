@@ -1,4 +1,4 @@
-import { VActions, VElement, VFlags, VNode, VProps } from './structs';
+import { VElement, VFlags, VNode, VProps } from './structs';
 
 /**
  * Attaches ns props to svg element
@@ -49,13 +49,7 @@ export const className = (classObject: Record<string, boolean>): string =>
  * @param {VFlags=} flag - Compiler flag for VNode
  * @returns {VElement}
  */
-export const m = (
-  tag: string,
-  props?: VProps,
-  children?: VNode[],
-  flag?: VFlags,
-  action?: [VActions, number],
-): VElement => {
+export const m = (tag: string, props?: VProps, children?: VNode[], flag?: VFlags): VElement => {
   let key;
   if (props?.key) {
     key = <string | undefined>props.key;
@@ -67,6 +61,5 @@ export const m = (
     children,
     key,
     flag,
-    action,
   };
 };

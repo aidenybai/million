@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/millionjs/million.git"
+    "url": "git+https://github.com/aidenybai/million.git"
   },
   "exports": {
     "browser": "./dist/million.umd.js",
@@ -34,15 +34,12 @@
     "ui",
     "browser"
   ],
-  "contributors": [
-    "Aiden Bai <hello@aidenybai.com>",
-    "William Lane <williamlane923@gmail.com>"
-  ],
+  "author": "Aiden Bai <hello@aidenybai.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/millionjs/million/issues"
+    "url": "https://github.com/aidenybai/million/issues"
   },
-  "homepage": "https://github.com/millionjs/million",
+  "homepage": "https://github.com/aidenybai/million",
   "engines": {
     "node": ">=14.0.0"
   },
