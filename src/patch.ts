@@ -1,6 +1,6 @@
 import { OLD_VNODE_FIELD } from './constants';
 import { createElement } from './createElement';
-import { VActions, VElement, VFlags, VNode, VProps } from './structs';
+import { VElement, VFlags, VNode, VProps } from './structs';
 
 /**
  * Diffs two VNode props and modifies the DOM node based on the necessary changes
@@ -116,41 +116,7 @@ export const patch = (
             break;
           }
           default: {
-            const [action, numberOfNodes = 0] = (<VElement>newVNode).action ?? [];
-            switch (action) {
-              case VActions.INSERT_TOP: {
-                for (let i = numberOfNodes - 1; i >= 0; --i) {
-                  el.insertBefore(createElement((<VElement>newVNode).children![i]), el.firstChild);
-                }
-                break;
-              }
-              case VActions.INSERT_BOTTOM: {
-                for (let i = 0; i < numberOfNodes; i++) {
-                  el.appendChild(createElement((<VElement>newVNode).children![i]));
-                }
-                break;
-              }
-              case VActions.DELETE_TOP: {
-                for (let i = numberOfNodes - 1; i >= 0; --i) {
-                  el.removeChild(el.firstChild!);
-                }
-                break;
-              }
-              case VActions.DELETE_BOTTOM: {
-                for (let i = 0; i < numberOfNodes; i++) {
-                  el.removeChild(el.lastChild!);
-                }
-                break;
-              }
-              default: {
-                patchChildren(
-                  el,
-                  (<VElement>oldVNode).children || [],
-                  (<VElement>newVNode).children!,
-                );
-                break;
-              }
-            }
+            patchChildren(el, (<VElement>oldVNode).children || [], (<VElement>newVNode).children!);
             break;
           }
         }

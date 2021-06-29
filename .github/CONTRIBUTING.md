@@ -16,4 +16,4 @@
 
 - If you are using [VSCode](https://code.visualstudio.com/), install all recommended workspace extensions.
 - Make sure you are up to date by doing `git pull` here and there.
-- Submit a [pull request](https://github.com/millionjs/million/pulls)!
+- Submit a [pull request](https://github.com/aidenybai/million/pulls)!
