@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 export PATH="$(dirname "$0")/../node_modules/.bin:$PATH"
 
 YELLOW_COLOR="\u001b[33m"
