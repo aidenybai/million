@@ -22,16 +22,6 @@ export const ns = (tag: string, props: VProps, children?: VNode[]): void => {
 };
 
 /**
- * Generates a style string based on a styleObject
- * @param {object} styleObject - Object with styles
- * @returns
- */
-export const style = (styleObject: Record<string, string>): string =>
-  Object.entries(styleObject)
-    .map((style) => style.join(':'))
-    .join(';');
-
-/**
  * Generates a className string based on a classObject
  * @param {object} classObject - Object with classes paired with boolean values to toggle
  * @returns {string}
@@ -40,6 +30,16 @@ export const className = (classObject: Record<string, boolean>): string =>
   Object.keys(classObject)
     .filter((className) => classObject[className])
     .join(' ');
+
+/**
+ * Generates a style string based on a styleObject
+ * @param {object} styleObject - Object with styles
+ * @returns
+ */
+export const style = (styleObject: Record<string, string>): string =>
+  Object.entries(styleObject)
+    .map((style) => style.join(':'))
+    .join(';');
 
 /**
  * Helper method for creating a VNode
