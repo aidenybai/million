@@ -8,7 +8,6 @@ import { VElement, VFlags, VNode, VProps } from './structs';
  * @param {VProps} oldProps - Old VNode props
  * @param {VProps} newProps - New VNode props
  */
-/* istanbul ignore next */
 export const patchProps = (el: HTMLElement, oldProps: VProps, newProps: VProps): void => {
   const cache = new Set<string>();
   for (const oldPropName of Object.keys(oldProps)) {
@@ -40,23 +39,20 @@ export const patchChildren = (
   oldVNodeChildren: VNode[],
   newVNodeChildren: VNode[],
 ): void => {
-  /* istanbul ignore next */
   if (oldVNodeChildren) {
     for (let i = oldVNodeChildren.length - 1; i >= 0; --i) {
       patch(<HTMLElement | Text>el.childNodes[i], newVNodeChildren[i], oldVNodeChildren[i]);
     }
   }
-  /* istanbul ignore next */
-  const slicedNewVNodeChildren = newVNodeChildren.slice(oldVNodeChildren?.length ?? 0);
-  for (let i = 0; i < slicedNewVNodeChildren.length; ++i) {
-    el.appendChild(createElement(slicedNewVNodeChildren[i], false));
+  for (let i = oldVNodeChildren.length ?? 0; i < newVNodeChildren.length; ++i) {
+    el.appendChild(createElement(newVNodeChildren[i], false));
   }
 };
 
 const replaceElementWithVNode = (el: HTMLElement | Text, newVNode: VNode): HTMLElement | Text => {
   if (typeof newVNode === 'string') {
     el.textContent = newVNode;
-    return el;
+    return <Text>el.firstChild;
   } else {
     const newElement = createElement(newVNode);
     el.replaceWith(newElement);
@@ -87,7 +83,6 @@ export const patch = (
   if (hasString && oldVNode !== newVNode) return replaceElementWithVNode(el, newVNode);
   if (!hasString) {
     if (
-      /* istanbul ignore next */
       (!(<VElement>oldVNode)?.key && !(<VElement>newVNode)?.key) ||
       (<VElement>oldVNode)?.key !== (<VElement>newVNode)?.key
     ) {
@@ -104,7 +99,6 @@ export const patch = (
       if (oldVNode && !(el instanceof Text)) {
         patchProps(el, (<VElement>oldVNode).props || {}, (<VElement>newVNode).props || {});
 
-        /* istanbul ignore next */
         switch (<VFlags>(<VElement>newVNode).flag) {
           case VFlags.NO_CHILDREN: {
             el.textContent = '';

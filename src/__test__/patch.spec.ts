@@ -31,8 +31,8 @@ describe('.patch', () => {
   it('should patch text', () => {
     const el = createElement('foo');
     document.body.appendChild(el);
-
-    expect(patch(el, 'bar').textContent).toEqual('bar');
+    patch(el, 'bar');
+    expect(el.textContent).toEqual('bar');
   });
 
   it('should remove textContent if no children', () => {
