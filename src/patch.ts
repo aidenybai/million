@@ -40,11 +40,10 @@ export const patchChildren = (
   oldVNodeChildren: VNode[],
   newVNodeChildren: VNode[],
 ): void => {
-  const childNodes = [...el.childNodes];
   /* istanbul ignore next */
   if (oldVNodeChildren) {
-    for (let i = 0; i < oldVNodeChildren.length; ++i) {
-      patch(<HTMLElement | Text>childNodes[i], newVNodeChildren[i], oldVNodeChildren[i]);
+    for (let i = oldVNodeChildren.length - 1; i >= 0; --i) {
+      patch(<HTMLElement | Text>el.childNodes[i], newVNodeChildren[i], oldVNodeChildren[i]);
     }
   }
   /* istanbul ignore next */

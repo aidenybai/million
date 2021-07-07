@@ -10,7 +10,7 @@ export interface VElement {
 }
 
 export enum VFlags {
-  NO_CHILDREN = 0,
-  ONLY_TEXT_CHILDREN = 1,
-  ANY_CHILDREN = 2,
+  NO_CHILDREN = 1 << 0,
+  ONLY_TEXT_CHILDREN = 1 << 1,
+  ANY_CHILDREN = 1 << 2,
 }
