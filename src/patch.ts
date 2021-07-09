@@ -1,6 +1,6 @@
 import { OLD_VNODE_FIELD } from './constants';
 import { createElement } from './createElement';
-import { VElement, VFlags, VNode, VProps } from './structs';
+import { VDelta, VDeltaOperationTypes, VElement, VFlags, VNode, VProps } from './structs';
 
 /**
  * Diffs two VNode props and modifies the DOM node based on the necessary changes
@@ -38,14 +38,42 @@ export const patchChildren = (
   el: HTMLElement,
   oldVNodeChildren: VNode[],
   newVNodeChildren: VNode[],
+  delta?: VDelta,
 ): void => {
-  if (oldVNodeChildren) {
-    for (let i = oldVNodeChildren.length - 1; i >= 0; --i) {
-      patch(<HTMLElement | Text>el.childNodes[i], newVNodeChildren[i], oldVNodeChildren[i]);
+  if (delta) {
+    for (let i = 0; i < delta.length; i++) {
+      const [deltaType, deltaPosition] = delta[i];
+      switch (deltaType) {
+        case VDeltaOperationTypes.INSERT: {
+          el.insertBefore(
+            createElement(newVNodeChildren[deltaPosition]),
+            el.childNodes[deltaPosition + 1],
+          );
+          break;
+        }
+        case VDeltaOperationTypes.UPDATE: {
+          patch(
+            <HTMLElement | Text>el.childNodes[deltaPosition],
+            newVNodeChildren[deltaPosition],
+            oldVNodeChildren[deltaPosition],
+          );
+          break;
+        }
+        case VDeltaOperationTypes.DELETE: {
+          el.removeChild(el.childNodes[deltaPosition]);
+          break;
+        }
+      }
     }
-  }
-  for (let i = oldVNodeChildren.length ?? 0; i < newVNodeChildren.length; ++i) {
-    el.appendChild(createElement(newVNodeChildren[i], false));
+  } else {
+    if (oldVNodeChildren) {
+      for (let i = oldVNodeChildren.length - 1; i >= 0; --i) {
+        patch(<HTMLElement | Text>el.childNodes[i], newVNodeChildren[i], oldVNodeChildren[i]);
+      }
+    }
+    for (let i = oldVNodeChildren.length ?? 0; i < newVNodeChildren.length; ++i) {
+      el.appendChild(createElement(newVNodeChildren[i], false));
+    }
   }
 };
 
@@ -109,7 +137,12 @@ export const patch = (
             break;
           }
           default: {
-            patchChildren(el, (<VElement>oldVNode).children || [], (<VElement>newVNode).children!);
+            patchChildren(
+              el,
+              (<VElement>oldVNode).children || [],
+              (<VElement>newVNode).children!,
+              (<VElement>newVNode).delta,
+            );
             break;
           }
         }
