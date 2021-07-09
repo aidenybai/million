@@ -1,5 +1,7 @@
 export type VProps = Record<string, string | unknown | (() => void)>;
 export type VNode = VElement | string;
+export type VDeltaOperation = [VDeltaOperationTypes, number];
+export type VDelta = VDeltaOperation[];
 
 export interface VElement {
   tag: string;
@@ -7,10 +9,17 @@ export interface VElement {
   children?: VNode[];
   key?: string;
   flag?: VFlags;
+  delta?: VDelta;
 }
 
 export enum VFlags {
   NO_CHILDREN = 1 << 0,
   ONLY_TEXT_CHILDREN = 1 << 1,
   ANY_CHILDREN = 1 << 2,
+}
+
+export enum VDeltaOperationTypes {
+  INSERT = 1 << 0,
+  UPDATE = 1 << 1,
+  DELETE = 1 << 2,
 }

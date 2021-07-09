@@ -1,4 +1,12 @@
-import { VElement, VFlags, VNode, VProps } from './structs';
+import {
+  VDelta,
+  VDeltaOperation,
+  VDeltaOperationTypes,
+  VElement,
+  VFlags,
+  VNode,
+  VProps,
+} from './structs';
 
 /**
  * Attaches ns props to svg element
@@ -34,12 +42,42 @@ export const className = (classObject: Record<string, boolean>): string =>
 /**
  * Generates a style string based on a styleObject
  * @param {object} styleObject - Object with styles
- * @returns
+ * @returns {string}
  */
 export const style = (styleObject: Record<string, string>): string =>
   Object.entries(styleObject)
     .map((style) => style.join(':'))
     .join(';');
+
+/**
+ * Returns an insert (creation) delta operation
+ * @param {number} positionIdx - Index of delta operation
+ * @returns {VDeltaOperation}
+ */
+export const INSERT = (positionIdx = 0): VDeltaOperation => [
+  VDeltaOperationTypes.INSERT,
+  positionIdx,
+];
+
+/**
+ * Returns an update (modification) delta operation
+ * @param {number} positionIdx - Index of delta operation
+ * @returns {VDeltaOperation}
+ */
+export const UPDATE = (positionIdx = 0): VDeltaOperation => [
+  VDeltaOperationTypes.UPDATE,
+  positionIdx,
+];
+
+/**
+ * Returns an delete (removal) delta operation
+ * @param {number} positionIdx - Index of delta operation
+ * @returns {VDeltaOperation}
+ */
+export const DELETE = (positionIdx = 0): VDeltaOperation => [
+  VDeltaOperationTypes.DELETE,
+  positionIdx,
+];
 
 /**
  * Helper method for creating a VNode
@@ -49,7 +87,13 @@ export const style = (styleObject: Record<string, string>): string =>
  * @param {VFlags=} flag - Compiler flag for VNode
  * @returns {VElement}
  */
-export const m = (tag: string, props?: VProps, children?: VNode[], flag?: VFlags): VElement => {
+export const m = (
+  tag: string,
+  props?: VProps,
+  children?: VNode[],
+  flag?: VFlags,
+  delta?: VDelta,
+): VElement => {
   let key;
   if (props?.key) {
     key = <string | undefined>props.key;
@@ -61,5 +105,6 @@ export const m = (tag: string, props?: VProps, children?: VNode[], flag?: VFlags
     children,
     key,
     flag,
+    delta,
   };
 };
