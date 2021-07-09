@@ -18,7 +18,7 @@ export enum VFlags {
   ANY_CHILDREN = 1 << 2,
 }
 
-export enum VDeltaOperationTypes {
+export const enum VDeltaOperationTypes {
   INSERT = 1 << 0,
   UPDATE = 1 << 1,
   DELETE = 1 << 2,
