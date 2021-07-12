@@ -1,9 +1,11 @@
 ![Million Banner](https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/banner.svg)
 
+---
+
 Current Virtual DOM implementations are inadequate—Ranging from overcomplicated to abandoned, most are unusable without sacrificing raw performance and size. Million aims to fix this, providing a library-agnostic Virtual DOM to serve as the core for Javascript libraries.
 
-[![CI](https://img.shields.io/github/workflow/status/aidenybai/million/CI?color=FD9336&labelColor=000&style=flat-square&label=build)](https://img.shields.io/github/workflow/status/aidenybai/million)
-![Code Size](https://badgen.net/badgesize/brotli/https/unpkg.com/million/dist/million.min.js?style=flat-square&label=size&color=A04A9C&labelColor=000) [![NPM Version](https://img.shields.io/npm/v/million?style=flat-square&color=4E82EE&labelColor=000)](https://www.npmjs.com/package/million) ![Code Coverage](https://img.shields.io/coveralls/github/aidenybai/million?color=3CF5EB&labelColor=000&style=flat-square)
+[![CI](https://img.shields.io/github/workflow/status/aidenybai/million/CI?color=47BB77&labelColor=000&style=flat-square&label=build)](https://img.shields.io/github/workflow/status/aidenybai/million)
+![Code Size](https://badgen.net/badgesize/brotli/https/unpkg.com/million/dist/million.min.js?style=flat-square&label=size&color=47BB77&labelColor=000) [![NPM Version](https://img.shields.io/npm/v/million?style=flat-square&color=47BB77&labelColor=000)](https://www.npmjs.com/package/million) ![Code Coverage](https://img.shields.io/coveralls/github/aidenybai/million?color=47BB77&labelColor=000&style=flat-square)
 
 [**→ Check out the Million documentation**](https://million.js.org)
 
