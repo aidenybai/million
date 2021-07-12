@@ -1,8 +1,7 @@
-import { OLD_VNODE_FIELD } from './constants';
 import { createElement } from './createElement';
-import { className, m, style, svg, INSERT, UPDATE, DELETE } from './m';
+import { className, DELETE, INSERT, m, style, svg, UPDATE } from './m';
 import { patch, patchChildren, patchProps } from './patch';
-import { VElement, VFlags, VNode, VProps } from './structs';
+import { OLD_VNODE_FIELD, VElement, VFlags, VNode, VProps } from './structs';
 
 export type { VNode, VElement, VProps };
 export {

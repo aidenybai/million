@@ -1,3 +1,8 @@
+/**
+ * Field on DOM node that stores the previous VNode
+ */
+export const OLD_VNODE_FIELD = '__m_old_vnode';
+
 export type VProps = Record<string, string | unknown | (() => void)>;
 export type VNode = VElement | string;
 export type VDeltaOperation = [VDeltaOperationTypes, number];
