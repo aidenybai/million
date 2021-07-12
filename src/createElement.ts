@@ -1,5 +1,4 @@
-import { OLD_VNODE_FIELD } from './constants';
-import { VNode } from './structs';
+import { OLD_VNODE_FIELD, VNode } from './structs';
 
 /**
  * Creates an element from a VNode

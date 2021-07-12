@@ -1,4 +1,4 @@
-# <a href="https://million.js.org"><img src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/logo.svg" height="60" alt="Million Logo" aria-label="Million Logo" /></a>
+# <a href="https://million.js.org"><img src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/logo.svg" height="80" alt="Million Logo" aria-label="Million Logo" /></a>
 
 ### <1kb virtual DOM - it's fast!
 

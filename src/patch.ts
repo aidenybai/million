@@ -1,6 +1,13 @@
-import { OLD_VNODE_FIELD } from './constants';
 import { createElement } from './createElement';
-import { VDelta, VDeltaOperationTypes, VElement, VFlags, VNode, VProps } from './structs';
+import {
+  OLD_VNODE_FIELD,
+  VDelta,
+  VDeltaOperationTypes,
+  VElement,
+  VFlags,
+  VNode,
+  VProps,
+} from './structs';
 
 /**
  * Diffs two VNode props and modifies the DOM node based on the necessary changes

@@ -1,7 +1,6 @@
 import { createElement } from '../createElement';
-import { OLD_VNODE_FIELD } from '../constants';
 import { m } from '../m';
-import { VNode, VProps } from '../structs';
+import { OLD_VNODE_FIELD, VNode, VProps } from '../structs';
 
 const createManual = (tag: string, props: unknown) =>
   Object.assign(document.createElement(tag), props);
