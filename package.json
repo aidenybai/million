@@ -4,7 +4,8 @@
   "description": "<1kb virtual DOM - it's fast!",
   "main": "dist/million.umd.js",
   "module": "dist/million.esm.js",
-  "browser": "dist/million.min.js",
+  "jsdelivr": "dist/million.esm.min.js",
+  "unpkg": "dist/million.esm.min.js",
   "types": "dist/million.d.ts",
   "scripts": {
     "dev": "sh scripts/dev.sh",
@@ -20,8 +21,7 @@
     "url": "git+https://github.com/aidenybai/million.git"
   },
   "exports": {
-    "browser": "./dist/million.min.js",
-    "require": "./dist/million.umd.js",
+    "require": "./dist/million.cjs.js",
     "import": "./dist/million.esm.js"
   },
   "sideEffects": false,
