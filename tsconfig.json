@@ -1,14 +1,7 @@
 {
   "compilerOptions": {
     "jsx": "preserve",
-    "lib": [
-      "dom",
-      "es2016",
-      "es2017.object",
-      "esnext",
-      "dom.iterable",
-      "esnext.asynciterable"
-    ],
+    "lib": ["dom", "es2016", "es2017.object", "esnext", "dom.iterable", "esnext.asynciterable"],
     "declarationDir": "dist/types",
     "outDir": "dist",
     "moduleResolution": "node",
@@ -17,22 +10,15 @@
     "suppressImplicitAnyIndexErrors": true,
     "allowSyntheticDefaultImports": true,
     "noFallthroughCasesInSwitch": true,
+    "experimentalDecorators": true,
     "downlevelIteration": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "esModuleInterop": true,
     "noUnusedLocals": true,
     "declaration": true,
-    "strict": true,
-    "experimentalDecorators": true
+    "strict": true
   },
-  "include": [
-    "./src/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "./src/**/*.js",
-    "./src/**/*.spec.ts"
-  ]
+  "include": ["./src/**/*.ts"],
+  "exclude": ["node_modules", "dist", "./src/**/*.js", "./src/**/*.spec.ts"]
 }
