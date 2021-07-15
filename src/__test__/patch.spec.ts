@@ -1,7 +1,7 @@
 import { createElement } from '../createElement';
-import { m } from '../m';
+import { m, INSERT, UPDATE, DELETE } from '../m';
 import { patch, patchChildren, patchProps } from '../patch';
-import { VNode, VProps } from '../structs';
+import { VFlags, VNode, VProps } from '../structs';
 
 const h = (tag: string, props?: VProps, ...children: VNode[]) =>
   m(
@@ -106,5 +106,76 @@ describe('.patch', () => {
     patchChildren(<HTMLElement>el, ['foo', 'bar', 'baz'], ['foo', m('div'), 'baz']);
 
     expect([...el.childNodes]).toEqual(virtualArrayToDOMNodes(['foo', m('div'), 'baz']));
+  });
+
+  // Deltas are behaving weird because they are "delayed" patching
+  it('should execute INSERT deltas', () => {
+    const el = document.createElement('div');
+    const children: string[] = [];
+    const createVNode = () => m('div', undefined, [...children], undefined, [INSERT(0)]);
+
+    children.unshift('foo');
+    patch(el, createVNode());
+    expect(el.childNodes.length).toEqual(1);
+
+    children.unshift('bar');
+    patch(el, createVNode());
+    expect(el.childNodes.length).toEqual(2);
+
+    children.unshift('baz');
+    patch(el, createVNode());
+    expect(el.childNodes.length).toEqual(3);
+  });
+
+  it('should execute UPDATE deltas', () => {
+    const el = document.createElement('div');
+    el.textContent = 'foo';
+    const children: string[] = ['foo'];
+    const createVNode = () => m('div', undefined, [...children], undefined, [UPDATE(0)]);
+
+    children[0] = 'bar';
+    patch(el, createVNode());
+    expect(el.textContent).toEqual('bar');
+
+    children[0] = 'baz';
+    patch(el, createVNode());
+    expect(el.textContent).toEqual('baz');
+  });
+
+  it('should execute INSERT deltas', () => {
+    const el = document.createElement('div');
+    const children: string[] = [];
+    const createVNode = () => m('div', undefined, [...children], undefined, [INSERT(0)]);
+
+    children.unshift('bar');
+    patch(el, createVNode());
+    expect(el.childNodes.length).toEqual(1);
+
+    children.unshift('baz');
+    patch(el, createVNode());
+    expect(el.childNodes.length).toEqual(2);
+  });
+
+  it('should execute DELETE deltas', () => {
+    const el = document.createElement('div');
+    el.appendChild(document.createTextNode('foo'));
+    el.appendChild(document.createTextNode('bar'));
+    el.appendChild(document.createTextNode('baz'));
+    const children: string[] = ['foo', 'bar', 'baz'];
+    const createVNode = () => m('div', undefined, [...children], undefined, [DELETE(0)]);
+
+    children.splice(0, 1);
+    patch(el, createVNode());
+    expect(el.firstChild!.nodeValue).toEqual('bar');
+
+    children.splice(0, 1);
+    patch(el, createVNode());
+    expect(el.firstChild!.nodeValue).toEqual('baz');
+  });
+
+  it('should shortcut if flags are present', () => {
+    const el = document.createElement('div');
+    patch(el, m('div', undefined, ['foo'], VFlags.ONLY_TEXT_CHILDREN));
+    expect(el.textContent).toEqual('foo');
   });
 });

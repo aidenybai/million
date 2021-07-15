@@ -3,7 +3,8 @@
  */
 export const OLD_VNODE_FIELD = '__m_old_vnode';
 
-export type VProps = Record<string, string | unknown | (() => void)>;
+// Props can contain a standard value or a callback function (for events)
+export type VProps = Record<string, string | boolean | (() => void)>;
 export type VNode = VElement | string;
 export type VDeltaOperation = [VDeltaOperationTypes, number];
 export type VDelta = VDeltaOperation[];
