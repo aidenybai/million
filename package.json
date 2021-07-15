@@ -1,6 +1,6 @@
 {
   "name": "million",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "<1kb virtual DOM - it's fast!",
   "main": "dist/million.umd.js",
   "module": "dist/million.esm.js",
