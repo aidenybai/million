@@ -8,7 +8,7 @@ import { OLD_VNODE_FIELD, VNode } from './structs';
  */
 export const createElement = (vnode: VNode, attachField = true): HTMLElement | Text => {
   if (typeof vnode === 'string') return document.createTextNode(vnode);
-  const el = Object.assign(document.createElement(vnode.tag), vnode.props);
+  const el = <HTMLElement>Object.assign(document.createElement(vnode.tag), vnode.props);
 
   if (vnode.children) {
     vnode.children.forEach((child) => {

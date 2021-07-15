@@ -54,7 +54,7 @@ export const patchChildren = (
         case VDeltaOperationTypes.INSERT: {
           el.insertBefore(
             createElement(newVNodeChildren[deltaPosition]),
-            el.childNodes[deltaPosition + 1],
+            el.childNodes[deltaPosition],
           );
           break;
         }
@@ -131,23 +131,29 @@ export const patch = (
         // remove props/children
         return replaceElementWithVNode(el, newVNode);
       }
-      if (oldVNode && !(el instanceof Text)) {
-        patchProps(el, (<VElement>oldVNode).props || {}, (<VElement>newVNode).props || {});
+      if (!(el instanceof Text)) {
+        patchProps(el, (<VElement>oldVNode)?.props || {}, (<VElement>newVNode).props || {});
 
+        // Flags allow for greater optimizability by reducing condition branches.
+        // Generally, you should use a compiler to generate these flags, but
+        // hand-writing them is also possible
         switch (<VFlags>(<VElement>newVNode).flag) {
           case VFlags.NO_CHILDREN: {
             el.textContent = '';
             break;
           }
           case VFlags.ONLY_TEXT_CHILDREN: {
+            // Joining is faster than setting textContent to an array
             el.textContent = <string>(<VElement>newVNode).children!.join('');
             break;
           }
           default: {
             patchChildren(
               el,
-              (<VElement>oldVNode).children || [],
+              (<VElement>oldVNode)?.children || [],
               (<VElement>newVNode).children!,
+              // We need to pass delta here because this function does not have
+              // a reference to the actual vnode.
               (<VElement>newVNode).delta,
             );
             break;

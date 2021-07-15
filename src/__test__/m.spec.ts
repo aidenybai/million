@@ -1,5 +1,5 @@
-import { className, m, ns, svg, style } from '../m';
-import { VNode, VProps } from '../structs';
+import { className, m, ns, svg, style, INSERT, DELETE, UPDATE } from '../m';
+import { VNode, VProps, VDeltaOperationTypes } from '../structs';
 
 const h = (tag: string, props?: VProps, ...children: VNode[]) =>
   m(
@@ -207,5 +207,14 @@ describe('.m', () => {
       ],
       key: 'foo',
     });
+  });
+
+  it('should return delta operation when operation helper is used', () => {
+    expect(INSERT()).toEqual([VDeltaOperationTypes.INSERT, 0]);
+    expect(INSERT(5)).toEqual([VDeltaOperationTypes.INSERT, 5]);
+    expect(UPDATE()).toEqual([VDeltaOperationTypes.UPDATE, 0]);
+    expect(UPDATE(5)).toEqual([VDeltaOperationTypes.UPDATE, 5]);
+    expect(DELETE()).toEqual([VDeltaOperationTypes.DELETE, 0]);
+    expect(DELETE(5)).toEqual([VDeltaOperationTypes.DELETE, 5]);
   });
 });
