@@ -177,5 +177,8 @@ describe('.patch', () => {
     const el = document.createElement('div');
     patch(el, m('div', undefined, ['foo'], VFlags.ONLY_TEXT_CHILDREN));
     expect(el.textContent).toEqual('foo');
+
+    patch(el, m('div', undefined, [], VFlags.NO_CHILDREN));
+    expect(el.childNodes.length).toEqual(0);
   });
 });
