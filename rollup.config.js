@@ -3,9 +3,9 @@ import commonjs from '@rollup/plugin-commonjs';
 import eslint from '@rollup/plugin-eslint';
 import resolve from '@rollup/plugin-node-resolve';
 import strip from '@rollup/plugin-strip';
-import ts from '@wessberg/rollup-plugin-ts';
 import filesize from 'rollup-plugin-filesize';
 import { terser } from 'rollup-plugin-terser';
+import ts from 'rollup-plugin-ts';
 
 const suite = async (input, output) => {
   return {
@@ -46,20 +46,12 @@ export const unit = ({ file, format, minify }) => ({
 
 export default suite('./src/index.ts', [
   unit({
-    file: './dist/million.esm.js',
-    format: 'esm',
-  }),
-  unit({
-    file: './dist/million.cjs.js',
-    format: 'cjs',
-  }),
-  unit({
     file: './dist/million.umd.js',
     format: 'umd',
   }),
   unit({
-    file: './dist/million.js',
-    format: 'iife',
+    file: './dist/million.esm.js',
+    format: 'esm',
   }),
   unit({
     file: './dist/million.min.js',

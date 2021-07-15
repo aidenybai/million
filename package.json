@@ -4,7 +4,7 @@
   "description": "<1kb virtual DOM - it's fast!",
   "main": "dist/million.umd.js",
   "module": "dist/million.esm.js",
-  "browser": "dist/million.umd.js",
+  "browser": "dist/million.min.js",
   "types": "dist/million.d.ts",
   "scripts": {
     "dev": "sh scripts/dev.sh",
@@ -20,8 +20,8 @@
     "url": "git+https://github.com/aidenybai/million.git"
   },
   "exports": {
-    "browser": "./dist/million.umd.js",
-    "require": "./dist/million.cjs.js",
+    "browser": "./dist/million.min.js",
+    "require": "./dist/million.umd.js",
     "import": "./dist/million.esm.js"
   },
   "sideEffects": false,
@@ -55,7 +55,6 @@
     "@types/jest": "^26.0.22",
     "@typescript-eslint/eslint-plugin": "^4.21.0",
     "@typescript-eslint/parser": "^4.21.0",
-    "@wessberg/rollup-plugin-ts": "^1.3.14",
     "eslint": "^7.24.0",
     "eslint-config-prettier": "^8.1.0",
     "husky": "^7.0.0",
@@ -68,7 +67,10 @@
     "ts-jest": "^26.4.2",
     "ts-node": "^9.1.1",
     "tslib": "^2.2.0",
-    "typescript": "^4.2.4",
+    "typescript": "^4.3.5",
     "vite": "^2.3.4"
+  },
+  "dependencies": {
+    "rollup-plugin-ts": "^1.4.0"
   }
 }
