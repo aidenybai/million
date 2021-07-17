@@ -85,14 +85,9 @@ export const patchChildren = (
 };
 
 const replaceElementWithVNode = (el: HTMLElement | Text, newVNode: VNode): HTMLElement | Text => {
-  if (typeof newVNode === 'string') {
-    el.textContent = newVNode;
-    return <Text>el.firstChild;
-  } else {
-    const newElement = createElement(newVNode);
-    el.replaceWith(newElement);
-    return newElement;
-  }
+  const newElement = createElement(newVNode);
+  el.replaceWith(newElement);
+  return newElement;
 };
 
 /**
@@ -121,14 +116,7 @@ export const patch = (
       (!(<VElement>oldVNode)?.key && !(<VElement>newVNode)?.key) ||
       (<VElement>oldVNode)?.key !== (<VElement>newVNode)?.key
     ) {
-      if (
-        (<VElement>oldVNode)?.tag !== (<VElement>newVNode)?.tag &&
-        !(<VElement>newVNode).children &&
-        !(<VElement>newVNode).props
-      ) {
-        // newVNode has no props/children is replaced because it is generally
-        // faster to create a empty HTMLElement rather than iteratively/recursively
-        // remove props/children
+      if ((<VElement>oldVNode)?.tag !== (<VElement>newVNode)?.tag) {
         return replaceElementWithVNode(el, newVNode);
       }
       if (!(el instanceof Text)) {
