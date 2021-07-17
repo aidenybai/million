@@ -13,14 +13,11 @@ const h = (tag: string, props?: VProps, ...children: VNode[]) =>
 describe('.patch', () => {
   it('should patch element with text as children', () => {
     const el = createElement(h('div', { id: 'el' }, 'foo'));
-    document.body.appendChild(el);
 
     expect(patch(el, h('div', { id: 'el' }, 'bar'))).toEqual(
       createElement(h('div', { id: 'el' }, 'bar')),
     );
-    expect(<HTMLElement>document.querySelector('#el')).toEqual(
-      createElement(h('div', { id: 'el' }, 'bar')),
-    );
+    expect(el).toEqual(createElement(h('div', { id: 'el' }, 'bar')));
     expect(patch(el, h('div', { id: 'el', class: 'new' }, 'baz'))).toEqual(
       createElement(h('div', { id: 'el', class: 'new' }, 'baz')),
     );
@@ -30,14 +27,13 @@ describe('.patch', () => {
 
   it('should patch text', () => {
     const el = createElement('foo');
-    document.body.appendChild(el);
-    patch(el, 'bar');
-    expect(el.textContent).toEqual('bar');
+
+    expect(patch(el, 'bar', 'foo').nodeValue).toEqual('bar');
   });
 
   it('should remove textContent if no children', () => {
     const el = createElement('foo');
-    document.body.appendChild(el);
+
     el.textContent = 'foo';
 
     expect(patch(el, m('div', undefined, undefined, 0)).textContent).toEqual('');
@@ -114,16 +110,19 @@ describe('.patch', () => {
     const children: string[] = [];
     const createVNode = () => m('div', undefined, [...children], undefined, [INSERT(0)]);
 
+    const prevVNode1 = createVNode();
     children.unshift('foo');
-    patch(el, createVNode());
+    patch(el, createVNode(), prevVNode1);
     expect(el.childNodes.length).toEqual(1);
 
+    const prevVNode2 = createVNode();
     children.unshift('bar');
-    patch(el, createVNode());
+    patch(el, createVNode(), prevVNode2);
     expect(el.childNodes.length).toEqual(2);
 
+    const prevVNode3 = createVNode();
     children.unshift('baz');
-    patch(el, createVNode());
+    patch(el, createVNode(), prevVNode3);
     expect(el.childNodes.length).toEqual(3);
   });
 
@@ -133,12 +132,14 @@ describe('.patch', () => {
     const children: string[] = ['foo'];
     const createVNode = () => m('div', undefined, [...children], undefined, [UPDATE(0)]);
 
+    const prevVNode1 = createVNode();
     children[0] = 'bar';
-    patch(el, createVNode());
+    patch(el, createVNode(), prevVNode1);
     expect(el.textContent).toEqual('bar');
 
+    const prevVNode2 = createVNode();
     children[0] = 'baz';
-    patch(el, createVNode());
+    patch(el, createVNode(), prevVNode2);
     expect(el.textContent).toEqual('baz');
   });
 
@@ -147,12 +148,14 @@ describe('.patch', () => {
     const children: string[] = [];
     const createVNode = () => m('div', undefined, [...children], undefined, [INSERT(0)]);
 
+    const prevVNode1 = createVNode();
     children.unshift('bar');
-    patch(el, createVNode());
+    patch(el, createVNode(), prevVNode1);
     expect(el.childNodes.length).toEqual(1);
 
+    const prevVNode2 = createVNode();
     children.unshift('baz');
-    patch(el, createVNode());
+    patch(el, createVNode(), prevVNode2);
     expect(el.childNodes.length).toEqual(2);
   });
 
@@ -164,21 +167,31 @@ describe('.patch', () => {
     const children: string[] = ['foo', 'bar', 'baz'];
     const createVNode = () => m('div', undefined, [...children], undefined, [DELETE(0)]);
 
+    const prevVNode1 = createVNode();
     children.splice(0, 1);
-    patch(el, createVNode());
+    patch(el, createVNode(), prevVNode1);
     expect(el.firstChild!.nodeValue).toEqual('bar');
 
+    const prevVNode2 = createVNode();
     children.splice(0, 1);
-    patch(el, createVNode());
+    patch(el, createVNode(), prevVNode2);
     expect(el.firstChild!.nodeValue).toEqual('baz');
   });
 
   it('should shortcut if flags are present', () => {
     const el = document.createElement('div');
-    patch(el, m('div', undefined, ['foo'], VFlags.ONLY_TEXT_CHILDREN));
+    patch(
+      el,
+      m('div', undefined, ['foo'], VFlags.ONLY_TEXT_CHILDREN),
+      m('div', undefined, [], VFlags.ONLY_TEXT_CHILDREN),
+    );
     expect(el.textContent).toEqual('foo');
 
-    patch(el, m('div', undefined, [], VFlags.NO_CHILDREN));
+    patch(
+      el,
+      m('div', undefined, [], VFlags.NO_CHILDREN),
+      m('div', undefined, ['foo'], VFlags.NO_CHILDREN),
+    );
     expect(el.childNodes.length).toEqual(0);
   });
 });
