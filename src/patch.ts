@@ -1,36 +1,47 @@
 import { createElement } from './createElement';
+import { processWorkQueue } from './fiber';
 import {
   OLD_VNODE_FIELD,
   VDelta,
   VDeltaOperationTypes,
   VElement,
+  VFiber,
   VFlags,
   VNode,
   VProps,
 } from './structs';
+
+const workQueue: VFiber[] = [];
 
 /**
  * Diffs two VNode props and modifies the DOM node based on the necessary changes
  * @param {HTMLElement} el - Target element to be modified
  * @param {VProps} oldProps - Old VNode props
  * @param {VProps} newProps - New VNode props
+ * @returns {void}
  */
 export const patchProps = (el: HTMLElement, oldProps: VProps, newProps: VProps): void => {
   const cache = new Set<string>();
   for (const oldPropName of Object.keys(oldProps)) {
     const newPropValue = newProps[oldPropName];
     if (newPropValue) {
-      el[oldPropName] = newPropValue;
+      workQueue.unshift(() => {
+        el[oldPropName] = newPropValue;
+      });
       cache.add(oldPropName);
     } else {
-      el.removeAttribute(oldPropName);
+      workQueue.unshift(() => {
+        el.removeAttribute(oldPropName);
+      });
       delete el[oldPropName];
     }
   }
 
   for (const newPropName of Object.keys(newProps)) {
     if (!cache.has(newPropName)) {
-      el[newPropName] = newProps[newPropName];
+      workQueue.unshift(() => {
+        el[newPropName] = newProps[newPropName];
+      });
     }
   }
 };
@@ -40,6 +51,7 @@ export const patchProps = (el: HTMLElement, oldProps: VProps, newProps: VProps):
  * @param {HTMLElement} el - Target element to be modified
  * @param {VNode[]} oldVNodeChildren - Old VNode children
  * @param {VNode[]} newVNodeChildren - New VNode children
+ * @returns {void}
  */
 export const patchChildren = (
   el: HTMLElement,
@@ -52,10 +64,12 @@ export const patchChildren = (
       const [deltaType, deltaPosition] = delta[i];
       switch (deltaType) {
         case VDeltaOperationTypes.INSERT: {
-          el.insertBefore(
-            createElement(newVNodeChildren[deltaPosition]),
-            el.childNodes[deltaPosition],
-          );
+          workQueue.unshift(() => {
+            el.insertBefore(
+              createElement(newVNodeChildren[deltaPosition]),
+              el.childNodes[deltaPosition],
+            );
+          });
           break;
         }
         case VDeltaOperationTypes.UPDATE: {
@@ -67,27 +81,38 @@ export const patchChildren = (
           break;
         }
         case VDeltaOperationTypes.DELETE: {
-          el.removeChild(el.childNodes[deltaPosition]);
+          workQueue.unshift(() => {
+            el.removeChild(el.childNodes[deltaPosition]);
+          });
           break;
         }
       }
     }
   } else {
-    if (oldVNodeChildren) {
-      for (let i = oldVNodeChildren.length - 1; i >= 0; --i) {
-        patch(<HTMLElement | Text>el.childNodes[i], newVNodeChildren[i], oldVNodeChildren[i]);
+    if (!newVNodeChildren) {
+      workQueue.unshift(() => {
+        el.textContent = '';
+      });
+    } else {
+      if (oldVNodeChildren) {
+        for (let i = oldVNodeChildren.length - 1; i >= 0; --i) {
+          patch(<HTMLElement | Text>el.childNodes[i], newVNodeChildren[i], oldVNodeChildren[i]);
+        }
       }
-    }
-    for (let i = oldVNodeChildren.length ?? 0; i < newVNodeChildren.length; ++i) {
-      el.appendChild(createElement(newVNodeChildren[i], false));
+      for (let i = oldVNodeChildren.length ?? 0; i < newVNodeChildren.length; ++i) {
+        workQueue.unshift(() => {
+          el.appendChild(createElement(newVNodeChildren[i], false));
+        });
+      }
     }
   }
 };
 
-const replaceElementWithVNode = (el: HTMLElement | Text, newVNode: VNode): HTMLElement | Text => {
-  const newElement = createElement(newVNode);
-  el.replaceWith(newElement);
-  return newElement;
+const replaceElementWithVNode = (el: HTMLElement | Text, newVNode: VNode): void => {
+  workQueue.unshift(() => {
+    const newElement = createElement(newVNode);
+    el.replaceWith(newElement);
+  });
 };
 
 /**
@@ -95,31 +120,24 @@ const replaceElementWithVNode = (el: HTMLElement | Text, newVNode: VNode): HTMLE
  * @param {HTMLElement|Text} el - Target element to be modified
  * @param {VNode} newVNode - New VNode
  * @param {VNode=} prevVNode - Previous VNode
- * @returns {HTMLElement|Text}
+ * @returns {void}
  */
-export const patch = (
-  el: HTMLElement | Text,
-  newVNode: VNode,
-  prevVNode?: VNode,
-): HTMLElement | Text => {
-  if (!newVNode) {
-    el.remove();
-    return el;
-  }
+export const patch = (el: HTMLElement | Text, newVNode: VNode, prevVNode?: VNode): void => {
+  if (!newVNode) workQueue.unshift(() => el.remove());
 
   const oldVNode: VNode | undefined = prevVNode ?? el[OLD_VNODE_FIELD];
   const hasString = typeof oldVNode === 'string' || typeof newVNode === 'string';
 
-  if (hasString && oldVNode !== newVNode) return replaceElementWithVNode(el, newVNode);
-  if (!hasString) {
+  if (hasString && oldVNode !== newVNode) {
+    replaceElementWithVNode(el, newVNode);
+  } else if (!hasString) {
     if (
       (!(<VElement>oldVNode)?.key && !(<VElement>newVNode)?.key) ||
       (<VElement>oldVNode)?.key !== (<VElement>newVNode)?.key
     ) {
       if ((<VElement>oldVNode)?.tag !== (<VElement>newVNode)?.tag) {
-        return replaceElementWithVNode(el, newVNode);
-      }
-      if (!(el instanceof Text)) {
+        replaceElementWithVNode(el, newVNode);
+      } else if (!(el instanceof Text)) {
         patchProps(el, (<VElement>oldVNode)?.props || {}, (<VElement>newVNode).props || {});
 
         // Flags allow for greater optimizability by reducing condition branches.
@@ -127,12 +145,16 @@ export const patch = (
         // hand-writing them is also possible
         switch (<VFlags>(<VElement>newVNode).flag) {
           case VFlags.NO_CHILDREN: {
-            el.textContent = '';
+            workQueue.unshift(() => {
+              el.textContent = '';
+            });
             break;
           }
           case VFlags.ONLY_TEXT_CHILDREN: {
             // Joining is faster than setting textContent to an array
-            el.textContent = <string>(<VElement>newVNode).children!.join('');
+            workQueue.unshift(
+              () => (el.textContent = <string>(<VElement>newVNode).children!.join('')),
+            );
             break;
           }
           default: {
@@ -153,5 +175,6 @@ export const patch = (
 
   if (!prevVNode) el[OLD_VNODE_FIELD] = newVNode;
 
-  return el;
+  // Batch all modfications into a scheduler (diffing segregated from DOM manipulation)
+  processWorkQueue(workQueue);
 };

@@ -14,21 +14,19 @@ describe('.patch', () => {
   it('should patch element with text as children', () => {
     const el = createElement(h('div', { id: 'el' }, 'foo'));
 
-    expect(patch(el, h('div', { id: 'el' }, 'bar'))).toEqual(
-      createElement(h('div', { id: 'el' }, 'bar')),
-    );
+    patch(el, h('div', { id: 'el' }, 'bar'));
     expect(el).toEqual(createElement(h('div', { id: 'el' }, 'bar')));
-    expect(patch(el, h('div', { id: 'el', class: 'new' }, 'baz'))).toEqual(
-      createElement(h('div', { id: 'el', class: 'new' }, 'baz')),
-    );
+    expect(el).toEqual(createElement(h('div', { id: 'el' }, 'bar')));
+    patch(el, h('div', { id: 'el', class: 'new' }, 'baz'));
+    expect(el).toEqual(createElement(h('div', { id: 'el', class: 'new' }, 'baz')));
 
     document.body.textContent = '';
   });
 
   it('should patch text', () => {
     const el = createElement('foo');
-
-    expect(patch(el, 'bar', 'foo').nodeValue).toEqual('bar');
+    patch(el, 'bar', 'foo');
+    expect(el.nodeValue).toEqual('bar');
   });
 
   it('should remove textContent if no children', () => {
@@ -36,7 +34,9 @@ describe('.patch', () => {
 
     el.textContent = 'foo';
 
-    expect(patch(el, m('div', undefined, undefined, 0)).textContent).toEqual('');
+    patch(el, m('div', undefined, undefined, 0));
+
+    expect(el.textContent).toEqual('');
   });
 
   it('should patch props', () => {
@@ -55,6 +55,7 @@ describe('.patch', () => {
   });
 
   it('should keep old props and add new ones', () => {
+    jest.useFakeTimers();
     const el = document.createElement('div');
     const props = { title: 'bar', id: 'app', hidden: false };
     el.id = 'app';
