@@ -6,7 +6,8 @@ const conditionalRender = (() => {
   const benchmark = suite
     .add('million', {
       setup() {
-        document.body.innerHTML = '<b>conditional-render</b>: Running <code>million</code> benchmarks... (Check console for realtime results)';
+        document.body.innerHTML =
+          '<b>conditional-render</b>: Running <code>million</code> benchmarks... (Check console for realtime results)';
         const el = Million.createElement(Million.m('div', { id: 'app' }));
         document.body.appendChild(el);
         app = el;
@@ -16,13 +17,19 @@ const conditionalRender = (() => {
         const hasChildren = timestamp % 2 === 0;
         Million.patch(
           app,
-          Million.m('div', { id: 'app' }, hasChildren ? [String(timestamp)] : undefined, hasChildren ? 1 : 0),
+          Million.m(
+            'div',
+            { id: 'app' },
+            hasChildren ? [String(timestamp)] : undefined,
+            hasChildren ? 1 << 1 : 1 << 0,
+          ),
         );
       },
     })
     .add('virtual-dom', {
       setup() {
-        document.body.innerHTML = '<b>conditional-render</b>: Running <code>virtual-dom</code> benchmarks... (Check console for realtime results)';
+        document.body.innerHTML =
+          '<b>conditional-render</b>: Running <code>virtual-dom</code> benchmarks... (Check console for realtime results)';
         const vnode = virtualDom.h('div', {
           id: 'app',
         });
@@ -46,7 +53,8 @@ const conditionalRender = (() => {
     })
     .add('vanilla', {
       setup() {
-        document.body.innerHTML = '<b>conditional-render</b>: Running <code>vanilla</code> benchmarks... (Check console for realtime results)';
+        document.body.innerHTML =
+          '<b>conditional-render</b>: Running <code>vanilla</code> benchmarks... (Check console for realtime results)';
         const el = document.createElement('div');
         el.id = 'app';
         document.body.appendChild(el);
@@ -68,7 +76,8 @@ const conditionalRender = (() => {
     })
     .add('baseline', {
       setup() {
-        document.body.innerHTML = '<b>conditional-render</b>: Running <code>baseline</code> benchmarks... (Check console for realtime results)';
+        document.body.innerHTML =
+          '<b>conditional-render</b>: Running <code>baseline</code> benchmarks... (Check console for realtime results)';
         const el = document.createElement('div');
         el.id = 'app';
         document.body.appendChild(el);
@@ -83,7 +92,10 @@ const conditionalRender = (() => {
       output += `${String(target)}<br />`;
     })
     .on('complete', () => {
-      const message = `<i>Fastest is <b>${benchmark.filter('fastest').map('name').join(', ')}</b></i>`;
+      const message = `<i>Fastest is <b>${benchmark
+        .filter('fastest')
+        .map('name')
+        .join(', ')}</b></i>`;
       console.log(message);
       output += `${message}<br /><br />`;
       output += `<button onclick="window.location.reload()">Reload</button><br />`;
