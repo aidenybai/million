@@ -45,7 +45,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^12.1.4",
-    "@commitlint/config-conventional": "^12.1.4",
+    "@commitlint/config-conventional": "^13.1.0",
     "@rollup/plugin-beep": "^0.2.0",
     "@rollup/plugin-commonjs": "19.0.1",
     "@rollup/plugin-eslint": "^8.0.1",
