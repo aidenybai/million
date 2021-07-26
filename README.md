@@ -1,8 +1,8 @@
 # <a href="https://million.js.org"><img src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/logo.svg" height="80" alt="Million Logo" aria-label="Million Logo" /></a>
 
-### <1kb virtual DOM - it's fast!
+### <1kb compiler-focused virtual DOM. It's fast!
 
-Current Virtual DOM implementations are inadequate—Ranging from overcomplicated to abandoned, most are unusable without sacrificing raw performance and size. Million aims to fix this, providing a library-agnostic Virtual DOM to serve as the core for Javascript libraries.
+Current Virtual DOM implementations are inadequate—Ranging from overcomplicated to abandoned, most are unusable without sacrificing raw performance and size. Million aims to fix this, providing a library-agnostic Virtual DOM to serve as the core for Javascript libraries that focus on precompilation and static analysis.
 
 [![CI](https://img.shields.io/github/workflow/status/aidenybai/million/CI?color=47BB77&labelColor=000&style=flat-square&label=build)](https://img.shields.io/github/workflow/status/aidenybai/million)
 ![Code Size](https://badgen.net/badgesize/brotli/https/unpkg.com/million/dist/million.esm.min.js?style=flat-square&label=size&color=47BB77&labelColor=000) [![NPM Version](https://img.shields.io/npm/v/million?style=flat-square&color=47BB77&labelColor=000)](https://www.npmjs.com/package/million) ![Code Coverage](https://img.shields.io/coveralls/github/aidenybai/million?color=47BB77&labelColor=000&style=flat-square)
