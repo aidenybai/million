@@ -1404,9 +1404,9 @@
     resolve "^1.19.0"
 
 "@rollup/plugin-strip@^2.0.0":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@rollup/plugin-strip/-/plugin-strip-2.0.1.tgz#276e7789a33ae0b10bc8522a20f187d8a6b6b550"
-  integrity sha512-+JJInHt/90Ta/ofCH+YHrI6nyDKe9jVzwBkmnakjDUMD+2QUTPHy60jep+kaMm4ARKWavtfmPbQp7e+xxAHU7g==
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@rollup/plugin-strip/-/plugin-strip-2.1.0.tgz#04c2d2ccfb2c6b192bb70447fbf26e336379a333"
+  integrity sha512-OKlIlXMFlH4nVxq0beNSIKVw0LkpNUpVjjvfzH5OAOAR5dhLZgLZBzwYX4ifIAs18YDrreMcZH4xnKmW9fI2AQ==
   dependencies:
     "@rollup/pluginutils" "^3.1.0"
     estree-walker "^2.0.1"
