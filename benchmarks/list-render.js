@@ -8,20 +8,27 @@ const listRender = (() => {
     .add('million', {
       setup() {
         children = [];
-        document.body.innerHTML = '<b>list-render</b>: Running <code>million</code> benchmarks... (Check console for realtime results)';
+        document.body.innerHTML =
+          '<b>list-render</b>: Running <code>million</code> benchmarks... (Check console for realtime results)';
         const el = Million.createElement(Million.m('div', { id: 'app' }));
         document.body.appendChild(el);
         app = el;
       },
       fn() {
         children.push(String(Date.now()));
-        Million.patch(app, Million.m('div', { id: 'app' }, [...children], 1));
+        Million.patch(
+          app,
+          Million.m('div', { id: 'app' }, [...children], 1 << 1, [
+            Million.INSERT(children.length - 1),
+          ]),
+        );
       },
     })
     .add('virtual-dom', {
       setup() {
         children = [];
-        document.body.innerHTML = '<b>list-render</b>: Running <code>virtual-dom</code> benchmarks... (Check console for realtime results)';
+        document.body.innerHTML =
+          '<b>list-render</b>: Running <code>virtual-dom</code> benchmarks... (Check console for realtime results)';
         const vnode = virtualDom.h('div', {
           id: 'app',
         });
@@ -47,7 +54,8 @@ const listRender = (() => {
     .add('vanilla', {
       setup() {
         children = [];
-        document.body.innerHTML = '<b>list-render</b>: Running <code>vanilla</code> benchmarks... (Check console for realtime results)';
+        document.body.innerHTML =
+          '<b>list-render</b>: Running <code>vanilla</code> benchmarks... (Check console for realtime results)';
         const el = document.createElement('div');
         el.id = 'app';
         document.body.appendChild(el);
@@ -72,7 +80,8 @@ const listRender = (() => {
     .add('baseline', {
       setup() {
         children = [];
-        document.body.innerHTML = '<b>list-render</b>: Running <code>baseline</code> benchmarks... (Check console for realtime results)';
+        document.body.innerHTML =
+          '<b>list-render</b>: Running <code>baseline</code> benchmarks... (Check console for realtime results)';
         const el = document.createElement('div');
         el.id = 'app';
         document.body.appendChild(el);
@@ -87,7 +96,10 @@ const listRender = (() => {
       output += `${String(target)}<br />`;
     })
     .on('complete', () => {
-      const message = `<i>Fastest is <b>${benchmark.filter('fastest').map('name').join(', ')}</b></i>`;
+      const message = `<i>Fastest is <b>${benchmark
+        .filter('fastest')
+        .map('name')
+        .join(', ')}</b></i>`;
       console.log(message);
       output += `${message}<br /><br />`;
       output += `<button onclick="window.location.reload()">Reload</button><br />`;
