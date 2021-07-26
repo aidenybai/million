@@ -6,18 +6,20 @@ const textInterop = (() => {
   const benchmark = suite
     .add('million', {
       setup() {
-        document.body.innerHTML = '<b>text-interop</b>: Running <code>million</code> benchmarks... (Check console for realtime results)';
+        document.body.innerHTML =
+          '<b>text-interop</b>: Running <code>million</code> benchmarks... (Check console for realtime results)';
         const el = Million.createElement(Million.m('div', { id: 'app' }));
         document.body.appendChild(el);
         app = el;
       },
       fn() {
-        Million.patch(app, Million.m('div', { id: 'app' }, [Date.now()], 1));
+        Million.patch(app, Million.m('div', { id: 'app' }, [Date.now()], 1 << 1));
       },
     })
     .add('virtual-dom', {
       setup() {
-        document.body.innerHTML = '<b>text-interop</b>: Running <code>virtual-dom</code> benchmarks... (Check console for realtime results)';
+        document.body.innerHTML =
+          '<b>text-interop</b>: Running <code>virtual-dom</code> benchmarks... (Check console for realtime results)';
         const vnode = virtualDom.h('div', {
           id: 'app',
         });
@@ -41,7 +43,8 @@ const textInterop = (() => {
     })
     .add('vanilla', {
       setup() {
-        document.body.innerHTML = '<b>text-interop</b>: Running <code>vanilla</code> benchmarks... (Check console for realtime results)';
+        document.body.innerHTML =
+          '<b>text-interop</b>: Running <code>vanilla</code> benchmarks... (Check console for realtime results)';
         const el = document.createElement('div');
         el.id = 'app';
         document.body.appendChild(el);
@@ -63,7 +66,8 @@ const textInterop = (() => {
     })
     .add('baseline', {
       setup() {
-        document.body.innerHTML = '<b>text-interop</b>: Running <code>baseline</code> benchmarks... (Check console for realtime results)';
+        document.body.innerHTML =
+          '<b>text-interop</b>: Running <code>baseline</code> benchmarks... (Check console for realtime results)';
         const el = document.createElement('div');
         el.id = 'app';
         document.body.appendChild(el);
@@ -78,7 +82,10 @@ const textInterop = (() => {
       output += `${String(target)}<br />`;
     })
     .on('complete', () => {
-      const message = `<i>Fastest is <b>${benchmark.filter('fastest').map('name').join(', ')}</b></i>`;
+      const message = `<i>Fastest is <b>${benchmark
+        .filter('fastest')
+        .map('name')
+        .join(', ')}</b></i>`;
       console.log(message);
       output += `${message}<br /><br />`;
       output += `<button onclick="window.location.reload()">Reload</button><br />`;
