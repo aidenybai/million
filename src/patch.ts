@@ -1,5 +1,4 @@
 import { createElement } from './createElement';
-import { processWorkQueue } from './fiber';
 import {
   OLD_VNODE_FIELD,
   VDelta,
@@ -12,6 +11,7 @@ import {
 } from './structs';
 
 const workQueue: VFiber[] = [];
+const DEADLINE_THRESHOLD = 1000 / 60; // Minimum time buffer for 60 FPS
 
 /**
  * Diffs two VNode props and modifies the DOM node based on the necessary changes
@@ -21,25 +21,25 @@ const workQueue: VFiber[] = [];
  * @returns {void}
  */
 export const patchProps = (el: HTMLElement, oldProps: VProps, newProps: VProps): void => {
-  const cache = new Set<string>();
+  const skip = new Set<string>();
   for (const oldPropName of Object.keys(oldProps)) {
     const newPropValue = newProps[oldPropName];
     if (newPropValue) {
-      workQueue.unshift(() => {
+      workQueue.push(() => {
         el[oldPropName] = newPropValue;
       });
-      cache.add(oldPropName);
+      skip.add(oldPropName);
     } else {
-      workQueue.unshift(() => {
+      workQueue.push(() => {
         el.removeAttribute(oldPropName);
+        delete el[oldPropName];
       });
-      delete el[oldPropName];
     }
   }
 
   for (const newPropName of Object.keys(newProps)) {
-    if (!cache.has(newPropName)) {
-      workQueue.unshift(() => {
+    if (!skip.has(newPropName)) {
+      workQueue.push(() => {
         el[newPropName] = newProps[newPropName];
       });
     }
@@ -64,7 +64,7 @@ export const patchChildren = (
       const [deltaType, deltaPosition] = delta[i];
       switch (deltaType) {
         case VDeltaOperationTypes.INSERT: {
-          workQueue.unshift(() => {
+          workQueue.push(() => {
             el.insertBefore(
               createElement(newVNodeChildren[deltaPosition]),
               el.childNodes[deltaPosition],
@@ -81,38 +81,48 @@ export const patchChildren = (
           break;
         }
         case VDeltaOperationTypes.DELETE: {
-          workQueue.unshift(() => {
+          workQueue.push(() => {
             el.removeChild(el.childNodes[deltaPosition]);
           });
           break;
         }
       }
     }
+  } else if (!newVNodeChildren) {
+    workQueue.push(() => {
+      el.textContent = '';
+    });
   } else {
-    if (!newVNodeChildren) {
-      workQueue.unshift(() => {
-        el.textContent = '';
+    if (oldVNodeChildren) {
+      for (let i = oldVNodeChildren.length - 1; i >= 0; --i) {
+        patch(<HTMLElement | Text>el.childNodes[i], newVNodeChildren[i], oldVNodeChildren[i]);
+      }
+    }
+    for (let i = oldVNodeChildren.length ?? 0; i < newVNodeChildren.length; ++i) {
+      workQueue.push(() => {
+        el.appendChild(createElement(newVNodeChildren[i], false));
       });
-    } else {
-      if (oldVNodeChildren) {
-        for (let i = oldVNodeChildren.length - 1; i >= 0; --i) {
-          patch(<HTMLElement | Text>el.childNodes[i], newVNodeChildren[i], oldVNodeChildren[i]);
-        }
-      }
-      for (let i = oldVNodeChildren.length ?? 0; i < newVNodeChildren.length; ++i) {
-        workQueue.unshift(() => {
-          el.appendChild(createElement(newVNodeChildren[i], false));
-        });
-      }
     }
   }
 };
 
 const replaceElementWithVNode = (el: HTMLElement | Text, newVNode: VNode): void => {
-  workQueue.unshift(() => {
-    const newElement = createElement(newVNode);
-    el.replaceWith(newElement);
-  });
+  workQueue.push(() => el.replaceWith(createElement(newVNode)));
+};
+
+const processWorkQueue = (): void => {
+  const deadline = performance.now() + DEADLINE_THRESHOLD;
+  const isInputPending =
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    navigator && (<any>navigator)?.scheduling?.isInputPending({ includeContinuous: true });
+  while (workQueue.length > 0) {
+    if (isInputPending || performance.now() >= deadline) {
+      setTimeout(processWorkQueue);
+    } else {
+      const fiber = workQueue.shift();
+      if (fiber) fiber();
+    }
+  }
 };
 
 /**
@@ -123,50 +133,52 @@ const replaceElementWithVNode = (el: HTMLElement | Text, newVNode: VNode): void 
  * @returns {void}
  */
 export const patch = (el: HTMLElement | Text, newVNode: VNode, prevVNode?: VNode): void => {
-  if (!newVNode) workQueue.unshift(() => el.remove());
+  if (!newVNode) {
+    workQueue.push(() => el.remove());
+  } else {
+    const oldVNode: VNode | undefined = prevVNode ?? el[OLD_VNODE_FIELD];
+    const hasString = typeof oldVNode === 'string' || typeof newVNode === 'string';
 
-  const oldVNode: VNode | undefined = prevVNode ?? el[OLD_VNODE_FIELD];
-  const hasString = typeof oldVNode === 'string' || typeof newVNode === 'string';
+    if (hasString && oldVNode !== newVNode) {
+      replaceElementWithVNode(el, newVNode);
+    } else if (!hasString) {
+      if (
+        (!(<VElement>oldVNode)?.key && !(<VElement>newVNode)?.key) ||
+        (<VElement>oldVNode)?.key !== (<VElement>newVNode)?.key
+      ) {
+        if ((<VElement>oldVNode)?.tag !== (<VElement>newVNode)?.tag || el instanceof Text) {
+          replaceElementWithVNode(el, newVNode);
+        } else {
+          patchProps(el, (<VElement>oldVNode)?.props || {}, (<VElement>newVNode).props || {});
 
-  if (hasString && oldVNode !== newVNode) {
-    replaceElementWithVNode(el, newVNode);
-  } else if (!hasString) {
-    if (
-      (!(<VElement>oldVNode)?.key && !(<VElement>newVNode)?.key) ||
-      (<VElement>oldVNode)?.key !== (<VElement>newVNode)?.key
-    ) {
-      if ((<VElement>oldVNode)?.tag !== (<VElement>newVNode)?.tag) {
-        replaceElementWithVNode(el, newVNode);
-      } else if (!(el instanceof Text)) {
-        patchProps(el, (<VElement>oldVNode)?.props || {}, (<VElement>newVNode).props || {});
-
-        // Flags allow for greater optimizability by reducing condition branches.
-        // Generally, you should use a compiler to generate these flags, but
-        // hand-writing them is also possible
-        switch (<VFlags>(<VElement>newVNode).flag) {
-          case VFlags.NO_CHILDREN: {
-            workQueue.unshift(() => {
-              el.textContent = '';
-            });
-            break;
-          }
-          case VFlags.ONLY_TEXT_CHILDREN: {
-            // Joining is faster than setting textContent to an array
-            workQueue.unshift(
-              () => (el.textContent = <string>(<VElement>newVNode).children!.join('')),
-            );
-            break;
-          }
-          default: {
-            patchChildren(
-              el,
-              (<VElement>oldVNode)?.children || [],
-              (<VElement>newVNode).children!,
-              // We need to pass delta here because this function does not have
-              // a reference to the actual vnode.
-              (<VElement>newVNode).delta,
-            );
-            break;
+          // Flags allow for greater optimizability by reducing condition branches.
+          // Generally, you should use a compiler to generate these flags, but
+          // hand-writing them is also possible
+          switch (<VFlags>(<VElement>newVNode).flag) {
+            case VFlags.NO_CHILDREN: {
+              workQueue.push(() => {
+                el.textContent = '';
+              });
+              break;
+            }
+            case VFlags.ONLY_TEXT_CHILDREN: {
+              // Joining is faster than setting textContent to an array
+              workQueue.push(
+                () => (el.textContent = <string>(<VElement>newVNode).children!.join('')),
+              );
+              break;
+            }
+            default: {
+              patchChildren(
+                el,
+                (<VElement>oldVNode)?.children || [],
+                (<VElement>newVNode).children!,
+                // We need to pass delta here because this function does not have
+                // a reference to the actual vnode.
+                (<VElement>newVNode).delta,
+              );
+              break;
+            }
           }
         }
       }
@@ -176,5 +188,5 @@ export const patch = (el: HTMLElement | Text, newVNode: VNode, prevVNode?: VNode
   if (!prevVNode) el[OLD_VNODE_FIELD] = newVNode;
 
   // Batch all modfications into a scheduler (diffing segregated from DOM manipulation)
-  processWorkQueue(workQueue);
+  processWorkQueue();
 };
