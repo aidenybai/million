@@ -18,10 +18,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: yarn install --frozen-lockfile
-      - run: yarn lint
-      - run: yarn test
-      - run: yarn build
+      - run: npm install --frozen-lockfile
+      - run: npm run lint
+      - run: npm run test
+      - run: npm run build
       - name: Coveralls Parallel
         uses: coverallsapp/github-action@master
         with:

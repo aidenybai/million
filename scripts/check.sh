@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-yarn cleanup
-yarn lint
-yarn test
+pnpm run cleanup
+pnpm run lint
+pnpm run test
