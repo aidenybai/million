@@ -8,7 +8,7 @@ export type VProps = Record<string, string | boolean | (() => void)>;
 export type VNode = VElement | string;
 export type VDeltaOperation = [VDeltaOperationTypes, number];
 export type VDelta = VDeltaOperation[];
-export type VFiber = () => void;
+export type VTask = () => void;
 
 export interface VElement {
   tag: string;
