@@ -11,5 +11,4 @@ module.exports = {
     '!src/**/structs.ts',
     '!src/**/schedule.ts',
   ],
-  setupFilesAfterEnv: ['./jest.setup.ts'],
 };
