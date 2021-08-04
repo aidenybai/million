@@ -13,7 +13,10 @@ const textInterop = (() => {
         app = el;
       },
       fn() {
-        Million.patch(app, Million.m('div', { id: 'app' }, [Date.now()], 1 << 1));
+        Million.patch(
+          app,
+          Million.m('div', { id: 'app' }, [Date.now()], Million.VFlags.ONLY_TEXT_CHILDREN),
+        );
       },
     })
     .add('virtual-dom', {
