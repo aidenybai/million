@@ -8,10 +8,6 @@ import {
   VNode,
   VProps,
 } from './structs';
-import { schedule } from './schedule';
-
-// @ts-expect-error Create new property on window object
-const mutate = window.__m_sync ? (callback: () => void) => callback() : schedule;
 
 /**
  * Diffs two VNode props and modifies the DOM node based on the necessary changes
@@ -25,23 +21,17 @@ export const patchProps = (el: HTMLElement, oldProps: VProps, newProps: VProps):
   for (const oldPropName of Object.keys(oldProps)) {
     const newPropValue = newProps[oldPropName];
     if (newPropValue) {
-      mutate(() => {
-        el[oldPropName] = newPropValue;
-      });
+      el[oldPropName] = newPropValue;
       skip.add(oldPropName);
     } else {
-      mutate(() => {
-        el.removeAttribute(oldPropName);
-        delete el[oldPropName];
-      });
+      el.removeAttribute(oldPropName);
+      delete el[oldPropName];
     }
   }
 
   for (const newPropName of Object.keys(newProps)) {
     if (!skip.has(newPropName)) {
-      mutate(() => {
-        el[newPropName] = newProps[newPropName];
-      });
+      el[newPropName] = newProps[newPropName];
     }
   }
 };
@@ -64,12 +54,10 @@ export const patchChildren = (
       const [deltaType, deltaPosition] = delta[i];
       switch (deltaType) {
         case VDeltaOperationTypes.INSERT: {
-          mutate(() => {
-            el.insertBefore(
-              createElement(newVNodeChildren[deltaPosition]),
-              el.childNodes[deltaPosition],
-            );
-          });
+          el.insertBefore(
+            createElement(newVNodeChildren[deltaPosition]),
+            el.childNodes[deltaPosition],
+          );
           break;
         }
         case VDeltaOperationTypes.UPDATE: {
@@ -81,17 +69,13 @@ export const patchChildren = (
           break;
         }
         case VDeltaOperationTypes.DELETE: {
-          mutate(() => {
-            el.removeChild(el.childNodes[deltaPosition]);
-          });
+          el.removeChild(el.childNodes[deltaPosition]);
           break;
         }
       }
     }
   } else if (!newVNodeChildren) {
-    mutate(() => {
-      el.textContent = '';
-    });
+    el.textContent = '';
   } else {
     if (oldVNodeChildren) {
       for (let i = oldVNodeChildren.length - 1; i >= 0; --i) {
@@ -99,15 +83,13 @@ export const patchChildren = (
       }
     }
     for (let i = oldVNodeChildren.length ?? 0; i < newVNodeChildren.length; ++i) {
-      mutate(() => {
-        el.appendChild(createElement(newVNodeChildren[i], false));
-      });
+      el.appendChild(createElement(newVNodeChildren[i], false));
     }
   }
 };
 
 const replaceElementWithVNode = (el: HTMLElement | Text, newVNode: VNode): void => {
-  mutate(() => el.replaceWith(createElement(newVNode)));
+  el.replaceWith(createElement(newVNode));
 };
 
 /**
@@ -119,7 +101,7 @@ const replaceElementWithVNode = (el: HTMLElement | Text, newVNode: VNode): void 
  */
 export const patch = (el: HTMLElement | Text, newVNode: VNode, prevVNode?: VNode): void => {
   if (!newVNode) {
-    mutate(() => el.remove());
+    el.remove();
   } else {
     const oldVNode: VNode | undefined = prevVNode ?? el[OLD_VNODE_FIELD];
     const hasString = typeof oldVNode === 'string' || typeof newVNode === 'string';
@@ -134,36 +116,30 @@ export const patch = (el: HTMLElement | Text, newVNode: VNode, prevVNode?: VNode
         if ((<VElement>oldVNode)?.tag !== (<VElement>newVNode)?.tag || el instanceof Text) {
           replaceElementWithVNode(el, newVNode);
         } else {
-          mutate(() => {
-            patchProps(el, (<VElement>oldVNode)?.props || {}, (<VElement>newVNode).props || {});
-          });
+          patchProps(el, (<VElement>oldVNode)?.props || {}, (<VElement>newVNode).props || {});
 
           // Flags allow for greater optimizability by reducing condition branches.
           // Generally, you should use a compiler to generate these flags, but
           // hand-writing them is also possible
           switch (<VFlags>(<VElement>newVNode).flag) {
             case VFlags.NO_CHILDREN: {
-              mutate(() => {
-                el.textContent = '';
-              });
+              el.textContent = '';
               break;
             }
             case VFlags.ONLY_TEXT_CHILDREN: {
               // Joining is faster than setting textContent to an array
-              mutate(() => (el.textContent = <string>(<VElement>newVNode).children!.join('')));
+              el.textContent = <string>(<VElement>newVNode).children!.join('');
               break;
             }
             default: {
-              mutate(() => {
-                patchChildren(
-                  el,
-                  (<VElement>oldVNode)?.children || [],
-                  (<VElement>newVNode).children!,
-                  // We need to pass delta here because this function does not have
-                  // a reference to the actual vnode.
-                  (<VElement>newVNode).delta,
-                );
-              });
+              patchChildren(
+                el,
+                (<VElement>oldVNode)?.children || [],
+                (<VElement>newVNode).children!,
+                // We need to pass delta here because this function does not have
+                // a reference to the actual vnode.
+                (<VElement>newVNode).delta,
+              );
               break;
             }
           }

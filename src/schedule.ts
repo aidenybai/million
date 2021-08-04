@@ -4,9 +4,13 @@ const queue: VTask[] = [];
 const DEADLINE_THRESHOLD = 1000 / 60; // Minimum time buffer for 60 FPS
 let deadline = 0;
 
-export const schedule = (callback: VTask): void => {
-  queue.push(callback);
-  setTimeout(flush);
+export const schedule = (callback: VTask, important = false): void => {
+  if (important) {
+    requestAnimationFrame(callback);
+  } else {
+    queue.push(callback);
+    postMessage();
+  }
 };
 
 export const shouldYield = (): boolean =>
@@ -21,5 +25,10 @@ export const flush = (): void => {
     if (task) task();
     else break;
   }
-  if (queue.length > 0) setTimeout(flush);
+  if (queue.length > 0) postMessage();
 };
+
+const { port1, port2 } = new MessageChannel();
+port1.onmessage = flush;
+
+export const postMessage = (): void => port2.postMessage(null);
