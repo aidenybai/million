@@ -21,7 +21,7 @@ const conditionalRender = (() => {
             'div',
             { id: 'app' },
             hasChildren ? [String(timestamp)] : undefined,
-            hasChildren ? 1 << 1 : 1 << 0,
+            hasChildren ? Million.VFlags.ONLY_TEXT_CHILDREN : Million.VFlags.NO_CHILDREN,
           ),
         );
       },

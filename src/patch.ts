@@ -10,6 +10,9 @@ import {
 } from './structs';
 import { schedule } from './schedule';
 
+// @ts-expect-error Create new property on window object
+const mutate = window.__m_sync ? (callback: () => void) => callback() : schedule;
+
 /**
  * Diffs two VNode props and modifies the DOM node based on the necessary changes
  * @param {HTMLElement} el - Target element to be modified
@@ -22,12 +25,12 @@ export const patchProps = (el: HTMLElement, oldProps: VProps, newProps: VProps):
   for (const oldPropName of Object.keys(oldProps)) {
     const newPropValue = newProps[oldPropName];
     if (newPropValue) {
-      schedule(() => {
+      mutate(() => {
         el[oldPropName] = newPropValue;
       });
       skip.add(oldPropName);
     } else {
-      schedule(() => {
+      mutate(() => {
         el.removeAttribute(oldPropName);
         delete el[oldPropName];
       });
@@ -36,7 +39,7 @@ export const patchProps = (el: HTMLElement, oldProps: VProps, newProps: VProps):
 
   for (const newPropName of Object.keys(newProps)) {
     if (!skip.has(newPropName)) {
-      schedule(() => {
+      mutate(() => {
         el[newPropName] = newProps[newPropName];
       });
     }
@@ -61,7 +64,7 @@ export const patchChildren = (
       const [deltaType, deltaPosition] = delta[i];
       switch (deltaType) {
         case VDeltaOperationTypes.INSERT: {
-          schedule(() => {
+          mutate(() => {
             el.insertBefore(
               createElement(newVNodeChildren[deltaPosition]),
               el.childNodes[deltaPosition],
@@ -78,7 +81,7 @@ export const patchChildren = (
           break;
         }
         case VDeltaOperationTypes.DELETE: {
-          schedule(() => {
+          mutate(() => {
             el.removeChild(el.childNodes[deltaPosition]);
           });
           break;
@@ -86,7 +89,7 @@ export const patchChildren = (
       }
     }
   } else if (!newVNodeChildren) {
-    schedule(() => {
+    mutate(() => {
       el.textContent = '';
     });
   } else {
@@ -96,7 +99,7 @@ export const patchChildren = (
       }
     }
     for (let i = oldVNodeChildren.length ?? 0; i < newVNodeChildren.length; ++i) {
-      schedule(() => {
+      mutate(() => {
         el.appendChild(createElement(newVNodeChildren[i], false));
       });
     }
@@ -104,7 +107,7 @@ export const patchChildren = (
 };
 
 const replaceElementWithVNode = (el: HTMLElement | Text, newVNode: VNode): void => {
-  schedule(() => el.replaceWith(createElement(newVNode)));
+  mutate(() => el.replaceWith(createElement(newVNode)));
 };
 
 /**
@@ -116,7 +119,7 @@ const replaceElementWithVNode = (el: HTMLElement | Text, newVNode: VNode): void 
  */
 export const patch = (el: HTMLElement | Text, newVNode: VNode, prevVNode?: VNode): void => {
   if (!newVNode) {
-    schedule(() => el.remove());
+    mutate(() => el.remove());
   } else {
     const oldVNode: VNode | undefined = prevVNode ?? el[OLD_VNODE_FIELD];
     const hasString = typeof oldVNode === 'string' || typeof newVNode === 'string';
@@ -131,7 +134,7 @@ export const patch = (el: HTMLElement | Text, newVNode: VNode, prevVNode?: VNode
         if ((<VElement>oldVNode)?.tag !== (<VElement>newVNode)?.tag || el instanceof Text) {
           replaceElementWithVNode(el, newVNode);
         } else {
-          schedule(() => {
+          mutate(() => {
             patchProps(el, (<VElement>oldVNode)?.props || {}, (<VElement>newVNode).props || {});
           });
 
@@ -140,18 +143,18 @@ export const patch = (el: HTMLElement | Text, newVNode: VNode, prevVNode?: VNode
           // hand-writing them is also possible
           switch (<VFlags>(<VElement>newVNode).flag) {
             case VFlags.NO_CHILDREN: {
-              schedule(() => {
+              mutate(() => {
                 el.textContent = '';
               });
               break;
             }
             case VFlags.ONLY_TEXT_CHILDREN: {
               // Joining is faster than setting textContent to an array
-              schedule(() => (el.textContent = <string>(<VElement>newVNode).children!.join('')));
+              mutate(() => (el.textContent = <string>(<VElement>newVNode).children!.join('')));
               break;
             }
             default: {
-              schedule(() => {
+              mutate(() => {
                 patchChildren(
                   el,
                   (<VElement>oldVNode)?.children || [],
