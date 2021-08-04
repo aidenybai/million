@@ -8,7 +8,8 @@ module.exports = {
   collectCoverageFrom: [
     '<rootDir>/src/**/*.ts',
     '!src/**/index.*',
-    '!src/**/constants.ts',
     '!src/**/structs.ts',
+    '!src/**/schedule.ts',
   ],
+  setupFilesAfterEnv: ['./jest.setup.ts'],
 };

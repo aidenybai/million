@@ -1,25 +1,12 @@
-// Adapted from https://github.com/yisar/fre/blob/master/src/schedule.ts
-
 import { VTask } from './structs';
 
 const queue: VTask[] = [];
-const transitions: VTask[] = [];
-const DEADLINE_THRESHOLD = 1000 / 100; // Minimum time buffer for 60 FPS (~6/16ms allocated for repaint)
+const DEADLINE_THRESHOLD = 1000 / 60; // Minimum time buffer for 60 FPS
 let deadline = 0;
-
-const { port1, port2 } = new MessageChannel();
-port1.onmessage = () => {
-  if (transitions.length > 0) transitions.shift()!();
-};
-export const postMessage = (): void => port2.postMessage(null);
 
 export const schedule = (callback: VTask): void => {
   queue.push(callback);
-  startTransition(flush);
-};
-
-export const startTransition = (task: VTask): void => {
-  transitions.push(task) && postMessage();
+  setTimeout(flush);
 };
 
 export const shouldYield = (): boolean =>
@@ -29,10 +16,10 @@ export const shouldYield = (): boolean =>
 
 export const flush = (): void => {
   deadline = performance.now() + DEADLINE_THRESHOLD;
-  let task: VTask | undefined = queue.shift();
-  while (task && !shouldYield()) {
-    task();
-    task = queue.shift();
+  while (!shouldYield()) {
+    const task = queue.shift();
+    if (task) task();
+    else break;
   }
-  if (task) startTransition(flush);
+  if (queue.length > 0) setTimeout(flush);
 };

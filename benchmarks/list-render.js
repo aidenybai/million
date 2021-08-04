@@ -18,7 +18,7 @@ const listRender = (() => {
         children.push(String(Date.now()));
         Million.patch(
           app,
-          Million.m('div', { id: 'app' }, [...children], 1 << 1, [
+          Million.m('div', { id: 'app' }, [...children], Million.VFlags.ONLY_TEXT_CHILDREN, [
             Million.INSERT(children.length - 1),
           ]),
         );
