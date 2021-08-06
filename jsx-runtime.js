@@ -20,6 +20,7 @@ const h = (tag, props, children, delta) => {
 };
 
 const normalize = (children, normalizedChildren) => {
+  if (!children || children.length === 0) return undefined;
   for (const child of children) {
     if (child !== undefined && child !== null && child !== false && child !== '') {
       if (Array.isArray(child)) {
@@ -39,16 +40,20 @@ const normalize = (children, normalizedChildren) => {
 };
 
 const jsx = (tag, props, ...children) => {
-  const normalizedChildren = normalize(children, []);
   let delta;
   if (props.delta && props.delta.length > 0) {
     delta = props.delta;
     delete props.delta;
   }
+  if (props.children) {
+    children = props.children;
+    delete props.children;
+  }
+  const normalizedChildren = normalize(children, []);
   if (typeof tag === 'function') {
-    return tag(props || {}, normalizedChildren, delta);
+    return tag(props, normalizedChildren, delta);
   } else {
-    return h(tag, props || {}, normalizedChildren, delta);
+    return h(tag, props, normalizedChildren, delta);
   }
 };
 
