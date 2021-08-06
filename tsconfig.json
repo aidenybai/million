@@ -19,6 +19,6 @@
     "declaration": true,
     "strict": true
   },
-  "include": ["./src/**/*.ts", "jest.setup.ts"],
+  "include": ["./src/**/*.ts"],
   "exclude": ["node_modules", "dist", "./src/**/*.js", "./src/**/*.spec.ts"]
 }

@@ -21,8 +21,14 @@
     "url": "git+https://github.com/aidenybai/million.git"
   },
   "exports": {
-    "require": "./dist/million.cjs.js",
-    "import": "./dist/million.esm.js"
+    ".": {
+      "import": "./dist/million.esm.js",
+      "require": "./dist/million.cjs.js"
+    },
+    "./jsx-runtime": {
+      "import": "./jsx-runtime.js",
+      "require": "./jsx-runtime.js"
+    }
   },
   "sideEffects": false,
   "keywords": [
