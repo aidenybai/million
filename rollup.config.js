@@ -7,24 +7,22 @@ import filesize from 'rollup-plugin-filesize';
 import { terser } from 'rollup-plugin-terser';
 import ts from 'rollup-plugin-ts';
 
-const suite = async (input, output) => {
-  return {
-    input,
-    plugins: [
-      eslint(),
-      commonjs(),
-      resolve({ extensions: ['.ts'] }),
-      ts(),
-      strip({
-        functions: ['console.log'],
-        include: '**/*.(ts)',
-      }),
-      beep(),
-    ],
-    output,
-    onwarn: () => {},
-  };
-};
+const suite = (input, output) => ({
+  input,
+  plugins: [
+    eslint(),
+    commonjs(),
+    resolve({ extensions: ['.ts'] }),
+    ts(),
+    strip({
+      functions: ['console.log'],
+      include: '**/*.(ts)',
+    }),
+    beep(),
+  ],
+  output,
+  onwarn: () => {},
+});
 
 export const unit = ({ file, format, minify }) => ({
   file,
@@ -44,32 +42,46 @@ export const unit = ({ file, format, minify }) => ({
     : [],
 });
 
-export default suite('./src/index.ts', [
-  unit({
-    file: './dist/million.umd.js',
-    format: 'umd',
-  }),
-  unit({
-    file: './dist/million.umd.min.js',
-    format: 'umd',
-    minify: true,
-  }),
-  unit({
-    file: './dist/million.cjs.js',
-    format: 'cjs',
-  }),
-  unit({
-    file: './dist/million.cjs.min.js',
-    format: 'cjs',
-    minify: true,
-  }),
-  unit({
-    file: './dist/million.esm.js',
-    format: 'esm',
-  }),
-  unit({
-    file: './dist/million.esm.min.js',
-    format: 'esm',
-    minify: true,
-  }),
-]);
+export default [
+  suite('./src/index.ts', [
+    unit({
+      file: './dist/million.umd.js',
+      format: 'umd',
+    }),
+    unit({
+      file: './dist/million.umd.min.js',
+      format: 'umd',
+      minify: true,
+    }),
+    unit({
+      file: './dist/million.cjs.js',
+      format: 'cjs',
+    }),
+    unit({
+      file: './dist/million.cjs.min.js',
+      format: 'cjs',
+      minify: true,
+    }),
+    unit({
+      file: './dist/million.esm.js',
+      format: 'esm',
+    }),
+    unit({
+      file: './dist/million.esm.min.js',
+      format: 'esm',
+      minify: true,
+    }),
+  ]),
+  suite('./src/jsx-runtime.ts', [
+    unit({
+      file: './dist/jsx-runtime.cjs.js',
+      format: 'cjs',
+      minify: true,
+    }),
+    unit({
+      file: './dist/jsx-runtime.esm.js',
+      format: 'esm',
+      minify: true,
+    }),
+  ]),
+];
