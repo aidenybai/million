@@ -5,7 +5,6 @@ source $(dirname "$0")/helpers.sh
 rm -rf dist
 rollup -c
 mv dist/types/million.esm.d.ts dist/million.d.ts
-rm -rf dist/types
 
 sed -i '' 's/export type/export/g' dist/million.d.ts
 

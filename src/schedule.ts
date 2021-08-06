@@ -13,12 +13,12 @@ export const schedule = (callback: VTask, important = false): void => {
   }
 };
 
-export const shouldYield = (): boolean =>
+const shouldYield = (): boolean =>
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (<any>navigator)?.scheduling?.isInputPending({ includeContinuous: true }) ||
   performance.now() >= deadline;
 
-export const flush = (): void => {
+const flush = (): void => {
   deadline = performance.now() + DEADLINE_THRESHOLD;
   while (!shouldYield()) {
     const task = queue.shift();
@@ -31,4 +31,4 @@ export const flush = (): void => {
 const { port1, port2 } = new MessageChannel();
 port1.onmessage = flush;
 
-export const postMessage = (): void => port2.postMessage(null);
+const postMessage = (): void => port2.postMessage(null);
