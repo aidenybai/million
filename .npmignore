@@ -3,3 +3,4 @@
 !LICENSE
 !/README.md
 !package.json
+!jsx-runtime.js
