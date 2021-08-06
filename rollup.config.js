@@ -72,7 +72,7 @@ export default [
       minify: true,
     }),
   ]),
-  suite('./src/jsx-runtime.ts', [
+  suite('./src/jsx.ts', [
     unit({
       file: './dist/jsx-runtime.cjs.js',
       format: 'cjs',
