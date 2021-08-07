@@ -10,7 +10,7 @@ module.exports = {
     '!src/**/index.*',
     '!src/**/structs.ts',
     '!src/**/schedule.ts',
-    '!src/**/jsx-runtime.ts',
+    '!src/**/jsx.ts',
     '!src/**/patch.ts',
   ],
 };
