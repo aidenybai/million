@@ -47,9 +47,12 @@ export const patchChildren = (
   el: HTMLElement,
   oldVNodeChildren: VNode[],
   newVNodeChildren: VNode[],
+  keyed: boolean,
   delta?: VDelta,
 ): void => {
-  if (delta) {
+  if (!newVNodeChildren) {
+    el.textContent = '';
+  } else if (delta) {
     for (let i = 0; i < delta.length; i++) {
       const [deltaType, deltaPosition] = delta[i];
       switch (deltaType) {
@@ -74,10 +77,12 @@ export const patchChildren = (
         }
       }
     }
-  } else if (!newVNodeChildren) {
-    el.textContent = '';
+  } else if (keyed) {
+    // TODO: Efficient diffing by keys with moves (#107)
   } else {
     if (oldVNodeChildren) {
+      // Interates backwards, so in case a childNode is destroyed, it will not shift the nodes
+      // and break accessing by index
       for (let i = oldVNodeChildren.length - 1; i >= 0; --i) {
         patch(<HTMLElement | Text>el.childNodes[i], newVNodeChildren[i], oldVNodeChildren[i]);
       }
@@ -136,6 +141,7 @@ export const patch = (el: HTMLElement | Text, newVNode: VNode, prevVNode?: VNode
                 el,
                 (<VElement>oldVNode)?.children || [],
                 (<VElement>newVNode).children!,
+                <VFlags>(<VElement>newVNode).flag === VFlags.ONLY_KEYED_CHILDREN,
                 // We need to pass delta here because this function does not have
                 // a reference to the actual vnode.
                 (<VElement>newVNode).delta,
