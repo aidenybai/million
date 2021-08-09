@@ -84,7 +84,7 @@ export const patchChildren = (
       }
     }
   } else if (keyed) {
-    // Diffing algorithm adapted from Fre
+    // Keyed reconciliation algorithm adapted from [Fre](https://github.com/yisar/fre)
     let oldHead = 0;
     let newHead = 0;
     let oldTail = oldVNodeChildren.length - 1;
