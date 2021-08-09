@@ -21,7 +21,16 @@ export const patchProps = (el: HTMLElement, oldProps: VProps, newProps: VProps):
   for (const oldPropName of Object.keys(oldProps)) {
     const newPropValue = newProps[oldPropName];
     if (newPropValue) {
-      el[oldPropName] = newPropValue;
+      const oldPropValue = oldProps[oldPropName];
+      if (newPropValue !== oldPropValue) {
+        if (typeof oldPropValue === 'function' && typeof newPropValue === 'function') {
+          if (oldPropValue.toString() !== newPropValue.toString()) {
+            el[oldPropName] = newPropValue;
+          }
+        } else {
+          el[oldPropName] = newPropValue;
+        }
+      }
       skip.add(oldPropName);
     } else {
       el.removeAttribute(oldPropName);
@@ -75,7 +84,66 @@ export const patchChildren = (
       }
     }
   } else if (keyed) {
-    // TODO: Efficient diffing by keys with moves (#107)
+    // WIP: Efficient diffing by keys with moves (#107)
+    let oldHead = 0;
+    let newHead = 0;
+    let oldTail = oldVNodeChildren.length - 1;
+    let newTail = newVNodeChildren.length - 1;
+
+    // Constrain tails to dirty vnodes: [X, A, B, C], [Y, A, B, C] -> [X], [Y]
+    while (oldHead <= oldTail && newHead <= newTail) {
+      if ((<VElement>oldVNodeChildren[oldTail]).key !== (<VElement>newVNodeChildren[newTail]).key)
+        break;
+      oldTail--;
+      newTail--;
+    }
+
+    // Constrain heads to dirty vnodes: [A, B, C, X], [A, B, C, Y] -> [X], [Y]
+    while (oldHead <= oldTail && newHead <= newTail) {
+      if ((<VElement>oldVNodeChildren[oldTail]).key !== (<VElement>newVNodeChildren[newTail]).key)
+        break;
+      oldHead++;
+      newHead++;
+    }
+
+    if (oldHead > oldTail) {
+      // There are no dirty old children: [], [X, Y, Z]
+      while (newHead <= newTail) {
+        el.insertBefore(createElement(newVNodeChildren[newTail], false), el.childNodes[newTail--]);
+      }
+    } else if (newHead > newTail) {
+      // There are no dirty new children: [X, Y, Z], []
+      while (oldHead <= oldTail) {
+        el.removeChild(el.childNodes[oldTail--]);
+      }
+    } else {
+      const keyMap = {};
+      for (let i = oldHead; i <= oldTail; i++) {
+        keyMap[(<VElement>oldVNodeChildren[i]).key!] = i;
+      }
+      while (newHead <= newTail) {
+        const newVNodeChild = <VElement>newVNodeChildren[newTail];
+        const i = keyMap[newVNodeChild.key!];
+        if (i && newVNodeChild.key === (<VElement>oldVNodeChildren[i]).key) {
+          // Determine move for child that moved: [X, A, B, C] -> [A, B, C, X]
+          const child = el.removeChild(el.childNodes[i]);
+          el.insertBefore(child, el.childNodes[newTail--]);
+          delete keyMap[newVNodeChild.key!];
+        } else {
+          // VNode doesn't exist yet: [] -> [X]
+          el.insertBefore(createElement(newVNodeChild, false), el.childNodes[newTail--]);
+        }
+      }
+
+      for (const key in keyMap) {
+        // VNode wasn't found in new vnodes, so it's cleaned up: [X] -> []
+        el.removeChild(el.childNodes[keyMap[key]]);
+      }
+    }
+
+    while (newHead-- > 0) {
+      patch(el, newVNodeChildren[newHead], oldVNodeChildren[newHead]);
+    }
   } else {
     if (oldVNodeChildren) {
       // Interates backwards, so in case a childNode is destroyed, it will not shift the nodes
