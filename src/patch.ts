@@ -56,25 +56,22 @@ export const patchChildren = (
     for (let i = 0; i < delta.length; i++) {
       const [deltaType, deltaPosition] = delta[i];
       switch (deltaType) {
-        case VDeltaOperationTypes.INSERT: {
+        case VDeltaOperationTypes.INSERT:
           el.insertBefore(
             createElement(newVNodeChildren[deltaPosition]),
             el.childNodes[deltaPosition],
           );
           break;
-        }
-        case VDeltaOperationTypes.UPDATE: {
+        case VDeltaOperationTypes.UPDATE:
           patch(
             <HTMLElement | Text>el.childNodes[deltaPosition],
             newVNodeChildren[deltaPosition],
             oldVNodeChildren[deltaPosition],
           );
           break;
-        }
-        case VDeltaOperationTypes.DELETE: {
+        case VDeltaOperationTypes.DELETE:
           el.removeChild(el.childNodes[deltaPosition]);
           break;
-        }
       }
     }
   } else if (keyed) {
@@ -127,16 +124,14 @@ export const patch = (el: HTMLElement | Text, newVNode: VNode, prevVNode?: VNode
           // Generally, you should use a compiler to generate these flags, but
           // hand-writing them is also possible
           switch (<VFlags>(<VElement>newVNode).flag) {
-            case VFlags.NO_CHILDREN: {
+            case VFlags.NO_CHILDREN:
               el.textContent = '';
               break;
-            }
-            case VFlags.ONLY_TEXT_CHILDREN: {
+            case VFlags.ONLY_TEXT_CHILDREN:
               // Joining is faster than setting textContent to an array
               el.textContent = <string>(<VElement>newVNode).children!.join('');
               break;
-            }
-            default: {
+            default:
               patchChildren(
                 el,
                 (<VElement>oldVNode)?.children || [],
@@ -147,7 +142,6 @@ export const patch = (el: HTMLElement | Text, newVNode: VNode, prevVNode?: VNode
                 (<VElement>newVNode).delta,
               );
               break;
-            }
           }
         }
       }
