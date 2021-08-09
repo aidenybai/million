@@ -84,7 +84,7 @@ export const patchChildren = (
       }
     }
   } else if (keyed) {
-    // WIP: Efficient diffing by keys with moves (#107)
+    // Diffing algorithm adapted from Fre
     let oldHead = 0;
     let newHead = 0;
     let oldTail = oldVNodeChildren.length - 1;
@@ -141,6 +141,7 @@ export const patchChildren = (
       }
     }
 
+    // Patch and update the new children top up: [X, Y, Z], [Y, X, Z] -> [Y, X, Z]
     while (newHead-- > 0) {
       patch(el, newVNodeChildren[newHead], oldVNodeChildren[newHead]);
     }
