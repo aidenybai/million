@@ -83,8 +83,10 @@ export const patchChildren = (
           break;
       }
     }
-  } else if (keyed) {
-    // Keyed reconciliation algorithm adapted from [Fre](https://github.com/yisar/fre)
+  } else if (keyed && oldVNodeChildren.length > 0) {
+    const childNodes = [...el.childNodes];
+
+    // Keyed reconciliation algorithm originally adapted from [Fre](https://github.com/yisar/fre)
     let oldHead = 0;
     let newHead = 0;
     let oldTail = oldVNodeChildren.length - 1;
@@ -114,7 +116,7 @@ export const patchChildren = (
     } else if (newHead > newTail) {
       // There are no dirty new children: [X, Y, Z], []
       while (oldHead <= oldTail) {
-        el.removeChild(el.childNodes[oldTail--]);
+        el.removeChild(childNodes[oldTail--]);
       }
     } else {
       const keyMap = {};
@@ -123,21 +125,24 @@ export const patchChildren = (
       }
       while (newHead <= newTail) {
         const newVNodeChild = <VElement>newVNodeChildren[newTail];
-        const i = keyMap[newVNodeChild.key!];
-        if (i && newVNodeChild.key === (<VElement>oldVNodeChildren[i]).key) {
+        const oldVNodePosition = keyMap[newVNodeChild.key!];
+        if (
+          oldVNodePosition &&
+          newVNodeChild.key === (<VElement>oldVNodeChildren[oldVNodePosition]).key
+        ) {
           // Determine move for child that moved: [X, A, B, C] -> [A, B, C, X]
-          const child = el.removeChild(el.childNodes[i]);
-          el.insertBefore(child, el.childNodes[newTail--]);
+          const child = el.removeChild(childNodes[oldVNodePosition]);
+          el.insertBefore(child, childNodes[newTail--]);
           delete keyMap[newVNodeChild.key!];
         } else {
           // VNode doesn't exist yet: [] -> [X]
-          el.insertBefore(createElement(newVNodeChild, false), el.childNodes[newTail--]);
+          el.insertBefore(createElement(newVNodeChild, false), childNodes[newTail--]);
         }
       }
 
       for (const key in keyMap) {
         // VNode wasn't found in new vnodes, so it's cleaned up: [X] -> []
-        el.removeChild(el.childNodes[keyMap[key]]);
+        el.removeChild(childNodes[keyMap[key]]);
       }
     }
 
