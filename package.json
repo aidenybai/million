@@ -58,7 +58,7 @@
     "@rollup/plugin-node-resolve": "13.0.4",
     "@rollup/plugin-strip": "^2.0.0",
     "@testing-library/dom": "^8.0.0",
-    "@types/jest": "^26.0.22",
+    "@types/jest": "^27.0.0",
     "@types/node": "^16.4.8",
     "@typescript-eslint/eslint-plugin": "^4.21.0",
     "@typescript-eslint/parser": "^4.21.0",
