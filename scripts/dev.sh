@@ -47,4 +47,4 @@ if [ ! -d dev ]; then
   info "Couldn't find an the \`dev\` directory, creating one for you..."
 fi
 
-vite --host
+vite

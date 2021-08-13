@@ -16,8 +16,14 @@ import {
  * @param {VProps} newProps - New VNode props
  * @returns {void}
  */
-export const patchProps = (el: HTMLElement, oldProps: VProps, newProps: VProps): void => {
+export const patchProps = (
+  el: HTMLElement,
+  oldProps: VProps,
+  newProps: VProps,
+  workQueue: (() => void)[],
+): void => {
   const skip = new Set<string>();
+
   for (const oldPropName of Object.keys(oldProps)) {
     const newPropValue = newProps[oldPropName];
     if (newPropValue) {
@@ -25,22 +31,24 @@ export const patchProps = (el: HTMLElement, oldProps: VProps, newProps: VProps):
       if (newPropValue !== oldPropValue) {
         if (typeof oldPropValue === 'function' && typeof newPropValue === 'function') {
           if (oldPropValue.toString() !== newPropValue.toString()) {
-            el[oldPropName] = newPropValue;
+            workQueue.push(() => (el[oldPropName] = newPropValue));
           }
         } else {
-          el[oldPropName] = newPropValue;
+          workQueue.push(() => (el[oldPropName] = newPropValue));
         }
       }
       skip.add(oldPropName);
     } else {
-      el.removeAttribute(oldPropName);
-      delete el[oldPropName];
+      workQueue.push(() => {
+        el.removeAttribute(oldPropName);
+        delete el[oldPropName];
+      });
     }
   }
 
   for (const newPropName of Object.keys(newProps)) {
     if (!skip.has(newPropName)) {
-      el[newPropName] = newProps[newPropName];
+      workQueue.push(() => (el[newPropName] = newProps[newPropName]));
     }
   }
 };
@@ -57,18 +65,21 @@ export const patchChildren = (
   oldVNodeChildren: VNode[],
   newVNodeChildren: VNode[],
   keyed: boolean,
-  delta?: VDelta,
+  delta: VDelta | undefined,
+  workQueue: (() => void)[],
 ): void => {
   if (!newVNodeChildren) {
-    el.textContent = '';
+    workQueue.push(() => (el.textContent = ''));
   } else if (delta) {
     for (let i = 0; i < delta.length; i++) {
       const [deltaType, deltaPosition] = delta[i];
       switch (deltaType) {
         case VDeltaOperationTypes.INSERT:
-          el.insertBefore(
-            createElement(newVNodeChildren[deltaPosition]),
-            el.childNodes[deltaPosition],
+          workQueue.push(() =>
+            el.insertBefore(
+              createElement(newVNodeChildren[deltaPosition]),
+              el.childNodes[deltaPosition],
+            ),
           );
           break;
         case VDeltaOperationTypes.UPDATE:
@@ -76,16 +87,15 @@ export const patchChildren = (
             <HTMLElement | Text>el.childNodes[deltaPosition],
             newVNodeChildren[deltaPosition],
             oldVNodeChildren[deltaPosition],
+            workQueue,
           );
           break;
         case VDeltaOperationTypes.DELETE:
-          el.removeChild(el.childNodes[deltaPosition]);
+          workQueue.push(() => el.removeChild(el.childNodes[deltaPosition]));
           break;
       }
     }
   } else if (keyed && oldVNodeChildren.length > 0) {
-    const childNodes = [...el.childNodes];
-
     // Keyed reconciliation algorithm originally adapted from [Fre](https://github.com/yisar/fre)
     let oldHead = 0;
     let newHead = 0;
@@ -102,7 +112,7 @@ export const patchChildren = (
 
     // Constrain heads to dirty vnodes: [A, B, C, X], [A, B, C, Y] -> [X], [Y]
     while (oldHead <= oldTail && newHead <= newTail) {
-      if ((<VElement>oldVNodeChildren[oldTail]).key !== (<VElement>newVNodeChildren[newTail]).key)
+      if ((<VElement>oldVNodeChildren[oldHead]).key !== (<VElement>newVNodeChildren[newHead]).key)
         break;
       oldHead++;
       newHead++;
@@ -111,61 +121,80 @@ export const patchChildren = (
     if (oldHead > oldTail) {
       // There are no dirty old children: [], [X, Y, Z]
       while (newHead <= newTail) {
-        el.insertBefore(createElement(newVNodeChildren[newTail], false), el.childNodes[newTail--]);
+        const newHeadIndex = Number(newHead++);
+        const node = el.childNodes[newHeadIndex];
+        workQueue.push(() =>
+          el.insertBefore(createElement(newVNodeChildren[newHeadIndex], false), node),
+        );
       }
     } else if (newHead > newTail) {
       // There are no dirty new children: [X, Y, Z], []
       while (oldHead <= oldTail) {
-        el.removeChild(childNodes[oldTail--]);
+        const node = el.childNodes[oldTail--];
+        workQueue.push(() => el.removeChild(node));
       }
     } else {
-      const keyMap = {};
+      const keyMap: Record<string, number> = {};
       for (let i = oldHead; i <= oldTail; i++) {
         keyMap[(<VElement>oldVNodeChildren[i]).key!] = i;
       }
       while (newHead <= newTail) {
-        const newVNodeChild = <VElement>newVNodeChildren[newTail];
+        const newVNodeChild = <VElement>newVNodeChildren[newHead];
         const oldVNodePosition = keyMap[newVNodeChild.key!];
+        const node = el.childNodes[oldVNodePosition];
+
         if (
-          oldVNodePosition &&
+          oldVNodePosition !== undefined &&
           newVNodeChild.key === (<VElement>oldVNodeChildren[oldVNodePosition]).key
         ) {
           // Determine move for child that moved: [X, A, B, C] -> [A, B, C, X]
-          const child = el.removeChild(childNodes[oldVNodePosition]);
-          el.insertBefore(child, childNodes[newTail--]);
+          const refNode = el.childNodes[newHead++];
+          workQueue.push(() => {
+            el.removeChild(node);
+            el.insertBefore(node, refNode);
+          });
           delete keyMap[newVNodeChild.key!];
         } else {
           // VNode doesn't exist yet: [] -> [X]
-          el.insertBefore(createElement(newVNodeChild, false), childNodes[newTail--]);
+          const node = el.childNodes[newHead++];
+          workQueue.push(() => el.insertBefore(createElement(newVNodeChild, false), node));
         }
       }
 
-      for (const key in keyMap) {
+      for (const oldVNodePosition of Object.values(keyMap)) {
         // VNode wasn't found in new vnodes, so it's cleaned up: [X] -> []
-        el.removeChild(childNodes[keyMap[key]]);
+        const node = el.childNodes[oldVNodePosition];
+        workQueue.push(() => el.removeChild(node));
       }
     }
 
     // Patch and update the new children top up: [X, Y, Z], [Y, X, Z] -> [Y, X, Z]
-    while (newHead-- > 0) {
-      patch(el, newVNodeChildren[newHead], oldVNodeChildren[newHead]);
+    while (newTail++ < newVNodeChildren.length - 1) {
+      patch(
+        <HTMLElement>el.childNodes[newTail],
+        newVNodeChildren[newTail],
+        oldVNodeChildren[newTail],
+        workQueue,
+      );
     }
   } else {
     if (oldVNodeChildren) {
       // Interates backwards, so in case a childNode is destroyed, it will not shift the nodes
       // and break accessing by index
       for (let i = oldVNodeChildren.length - 1; i >= 0; --i) {
-        patch(<HTMLElement | Text>el.childNodes[i], newVNodeChildren[i], oldVNodeChildren[i]);
+        patch(
+          <HTMLElement | Text>el.childNodes[i],
+          newVNodeChildren[i],
+          oldVNodeChildren[i],
+          workQueue,
+        );
       }
     }
     for (let i = oldVNodeChildren.length ?? 0; i < newVNodeChildren.length; ++i) {
-      el.appendChild(createElement(newVNodeChildren[i], false));
+      const node = createElement(newVNodeChildren[i], false);
+      workQueue.push(() => el.appendChild(node));
     }
   }
-};
-
-const replaceElementWithVNode = (el: HTMLElement | Text, newVNode: VNode): void => {
-  el.replaceWith(createElement(newVNode));
 };
 
 /**
@@ -175,35 +204,47 @@ const replaceElementWithVNode = (el: HTMLElement | Text, newVNode: VNode): void 
  * @param {VNode=} prevVNode - Previous VNode
  * @returns {void}
  */
-export const patch = (el: HTMLElement | Text, newVNode: VNode, prevVNode?: VNode): void => {
+export const patch = (
+  el: HTMLElement | Text,
+  newVNode: VNode,
+  prevVNode?: VNode,
+  workQueue: (() => void)[] = [],
+): void => {
   if (!newVNode) {
-    el.remove();
+    workQueue.push(() => el.remove());
   } else {
     const oldVNode: VNode | undefined = prevVNode ?? el[OLD_VNODE_FIELD];
     const hasString = typeof oldVNode === 'string' || typeof newVNode === 'string';
 
     if (hasString && oldVNode !== newVNode) {
-      replaceElementWithVNode(el, newVNode);
+      workQueue.push(() => el.replaceWith(createElement(newVNode)));
     } else if (!hasString) {
       if (
         (!(<VElement>oldVNode)?.key && !(<VElement>newVNode)?.key) ||
         (<VElement>oldVNode)?.key !== (<VElement>newVNode)?.key
       ) {
         if ((<VElement>oldVNode)?.tag !== (<VElement>newVNode)?.tag || el instanceof Text) {
-          replaceElementWithVNode(el, newVNode);
+          workQueue.push(() => el.replaceWith(createElement(newVNode)));
         } else {
-          patchProps(el, (<VElement>oldVNode)?.props || {}, (<VElement>newVNode).props || {});
+          patchProps(
+            el,
+            (<VElement>oldVNode)?.props || {},
+            (<VElement>newVNode).props || {},
+            workQueue,
+          );
 
           // Flags allow for greater optimizability by reducing condition branches.
           // Generally, you should use a compiler to generate these flags, but
           // hand-writing them is also possible
           switch (<VFlags>(<VElement>newVNode).flag) {
             case VFlags.NO_CHILDREN:
-              el.textContent = '';
+              workQueue.push(() => (el.textContent = ''));
               break;
             case VFlags.ONLY_TEXT_CHILDREN:
               // Joining is faster than setting textContent to an array
-              el.textContent = <string>(<VElement>newVNode).children!.join('');
+              workQueue.push(
+                () => (el.textContent = <string>(<VElement>newVNode).children!.join('')),
+              );
               break;
             default:
               patchChildren(
@@ -214,12 +255,19 @@ export const patch = (el: HTMLElement | Text, newVNode: VNode, prevVNode?: VNode
                 // We need to pass delta here because this function does not have
                 // a reference to the actual vnode.
                 (<VElement>newVNode).delta,
+                workQueue,
               );
               break;
           }
         }
       }
     }
+  }
+
+  for (let i = 0; i < workQueue.length; i++) {
+    workQueue[i]();
+    // eslint-disable-next-line no-debugger
+    // debugger;
   }
 
   if (!prevVNode) el[OLD_VNODE_FIELD] = newVNode;
