@@ -104,16 +104,18 @@ export const patchChildren = (
 
     // Constrain tails to dirty vnodes: [X, A, B, C], [Y, A, B, C] -> [X], [Y]
     while (oldHead <= oldTail && newHead <= newTail) {
-      if ((<VElement>oldVNodeChildren[oldTail]).key !== (<VElement>newVNodeChildren[newTail]).key)
+      if ((<VElement>oldVNodeChildren[oldTail]).key !== (<VElement>newVNodeChildren[newTail]).key) {
         break;
+      }
       oldTail--;
       newTail--;
     }
 
     // Constrain heads to dirty vnodes: [A, B, C, X], [A, B, C, Y] -> [X], [Y]
     while (oldHead <= oldTail && newHead <= newTail) {
-      if ((<VElement>oldVNodeChildren[oldHead]).key !== (<VElement>newVNodeChildren[newHead]).key)
+      if ((<VElement>oldVNodeChildren[oldHead]).key !== (<VElement>newVNodeChildren[newHead]).key) {
         break;
+      }
       oldHead++;
       newHead++;
     }
@@ -130,52 +132,37 @@ export const patchChildren = (
     } else if (newHead > newTail) {
       // There are no dirty new children: [X, Y, Z], []
       while (oldHead <= oldTail) {
-        const node = el.childNodes[oldTail--];
+        const node = el.childNodes[oldHead++];
         workQueue.push(() => el.removeChild(node));
       }
     } else {
       const keyMap: Record<string, number> = {};
-      for (let i = oldHead; i <= oldTail; i++) {
+      for (let i = oldHead; i <= oldTail; ++i) {
         keyMap[(<VElement>oldVNodeChildren[i]).key!] = i;
       }
       while (newHead <= newTail) {
         const newVNodeChild = <VElement>newVNodeChildren[newHead];
         const oldVNodePosition = keyMap[newVNodeChild.key!];
         const node = el.childNodes[oldVNodePosition];
+        const refNode = el.childNodes[newVNodeChildren.length + newHead++];
 
         if (
           oldVNodePosition !== undefined &&
           newVNodeChild.key === (<VElement>oldVNodeChildren[oldVNodePosition]).key
         ) {
           // Determine move for child that moved: [X, A, B, C] -> [A, B, C, X]
-          const refNode = el.childNodes[newHead++];
-          workQueue.push(() => {
-            el.removeChild(node);
-            el.insertBefore(node, refNode);
-          });
+          workQueue.push(() => el.insertBefore(node, refNode));
           delete keyMap[newVNodeChild.key!];
         } else {
           // VNode doesn't exist yet: [] -> [X]
-          const node = el.childNodes[newHead++];
-          workQueue.push(() => el.insertBefore(createElement(newVNodeChild, false), node));
+          workQueue.push(() => el.insertBefore(createElement(newVNodeChild, false), refNode));
         }
       }
-
       for (const oldVNodePosition of Object.values(keyMap)) {
         // VNode wasn't found in new vnodes, so it's cleaned up: [X] -> []
         const node = el.childNodes[oldVNodePosition];
         workQueue.push(() => el.removeChild(node));
       }
-    }
-
-    // Patch and update the new children top up: [X, Y, Z], [Y, X, Z] -> [Y, X, Z]
-    while (newTail++ < newVNodeChildren.length - 1) {
-      patch(
-        <HTMLElement>el.childNodes[newTail],
-        newVNodeChildren[newTail],
-        oldVNodeChildren[newTail],
-        workQueue,
-      );
     }
   } else {
     if (oldVNodeChildren) {
