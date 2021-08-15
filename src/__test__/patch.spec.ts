@@ -1,7 +1,6 @@
 import { createElement } from '../createElement';
 import { m, INSERT, UPDATE, DELETE } from '../m';
 import { patch } from '../patch';
-// import { patch } from '../patch';
 import { VFlags, VNode, VProps } from '../structs';
 
 const h = (tag: string, props?: VProps, ...children: VNode[]) =>
@@ -131,5 +130,48 @@ describe('.patch', () => {
       m('div', undefined, ['foo'], VFlags.NO_CHILDREN),
     );
     expect(el.childNodes.length).toEqual(0);
+  });
+
+  it('should used keyed algorithm when flag is passed', () => {
+    const el = document.createElement('ul');
+    const list1 = ['foo', 'bar', 'baz'];
+    const newVNode1 = m(
+      'ul',
+      undefined,
+      list1.map((item) => m('li', { key: item }, [item])),
+      VFlags.ONLY_KEYED_CHILDREN,
+    );
+    patch(el, newVNode1, m('ul', undefined, undefined, VFlags.NO_CHILDREN));
+    expect(el).toEqual(createElement(newVNode1));
+
+    const list2 = ['foo', 'baz', 'bar'];
+    const newVNode2 = m(
+      'ul',
+      undefined,
+      list2.map((item) => m('li', { key: item }, [item])),
+      VFlags.ONLY_KEYED_CHILDREN,
+    );
+    patch(el, newVNode2, newVNode1);
+    expect(el).toEqual(createElement(newVNode2));
+
+    const list3 = ['foo0', 'foo', 'bar', 'baz', 'foo1', 'bar1', 'baz1'];
+    const newVNode3 = m(
+      'ul',
+      undefined,
+      list3.map((item) => m('li', { key: item }, [item])),
+      VFlags.ONLY_KEYED_CHILDREN,
+    );
+    patch(el, newVNode3, newVNode2);
+    expect(el).toEqual(createElement(newVNode3));
+
+    const list4 = list3.reverse();
+    const newVNode4 = m(
+      'ul',
+      undefined,
+      list4.map((item) => m('li', { key: item }, [item])),
+      VFlags.ONLY_KEYED_CHILDREN,
+    );
+    patch(el, newVNode4, newVNode3);
+    expect(el).toEqual(createElement(newVNode4));
   });
 });
