@@ -10,11 +10,9 @@ export const createElement = (vnode: VNode, attachField = true): HTMLElement | T
   if (typeof vnode === 'string') return document.createTextNode(vnode);
   const el = <HTMLElement>Object.assign(document.createElement(vnode.tag), vnode.props);
 
-  if (vnode.children) {
-    vnode.children.forEach((child) => {
-      el.appendChild(createElement(child));
-    });
-  }
+  vnode.children?.forEach((child) => {
+    el.appendChild(createElement(child));
+  });
 
   if (attachField) el[OLD_VNODE_FIELD] = vnode;
 
