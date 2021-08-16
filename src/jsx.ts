@@ -1,7 +1,7 @@
 import { m, VNode, VProps, VElement, VFlags, VDelta, className, style, svg } from './index';
 
-export type JSXVNode = VNode | number | boolean | undefined | null;
-export type FC = (props?: VProps, children?: VNode[], delta?: VDelta) => VElement;
+type JSXVNode = VNode | number | boolean | undefined | null;
+type FC = (props?: VProps, children?: VNode[], delta?: VDelta) => VElement;
 
 const h = (tag: string, props?: VProps, children?: VNode[], delta?: VDelta) => {
   let type = VFlags.NO_CHILDREN;
