@@ -21,7 +21,7 @@ export const svg = (vnode: VElement): VElement => {
 };
 
 export const ns = (tag: string, props: VProps, children?: VNode[]): void => {
-  props.ns = 'http://www.w3.org/2000/svg';
+  if (!props.ns) props.ns = 'http://www.w3.org/2000/svg';
   if (children && tag !== 'foreignObject') {
     for (const child of children) {
       if (typeof child !== 'string' && child.props) ns(child.tag, child.props, child.children);
