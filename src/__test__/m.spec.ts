@@ -121,6 +121,20 @@ describe('.m', () => {
     );
   });
 
+  it('should create a tag with dataset attribute', () => {
+    expect(h('div', { attributes: { 'data-test': 'foo' } })).toEqual({
+      tag: 'div',
+      attributes: {
+        'data-test': 'foo',
+      },
+      children: undefined,
+      delta: undefined,
+      flag: undefined,
+      key: undefined,
+      props: {},
+    });
+  });
+
   it('should attach ns to props with children with props', () => {
     const vnode = {
       tag: 'svg',

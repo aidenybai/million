@@ -21,7 +21,7 @@ const h = (tag: string, props?: VProps, children?: VNode[], delta?: VDelta) => {
     }
   }
   if (typeof props?.className === 'object') {
-    props.className = className(props.className);
+    props.className = className(<Record<string, boolean>>(<unknown>props.className));
   }
   if (typeof props?.style === 'object') {
     props.style = style(props.style);
@@ -51,7 +51,7 @@ const normalizeChildren = (children: JSXVNode[], normalizedChildren: VNode[]) =>
   return normalizedChildren;
 };
 
-const jsx = (tag: string | FC, props?: VProps, ...children: JSXVNode[]): VNode => {
+const jsx = (tag: string | FC, props?: VProps, ...children: JSXVNode[]): VNode | (() => VNode) => {
   let delta: VDelta | undefined;
   if (props) {
     const rawDelta = <VDelta>(<unknown>props.delta);
@@ -66,7 +66,7 @@ const jsx = (tag: string | FC, props?: VProps, ...children: JSXVNode[]): VNode =
   }
   const normalizedChildren = normalizeChildren(children, []);
   if (typeof tag === 'function') {
-    return tag(props, normalizedChildren, delta);
+    return () => tag(props, normalizedChildren, delta);
   } else {
     return h(tag, props, normalizedChildren, delta);
   }
