@@ -4,7 +4,8 @@
 export const OLD_VNODE_FIELD = '__m_old_vnode';
 
 // Props can contain a standard value or a callback function (for events)
-export type VProps = Record<string, string | boolean | (() => void)>;
+export type VProps = Record<string, string | boolean | (() => void) | VAttributes>;
+export type VAttributes = Record<string, string>;
 export type VNode = VElement | string;
 export type VDeltaOperation = [VDeltaOperationTypes, number];
 export type VDelta = VDeltaOperation[];
@@ -13,6 +14,7 @@ export type VTask = () => void;
 export interface VElement {
   tag: string;
   props?: VProps;
+  attributes?: VAttributes;
   children?: VNode[];
   key?: string;
   flag?: VFlags;

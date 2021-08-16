@@ -1,4 +1,5 @@
 import {
+  VAttributes,
   VDelta,
   VDeltaOperation,
   VDeltaOperationTypes,
@@ -10,8 +11,6 @@ import {
 
 /**
  * Attaches ns props to svg element
- * @param {VElement} vnode - SVG VNode
- * @returns {VElement}
  */
 export const svg = (vnode: VElement): VElement => {
   /* istanbul ignore next */
@@ -31,8 +30,6 @@ export const ns = (tag: string, props: VProps, children?: VNode[]): void => {
 
 /**
  * Generates a className string based on a classObject
- * @param {object} classObject - Object with classes paired with boolean values to toggle
- * @returns {string}
  */
 export const className = (classObject: Record<string, boolean>): string =>
   Object.keys(classObject)
@@ -41,8 +38,6 @@ export const className = (classObject: Record<string, boolean>): string =>
 
 /**
  * Generates a style string based on a styleObject
- * @param {object} styleObject - Object with styles
- * @returns {string}
  */
 export const style = (styleObject: Record<string, string>): string =>
   Object.entries(styleObject)
@@ -51,8 +46,6 @@ export const style = (styleObject: Record<string, string>): string =>
 
 /**
  * Returns an insert (creation) delta operation
- * @param {number} positionIdx - Index of delta operation
- * @returns {VDeltaOperation}
  */
 export const INSERT = (positionIdx = 0): VDeltaOperation => [
   VDeltaOperationTypes.INSERT,
@@ -61,8 +54,6 @@ export const INSERT = (positionIdx = 0): VDeltaOperation => [
 
 /**
  * Returns an update (modification) delta operation
- * @param {number} positionIdx - Index of delta operation
- * @returns {VDeltaOperation}
  */
 export const UPDATE = (positionIdx = 0): VDeltaOperation => [
   VDeltaOperationTypes.UPDATE,
@@ -71,8 +62,6 @@ export const UPDATE = (positionIdx = 0): VDeltaOperation => [
 
 /**
  * Returns an delete (removal) delta operation
- * @param {number} positionIdx - Index of delta operation
- * @returns {VDeltaOperation}
  */
 export const DELETE = (positionIdx = 0): VDeltaOperation => [
   VDeltaOperationTypes.DELETE,
@@ -81,11 +70,6 @@ export const DELETE = (positionIdx = 0): VDeltaOperation => [
 
 /**
  * Helper method for creating a VNode
- * @param {string} tag - The tagName of an HTMLElement
- * @param {VProps=} props - DOM properties and attributes of an HTMLElement
- * @param {VNode[]=} children - Children of an HTMLElement
- * @param {VFlags=} flag - Compiler flag for VNode
- * @returns {VElement}
  */
 export const m = (
   tag: string,
@@ -95,13 +79,19 @@ export const m = (
   delta?: VDelta,
 ): VElement => {
   let key;
+  let attributes;
   if (props?.key) {
     key = <string | undefined>props.key;
     delete props.key;
   }
+  if (props?.attributes) {
+    attributes = <VAttributes>props.attributes;
+    delete props.attributes;
+  }
   return {
     tag,
     props,
+    attributes,
     children,
     key,
     flag,

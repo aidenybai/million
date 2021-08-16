@@ -16,9 +16,17 @@ describe('.patch', () => {
 
     patch(el, h('div', { id: 'el' }, 'bar'));
     expect(el).toEqual(createElement(h('div', { id: 'el' }, 'bar')));
-    expect(el).toEqual(createElement(h('div', { id: 'el' }, 'bar')));
-    patch(el, h('div', { id: 'el', class: 'new' }, 'baz'));
-    expect(el).toEqual(createElement(h('div', { id: 'el', class: 'new' }, 'baz')));
+    patch(el, h('div', { id: 'el', className: 'foo' }, 'baz'));
+    expect(el).toEqual(createElement(h('div', { id: 'el', className: 'foo' }, 'baz')));
+
+    document.body.textContent = '';
+  });
+
+  it('should patch attributes', () => {
+    const el = createElement(h('div', { id: 'el' }, 'foo'));
+
+    patch(el, h('div', { attributes: { 'data-test': 'foo' } }, 'bar'));
+    expect(el).toEqual(createElement(h('div', { attributes: { 'data-test': 'foo' } }, 'bar')));
 
     document.body.textContent = '';
   });

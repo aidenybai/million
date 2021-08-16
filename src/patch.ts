@@ -11,15 +11,12 @@ import {
 
 /**
  * Diffs two VNode props and modifies the DOM node based on the necessary changes
- * @param {HTMLElement} el - Target element to be modified
- * @param {VProps} oldProps - Old VNode props
- * @param {VProps} newProps - New VNode props
- * @returns {void}
  */
 export const patchProps = (
   el: HTMLElement,
   oldProps: VProps,
   newProps: VProps,
+  areAttributes: boolean,
   workQueue: (() => void)[],
 ): void => {
   const skip = new Set<string>();
@@ -29,12 +26,20 @@ export const patchProps = (
     if (newPropValue) {
       const oldPropValue = oldProps[oldPropName];
       if (newPropValue !== oldPropValue) {
-        if (typeof oldPropValue === 'function' && typeof newPropValue === 'function') {
+        if (
+          !areAttributes &&
+          typeof oldPropValue === 'function' &&
+          typeof newPropValue === 'function'
+        ) {
           if (oldPropValue.toString() !== newPropValue.toString()) {
             workQueue.push(() => (el[oldPropName] = newPropValue));
           }
         } else {
-          workQueue.push(() => (el[oldPropName] = newPropValue));
+          workQueue.push(() =>
+            areAttributes
+              ? el.setAttribute(oldPropName, String(newPropValue))
+              : (el[oldPropName] = newPropValue),
+          );
         }
       }
       skip.add(oldPropName);
@@ -48,17 +53,17 @@ export const patchProps = (
 
   for (const newPropName of Object.keys(newProps)) {
     if (!skip.has(newPropName)) {
-      workQueue.push(() => (el[newPropName] = newProps[newPropName]));
+      workQueue.push(() =>
+        areAttributes
+          ? el.setAttribute(newPropName, String(newProps[newPropName]))
+          : (el[newPropName] = newProps[newPropName]),
+      );
     }
   }
 };
 
 /**
  * Diffs two VNode children and modifies the DOM node based on the necessary changes
- * @param {HTMLElement} el - Target element to be modified
- * @param {VNode[]} oldVNodeChildren - Old VNode children
- * @param {VNode[]} newVNodeChildren - New VNode children
- * @returns {void}
  */
 export const patchChildren = (
   el: HTMLElement,
@@ -186,10 +191,6 @@ export const patchChildren = (
 
 /**
  * Diffs two VNodes and modifies the DOM node based on the necessary changes
- * @param {HTMLElement|Text} el - Target element to be modified
- * @param {VNode} newVNode - New VNode
- * @param {VNode=} prevVNode - Previous VNode
- * @returns {void}
  */
 export const patch = (
   el: HTMLElement | Text,
@@ -217,6 +218,14 @@ export const patch = (
             el,
             (<VElement>oldVNode)?.props || {},
             (<VElement>newVNode).props || {},
+            false,
+            workQueue,
+          );
+          patchProps(
+            el,
+            (<VElement>oldVNode)?.attributes || {},
+            (<VElement>newVNode).attributes || {},
+            true,
             workQueue,
           );
 
