@@ -1,5 +1,5 @@
 import { createElement } from '../createElement';
-import { m, INSERT, UPDATE, DELETE } from '../m';
+import { DELETE, INSERT, m, UPDATE } from '../m';
 import { patch } from '../patch';
 import { VFlags, VNode, VProps } from '../structs';
 
