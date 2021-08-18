@@ -7,7 +7,24 @@ import filesize from 'rollup-plugin-filesize';
 import { terser } from 'rollup-plugin-terser';
 import ts from 'rollup-plugin-ts';
 
-const suite = (input, output) => ({
+const build = () => [
+  entry('./src/index.ts', [
+    out('./dist/million.umd.js', { format: 'umd' }),
+    out('./dist/million.umd.min.js', { format: 'umd', minify: true }),
+    out('./dist/million.cjs.js', { format: 'cjs' }),
+    out('./dist/million.cjs.min.js', { format: 'cjs', minify: true }),
+    out('./dist/million.esm.js', { format: 'esm' }),
+    out('./dist/million.esm.min.js', { format: 'esm', minify: true }),
+  ]),
+  entry('./src/jsx.ts', [
+    out('./dist/jsx-runtime.cjs.js', { format: 'cjs' }),
+    out('./dist/jsx-runtime.cjs.min.js', { format: 'cjs', minify: true }),
+    out('./dist/jsx-runtime.esm.js', { format: 'esm' }),
+    out('./dist/jsx-runtime.esm.min.js', { format: 'esm', minify: true }),
+  ]),
+];
+
+const entry = (input, output) => ({
   input,
   plugins: [
     eslint(),
@@ -24,7 +41,7 @@ const suite = (input, output) => ({
   onwarn: () => {},
 });
 
-export const unit = ({ file, format, minify }) => ({
+export const out = (file, { format, minify }) => ({
   file,
   format,
   name: 'Million',
@@ -42,46 +59,4 @@ export const unit = ({ file, format, minify }) => ({
     : [],
 });
 
-export default [
-  suite('./src/index.ts', [
-    unit({
-      file: './dist/million.umd.js',
-      format: 'umd',
-    }),
-    unit({
-      file: './dist/million.umd.min.js',
-      format: 'umd',
-      minify: true,
-    }),
-    unit({
-      file: './dist/million.cjs.js',
-      format: 'cjs',
-    }),
-    unit({
-      file: './dist/million.cjs.min.js',
-      format: 'cjs',
-      minify: true,
-    }),
-    unit({
-      file: './dist/million.esm.js',
-      format: 'esm',
-    }),
-    unit({
-      file: './dist/million.esm.min.js',
-      format: 'esm',
-      minify: true,
-    }),
-  ]),
-  suite('./src/jsx.ts', [
-    unit({
-      file: './dist/jsx-runtime.cjs.js',
-      format: 'cjs',
-      minify: true,
-    }),
-    unit({
-      file: './dist/jsx-runtime.esm.js',
-      format: 'esm',
-      minify: true,
-    }),
-  ]),
-];
+export default build();

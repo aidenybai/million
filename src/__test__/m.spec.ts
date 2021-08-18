@@ -1,5 +1,5 @@
-import { className, m, ns, svg, style, INSERT, DELETE, UPDATE } from '../m';
-import { VNode, VProps, VDeltaOperationTypes } from '../structs';
+import { className, DELETE, INSERT, m, ns, style, svg, UPDATE } from '../m';
+import { VDeltaOperationTypes, VNode, VProps } from '../structs';
 
 const h = (tag: string, props?: VProps, ...children: VNode[]) =>
   m(

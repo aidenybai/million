@@ -1,4 +1,4 @@
-import { m, VNode, VProps, VElement, VFlags, VDelta, className, style, svg } from './index';
+import { className, m, style, svg, VDelta, VElement, VFlags, VNode, VProps } from './index';
 
 type JSXVNode = VNode | number | boolean | undefined | null;
 type FC = (props?: VProps, children?: VNode[], delta?: VDelta) => VElement;
