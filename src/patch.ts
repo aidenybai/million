@@ -16,7 +16,7 @@ export const patchProps = (
   el: HTMLElement,
   oldProps: VProps,
   newProps: VProps,
-  areAttributes: boolean,
+  useAttributes: boolean,
   workQueue: (() => void)[],
 ): void => {
   const skip = new Set<string>();
@@ -27,7 +27,7 @@ export const patchProps = (
       const oldPropValue = oldProps[oldPropName];
       if (newPropValue !== oldPropValue) {
         if (
-          !areAttributes &&
+          !useAttributes &&
           typeof oldPropValue === 'function' &&
           typeof newPropValue === 'function'
         ) {
@@ -36,7 +36,7 @@ export const patchProps = (
           }
         } else {
           workQueue.push(() =>
-            areAttributes
+            useAttributes
               ? el.setAttribute(oldPropName, String(newPropValue))
               : (el[oldPropName] = newPropValue),
           );
@@ -54,7 +54,7 @@ export const patchProps = (
   for (const newPropName of Object.keys(newProps)) {
     if (!skip.has(newPropName)) {
       workQueue.push(() =>
-        areAttributes
+        useAttributes
           ? el.setAttribute(newPropName, String(newProps[newPropName]))
           : (el[newPropName] = newProps[newPropName]),
       );
