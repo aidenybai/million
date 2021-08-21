@@ -33,6 +33,12 @@ patch(app, m('div', { id: 'app' }, ['Goodbye World']));
 
 [**→ Check out more examples**](https://million.js.org)
 
+## Sponsors
+
+<a href="https://vercel.com/?utm_source=millionjs&utm_campaign=oss" target="_blank"><img height="44" src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/vercel-logo.svg" alt="Vercel"></a>
+
+**Want your logo here? [→ Sponsor Million](https://github.com/sponsors/aidenybai)**
+
 ## Resources & Contributing Back
 
 Looking for the docs? Check the [documentation](https://million.js.org) out.
