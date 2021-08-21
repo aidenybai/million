@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 source $(dirname "$0")/helpers.sh
 
 pending "Checking for errors..."
