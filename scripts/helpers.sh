@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 export PATH="$(dirname "$0")/../node_modules/.bin:$PATH"
 
 COLOR_RED=`tput setaf 1`
