@@ -197,6 +197,7 @@ export const patch = (
   newVNode: VNode,
   prevVNode?: VNode,
   workQueue: (() => void)[] = [],
+  commit: (callback: () => void) => void = (callback: () => void): void => callback(),
 ): void => {
   if (!newVNode) {
     workQueue.push(() => el.remove());
@@ -261,9 +262,7 @@ export const patch = (
   }
 
   for (let i = 0; i < workQueue.length; i++) {
-    workQueue[i]();
-    // eslint-disable-next-line no-debugger
-    // debugger;
+    commit(workQueue[i]);
   }
 
   if (!prevVNode) el[OLD_VNODE_FIELD] = newVNode;
