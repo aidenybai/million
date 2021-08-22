@@ -84,7 +84,7 @@ const conditionalRender = (() => {
         app = el;
       },
       fn() {
-        app.textContent = Date.now() % 2 === 0 ? [Date.now()] : null;
+        app.innerText = Date.now() % 2 === 0 ? [Date.now()] : null;
       },
     })
     .on('cycle', ({ target }) => {
