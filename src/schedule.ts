@@ -6,6 +6,9 @@ const promise = Promise.resolve();
 let deadline = 0;
 let queued = false;
 
+/*
+ * Runs a callback, unless the main thread is blocked and it defers and runs later
+ */
 export const schedule = (callback: VTask): void => {
   stack.push(callback);
   nextTick();
