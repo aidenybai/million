@@ -4,12 +4,12 @@ type JSXVNode = VNode | number | boolean | undefined | null;
 type FC = (props?: VProps, children?: VNode[], delta?: VDelta) => VElement;
 
 const h = (tag: string, props?: VProps, children?: VNode[], delta?: VDelta) => {
-  let type = VFlags.NO_CHILDREN;
+  let flag = VFlags.NO_CHILDREN;
   if (children) {
     const keyCache = new Set();
-    type = VFlags.ANY_CHILDREN;
+    flag = VFlags.ANY_CHILDREN;
     if (children.some((child) => typeof child === 'string')) {
-      type = VFlags.ONLY_TEXT_CHILDREN;
+      flag = VFlags.ONLY_TEXT_CHILDREN;
     }
     for (const child of children) {
       if (typeof child === 'object' && child.key) {
@@ -17,7 +17,7 @@ const h = (tag: string, props?: VProps, children?: VNode[], delta?: VDelta) => {
       }
     }
     if (keyCache.size === children.length) {
-      type = VFlags.ONLY_KEYED_CHILDREN;
+      flag = VFlags.ONLY_KEYED_CHILDREN;
     }
   }
   if (typeof props?.className === 'object') {
@@ -27,7 +27,7 @@ const h = (tag: string, props?: VProps, children?: VNode[], delta?: VDelta) => {
     props.style = style(props.style);
   }
 
-  const vnode = m(tag, props, children, type, delta);
+  const vnode = m(tag, props, children, flag, delta);
   return tag === 'svg' ? svg(vnode) : vnode;
 };
 
