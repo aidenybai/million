@@ -3,7 +3,7 @@
 
 source "$(dirname "$0")/../scripts/helpers.sh"
 
-pending "Checking for errors..."
+info "Checking for errors..."
 
 if [ -n "$(git status src --porcelain)" ]; then
   npx --no-install lint-staged --quiet || exit 1
