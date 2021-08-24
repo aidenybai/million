@@ -42,7 +42,7 @@ if [ ! -d dev ]; then
   echo "$index_html_content" > dev/index.html
   echo "$script_tsx_content" > dev/script.tsx
   echo "$style_css_content" > dev/style.css
-  info "Couldn't find an the \`dev\` directory, creating one for you..."
+  info "Couldn't find an the \`dev\` directory, creating one for you...\n"
 fi
 
 vite
