@@ -125,13 +125,17 @@ export const patchChildren = (
       newHead++;
     }
 
+    // console.log({ oldHead, oldTail, newHead, newTail });
+
     if (oldHead > oldTail) {
       // There are no dirty old children: [], [X, Y, Z]
       while (newHead <= newTail) {
-        const newHeadIndex = Number(newHead++);
-        const node = el.childNodes[newHeadIndex];
+        const newHeadIndex = newHead++;
         workQueue.push(() =>
-          el.insertBefore(createElement(newVNodeChildren[newHeadIndex], false), node),
+          el.insertBefore(
+            createElement(newVNodeChildren[newHeadIndex], false),
+            el.childNodes[newHeadIndex],
+          ),
         );
       }
     } else if (newHead > newTail) {
