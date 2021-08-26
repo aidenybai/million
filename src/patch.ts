@@ -183,6 +183,15 @@ export const patchChildren = (
   return workQueue;
 };
 
+export const flushWorkQueue = (
+  workQueue: (() => void)[],
+  commit: (callback: () => void) => void = (callback: () => void): void => callback(),
+): void => {
+  for (let i = 0; i < workQueue.length; i++) {
+    commit(workQueue[i]);
+  }
+};
+
 /**
  * Diffs two VNodes and modifies the DOM node based on the necessary changes
  */
@@ -191,7 +200,7 @@ export const patch = (
   newVNode: VNode,
   prevVNode?: VNode,
   workQueue: (() => void)[] = [],
-  commit: (callback: () => void) => void = (callback: () => void): void => callback(),
+  commit?: (callback: () => void) => void,
 ): void => {
   if (!newVNode) {
     workQueue.push(() => el.remove());
@@ -247,9 +256,7 @@ export const patch = (
     }
   }
 
-  for (let i = 0; i < workQueue.length; i++) {
-    commit(workQueue[i]);
-  }
+  flushWorkQueue(workQueue, commit);
 
   if (!prevVNode) el[OLD_VNODE_FIELD] = newVNode;
 };
