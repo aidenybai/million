@@ -25,8 +25,8 @@ describe('.patch', () => {
   it('should patch attributes', () => {
     const el = createElement(h('div', { id: 'el' }, 'foo'));
 
-    patch(el, h('div', { attributes: { 'data-test': 'foo' } }, 'bar'));
-    expect(el).toEqual(createElement(h('div', { attributes: { 'data-test': 'foo' } }, 'bar')));
+    patch(el, h('div', { 'data-test': 'foo' }, 'bar'));
+    expect(el).toEqual(createElement(h('div', { 'data-test': 'foo' }, 'bar')));
 
     document.body.textContent = '';
   });

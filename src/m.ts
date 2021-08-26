@@ -1,5 +1,4 @@
 import {
-  VAttributes,
   VDelta,
   VDeltaOperation,
   VDeltaOperationTypes,
@@ -79,19 +78,17 @@ export const m = (
   delta?: VDelta,
 ): VElement => {
   let key;
-  let attributes;
   if (props?.key) {
     key = <string | undefined>props.key;
     delete props.key;
   }
-  if (props?.attributes) {
-    attributes = <VAttributes>props.attributes;
-    delete props.attributes;
+  if (props?.children) {
+    children = [...(children || []), ...(<VNode[]>(<unknown>props.children))];
+    delete props.children;
   }
   return {
     tag,
     props,
-    attributes,
     children,
     key,
     flag,

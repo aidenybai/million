@@ -1,3 +1,4 @@
+import { patchProps } from './patch';
 import { OLD_VNODE_FIELD, VNode } from './structs';
 
 /**
@@ -5,11 +6,13 @@ import { OLD_VNODE_FIELD, VNode } from './structs';
  */
 export const createElement = (vnode: VNode, attachField = true): HTMLElement | Text => {
   if (typeof vnode === 'string') return document.createTextNode(vnode);
-  const el = <HTMLElement>Object.assign(document.createElement(vnode.tag), vnode.props);
+  const el = <HTMLElement>document.createElement(vnode.tag);
 
-  Object.entries(vnode.attributes || {}).forEach(([attrName, attrValue]) => {
-    el.setAttribute(attrName, attrValue);
-  });
+  const workQueue = patchProps(el, {}, vnode.props ?? {}, []);
+
+  for (let i = 0; i < workQueue.length; i++) {
+    workQueue[i]();
+  }
 
   vnode.children?.forEach((child) => {
     el.appendChild(createElement(child));
