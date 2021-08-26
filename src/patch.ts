@@ -16,50 +16,38 @@ export const patchProps = (
   el: HTMLElement,
   oldProps: VProps,
   newProps: VProps,
-  useAttributes: boolean,
   workQueue: (() => void)[],
-): void => {
-  const skip = new Set<string>();
+): (() => void)[] => {
+  // Subsequent spreads will overwrite original spreads
+  // e.g. { ...{ foo: 'bar' }, ...{ foo: 'baz' } } becomes { foo: 'baz' }
+  for (const propName in { ...oldProps, ...newProps }) {
+    const oldPropValue = oldProps[propName];
+    const newPropValue = newProps[propName];
 
-  for (const oldPropName of Object.keys(oldProps)) {
-    const newPropValue = newProps[oldPropName];
-    if (newPropValue) {
-      const oldPropValue = oldProps[oldPropName];
-      if (newPropValue !== oldPropValue) {
-        if (
-          !useAttributes &&
-          typeof oldPropValue === 'function' &&
-          typeof newPropValue === 'function'
-        ) {
-          if (oldPropValue.toString() !== newPropValue.toString()) {
-            workQueue.push(() => (el[oldPropName] = newPropValue));
-          }
-        } else {
-          workQueue.push(() =>
-            useAttributes
-              ? el.setAttribute(oldPropName, String(newPropValue))
-              : (el[oldPropName] = newPropValue),
-          );
-        }
-      }
-      skip.add(oldPropName);
-    } else {
+    if (oldPropValue === newPropValue) continue;
+    if (propName.startsWith('on')) {
+      const eventPropName = propName.slice(2).toLowerCase();
       workQueue.push(() => {
-        el.removeAttribute(oldPropName);
-        delete el[oldPropName];
+        if (oldPropValue) el.removeEventListener(eventPropName, <EventListener>oldPropValue);
+        el.addEventListener(eventPropName, <EventListener>newPropValue);
       });
+    } else if (el[propName] && !(el instanceof SVGElement)) {
+      if (newPropValue) {
+        workQueue.push(() => (el[propName] = newPropValue));
+      } else {
+        workQueue.push(() => {
+          el.removeAttribute(propName);
+          delete el[propName];
+        });
+      }
+    } else if (newPropValue == null || newPropValue === false) {
+      workQueue.push(() => el.removeAttribute(propName));
+    } else {
+      workQueue.push(() => el.setAttribute(propName, String(newPropValue)));
     }
   }
 
-  for (const newPropName of Object.keys(newProps)) {
-    if (!skip.has(newPropName)) {
-      workQueue.push(() =>
-        useAttributes
-          ? el.setAttribute(newPropName, String(newProps[newPropName]))
-          : (el[newPropName] = newProps[newPropName]),
-      );
-    }
-  }
+  return workQueue;
 };
 
 /**
@@ -72,7 +60,7 @@ export const patchChildren = (
   keyed: boolean,
   delta: VDelta | undefined,
   workQueue: (() => void)[],
-): void => {
+): (() => void)[] => {
   if (!newVNodeChildren) {
     workQueue.push(() => (el.textContent = ''));
   } else if (delta) {
@@ -191,6 +179,8 @@ export const patchChildren = (
       workQueue.push(() => el.appendChild(node));
     }
   }
+
+  return workQueue;
 };
 
 /**
@@ -223,14 +213,6 @@ export const patch = (
             el,
             (<VElement>oldVNode)?.props || {},
             (<VElement>newVNode).props || {},
-            false,
-            workQueue,
-          );
-          patchProps(
-            el,
-            (<VElement>oldVNode)?.attributes || {},
-            (<VElement>newVNode).attributes || {},
-            true,
             workQueue,
           );
 
