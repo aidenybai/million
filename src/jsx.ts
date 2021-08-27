@@ -24,7 +24,7 @@ const h = (tag: string, props?: VProps, children?: VNode[], delta?: VDelta) => {
     props.className = className(<Record<string, boolean>>(<unknown>props.className));
   }
   if (typeof props?.style === 'object') {
-    props.style = style(props.style);
+    props.style = style(<Record<string, string>>(<unknown>props.style));
   }
 
   const vnode = m(tag, props, children, flag, delta);

@@ -209,6 +209,14 @@ describe('.m', () => {
     });
   });
 
+  it('should move children to distinct property to handle jsxs', () => {
+    expect(h('div', { children: ['foo'] })).toEqual({
+      tag: 'div',
+      props: {},
+      children: ['foo'],
+    });
+  });
+
   it('should return delta operation when operation helper is used', () => {
     expect(INSERT()).toEqual([VDeltaOperationTypes.INSERT, 0]);
     expect(INSERT(5)).toEqual([VDeltaOperationTypes.INSERT, 5]);
