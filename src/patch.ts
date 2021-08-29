@@ -134,25 +134,27 @@ export const patchChildren = (
       }
     } else {
       const keyMap: Record<string, number> = {};
-      for (let i = oldHead; i <= oldTail; ++i) {
+      for (let i = oldTail; i >= oldHead; --i) {
         keyMap[(<VElement>oldVNodeChildren[i]).key!] = i;
       }
       while (newHead <= newTail) {
         const newVNodeChild = <VElement>newVNodeChildren[newHead];
         const oldVNodePosition = keyMap[newVNodeChild.key!];
         const node = el.childNodes[oldVNodePosition];
-        const refNode = el.childNodes[newVNodeChildren.length + newHead++];
+        const newPosition = newHead++;
 
         if (
           oldVNodePosition !== undefined &&
           newVNodeChild.key === (<VElement>oldVNodeChildren[oldVNodePosition]).key
         ) {
           // Determine move for child that moved: [X, A, B, C] -> [A, B, C, X]
-          workQueue.push(() => el.insertBefore(node, refNode));
+          workQueue.push(() => el.insertBefore(node, el.childNodes[newPosition]));
           delete keyMap[newVNodeChild.key!];
         } else {
           // VNode doesn't exist yet: [] -> [X]
-          workQueue.push(() => el.insertBefore(createElement(newVNodeChild, false), refNode));
+          workQueue.push(() =>
+            el.insertBefore(createElement(newVNodeChild, false), el.childNodes[newPosition]),
+          );
         }
       }
       for (const oldVNodePosition of Object.values(keyMap)) {
