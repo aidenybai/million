@@ -40,7 +40,7 @@ export const patchProps = (
           delete el[propName];
         });
       }
-    } else if (newPropValue == null || newPropValue === false) {
+    } else if (!newPropValue) {
       workQueue.push(() => el.removeAttribute(propName));
     } else {
       workQueue.push(() => el.setAttribute(propName, String(newPropValue)));
