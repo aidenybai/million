@@ -82,10 +82,6 @@ export const m = (
     key = <string | undefined>props.key;
     delete props.key;
   }
-  if (props?.children) {
-    children = [...(children || []), ...(<VNode[]>(<unknown>props.children))];
-    delete props.children;
-  }
   return {
     tag,
     props,

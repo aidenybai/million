@@ -16,7 +16,7 @@ export const patchProps = (
   el: HTMLElement,
   oldProps: VProps,
   newProps: VProps,
-  workQueue: (() => void)[],
+  workStack: (() => void)[],
 ): (() => void)[] => {
   // Subsequent spreads will overwrite original spreads
   // e.g. { ...{ foo: 'bar' }, ...{ foo: 'baz' } } becomes { foo: 'baz' }
@@ -27,27 +27,27 @@ export const patchProps = (
     if (oldPropValue === newPropValue) continue;
     if (propName.startsWith('on')) {
       const eventPropName = propName.slice(2).toLowerCase();
-      workQueue.push(() => {
+      workStack.push(() => {
         if (oldPropValue) el.removeEventListener(eventPropName, <EventListener>oldPropValue);
         el.addEventListener(eventPropName, <EventListener>newPropValue);
       });
     } else if (el[propName] && !(el instanceof SVGElement)) {
       if (newPropValue) {
-        workQueue.push(() => (el[propName] = newPropValue));
+        workStack.push(() => (el[propName] = newPropValue));
       } else {
-        workQueue.push(() => {
+        workStack.push(() => {
           el.removeAttribute(propName);
           delete el[propName];
         });
       }
     } else if (!newPropValue) {
-      workQueue.push(() => el.removeAttribute(propName));
+      workStack.push(() => el.removeAttribute(propName));
     } else {
-      workQueue.push(() => el.setAttribute(propName, String(newPropValue)));
+      workStack.push(() => el.setAttribute(propName, String(newPropValue)));
     }
   }
 
-  return workQueue;
+  return workStack;
 };
 
 /**
@@ -59,16 +59,16 @@ export const patchChildren = (
   newVNodeChildren: VNode[],
   keyed: boolean,
   delta: VDelta | undefined,
-  workQueue: (() => void)[],
+  workStack: (() => void)[],
 ): (() => void)[] => {
   if (!newVNodeChildren) {
-    workQueue.push(() => (el.textContent = ''));
+    workStack.push(() => (el.textContent = ''));
   } else if (delta) {
     for (let i = 0; i < delta.length; i++) {
       const [deltaType, deltaPosition] = delta[i];
       switch (deltaType) {
         case VDeltaOperationTypes.INSERT:
-          workQueue.push(() =>
+          workStack.push(() =>
             el.insertBefore(
               createElement(newVNodeChildren[deltaPosition]),
               el.childNodes[deltaPosition],
@@ -80,11 +80,11 @@ export const patchChildren = (
             <HTMLElement | Text>el.childNodes[deltaPosition],
             newVNodeChildren[deltaPosition],
             oldVNodeChildren[deltaPosition],
-            workQueue,
+            workStack,
           );
           break;
         case VDeltaOperationTypes.DELETE:
-          workQueue.push(() => el.removeChild(el.childNodes[deltaPosition]));
+          workStack.push(() => el.removeChild(el.childNodes[deltaPosition]));
           break;
       }
     }
@@ -119,7 +119,7 @@ export const patchChildren = (
       // There are no dirty old children: [], [X, Y, Z]
       while (newHead <= newTail) {
         const newHeadIndex = newHead++;
-        workQueue.push(() =>
+        workStack.push(() =>
           el.insertBefore(
             createElement(newVNodeChildren[newHeadIndex], false),
             el.childNodes[newHeadIndex],
@@ -130,7 +130,7 @@ export const patchChildren = (
       // There are no dirty new children: [X, Y, Z], []
       while (oldHead <= oldTail) {
         const node = el.childNodes[oldHead++];
-        workQueue.push(() => el.removeChild(node));
+        workStack.push(() => el.removeChild(node));
       }
     } else {
       const keyMap: Record<string, number> = {};
@@ -148,11 +148,11 @@ export const patchChildren = (
           newVNodeChild.key === (<VElement>oldVNodeChildren[oldVNodePosition]).key
         ) {
           // Determine move for child that moved: [X, A, B, C] -> [A, B, C, X]
-          workQueue.push(() => el.insertBefore(node, el.childNodes[newPosition]));
+          workStack.push(() => el.insertBefore(node, el.childNodes[newPosition]));
           delete keyMap[newVNodeChild.key!];
         } else {
           // VNode doesn't exist yet: [] -> [X]
-          workQueue.push(() =>
+          workStack.push(() =>
             el.insertBefore(createElement(newVNodeChild, false), el.childNodes[newPosition]),
           );
         }
@@ -160,7 +160,7 @@ export const patchChildren = (
       for (const oldVNodePosition of Object.values(keyMap)) {
         // VNode wasn't found in new vnodes, so it's cleaned up: [X] -> []
         const node = el.childNodes[oldVNodePosition];
-        workQueue.push(() => el.removeChild(node));
+        workStack.push(() => el.removeChild(node));
       }
     }
   } else {
@@ -172,25 +172,25 @@ export const patchChildren = (
           <HTMLElement | Text>el.childNodes[i],
           newVNodeChildren[i],
           oldVNodeChildren[i],
-          workQueue,
+          workStack,
         );
       }
     }
     for (let i = oldVNodeChildren.length ?? 0; i < newVNodeChildren.length; ++i) {
       const node = createElement(newVNodeChildren[i], false);
-      workQueue.push(() => el.appendChild(node));
+      workStack.push(() => el.appendChild(node));
     }
   }
 
-  return workQueue;
+  return workStack;
 };
 
-export const flushWorkQueue = (
-  workQueue: (() => void)[],
+export const flushworkStack = (
+  workStack: (() => void)[],
   commit: (callback: () => void) => void = (callback: () => void): void => callback(),
 ): void => {
-  for (let i = 0; i < workQueue.length; i++) {
-    commit(workQueue[i]);
+  for (let i = 0; i < workStack.length; i++) {
+    commit(workStack[i]);
   }
 };
 
@@ -201,30 +201,30 @@ export const patch = (
   el: HTMLElement | Text,
   newVNode: VNode,
   prevVNode?: VNode,
-  workQueue: (() => void)[] = [],
+  workStack: (() => void)[] = [],
   commit?: (callback: () => void) => void,
 ): void => {
   if (!newVNode) {
-    workQueue.push(() => el.remove());
+    workStack.push(() => el.remove());
   } else {
     const oldVNode: VNode | undefined = prevVNode ?? el[OLD_VNODE_FIELD];
     const hasString = typeof oldVNode === 'string' || typeof newVNode === 'string';
 
     if (hasString && oldVNode !== newVNode) {
-      workQueue.push(() => el.replaceWith(createElement(newVNode)));
+      workStack.push(() => el.replaceWith(createElement(newVNode)));
     } else if (!hasString) {
       if (
         (!(<VElement>oldVNode)?.key && !(<VElement>newVNode)?.key) ||
         (<VElement>oldVNode)?.key !== (<VElement>newVNode)?.key
       ) {
         if ((<VElement>oldVNode)?.tag !== (<VElement>newVNode)?.tag || el instanceof Text) {
-          workQueue.push(() => el.replaceWith(createElement(newVNode)));
+          workStack.push(() => el.replaceWith(createElement(newVNode)));
         } else {
           patchProps(
             el,
             (<VElement>oldVNode)?.props || {},
             (<VElement>newVNode).props || {},
-            workQueue,
+            workStack,
           );
 
           // Flags allow for greater optimizability by reducing condition branches.
@@ -232,11 +232,11 @@ export const patch = (
           // hand-writing them is also possible
           switch (<VFlags>(<VElement>newVNode).flag) {
             case VFlags.NO_CHILDREN:
-              workQueue.push(() => (el.textContent = ''));
+              workStack.push(() => (el.textContent = ''));
               break;
             case VFlags.ONLY_TEXT_CHILDREN:
               // Joining is faster than setting textContent to an array
-              workQueue.push(
+              workStack.push(
                 () => (el.textContent = <string>(<VElement>newVNode).children!.join('')),
               );
               break;
@@ -249,7 +249,7 @@ export const patch = (
                 // We need to pass delta here because this function does not have
                 // a reference to the actual vnode.
                 (<VElement>newVNode).delta,
-                workQueue,
+                workStack,
               );
               break;
           }
@@ -258,7 +258,7 @@ export const patch = (
     }
   }
 
-  flushWorkQueue(workQueue, commit);
+  flushworkStack(workStack, commit);
 
   if (!prevVNode) el[OLD_VNODE_FIELD] = newVNode;
 };
