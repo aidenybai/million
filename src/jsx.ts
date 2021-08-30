@@ -66,7 +66,7 @@ const jsx = (tag: string | FC, props?: VProps, ...children: JSXVNode[]): VNode |
   }
   const normalizedChildren = normalizeChildren(children, []);
   if (typeof tag === 'function') {
-    return () => tag(props, normalizedChildren, delta);
+    return tag(props, normalizedChildren, delta);
   } else {
     return h(tag, props, normalizedChildren, delta);
   }
@@ -74,4 +74,12 @@ const jsx = (tag: string | FC, props?: VProps, ...children: JSXVNode[]): VNode |
 
 const Fragment = (props?: VProps): VNode[] | undefined => <VNode[] | undefined>props?.children;
 
-export { jsx, jsx as jsxs, Fragment };
+// eslint-disable-next-line @typescript-eslint/no-namespace
+namespace JSX {
+  export type Element = VNode;
+  export interface IntrinsicElements {
+    [elemName: string]: VProps;
+  }
+}
+
+export { JSX, jsx, jsx as jsxs, Fragment };
