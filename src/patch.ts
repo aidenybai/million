@@ -64,7 +64,7 @@ export const patchChildren = (
   if (!newVNodeChildren) {
     workStack.push(() => (el.textContent = ''));
   } else if (delta) {
-    for (let i = 0; i < delta.length; i++) {
+    for (let i = 0; i < delta.length; ++i) {
       const [deltaType, deltaPosition] = delta[i];
       switch (deltaType) {
         case VDeltaOperationTypes.INSERT:
@@ -113,8 +113,6 @@ export const patchChildren = (
       newHead++;
     }
 
-    // console.log({ oldHead, oldTail, newHead, newTail });
-
     if (oldHead > oldTail) {
       // There are no dirty old children: [], [X, Y, Z]
       while (newHead <= newTail) {
@@ -133,13 +131,13 @@ export const patchChildren = (
         workStack.push(() => el.removeChild(node));
       }
     } else {
-      const keyMap: Record<string, number> = {};
+      const oldKeyMap: Record<string, number> = {};
       for (let i = oldTail; i >= oldHead; --i) {
-        keyMap[(<VElement>oldVNodeChildren[i]).key!] = i;
+        oldKeyMap[(<VElement>oldVNodeChildren[i]).key!] = i;
       }
       while (newHead <= newTail) {
         const newVNodeChild = <VElement>newVNodeChildren[newHead];
-        const oldVNodePosition = keyMap[newVNodeChild.key!];
+        const oldVNodePosition = oldKeyMap[newVNodeChild.key!];
         const node = el.childNodes[oldVNodePosition];
         const newPosition = newHead++;
 
@@ -149,7 +147,7 @@ export const patchChildren = (
         ) {
           // Determine move for child that moved: [X, A, B, C] -> [A, B, C, X]
           workStack.push(() => el.insertBefore(node, el.childNodes[newPosition]));
-          delete keyMap[newVNodeChild.key!];
+          delete oldKeyMap[newVNodeChild.key!];
         } else {
           // VNode doesn't exist yet: [] -> [X]
           workStack.push(() =>
@@ -157,7 +155,7 @@ export const patchChildren = (
           );
         }
       }
-      for (const oldVNodePosition of Object.values(keyMap)) {
+      for (const oldVNodePosition of Object.values(oldKeyMap)) {
         // VNode wasn't found in new vnodes, so it's cleaned up: [X] -> []
         const node = el.childNodes[oldVNodePosition];
         workStack.push(() => el.removeChild(node));
@@ -176,7 +174,7 @@ export const patchChildren = (
         );
       }
     }
-    for (let i = oldVNodeChildren.length ?? 0; i < newVNodeChildren.length; ++i) {
+    for (let i = oldVNodeChildren.length ?? 0; i < newVNodeChildren.length; i++) {
       const node = createElement(newVNodeChildren[i], false);
       workStack.push(() => el.appendChild(node));
     }
@@ -189,7 +187,7 @@ export const flushworkStack = (
   workStack: (() => void)[],
   commit: (callback: () => void) => void = (callback: () => void): void => callback(),
 ): void => {
-  for (let i = 0; i < workStack.length; i++) {
+  for (let i = 0; i < workStack.length; ++i) {
     commit(workStack[i]);
   }
 };
