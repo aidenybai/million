@@ -183,7 +183,7 @@ export const patchChildren = (
   return workStack;
 };
 
-export const flushworkStack = (
+export const flushWorkStack = (
   workStack: (() => void)[],
   commit: (callback: () => void) => void = (callback: () => void): void => callback(),
 ): void => {
@@ -256,7 +256,7 @@ export const patch = (
     }
   }
 
-  flushworkStack(workStack, commit);
+  flushWorkStack(workStack, commit);
 
   if (!prevVNode) el[OLD_VNODE_FIELD] = newVNode;
 };
