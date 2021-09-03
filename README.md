@@ -53,7 +53,7 @@ We expect all Million contributors to abide by the terms of our [Code of Conduct
 
 ## Acknowledgments
 
-Million takes heavy inspiration from [Snabbdom](https://github.com/snabbdom/snabbdom), and believes in the core philosophies and values behind [Fre](https://github.com/yisar/fre), [React](https://github.com/facebook/react), and [Inferno](https://github.com/infernojs/inferno). Feel free to check them out if you interested in an alternative library to use.
+Million takes heavy inspiration from [Snabbdom](https://github.com/snabbdom/snabbdom) and [Fre](https://github.com/yisar/fre), and believes in the core philosophies and values behind [React](https://github.com/facebook/react), [Inferno](https://github.com/infernojs/inferno), and [Moon](https://github.com/kbrsh/moon). Feel free to check them out if you interested in an alternative library to use.
 
 _Why is it called "Million"? The name originated with the goal of being able to handle [1M+ ops/sec for benchmarks](https://github.com/aidenybai/million/tree/main/benchmarks#readme)_.
 

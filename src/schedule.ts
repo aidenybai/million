@@ -32,6 +32,8 @@ export const flush = (): void => {
 
 export const nextTick = (): void => {
   if (!queued) {
+    // Promise-based solution is by far the fastest solution
+    // when compared with MessageChannel (ok) and setTimeout (bad)
     promise.then(flush);
     queued = true;
   }
