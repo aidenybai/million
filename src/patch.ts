@@ -89,7 +89,6 @@ export const patchChildren = (
       }
     }
   } else if (keyed && oldVNodeChildren.length > 0) {
-    // Keyed reconciliation algorithm originally adapted from [Fre](https://github.com/yisar/fre)
     let oldHead = 0;
     let newHead = 0;
     let oldTail = oldVNodeChildren.length - 1;
