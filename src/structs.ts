@@ -20,14 +20,14 @@ export interface VElement {
 }
 
 export enum VFlags {
-  NO_CHILDREN = 1,
-  ONLY_TEXT_CHILDREN = 2,
-  ANY_CHILDREN = 3,
-  ONLY_KEYED_CHILDREN = 4,
+  NO_CHILDREN = 0,
+  ONLY_TEXT_CHILDREN = 1,
+  ANY_CHILDREN = 2,
+  ONLY_KEYED_CHILDREN = 3,
 }
 
 export const enum VDeltaOperationTypes {
-  INSERT = 1,
-  UPDATE = 2,
-  DELETE = 3,
+  INSERT = 0,
+  UPDATE = 1,
+  DELETE = 2,
 }
