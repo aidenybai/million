@@ -22,8 +22,8 @@ export interface VElement {
 export enum VFlags {
   NO_CHILDREN = 0,
   ONLY_TEXT_CHILDREN = 1,
-  ANY_CHILDREN = 2,
-  ONLY_KEYED_CHILDREN = 3,
+  ONLY_KEYED_CHILDREN = 2,
+  ANY_CHILDREN = 3,
 }
 
 export const enum VDeltaOperationTypes {
