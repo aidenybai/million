@@ -3,60 +3,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.jsdelivr.net/combine/npm/lodash@4.17.21,npm/platform@1.3.6,npm/benchmark@2.1.4"></script>
-    <script src="https://cdn.jsdelivr.net/npm/virtual-dom@2.1.1/dist/virtual-dom.min.js"></script>
-    <link rel="stylesheet" href="https://fonts.xz.style/serve/inter.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@exampledev/new.css@1.1.2/new.min.css"
-    />
-    <style>
-      body {
-        text-align: center;
-      }
-      button {
-        background: black;
-      }
-      button:hover {
-        background: rgba(0, 0, 0, 0.8);
-      }
-      button:focus {
-        background: rgba(0, 0, 0, 0.6);
-      }
-      #app {
-        visibility: hidden;
-      }
-    </style>
-    <script>
-      window.__m_sync = true;
-    </script>
-    <script src="https://unpkg.com/million/dist/million.umd.min.js"></script>
-    <!-- <script src="../dist/million.umd.min.js"></script> -->
-    <script src="./text-interop.js"></script>
-    <script src="./list-render.js"></script>
-    <script src="./conditional-render.js"></script>
     <link
       rel="icon"
       type="image/svg+xml"
       href="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/icon.svg"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/yegor256/tacit@gh-pages/tacit-css-1.5.5.min.css"
+    />
     <title>Million Benchmarks</title>
   </head>
   <body>
-    <button onclick="textInterop()" title="Swaps the text inside a div#app with Date.now()">
-      text-interop
-    </button>
-    <button
-      onclick="listRender()"
-      title="Pushes Date.now() to a growing children array and sets the children of div#app"
-    >
-      list-render
-    </button>
-    <button
-      onclick="conditionalRender()"
-      title="Swaps text inside div#app on random int to satisfy condition with Date.now()"
-    >
-      conditional-render
-    </button>
+    <script src="./main.ts" type="module"></script>
   </body>
 </html>

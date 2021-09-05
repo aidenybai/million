@@ -1,35 +1,28 @@
 import { className, DELETE, INSERT, m, ns, style, svg, UPDATE } from '../m';
-import { VDeltaOperationTypes, VNode, VProps } from '../structs';
-
-const h = (tag: string, props?: VProps, ...children: VNode[]) =>
-  m(
-    tag,
-    props,
-    children.length ? children.flat().filter((child) => child !== undefined) : undefined,
-  );
+import { VDeltaOperationTypes } from '../structs';
 
 describe('.m', () => {
   it('should create empty vnode with tag', () => {
-    expect(h('div')).toEqual({ tag: 'div' });
+    expect(m('div')).toEqual({ tag: 'div' });
   });
 
   it('should create vnode with tag and props', () => {
-    expect(h('div', { id: 'app' })).toEqual({ tag: 'div', props: { id: 'app' } });
+    expect(m('div', { id: 'app' })).toEqual({ tag: 'div', props: { id: 'app' } });
   });
 
   it('should create vnode with tag and one string child', () => {
-    expect(h('div', undefined, 'foo')).toEqual({ tag: 'div', children: ['foo'] });
+    expect(m('div', undefined, ['foo'])).toEqual({ tag: 'div', children: ['foo'] });
   });
 
   it('should create vnode with tag and multiple string children', () => {
-    expect(h('div', undefined, 'foo', 'bar', 'baz')).toEqual({
+    expect(m('div', undefined, ['foo', 'bar', 'baz'])).toEqual({
       tag: 'div',
       children: ['foo', 'bar', 'baz'],
     });
   });
 
   it('should create vnode with tag and one vnode child', () => {
-    expect(h('div', undefined, h('div'))).toEqual({
+    expect(m('div', undefined, [m('div')])).toEqual({
       tag: 'div',
       children: [
         {
@@ -40,7 +33,7 @@ describe('.m', () => {
   });
 
   it('should create vnode with tag and multiple vnode and string children', () => {
-    expect(h('div', undefined, h('div'), 'foo', h('div'), 'bar')).toEqual({
+    expect(m('div', undefined, [m('div'), 'foo', m('div'), 'bar'])).toEqual({
       tag: 'div',
       children: [
         {
@@ -57,12 +50,10 @@ describe('.m', () => {
 
   it('should create vnode with deeply nested children', () => {
     expect(
-      h(
-        'div',
-        undefined,
+      m('div', undefined, [
         'foo',
-        h('div', undefined, 'bar', h('div', undefined, 'baz', h('div', undefined, 'boo'))),
-      ),
+        m('div', undefined, ['bar', m('div', undefined, ['baz', m('div', undefined, ['boo'])])]),
+      ]),
     ).toEqual({
       tag: 'div',
       children: [
@@ -89,7 +80,7 @@ describe('.m', () => {
 
   it('should create a tag with className from class object', () => {
     expect(
-      h('div', { className: className({ class1: true, class2: false, class3: true }) }),
+      m('div', { className: className({ class1: true, class2: false, class3: true }) }),
     ).toEqual({
       tag: 'div',
       props: {
@@ -101,7 +92,7 @@ describe('.m', () => {
   });
 
   it('should create a tag with style object', () => {
-    expect(h('div', { style: style({ color: 'tomato', margin: '1rem' }) })).toEqual({
+    expect(m('div', { style: style({ color: 'tomato', margin: '1rem' }) })).toEqual({
       tag: 'div',
       props: {
         style: 'color:tomato;margin:1rem',
@@ -196,7 +187,7 @@ describe('.m', () => {
   });
 
   it('should move key to distinct property', () => {
-    expect(h('div', { key: 'foo' }, 'foo', h('div'))).toEqual({
+    expect(m('div', { key: 'foo' }, ['foo', m('div')])).toEqual({
       tag: 'div',
       props: {},
       children: [
