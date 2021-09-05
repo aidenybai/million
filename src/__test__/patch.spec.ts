@@ -1,32 +1,25 @@
 import { createElement } from '../createElement';
 import { DELETE, INSERT, m, UPDATE } from '../m';
 import { patch } from '../patch';
-import { VFlags, VNode, VProps } from '../structs';
-
-const h = (tag: string, props?: VProps, ...children: VNode[]) =>
-  m(
-    tag,
-    props,
-    children.length ? children.flat().filter((child) => child !== undefined) : undefined,
-  );
+import { VFlags } from '../structs';
 
 describe('.patch', () => {
   it('should patch element with text as children', () => {
-    const el = createElement(h('div', { id: 'el' }, 'foo'));
+    const el = createElement(m('div', { id: 'el' }, ['foo']));
 
-    patch(el, h('div', { id: 'el' }, 'bar'));
-    expect(el).toEqual(createElement(h('div', { id: 'el' }, 'bar')));
-    patch(el, h('div', { id: 'el', className: 'foo' }, 'baz'));
-    expect(el).toEqual(createElement(h('div', { id: 'el', className: 'foo' }, 'baz')));
+    patch(el, m('div', { id: 'el' }, ['bar']));
+    expect(el).toEqual(createElement(m('div', { id: 'el' }, ['bar'])));
+    patch(el, m('div', { id: 'el', className: 'foo' }, ['baz']));
+    expect(el).toEqual(createElement(m('div', { id: 'el', className: 'foo' }, ['baz'])));
 
     document.body.textContent = '';
   });
 
   it('should patch attributes', () => {
-    const el = createElement(h('div', { id: 'el' }, 'foo'));
+    const el = createElement(m('div', { id: 'el' }, ['foo']));
 
-    patch(el, h('div', { 'data-test': 'foo' }, 'bar'));
-    expect(el).toEqual(createElement(h('div', { 'data-test': 'foo' }, 'bar')));
+    patch(el, m('div', { 'data-test': 'foo' }, ['bar']));
+    expect(el).toEqual(createElement(m('div', { 'data-test': 'foo' }, ['bar'])));
 
     document.body.textContent = '';
   });

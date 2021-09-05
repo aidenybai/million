@@ -28,6 +28,7 @@ specifiers:
   tslib: ^2.2.0
   typescript: ^4.3.5
   vite: ^2.4.4
+  yet-another-benchmarking-tool: ^2.0.1
 
 devDependencies:
   '@commitlint/cli': 13.1.0
@@ -57,6 +58,7 @@ devDependencies:
   tslib: 2.3.0
   typescript: 4.3.5
   vite: 2.4.4
+  yet-another-benchmarking-tool: 2.0.1
 
 packages:
 
@@ -6519,6 +6521,12 @@ packages:
       string-width: 4.2.2
       y18n: 5.0.8
       yargs-parser: 20.2.9
+    dev: true
+
+  /yet-another-benchmarking-tool/2.0.1:
+    resolution: {integrity: sha512-av81Fd/Uc0cPqbulBokVq5CBZysRvFhpLNpBleOvrjTxZnC9iFKjT1rsJDM+FtLNxfZyOTFZDVU5iiN3vo8njw==}
+    dependencies:
+      chalk: 4.1.2
     dev: true
 
   /yn/3.1.1:

@@ -66,25 +66,23 @@ export const patchChildren = (
   } else if (delta) {
     for (let i = 0; i < delta.length; ++i) {
       const [deltaType, deltaPosition] = delta[i];
+      const child = el.childNodes[deltaPosition];
       switch (deltaType) {
         case VDeltaOperationTypes.INSERT:
           workStack.push(() =>
-            el.insertBefore(
-              createElement(newVNodeChildren[deltaPosition]),
-              el.childNodes[deltaPosition],
-            ),
+            el.insertBefore(createElement(newVNodeChildren[deltaPosition]), child),
           );
           break;
         case VDeltaOperationTypes.UPDATE:
           patch(
-            <HTMLElement | Text>el.childNodes[deltaPosition],
+            <HTMLElement | Text>child,
             newVNodeChildren[deltaPosition],
             oldVNodeChildren[deltaPosition],
             workStack,
           );
           break;
         case VDeltaOperationTypes.DELETE:
-          workStack.push(() => el.removeChild(el.childNodes[deltaPosition]));
+          workStack.push(() => el.removeChild(child));
           break;
       }
     }
