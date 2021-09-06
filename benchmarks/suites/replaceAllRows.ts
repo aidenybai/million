@@ -14,28 +14,43 @@ const shuffleArray = <T>(array: T[]): void => {
   }
 };
 
-const el = document.createElement('table');
-const data = buildData(1000);
-data.forEach(({ id, label }) => {
+const el1 = document.createElement('table');
+const data1 = buildData(1000);
+data1.forEach(({ id, label }) => {
   const newId = String(id);
   const row = createElement(
     m('tr', { key: newId }, [m('td', undefined, [newId]), m('td', undefined, [label])]),
   );
-  el.appendChild(row);
+  el1.appendChild(row);
 });
 
-shuffleArray(data);
+shuffleArray(data1);
+
+const el2 = document.createElement('table');
+const data2 = buildData(1000);
+data2.forEach(({ id, label }) => {
+  const tr = document.createElement('tr');
+  const td1 = document.createElement('td');
+  const td2 = document.createElement('td');
+  td1.textContent = String(id);
+  td2.textContent = label;
+  tr.appendChild(td1);
+  tr.appendChild(td2);
+  el2.appendChild(tr);
+});
+
+shuffleArray(data2);
 
 const suite = new Suite('replace all rows', [
   [
     'million',
     () => {
       patch(
-        el,
+        el1,
         m(
           'table',
           undefined,
-          data.map(({ id, label }) => {
+          data1.map(({ id, label }) => {
             const newId = String(id);
             return m('tr', { key: newId }, [
               m('td', undefined, [newId]),
@@ -45,6 +60,16 @@ const suite = new Suite('replace all rows', [
           VFlags.ONLY_KEYED_CHILDREN,
         ),
       );
+    },
+  ],
+  [
+    'vanilla',
+    () => {
+      el2.childNodes.forEach((tr, i) => {
+        const newId = String(data2[i].id);
+        tr.childNodes[0].textContent = newId;
+        tr.childNodes[1].textContent = data2[i].label;
+      });
     },
   ],
 ]);

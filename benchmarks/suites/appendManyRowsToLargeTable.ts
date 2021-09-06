@@ -7,23 +7,36 @@ import { Suite } from 'yet-another-benchmarking-tool';
 import { m, createElement, patch, VFlags } from '../../src/index';
 import { buildData } from '../data';
 
-const el = document.createElement('table');
-const data = buildData(10000);
-data.forEach(({ id, label }) => {
+const el1 = document.createElement('table');
+const data1 = buildData(10000);
+data1.forEach(({ id, label }) => {
   const newId = String(id);
   const row = createElement(
     m('tr', { key: newId }, [m('td', undefined, [newId]), m('td', undefined, [label])]),
   );
-  el.appendChild(row);
+  el1.appendChild(row);
 });
-data.push(...buildData(1000));
+data1.push(...buildData(1000));
+
+const el2 = document.createElement('table');
+const data2 = buildData(10000);
+data2.forEach(({ id, label }) => {
+  const tr = document.createElement('tr');
+  const td1 = document.createElement('td');
+  const td2 = document.createElement('td');
+  td1.textContent = String(id);
+  td2.textContent = label;
+  tr.appendChild(td1);
+  tr.appendChild(td2);
+  el2.appendChild(tr);
+});
 
 const suite = new Suite('append many rows to large table', [
   [
     'million',
     () => {
       patch(
-        el,
+        el1,
         m(
           'table',
           undefined,
@@ -33,6 +46,21 @@ const suite = new Suite('append many rows to large table', [
           VFlags.ONLY_KEYED_CHILDREN,
         ),
       );
+    },
+  ],
+  [
+    'vanilla',
+    () => {
+      buildData(1000).forEach(({ id, label }) => {
+        const tr = document.createElement('tr');
+        const td1 = document.createElement('td');
+        const td2 = document.createElement('td');
+        td1.textContent = String(id);
+        td2.textContent = label;
+        tr.appendChild(td1);
+        tr.appendChild(td2);
+        el2.appendChild(tr);
+      });
     },
   ],
 ]);

@@ -25,16 +25,34 @@ const suites = [
 
 const el = createElement(
   m('div', undefined, [
-    'Check console for results - Compliant with ',
+    'Open console to check for results. This benchmark is compliant with ',
     m('a', { href: 'https://github.com/krausest/js-framework-benchmark', target: '_blank' }, [
       'JS Framework Benchmark',
     ]),
     m('br'),
     m('br'),
     ...suites.map((suite) =>
-      m('button', { onclick: () => new Benchmark([suite]).run() }, [suite.name]),
+      m(
+        'button',
+        {
+          onclick: () => {
+            console.log(`Running: ${suite.name}`);
+            new Benchmark([suite]).run();
+          },
+        },
+        [suite.name],
+      ),
     ),
-    m('button', { onclick: () => new Benchmark(suites).run() }, ['All']),
+    m(
+      'button',
+      {
+        onclick: () => {
+          console.log(`Running: ${suites.map((suite) => suite.name).join(', ')}`);
+          new Benchmark(suites).run();
+        },
+      },
+      ['All'],
+    ),
   ]),
 );
 

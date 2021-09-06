@@ -24,6 +24,22 @@ const suite = new Suite('create rows', [
       );
     },
   ],
+  [
+    'vanilla',
+    () => {
+      const el = document.createElement('table');
+      buildData(1000).forEach(({ id, label }) => {
+        const tr = document.createElement('tr');
+        const td1 = document.createElement('td');
+        const td2 = document.createElement('td');
+        td1.textContent = String(id);
+        td2.textContent = label;
+        tr.appendChild(td1);
+        tr.appendChild(td2);
+        el.appendChild(tr);
+      });
+    },
+  ],
 ]);
 
 export default suite;
