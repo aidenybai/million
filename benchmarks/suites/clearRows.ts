@@ -7,21 +7,37 @@ import { Suite } from 'yet-another-benchmarking-tool';
 import { m, createElement, patch, VFlags } from '../../src/index';
 import { buildData } from '../data';
 
-const el = document.createElement('table');
-const data = buildData(10000);
-data.forEach(({ id, label }) => {
+const el1 = document.createElement('table');
+const data1 = buildData(10000);
+data1.forEach(({ id, label }) => {
   const newId = String(id);
   const row = createElement(
     m('tr', { key: newId }, [m('td', undefined, [newId]), m('td', undefined, [label])]),
   );
-  el.appendChild(row);
+  el1.appendChild(row);
+});
+
+const el2 = document.createElement('table');
+const data2 = buildData(10000);
+data2.forEach(({ id, label }) => {
+  const newId = String(id);
+  const row = createElement(
+    m('tr', { key: newId }, [m('td', undefined, [newId]), m('td', undefined, [label])]),
+  );
+  el2.appendChild(row);
 });
 
 const suite = new Suite('clear rows', [
   [
     'million',
     () => {
-      patch(el, m('table', undefined, [], VFlags.NO_CHILDREN));
+      patch(el1, m('table', undefined, [], VFlags.NO_CHILDREN));
+    },
+  ],
+  [
+    'vanilla',
+    () => {
+      el2.childNodes.forEach((node) => el2.removeChild(node));
     },
   ],
 ]);
