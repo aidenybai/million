@@ -44,6 +44,18 @@ export const style = (styleObject: Record<string, string>): string =>
     .join(';');
 
 /**
+ * Converts key names from camelCase to kebab-case
+ */
+export const kebab = (camelCaseObject: Record<string, unknown>): Record<string, unknown> => {
+  const kebabCaseObject = {};
+  for (const key in camelCaseObject) {
+    kebabCaseObject[key.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()] =
+      camelCaseObject[key];
+  }
+  return kebabCaseObject;
+};
+
+/**
  * Returns an insert (creation) delta operation
  */
 export const INSERT = (positionIdx = 0): VDeltaOperation => [
