@@ -1,4 +1,4 @@
-import { className, DELETE, INSERT, m, ns, style, svg, UPDATE } from '../m';
+import { className, DELETE, INSERT, kebab, m, ns, style, svg, UPDATE } from '../m';
 import { VDeltaOperationTypes } from '../structs';
 
 describe('.m', () => {
@@ -207,5 +207,13 @@ describe('.m', () => {
     expect(UPDATE(5)).toEqual([VDeltaOperationTypes.UPDATE, 5]);
     expect(DELETE()).toEqual([VDeltaOperationTypes.DELETE, 0]);
     expect(DELETE(5)).toEqual([VDeltaOperationTypes.DELETE, 5]);
+  });
+
+  it('should convert camelCase to kebab-case', () => {
+    expect(kebab({ fooBarBaz: 'fooBarBaz' })).toEqual({ 'foo-bar-baz': 'fooBarBaz' });
+    expect(kebab({ helloWorld: 'helloWorld' })).toEqual({ 'hello-world': 'helloWorld' });
+    expect(kebab({ iHaveNumbers1: 'iHaveNumbers1' })).toEqual({
+      'i-have-numbers1': 'iHaveNumbers1',
+    });
   });
 });
