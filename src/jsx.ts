@@ -8,7 +8,7 @@ const h = (tag: string, props?: VProps, children?: VNode[], delta?: VDelta) => {
   if (children) {
     const keyCache = new Set();
     flag = VFlags.ANY_CHILDREN;
-    if (children.some((child) => typeof child === 'string')) {
+    if (children.every((child) => typeof child === 'string')) {
       flag = VFlags.ONLY_TEXT_CHILDREN;
     }
     for (const child of children) {
