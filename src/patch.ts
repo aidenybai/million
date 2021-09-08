@@ -25,13 +25,14 @@ export const patchProps = (
     const newPropValue = newProps[propName];
 
     if (oldPropValue === newPropValue) continue;
+    console.log(el[propName]);
     if (propName.startsWith('on')) {
       const eventPropName = propName.slice(2).toLowerCase();
       workStack.push(() => {
         if (oldPropValue) el.removeEventListener(eventPropName, <EventListener>oldPropValue);
         el.addEventListener(eventPropName, <EventListener>newPropValue);
       });
-    } else if (el[propName] && !(el instanceof SVGElement)) {
+    } else if (el[propName] !== undefined && !(el instanceof SVGElement)) {
       if (newPropValue) {
         workStack.push(() => (el[propName] = newPropValue));
       } else {
