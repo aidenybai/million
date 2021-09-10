@@ -200,24 +200,34 @@ export const patch = (
   workStack: (() => void)[] = [],
   commit?: (callback: () => void) => void,
 ): HTMLElement | Text => {
-  let patchedEl = el;
+  const finish = () => {
+    flushWorkStack(workStack, commit);
+    if (!prevVNode) el[OLD_VNODE_FIELD] = newVNode;
+  };
+
   if (!newVNode) {
     workStack.push(() => el.remove());
+    finish();
+    return el;
   } else {
     const oldVNode: VNode | undefined = prevVNode ?? el[OLD_VNODE_FIELD];
     const hasString = typeof oldVNode === 'string' || typeof newVNode === 'string';
 
     if (hasString && oldVNode !== newVNode) {
-      const patchedEl = createElement(newVNode);
-      workStack.push(() => el.replaceWith(patchedEl));
+      const newEl = createElement(newVNode);
+      workStack.push(() => el.replaceWith(newEl));
+      finish();
+      return newEl;
     } else if (!hasString) {
       if (
         (!(<VElement>oldVNode)?.key && !(<VElement>newVNode)?.key) ||
         (<VElement>oldVNode)?.key !== (<VElement>newVNode)?.key
       ) {
         if ((<VElement>oldVNode)?.tag !== (<VElement>newVNode)?.tag || el instanceof Text) {
-          patchedEl = createElement(newVNode);
-          workStack.push(() => el.replaceWith(patchedEl));
+          const newEl = createElement(newVNode);
+          workStack.push(() => el.replaceWith(newEl));
+          finish();
+          return newEl;
         } else {
           patchProps(
             el,
@@ -257,9 +267,6 @@ export const patch = (
     }
   }
 
-  flushWorkStack(workStack, commit);
-
-  if (!prevVNode) el[OLD_VNODE_FIELD] = newVNode;
-
-  return patchedEl;
+  finish();
+  return el;
 };
