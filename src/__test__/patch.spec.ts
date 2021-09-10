@@ -175,4 +175,12 @@ describe('.patch', () => {
     patch(el, newVNode4, newVNode3);
     expect(el).toEqual(createElement(newVNode4));
   });
+
+  it('should return new DOM node', () => {
+    const el1 = createElement(m('div'));
+    const el2 = patch(el1, m('div', { id: 'app' }));
+
+    expect((<HTMLElement>el2).id).toEqual('app');
+    expect((<HTMLElement>el2).isEqualNode(el1)).toBeTruthy();
+  });
 });
