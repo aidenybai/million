@@ -199,7 +199,8 @@ export const patch = (
   prevVNode?: VNode,
   workStack: (() => void)[] = [],
   commit?: (callback: () => void) => void,
-): void => {
+): HTMLElement | Text => {
+  let patchedEl = el;
   if (!newVNode) {
     workStack.push(() => el.remove());
   } else {
@@ -207,14 +208,18 @@ export const patch = (
     const hasString = typeof oldVNode === 'string' || typeof newVNode === 'string';
 
     if (hasString && oldVNode !== newVNode) {
-      workStack.push(() => el.replaceWith(createElement(newVNode)));
+      const newEl = createElement(newVNode);
+      workStack.push(() => el.replaceWith(newEl));
+      patchedEl = newEl;
     } else if (!hasString) {
       if (
         (!(<VElement>oldVNode)?.key && !(<VElement>newVNode)?.key) ||
         (<VElement>oldVNode)?.key !== (<VElement>newVNode)?.key
       ) {
         if ((<VElement>oldVNode)?.tag !== (<VElement>newVNode)?.tag || el instanceof Text) {
-          workStack.push(() => el.replaceWith(createElement(newVNode)));
+          const newEl = createElement(newVNode);
+          workStack.push(() => el.replaceWith(newEl));
+          patchedEl = newEl;
         } else {
           patchProps(
             el,
@@ -257,4 +262,6 @@ export const patch = (
   flushWorkStack(workStack, commit);
 
   if (!prevVNode) el[OLD_VNODE_FIELD] = newVNode;
+
+  return patchedEl;
 };
