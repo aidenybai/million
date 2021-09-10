@@ -208,18 +208,16 @@ export const patch = (
     const hasString = typeof oldVNode === 'string' || typeof newVNode === 'string';
 
     if (hasString && oldVNode !== newVNode) {
-      const newEl = createElement(newVNode);
-      workStack.push(() => el.replaceWith(newEl));
-      patchedEl = newEl;
+      const patchedEl = createElement(newVNode);
+      workStack.push(() => el.replaceWith(patchedEl));
     } else if (!hasString) {
       if (
         (!(<VElement>oldVNode)?.key && !(<VElement>newVNode)?.key) ||
         (<VElement>oldVNode)?.key !== (<VElement>newVNode)?.key
       ) {
         if ((<VElement>oldVNode)?.tag !== (<VElement>newVNode)?.tag || el instanceof Text) {
-          const newEl = createElement(newVNode);
-          workStack.push(() => el.replaceWith(newEl));
-          patchedEl = newEl;
+          patchedEl = createElement(newVNode);
+          workStack.push(() => el.replaceWith(patchedEl));
         } else {
           patchProps(
             el,
