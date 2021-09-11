@@ -1,4 +1,5 @@
 import { className, m, style, svg, VDelta, VElement, VFlags, VNode, VProps } from './index';
+import { kebab } from './m';
 
 type JSXVNode = VNode | number | boolean | undefined | null;
 type FC = (props?: VProps, children?: VNode[], delta?: VDelta) => VElement;
@@ -24,7 +25,11 @@ const h = (tag: string, props?: VProps, children?: VNode[], delta?: VDelta) => {
     props.className = className(<Record<string, boolean>>(<unknown>props.className));
   }
   if (typeof props?.style === 'object') {
-    props.style = style(<Record<string, string>>(<unknown>props.style));
+    const rawStyle = <Record<string, string>>(<unknown>props.style);
+    const normalizedStyle = Object.keys(rawStyle).some((key) => /[-A-Z]/gim.test(key))
+      ? kebab(rawStyle)
+      : rawStyle;
+    props.style = style(<Record<string, string>>normalizedStyle);
   }
 
   const vnode = m(tag, props, children, flag, delta);
