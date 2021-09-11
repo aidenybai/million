@@ -51,7 +51,7 @@ const normalizeChildren = (children: JSXVNode[], normalizedChildren: VNode[]) =>
   return normalizedChildren;
 };
 
-const jsx = (tag: string | FC, props?: VProps, ...children: JSXVNode[]): VNode | (() => VNode) => {
+const jsx = (tag: string | FC, props?: VProps, ...children: JSXVNode[]): VNode => {
   let delta: VDelta | undefined;
   if (props) {
     const rawDelta = <VDelta>(<unknown>props.delta);
