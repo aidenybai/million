@@ -87,4 +87,4 @@ namespace JSX {
   }
 }
 
-export { JSX, jsx, jsx as jsxs, Fragment };
+export { JSX, JSXVNode, FC, jsx, jsx as jsxs, Fragment };
