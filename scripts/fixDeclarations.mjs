@@ -1,17 +1,22 @@
 import glob from 'glob';
-import { readFileSync, writeFileSync } from 'fs';
+import { readFile, writeFile } from 'fs/promises';
 
-const replaceDupeTypes = (text) => {
-  const delim = 'type JSXVNode';
-  const [, types] = text.split(delim);
+const collapseSharedTypes = (content) => {
+  /*
+    // Various shared types that need to be collapsed into an import statement...
+    type JSXVNode = // should be kept
+    // Actual types that are unique and should be kept
+  */
+  const delimiter = 'type JSXVNode';
+  const [, types] = content.split(delimiter);
   return `import { VDelta, VElement, VNode, VProps } from './million';
-  ${delim}${types}`;
+  ${delimiter}${types}`;
 };
 
-glob('dist/jsx-runtime.*', {}, (err, files) => {
-  if (err) console.error(err);
-  files.forEach((file) => {
-    const text = readFileSync(file, 'utf8');
-    writeFileSync(file, replaceDupeTypes(text));
-  });
+glob('dist/jsx-runtime.*', {}, async (err, files) => {
+  if (err) throw new Error(err);
+  for (const file of files) {
+    const text = await readFile(file, 'utf8');
+    await writeFile(file, collapseSharedTypes(text));
+  }
 });
