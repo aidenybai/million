@@ -242,12 +242,6 @@ export const init =
               workStack,
             );
 
-            if (effects.length > 0) {
-              for (let i = 0; i < effects.length; ++i) {
-                effects[i]();
-              }
-            }
-
             // Flags allow for greater optimizability by reducing condition branches.
             // Generally, you should use a compiler to generate these flags, but
             // hand-writing them is also possible
@@ -274,6 +268,12 @@ export const init =
                 );
                 break;
             }
+          }
+        }
+
+        if (effects.length > 0) {
+          for (let i = 0; i < effects.length; ++i) {
+            effects[i]();
           }
         }
       }
