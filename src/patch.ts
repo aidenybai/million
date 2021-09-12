@@ -191,82 +191,99 @@ export const flushWorkStack = (
 };
 
 /**
- * Diffs two VNodes and modifies the DOM node based on the necessary changes
+ * Creates a custom patch function
  */
-export const patch = (
-  el: HTMLElement | Text,
-  newVNode: VNode,
-  prevVNode?: VNode,
-  workStack: (() => void)[] = [],
-  commit?: (callback: () => void) => void,
-): HTMLElement | Text => {
-  const finish = () => {
-    flushWorkStack(workStack, commit);
-    if (!prevVNode) el[OLD_VNODE_FIELD] = newVNode;
-  };
+export const init =
+  (
+    customPatchProps: typeof patchProps = patchProps,
+    customPatchChildren: typeof patchChildren = patchChildren,
+    ...effects: (() => void)[]
+  ) =>
+  (
+    el: HTMLElement | Text,
+    newVNode: VNode,
+    prevVNode?: VNode,
+    workStack: (() => void)[] = [],
+    commit?: (callback: () => void) => void,
+  ): HTMLElement | Text => {
+    const finish = () => {
+      flushWorkStack(workStack, commit);
+      if (!prevVNode) el[OLD_VNODE_FIELD] = newVNode;
+    };
 
-  if (!newVNode) {
-    workStack.push(() => el.remove());
-    finish();
-    return el;
-  } else {
-    const oldVNode: VNode | undefined = prevVNode ?? el[OLD_VNODE_FIELD];
-    const hasString = typeof oldVNode === 'string' || typeof newVNode === 'string';
-
-    if (hasString && oldVNode !== newVNode) {
-      const newEl = createElement(newVNode);
-      workStack.push(() => el.replaceWith(newEl));
+    if (!newVNode) {
+      workStack.push(() => el.remove());
       finish();
-      return newEl;
-    } else if (!hasString) {
-      if (
-        (!(<VElement>oldVNode)?.key && !(<VElement>newVNode)?.key) ||
-        (<VElement>oldVNode)?.key !== (<VElement>newVNode)?.key
-      ) {
-        if ((<VElement>oldVNode)?.tag !== (<VElement>newVNode)?.tag || el instanceof Text) {
-          const newEl = createElement(newVNode);
-          workStack.push(() => el.replaceWith(newEl));
-          finish();
-          return newEl;
-        } else {
-          patchProps(
-            el,
-            (<VElement>oldVNode)?.props || {},
-            (<VElement>newVNode).props || {},
-            workStack,
-          );
+      return el;
+    } else {
+      const oldVNode: VNode | undefined = prevVNode ?? el[OLD_VNODE_FIELD];
+      const hasString = typeof oldVNode === 'string' || typeof newVNode === 'string';
 
-          // Flags allow for greater optimizability by reducing condition branches.
-          // Generally, you should use a compiler to generate these flags, but
-          // hand-writing them is also possible
-          switch (<VFlags>(<VElement>newVNode).flag) {
-            case VFlags.NO_CHILDREN:
-              workStack.push(() => (el.textContent = ''));
-              break;
-            case VFlags.ONLY_TEXT_CHILDREN:
-              // Joining is faster than setting textContent to an array
-              workStack.push(
-                () => (el.textContent = <string>(<VElement>newVNode).children!.join('')),
-              );
-              break;
-            default:
-              patchChildren(
-                el,
-                (<VElement>oldVNode)?.children || [],
-                (<VElement>newVNode).children!,
-                <VFlags>(<VElement>newVNode).flag === VFlags.ONLY_KEYED_CHILDREN,
-                // We need to pass delta here because this function does not have
-                // a reference to the actual vnode.
-                (<VElement>newVNode).delta,
-                workStack,
-              );
-              break;
+      if (hasString && oldVNode !== newVNode) {
+        const newEl = createElement(newVNode);
+        workStack.push(() => el.replaceWith(newEl));
+        finish();
+        return newEl;
+      } else if (!hasString) {
+        if (
+          (!(<VElement>oldVNode)?.key && !(<VElement>newVNode)?.key) ||
+          (<VElement>oldVNode)?.key !== (<VElement>newVNode)?.key
+        ) {
+          if ((<VElement>oldVNode)?.tag !== (<VElement>newVNode)?.tag || el instanceof Text) {
+            const newEl = createElement(newVNode);
+            workStack.push(() => el.replaceWith(newEl));
+            finish();
+            return newEl;
+          } else {
+            customPatchProps(
+              el,
+              (<VElement>oldVNode)?.props || {},
+              (<VElement>newVNode).props || {},
+              workStack,
+            );
+
+            if (effects.length > 0) {
+              for (let i = 0; i < effects.length; ++i) {
+                effects[i]();
+              }
+            }
+
+            // Flags allow for greater optimizability by reducing condition branches.
+            // Generally, you should use a compiler to generate these flags, but
+            // hand-writing them is also possible
+            switch (<VFlags>(<VElement>newVNode).flag) {
+              case VFlags.NO_CHILDREN:
+                workStack.push(() => (el.textContent = ''));
+                break;
+              case VFlags.ONLY_TEXT_CHILDREN:
+                // Joining is faster than setting textContent to an array
+                workStack.push(
+                  () => (el.textContent = <string>(<VElement>newVNode).children!.join('')),
+                );
+                break;
+              default:
+                customPatchChildren(
+                  el,
+                  (<VElement>oldVNode)?.children || [],
+                  (<VElement>newVNode).children!,
+                  <VFlags>(<VElement>newVNode).flag === VFlags.ONLY_KEYED_CHILDREN,
+                  // We need to pass delta here because this function does not have
+                  // a reference to the actual vnode.
+                  (<VElement>newVNode).delta,
+                  workStack,
+                );
+                break;
+            }
           }
         }
       }
     }
-  }
 
-  finish();
-  return el;
-};
+    finish();
+    return el;
+  };
+
+/**
+ * Diffs two VNodes and modifies the DOM node based on the necessary changes
+ */
+export const patch = init();
