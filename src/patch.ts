@@ -197,10 +197,10 @@ export const init =
     customPatchProps: typeof patchProps = patchProps,
     customPatchChildren: typeof patchChildren = patchChildren,
     ...effects: ((
-      el: HTMLElement | Text,
-      newVNode: VNode,
-      prevVNode: VNode | undefined,
-      workStack: (() => void)[],
+      el?: HTMLElement | Text,
+      newVNode?: VNode,
+      prevVNode?: VNode,
+      workStack?: (() => void)[],
     ) => void)[]
   ) =>
   (
