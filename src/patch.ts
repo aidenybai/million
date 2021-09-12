@@ -197,7 +197,12 @@ export const init =
   (
     customPatchProps: typeof patchProps = patchProps,
     customPatchChildren: typeof patchChildren = patchChildren,
-    ...effects: (() => void)[]
+    ...effects: ((
+      el: HTMLElement | Text,
+      newVNode: VNode,
+      prevVNode: VNode | undefined,
+      workStack: (() => void)[],
+    ) => void)[]
   ) =>
   (
     el: HTMLElement | Text,
@@ -273,7 +278,7 @@ export const init =
 
         if (effects.length > 0) {
           for (let i = 0; i < effects.length; ++i) {
-            effects[i]();
+            effects[i](el, newVNode, oldVNode, workStack);
           }
         }
       }
