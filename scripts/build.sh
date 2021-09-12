@@ -5,4 +5,4 @@ rollup -c
 
 info "\nDist: `ls -xm -d dist/*`\n"
 
-node scripts/fixDeclarations.mjs
+node scripts/fix-jsx-runtime.mjs
