@@ -25,7 +25,6 @@ export const patchProps = (
     const newPropValue = newProps[propName];
 
     if (oldPropValue === newPropValue) continue;
-    console.log(el[propName]);
     if (propName.startsWith('on')) {
       const eventPropName = propName.slice(2).toLowerCase();
       workStack.push(() => {
