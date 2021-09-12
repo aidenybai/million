@@ -19,9 +19,7 @@ const build = () => [
   ]),
   entry('./src/jsx.ts', [
     out('./dist/jsx-runtime.cjs.js', { format: 'cjs' }),
-    out('./dist/jsx-runtime.cjs.min.js', { format: 'cjs', minify: true }),
     out('./dist/jsx-runtime.esm.js', { format: 'esm' }),
-    out('./dist/jsx-runtime.esm.min.js', { format: 'esm', minify: true }),
     out('./dist/jsx-runtime.js', { format: 'esm' }),
   ]),
 ];
