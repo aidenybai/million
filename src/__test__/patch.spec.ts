@@ -1,6 +1,6 @@
 import { createElement } from '../createElement';
 import { DELETE, INSERT, m, UPDATE } from '../m';
-import { patch } from '../patch';
+import { init, patch } from '../patch';
 import { VFlags } from '../structs';
 
 describe('.patch', () => {
@@ -179,6 +179,15 @@ describe('.patch', () => {
   it('should return new DOM node', () => {
     const el1 = createElement(m('div'));
     const el2 = patch(el1, m('div', { id: 'app' }));
+
+    expect((<HTMLElement>el2).id).toEqual('app');
+    expect((<HTMLElement>el2).isEqualNode(el1)).toBeTruthy();
+  });
+
+  it('should init a custom patch', () => {
+    const el1 = createElement(m('div'));
+    const customPatch = init();
+    const el2 = customPatch(el1, m('div', { id: 'app' }));
 
     expect((<HTMLElement>el2).id).toEqual('app');
     expect((<HTMLElement>el2).isEqualNode(el1)).toBeTruthy();
