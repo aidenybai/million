@@ -211,8 +211,10 @@ export const init =
     commit?: (callback: () => void) => void,
   ): HTMLElement | Text => {
     const finish = () => {
+      workStack.push(() => {
+        if (!prevVNode) el[OLD_VNODE_FIELD] = newVNode;
+      });
       flushWorkStack(workStack, commit);
-      if (!prevVNode) el[OLD_VNODE_FIELD] = newVNode;
     };
 
     if (!newVNode) {
