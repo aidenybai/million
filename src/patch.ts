@@ -27,17 +27,17 @@ export const init =
     workStack: VTask[] = [],
     commit?: (callback: VTask) => void,
   ): HTMLElement | Text => {
-    const finish = () => {
+    const finish = (element: HTMLElement | Text): HTMLElement | Text => {
       workStack.push(() => {
-        if (!prevVNode) el[OLD_VNODE_FIELD] = newVNode;
+        if (!prevVNode) element[OLD_VNODE_FIELD] = newVNode;
       });
       flushWorkStack(workStack, commit);
+      return element;
     };
 
     if (!newVNode) {
       workStack.push(() => el.remove());
-      finish();
-      return el;
+      return finish(el);
     } else {
       const oldVNode: VNode | undefined = prevVNode ?? el[OLD_VNODE_FIELD];
       const hasString = typeof oldVNode === 'string' || typeof newVNode === 'string';
@@ -45,9 +45,9 @@ export const init =
       if (hasString && oldVNode !== newVNode) {
         const newEl = createElement(newVNode);
         workStack.push(() => el.replaceWith(newEl));
-        finish();
-        return newEl;
-      } else if (!hasString) {
+        return finish(newEl);
+      }
+      if (!hasString) {
         if (
           (!(<VElement>oldVNode)?.key && !(<VElement>newVNode)?.key) ||
           (<VElement>oldVNode)?.key !== (<VElement>newVNode)?.key
@@ -55,19 +55,17 @@ export const init =
           if ((<VElement>oldVNode)?.tag !== (<VElement>newVNode)?.tag || el instanceof Text) {
             const newEl = createElement(newVNode);
             workStack.push(() => el.replaceWith(newEl));
-            finish();
-            return newEl;
-          } else {
-            for (let i = 0; i < drivers.length; i++) {
-              drivers[i](el, <VElement>newVNode, <VElement | undefined>oldVNode, workStack);
-            }
+            return finish(newEl);
+          }
+
+          for (let i = 0; i < drivers.length; i++) {
+            drivers[i](el, <VElement>newVNode, <VElement | undefined>oldVNode, workStack);
           }
         }
       }
     }
 
-    finish();
-    return el;
+    return finish(el);
   };
 
 /**
