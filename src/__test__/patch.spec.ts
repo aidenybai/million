@@ -1,6 +1,8 @@
 import { createElement } from '../createElement';
+import { childrenDriver } from '../drivers/children';
+import { propsDriver } from '../drivers/props';
 import { DELETE, INSERT, m, UPDATE } from '../m';
-import { childrenDriver, init, patch, propsDriver } from '../patch';
+import { init, patch } from '../patch';
 import { VFlags } from '../structs';
 
 describe('.patch', () => {
