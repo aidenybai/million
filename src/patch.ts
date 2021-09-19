@@ -3,21 +3,26 @@ import {
   OLD_VNODE_FIELD,
   VDelta,
   VDeltaOperationTypes,
+  VDriver,
   VElement,
   VFlags,
   VNode,
   VProps,
+  VTask,
 } from './structs';
 
 /**
  * Diffs two VNode props and modifies the DOM node based on the necessary changes
  */
-export const patchProps = (
+export const propsDriver = (
   el: HTMLElement,
-  oldProps: VProps,
-  newProps: VProps,
-  workStack: (() => void)[],
-): (() => void)[] => {
+  newVNode: VElement,
+  oldVNode: VElement | undefined,
+  workStack: VTask[],
+): VTask[] => {
+  const oldProps: VProps = oldVNode?.props ?? {};
+  const newProps: VProps = newVNode.props ?? {};
+
   // Subsequent spreads will overwrite original spreads
   // e.g. { ...{ foo: 'bar' }, ...{ foo: 'baz' } } becomes { foo: 'baz' }
   for (const propName in { ...oldProps, ...newProps }) {
@@ -53,30 +58,34 @@ export const patchProps = (
 /**
  * Diffs two VNode children and modifies the DOM node based on the necessary changes
  */
-export const patchChildren = (
+export const childrenDriver = (
   el: HTMLElement,
-  oldVNodeChildren: VNode[],
-  newVNodeChildren: VNode[],
-  keyed: boolean,
-  delta: VDelta | undefined,
-  workStack: (() => void)[],
-): (() => void)[] => {
-  if (!newVNodeChildren) {
-    workStack.push(() => (el.textContent = ''));
-  } else if (delta) {
+  newVNode: VElement,
+  oldVNode: VElement | undefined,
+  workStack: VTask[],
+): VTask[] => {
+  const oldVNodeChildren: VNode[] = oldVNode?.children ?? [];
+  const newVNodeChildren: VNode[] | undefined = newVNode.children;
+  const delta: VDelta | undefined = newVNode.delta;
+
+  // Deltas are a way for the compile-time to optimize runtime operations
+  // by providing a set of predefined operations. This is useful for cases
+  // where you are patching a large amount of children, or when you have
+  // a large amount of props.
+  if (delta) {
     for (let i = 0; i < delta.length; ++i) {
       const [deltaType, deltaPosition] = delta[i];
       const child = el.childNodes[deltaPosition];
       switch (deltaType) {
         case VDeltaOperationTypes.INSERT:
           workStack.push(() =>
-            el.insertBefore(createElement(newVNodeChildren[deltaPosition]), child),
+            el.insertBefore(createElement(newVNodeChildren![deltaPosition]), child),
           );
           break;
         case VDeltaOperationTypes.UPDATE:
           patch(
             <HTMLElement | Text>child,
-            newVNodeChildren[deltaPosition],
+            newVNodeChildren![deltaPosition],
             oldVNodeChildren[deltaPosition],
             workStack,
           );
@@ -86,7 +95,24 @@ export const patchChildren = (
           break;
       }
     }
-  } else if (keyed && oldVNodeChildren.length > 0) {
+    return workStack;
+  }
+
+  if (!oldVNodeChildren && !newVNodeChildren) {
+    return workStack;
+  }
+  // Flags allow for greater optimizability by reducing condition branches.
+  // Generally, you should use a compiler to generate these flags, but
+  // hand-writing them is also possible
+  if (!newVNodeChildren || newVNode.flag === VFlags.NO_CHILDREN) {
+    workStack.push(() => (el.textContent = ''));
+    return workStack;
+  }
+  if (newVNode.flag === VFlags.ONLY_TEXT_CHILDREN) {
+    workStack.push(() => (el.textContent = <string>(<VElement>newVNode).children!.join('')));
+    return workStack;
+  }
+  if (newVNode.flag === VFlags.ONLY_KEYED_CHILDREN) {
     let oldHead = 0;
     let newHead = 0;
     let oldTail = oldVNodeChildren.length - 1;
@@ -158,31 +184,33 @@ export const patchChildren = (
         workStack.push(() => el.removeChild(node));
       }
     }
-  } else {
-    if (oldVNodeChildren) {
-      // Interates backwards, so in case a childNode is destroyed, it will not shift the nodes
-      // and break accessing by index
-      for (let i = oldVNodeChildren.length - 1; i >= 0; --i) {
-        patch(
-          <HTMLElement | Text>el.childNodes[i],
-          newVNodeChildren[i],
-          oldVNodeChildren[i],
-          workStack,
-        );
-      }
+    return workStack;
+  }
+
+  if (oldVNodeChildren) {
+    // Interates backwards, so in case a childNode is destroyed, it will not shift the nodes
+    // and break accessing by index
+    for (let i = oldVNodeChildren.length - 1; i >= 0; --i) {
+      patch(
+        <HTMLElement | Text>el.childNodes[i],
+        newVNodeChildren[i],
+        oldVNodeChildren[i],
+        workStack,
+      );
     }
-    for (let i = oldVNodeChildren.length ?? 0; i < newVNodeChildren.length; i++) {
-      const node = createElement(newVNodeChildren[i], false);
-      workStack.push(() => el.appendChild(node));
-    }
+  }
+
+  for (let i = oldVNodeChildren.length ?? 0; i < newVNodeChildren.length; i++) {
+    const node = createElement(newVNodeChildren[i], false);
+    workStack.push(() => el.appendChild(node));
   }
 
   return workStack;
 };
 
 export const flushWorkStack = (
-  workStack: (() => void)[],
-  commit: (callback: () => void) => void = (callback: () => void): void => callback(),
+  workStack: VTask[],
+  commit: (callback: VTask) => void = (callback: VTask): void => callback(),
 ): void => {
   for (let i = 0; i < workStack.length; ++i) {
     commit(workStack[i]);
@@ -193,22 +221,13 @@ export const flushWorkStack = (
  * Creates a custom patch function
  */
 export const init =
-  (
-    customPatchProps: typeof patchProps = patchProps,
-    customPatchChildren: typeof patchChildren = patchChildren,
-    ...effects: ((
-      el?: HTMLElement | Text,
-      newVNode?: VNode,
-      prevVNode?: VNode,
-      workStack?: (() => void)[],
-    ) => void)[]
-  ) =>
+  (drivers: VDriver[]) =>
   (
     el: HTMLElement | Text,
     newVNode: VNode,
     prevVNode?: VNode,
-    workStack: (() => void)[] = [],
-    commit?: (callback: () => void) => void,
+    workStack: VTask[] = [],
+    commit?: (callback: VTask) => void,
   ): HTMLElement | Text => {
     const finish = () => {
       workStack.push(() => {
@@ -241,45 +260,9 @@ export const init =
             finish();
             return newEl;
           } else {
-            customPatchProps(
-              el,
-              (<VElement>oldVNode)?.props || {},
-              (<VElement>newVNode).props || {},
-              workStack,
-            );
-
-            // Flags allow for greater optimizability by reducing condition branches.
-            // Generally, you should use a compiler to generate these flags, but
-            // hand-writing them is also possible
-            switch (<VFlags>(<VElement>newVNode).flag) {
-              case VFlags.NO_CHILDREN:
-                workStack.push(() => (el.textContent = ''));
-                break;
-              case VFlags.ONLY_TEXT_CHILDREN:
-                // Joining is faster than setting textContent to an array
-                workStack.push(
-                  () => (el.textContent = <string>(<VElement>newVNode).children!.join('')),
-                );
-                break;
-              default:
-                customPatchChildren(
-                  el,
-                  (<VElement>oldVNode)?.children || [],
-                  (<VElement>newVNode).children!,
-                  <VFlags>(<VElement>newVNode).flag === VFlags.ONLY_KEYED_CHILDREN,
-                  // We need to pass delta here because this function does not have
-                  // a reference to the actual vnode.
-                  (<VElement>newVNode).delta,
-                  workStack,
-                );
-                break;
+            for (let i = 0; i < drivers.length; i++) {
+              drivers[i](el, <VElement>newVNode, <VElement | undefined>oldVNode, workStack);
             }
-          }
-        }
-
-        if (effects.length > 0) {
-          for (let i = 0; i < effects.length; ++i) {
-            effects[i](el, newVNode, oldVNode, workStack);
           }
         }
       }
@@ -292,4 +275,4 @@ export const init =
 /**
  * Diffs two VNodes and modifies the DOM node based on the necessary changes
  */
-export const patch = init();
+export const patch = init([propsDriver, childrenDriver]);
