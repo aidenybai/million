@@ -1,6 +1,6 @@
 import { createElement } from '../createElement';
 import { m } from '../m';
-import { OLD_VNODE_FIELD } from '../structs';
+import { OLD_VNODE_FIELD } from '../types';
 
 const fakeMFunction = (tag: string, props: unknown) =>
   Object.assign(document.createElement(tag), props);

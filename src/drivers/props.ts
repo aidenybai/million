@@ -1,4 +1,4 @@
-import { VElement, VProps, VTask } from '../structs';
+import { VElement, VProps, VTask } from '../types';
 
 /**
  * Diffs two VNode props and modifies the DOM node based on the necessary changes

@@ -1,6 +1,6 @@
 import { propsDriver } from './drivers/props';
 import { flushWorkStack } from './patch';
-import { OLD_VNODE_FIELD, VNode } from './structs';
+import { OLD_VNODE_FIELD, VNode } from './types';
 
 /**
  * Creates an Element from a VNode

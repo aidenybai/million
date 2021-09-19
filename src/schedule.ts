@@ -1,4 +1,4 @@
-import { VTask } from './structs';
+import { VTask } from './types';
 
 const stack: VTask[] = [];
 const DEADLINE_THRESHOLD = 1000 / 60; // Minimum time buffer for 60 FPS
