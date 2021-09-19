@@ -1,6 +1,6 @@
 import { createElement } from '../createElement';
 import { DELETE, INSERT, m, UPDATE } from '../m';
-import { init, patch } from '../patch';
+import { childrenDriver, init, patch, propsDriver } from '../patch';
 import { VFlags } from '../structs';
 
 describe('.patch', () => {
@@ -186,7 +186,7 @@ describe('.patch', () => {
 
   it('should init a custom patch', () => {
     const el1 = createElement(m('div'));
-    const customPatch = init();
+    const customPatch = init([propsDriver, childrenDriver]);
     const el2 = customPatch(el1, m('div', { id: 'app' }));
 
     expect((<HTMLElement>el2).id).toEqual('app');

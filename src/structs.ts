@@ -9,6 +9,12 @@ export type VNode = VElement | string;
 export type VDeltaOperation = [VDeltaOperationTypes, number];
 export type VDelta = VDeltaOperation[];
 export type VTask = () => void;
+export type VDriver = (
+  el: HTMLElement,
+  newVNode: VElement,
+  oldVNode: VElement | undefined,
+  workStack: VTask[],
+) => VTask[];
 
 export interface VElement {
   tag: string;

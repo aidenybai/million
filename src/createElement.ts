@@ -1,4 +1,4 @@
-import { flushWorkStack, patchProps } from './patch';
+import { flushWorkStack, propsDriver } from './patch';
 import { OLD_VNODE_FIELD, VNode } from './structs';
 
 /**
@@ -8,7 +8,7 @@ export const createElement = (vnode: VNode, attachField = true): HTMLElement | T
   if (typeof vnode === 'string') return document.createTextNode(vnode);
   const el = <HTMLElement>document.createElement(vnode.tag);
 
-  flushWorkStack(patchProps(el, {}, vnode.props ?? {}, []));
+  flushWorkStack(propsDriver(el, vnode, undefined, []));
 
   vnode.children?.forEach((child) => {
     el.appendChild(createElement(child));
