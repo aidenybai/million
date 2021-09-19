@@ -21,6 +21,7 @@ const build = () => [
     out('./dist/jsx-runtime.cjs.js', { format: 'cjs' }),
     out('./dist/jsx-runtime.esm.js', { format: 'esm' }),
     out('./dist/jsx-runtime.js', { format: 'esm' }),
+    out('./dist/code-size-measurement.js', { format: 'esm', minify: true }),
   ]),
 ];
 
