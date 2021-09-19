@@ -27,8 +27,8 @@
       "require": "./dist/million.cjs.js"
     },
     "./jsx-runtime": {
-      "import": "./dist/jsx-runtime.esm.min.js",
-      "require": "./dist/jsx-runtime.cjs.min.js"
+      "import": "./dist/jsx-runtime.esm.js",
+      "require": "./dist/jsx-runtime.cjs.js"
     }
   },
   "sideEffects": false,
