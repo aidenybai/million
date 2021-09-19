@@ -12,5 +12,6 @@ module.exports = {
     '!src/**/schedule.ts',
     '!src/**/jsx.ts',
     '!src/**/patch.ts',
+    '!src/**/drivers/*',
   ],
 };
