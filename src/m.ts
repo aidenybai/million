@@ -18,6 +18,9 @@ export const svg = (vnode: VElement): VElement => {
   return vnode;
 };
 
+/**
+ * Attaches ns props to an arbitrary element
+ */
 export const ns = (tag: string, props: VProps, children?: VNode[]): void => {
   props.ns = 'http://www.w3.org/2000/svg';
   if (children && tag !== 'foreignObject') {

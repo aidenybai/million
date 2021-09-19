@@ -3,7 +3,7 @@ import { flushWorkStack } from './patch';
 import { OLD_VNODE_FIELD, VNode } from './structs';
 
 /**
- * Creates an element from a VNode
+ * Creates an Element from a VNode
  */
 export const createElement = (vnode: VNode, attachField = true): HTMLElement | Text => {
   if (typeof vnode === 'string') return document.createTextNode(vnode);
