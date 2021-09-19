@@ -1,5 +1,5 @@
 import { className, DELETE, INSERT, kebab, m, ns, style, svg, UPDATE } from '../m';
-import { VDeltaOperationTypes } from '../structs';
+import { VDeltaOperationTypes } from '../types';
 
 describe('.m', () => {
   it('should create empty vnode with tag', () => {

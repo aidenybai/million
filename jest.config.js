@@ -8,7 +8,7 @@ module.exports = {
   collectCoverageFrom: [
     '<rootDir>/src/**/*.ts',
     '!src/**/index.*',
-    '!src/**/structs.ts',
+    '!src/**/types.ts',
     '!src/**/schedule.ts',
     '!src/**/jsx.ts',
     '!src/**/patch.ts',

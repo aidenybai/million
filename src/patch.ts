@@ -1,7 +1,7 @@
 import { createElement } from './createElement';
 import { childrenDriver } from './drivers/children';
 import { propsDriver } from './drivers/props';
-import { OLD_VNODE_FIELD, VDriver, VElement, VNode, VTask } from './structs';
+import { OLD_VNODE_FIELD, VDriver, VElement, VNode, VTask } from './types';
 
 /**
  * Passes all of the callbacks in a given array to a given function sequentially.

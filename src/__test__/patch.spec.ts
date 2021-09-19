@@ -3,7 +3,7 @@ import { childrenDriver } from '../drivers/children';
 import { propsDriver } from '../drivers/props';
 import { DELETE, INSERT, m, UPDATE } from '../m';
 import { init, patch } from '../patch';
-import { VFlags } from '../structs';
+import { VFlags } from '../types';
 
 describe('.patch', () => {
   it('should patch element with text as children', () => {

@@ -6,7 +6,7 @@ import {
   VFlags,
   VNode,
   VProps,
-} from './structs';
+} from './types';
 
 /**
  * Attaches ns props to svg element
