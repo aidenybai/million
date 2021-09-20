@@ -58,8 +58,10 @@ export const init =
             return finish(newEl);
           }
 
-          for (let i = 0; i < drivers.length; i++) {
-            drivers[i](el, <VElement>newVNode, <VElement | undefined>oldVNode, workStack);
+          if (drivers) {
+            for (let i = 0; i < drivers.length; i++) {
+              drivers[i](el, <VElement>newVNode, <VElement | undefined>oldVNode, workStack);
+            }
           }
         }
       }
