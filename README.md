@@ -9,6 +9,13 @@ Current Virtual DOM implementations are inadequate—Ranging from overcomplicate
 
 [**→ Check out the Million documentation**](https://million.js.org)
 
+## Why Million?
+
+- Built for libraries that compile & statically analyze
+- Lightweight (<1kb brotli+min) and [fast](https://github.com/aidenybai/million/tree/main/benchmarks#readme)
+- Extensible, but sensible by default
+- Rich features & typed API
+
 ## Installing Million
 
 Million doesn't require [build tools by default](https://million.js.org/essentials/installation), but it is highly recommended you use NPM to install.
