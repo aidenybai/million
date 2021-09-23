@@ -11,10 +11,10 @@ Current Virtual DOM implementations are inadequate—Ranging from overcomplicate
 
 ## Why Million?
 
-- Built for libraries that compile & statically analyze
-- Lightweight (<1kb brotli+min) and [fast](https://github.com/aidenybai/million/tree/main/benchmarks#readme)
-- Extensible, but sensible by default
-- Rich features & typed API
+- 🎨 Built for libraries that compile
+- 📦 Lightweight bundle size (<1kb brotli+min)
+- ⚡ Fast runtime operations
+- 🛠️ Extensible using drivers, sensible by default
 
 ## Installing Million
 
