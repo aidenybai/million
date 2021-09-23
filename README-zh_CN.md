@@ -1,6 +1,6 @@
 # <a href="https://million.js.org"><img src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/logo.svg" height="69" alt="Million Logo" aria-label="Million Logo" /></a>
 
-简体中文 | [English](./README.md)
+简体中文 | [English](https://github.com/aidenybai/million/blob/main/README.md)
 
 ### <1kb 专注虚拟 DOM 的编译器。非常快！
 
