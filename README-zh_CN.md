@@ -20,7 +20,7 @@
 
 ## 下载 Million
 
-Million 在默认情况下不需要 [构建工具](https://million.js.org/essentials/installation)的, 但是非常推荐你使用 npm 进行安装
+Million 在默认情况下不需要 [构建工具](https://million.js.org/essentials/installation) 的, 但是非常推荐你使用 npm 进行安装
 
 ```sh
 npm install million
@@ -62,9 +62,9 @@ patch(app, m('div', { id: 'app' }, ['Goodbye World']));
 
 ## 鸣谢
 
-Million 从 [Snabbdom](https://github.com/snabbdom/snabbdom) 和 [Fre](https://github.com/yisar/fre)身上获取了很多灵感，并相信 [React](https://github.com/facebook/react)，[Inferno](https://github.com/infernojs/inferno)以及 [Moon](https://github.com/kbrsh/moon) 背后的核心理念和价值。如果你有兴趣使用其他库，可以随时查看它们。
+Million 从 [Snabbdom](https://github.com/snabbdom/snabbdom) 和 [Fre](https://github.com/yisar/fre) 身上获取了很多灵感，并相信 [React](https://github.com/facebook/react)，[Inferno](https://github.com/infernojs/inferno) 以及 [Moon](https://github.com/kbrsh/moon) 背后的核心理念和价值。如果你有兴趣使用其他库，可以随时查看它们。
 
-_为什么叫 "Million"？这个名字源于能够处理 [1M+ ops/sec 基准测试](https://github.com/aidenybai/million/tree/main/benchmarks#readme)的目标_.
+_为什么叫 "Million"？这个名字源于能够处理 [1M+ ops/sec 基准测试](https://github.com/aidenybai/million/tree/main/benchmarks#readme) 的目标_.
 
 ## License
 
