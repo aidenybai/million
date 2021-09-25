@@ -4,11 +4,11 @@ import { propsDriver } from './drivers/props';
 import { OLD_VNODE_FIELD, VDriver, VElement, VNode, VTask } from './types';
 
 /**
- * Passes all of the callbacks in a given array to a given function sequentially.
+ * Passes all of the tasks in a given array to a given function sequentially.
  */
 export const flushWorkStack = (
   workStack: VTask[],
-  commit: (callback: VTask) => void = (callback: VTask): void => callback(),
+  commit: (task: VTask) => void = (task: VTask): void => task(),
 ): void => {
   for (let i = 0; i < workStack.length; ++i) {
     commit(workStack[i]);
@@ -25,7 +25,7 @@ export const init =
     newVNode: VNode,
     prevVNode?: VNode,
     workStack: VTask[] = [],
-    commit?: (callback: VTask) => void,
+    commit?: (task: VTask) => void,
   ): HTMLElement | Text => {
     const finish = (element: HTMLElement | Text): HTMLElement | Text => {
       workStack.push(() => {

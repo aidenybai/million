@@ -1,16 +1,16 @@
 import { VTask } from './types';
 
-const stack: VTask[] = [];
-const DEADLINE_THRESHOLD = 1000 / 60; // Minimum time buffer for 60 FPS
-const promise = Promise.resolve();
+const workStack: VTask[] = [];
+const DEADLINE_THRESHOLD = 1000 / 60; // Minimum time to achieve 60 FPS
+const resolvedPromise = Promise.resolve();
 let deadline = 0;
 let queued = false;
 
 /*
- * Runs a callback, unless the main thread is blocked and it defers and runs later
+ * Runs a task, unless the main thread is blocked and it defers and runs later
  */
-export const schedule = (callback: VTask): void => {
-  stack.push(callback);
+export const schedule = (task: VTask): void => {
+  workStack.push(task);
   nextTick();
 };
 
@@ -23,17 +23,17 @@ export const shouldYield = (): boolean =>
   performance.now() >= deadline;
 
 /**
- * Iterates through stack and runs callbacks, defer to next tick if main thread is blocked
+ * Iterates through stack and runs tasks, defer to next tick if main thread is blocked
  */
 export const flush = (): void => {
   deadline = performance.now() + DEADLINE_THRESHOLD;
   while (!shouldYield()) {
-    const task = stack.shift();
+    const task = workStack.shift();
     if (task) task();
     else break;
   }
   queued = false;
-  if (stack.length > 0) nextTick();
+  if (workStack.length > 0) nextTick();
 };
 
 /**
@@ -43,7 +43,7 @@ export const nextTick = (): void => {
   if (!queued) {
     // Promise-based solution is by far the fastest solution
     // when compared with MessageChannel (decent) and setTimeout (bad)
-    promise.then(flush);
+    resolvedPromise.then(flush);
     queued = true;
   }
 };
