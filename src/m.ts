@@ -97,10 +97,6 @@ export const m = (
     key = <string | undefined>props.key;
     delete props.key;
   }
-  if (props?.style) {
-    props.cssText = props.style;
-    delete props.style;
-  }
   return {
     tag,
     props,
