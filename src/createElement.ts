@@ -11,9 +11,11 @@ export const createElement = (vnode: VNode, attachField = true): HTMLElement | T
 
   flushWorkStack(propsDriver(el, vnode, undefined, []));
 
-  vnode.children?.forEach((child) => {
-    el.appendChild(createElement(child));
-  });
+  if (vnode.children) {
+    for (let i = 0; i < vnode.children.length; i++) {
+      el.appendChild(createElement(vnode.children[i]));
+    }
+  }
 
   if (attachField) el[OLD_VNODE_FIELD] = vnode;
 
