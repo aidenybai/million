@@ -19,9 +19,7 @@ export const propsDriver = (
     const newPropValue = newProps[propName];
 
     if (oldPropValue === newPropValue) continue;
-    if (propName === 'style') {
-      el[propName].cssText = <string>newPropValue;
-    } else if (propName.startsWith('on')) {
+    if (propName.startsWith('on')) {
       const eventPropName = propName.slice(2).toLowerCase();
       workStack.push(() => {
         if (oldPropValue) el.removeEventListener(eventPropName, <EventListener>oldPropValue);
