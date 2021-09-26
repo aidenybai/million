@@ -8,8 +8,8 @@ import { VDelta, VDeltaOperationTypes, VElement, VFlags, VNode, VTask } from '..
 export const childrenDriver = (
   el: HTMLElement,
   newVNode: VElement,
-  oldVNode: VElement | undefined,
-  workStack: VTask[],
+  oldVNode?: VElement,
+  workStack: VTask[] = [],
 ): VTask[] => {
   const oldVNodeChildren: VNode[] = oldVNode?.children ?? [];
   const newVNodeChildren: VNode[] | undefined = newVNode.children;

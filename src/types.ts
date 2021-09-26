@@ -10,8 +10,8 @@ export type VTask = () => void;
 export type VDriver = (
   el: HTMLElement,
   newVNode: VElement,
-  oldVNode: VElement | undefined,
-  workStack: VTask[],
+  oldVNode?: VElement,
+  workStack?: VTask[],
 ) => VTask[];
 
 export interface VElement {
