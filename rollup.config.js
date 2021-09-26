@@ -27,6 +27,7 @@ const build = () => [
 
 const entry = (input, output) => ({
   input,
+  output,
   plugins: [
     eslint(),
     commonjs(),
@@ -38,7 +39,6 @@ const entry = (input, output) => ({
     }),
     beep(),
   ],
-  output,
   onwarn: () => {},
 });
 

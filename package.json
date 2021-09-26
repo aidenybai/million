@@ -41,6 +41,7 @@
     "ui",
     "browser"
   ],
+  "funding": "https://github.com/aidenybai/million?sponsor=1",
   "author": "Aiden Bai <hello@aidenybai.com>",
   "license": "MIT",
   "bugs": {
