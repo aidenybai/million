@@ -6,8 +6,8 @@ import { VElement, VProps, VTask } from '../types';
 export const propsDriver = (
   el: HTMLElement,
   newVNode: VElement,
-  oldVNode: VElement | undefined,
-  workStack: VTask[],
+  oldVNode?: VElement,
+  workStack: VTask[] = [],
 ): VTask[] => {
   const oldProps: VProps = oldVNode?.props ?? {};
   const newProps: VProps = newVNode.props ?? {};

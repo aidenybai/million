@@ -9,7 +9,7 @@ export const createElement = (vnode: VNode, attachField = true): HTMLElement | T
   if (typeof vnode === 'string') return document.createTextNode(vnode);
   const el = <HTMLElement>document.createElement(vnode.tag);
 
-  flushWorkStack(propsDriver(el, vnode, undefined, []));
+  flushWorkStack(propsDriver(el, vnode));
 
   if (vnode.children) {
     for (let i = 0; i < vnode.children.length; i++) {
