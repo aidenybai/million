@@ -95,7 +95,7 @@ describe('.m', () => {
     expect(m('div', { style: style({ color: 'tomato', margin: '1rem' }) })).toEqual({
       tag: 'div',
       props: {
-        style: 'color:tomato;margin:1rem',
+        cssText: 'color:tomato;margin:1rem',
       },
       children: undefined,
       key: undefined,
