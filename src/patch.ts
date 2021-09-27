@@ -56,7 +56,7 @@ export const init =
           }
 
           if (drivers) {
-            for (let i = 0; i < drivers.length; i++) {
+            for (let i = 0; i < drivers.length; ++i) {
               drivers[i](el, newVNode, oldVNode, workStack);
             }
           }

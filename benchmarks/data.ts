@@ -67,7 +67,7 @@ let id = 0;
 
 export const buildData = (count: number): Data[] => {
   const data: Data[] = [];
-  for (let i = 0; i < count; i++) {
+  for (let i = 0; i < count; ++i) {
     data.push({
       id: id++,
       label: `${adjectives[random(adjectives.length)]} ${colors[random(colors.length)]} ${
