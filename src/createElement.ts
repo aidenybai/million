@@ -12,7 +12,7 @@ export const createElement = (vnode: VNode, attachField = true): DOMNode => {
   flushWorkStack(propsDriver(el, vnode));
 
   if (vnode.children) {
-    for (let i = 0; i < vnode.children.length; i++) {
+    for (let i = 0; i < vnode.children.length; ++i) {
       el.appendChild(createElement(vnode.children[i]));
     }
   }

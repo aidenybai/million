@@ -142,7 +142,7 @@ export const childrenDriver = (
     }
   }
 
-  for (let i = oldVNodeChildren.length ?? 0; i < newVNodeChildren.length; i++) {
+  for (let i = oldVNodeChildren.length ?? 0; i < newVNodeChildren.length; ++i) {
     const node = createElement(newVNodeChildren[i], false);
     workStack.push(() => el.appendChild(node));
   }
