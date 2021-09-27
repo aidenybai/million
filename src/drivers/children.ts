@@ -1,6 +1,6 @@
 import { createElement } from '../createElement';
 import { patch } from '../patch';
-import { VDelta, VDeltaOperationTypes, VElement, VFlags, VNode, VTask } from '../types';
+import { DOMNode, VDelta, VDeltaOperationTypes, VElement, VFlags, VNode, VTask } from '../types';
 
 /**
  * Diffs two VNode children and modifies the DOM node based on the necessary changes
@@ -31,7 +31,7 @@ export const childrenDriver = (
           break;
         case VDeltaOperationTypes.UPDATE:
           patch(
-            <HTMLElement | Text>child,
+            <DOMNode>child,
             newVNodeChildren![deltaPosition],
             oldVNodeChildren[deltaPosition],
             workStack,
@@ -56,7 +56,7 @@ export const childrenDriver = (
     return workStack;
   }
   if (newVNode.flag === VFlags.ONLY_TEXT_CHILDREN) {
-    workStack.push(() => (el.textContent = <string>(<VElement>newVNode).children!.join('')));
+    workStack.push(() => (el.textContent = newVNode.children!.join('')));
     return workStack;
   }
   if (newVNode.flag === VFlags.ONLY_KEYED_CHILDREN) {
@@ -138,12 +138,7 @@ export const childrenDriver = (
     // Interates backwards, so in case a childNode is destroyed, it will not shift the nodes
     // and break accessing by index
     for (let i = oldVNodeChildren.length - 1; i >= 0; --i) {
-      patch(
-        <HTMLElement | Text>el.childNodes[i],
-        newVNodeChildren[i],
-        oldVNodeChildren[i],
-        workStack,
-      );
+      patch(<DOMNode>el.childNodes[i], newVNodeChildren[i], oldVNodeChildren[i], workStack);
     }
   }
 
