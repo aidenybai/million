@@ -18,7 +18,7 @@ export const flushWorkStack = (
 /**
  * Creates a custom patch function
  */
-export const init =
+export const compose =
   (drivers: VDriver[]) =>
   (
     el: DOMNode,
@@ -70,4 +70,4 @@ export const init =
 /**
  * Diffs two VNodes and modifies the DOM node based on the necessary changes
  */
-export const patch = init([propsDriver, childrenDriver]);
+export const patch = compose([propsDriver, childrenDriver]);
