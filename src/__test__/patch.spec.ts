@@ -2,7 +2,7 @@ import { createElement } from '../createElement';
 import { childrenDriver } from '../drivers/children';
 import { propsDriver } from '../drivers/props';
 import { DELETE, INSERT, m, UPDATE } from '../m';
-import { init, patch } from '../patch';
+import { compose, patch } from '../patch';
 import { VFlags } from '../types';
 
 describe('.patch', () => {
@@ -186,9 +186,9 @@ describe('.patch', () => {
     expect((<HTMLElement>el2).isEqualNode(el1)).toBeTruthy();
   });
 
-  it('should init a custom patch', () => {
+  it('should compose a custom patch', () => {
     const el1 = createElement(m('div'));
-    const customPatch = init([propsDriver, childrenDriver]);
+    const customPatch = compose([propsDriver, childrenDriver]);
     const el2 = customPatch(el1, m('div', { id: 'app' }));
 
     expect((<HTMLElement>el2).id).toEqual('app');
