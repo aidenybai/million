@@ -1,11 +1,11 @@
 import { propsDriver } from './drivers/props';
 import { flushWorkStack } from './patch';
-import { OLD_VNODE_FIELD, VNode } from './types';
+import { DOMNode, OLD_VNODE_FIELD, VNode } from './types';
 
 /**
  * Creates an Element from a VNode
  */
-export const createElement = (vnode: VNode, attachField = true): HTMLElement | Text => {
+export const createElement = (vnode: VNode, attachField = true): DOMNode => {
   if (typeof vnode === 'string') return document.createTextNode(vnode);
   const el = <HTMLElement>document.createElement(vnode.tag);
 

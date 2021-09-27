@@ -1,14 +1,14 @@
 import { createElement } from './createElement';
 import { childrenDriver } from './drivers/children';
 import { propsDriver } from './drivers/props';
-import { OLD_VNODE_FIELD, VDriver, VElement, VNode, VTask } from './types';
+import { DOMNode, OLD_VNODE_FIELD, VCommit, VDriver, VNode, VTask } from './types';
 
 /**
  * Passes all of the tasks in a given array to a given function sequentially.
  */
 export const flushWorkStack = (
   workStack: VTask[],
-  commit: (task: VTask) => void = (task: VTask): void => task(),
+  commit: VCommit = (task: VTask): void => task(),
 ): void => {
   for (let i = 0; i < workStack.length; ++i) {
     commit(workStack[i]);
@@ -21,13 +21,13 @@ export const flushWorkStack = (
 export const init =
   (drivers: VDriver[]) =>
   (
-    el: HTMLElement | Text,
+    el: DOMNode,
     newVNode: VNode,
     prevVNode?: VNode,
     workStack: VTask[] = [],
-    commit?: (task: VTask) => void,
-  ): HTMLElement | Text => {
-    const finish = (element: HTMLElement | Text): HTMLElement | Text => {
+    commit?: VCommit,
+  ): DOMNode => {
+    const finish = (element: DOMNode): DOMNode => {
       workStack.push(() => {
         if (!prevVNode) element[OLD_VNODE_FIELD] = newVNode;
       });
@@ -48,11 +48,8 @@ export const init =
         return finish(newEl);
       }
       if (!hasString) {
-        if (
-          (!(<VElement>oldVNode)?.key && !(<VElement>newVNode)?.key) ||
-          (<VElement>oldVNode)?.key !== (<VElement>newVNode)?.key
-        ) {
-          if ((<VElement>oldVNode)?.tag !== (<VElement>newVNode)?.tag || el instanceof Text) {
+        if ((!oldVNode?.key && !newVNode?.key) || oldVNode?.key !== newVNode?.key) {
+          if (oldVNode?.tag !== newVNode?.tag || el instanceof Text) {
             const newEl = createElement(newVNode);
             workStack.push(() => el.replaceWith(newEl));
             return finish(newEl);
@@ -60,7 +57,7 @@ export const init =
 
           if (drivers) {
             for (let i = 0; i < drivers.length; i++) {
-              drivers[i](el, <VElement>newVNode, <VElement | undefined>oldVNode, workStack);
+              drivers[i](el, newVNode, oldVNode, workStack);
             }
           }
         }
