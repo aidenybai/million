@@ -2,5 +2,6 @@
 !dist/**/*
 !LICENSE
 !/README.md
+!/README-*.md
 !package.json
 !jsx-runtime.d.ts
