@@ -69,7 +69,7 @@ const jsx = (tag: string | FC, props?: VProps, ...children: JSXVNode[]): VNode =
       delete props.children;
     }
   }
-  const normalizedChildren = normalizeChildren(children, []);
+  const normalizedChildren = normalizeChildren(Array.isArray(children) ? children : [children], []);
   if (typeof tag === 'function') {
     return tag(props, normalizedChildren, delta);
   } else {
