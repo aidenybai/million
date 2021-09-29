@@ -6,7 +6,7 @@ import { DOMNode, VDelta, VDeltaOperationTypes, VElement, VFlags, VNode, VTask }
  * Diffs two VNode children and modifies the DOM node based on the necessary changes
  */
 export const childrenDriver = (
-  el: HTMLElement,
+  el: HTMLElement | SVGElement,
   newVNode: VElement,
   oldVNode?: VElement,
   workStack: VTask[] = [],
