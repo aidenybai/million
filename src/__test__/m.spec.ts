@@ -143,7 +143,9 @@ describe('.m', () => {
   it('should attach ns to props with children without props', () => {
     const vnode = {
       tag: 'svg',
-      props: {},
+      props: {
+        className: 'foo',
+      },
       children: [
         'foo',
         {
@@ -154,7 +156,7 @@ describe('.m', () => {
     ns(vnode.tag, vnode.props, vnode.children);
     expect(vnode).toEqual({
       tag: 'svg',
-      props: { ns: 'http://www.w3.org/2000/svg' },
+      props: { ns: 'http://www.w3.org/2000/svg', class: 'foo' },
       children: [
         'foo',
         {
