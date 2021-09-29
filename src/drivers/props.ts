@@ -4,7 +4,7 @@ import { VElement, VProps, VTask } from '../types';
  * Diffs two VNode props and modifies the DOM node based on the necessary changes
  */
 export const propsDriver = (
-  el: HTMLElement,
+  el: HTMLElement | SVGElement,
   newVNode: VElement,
   oldVNode?: VElement,
   workStack: VTask[] = [],

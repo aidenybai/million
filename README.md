@@ -16,7 +16,7 @@ Current Virtual DOM implementations are inadequate—Ranging from overcomplicate
 - 🦁 Built for libraries that compile
 - 📦 Lightweight bundle size (<1kb brotli+min)
 - ⚡ Fast runtime operations
-- 🛠️ Extensible using drivers, sensible by default
+- 🛠️ Composable using drivers, sensible by default
 
 ## Installing Million
 

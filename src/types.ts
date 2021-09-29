@@ -3,7 +3,7 @@
  */
 export const OLD_VNODE_FIELD = '__m_old_vnode';
 export type VProps = Record<string, string | boolean | EventListener>;
-export type DOMNode = HTMLElement | Text;
+export type DOMNode = HTMLElement | SVGElement | Text;
 export type VNode = VElement | string;
 export type VDeltaOperation = [VDeltaOperationTypes, number];
 export type VDelta = VDeltaOperation[];
@@ -11,7 +11,7 @@ export type VTask = () => void;
 export type VCommit = (task: VTask) => void;
 
 export type VDriver = (
-  el: HTMLElement,
+  el: HTMLElement | SVGElement,
   newVNode: VElement,
   oldVNode?: VElement,
   workStack?: VTask[],
