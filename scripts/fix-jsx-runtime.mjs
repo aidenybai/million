@@ -1,3 +1,5 @@
+// NOTE: This is a hack because some of the functions and types are shared between jsx and index, and we want to import index into jsx instead of duplicates.
+
 import glob from 'glob';
 import { readFile, writeFile } from 'fs/promises';
 
