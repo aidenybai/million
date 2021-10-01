@@ -69,3 +69,5 @@ _为什么叫 "Million"？这个名字源于能够处理 [1M+ ops/sec 基准测�
 ## License
 
 Million 是属于 [Aiden Bai](https://github.com/aidenybai) ，并且获得了 [MIT-licensed](LICENSE) 认可的开源软件。
+
+![Hits](https://hits.link/hits?url=https://github.com/aidenybai/million)
