@@ -3,12 +3,12 @@
  * @description removing one row
  */
 
-import { Suite } from 'yet-another-benchmarking-tool';
+import benchmark from '../benchmark';
 import { m, createElement, patch, VFlags, DELETE } from '../../src/index';
 import { buildData } from '../data';
 
 const el1 = document.createElement('table');
-const data1 = buildData(1000);
+const data1 = buildData(2 << 15);
 data1.forEach(({ id, label }) => {
   const row = createElement(
     m('tr', undefined, [m('td', undefined, [String(id)]), m('td', undefined, [label])]),
@@ -18,7 +18,7 @@ data1.forEach(({ id, label }) => {
 const row = 0;
 
 const el2 = document.createElement('table');
-const data2 = buildData(1000);
+const data2 = buildData(2 << 15);
 data2.forEach(({ id, label }) => {
   const tr = document.createElement('tr');
   const td1 = document.createElement('td');
@@ -30,34 +30,23 @@ data2.forEach(({ id, label }) => {
   el2.appendChild(tr);
 });
 
-const suite = new Suite('remove row', [
-  [
-    'million',
-    () => {
-      patch(
-        el1,
-        m(
-          'table',
-          undefined,
-          data1.map(({ id, label }) => {
-            const newId = String(id);
-            return m('tr', { key: newId }, [
-              m('td', undefined, [newId]),
-              m('td', undefined, [label]),
-            ]);
-          }),
-          VFlags.ONLY_KEYED_CHILDREN,
-          [DELETE(row)],
-        ),
-      );
-    },
-  ],
-  [
-    'vanilla',
-    () => {
-      el2.removeChild(el2.childNodes[row]);
-    },
-  ],
-]);
+const suite = new benchmark.Suite('remove row');
+
+const dataAsVChildren = data1.map(({ id, label }) => {
+  const newId = String(id);
+  return m('tr', { key: newId }, [m('td', undefined, [newId]), m('td', undefined, [label])]);
+});
+
+suite
+  .add('million', () => {
+    patch(
+      el1.cloneNode(true),
+      m('table', undefined, dataAsVChildren, VFlags.ONLY_KEYED_CHILDREN, [DELETE(row)]),
+    );
+  })
+  .add('vanilla', () => {
+    const el2Clone = el2.cloneNode(true);
+    el2Clone.removeChild(el2Clone.childNodes[row]);
+  });
 
 export default suite;

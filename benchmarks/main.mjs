@@ -1,5 +1,6 @@
-import { Benchmark } from 'yet-another-benchmarking-tool';
-import { m, createElement } from '../src/index';
+import 'style.css';
+
+import { m, createElement, style } from '../src/index';
 
 import appendManyRowsToLargeTable from './suites/appendManyRowsToLargeTable';
 import clearRows from './suites/clearRows';
@@ -21,10 +22,19 @@ const suites = [
   replaceAllRows,
   selectRow,
   swapRows,
-];
+].map((suite) =>
+  suite
+    .on('cycle', (event) => {
+      console.log(String(event.target));
+    })
+    .on('complete', () => {
+      console.log(`Fastest is ${suite.filter('fastest').map('name')}`);
+    }),
+);
 
 const el = createElement(
   m('div', undefined, [
+    m('h1', undefined, 'Benchmarks'),
     'Open console to check for results. This benchmark is compliant with ',
     m('a', { href: 'https://github.com/krausest/js-framework-benchmark', target: '_blank' }, [
       'JS Framework Benchmark',
@@ -32,27 +42,30 @@ const el = createElement(
     m('br'),
     m('br'),
     ...suites.map((suite) =>
+      m('div', { style: style({ padding: '5px' }) }, [
+        m(
+          'button',
+          {
+            onclick: () => {
+              console.log(`\nRunning: ${suite.name}`);
+              suite.run({ async: true });
+            },
+          },
+          [suite.name],
+        ),
+      ]),
+    ),
+    m('div', { style: style({ padding: '5px' }) }, [
       m(
         'button',
         {
           onclick: () => {
-            console.log(`Running: ${suite.name}`);
-            new Benchmark([suite]).run();
+            suites.forEach((suite) => suite.run({ async: true }));
           },
         },
-        [suite.name],
+        ['All'],
       ),
-    ),
-    m(
-      'button',
-      {
-        onclick: () => {
-          console.log(`Running: ${suites.map((suite) => suite.name).join(', ')}`);
-          new Benchmark(suites).run();
-        },
-      },
-      ['All'],
-    ),
+    ]),
   ]),
 );
 

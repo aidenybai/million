@@ -3,11 +3,11 @@
  * @description updating all 1,000 rows
  */
 
-import { Suite } from 'yet-another-benchmarking-tool';
+import benchmark from '../benchmark';
 import { m, createElement, patch, VFlags } from '../../src/index';
 import { buildData } from '../data';
 
-const shuffleArray = <T>(array: T[]): void => {
+const shuffleArray = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
@@ -15,7 +15,7 @@ const shuffleArray = <T>(array: T[]): void => {
 };
 
 const el1 = document.createElement('table');
-const data1 = buildData(1000);
+const data1 = buildData(2 << 15);
 data1.forEach(({ id, label }) => {
   const newId = String(id);
   const row = createElement(
@@ -27,7 +27,7 @@ data1.forEach(({ id, label }) => {
 shuffleArray(data1);
 
 const el2 = document.createElement('table');
-const data2 = buildData(1000);
+const data2 = buildData(2 << 15);
 data2.forEach(({ id, label }) => {
   const tr = document.createElement('tr');
   const td1 = document.createElement('td');
@@ -41,37 +41,32 @@ data2.forEach(({ id, label }) => {
 
 shuffleArray(data2);
 
-const suite = new Suite('replace all rows', [
-  [
-    'million',
-    () => {
-      patch(
-        el1,
-        m(
-          'table',
-          undefined,
-          data1.map(({ id, label }) => {
-            const newId = String(id);
-            return m('tr', { key: newId }, [
-              m('td', undefined, [newId]),
-              m('td', undefined, [label]),
-            ]);
-          }),
-          VFlags.ONLY_KEYED_CHILDREN,
-        ),
-      );
-    },
-  ],
-  [
-    'vanilla',
-    () => {
-      el2.childNodes.forEach((tr, i) => {
-        const newId = String(data2[i].id);
-        tr.childNodes[0].textContent = newId;
-        tr.childNodes[1].textContent = data2[i].label;
-      });
-    },
-  ],
-]);
+const suite = new benchmark.Suite('replace all rows');
+
+suite
+  .add('million', () => {
+    patch(
+      el1,
+      m(
+        'table',
+        undefined,
+        data1.map(({ id, label }) => {
+          const newId = String(id);
+          return m('tr', { key: newId }, [
+            m('td', undefined, [newId]),
+            m('td', undefined, [label]),
+          ]);
+        }),
+        VFlags.ONLY_KEYED_CHILDREN,
+      ),
+    );
+  })
+  .add('vanilla', () => {
+    el2.childNodes.forEach((tr, i) => {
+      const newId = String(data2[i].id);
+      tr.childNodes[0].textContent = newId;
+      tr.childNodes[1].textContent = data2[i].label;
+    });
+  });
 
 export default suite;
