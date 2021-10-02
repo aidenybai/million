@@ -1,6 +1,6 @@
 import 'style.css';
 
-import { m, createElement, style } from '../src/index';
+import { m, createElement, style, patch } from '../src/index';
 
 import appendManyRowsToLargeTable from './suites/appendManyRowsToLargeTable';
 import clearRows from './suites/clearRows';
@@ -25,48 +25,63 @@ const suites = [
 ].map((suite) =>
   suite
     .on('cycle', (event) => {
-      console.log(String(event.target));
+      log(String(event.target));
     })
     .on('complete', () => {
-      console.log(`Fastest is ${suite.filter('fastest').map('name')}`);
+      log(`Fastest is ${suite.filter('fastest').map('name')}`);
     }),
 );
 
-const el = createElement(
+const logs = [];
+
+const vnode = () =>
   m('div', undefined, [
-    m('h1', undefined, 'Benchmarks'),
-    'Open console to check for results. This benchmark is compliant with ',
+    m('h3', undefined, 'Million Benchmarks'),
+    'This benchmark is compliant with ',
     m('a', { href: 'https://github.com/krausest/js-framework-benchmark', target: '_blank' }, [
-      'JS Framework Benchmark',
+      'JS Framework Benchmark.',
     ]),
     m('br'),
     m('br'),
+    'Please note that Benchmark results are unstable. To have more stable results:',
+    m('ol', undefined, [
+      m('li', undefined, ['Restart OS. Do not run any applications. Put power cable to laptop.']),
+      m('li', undefined, ['Run tests 5 times.']),
+      m('li', undefined, ['Take the best result for each candidate.']),
+    ]),
     ...suites.map((suite) =>
-      m('div', { style: style({ padding: '5px' }) }, [
-        m(
-          'button',
-          {
-            onclick: () => {
-              console.log(`\nRunning: ${suite.name}`);
-              suite.run({ async: true });
-            },
-          },
-          [suite.name],
-        ),
-      ]),
-    ),
-    m('div', { style: style({ padding: '5px' }) }, [
       m(
         'button',
         {
           onclick: () => {
-            suites.forEach((suite) => suite.run({ async: true }));
+            log(`\nRunning: ${suite.name}`);
+            suite.run({ async: true });
           },
+          style: style({ margin: '5px' }),
         },
-        ['All'],
+        [suite.name],
       ),
-    ]),
-  ]),
-);
+    ),
+    m(
+      'button',
+      {
+        onclick: () => {
+          suites.forEach((suite) => suite.run({ async: true }));
+        },
+        style: style({ margin: '5px' }),
+      },
+      ['all'],
+    ),
+    m('br'),
+    logs.length && m('pre', undefined, [m('code', undefined, [logs.join('\n')])]),
+  ]);
+
+const el = createElement(vnode());
+
+const log = (message) => {
+  logs.push(message);
+  patch(el, vnode());
+  console.log(String(message));
+};
 
 document.body.appendChild(el);
