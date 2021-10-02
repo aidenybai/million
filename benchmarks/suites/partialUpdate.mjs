@@ -34,7 +34,7 @@ data2.forEach(({ id, label }) => {
   el2.appendChild(tr);
 });
 
-const suite = new benchmark.Suite('partial update');
+const suite = new benchmark.Suite('partial update | updating every 10th row for 1,000 rows');
 
 const hoistedVNode = m(
   'table',

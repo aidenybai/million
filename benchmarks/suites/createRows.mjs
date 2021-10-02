@@ -7,7 +7,7 @@ import benchmark from '../benchmark';
 import { m, patch } from '../../src/index';
 import { buildData } from '../data';
 
-const suite = new benchmark.Suite('create rows');
+const suite = new benchmark.Suite('create rows | creating 1,000 rows');
 
 const hoistedVNode = m(
   'table',
