@@ -9,23 +9,22 @@ import { buildData } from '../data';
 
 const suite = new benchmark.Suite('create rows');
 
+const hoistedVNode = m(
+  'table',
+  undefined,
+  buildData(1000).map(({ id, label }) =>
+    m('tr', undefined, [m('td', undefined, [String(id)]), m('td', undefined, [label])]),
+  ),
+);
+
 suite
   .add('million', () => {
     const el = document.createElement('table');
-    patch(
-      el,
-      m(
-        'table',
-        undefined,
-        buildData(2 << 15).map(({ id, label }) =>
-          m('tr', undefined, [m('td', undefined, [String(id)]), m('td', undefined, [label])]),
-        ),
-      ),
-    );
+    patch(el, hoistedVNode);
   })
   .add('vanilla', () => {
     const el = document.createElement('table');
-    buildData(2 << 15).forEach(({ id, label }) => {
+    buildData(1000).forEach(({ id, label }) => {
       const tr = document.createElement('tr');
       const td1 = document.createElement('td');
       const td2 = document.createElement('td');

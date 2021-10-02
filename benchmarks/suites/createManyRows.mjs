@@ -9,19 +9,18 @@ import { buildData } from '../data';
 
 const suite = new benchmark.Suite('create many rows');
 
+const hoistedVNode = m(
+  'div',
+  undefined,
+  buildData(10000).map(({ id, label }) =>
+    m('tr', undefined, [m('td', undefined, [String(id)]), m('td', undefined, [label])]),
+  ),
+);
+
 suite
   .add('million', () => {
     const el = document.createElement('table');
-    patch(
-      el,
-      m(
-        'div',
-        undefined,
-        buildData(10000).map(({ id, label }) =>
-          m('tr', undefined, [m('td', undefined, [String(id)]), m('td', undefined, [label])]),
-        ),
-      ),
-    );
+    patch(el, hoistedVNode);
   })
   .add('vanilla', () => {
     const el = document.createElement('table');

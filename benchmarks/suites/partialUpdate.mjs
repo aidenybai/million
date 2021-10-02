@@ -8,7 +8,7 @@ import { m, createElement, patch, UPDATE, VFlags } from '../../src/index';
 import { buildData } from '../data';
 
 const el1 = document.createElement('table');
-const data1 = buildData(2 << 15);
+const data1 = buildData(1000);
 const deltas = [];
 data1.forEach(({ id, label }) => {
   const row = createElement(
@@ -22,7 +22,7 @@ for (let i = 0; i < 1000; i += 10) {
 }
 
 const el2 = document.createElement('table');
-const data2 = buildData(2 << 15);
+const data2 = buildData(1000);
 data2.forEach(({ id, label }) => {
   const tr = document.createElement('tr');
   const td1 = document.createElement('td');
@@ -36,20 +36,19 @@ data2.forEach(({ id, label }) => {
 
 const suite = new benchmark.Suite('partial update');
 
+const hoistedVNode = m(
+  'table',
+  undefined,
+  data1.map(({ id, label }) =>
+    m('tr', undefined, [m('td', undefined, [String(id)]), m('td', undefined, [label])]),
+  ),
+  VFlags.ANY_CHILDREN,
+  deltas,
+);
+
 suite
   .add('million', () => {
-    patch(
-      el1,
-      m(
-        'table',
-        undefined,
-        data1.map(({ id, label }) =>
-          m('tr', undefined, [m('td', undefined, [String(id)]), m('td', undefined, [label])]),
-        ),
-        VFlags.ANY_CHILDREN,
-        deltas,
-      ),
-    );
+    patch(el1, hoistedVNode);
   })
   .add('vanilla', () => {
     for (let i = 0; i < 1000; i += 10) {

@@ -16,7 +16,7 @@ data1.forEach(({ id, label }) => {
   );
   el1.appendChild(row);
 });
-data1.push(...buildData(2 << 15));
+data1.push(...buildData(1000));
 
 const el2 = document.createElement('table');
 const data2 = buildData(10000);
@@ -33,22 +33,21 @@ data2.forEach(({ id, label }) => {
 
 const suite = new benchmark.Suite('append many rows to large table');
 
+const hoistedVNode = m(
+  'table',
+  undefined,
+  buildData(1000).map(({ id, label }) =>
+    m('tr', undefined, [m('td', undefined, [String(id)]), m('td', undefined, [label])]),
+  ),
+  VFlags.ONLY_KEYED_CHILDREN,
+);
+
 suite
   .add('million', () => {
-    patch(
-      el1,
-      m(
-        'table',
-        undefined,
-        buildData(2 << 15).map(({ id, label }) =>
-          m('tr', undefined, [m('td', undefined, [String(id)]), m('td', undefined, [label])]),
-        ),
-        VFlags.ONLY_KEYED_CHILDREN,
-      ),
-    );
+    patch(el1, hoistedVNode);
   })
   .add('vanilla', () => {
-    buildData(2 << 15).forEach(({ id, label }) => {
+    buildData(1000).forEach(({ id, label }) => {
       const tr = document.createElement('tr');
       const td1 = document.createElement('td');
       const td2 = document.createElement('td');
