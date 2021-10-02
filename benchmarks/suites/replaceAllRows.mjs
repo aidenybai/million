@@ -15,7 +15,7 @@ const shuffleArray = (array) => {
 };
 
 const el1 = document.createElement('table');
-const data1 = buildData(2 << 15);
+const data1 = buildData(1000);
 data1.forEach(({ id, label }) => {
   const newId = String(id);
   const row = createElement(
@@ -27,7 +27,7 @@ data1.forEach(({ id, label }) => {
 shuffleArray(data1);
 
 const el2 = document.createElement('table');
-const data2 = buildData(2 << 15);
+const data2 = buildData(1000);
 data2.forEach(({ id, label }) => {
   const tr = document.createElement('tr');
   const td1 = document.createElement('td');
@@ -43,23 +43,19 @@ shuffleArray(data2);
 
 const suite = new benchmark.Suite('replace all rows');
 
+const hoistedVNode = m(
+  'table',
+  undefined,
+  data1.map(({ id, label }) => {
+    const newId = String(id);
+    return m('tr', { key: newId }, [m('td', undefined, [newId]), m('td', undefined, [label])]);
+  }),
+  VFlags.ONLY_KEYED_CHILDREN,
+);
+
 suite
   .add('million', () => {
-    patch(
-      el1,
-      m(
-        'table',
-        undefined,
-        data1.map(({ id, label }) => {
-          const newId = String(id);
-          return m('tr', { key: newId }, [
-            m('td', undefined, [newId]),
-            m('td', undefined, [label]),
-          ]);
-        }),
-        VFlags.ONLY_KEYED_CHILDREN,
-      ),
-    );
+    patch(el1, hoistedVNode);
   })
   .add('vanilla', () => {
     el2.childNodes.forEach((tr, i) => {

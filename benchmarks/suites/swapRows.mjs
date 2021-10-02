@@ -8,7 +8,7 @@ import { m, createElement, patch, VFlags, UPDATE } from '../../src/index';
 import { buildData } from '../data';
 
 const el1 = document.createElement('table');
-const data1 = buildData(2 << 15);
+const data1 = buildData(1000);
 data1.forEach(({ id, label }) => {
   const newId = String(id);
   const row = createElement(
@@ -24,7 +24,7 @@ data1[row1] = data1[row2];
 data1[row2] = temp;
 
 const el2 = document.createElement('table');
-const data2 = buildData(2 << 15);
+const data2 = buildData(1000);
 data2.forEach(({ id, label }) => {
   const tr = document.createElement('tr');
   const td1 = document.createElement('td');
@@ -38,23 +38,19 @@ data2.forEach(({ id, label }) => {
 
 const suite = new benchmark.Suite('swap rows');
 
+const hoistedVNode = m(
+  'table',
+  undefined,
+  data1.map(({ id, label }) => {
+    return m('tr', undefined, [m('td', undefined, [String(id)]), m('td', undefined, [label])]);
+  }),
+  VFlags.ANY_CHILDREN,
+  [UPDATE(row1), UPDATE(row2)],
+);
+
 suite
   .add('million', () => {
-    patch(
-      el1,
-      m(
-        'table',
-        undefined,
-        data1.map(({ id, label }) => {
-          return m('tr', undefined, [
-            m('td', undefined, [String(id)]),
-            m('td', undefined, [label]),
-          ]);
-        }),
-        VFlags.ANY_CHILDREN,
-        [UPDATE(row1), UPDATE(row2)],
-      ),
-    );
+    patch(el1, hoistedVNode);
   })
   .add('vanilla', () => {
     const tr1 = el2.children[row1];

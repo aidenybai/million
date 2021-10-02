@@ -1,6 +1,6 @@
 import 'style.css';
 
-import { m, createElement, style, patch } from '../src/index';
+import { m, createElement, style, kebab, patch } from '../src/index';
 
 import appendManyRowsToLargeTable from './suites/appendManyRowsToLargeTable';
 import clearRows from './suites/clearRows';
@@ -11,6 +11,9 @@ import removeRow from './suites/removeRow';
 import replaceAllRows from './suites/replaceAllRows';
 import selectRow from './suites/selectRow';
 import swapRows from './suites/swapRows';
+
+const logs = [];
+let disabled = false;
 
 const suites = [
   appendManyRowsToLargeTable,
@@ -25,14 +28,14 @@ const suites = [
 ].map((suite) =>
   suite
     .on('cycle', (event) => {
-      log(String(event.target));
+      log(event.target);
     })
     .on('complete', () => {
       log(`Fastest is ${suite.filter('fastest').map('name')}`);
+      disabled = false;
+      patch(el, vnode());
     }),
 );
-
-const logs = [];
 
 const vnode = () =>
   m('div', undefined, [
@@ -54,32 +57,32 @@ const vnode = () =>
         'button',
         {
           onclick: () => {
-            log(`\nRunning: ${suite.name}`);
+            disabled = true;
+            logs.unshift([]);
+            log(`Running: ${suite.name}`);
             suite.run({ async: true });
+            patch(el, vnode());
           },
           style: style({ margin: '5px' }),
+          disabled,
         },
         [suite.name],
       ),
     ),
     m(
-      'button',
-      {
-        onclick: () => {
-          suites.forEach((suite) => suite.run({ async: true }));
-        },
-        style: style({ margin: '5px' }),
-      },
-      ['all'],
+      'div',
+      { style: style(kebab({ paddingTop: '20px' })) },
+      logs.map(
+        (logGroup) =>
+          logGroup.length && m('pre', undefined, [m('code', undefined, [logGroup.join('\n')])]),
+      ),
     ),
-    m('br'),
-    logs.length && m('pre', undefined, [m('code', undefined, [logs.join('\n')])]),
   ]);
 
 const el = createElement(vnode());
 
 const log = (message) => {
-  logs.push(message);
+  logs[0].push(message);
   patch(el, vnode());
   console.log(String(message));
 };

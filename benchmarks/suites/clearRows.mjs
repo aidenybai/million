@@ -29,9 +29,11 @@ data2.forEach(({ id, label }) => {
 
 const suite = new benchmark.Suite('clear rows');
 
+const hoistedVNode = m('table', undefined, [], VFlags.NO_CHILDREN);
+
 suite
   .add('million', () => {
-    patch(el1, m('table', undefined, [], VFlags.NO_CHILDREN));
+    patch(el1, hoistedVNode);
   })
   .add('vanilla', () => {
     el2.childNodes.forEach((node) => el2.removeChild(node));
