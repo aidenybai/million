@@ -3,7 +3,7 @@
  * @description clearing a table with 1,000 rows
  */
 
-import { Suite } from 'yet-another-benchmarking-tool';
+import benchmark from '../benchmark';
 import { m, createElement, patch, VFlags } from '../../src/index';
 import { buildData } from '../data';
 
@@ -27,19 +27,14 @@ data2.forEach(({ id, label }) => {
   el2.appendChild(row);
 });
 
-const suite = new Suite('clear rows', [
-  [
-    'million',
-    () => {
-      patch(el1, m('table', undefined, [], VFlags.NO_CHILDREN));
-    },
-  ],
-  [
-    'vanilla',
-    () => {
-      el2.childNodes.forEach((node) => el2.removeChild(node));
-    },
-  ],
-]);
+const suite = new benchmark.Suite('clear rows');
+
+suite
+  .add('million', () => {
+    patch(el1, m('table', undefined, [], VFlags.NO_CHILDREN));
+  })
+  .add('vanilla', () => {
+    el2.childNodes.forEach((node) => el2.removeChild(node));
+  });
 
 export default suite;

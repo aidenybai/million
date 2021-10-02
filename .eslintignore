@@ -1,3 +1,4 @@
 **/*.js
 dist/
+benchmarks/
 node_modules/

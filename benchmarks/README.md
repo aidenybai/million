@@ -2,6 +2,12 @@
 
 These benchmarks are now 100% compiant with the [JS Framework Benchmark](https://github.com/krausest/js-framework-benchmark).
 
+Please note that Benchmark results are unstable. To have more stable results:
+
+1. Restart OS. Do not run any applications. Put power cable to laptop.
+2. Run tests 5 times.
+3. Take the best result for each candidate.
+
 [**→ Click to test benchmarks live yourself!**](https://million-benchmarks.netlify.app/)
 
 ---

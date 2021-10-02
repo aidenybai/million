@@ -54,19 +54,14 @@ export const nouns = [
   'keyboard',
 ];
 
-export const random = (max: number): number => {
+export const random = (max) => {
   return Math.round(Math.random() * 1000) % max;
 };
 
-interface Data {
-  id: number;
-  label: string;
-}
-
 let id = 0;
 
-export const buildData = (count: number): Data[] => {
-  const data: Data[] = [];
+export const buildData = (count) => {
+  const data = [];
   for (let i = 0; i < count; ++i) {
     data.push({
       id: id++,
