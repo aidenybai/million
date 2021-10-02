@@ -65,8 +65,9 @@ const vnode = () =>
           },
           style: style({ margin: '5px' }),
           disabled,
+          title: suite.name.split(' | ')[1],
         },
-        [suite.name],
+        [suite.name.split(' | ')[0]],
       ),
     ),
     m(

@@ -36,7 +36,7 @@ data2.forEach(({ id, label }) => {
   el2.appendChild(tr);
 });
 
-const suite = new benchmark.Suite('swap rows');
+const suite = new benchmark.Suite('swap rows | swap 2 rows for table with 1,000 rows');
 
 const hoistedVNode = m(
   'table',

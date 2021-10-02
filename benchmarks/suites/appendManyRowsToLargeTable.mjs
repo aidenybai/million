@@ -31,7 +31,9 @@ data2.forEach(({ id, label }) => {
   el2.appendChild(tr);
 });
 
-const suite = new benchmark.Suite('append many rows to large table');
+const suite = new benchmark.Suite(
+  'append many rows to large table | appending 1,000 to a table of 10,000 rows.',
+);
 
 const hoistedVNode = m(
   'table',

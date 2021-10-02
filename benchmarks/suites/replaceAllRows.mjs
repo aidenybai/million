@@ -41,7 +41,7 @@ data2.forEach(({ id, label }) => {
 
 shuffleArray(data2);
 
-const suite = new benchmark.Suite('replace all rows');
+const suite = new benchmark.Suite('replace all rows | updating all 1,000 rows');
 
 const hoistedVNode = m(
   'table',
