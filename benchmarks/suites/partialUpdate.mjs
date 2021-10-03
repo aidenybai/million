@@ -7,7 +7,7 @@ import benchmark from '../benchmark';
 import { m, createElement, patch, UPDATE, VFlags } from '../../src/index';
 import { buildData } from '../data';
 
-const el1 = document.createElement('table');
+const el1 = createElement(m('table'));
 const data1 = buildData(1000);
 const deltas = [];
 data1.forEach(({ id, label }) => {
@@ -17,7 +17,7 @@ data1.forEach(({ id, label }) => {
   el1.appendChild(row);
 });
 for (let i = 0; i < 1000; i += 10) {
-  deltas.push(UPDATE(0));
+  deltas.push(UPDATE(i));
   data1[i] = buildData(1)[0];
 }
 

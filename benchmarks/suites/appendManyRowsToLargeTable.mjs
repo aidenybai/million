@@ -7,7 +7,7 @@ import benchmark from '../benchmark';
 import { m, createElement, patch, VFlags } from '../../src/index';
 import { buildData } from '../data';
 
-const el1 = document.createElement('table');
+const el1 = createElement(m('table'));
 const data1 = buildData(10000);
 data1.forEach(({ id, label }) => {
   const newId = String(id);

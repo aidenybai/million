@@ -4,13 +4,13 @@
  */
 
 import benchmark from '../benchmark';
-import { m, patch } from '../../src/index';
+import { m, createElement, patch } from '../../src/index';
 import { buildData } from '../data';
 
 const suite = new benchmark.Suite('create many rows | creating 10,000 rows');
 
 const hoistedVNode = m(
-  'div',
+  'table',
   undefined,
   buildData(10000).map(({ id, label }) =>
     m('tr', undefined, [m('td', undefined, [String(id)]), m('td', undefined, [label])]),
@@ -19,7 +19,7 @@ const hoistedVNode = m(
 
 suite
   .add('million', () => {
-    const el = document.createElement('table');
+    const el = createElement(m('table'));
     patch(el, hoistedVNode);
   })
   .add('vanilla', () => {
