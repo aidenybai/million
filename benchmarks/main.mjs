@@ -13,7 +13,7 @@ import selectRow from './suites/selectRow';
 import swapRows from './suites/swapRows';
 
 const logs = [];
-const history = localStorage.logs ? JSON.parse(localStorage.logs) : [];
+const history = localStorage.logs && localStorage.logs.length ? JSON.parse(localStorage.logs) : [];
 let disabled = false;
 
 const suites = [
@@ -75,6 +75,28 @@ const vnode = () =>
           },
           ['🗑️'],
         ),
+        ' ',
+        m(
+          'button',
+          {
+            onclick: async () => {
+              navigator.clipboard.writeText(
+                `Benchmarks compiled on \`${new Date().toLocaleString()}\`\n\n**UA:** ${
+                  navigator.userAgent
+                }\n\n---\n\n${[...logs]
+                  .map((logGroup) => {
+                    const logGroupCopy = [...logGroup];
+                    const title = logGroupCopy.shift();
+                    return `${
+                      title.replace('Running: ', '').split(' - ')[0]
+                    }\n\n\`\`\`\n${logGroupCopy.join('\n')}\n\`\`\`\n`;
+                  })
+                  .join('\n')}`,
+              );
+            },
+          },
+          ['📋'],
+        ),
       ]),
       m(
         'div',
@@ -99,6 +121,28 @@ const vnode = () =>
                 },
               },
               ['🗑️'],
+            ),
+            ' ',
+            m(
+              'button',
+              {
+                onclick: async () => {
+                  navigator.clipboard.writeText(
+                    `Benchmarks compiled on \`${new Date().toLocaleString()}\`\n\n**UA:** ${
+                      navigator.userAgent
+                    }\n\n---\n\n${[...logs]
+                      .map((logGroup) => {
+                        const logGroupCopy = [...logGroup];
+                        const title = logGroupCopy.shift();
+                        return `${
+                          title.replace('Running: ', '').split(' - ')[0]
+                        }\n\n\`\`\`\n${logGroupCopy.join('\n')}\n\`\`\`\n`;
+                      })
+                      .join('\n')}`,
+                  );
+                },
+              },
+              ['📋'],
             ),
           ]),
           m(
