@@ -13,6 +13,7 @@ import selectRow from './suites/selectRow';
 import swapRows from './suites/swapRows';
 
 const logs = [];
+const history = localStorage.logs ? JSON.parse(localStorage.logs) : [];
 let disabled = false;
 
 const suites = [
@@ -34,42 +35,31 @@ const suites = [
       log(`Fastest is ${suite.filter('fastest').map('name')}`);
       disabled = false;
       patch(el, vnode());
+      localStorage.logs = JSON.stringify(logs);
     }),
 );
 
 const vnode = () =>
   m('div', undefined, [
-    m('h3', undefined, 'Million Benchmarks'),
-    'This benchmark is compliant with ',
-    m('a', { href: 'https://github.com/krausest/js-framework-benchmark', target: '_blank' }, [
-      'JS Framework Benchmark.',
-    ]),
-    m('br'),
-    m('br'),
-    'Please note that Benchmark results are unstable. To have more stable results:',
-    m('ol', undefined, [
-      m('li', undefined, ['Restart OS. Do not run any applications. Put power cable to laptop.']),
-      m('li', undefined, ['Run tests 5 times.']),
-      m('li', undefined, ['Take the best result for each candidate.']),
-    ]),
-    ...suites.map((suite) =>
-      m(
+    ...suites.map((suite) => {
+      const [name, description] = suite.name.split('(');
+      return m(
         'button',
         {
           onclick: () => {
-            disabled = true;
+            disabled = name;
             logs.unshift([]);
             log(`Running: ${suite.name}`);
             suite.run({ async: true });
             patch(el, vnode());
           },
-          style: style({ margin: '5px' }),
+          style: style({ margin: '5px', opacity: disabled && disabled !== name ? 0.25 : 1 }),
           disabled,
-          title: suite.name.split(' | ')[1],
+          title: description.slice(0, -1),
         },
-        [suite.name.split(' | ')[0]],
-      ),
-    ),
+        [(disabled === name ? '☑️ ' : '') + name],
+      );
+    }),
     m(
       'div',
       { style: style(kebab({ paddingTop: '20px' })) },
@@ -78,12 +68,26 @@ const vnode = () =>
           logGroup.length && m('pre', undefined, [m('code', undefined, [logGroup.join('\n')])]),
       ),
     ),
+    history.length
+      ? m('details', { style: style(kebab({ paddingTop: '20px' })) }, [
+          m('summary', undefined, ['Past logs']),
+          m(
+            'blockquote',
+            undefined,
+            history.map(
+              (logGroup) =>
+                logGroup.length &&
+                m('pre', undefined, [m('code', undefined, [logGroup.join('\n')])]),
+            ),
+          ),
+        ])
+      : '',
   ]);
 
 const el = createElement(vnode());
 
 const log = (message) => {
-  logs[0].push(message);
+  logs[0].push(String(message));
   patch(el, vnode());
   console.log(String(message));
 };

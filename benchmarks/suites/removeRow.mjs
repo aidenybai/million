@@ -30,7 +30,7 @@ data2.forEach(({ id, label }) => {
   el2.appendChild(tr);
 });
 
-const suite = new benchmark.Suite('remove row | removing one row');
+const suite = new benchmark.Suite('remove row (removing one row)');
 
 const hoistedVNode = m(
   'table',

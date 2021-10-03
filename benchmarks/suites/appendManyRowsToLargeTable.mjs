@@ -32,7 +32,7 @@ data2.forEach(({ id, label }) => {
 });
 
 const suite = new benchmark.Suite(
-  'append many rows to large table | appending 1,000 to a table of 10,000 rows.',
+  'append many rows to large table (appending 1,000 to a table of 10,000 rows)',
 );
 
 const hoistedVNode = m(

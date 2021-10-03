@@ -27,7 +27,7 @@ data2.forEach(({ id, label }) => {
   el2.appendChild(row);
 });
 
-const suite = new benchmark.Suite('clear rows | clearing a table with 1,000 rows');
+const suite = new benchmark.Suite('clear rows (clearing a table with 1,000 rows)');
 
 const hoistedVNode = m('table', undefined, [], VFlags.NO_CHILDREN);
 
