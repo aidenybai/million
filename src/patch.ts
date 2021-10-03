@@ -1,3 +1,4 @@
+import { VElement } from '.';
 import { createElement } from './createElement';
 import { childrenDriver } from './drivers/children';
 import { propsDriver } from './drivers/props';
@@ -35,7 +36,7 @@ export const compose =
       return element;
     };
 
-    if (!newVNode) {
+    if (!newVNode && newVNode !== '') {
       workStack.push(() => el.remove());
       return finish(el);
     } else {
@@ -48,8 +49,10 @@ export const compose =
         return finish(newEl);
       }
       if (!hasString) {
-        if ((!oldVNode?.key && !newVNode?.key) || oldVNode?.key !== newVNode?.key) {
-          if (oldVNode?.tag !== newVNode?.tag || el instanceof Text) {
+        const oldVElement = <VElement>oldVNode;
+        const newVElement = <VElement>newVNode;
+        if ((!oldVElement?.key && !newVElement?.key) || oldVElement?.key !== newVElement?.key) {
+          if (oldVElement?.tag !== newVElement?.tag || el instanceof Text) {
             const newEl = createElement(newVNode);
             workStack.push(() => el.replaceWith(newEl));
             return finish(newEl);
@@ -57,7 +60,7 @@ export const compose =
 
           if (drivers) {
             for (let i = 0; i < drivers.length; ++i) {
-              drivers[i](el, newVNode, oldVNode, workStack);
+              drivers[i](el, newVElement, oldVElement, workStack);
             }
           }
         }
