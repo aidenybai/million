@@ -14,7 +14,7 @@ const shuffleArray = (array) => {
   }
 };
 
-const el1 = document.createElement('table');
+const el1 = createElement(m('table'));
 const data1 = buildData(1000);
 data1.forEach(({ id, label }) => {
   const newId = String(id);
