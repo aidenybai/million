@@ -35,7 +35,7 @@ const suites = [
       log(`Fastest is ${suite.filter('fastest').map('name')}`);
       disabled = false;
       patch(el, vnode());
-      localStorage.logs = JSON.stringify(logs);
+      localStorage.logs = JSON.stringify([...logs, ...history]);
     }),
 );
 
@@ -49,7 +49,7 @@ const vnode = () =>
           onclick: () => {
             disabled = name;
             logs.unshift([]);
-            log(`Running: ${suite.name}`);
+            log(`Running: ${suite.name} - ${new Date().toLocaleString()}`);
             suite.run({ async: true });
             patch(el, vnode());
           },
@@ -60,19 +60,49 @@ const vnode = () =>
         [(disabled === name ? '☑️ ' : '') + name],
       );
     }),
-    m(
-      'div',
-      { style: style(kebab({ paddingTop: '20px' })) },
-      logs.map(
-        (logGroup) =>
-          logGroup.length && m('pre', undefined, [m('code', undefined, [logGroup.join('\n')])]),
+
+    m('details', { open: logs.length, style: style(kebab({ paddingTop: '20px' })) }, [
+      m('summary', undefined, [
+        'Logs ',
+        m(
+          'button',
+          {
+            onclick: () => {
+              logs.length = 0;
+              localStorage.logs = JSON.stringify(history);
+              patch(el, vnode());
+            },
+          },
+          ['🗑️'],
+        ),
+      ]),
+      m(
+        'div',
+        { style: style(kebab({ paddingTop: '20px' })) },
+        logs.map(
+          (logGroup) =>
+            logGroup.length && m('pre', undefined, [m('code', undefined, [logGroup.join('\n')])]),
+        ),
       ),
-    ),
+    ]),
     history.length
-      ? m('details', { style: style(kebab({ paddingTop: '20px' })) }, [
-          m('summary', undefined, ['Past logs']),
+      ? m('details', { style: style(kebab({ paddingTop: '20px', opacity: 0.5 })) }, [
+          m('summary', undefined, [
+            'History ',
+            m(
+              'button',
+              {
+                onclick: () => {
+                  history.length = 0;
+                  delete localStorage.logs;
+                  patch(el, vnode());
+                },
+              },
+              ['🗑️'],
+            ),
+          ]),
           m(
-            'blockquote',
+            'div',
             undefined,
             history.map(
               (logGroup) =>
