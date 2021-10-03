@@ -30,7 +30,7 @@ data2.forEach(({ id, label }) => {
   el2.appendChild(tr);
 });
 
-const suite = new benchmark.Suite('select row | highlighting a selected row');
+const suite = new benchmark.Suite('select row (highlighting a selected row)');
 
 const hoistedVNode = m(
   'table',
