@@ -10,6 +10,86 @@ Please note that Benchmark results are unstable. To have more stable results:
 
 [**→ Click to test benchmarks live yourself!**](https://million.aidenybai.com/)
 
+## Results
+
+Benchmarks compiled on `10/3/2021, 5:20:05 PM`
+
+**UA:** Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36
+
+---
+
+swap rows (swap 2 rows for table with 1,000 rows)
+
+```
+million x 233,115 ops/sec ±10.04% (64 runs sampled)
+vanilla x 38,236 ops/sec ±4.44% (60 runs sampled)
+Fastest is million
+```
+
+select row (highlighting a selected row)
+
+```
+million x 1,842,328 ops/sec ±0.70% (67 runs sampled)
+vanilla x 747,504 ops/sec ±0.42% (54 runs sampled)
+Fastest is million
+```
+
+replace all rows (updating all 1,000 rows)
+
+```
+million x 144,126 ops/sec ±1.02% (67 runs sampled)
+vanilla x 1,859 ops/sec ±16.60% (56 runs sampled)
+Fastest is million
+```
+
+remove row (removing one row)
+
+```
+million x 164 ops/sec ±17.96% (55 runs sampled)
+vanilla x 541 ops/sec ±41.13% (47 runs sampled)
+Fastest is vanilla
+```
+
+partial update (updating every 10th row for 1,000 rows)
+
+```
+million x 434 ops/sec ±2.73% (63 runs sampled)
+vanilla x 2,908 ops/sec ±33.23% (20 runs sampled)
+Fastest is vanilla
+```
+
+create rows (creating 1,000 rows)
+
+```
+million x 217 ops/sec ±19.98% (59 runs sampled)
+vanilla x 312 ops/sec ±21.50% (59 runs sampled)
+Fastest is vanilla
+```
+
+create many rows (creating 10,000 rows)
+
+```
+million x 20.29 ops/sec ±20.74% (38 runs sampled)
+vanilla x 31.58 ops/sec ±15.61% (41 runs sampled)
+Fastest is vanilla
+```
+
+clear rows (clearing a table with 1,000 rows)
+
+```
+million x 1,783,222 ops/sec ±21.94% (67 runs sampled)
+vanilla x 6,485,752 ops/sec ±10.31% (69 runs sampled)
+Fastest is vanilla
+```
+
+append many rows to large table (appending 1,000 to a table of 10,000 rows)
+
+```
+million x 258,696 ops/sec ±0.73% (67 runs sampled)
+vanilla x 332 ops/sec ±4.59% (62 runs sampled)
+Fastest is million
+```
+
 ---
 
 > ## Original benchmark metrics
