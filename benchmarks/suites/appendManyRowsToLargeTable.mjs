@@ -5,6 +5,7 @@
 
 import benchmark from '../benchmark';
 import { m, createElement, patch, VFlags } from '../../src/index';
+import * as tinyVDom from 'tiny-vdom';
 import { buildData } from '../data';
 
 const el1 = createElement(m('table'));
@@ -30,6 +31,24 @@ data2.forEach(({ id, label }) => {
   tr.appendChild(td2);
   el2.appendChild(tr);
 });
+
+const el3 = tinyVDom.createElement(tinyVDom.h('table'));
+const data3 = buildData(10000);
+const vchildren = [];
+data3.forEach(({ id, label }) => {
+  const newId = String(id);
+  const vnode = tinyVDom.h(
+    'tr',
+    { key: newId },
+    tinyVDom.h('td', undefined, newId),
+    tinyVDom.h('td', undefined, label),
+  );
+  vchildren.push(vnode);
+  const row = tinyVDom.createElement(vnode);
+  el3.appendChild(row);
+});
+el3._ = tinyVDom.h('table', undefined, vchildren);
+data3.push(...buildData(1000));
 
 const suite = new benchmark.Suite(
   'append many rows to large table (appending 1,000 to a table of 10,000 rows)',
@@ -59,6 +78,22 @@ suite
       tr.appendChild(td2);
       el2.appendChild(tr);
     });
+  })
+  .add('tiny-vdom', () => {
+    const vnode = tinyVDom.h(
+      'table',
+      undefined,
+      ...buildData(1000).map(({ id, label }) =>
+        tinyVDom.h(
+          'tr',
+          undefined,
+          tinyVDom.h('td', undefined, String(id)),
+          tinyVDom.h('td', undefined, label),
+        ),
+      ),
+    );
+    tinyVDom.patch(el3, vnode, el3._);
+    el3._ = vnode;
   });
 
 export default suite;

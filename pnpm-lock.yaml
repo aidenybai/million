@@ -28,6 +28,7 @@ specifiers:
   rollup-plugin-terser: ^7.0.2
   rollup-plugin-ts: ^1.4.0
   style.css: ^1.0.0
+  tiny-vdom: ^0.0.1
   ts-jest: ^27.0.4
   ts-node: ^10.1.0
   tslib: ^2.2.0
@@ -62,6 +63,7 @@ devDependencies:
   rollup-plugin-terser: 7.0.2_rollup@2.58.0
   rollup-plugin-ts: 1.4.0_rollup@2.58.0+typescript@4.3.5
   style.css: 1.0.0
+  tiny-vdom: 0.0.1
   ts-jest: 27.0.4_92306e36c1a4cf876b1cd4839a977b9c
   ts-node: 10.1.0_9dca92ad6883052be9382a1ca34778b1
   tslib: 2.3.0
@@ -6067,6 +6069,10 @@ packages:
     resolution: {integrity: sha512-iOqSav00cVxEEICeD7TjLB1sueEL+81Wpzp2bY17uZjZN0pWZPuo4suZ/61VujxmqSGFfgOcNuTZ85QJwNZQpw==}
     dependencies:
       readable-stream: 3.6.0
+    dev: true
+
+  /tiny-vdom/0.0.1:
+    resolution: {integrity: sha512-7ddRG8kXWVirQIMSIQYJoF+vaegs5iwT0aaQRkz6Y0Luna1dWi1pFsIzsPI4mG3NYwEQoBCmaWXTmqe6ixbVzA==}
     dev: true
 
   /tmpl/1.0.4:

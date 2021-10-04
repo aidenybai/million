@@ -7,3 +7,4 @@ coverage
 docs
 .DS_Store
 .pnpm-debug.log
+*.tgz
