@@ -4,8 +4,8 @@
   "description": "<1kb compiler-focused virtual DOM. It's fast!",
   "main": "dist/million.umd.js",
   "module": "dist/million.esm.js",
-  "jsdelivr": "dist/million.esm.min.js",
-  "unpkg": "dist/million.esm.min.js",
+  "jsdelivr": "dist/million.esm.js",
+  "unpkg": "dist/million.esm.js",
   "types": "dist/million.d.ts",
   "scripts": {
     "dev": "sh scripts/dev.sh",

@@ -10,17 +10,15 @@ import ts from 'rollup-plugin-ts';
 const build = () => [
   entry('./src/index.ts', [
     out('./dist/million.umd.js', { format: 'umd' }),
-    out('./dist/million.umd.min.js', { format: 'umd', minify: true }),
     out('./dist/million.cjs.js', { format: 'cjs' }),
-    out('./dist/million.cjs.min.js', { format: 'cjs', minify: true }),
     out('./dist/million.esm.js', { format: 'esm' }),
-    out('./dist/million.esm.min.js', { format: 'esm', minify: true }),
     out('./dist/million.js', { format: 'esm' }),
   ]),
   entry('./src/jsx.ts', [
     out('./dist/jsx-runtime.cjs.js', { format: 'cjs' }),
     out('./dist/jsx-runtime.esm.js', { format: 'esm' }),
     out('./dist/jsx-runtime.js', { format: 'esm' }),
+    // Used to determine a realistic bundle size for VNode + JSX
     out('./dist/code-size-measurement.js', { format: 'esm', minify: true }),
   ]),
 ];
