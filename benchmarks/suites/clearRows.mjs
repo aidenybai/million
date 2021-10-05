@@ -7,36 +7,29 @@ import benchmark from '../benchmark';
 import { m, createElement, patch, VFlags } from '../../src/index';
 import { buildData } from '../data';
 
-const el1 = createElement(m('table'));
-const data1 = buildData(10000);
-data1.forEach(({ id, label }) => {
-  const newId = String(id);
-  const row = createElement(
-    m('tr', { key: newId }, [m('td', undefined, [newId]), m('td', undefined, [label])]),
-  );
-  el1.appendChild(row);
-});
-
-const el2 = document.createElement('table');
-const data2 = buildData(10000);
-data2.forEach(({ id, label }) => {
-  const newId = String(id);
-  const row = createElement(
-    m('tr', { key: newId }, [m('td', undefined, [newId]), m('td', undefined, [label])]),
-  );
-  el2.appendChild(row);
-});
+const data = buildData(1000);
+const oldVNode = m(
+  'table',
+  undefined,
+  data.map(({ id, label }) =>
+    m('tr', { key: String(id) }, [m('td', undefined, [String(id)]), m('td', undefined, [label])]),
+  ),
+);
+const el = createElement(oldVNode);
+const vnode = m('table', undefined, [], VFlags.NO_CHILDREN);
 
 const suite = new benchmark.Suite('clear rows (clearing a table with 1,000 rows)');
 
-const hoistedVNode = m('table', undefined, [], VFlags.NO_CHILDREN);
-
 suite
   .add('million', () => {
-    patch(el1, hoistedVNode);
+    patch(el.cloneNode(true), vnode, oldVNode);
   })
-  .add('vanilla', () => {
-    el2.childNodes.forEach((node) => el2.removeChild(node));
+  .add('DOM', () => {
+    const elClone = el.cloneNode(true);
+    elClone.childNodes.forEach((child) => elClone.removeChild(child));
+  })
+  .add('innerHTML', () => {
+    el.cloneNode(true).innerHTML = '';
   });
 
 export default suite;

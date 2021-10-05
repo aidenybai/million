@@ -12,81 +12,90 @@ Please note that Benchmark results are unstable. To have more stable results:
 
 ## Results
 
-Benchmarks compiled on `10/3/2021, 5:20:05 PM`
+Benchmarks compiled on `10/4/2021, 8:40:13 PM`
 
-**UA:** Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36
+**UA:** Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36
 
 ---
 
 swap rows (swap 2 rows for table with 1,000 rows)
 
 ```
-million x 233,115 ops/sec ±10.04% (64 runs sampled)
-vanilla x 38,236 ops/sec ±4.44% (60 runs sampled)
-Fastest is million
+million x 608 ops/sec ±7.46% (43 runs sampled)
+DOM x 620 ops/sec ±7.14% (55 runs sampled)
+innerHTML x 220 ops/sec ±5.72% (55 runs sampled)
+Fastest is DOM,million
 ```
 
 select row (highlighting a selected row)
 
 ```
-million x 1,842,328 ops/sec ±0.70% (67 runs sampled)
-vanilla x 747,504 ops/sec ±0.42% (54 runs sampled)
-Fastest is million
+million x 606 ops/sec ±7.09% (43 runs sampled)
+DOM x 620 ops/sec ±6.82% (43 runs sampled)
+innerHTML x 220 ops/sec ±5.66% (54 runs sampled)
+Fastest is DOM,million
 ```
 
 replace all rows (updating all 1,000 rows)
 
 ```
-million x 144,126 ops/sec ±1.02% (67 runs sampled)
-vanilla x 1,859 ops/sec ±16.60% (56 runs sampled)
+million x 169 ops/sec ±4.31% (21 runs sampled)
+DOM x 145 ops/sec ±1.38% (18 runs sampled)
+innerHTML x 121 ops/sec ±5.12% (25 runs sampled)
 Fastest is million
 ```
 
 remove row (removing one row)
 
 ```
-million x 164 ops/sec ±17.96% (55 runs sampled)
-vanilla x 541 ops/sec ±41.13% (47 runs sampled)
-Fastest is vanilla
+million x 630 ops/sec ±6.18% (57 runs sampled)
+DOM x 635 ops/sec ±7.05% (44 runs sampled)
+innerHTML x 217 ops/sec ±6.45% (52 runs sampled)
+Fastest is million,DOM
 ```
 
 partial update (updating every 10th row for 1,000 rows)
 
 ```
-million x 434 ops/sec ±2.73% (63 runs sampled)
-vanilla x 2,908 ops/sec ±33.23% (20 runs sampled)
-Fastest is vanilla
+million x 96.90 ops/sec ±9.19% (46 runs sampled)
+DOM x 526 ops/sec ±7.46% (53 runs sampled)
+innerHTML x 218 ops/sec ±5.36% (54 runs sampled)
+Fastest is DOM
 ```
 
 create rows (creating 1,000 rows)
 
 ```
-million x 217 ops/sec ±19.98% (59 runs sampled)
-vanilla x 312 ops/sec ±21.50% (59 runs sampled)
-Fastest is vanilla
+million x 24.92 ops/sec ±7.78% (36 runs sampled)
+DOM x 34.00 ops/sec ±7.42% (39 runs sampled)
+innerHTML x 33.70 ops/sec ±6.40% (39 runs sampled)
+Fastest is innerHTML,DOM
 ```
 
 create many rows (creating 10,000 rows)
 
 ```
-million x 20.29 ops/sec ±20.74% (38 runs sampled)
-vanilla x 31.58 ops/sec ±15.61% (41 runs sampled)
-Fastest is vanilla
+million x 24.25 ops/sec ±8.71% (36 runs sampled)
+DOM x 33.19 ops/sec ±7.77% (38 runs sampled)
+innerHTML x 34.39 ops/sec ±6.15% (38 runs sampled)
+Fastest is innerHTML,DOM
 ```
 
 clear rows (clearing a table with 1,000 rows)
 
 ```
-million x 1,783,222 ops/sec ±21.94% (67 runs sampled)
-vanilla x 6,485,752 ops/sec ±10.31% (69 runs sampled)
-Fastest is vanilla
+million x 516 ops/sec ±6.88% (53 runs sampled)
+DOM x 448 ops/sec ±5.45% (57 runs sampled)
+innerHTML x 567 ops/sec ±5.13% (57 runs sampled)
+Fastest is innerHTML,million
 ```
 
 append many rows to large table (appending 1,000 to a table of 10,000 rows)
 
 ```
-million x 258,696 ops/sec ±0.73% (67 runs sampled)
-vanilla x 332 ops/sec ±4.59% (62 runs sampled)
+million x 44.27 ops/sec ±6.22% (42 runs sampled)
+DOM x 21.16 ops/sec ±9.63% (40 runs sampled)
+innerHTML x 12.13 ops/sec ±5.86% (25 runs sampled)
 Fastest is million
 ```
 

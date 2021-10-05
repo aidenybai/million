@@ -8,61 +8,56 @@ import { m, createElement, patch, VFlags } from '../../src/index';
 import { buildData } from '../data';
 
 const shuffleArray = (array) => {
-  for (let i = array.length - 1; i > 0; i--) {
+  for (
+    let i = array.length - 1 - Math.floor(Math.random() * (data.length / 3 + 1));
+    i > Math.floor(Math.random() * (data.length / 3 + 1));
+    i--
+  ) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
   }
 };
 
-const el1 = createElement(m('table'));
-const data1 = buildData(1000);
-data1.forEach(({ id, label }) => {
-  const newId = String(id);
-  const row = createElement(
-    m('tr', { key: newId }, [m('td', undefined, [newId]), m('td', undefined, [label])]),
-  );
-  el1.appendChild(row);
-});
-
-shuffleArray(data1);
-
-const el2 = document.createElement('table');
-const data2 = buildData(1000);
-data2.forEach(({ id, label }) => {
-  const tr = document.createElement('tr');
-  const td1 = document.createElement('td');
-  const td2 = document.createElement('td');
-  td1.textContent = String(id);
-  td2.textContent = label;
-  tr.appendChild(td1);
-  tr.appendChild(td2);
-  el2.appendChild(tr);
-});
-
-shuffleArray(data2);
-
-const suite = new benchmark.Suite('replace all rows (updating all 1,000 rows)');
-
-const hoistedVNode = m(
+const data = buildData(1000);
+const oldVNode = m(
   'table',
   undefined,
-  data1.map(({ id, label }) => {
-    const newId = String(id);
-    return m('tr', { key: newId }, [m('td', undefined, [newId]), m('td', undefined, [label])]);
-  }),
+  data.map(({ id, label }) =>
+    m('tr', { key: String(id) }, [m('td', undefined, [String(id)]), m('td', undefined, [label])]),
+  ),
+);
+const el = createElement(oldVNode);
+
+shuffleArray(data);
+
+const vnode = m(
+  'table',
+  undefined,
+  data.map(({ id, label }) =>
+    m('tr', { key: String(id) }, [m('td', undefined, [String(id)]), m('td', undefined, [label])]),
+  ),
   VFlags.ONLY_KEYED_CHILDREN,
 );
 
+const suite = new benchmark.Suite('replace all rows (updating all 1,000 rows)');
+
 suite
   .add('million', () => {
-    patch(el1, hoistedVNode);
+    patch(el.cloneNode(true), vnode, oldVNode);
   })
-  .add('vanilla', () => {
-    el2.childNodes.forEach((tr, i) => {
-      const newId = String(data2[i].id);
-      tr.childNodes[0].textContent = newId;
-      tr.childNodes[1].textContent = data2[i].label;
+  .add('DOM', () => {
+    el.cloneNode(true).childNodes.forEach((tr, i) => {
+      const { id, label } = data[i];
+      tr.childNodes[0].textContent = String(id);
+      tr.childNodes[1].textContent = label;
     });
+  })
+  .add('innerHTML', () => {
+    let html = '';
+    data.forEach(({ id, label }) => {
+      html += `<tr><td>${String(id)}</td><td>${label}</td></tr>`;
+    });
+    el.cloneNode(true).innerHTML = html;
   });
 
 export default suite;
