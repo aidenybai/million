@@ -4,71 +4,39 @@
  */
 
 import benchmark from '../benchmark';
-import { m, createElement, patch, VFlags } from '../../src/index';
-import * as tinyVDom from 'tiny-vdom';
+import { m, createElement, patch, VFlags, INSERT } from '../../src/index';
 import { buildData } from '../data';
 
-const el1 = createElement(m('table'));
-const data1 = buildData(10000);
-data1.forEach(({ id, label }) => {
-  const newId = String(id);
-  const row = createElement(
-    m('tr', { key: newId }, [m('td', undefined, [newId]), m('td', undefined, [label])]),
-  );
-  el1.appendChild(row);
-});
-data1.push(...buildData(1000));
-
-const el2 = document.createElement('table');
-const data2 = buildData(10000);
-data2.forEach(({ id, label }) => {
-  const tr = document.createElement('tr');
-  const td1 = document.createElement('td');
-  const td2 = document.createElement('td');
-  td1.textContent = String(id);
-  td2.textContent = label;
-  tr.appendChild(td1);
-  tr.appendChild(td2);
-  el2.appendChild(tr);
-});
-
-const el3 = tinyVDom.createElement(tinyVDom.h('table'));
-const data3 = buildData(10000);
-const vchildren = [];
-data3.forEach(({ id, label }) => {
-  const newId = String(id);
-  const vnode = tinyVDom.h(
-    'tr',
-    { key: newId },
-    tinyVDom.h('td', undefined, newId),
-    tinyVDom.h('td', undefined, label),
-  );
-  vchildren.push(vnode);
-  const row = tinyVDom.createElement(vnode);
-  el3.appendChild(row);
-});
-el3._ = tinyVDom.h('table', undefined, vchildren);
-data3.push(...buildData(1000));
+const data = buildData(10000);
+const oldVNode = m(
+  'table',
+  undefined,
+  data.map(({ id, label }) =>
+    m('tr', { key: String(id) }, [m('td', undefined, [String(id)]), m('td', undefined, [label])]),
+  ),
+);
+const el = createElement(oldVNode);
+data.push(...buildData(1000));
+const vnode = m(
+  'table',
+  undefined,
+  data.map(({ id, label }) =>
+    m('tr', { key: String(id) }, [m('td', undefined, [String(id)]), m('td', undefined, [label])]),
+  ),
+  VFlags.ONLY_KEYED_CHILDREN,
+);
 
 const suite = new benchmark.Suite(
   'append many rows to large table (appending 1,000 to a table of 10,000 rows)',
 );
 
-const hoistedVNode = m(
-  'table',
-  undefined,
-  buildData(1000).map(({ id, label }) =>
-    m('tr', undefined, [m('td', undefined, [String(id)]), m('td', undefined, [label])]),
-  ),
-  VFlags.ONLY_KEYED_CHILDREN,
-);
-
 suite
   .add('million', () => {
-    patch(el1, hoistedVNode);
+    patch(el.cloneNode(true), vnode, oldVNode);
   })
-  .add('vanilla', () => {
-    buildData(1000).forEach(({ id, label }) => {
+  .add('DOM', () => {
+    const elClone = el.cloneNode(true);
+    data.forEach(({ id, label }) => {
       const tr = document.createElement('tr');
       const td1 = document.createElement('td');
       const td2 = document.createElement('td');
@@ -76,24 +44,15 @@ suite
       td2.textContent = label;
       tr.appendChild(td1);
       tr.appendChild(td2);
-      el2.appendChild(tr);
+      elClone.appendChild(tr);
     });
   })
-  .add('tiny-vdom', () => {
-    const vnode = tinyVDom.h(
-      'table',
-      undefined,
-      ...buildData(1000).map(({ id, label }) =>
-        tinyVDom.h(
-          'tr',
-          undefined,
-          tinyVDom.h('td', undefined, String(id)),
-          tinyVDom.h('td', undefined, label),
-        ),
-      ),
-    );
-    tinyVDom.patch(el3, vnode, el3._);
-    el3._ = vnode;
+  .add('innerHTML', () => {
+    let html = '';
+    data.forEach(({ id, label }) => {
+      html += `<tr><td>${String(id)}</td><td>${label}</td></tr>`;
+    });
+    el.cloneNode(true).innerHTML += html;
   });
 
 export default suite;
