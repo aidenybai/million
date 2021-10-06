@@ -11,4 +11,12 @@ const benchmark = Benchmark.runInContext({ _ });
 // avoid `ReferenceError: Benchmark is not defined` error because Benchmark is assumed to be in window
 window.Benchmark = benchmark;
 
+export const Suite = (name, tests) => {
+  const suite = new benchmark.Suite(name);
+  Object.entries(tests).forEach(([name, callback]) => {
+    suite.add(name, callback);
+  });
+  return suite;
+};
+
 export default benchmark;

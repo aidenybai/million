@@ -13,7 +13,7 @@
     "lint": "eslint src/**",
     "cleanup": "prettier --write src --parser typescript",
     "test": "jest --silent --runInBand",
-    "bench": "vite --config benchmarks/vite.config.js",
+    "bench": "vite --config benchmarks/vite.config.ts",
     "release": "sh scripts/release.sh",
     "prepare": "husky install"
   },
