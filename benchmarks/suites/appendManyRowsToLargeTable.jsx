@@ -6,6 +6,7 @@
 import { createElement, patch } from '../../src/index';
 import { Suite } from '../benchmark';
 import { buildData } from '../data';
+import * as tiny_vdom from '../tiny-vdom';
 
 const data = buildData(10000);
 const createVNode = () => (
@@ -27,9 +28,12 @@ const suite = Suite('append many rows to large table (appending 1,000 to a table
   million: () => {
     patch(el(), vnode);
   },
+  'tiny-vdom': () => {
+    tiny_vdom.patch(el(), vnode, oldVNode);
+  },
   DOM: () => {
     const elClone = el();
-    data.forEach(({ id, label }) => {
+    [...data].slice(-1000).forEach(({ id, label }) => {
       const tr = document.createElement('tr');
       const td1 = document.createElement('td');
       const td2 = document.createElement('td');
