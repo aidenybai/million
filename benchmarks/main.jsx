@@ -1,7 +1,5 @@
 import 'style.css';
-
-import { m, createElement, style, kebab, patch } from '../src/index';
-
+import { createElement, patch } from '../src/index';
 import appendManyRowsToLargeTable from './suites/appendManyRowsToLargeTable';
 import clearRows from './suites/clearRows';
 import createManyRows from './suites/createManyRows';
@@ -39,6 +37,19 @@ const suites = [
     }),
 );
 
+const generateLogMarkdown = () =>
+  `Benchmarks compiled on \`${new Date().toLocaleString()}\`\n\n**UA:** ${
+    navigator.userAgent
+  }\n\n---\n\n${[...logs]
+    .map((logGroup) => {
+      const logGroupCopy = [...logGroup];
+      const title = logGroupCopy.shift();
+      return `${title.replace('Running: ', '').split(' - ')[0]}\n\n\`\`\`\n${logGroupCopy.join(
+        '\n',
+      )}\n\`\`\`\n`;
+    })
+    .join('\n')}`;
+
 const vnode = () => (
   <div>
     {suites.map((suite) => {
@@ -72,19 +83,7 @@ const vnode = () => (
         </button>{' '}
         <button
           onclick={async () => {
-            navigator.clipboard.writeText(
-              `Benchmarks compiled on \`${new Date().toLocaleString()}\`\n\n**UA:** ${
-                navigator.userAgent
-              }\n\n---\n\n${[...logs]
-                .map((logGroup) => {
-                  const logGroupCopy = [...logGroup];
-                  const title = logGroupCopy.shift();
-                  return `${
-                    title.replace('Running: ', '').split(' - ')[0]
-                  }\n\n\`\`\`\n${logGroupCopy.join('\n')}\n\`\`\`\n`;
-                })
-                .join('\n')}`,
-            );
+            navigator.clipboard.writeText(generateLogMarkdown());
           }}
         >
           📋
@@ -94,7 +93,11 @@ const vnode = () => (
       <div style={{ paddingTop: '20px' }}>
         {logs.map(
           (logGroup) =>
-            logGroup.length && m('pre', undefined, [m('code', undefined, [logGroup.join('\n')])]),
+            logGroup.length && (
+              <pre>
+                <code>{logGroup.join('\n')}</code>
+              </pre>
+            ),
         )}
       </div>
     </details>
@@ -114,19 +117,7 @@ const vnode = () => (
           </button>{' '}
           <button
             onclick={async () => {
-              navigator.clipboard.writeText(
-                `Benchmarks compiled on \`${new Date().toLocaleString()}\`\n\n**UA:** ${
-                  navigator.userAgent
-                }\n\n---\n\n${[...logs]
-                  .map((logGroup) => {
-                    const logGroupCopy = [...logGroup];
-                    const title = logGroupCopy.shift();
-                    return `${
-                      title.replace('Running: ', '').split(' - ')[0]
-                    }\n\n\`\`\`\n${logGroupCopy.join('\n')}\n\`\`\`\n`;
-                  })
-                  .join('\n')}`,
-              );
+              navigator.clipboard.writeText(generateLogMarkdown());
             }}
           >
             📋

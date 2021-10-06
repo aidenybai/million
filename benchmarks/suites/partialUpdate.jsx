@@ -3,8 +3,8 @@
  * @description updating every 10th row for 1,000 rows
  */
 
-import { Suite } from '../benchmark';
 import { createElement, patch, UPDATE } from '../../src/index';
+import { Suite } from '../benchmark';
 import { buildData } from '../data';
 
 const data = buildData(1000);

@@ -3,8 +3,8 @@
  * @description clearing a table with 1,000 rows
  */
 
-import { Suite } from '../benchmark';
 import { createElement, patch } from '../../src/index';
+import { Suite } from '../benchmark';
 import { buildData } from '../data';
 
 const data = buildData(1000);
