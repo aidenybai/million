@@ -1,5 +1,5 @@
-import _ from 'lodash';
 import Benchmark from 'benchmark';
+import _ from 'lodash';
 
 // avoid `Cannot read property 'parentNode' of undefined` error in runScript
 const script = document.createElement('script');

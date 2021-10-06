@@ -3,8 +3,8 @@
  * @description swap 2 rows for table with 1,000 rows
  */
 
+import { createElement, patch, UPDATE } from '../../src/index';
 import { Suite } from '../benchmark';
-import { m, createElement, patch, VFlags, UPDATE } from '../../src/index';
 import { buildData } from '../data';
 
 const data = buildData(1000);

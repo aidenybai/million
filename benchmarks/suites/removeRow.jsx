@@ -3,8 +3,8 @@
  * @description removing one row
  */
 
+import { createElement, DELETE, patch } from '../../src/index';
 import { Suite } from '../benchmark';
-import { createElement, patch, DELETE } from '../../src/index';
 import { buildData } from '../data';
 
 const data = buildData(1000);
