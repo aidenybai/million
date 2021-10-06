@@ -1,4 +1,4 @@
-export const adjectives = [
+const adjectives = [
   'pretty',
   'large',
   'big',
@@ -25,7 +25,7 @@ export const adjectives = [
   'expensive',
   'fancy',
 ];
-export const colors = [
+const colors = [
   'red',
   'yellow',
   'blue',
@@ -38,7 +38,7 @@ export const colors = [
   'black',
   'orange',
 ];
-export const nouns = [
+const nouns = [
   'table',
   'chair',
   'house',
@@ -54,7 +54,7 @@ export const nouns = [
   'keyboard',
 ];
 
-export const random = (max) => {
+const random = (max) => {
   return Math.round(Math.random() * 1000) % max;
 };
 
