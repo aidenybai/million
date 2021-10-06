@@ -6,6 +6,7 @@
 import { createElement, patch } from '../../src/index';
 import { Suite } from '../benchmark';
 import { buildData } from '../data';
+import * as tiny_vdom from '../tiny-vdom';
 
 const shuffleArray = (array) => {
   for (
@@ -39,6 +40,9 @@ const vnode = createVNode();
 const suite = Suite('replace all rows (updating all 1,000 rows)', {
   million: () => {
     patch(el(), vnode);
+  },
+  'tiny-vdom': () => {
+    tiny_vdom.patch(el(), vnode, oldVNode);
   },
   DOM: () => {
     el().childNodes.forEach((tr, i) => {

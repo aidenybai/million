@@ -3,9 +3,10 @@
  * @description updating every 10th row for 1,000 rows
  */
 
-import { createElement, patch, UPDATE } from '../../src/index';
+import { createElement, patch } from '../../src/index';
 import { Suite } from '../benchmark';
 import { buildData } from '../data';
+import * as tiny_vdom from '../tiny-vdom';
 
 const data = buildData(1000);
 const createVNode = () => (
@@ -29,6 +30,9 @@ const vnode = createVNode();
 const suite = Suite('partial update (updating every 10th row for 1,000 rows)', {
   million: () => {
     patch(el(), vnode);
+  },
+  'tiny-vdom': () => {
+    tiny_vdom.patch(el(), vnode, oldVNode);
   },
   DOM: () => {
     const elClone = el();
