@@ -8,7 +8,7 @@ import { Suite } from '../benchmark';
 import { buildData } from '../data';
 
 const data = buildData(1000);
-const createVNode = () => (
+const oldVNode = (
   <table>
     {data.map(({ id, label }) => (
       <tr key={String(id)}>
@@ -18,7 +18,6 @@ const createVNode = () => (
     ))}
   </table>
 );
-const oldVNode = createVNode();
 const el = () => createElement(oldVNode);
 const vnode = <table></table>;
 
