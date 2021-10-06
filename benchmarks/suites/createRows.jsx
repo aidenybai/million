@@ -23,7 +23,7 @@ const vnode = (
 
 const suite = Suite('create rows (creating 1,000 rows)', {
   million: () => {
-    patch(el(), vnode, oldVNode);
+    patch(el(), vnode);
   },
   DOM: () => {
     const elClone = el();
