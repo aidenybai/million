@@ -1,6 +1,6 @@
 # Benchmarks
 
-These benchmarks are now 100% compiant with the [JS Framework Benchmark](https://github.com/krausest/js-framework-benchmark).
+These benchmarks are now 100% compliant with the [JS Framework Benchmark](https://github.com/krausest/js-framework-benchmark).
 
 Please note that Benchmark results are unstable. To have more stable results:
 
