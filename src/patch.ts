@@ -51,7 +51,10 @@ export const compose =
       if (!hasString) {
         const oldVElement = <VElement>oldVNode;
         const newVElement = <VElement>newVNode;
-        if ((!oldVElement?.key && !newVElement?.key) || oldVElement?.key !== newVElement?.key) {
+        if (
+          (oldVElement?.key === undefined && newVElement?.key === undefined) ||
+          oldVElement?.key !== newVElement?.key
+        ) {
           if (oldVElement?.tag !== newVElement?.tag || el instanceof Text) {
             const newEl = createElement(newVNode);
             workStack.push(() => el.replaceWith(newEl));

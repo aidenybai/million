@@ -35,12 +35,13 @@ export const patch = (el, newVNode, oldVNode) => {
         el[prop] = newVNode.props[prop];
       }
     }
-  }
 
-  for (let i = oldVNode.children?.length - 1; i >= 0; --i) {
-    patch(el.childNodes[i], newVNode.children[i], oldVNode.children[i]);
-  }
-  for (let i = oldVNode.children?.length; i < newVNode.children?.length; i++) {
-    el.appendChild(createElement(newVNode.children[i]));
+    for (let i = (oldVNode.children?.length ?? 0) - 1; i >= 0; --i) {
+      patch(el.childNodes[i], newVNode.children[i], oldVNode.children[i]);
+    }
+
+    for (let i = oldVNode.children?.length ?? 0; i < newVNode.children?.length ?? 0; i++) {
+      el.appendChild(createElement(newVNode.children[i]));
+    }
   }
 };
