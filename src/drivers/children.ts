@@ -17,8 +17,8 @@ export const childrenDriver = (
 
   // Deltas are a way for the compile-time to optimize runtime operations
   // by providing a set of predefined operations. This is useful for cases
-  // where you are patching a large amount of children, or when you have
-  // a large amount of props.
+  // where you are performing consistent, predictable operations at a high
+  // interval, low payload situation.
   if (delta) {
     for (let i = 0; i < delta.length; ++i) {
       const [deltaType, deltaPosition] = delta[i];
