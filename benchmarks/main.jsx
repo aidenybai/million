@@ -70,7 +70,7 @@ const vnode = () => (
       );
     })}
     <details open={!!logs.length} style={{ paddingTop: '20px' }}>
-      <summary>
+      <summary key="logs">
         Logs{' '}
         <button
           onclick={() => {
@@ -104,7 +104,7 @@ const vnode = () => (
 
     {history.length ? (
       <details style={{ paddingTop: '20px', opacity: 0.5 }}>
-        <summary>
+        <summary key="history">
           History{' '}
           <button
             onclick={() => {
