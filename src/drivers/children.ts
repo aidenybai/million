@@ -55,6 +55,20 @@ export const childrenDriver = (
     workStack.push(() => (el.textContent = ''));
     return workStack;
   }
+  if (newVNode.flag === undefined || newVNode.flag === VFlags.ANY_CHILDREN) {
+    if (oldVNodeChildren) {
+      // Interates backwards, so in case a childNode is destroyed, it will not shift the nodes
+      // and break accessing by index
+      for (let i = oldVNodeChildren.length - 1; i >= 0; --i) {
+        patch(<DOMNode>el.childNodes[i], newVNodeChildren[i], oldVNodeChildren[i], workStack);
+      }
+    }
+
+    for (let i = oldVNodeChildren.length ?? 0; i < newVNodeChildren.length ?? 0; ++i) {
+      const node = createElement(newVNodeChildren[i], false);
+      workStack.push(() => el.appendChild(node));
+    }
+  }
   if (newVNode.flag === VFlags.ONLY_TEXT_CHILDREN) {
     workStack.push(() => (el.textContent = newVNode.children!.join('')));
     return workStack;
@@ -115,11 +129,14 @@ export const childrenDriver = (
           oldVNodePosition !== undefined &&
           newVNodeChild.key === (<VElement>oldVNodeChildren[oldVNodePosition]).key
         ) {
-          // Determine move for child that moved: [X, A, B, C] -> [A, B, C, X]
-          workStack.push(() => el.insertBefore(node, el.childNodes[newPosition]));
+          if (newPosition !== oldVNodePosition) {
+            // Determine move for child that moved: [X, A, B, C] -> [A, B, C, X]
+            workStack.push(() => el.insertBefore(node, el.childNodes[newPosition]));
+          }
           delete oldKeyMap[newVNodeChild.key!];
         } else {
           // VNode doesn't exist yet: [] -> [X]
+          console.log(newPosition, oldVNodePosition);
           workStack.push(() =>
             el.insertBefore(createElement(newVNodeChild, false), el.childNodes[newPosition]),
           );
@@ -132,19 +149,6 @@ export const childrenDriver = (
       }
     }
     return workStack;
-  }
-
-  if (oldVNodeChildren) {
-    // Interates backwards, so in case a childNode is destroyed, it will not shift the nodes
-    // and break accessing by index
-    for (let i = oldVNodeChildren.length - 1; i >= 0; --i) {
-      patch(<DOMNode>el.childNodes[i], newVNodeChildren[i], oldVNodeChildren[i], workStack);
-    }
-  }
-
-  for (let i = oldVNodeChildren.length ?? 0; i < newVNodeChildren.length; ++i) {
-    const node = createElement(newVNodeChildren[i], false);
-    workStack.push(() => el.appendChild(node));
   }
 
   return workStack;

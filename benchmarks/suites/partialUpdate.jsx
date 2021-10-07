@@ -3,13 +3,13 @@
  * @description updating every 10th row for 1,000 rows
  */
 
-import { createElement, patch } from '../../src/index';
+import { createElement, patch, UPDATE } from '../../src/index';
 import { Suite } from '../benchmark';
 import { buildData } from '../data';
 import * as tiny_vdom from '../tiny-vdom';
 
 const data = buildData(1000);
-const createVNode = () => (
+const oldVNode = (
   <table>
     {data.map(({ id, label }) => (
       <tr key={String(id)}>
@@ -19,13 +19,23 @@ const createVNode = () => (
     ))}
   </table>
 );
-const oldVNode = createVNode();
 const el = () => createElement(oldVNode);
+const delta = [];
 for (let i = 0; i < 1000; i += 10) {
   data[i] = buildData(1)[0];
+  delta.unshift(UPDATE(i));
 }
 
-const vnode = createVNode();
+const vnode = (
+  <table>
+    {data.map(({ id, label }) => (
+      <tr key={String(id)}>
+        <td>{id}</td>
+        <td>{label}</td>
+      </tr>
+    ))}
+  </table>
+);
 
 const suite = Suite('partial update (updating every 10th row for 1,000 rows)', {
   million: () => {
