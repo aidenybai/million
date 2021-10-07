@@ -1,4 +1,6 @@
-module.exports = {
+import type { Config } from '@jest/types';
+
+const config: Config.InitialOptions = {
   testEnvironment: 'jsdom',
   collectCoverage: true,
   maxWorkers: '50%',
@@ -15,3 +17,5 @@ module.exports = {
     '!src/**/drivers/*',
   ],
 };
+
+export default config;
