@@ -1,6 +1,18 @@
-export const h = (tag, props = {}, children = []) => ({ tag, props, children });
+type Props = Record<string, unknown>;
+interface VElement {
+  tag: string;
+  props: Props;
+  children: VNode[];
+}
+type VNode = VElement | string;
 
-export const createElement = (vnode) => {
+export const h = (tag: string, props: Props = {}, children: VNode[] = []): VElement => ({
+  tag,
+  props,
+  children,
+});
+
+export const createElement = (vnode: VNode): HTMLElement | Text => {
   if (typeof vnode === 'string') return document.createTextNode(vnode);
 
   const el = document.createElement(vnode.tag);
@@ -16,12 +28,12 @@ export const createElement = (vnode) => {
   return el;
 };
 
-export const patch = (el, newVNode, oldVNode) => {
-  if (!newVNode) el.remove();
+export const patch = (el: HTMLElement | Text, newVNode?: VNode, oldVNode?: VNode): void => {
+  if (!newVNode && newVNode !== '') return el.remove();
   if (typeof oldVNode === 'string' || typeof newVNode === 'string') {
     if (oldVNode !== newVNode) return el.replaceWith(createElement(newVNode));
   } else {
-    if (oldVNode.tag !== newVNode.tag) {
+    if (oldVNode?.tag !== newVNode?.tag) {
       return el.replaceWith(createElement(newVNode));
     }
 
@@ -37,7 +49,11 @@ export const patch = (el, newVNode, oldVNode) => {
     }
 
     for (let i = (oldVNode.children?.length ?? 0) - 1; i >= 0; --i) {
-      patch(el.childNodes[i], newVNode.children[i], oldVNode.children[i]);
+      patch(
+        <HTMLElement | Text>el.childNodes[i],
+        (newVNode.children || [])[i],
+        oldVNode.children[i],
+      );
     }
 
     for (let i = oldVNode.children?.length ?? 0; i < newVNode.children?.length ?? 0; i++) {

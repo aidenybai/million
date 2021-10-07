@@ -136,7 +136,6 @@ export const childrenDriver = (
           delete oldKeyMap[newVNodeChild.key!];
         } else {
           // VNode doesn't exist yet: [] -> [X]
-          console.log(newPosition, oldVNodePosition);
           workStack.push(() =>
             el.insertBefore(createElement(newVNodeChild, false), el.childNodes[newPosition]),
           );
