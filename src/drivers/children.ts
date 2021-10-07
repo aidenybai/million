@@ -45,13 +45,12 @@ export const childrenDriver = (
     return workStack;
   }
 
-  if (!oldVNodeChildren && !newVNodeChildren) {
-    return workStack;
-  }
   // Flags allow for greater optimizability by reducing condition branches.
   // Generally, you should use a compiler to generate these flags, but
   // hand-writing them is also possible
   if (!newVNodeChildren || newVNode.flag === VFlags.NO_CHILDREN) {
+    if (!oldVNodeChildren) return workStack;
+
     workStack.push(() => (el.textContent = ''));
     return workStack;
   }
@@ -68,6 +67,7 @@ export const childrenDriver = (
       const node = createElement(newVNodeChildren[i], false);
       workStack.push(() => el.appendChild(node));
     }
+    return workStack;
   }
   if (newVNode.flag === VFlags.ONLY_TEXT_CHILDREN) {
     workStack.push(() => (el.textContent = newVNode.children!.join('')));
