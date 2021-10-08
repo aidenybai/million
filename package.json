@@ -8,13 +8,13 @@
   "unpkg": "dist/million.esm.js",
   "types": "dist/million.d.ts",
   "scripts": {
-    "dev": "sh scripts/dev.sh",
-    "build": "sh scripts/build.sh",
+    "dev": "zx scripts/dev.mjs",
+    "build": "zx scripts/build.mjs",
     "lint": "eslint src/**",
     "cleanup": "prettier --write src --parser typescript",
     "test": "jest --silent --runInBand",
     "bench": "vite --config benchmarks/vite.config.ts",
-    "release": "sh scripts/release.sh",
+    "release": "zx scripts/release.mjs",
     "prepare": "husky install"
   },
   "repository": {
@@ -65,7 +65,7 @@
     ]
   },
   "lint-staged": {
-    "*": "sh scripts/check.sh"
+    "*": "zx scripts/check.mjs"
   },
   "devDependencies": {
     "@commitlint/cli": "^13.1.0",
@@ -99,6 +99,7 @@
     "ts-node": "^10.1.0",
     "tslib": "^2.2.0",
     "typescript": "^4.3.5",
-    "vite": "^2.4.4"
+    "vite": "^2.4.4",
+    "zx": "^4.2.0"
   }
 }
