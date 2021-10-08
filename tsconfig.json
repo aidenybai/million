@@ -1,5 +1,10 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "million": ["src/index"],
+      "million/*": ["src/*"]
+    },
     "jsx": "react-jsx",
     "jsxImportSource": "million",
     "lib": ["dom", "esnext"],
@@ -20,6 +25,6 @@
     "declaration": true,
     "strict": true
   },
-  "include": ["./src/**/*.ts"],
+  "include": ["./**/*.ts", "./**/*.tsx"],
   "exclude": ["node_modules", "dist", "./src/**/*.js", "./src/**/*.spec.ts"]
 }
