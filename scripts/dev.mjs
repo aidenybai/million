@@ -2,7 +2,7 @@
 import 'zx/globals';
 import { info } from './helpers.mjs';
 
-const index_html = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="icon" type="image/svg+xml" href="./.github/assets/icon.svg"><title>Million Playground</title><link rel="stylesheet" href="./style.css"><script type="module" src="./script.tsx"></script></head><body></body></html>`;
+const index_html = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Million Playground</title><link rel="stylesheet" href="./style.css"><script type="module" src="./script.tsx"></script></head><body></body></html>`;
 const script_tsx = `import { m, createElement, patch } from 'million';
 
 const app = createElement(m('div', { id: 'app' }, ['Hello World']));
