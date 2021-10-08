@@ -1,7 +1,7 @@
 source $(dirname "$0")/helpers.sh
 
 index_html_content="<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\" /><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" /><link rel=\"icon\" type=\"image/svg+xml\" href=\"https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/icon.svg\"><title>Million Playground</title><link rel=\"stylesheet\" href=\"./style.css\"><script type=\"module\" src=\"./script.tsx\"></script></head><body></body></html>"
-script_tsx_content="import { m, createElement, patch } from '../src/index';
+script_tsx_content="import { m, createElement, patch } from 'million';
 
 const app = createElement(m('div', { id: 'app' }, ['Hello World']));
 document.body.appendChild(app);
