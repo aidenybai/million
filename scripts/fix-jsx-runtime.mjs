@@ -1,3 +1,7 @@
+#!/usr/bin/env zx
+import 'zx/globals';
+$.verbose = false;
+
 // NOTE: This is a hack because some of the functions and types are shared between jsx and index, and we want to import index into jsx instead of duplicates.
 
 import glob from 'glob';
