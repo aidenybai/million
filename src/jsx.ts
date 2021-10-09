@@ -1,3 +1,6 @@
+// It is not recommended to edit this file unless you absolutely know what you are doing.
+// Please update scripts/fix-jsx-runtime.mjs accordingly.
+
 import { className, m, style, svg, VDelta, VElement, VFlags, VNode, VProps } from './index';
 import { kebab } from './m';
 
