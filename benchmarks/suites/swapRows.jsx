@@ -45,7 +45,7 @@ const suite = Suite('swap rows (swap 2 rows for table with 1,000 rows)', {
     patch(el(), vnode);
   },
   'tiny-vdom': () => {
-    tiny_vdom.patch(el(), vnode, oldVNode);
+    tiny_vdom.patch(el(), clone(oldVNode), clone(oldVNode));
   },
   'virtual-dom': () => {
     const patches = virtual_dom.diff(clone(oldVNode), clone(vnode));
