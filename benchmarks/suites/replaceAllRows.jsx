@@ -7,7 +7,7 @@ import { createElement, patch } from '../../src/index';
 import { Suite } from '../benchmark';
 import { buildData } from '../data';
 import * as tiny_vdom from '../tiny-vdom';
-import patch as virtual_dom from 'virtual-dom/patch';
+import * as virtual_dom from 'virtual-dom';
 
 const shuffleArray = (array) => {
   for (
