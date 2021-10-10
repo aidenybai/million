@@ -19,6 +19,20 @@ export const Suite = (name, tests) => {
   return suite;
 };
 
-export const clone = _.cloneDeep;
+export const removeKeys = (vnode) => {
+  if (typeof vnode === 'string') return;
+  if (vnode.key) {
+    delete vnode.key;
+  }
+  if (vnode.children && vnode.children.length > 0) {
+    vnode.children.forEach(removeKeys);
+  }
+};
+
+export const clone = (vnode) => {
+  const clonedVNode = _.cloneDeep(vnode);
+  removeKeys(clonedVNode);
+  return clonedVNode;
+};
 
 export default benchmark;
