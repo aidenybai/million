@@ -29,7 +29,7 @@ const suite = Suite('create many rows (creating 10,000 rows)', {
     patch(el(), vnode);
   },
   'tiny-vdom': () => {
-    tiny_vdom.patch(el(), clone(oldVNode), clone(oldVNode));
+    tiny_vdom.patch(el(), clone(vnode), clone(oldVNode));
   },
   'virtual-dom': () => {
     const patches = virtual_dom.diff(clone(oldVNode), clone(vnode));
