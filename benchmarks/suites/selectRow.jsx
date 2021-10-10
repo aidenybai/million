@@ -31,7 +31,7 @@ const suite = Suite('select row (highlighting a selected row)', {
     patch(el(), vnode);
   },
   'tiny-vdom': () => {
-    tiny_vdom.patch(el(), vnode, oldVNode);
+    tiny_vdom.patch(el(), clone(oldVNode), clone(oldVNode));
   },
   'virtual-dom': () => {
     const patches = virtual_dom.diff(clone(oldVNode), clone(vnode));
