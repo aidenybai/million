@@ -4,7 +4,7 @@
  */
 
 import { createElement, patch, UPDATE } from '../../src/index';
-import { Suite } from '../benchmark';
+import { Suite, clone } from '../benchmark';
 import { buildData } from '../data';
 import * as tiny_vdom from '../tiny-vdom';
 import * as virtual_dom from 'virtual-dom';
