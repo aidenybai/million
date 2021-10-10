@@ -7,6 +7,7 @@ import { createElement, patch } from '../../src/index';
 import { Suite } from '../benchmark';
 import { buildData } from '../data';
 import * as tiny_vdom from '../tiny-vdom';
+import * as virtual_dom from 'virtual-dom';
 
 const data = buildData(1000);
 const createVNode = () => (
@@ -30,6 +31,9 @@ const suite = Suite('select row (highlighting a selected row)', {
   },
   'tiny-vdom': () => {
     tiny_vdom.patch(el(), vnode, oldVNode);
+  },
+  'virtual-dom': () => {
+    virtual_dom.patch(el(), vnode, oldVNode);
   },
   DOM: () => {
     el().childNodes[row].style.background = 'red';
