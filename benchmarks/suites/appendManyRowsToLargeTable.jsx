@@ -4,10 +4,11 @@
  */
 
 import { createElement, patch } from '../../src/index';
-import { Suite } from '../benchmark';
+import { Suite, clone } from '../benchmark';
 import { buildData } from '../data';
 import * as tiny_vdom from '../tiny-vdom';
 import * as virtual_dom from 'virtual-dom';
+import * as snabbdom from 'snabbdom';
 
 const data = buildData(10000);
 const createVNode = () => (
@@ -33,7 +34,12 @@ const suite = Suite('append many rows to large table (appending 1,000 to a table
     tiny_vdom.patch(el(), vnode, oldVNode);
   },
   'virtual-dom': () => {
-      virtual_dom.patch(el(), vnode, oldVNode);
+    const patches = virtual_dom.diff(clone(oldVNode), clone(vnode));
+    virtual_dom.patch(el(), patches);
+  },
+  snabbdom: () => {
+    const patch = snabbdom.init([snabbdom.propsModule]);
+    patch(el(), clone(vnode));
   },
   DOM: () => {
     const elClone = el();

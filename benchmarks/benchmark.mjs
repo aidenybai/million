@@ -19,4 +19,6 @@ export const Suite = (name, tests) => {
   return suite;
 };
 
+export const clone = _.cloneDeep;
+
 export default benchmark;
