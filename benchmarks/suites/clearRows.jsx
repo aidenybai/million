@@ -8,6 +8,7 @@ import { Suite } from '../benchmark';
 import { buildData } from '../data';
 import * as tiny_vdom from '../tiny-vdom';
 import * as virtual_dom from 'virtual-dom';
+import * as snabbdom from 'snabbdom';
 
 const data = buildData(1000);
 const oldVNode = (
@@ -31,7 +32,12 @@ const suite = Suite('clear rows (clearing a table with 1,000 rows)', {
     tiny_vdom.patch(el(), vnode, oldVNode);
   },
   'virtual-dom': () => {
-    virtual_dom.patch(el(), vnode, oldVNode);
+    const patches = virtual_dom.diff(clone(oldVNode), clone(vnode));
+    virtual_dom.patch(el(), patches);
+  },
+  snabbdom: () => {
+    const patch = snabbdom.init([snabbdom.propsModule]);
+    patch(el(), clone(vnode));
   },
   DOM: () => {
     const elClone = el();
