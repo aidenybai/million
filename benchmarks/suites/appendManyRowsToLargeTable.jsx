@@ -7,6 +7,7 @@ import { createElement, patch } from '../../src/index';
 import { Suite } from '../benchmark';
 import { buildData } from '../data';
 import * as tiny_vdom from '../tiny-vdom';
+import patch as virtual_dom from 'virtual-dom/patch';
 
 const data = buildData(10000);
 const createVNode = () => (
@@ -30,6 +31,9 @@ const suite = Suite('append many rows to large table (appending 1,000 to a table
   },
   'tiny-vdom': () => {
     tiny_vdom.patch(el(), vnode, oldVNode);
+  },
+  'virtual-dom': () => {
+      virtual_dom.patch(el(), vnode, oldVNode);
   },
   DOM: () => {
     const elClone = el();
