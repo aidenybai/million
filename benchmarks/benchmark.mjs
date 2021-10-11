@@ -22,8 +22,8 @@ export const Suite = (name, tests) => {
 export const reformatVNode = (vnode) => {
   if (typeof vnode === 'string') return;
   if (vnode.key) delete vnode.key;
-  if (vnode.props === undefined) vnode.props = {};
-  if (vnode.children === undefined) vnode.children = [];
+  if (vnode.props === undefined || vnode.props === null) vnode.props = {};
+  if (vnode.children === undefined || vnode.children === null) vnode.children = [];
   if (vnode.children.length > 0) {
     vnode.children.forEach(reformatVNode);
   }
