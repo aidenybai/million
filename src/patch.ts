@@ -11,9 +11,7 @@ export const flushWorkStack = (
   workStack: VTask[],
   commit: VCommit = (task: VTask): void => task(),
 ): void => {
-  for (let i = 0; i < workStack.length; ++i) {
-    commit(workStack[i]);
-  }
+  for (let i = 0; i < workStack.length; ++i) commit(workStack[i]);
 };
 
 /**
@@ -76,4 +74,4 @@ export const compose =
 /**
  * Diffs two VNodes and modifies the DOM node based on the necessary changes
  */
-export const patch = compose([propsDriver, childrenDriver]);
+export const patch = compose([childrenDriver, propsDriver]);

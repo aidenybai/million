@@ -29,7 +29,12 @@ export const removeKeys = (vnode) => {
   }
 };
 
-export const clone = (vnode) => {
+// Virtual DOM libraries like snabbdom, virtual-dom will
+// mutate the vnode, even though the vnode must be
+// immutable for the benchmark. For this case, we deep
+// copy the vnode. This ensures compatibility throughout
+// the suite tests.
+export const vnodeAdapter = (vnode) => {
   const clonedVNode = _.cloneDeep(vnode);
   removeKeys(clonedVNode);
   return clonedVNode;
