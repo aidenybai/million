@@ -9,6 +9,7 @@ import { buildData } from '../data';
 import * as tiny_vdom from '../tiny-vdom';
 import * as virtual_dom from 'virtual-dom';
 import * as snabbdom from 'snabbdom';
+import * as simple_virtual_dom from 'simple-virtual-dom';
 
 const patch = compose([childrenDriver]);
 const data = buildData(10000);
@@ -33,6 +34,10 @@ const suite = Suite('append many rows to large table (appending 1,000 to a table
   },
   'tiny-vdom': () => {
     tiny_vdom.patch(el(), vnodeAdapter(vnode), vnodeAdapter(oldVNode));
+  },
+  'simple-virtual-dom': () => {
+    const patches = simple_virtual_dom.diff(vnodeAdapter(oldVNode), vnodeAdapter(vnode));
+    simple_virtual_dom.patch(el(), patches);
   },
   'virtual-dom': () => {
     const patches = virtual_dom.diff(vnodeAdapter(oldVNode), vnodeAdapter(vnode));

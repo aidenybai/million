@@ -27,6 +27,7 @@ specifiers:
   rollup-plugin-filesize: ^9.1.1
   rollup-plugin-terser: ^7.0.2
   rollup-plugin-ts: ^1.4.7
+  simple-virtual-dom: ^0.1.10
   snabbdom: ^3.1.0
   style.css: ^1.0.0
   ts-jest: ^27.0.5
@@ -64,6 +65,7 @@ devDependencies:
   rollup-plugin-filesize: 9.1.1
   rollup-plugin-terser: 7.0.2_rollup@2.58.0
   rollup-plugin-ts: 1.4.7_rollup@2.58.0+typescript@4.4.3
+  simple-virtual-dom: 0.1.10
   snabbdom: 3.1.0
   style.css: 1.0.0
   ts-jest: 27.0.5_c167855b7a039eaaa2a6b38847c1969c
@@ -4857,6 +4859,10 @@ packages:
       supports-color: 8.1.1
     dev: true
 
+  /list-diff2/0.1.4:
+    resolution: {integrity: sha1-hTnAXFebQksTSaNL54UI05IN+Vg=}
+    dev: true
+
   /listr2/3.12.2_enquirer@2.3.6:
     resolution: {integrity: sha512-64xC2CJ/As/xgVI3wbhlPWVPx0wfTqbUAkpb7bjDi0thSWMqrf07UFhrfsGoo8YSXmF049Rp9C0cjLC8rZxK9A==}
     engines: {node: '>=10.0.0'}
@@ -6015,6 +6021,12 @@ packages:
 
   /signal-exit/3.0.5:
     resolution: {integrity: sha512-KWcOiKeQj6ZyXx7zq4YxSMgHRlod4czeBQZrPb8OKcohcqAXShm7E20kEMle9WBt26hFcAf0qLOcp5zmY7kOqQ==}
+    dev: true
+
+  /simple-virtual-dom/0.1.10:
+    resolution: {integrity: sha512-mZvtF8cSkjdzPmyWbCPCQiSTs9QAOUQWRYUnsa0j0K7vFwuD/QAEA3pR1ZQb8+ai9l82K7BvmODXHFNAVu962Q==}
+    dependencies:
+      list-diff2: 0.1.4
     dev: true
 
   /sisteransi/1.0.5:
