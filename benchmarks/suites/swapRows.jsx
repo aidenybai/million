@@ -3,13 +3,14 @@
  * @description swap 2 rows for table with 1,000 rows
  */
 
-import { createElement, patch, UPDATE } from '../../src/index';
-import { Suite, clone } from '../benchmark';
+import { createElement, compose, childrenDriver, UPDATE } from '../../src/index';
+import { Suite, vnodeAdapter } from '../benchmark';
 import { buildData } from '../data';
 import * as tiny_vdom from '../tiny-vdom';
 import * as virtual_dom from 'virtual-dom';
 import * as snabbdom from 'snabbdom';
 
+const patch = compose([childrenDriver]);
 const data = buildData(1000);
 const oldVNode = (
   <table>
@@ -45,15 +46,15 @@ const suite = Suite('swap rows (swap 2 rows for table with 1,000 rows)', {
     patch(el(), vnode);
   },
   'tiny-vdom': () => {
-    tiny_vdom.patch(el(), clone(vnode), clone(oldVNode));
+    tiny_vdom.patch(el(), vnodeAdapter(vnode), vnodeAdapter(oldVNode));
   },
   'virtual-dom': () => {
-    const patches = virtual_dom.diff(clone(oldVNode), clone(vnode));
+    const patches = virtual_dom.diff(vnodeAdapter(oldVNode), vnodeAdapter(vnode));
     virtual_dom.patch(el(), patches);
   },
   snabbdom: () => {
-    const patch = snabbdom.init([snabbdom.propsModule]);
-    patch(el(), clone(vnode));
+    const patch = snabbdom.init([]);
+    patch(snabbdom.toVNode(el()), vnodeAdapter(vnode));
   },
   DOM: () => {
     const elClone = el();
