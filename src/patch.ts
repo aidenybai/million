@@ -49,7 +49,7 @@ export const compose =
       if (!hasString) {
         const oldVElement = <VElement>oldVNode;
         const newVElement = <VElement>newVNode;
-        if (oldVElement.props?.ignore || newVElement.props?.ignore) return el;
+        if (oldVElement?.props?.ignore || newVElement?.props?.ignore) return el;
         if (
           (oldVElement?.key === undefined && newVElement?.key === undefined) ||
           oldVElement?.key !== newVElement?.key
