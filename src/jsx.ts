@@ -16,7 +16,7 @@ const h = (tag: string, props?: VProps, children?: VNode[], delta?: VDelta) => {
       flag = VFlags.ONLY_TEXT_CHILDREN;
     }
     for (const child of children) {
-      if (typeof child === 'object' && child.key) {
+      if (typeof child === 'object' && typeof child.key === 'string' && child.key !== '') {
         keyCache.add(child.key);
       }
     }
