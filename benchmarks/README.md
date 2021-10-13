@@ -10,6 +10,8 @@ Please note that Benchmark results are unstable. To have more stable results:
 
 [**→ Click to test benchmarks live yourself!**](https://million.aidenybai.com/)
 
+[**→ View the official benchmark results**](https://docs.google.com/spreadsheets/d/e/2PACX-1vS-zBSBzc0LW1V6BoPEw-V98P4_gox4qC0wZuQT5Yls_NDTDwM612aIYL_U988gfp4Xbl0ed7_9uYly/pubhtml)
+
 ---
 
 > ## Original benchmark metrics
