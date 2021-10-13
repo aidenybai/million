@@ -16,6 +16,10 @@ function success {
   printf "\r${COLOR_GREEN}success ${RESET}- $1${SPACER}${RESET}\n"
 }
 
+info "Updating packages..."
+
+pnpm up
+
 info "Checking for errors..."
 
 if [ -n "$(git status src --porcelain)" ]; then
