@@ -20,6 +20,9 @@ info "Updating packages..."
 
 pnpm up
 
+git stage package.json
+git stage pnpm-lock.yaml
+
 info "Checking for errors..."
 
 if [ -n "$(git status src --porcelain)" ]; then
