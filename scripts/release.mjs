@@ -21,4 +21,4 @@ try {
 current.stop();
 success('Built distribution bundles.');
 info(`Please change the version number in ${chalk.gray('`CITATIONS.cff`')}`);
-info(`Run ${chalk.gray('`np`')} to publish.`);
+info(`Run ${chalk.gray('`np --no-cleanup`')} to publish.`);
