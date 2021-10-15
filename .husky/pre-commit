@@ -19,6 +19,7 @@ function success {
 info "Updating packages..."
 
 pnpm up
+pnpm i
 
 git stage package.json
 git stage pnpm-lock.yaml
