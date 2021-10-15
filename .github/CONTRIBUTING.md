@@ -1,3 +1,5 @@
+> _Want an interactive CLI experience by Mil the Lion? Run `pnpm welcome`_!
+
 # Contributing to Million
 
 ### Initial Steps:
