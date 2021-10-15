@@ -19,7 +19,7 @@ await send(
   3000,
 );
 const hasPnpmInstalled =
-  (await question(`${chalk.red('▓')} Do you have pnpm? ${chalk.gray('(yes/no)')} `)) === 'yes';
+  (await question(`${chalk.red('→')} Do you have pnpm? ${chalk.gray('(yes/no)')} `)) === 'yes';
 if (!hasPnpmInstalled) throw new Error('Please install `pnpm`');
 await send(`Ok! Let me install the necessary packages for you.`, 3000);
 await $`pnpm i`;
@@ -29,5 +29,8 @@ await send(
   )} to get started!`,
   3000,
 );
-await send(`Tip: You can spin up a dev environment by running ${chalk.gray('`pnpm dev`')}!`, 3000);
+await send(
+  `${chalk.bold('Tip:')} You can spin up a dev environment by running ${chalk.gray('`pnpm dev`')}!`,
+  3000,
+);
 await send(`Alright! I'll see ya around!`, 3000);

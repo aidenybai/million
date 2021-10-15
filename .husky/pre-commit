@@ -9,11 +9,11 @@ RESET=`tput sgr0`
 SPACER='                    '
 
 function info {
-  printf "${COLOR_BLUE}▓ info    ${RESET}- $1${RESET}"
+  printf "${COLOR_BLUE}→ info    ${RESET}- $1${RESET}"
 }
 
 function success {
-  printf "\r${COLOR_GREEN}▓ success ${RESET}- $1${SPACER}${RESET}\n"
+  printf "\r${COLOR_GREEN}✔ success ${RESET}- $1${SPACER}${RESET}\n"
 }
 
 info "Updating packages..."
