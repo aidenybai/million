@@ -5,7 +5,7 @@ const config: Config.InitialOptions = {
   collectCoverage: true,
   maxWorkers: '50%',
   transform: {
-    '.(ts)': 'ts-jest',
+    '^.+\\.(t|j)sx?$': '@swc-node/jest',
   },
   collectCoverageFrom: [
     '<rootDir>/src/**/*.ts',
