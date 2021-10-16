@@ -61,14 +61,14 @@ const random = (max) => {
 let id = 0;
 
 export const buildData = (count) => {
-  const data = [];
+  const data = new Array(count).fill(0);
   for (let i = 0; i < count; ++i) {
-    data.push({
+    data[i] = {
       id: id++,
       label: `${adjectives[random(adjectives.length)]} ${colors[random(colors.length)]} ${
         nouns[random(nouns.length)]
       }`,
-    });
+    };
   }
   return data;
 };
