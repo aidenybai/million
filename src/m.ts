@@ -1,4 +1,5 @@
 import {
+  DOMNode,
   VDelta,
   VDeltaOperation,
   VDeltaOperationTypes,
@@ -109,4 +110,20 @@ export const m = (
     flag,
     delta,
   };
+};
+
+/**
+ * Turns a DOMNode into a VNode
+ */
+export const toVNode = (el: DOMNode): VNode => {
+  if (el instanceof Text) return String(el.nodeValue);
+  const props = {};
+  const children = new Array(el.children.length).fill(0);
+  for (let i = 0; i < el.attributes.length; i++) {
+    props[el.attributes[i].nodeName] = el.attributes[i].nodeValue;
+  }
+  for (let i = 0; i < el.children.length; i++) {
+    children[i] = toVNode(<DOMNode>el.children[i]);
+  }
+  return m(el.tagName, props, children);
 };
