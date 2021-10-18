@@ -4,7 +4,8 @@ import { propsDriver } from './drivers/props';
 import { DOMNode, OLD_VNODE_FIELD, VCommit, VDriver, VElement, VNode, VTask } from './types';
 
 /**
- * Passes all of the tasks in a given array to a given function sequentially.
+ * Passes all of the tasks in a given array to a given callback function sequentially.
+ * Generally, this is used to call the functions, with an optional modifier
  */
 export const flushWorkStack = (
   workStack: VTask[],
