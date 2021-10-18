@@ -1,4 +1,4 @@
-import { className, DELETE, INSERT, kebab, m, ns, style, svg, UPDATE } from '../m';
+import { className, DELETE, INSERT, kebab, m, ns, style, svg, UPDATE, toVNode } from '../m';
 import { VDeltaOperationTypes } from '../types';
 
 describe('.m', () => {
@@ -217,5 +217,22 @@ describe('.m', () => {
     expect(kebab({ iHaveNumbers1: 'iHaveNumbers1' })).toEqual({
       'i-have-numbers1': 'iHaveNumbers1',
     });
+  });
+
+  it('should convert camelCase to kebab-case', () => {
+    const el = document.createElement('div');
+    const child = document.createElement('a');
+    el.id = 'foo';
+    el.className = 'bar baz';
+    el.style.color = 'red';
+    child.textContent = 'foo bar baz';
+    child.href = 'http://foo.bar';
+    el.appendChild(child);
+
+    expect(toVNode(el)).toEqual(
+      m('DIV', { id: 'foo', class: 'bar baz', style: 'color: red;' }, [
+        m('A', { href: 'http://foo.bar' }, ['foo bar baz']),
+      ]),
+    );
   });
 });

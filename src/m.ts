@@ -125,8 +125,8 @@ export const toVNode = (el: DOMNode): VNode => {
   for (let i = 0; i < el.attributes.length; i++) {
     props[el.attributes[i].nodeName] = el.attributes[i].nodeValue;
   }
-  for (let i = 0; i < el.children.length; i++) {
-    children[i] = toVNode(<DOMNode>el.children[i]);
+  for (let i = 0; i < el.childNodes.length; i++) {
+    children[i] = toVNode(<DOMNode>el.childNodes[i]);
   }
 
   const vnode = m(el.tagName, props, children);
