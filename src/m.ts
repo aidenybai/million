@@ -1,5 +1,6 @@
 import {
   DOMNode,
+  OLD_VNODE_FIELD,
   VDelta,
   VDeltaOperation,
   VDeltaOperationTypes,
@@ -116,7 +117,9 @@ export const m = (
  * Turns a DOMNode into a VNode
  */
 export const toVNode = (el: DOMNode): VNode => {
+  if (el[OLD_VNODE_FIELD]) return el[OLD_VNODE_FIELD];
   if (el instanceof Text) return String(el.nodeValue);
+
   const props = {};
   const children = new Array(el.children.length).fill(0);
   for (let i = 0; i < el.attributes.length; i++) {
@@ -125,5 +128,8 @@ export const toVNode = (el: DOMNode): VNode => {
   for (let i = 0; i < el.children.length; i++) {
     children[i] = toVNode(<DOMNode>el.children[i]);
   }
-  return m(el.tagName, props, children);
+
+  const vnode = m(el.tagName, props, children);
+  el[OLD_VNODE_FIELD] = vnode;
+  return vnode;
 };
