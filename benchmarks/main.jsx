@@ -1,4 +1,4 @@
-import 'latex.css';
+import 'github-markdown-css/github-markdown.css';
 import './style.css';
 
 import { createElement, patch } from '../src/index';
