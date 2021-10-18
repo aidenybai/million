@@ -21,6 +21,7 @@ specifiers:
   glob: ^7.2.0
   husky: ^7.0.2
   jest: ^27.3.0
+  latex.css: ^1.5.0
   lint-staged: ^11.2.3
   lodash: ^4.17.21
   ora: ^6.0.1
@@ -31,7 +32,6 @@ specifiers:
   rollup-plugin-ts: ^1.4.7
   simple-virtual-dom: ^0.1.10
   snabbdom: ^3.1.0
-  style.css: ^1.0.0
   ts-node: ^10.3.0
   tslib: ^2.3.1
   typescript: ^4.4.4
@@ -60,6 +60,7 @@ devDependencies:
   glob: 7.2.0
   husky: 7.0.2
   jest: 27.3.0_ts-node@10.3.0
+  latex.css: 1.5.0
   lint-staged: 11.2.3
   lodash: 4.17.21
   ora: 6.0.1
@@ -70,7 +71,6 @@ devDependencies:
   rollup-plugin-ts: 1.4.7_rollup@2.58.0+typescript@4.4.4
   simple-virtual-dom: 0.1.10
   snabbdom: 3.1.0
-  style.css: 1.0.0
   ts-node: 10.3.0_4837b44df871fd426bb731ce8876dc42
   tslib: 2.3.1
   typescript: 4.4.4
@@ -5194,6 +5194,10 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
+  /latex.css/1.5.0:
+    resolution: {integrity: sha512-w7yk3G3jqk3PT1Ui5IOPWJ685Hl60YgbXnJ3JlAoFTmOyucdOnDgJfj2gsU0viiUORFHoNpEMYV23rWMwM1VyA==}
+    dev: true
+
   /leven/3.1.0:
     resolution: {integrity: sha512-qsda+H8jTaUaN/x5vzW2rzc+8Rw4TAQ/4KjB46IwK5VH+IlVeeeje/EoZRpiXvIqjFgK84QffqPztGI3VBLG1A==}
     engines: {node: '>=6'}
@@ -6716,10 +6720,6 @@ packages:
   /strip-json-comments/3.1.1:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
-    dev: true
-
-  /style.css/1.0.0:
-    resolution: {integrity: sha512-Ko0Bj+wqvyBpejOUKwPGNabkXl73yLZygnsfwKtL8YVYyyOXp4GXWGsKlAxw4Na83JOBSFzwh6yCr0P2ohcwJQ==}
     dev: true
 
   /supports-color/5.5.0:

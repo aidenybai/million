@@ -1,4 +1,6 @@
-import 'style.css';
+import 'latex.css';
+import './style.css';
+
 import { createElement, patch } from '../src/index';
 import appendManyRowsToLargeTable from './suites/appendManyRowsToLargeTable';
 import clearRows from './suites/clearRows';
