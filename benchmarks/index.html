@@ -5,16 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Million Benchmarks</title>
   </head>
-  <body>
-    <a
-      href="https://github.com/aidenybai/million"
-      class="github-corner"
-      aria-label="View source on GitHub"
+  <body class="markdown-body">
+    <a href="https://your-url" class="github-corner" aria-label="View source on GitHub"
       ><svg
         width="80"
         height="80"
         viewBox="0 0 250 250"
-        style="fill: #151513; color: #fff; position: absolute; top: 0; border: 0; right: 0"
+        style="fill: #70b7fd; color: #fff; position: absolute; top: 0; border: 0; right: 0"
         aria-hidden="true"
       >
         <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
@@ -30,88 +27,20 @@
           class="octo-body"
         ></path></svg
     ></a>
-    <details>
-      <summary>Old benchmark metrics</summary>
-      <blockquote>
-        <p>
-          The intention of these benchmarks are not to convince you that Million is faster that all
-          libraries, but rather bring perspective on the results of a specific method of testing DOM
-          manipulation implementations when compared to each other.
-        </p>
-        <p>
-          Implementation may differ, as the goal of the benchmarks is to acheive the same function
-          <u>for the end user</u>.
-        </p>
-        <table>
-          <thead>
-            <tr>
-              <th>Method</th>
-              <th><code>text-interop</code></th>
-              <th><code>list-render</code></th>
-              <th><code>conditional-render</code></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>million</td>
-              <td>1,275,852 ops/sec ±6.33%</td>
-              <td>12,262 ops/sec ±8.60%</td>
-              <td>1,013,634 ops/sec ±11.69%</td>
-            </tr>
-            <tr>
-              <td>virtual-dom</td>
-              <td>341,239 ops/sec ±5.09%</td>
-              <td>8,466 ops/sec ±4.18%</td>
-              <td>356,429 ops/sec ±6.03%</td>
-            </tr>
-            <tr>
-              <td>vanilla<sup>1</sup></td>
-              <td>24,974 ops/sec ±9.21%</td>
-              <td>3,417 ops/sec ±8.91%</td>
-              <td>19,306 ops/sec ±11.23%</td>
-            </tr>
-            <tr>
-              <td>baseline<sup>2</sup></td>
-              <td>1,264,249 ops/sec ±7.34%</td>
-              <td>13,216 ops/sec ±11.83%</td>
-              <td>1,027,381 ops/sec ±8.00%</td>
-            </tr>
-          </tbody>
-        </table>
-        <ol>
-          <li>An implementation the average developer would make when writing just JavaScript.</li>
-          <li>The most performance-focused imperative solution.</li>
-        </ol>
-        <p>
-          Tested on Macbook M1 16 GB, macOS Version 12.0 (Build 21A5268h), Chrome 91.0.4472.164
-          (Official Build) (arm64)
-        </p>
-        <p>
-          <em
-            >Results last taken 1:04 PM PST, 7/23/2021. Results may differ from the main
-            implementation, and will most likely keep differing based on the elapsed time</em
-          >
-        </p>
-        <p>
-          <a href="https://million.aidenybai.com/"
-            ><strong>→ Click to test benchmarks live yourself!</strong></a
-          >
-        </p>
-        <p>
-          <em
-            >Note: results you test may differ from the official benchmarks, due to differing
-            hardware, browsers, extensions, etc.</em
-          >
-        </p>
-      </blockquote>
-    </details>
 
-    <h3>Million Benchmarks</h3>
+    <h1>Million Benchmarks</h1>
     <p>
       These benchmarks are now 100% compliant with the
       <a href="https://github.com/krausest/js-framework-benchmark" target="_blank"
         >JS Framework Benchmark</a
       >.
+    </p>
+    <p>
+      <a
+        href="https://docs.google.com/spreadsheets/d/e/2PACX-1vS-zBSBzc0LW1V6BoPEw-V98P4_gox4qC0wZuQT5Yls_NDTDwM612aIYL_U988gfp4Xbl0ed7_9uYly/pubhtml"
+        target="_blank"
+        ><b>→ View the official benchmark results</b></a
+      >
     </p>
     <p>Please note that benchmark results are unstable. To have more stable results:</p>
     <ol>
@@ -125,6 +54,7 @@
       >
     </p>
     <small>Empty result for benchmark test means the library doesn't work</small>
+    <hr />
 
     <script src="./main.jsx" type="module"></script>
   </body>
