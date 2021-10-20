@@ -7,56 +7,80 @@ import { kebab } from './m';
 type JSXVNode = VNode | number | boolean | undefined | null;
 type FC = (props?: VProps, children?: VNode[], delta?: VDelta) => VElement;
 
-const h = (tag: string, props?: VProps, children?: VNode[], delta?: VDelta) => {
+const h = (tag: string, props?: VProps, children?: JSXVNode[], delta?: VDelta) => {
   let flag = VFlags.NO_CHILDREN;
+  const normalizedChildren: VNode[] = [];
   if (children) {
-    const keyCache = new Set();
+    const keysInChildren = new Set();
+    let hasVElementChildren = false;
     flag = VFlags.ANY_CHILDREN;
+
     if (children.every((child) => typeof child === 'string')) {
       flag = VFlags.ONLY_TEXT_CHILDREN;
     }
-    for (const child of children) {
-      if (typeof child === 'object' && typeof child.key === 'string' && child.key !== '') {
-        keyCache.add(child.key);
+    for (let i = 0; i < children.length; i++) {
+      if (
+        children[i] !== undefined &&
+        children[i] !== null &&
+        children[i] !== false &&
+        children[i] !== ''
+      ) {
+        const unwrappedChild = <VNode>normalize(children[i]);
+        const subChildren = Array.isArray(unwrappedChild) ? unwrappedChild : [unwrappedChild];
+
+        for (let i = 0; i < subChildren.length; i++) {
+          if (subChildren[i] || subChildren[i] === '') {
+            normalizedChildren.push(subChildren[i]);
+            if (typeof subChildren[i] === 'object') {
+              if (!hasVElementChildren) hasVElementChildren = true;
+              if (typeof subChildren[i].key === 'string' && subChildren[i].key !== '') {
+                keysInChildren.add(subChildren[i].key);
+              }
+            }
+          }
+        }
       }
     }
-    if (keyCache.size === children.length) {
+    if (keysInChildren.size === children.length) {
       flag = VFlags.ONLY_KEYED_CHILDREN;
     }
+    if (!hasVElementChildren) {
+      flag = VFlags.ONLY_TEXT_CHILDREN;
+    }
   }
-  if (typeof props?.className === 'object') {
-    props.className = className(<Record<string, boolean>>(<unknown>props.className));
-  }
-  if (typeof props?.style === 'object') {
-    const rawStyle = <Record<string, string>>(<unknown>props.style);
-    const normalizedStyle = Object.keys(rawStyle).some((key) => /[-A-Z]/gim.test(key))
-      ? kebab(rawStyle)
-      : rawStyle;
-    props.style = style(<Record<string, string>>normalizedStyle);
+  if (props) {
+    if (typeof props.className === 'object') {
+      props.className = className(<Record<string, boolean>>(<unknown>props.className));
+    }
+    if (typeof props.style === 'object') {
+      const rawStyle = <Record<string, string>>(<unknown>props.style);
+      const normalizedStyle = Object.keys(rawStyle).some((key) => /[-A-Z]/gim.test(key))
+        ? kebab(rawStyle)
+        : rawStyle;
+      props.style = style(<Record<string, string>>normalizedStyle);
+    }
   }
 
-  const vnode = m(tag, props, children, flag, delta);
+  const vnode = m(tag, props, normalizedChildren, flag, delta);
   return tag === 'svg' ? svg(vnode) : vnode;
 };
 
-const normalizeChildren = (children: JSXVNode[], normalizedChildren: VNode[]) => {
-  if (!children || children.length === 0) return undefined;
-  for (const child of children) {
-    if (child !== undefined && child !== null && child !== false && child !== '') {
-      if (Array.isArray(child)) {
-        normalizeChildren(child, normalizedChildren);
-      } else if (
-        typeof child === 'string' ||
-        typeof child === 'number' ||
-        typeof child === 'boolean'
-      ) {
-        normalizedChildren.push(String(child));
-      } else {
-        normalizedChildren.push(child);
-      }
+const normalize = (jsxVNode: JSXVNode): VNode | VNode[] | undefined => {
+  if (Array.isArray(jsxVNode)) {
+    const normalizedChildren: VNode[] = [];
+    for (let i = 0; i < jsxVNode.length; i++) {
+      normalizedChildren.push(<VNode>normalize(jsxVNode[i]));
     }
+    return normalizedChildren;
+  } else if (
+    typeof jsxVNode === 'string' ||
+    typeof jsxVNode === 'number' ||
+    typeof jsxVNode === 'boolean'
+  ) {
+    return String(jsxVNode);
+  } else {
+    return <VNode>jsxVNode;
   }
-  return normalizedChildren;
 };
 
 const jsx = (tag: string | FC, props?: VProps, ...children: JSXVNode[]): VNode => {
@@ -72,11 +96,10 @@ const jsx = (tag: string | FC, props?: VProps, ...children: JSXVNode[]): VNode =
       delete props.children;
     }
   }
-  const normalizedChildren = normalizeChildren(Array.isArray(children) ? children : [children], []);
   if (typeof tag === 'function') {
-    return tag(props, normalizedChildren, delta);
+    return tag(props, <VNode[]>children, delta);
   } else {
-    return h(tag, props, normalizedChildren, delta);
+    return h(tag, props, children, delta);
   }
 };
 
