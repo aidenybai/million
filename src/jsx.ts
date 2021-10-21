@@ -11,6 +11,7 @@ const h = (tag: string, props?: VProps, children?: JSXVNode[], delta?: VDelta) =
   let flag = VFlags.NO_CHILDREN;
   const normalizedChildren: VNode[] = [];
   if (children) {
+    children = Array.isArray(children) ? children : [children];
     const keysInChildren = new Set();
     let hasVElementChildren = false;
     flag = VFlags.ANY_CHILDREN;
