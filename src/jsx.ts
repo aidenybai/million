@@ -5,7 +5,7 @@ import { className, m, style, svg, VDelta, VElement, VFlags, VNode, VProps } fro
 import { kebab } from './m';
 
 type JSXVNode = VNode | number | boolean | undefined | null;
-type FC = (props?: VProps, children?: VNode[], delta?: VDelta) => VElement;
+type FC = (props?: VProps, children?: JSXVNode[], delta?: VDelta) => VElement;
 
 const h = (tag: string, props?: VProps, children?: JSXVNode[], delta?: VDelta) => {
   let flag = VFlags.NO_CHILDREN;
@@ -84,13 +84,9 @@ const normalize = (jsxVNode: JSXVNode): VNode | VNode[] | undefined => {
   }
 };
 
-const jsx = (
-  tag: string | FC,
-  props?: VProps,
-  key?: string | null,
-  ...children: JSXVNode[]
-): VNode => {
+const jsx = (tag: string | FC, props?: VProps, key?: string | null): VNode => {
   let delta: VDelta | undefined;
+  let children: JSXVNode[] = [];
   if (props) {
     const rawDelta = <VDelta>(<unknown>props.delta);
     if (props.delta && rawDelta.length > 0) {
@@ -98,13 +94,13 @@ const jsx = (
       delete props.delta;
     }
     if (props.children) {
-      children = <VNode[]>(<unknown>props.children);
+      children = <JSXVNode[]>(<unknown>props.children);
       delete props.children;
     }
     if (key) props.key = key;
   }
   if (typeof tag === 'function') {
-    return tag(props, <VNode[]>children, delta);
+    return tag(props, children, delta);
   } else {
     return h(tag, props, children, delta);
   }
@@ -120,4 +116,4 @@ namespace JSX {
   }
 }
 
-export { JSX, JSXVNode, FC, jsx, jsx as jsxs, Fragment };
+export { JSX, JSXVNode, FC, h, jsx, jsx as jsxs, Fragment };

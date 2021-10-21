@@ -2789,7 +2789,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001270
-      electron-to-chromium: 1.3.876
+      electron-to-chromium: 1.3.877
       escalade: 3.1.1
       nanocolors: 0.1.12
       node-releases: 1.1.77
@@ -2801,7 +2801,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001270
-      electron-to-chromium: 1.3.876
+      electron-to-chromium: 1.3.877
       escalade: 3.1.1
       node-releases: 2.0.1
       picocolors: 1.0.0
@@ -3340,8 +3340,8 @@ packages:
       safer-buffer: 2.1.2
     dev: true
 
-  /electron-to-chromium/1.3.876:
-    resolution: {integrity: sha512-a6LR4738psrubCtGx5HxM/gNlrIsh4eFTNnokgOqvQo81GWd07lLcOjITkAXn2y4lIp18vgS+DGnehj+/oEAxQ==}
+  /electron-to-chromium/1.3.877:
+    resolution: {integrity: sha512-fT5mW5Giw5iyVukeHb2XvB4joBKvzHtl8Vs3QzE7APATpFMt/T7RWyUcIKSZzYkKQgpMbu+vDBTCHfQZvh8klA==}
     dev: true
 
   /emittery/0.8.1:
