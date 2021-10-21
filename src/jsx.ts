@@ -83,7 +83,12 @@ const normalize = (jsxVNode: JSXVNode): VNode | VNode[] | undefined => {
   }
 };
 
-const jsx = (tag: string | FC, props?: VProps, ...children: JSXVNode[]): VNode => {
+const jsx = (
+  tag: string | FC,
+  props?: VProps,
+  key?: string | null,
+  ...children: JSXVNode[]
+): VNode => {
   let delta: VDelta | undefined;
   if (props) {
     const rawDelta = <VDelta>(<unknown>props.delta);
@@ -95,6 +100,7 @@ const jsx = (tag: string | FC, props?: VProps, ...children: JSXVNode[]): VNode =
       children = <VNode[]>(<unknown>props.children);
       delete props.children;
     }
+    if (key) props.key = key;
   }
   if (typeof tag === 'function') {
     return tag(props, <VNode[]>children, delta);
