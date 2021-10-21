@@ -4,9 +4,9 @@ import { resolve } from 'path';
 export default defineConfig({
   root: 'benchmarks',
   esbuild: {
-    jsxFactory: 'jsx',
+    jsxFactory: 'h',
     jsxFragment: 'Fragment',
-    jsxInject: `import { jsx, jsxs, Fragment } from 'million/jsx'`,
+    jsxInject: `import { h, jsxs, Fragment } from 'million/jsx'`,
   },
   resolve: {
     alias: {
