@@ -3,7 +3,8 @@
     "baseUrl": ".",
     "paths": {
       "million": ["src/index"],
-      "million/*": ["src/*"]
+      "million/*": ["src/*"],
+      "million/jsx-runtime": ["src/jsx"]
     },
     "jsx": "react-jsx",
     "jsxImportSource": "million",
