@@ -25,12 +25,15 @@ export const compose =
     prevVNode?: VNode,
     workStack: VTask[] = [],
     commit?: VCommit,
+    isRoot = true,
   ): DOMNode => {
     const finish = (element: DOMNode): DOMNode => {
-      workStack.push(() => {
-        if (!prevVNode) element[OLD_VNODE_FIELD] = newVNode;
-      });
-      flushWorkStack(workStack, commit);
+      if (isRoot) {
+        workStack.push(() => {
+          if (!prevVNode) element[OLD_VNODE_FIELD] = newVNode;
+        });
+        flushWorkStack(workStack, commit);
+      }
       return element;
     };
 
