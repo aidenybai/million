@@ -14,8 +14,7 @@
     "cleanup": "prettier --write src --parser typescript",
     "test": "jest --silent --runInBand",
     "bench": "vite --config benchmarks/vite.config.ts",
-    "release": "zx scripts/release.mjs && np --no-cleanup",
-    "postrelease": "zx scripts/citation.mjs",
+    "release": "zx scripts/release.mjs && zx scripts/citation.mjs",
     "welcome": "zx scripts/welcome.mjs",
     "prepare": "husky install"
   },
