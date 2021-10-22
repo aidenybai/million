@@ -12,6 +12,7 @@ try {
 }
 current.stop();
 success('No errors found.');
+
 current = load('Building distribution bundles...');
 try {
   await $`pnpm zx scripts/build.mjs`;
@@ -20,5 +21,5 @@ try {
 }
 current.stop();
 success('Built distribution bundles.');
-info(`Please change the version number in ${chalk.gray('`CITATIONS.cff`')}`);
+
 info(`Run ${chalk.gray('`np --no-cleanup`')} to publish.`);
