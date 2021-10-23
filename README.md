@@ -72,4 +72,4 @@ Million is [MIT-licensed](LICENSE) open-source software by [Aiden Bai](https://g
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Faidenybai%2Fmillion.svg?type=small)](https://app.fossa.com/projects/git%2Bgithub.com%2Faidenybai%2Fmillion?ref=badge_large)
 
-<img style="opacity: 0" src="https://hits.link/hits?url=https://github.com/aidenybai/million" />
+![View count](https://hits.link/hits?url=https://github.com/aidenybai/million)

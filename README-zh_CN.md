@@ -70,4 +70,6 @@ _为什么叫 "Million"？这个名字源于能够处理 [1M+ ops/sec 基准测�
 
 Million 是属于 [Aiden Bai](https://github.com/aidenybai) ，并且获得了 [MIT-licensed](LICENSE) 认可的开源软件。
 
-![Hits](https://hits.link/hits?url=https://github.com/aidenybai/million)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Faidenybai%2Fmillion.svg?type=small)](https://app.fossa.com/projects/git%2Bgithub.com%2Faidenybai%2Fmillion?ref=badge_large)
+
+![View count](https://hits.link/hits?url=https://github.com/aidenybai/million)

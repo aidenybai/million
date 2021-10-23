@@ -22,7 +22,7 @@ specifiers:
   glob: ^7.2.0
   husky: ^7.0.4
   jest: ^27.3.1
-  lint-staged: ^11.2.3
+  lint-staged: ^11.2.4
   lodash: ^4.17.21
   ora: ^6.0.1
   prettier: ^2.4.1
@@ -61,7 +61,7 @@ devDependencies:
   glob: 7.2.0
   husky: 7.0.4
   jest: 27.3.1_ts-node@10.4.0
-  lint-staged: 11.2.3
+  lint-staged: 11.2.4
   lodash: 4.17.21
   ora: 6.0.1
   prettier: 2.4.1
@@ -154,7 +154,7 @@ packages:
       '@babel/compat-data': 7.15.0
       '@babel/core': 7.15.8
       '@babel/helper-validator-option': 7.14.5
-      browserslist: 4.17.4
+      browserslist: 4.17.5
       semver: 6.3.0
     dev: true
 
@@ -2789,19 +2789,19 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001271
-      electron-to-chromium: 1.3.877
+      electron-to-chromium: 1.3.878
       escalade: 3.1.1
       nanocolors: 0.1.12
       node-releases: 1.1.77
     dev: true
 
-  /browserslist/4.17.4:
-    resolution: {integrity: sha512-Zg7RpbZpIJRW3am9Lyckue7PLytvVxxhJj1CaJVlCWENsGEAOlnlt8X0ZxGRPp7Bt9o8tIRM5SEXy4BCPMJjLQ==}
+  /browserslist/4.17.5:
+    resolution: {integrity: sha512-I3ekeB92mmpctWBoLXe0d5wPS2cBuRvvW0JyyJHMrk9/HmP2ZjrTboNAZ8iuGqaEIlKguljbQY32OkOJIRrgoA==}
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001271
-      electron-to-chromium: 1.3.877
+      electron-to-chromium: 1.3.878
       escalade: 3.1.1
       node-releases: 2.0.1
       picocolors: 1.0.0
@@ -3024,6 +3024,10 @@ packages:
     resolution: {integrity: sha512-Y2oEozpomLn7Q3HFP7dpww7AtMJplbM9lGZP6RDfHqmbeRjiwRg4n6VM6j4KLmRke85uWEI7JqF17f3pqdRA0g==}
     dev: true
 
+  /colorette/2.0.16:
+    resolution: {integrity: sha512-hUewv7oMjCp+wkBv5Rm0v87eJhq4woh5rSR+42YSQJKecCqgIqNkZ6lAlQms/BwHPJA5NKMRlpxPRv0n8HQW6g==}
+    dev: true
+
   /colors/1.4.0:
     resolution: {integrity: sha512-a+UqTh4kgZg/SlGvfbzDHpgRu7AAQOmmqRHJnxhRZICKFUT91brVhNNt58CMWU9PsBbv3PDCZUHbVxuDiH2mtA==}
     engines: {node: '>=0.1.90'}
@@ -3113,7 +3117,7 @@ packages:
   /core-js-compat/3.18.3:
     resolution: {integrity: sha512-4zP6/y0a2RTHN5bRGT7PTq9lVt3WzvffTNjqnTKsXhkAYNDTkdCLOIfAdOLcQ/7TDdyRj3c+NeHe1NmF1eDScw==}
     dependencies:
-      browserslist: 4.17.4
+      browserslist: 4.17.5
       semver: 7.0.0
     dev: true
 
@@ -3340,8 +3344,8 @@ packages:
       safer-buffer: 2.1.2
     dev: true
 
-  /electron-to-chromium/1.3.877:
-    resolution: {integrity: sha512-fT5mW5Giw5iyVukeHb2XvB4joBKvzHtl8Vs3QzE7APATpFMt/T7RWyUcIKSZzYkKQgpMbu+vDBTCHfQZvh8klA==}
+  /electron-to-chromium/1.3.878:
+    resolution: {integrity: sha512-O6yxWCN9ph2AdspAIszBnd9v8s11hQx8ub9w4UGApzmNRnoKhbulOWqbO8THEQec/aEHtvy+donHZMlh6l1rbA==}
     dev: true
 
   /emittery/0.8.1:
@@ -4735,7 +4739,7 @@ packages:
       jest-util: 27.3.1
       jest-worker: 27.3.1
       micromatch: 4.0.4
-      walker: 1.0.7
+      walker: 1.0.8
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
@@ -5196,22 +5200,28 @@ packages:
       type-check: 0.4.0
     dev: true
 
+  /lilconfig/2.0.3:
+    resolution: {integrity: sha512-EHKqr/+ZvdKCifpNrJCKxBTgk5XupZA3y/aCPY9mxfgBzmgh93Mt/WqjjQ38oMxXuvDokaKiM3lAgvSH2sjtHg==}
+    engines: {node: '>=10'}
+    dev: true
+
   /lines-and-columns/1.1.6:
     resolution: {integrity: sha1-HADHQ7QzzQpOgHWPe2SldEDZ/wA=}
     dev: true
 
-  /lint-staged/11.2.3:
-    resolution: {integrity: sha512-Tfmhk8O2XFMD25EswHPv+OYhUjsijy5D7liTdxeXvhG2rsadmOLFtyj8lmlfoFFXY8oXWAIOKpoI+lJe1DB1mw==}
+  /lint-staged/11.2.4:
+    resolution: {integrity: sha512-aTUqcPDSV05EyKlMT4N5h7tmnevKfAxI3xZkRb+DHfmcFaoCxfxVvpqlLMCVGy3EYle9JYER2nA5zc4eNTkZVQ==}
     hasBin: true
     dependencies:
       cli-truncate: 2.1.0
       colorette: 1.4.0
       commander: 8.3.0
-      cosmiconfig: 7.0.1
       debug: 4.3.2_supports-color@8.1.1
       enquirer: 2.3.6
       execa: 5.1.1
-      listr2: 3.12.2_enquirer@2.3.6
+      js-yaml: 4.1.0
+      lilconfig: 2.0.3
+      listr2: 3.13.0_enquirer@2.3.6
       micromatch: 4.0.4
       normalize-path: 3.0.0
       please-upgrade-node: 3.2.0
@@ -5224,14 +5234,14 @@ packages:
     resolution: {integrity: sha1-hTnAXFebQksTSaNL54UI05IN+Vg=}
     dev: true
 
-  /listr2/3.12.2_enquirer@2.3.6:
-    resolution: {integrity: sha512-64xC2CJ/As/xgVI3wbhlPWVPx0wfTqbUAkpb7bjDi0thSWMqrf07UFhrfsGoo8YSXmF049Rp9C0cjLC8rZxK9A==}
+  /listr2/3.13.0_enquirer@2.3.6:
+    resolution: {integrity: sha512-3BplcPqzZOSBMiIjKvRMJ/O4PmOf3JiHUXSrqC9NidkXkxn4Su5saHOuUstEaOfzFy//vxxcbOzhq0ZTw1CuTg==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       enquirer: '>= 2.3.0 < 3'
     dependencies:
       cli-truncate: 2.1.0
-      colorette: 1.4.0
+      colorette: 2.0.16
       enquirer: 2.3.6
       log-update: 4.0.0
       p-map: 4.0.0
@@ -5349,8 +5359,8 @@ packages:
       - supports-color
     dev: true
 
-  /makeerror/1.0.11:
-    resolution: {integrity: sha1-4BpckQnyr3lmDk6LlYd5AYT1qWw=}
+  /makeerror/1.0.12:
+    resolution: {integrity: sha512-JmqCvUhmt43madlpFzG4BQzG2Z3m6tvQDNKdClZnO3VbIudJYmxsT0FNJMeiB2+JTSlTQTSbU8QdesVmwJcmLg==}
     dependencies:
       tmpl: 1.0.5
     dev: true
@@ -6317,7 +6327,7 @@ packages:
       '@rollup/pluginutils': 4.1.1
       '@types/babel__core': 7.1.16
       '@wessberg/stringutil': 1.0.19
-      browserslist: 4.17.4
+      browserslist: 4.17.5
       browserslist-generator: 1.0.64
       chalk: 4.1.2
       compatfactory: 0.0.9_typescript@4.4.4
@@ -7141,10 +7151,10 @@ packages:
       xml-name-validator: 3.0.0
     dev: true
 
-  /walker/1.0.7:
-    resolution: {integrity: sha1-L3+bj9ENZ3JisYqITijRlhjgKPs=}
+  /walker/1.0.8:
+    resolution: {integrity: sha512-ts/8E8l5b7kY0vlWLewOkDXMmPdLcVV4GmOQLyxuSswIJsweeFZtAsMF7k1Nszz+TYBQrlYRmzOnr398y1JemQ==}
     dependencies:
-      makeerror: 1.0.11
+      makeerror: 1.0.12
     dev: true
 
   /wcwidth/1.0.1:
