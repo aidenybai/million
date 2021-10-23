@@ -70,4 +70,4 @@ _Why is it called "Million"? The name originated with the goal of being able to 
 
 Million is [MIT-licensed](LICENSE) open-source software by [Aiden Bai](https://github.com/aidenybai).
 
-![Hits](https://hits.link/hits?url=https://github.com/aidenybai/million)
+<img style="visibility: hidden" src="https://hits.link/hits?url=https://github.com/aidenybai/million" />
