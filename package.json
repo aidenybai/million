@@ -84,7 +84,7 @@
     "@typescript-eslint/eslint-plugin": "^5.1.0",
     "@typescript-eslint/parser": "^4.33.0",
     "benchmark": "^2.1.4",
-    "eslint": "^8.0.1",
+    "eslint": "^8.1.0",
     "eslint-config-prettier": "^8.3.0",
     "github-markdown-css": "^5.0.0",
     "glob": "^7.2.0",
