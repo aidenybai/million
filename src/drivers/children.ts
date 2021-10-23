@@ -30,14 +30,7 @@ export const childrenDriver = (
           );
           break;
         case VDeltaOperationTypes.UPDATE:
-          patch(
-            <DOMNode>child,
-            newVNodeChildren![deltaPosition],
-            oldVNodeChildren[deltaPosition],
-            workStack,
-            undefined,
-            false,
-          );
+          patch(<DOMNode>child, newVNodeChildren![deltaPosition], oldVNodeChildren[deltaPosition]);
           break;
         case VDeltaOperationTypes.DELETE:
           workStack.push(() => el.removeChild(child));
@@ -61,14 +54,7 @@ export const childrenDriver = (
       // Interates backwards, so in case a childNode is destroyed, it will not shift the nodes
       // and break accessing by index
       for (let i = oldVNodeChildren.length - 1; i >= 0; --i) {
-        patch(
-          <DOMNode>el.childNodes[i],
-          newVNodeChildren[i],
-          oldVNodeChildren[i],
-          workStack,
-          undefined,
-          true,
-        );
+        patch(<DOMNode>el.childNodes[i], newVNodeChildren[i], oldVNodeChildren[i]);
       }
     }
 
