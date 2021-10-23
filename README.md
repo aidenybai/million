@@ -8,6 +8,7 @@ Current Virtual DOM implementations are inadequate—Ranging from overcomplicate
 
 [![CI](https://img.shields.io/github/workflow/status/aidenybai/million/CI?color=FF524C&labelColor=000&style=flat-square&label=build)](https://img.shields.io/github/workflow/status/aidenybai/million)
 ![Code Size](https://badgen.net/badgesize/brotli/https/unpkg.com/million/dist/code-size-measurement.js?style=flat-square&label=size&color=FF524C&labelColor=000) [![NPM Version](https://img.shields.io/npm/v/million?style=flat-square&color=FF524C&labelColor=000)](https://www.npmjs.com/package/million) ![Code Coverage](https://img.shields.io/coveralls/github/aidenybai/million?color=FF524C&labelColor=000&style=flat-square)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Faidenybai%2Fmillion.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Faidenybai%2Fmillion?ref=badge_shield)
 
 [**→ Check out the Million documentation**](https://million.js.org)
 
@@ -71,3 +72,5 @@ _Why is it called "Million"? The name originated with the goal of being able to 
 Million is [MIT-licensed](LICENSE) open-source software by [Aiden Bai](https://github.com/aidenybai).
 
 <img style="visibility: hidden" src="https://hits.link/hits?url=https://github.com/aidenybai/million" />
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Faidenybai%2Fmillion.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Faidenybai%2Fmillion?ref=badge_large)
