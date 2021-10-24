@@ -43,4 +43,10 @@ describe('.createElement', () => {
     expect(createElement(m('div'), true)[OLD_VNODE_FIELD]).toEqual(m('div'));
     expect(createElement(m('div'), false)[OLD_VNODE_FIELD]).toBeUndefined();
   });
+
+  it('should createElementNS when svg', () => {
+    const svg = <HTMLElement>createElement(m('svg', { ns: 'http://www.w3.org/2000/svg' }));
+    expect(svg.namespaceURI).toEqual('http://www.w3.org/2000/svg');
+    expect(svg instanceof SVGElement).toBeTruthy();
+  });
 });

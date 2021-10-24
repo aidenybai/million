@@ -1,5 +1,5 @@
 import { className, DELETE, INSERT, kebab, m, ns, style, svg, UPDATE, toVNode } from '../m';
-import { VDeltaOperationTypes } from '../types';
+import { OLD_VNODE_FIELD, VDeltaOperationTypes } from '../types';
 
 describe('.m', () => {
   it('should create empty vnode with tag', () => {
@@ -219,7 +219,7 @@ describe('.m', () => {
     });
   });
 
-  it('should convert camelCase to kebab-case', () => {
+  it('should convert real HTMLElement to VNode', () => {
     const el = document.createElement('div');
     const child = document.createElement('a');
     el.id = 'foo';
@@ -228,6 +228,27 @@ describe('.m', () => {
     child.textContent = 'foo bar baz';
     child.href = 'http://foo.bar';
     el.appendChild(child);
+
+    expect(toVNode(el)).toEqual(
+      m('DIV', { id: 'foo', class: 'bar baz', style: 'color: red;' }, [
+        m('A', { href: 'http://foo.bar' }, ['foo bar baz']),
+      ]),
+    );
+  });
+
+  it('should convert real HTMLElement to VNode with OLD_VNODE_FIELD', () => {
+    const el = document.createElement('div');
+    const child = document.createElement('a');
+    el.id = 'foo';
+    el.className = 'bar baz';
+    el.style.color = 'red';
+    child.textContent = 'foo bar baz';
+    child.href = 'http://foo.bar';
+    el.appendChild(child);
+
+    el[OLD_VNODE_FIELD] = m('DIV', { id: 'foo', class: 'bar baz', style: 'color: red;' }, [
+      m('A', { href: 'http://foo.bar' }, ['foo bar baz']),
+    ]);
 
     expect(toVNode(el)).toEqual(
       m('DIV', { id: 'foo', class: 'bar baz', style: 'color: red;' }, [
