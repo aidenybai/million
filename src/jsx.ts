@@ -1,11 +1,10 @@
 // It is not recommended to edit this file unless you absolutely know what you are doing.
 // Please update scripts/fix-jsx-runtime.mjs accordingly.
 
-import { className, m, style, svg, VDelta, VElement, VFlags, VNode, VProps } from './index';
+import { className, m, style, svg, VFlags } from './index';
+import { VDelta, VNode, VProps } from './types';
+import { JSX, JSXVNode, FC } from './types/jsx';
 import { kebab } from './m';
-
-type JSXVNode = VNode | number | boolean | undefined | null;
-type FC = (props?: VProps, children?: JSXVNode[], delta?: VDelta) => VElement;
 
 const h = (tag: string, props?: VProps, children?: JSXVNode[], delta?: VDelta) => {
   let flag = VFlags.NO_CHILDREN;
@@ -107,13 +106,5 @@ const jsx = (tag: string | FC, props?: VProps, key?: string | null): VNode => {
 };
 
 const Fragment = (props?: VProps): VNode[] | undefined => <VNode[] | undefined>props?.children;
-
-// eslint-disable-next-line @typescript-eslint/no-namespace
-namespace JSX {
-  export type Element = VNode;
-  export interface IntrinsicElements {
-    [elemName: string]: VProps;
-  }
-}
 
 export { JSX, JSXVNode, FC, h, jsx, jsx as jsxs, Fragment };
