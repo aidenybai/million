@@ -8,7 +8,7 @@ import {
   VFlags,
   VNode,
   VProps,
-} from './types';
+} from './types/base';
 
 /**
  * Attaches ns props to svg element

@@ -1,4 +1,4 @@
-import { VTask } from './types';
+import { VTask } from './types/base';
 
 const workStack: VTask[] = [];
 const DEADLINE_THRESHOLD = 1000 / 60; // Minimum time to achieve 60 FPS

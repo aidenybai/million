@@ -14,7 +14,7 @@ setTimeout(() => {
 const style_css = `body { font-size: 2em; display: flex; justify-content: center; align-items: start; padding-top: 2em; font-family: Arial; }`;
 
 if (!fs.existsSync('dev')) {
-  $`mkdir dev`;
+  await $`mkdir dev`;
   await fs.writeFile('./dev/index.html', index_html);
   await fs.writeFile('./dev/script.tsx', script_tsx);
   await fs.writeFile('./dev/style.css', style_css);

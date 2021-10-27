@@ -1,5 +1,5 @@
 import { className, DELETE, INSERT, kebab, m, ns, style, svg, UPDATE, toVNode } from '../m';
-import { OLD_VNODE_FIELD, VDeltaOperationTypes } from '../types';
+import { OLD_VNODE_FIELD, VDeltaOperationTypes } from '../types/base';
 
 describe('.m', () => {
   it('should create empty vnode with tag', () => {

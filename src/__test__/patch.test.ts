@@ -3,7 +3,7 @@ import { childrenDriver } from '../drivers/children';
 import { propsDriver } from '../drivers/props';
 import { DELETE, INSERT, m, UPDATE } from '../m';
 import { compose, patch } from '../patch';
-import { VFlags } from '../types';
+import { VFlags } from '../types/base';
 
 describe('.patch', () => {
   it('should patch element with text as children', () => {
@@ -167,7 +167,7 @@ describe('.patch', () => {
     //   VFlags.ONLY_KEYED_CHILDREN,
     // );
     // patch(el, newVNode3, newVNode2);
-    // expect(el).toEqual(createElement(newVNode3));
+    // expect(patch(el, newVNode3, newVNode2)).toEqual(createElement(newVNode3));
 
     // const list4 = list3.reverse();
     // const newVNode4 = m(
@@ -176,8 +176,7 @@ describe('.patch', () => {
     //   list4.map((item) => m('li', { key: item }, [item])),
     //   VFlags.ONLY_KEYED_CHILDREN,
     // );
-    // patch(el, newVNode4, newVNode3);
-    // expect(el).toEqual(createElement(newVNode4));
+    // expect(patch(el, newVNode4, newVNode3)).toEqual(createElement(newVNode4));
   });
 
   it('should return new DOM node', () => {

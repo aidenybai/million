@@ -1,6 +1,14 @@
 import { createElement } from '../createElement';
 import { patch } from '../patch';
-import { DOMNode, VDelta, VDeltaOperationTypes, VElement, VFlags, VNode, VTask } from '../types';
+import {
+  DOMNode,
+  VDelta,
+  VDeltaOperationTypes,
+  VElement,
+  VFlags,
+  VNode,
+  VTask,
+} from '../types/base';
 
 /**
  * Diffs two VNode children and modifies the DOM node based on the necessary changes

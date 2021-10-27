@@ -1,4 +1,4 @@
-import { VDelta, VElement, VNode, VProps } from './index';
+import type { VDelta, VElement, VNode, VProps } from './base';
 
 export type JSXVNode = VNode | number | boolean | undefined | null;
 export type FC = (props?: VProps, children?: JSXVNode[], delta?: VDelta) => VElement;
