@@ -2,9 +2,9 @@
 // Please update scripts/fix-jsx-runtime.mjs accordingly.
 
 import { className, m, style, svg, VFlags } from './index';
-import { VDelta, VNode, VProps } from './types';
-import { JSX, JSXVNode, FC } from './types/jsx';
 import { kebab } from './m';
+import type { VDelta, VNode, VProps } from './types/base';
+import type { FC, JSX, JSXVNode } from './types/jsx';
 
 const h = (tag: string, props?: VProps, children?: JSXVNode[], delta?: VDelta) => {
   let flag = VFlags.NO_CHILDREN;

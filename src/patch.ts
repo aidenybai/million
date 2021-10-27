@@ -1,7 +1,7 @@
 import { createElement } from './createElement';
 import { childrenDriver } from './drivers/children';
 import { propsDriver } from './drivers/props';
-import { DOMNode, OLD_VNODE_FIELD, VCommit, VDriver, VElement, VNode, VTask } from './types';
+import { DOMNode, OLD_VNODE_FIELD, VCommit, VDriver, VElement, VNode, VTask } from './types/base';
 
 /**
  * Passes all of the tasks in a given array to a given callback function sequentially.

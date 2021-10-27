@@ -10,7 +10,7 @@ const config: Config.InitialOptions = {
   collectCoverageFrom: [
     '<rootDir>/src/**/*.ts',
     '!src/**/index.*',
-    '!src/**/types.ts',
+    '!src/**/types/*',
     '!src/**/schedule.ts',
     '!src/**/jsx.ts',
     '!src/**/patch.ts',

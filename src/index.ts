@@ -4,5 +4,5 @@ export * from './drivers/props';
 export * from './m';
 export * from './patch';
 export * from './schedule';
-export { OLD_VNODE_FIELD, VFlags } from './types';
-export type { VDelta, VElement, VNode, VProps } from './types';
+export { OLD_VNODE_FIELD, VFlags } from './types/base';
+export type { VDelta, VElement, VNode, VProps } from './types/base';

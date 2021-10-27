@@ -1,6 +1,6 @@
 import { createElement } from '../createElement';
 import { m } from '../m';
-import { OLD_VNODE_FIELD } from '../types';
+import { OLD_VNODE_FIELD } from '../types/base';
 
 describe('.createElement', () => {
   it('should create Text', () => {
