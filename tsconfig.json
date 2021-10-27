@@ -27,5 +27,5 @@
     "strict": true
   },
   "include": ["./**/*.ts", "./**/*.tsx"],
-  "exclude": ["node_modules", "dist", "./src/**/*.js", "./src/**/*.spec.ts"]
+  "exclude": ["node_modules", "dist", "./src/**/*.js", "./src/**/*.test.ts"]
 }
