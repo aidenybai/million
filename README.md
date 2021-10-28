@@ -1,6 +1,6 @@
 # <a href="https://million.js.org"><img src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/logo.svg" height="69" alt="Million Logo" aria-label="Million Logo" /></a>
 
-English | [简体中文](https://github.com/aidenybai/million/blob/main/README-zh_CN.md)
+English | [中文](https://github.com/aidenybai/million/blob/main/README-zh_CN.md)
 
 ### <1kb compiler-focused virtual DOM. It's fast!
 
