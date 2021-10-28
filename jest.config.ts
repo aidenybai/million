@@ -13,7 +13,6 @@ const config: Config.InitialOptions = {
     '!src/**/types/*',
     '!src/**/schedule.ts',
     '!src/**/jsx.ts',
-    '!src/**/patch.ts',
     '!src/**/drivers/*',
   ],
 };
