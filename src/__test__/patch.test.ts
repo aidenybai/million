@@ -34,6 +34,14 @@ describe('.patch', () => {
     document.body.textContent = '';
   });
 
+  it('should remove text', () => {
+    const el = createElement('foo');
+    document.body.appendChild(el);
+    patch(el, undefined, 'foo');
+    expect(document.body.firstChild?.nodeValue).toEqual(undefined);
+    document.body.textContent = '';
+  });
+
   it('should remove textContent if no children', () => {
     const el = createElement(m('div'));
 
@@ -194,5 +202,19 @@ describe('.patch', () => {
 
     expect((<HTMLElement>el2).id).toEqual('app');
     expect((<HTMLElement>el2).isEqualNode(el1)).toBeTruthy();
+  });
+
+  it('should hard replace if different tag', () => {
+    const el1 = createElement(m('div'));
+    const el2 = patch(el1, m('a'));
+
+    expect(el2).toEqual(document.createElement('a'));
+  });
+
+  it('should return el if ignore is set', () => {
+    const el1 = createElement(m('div', { ignore: true }));
+    const el2 = patch(el1, m('a'));
+
+    expect(el2).toEqual(el1);
   });
 });
