@@ -6,9 +6,17 @@ import { kebab } from './m';
 import type { VDelta, VNode, VProps } from './types/base';
 import type { FC, JSX, JSXVNode } from './types/jsx';
 
-const h = (tag: string, props?: VProps, children?: JSXVNode[], delta?: VDelta) => {
+const h = (tag: string, props?: VProps, ...children: JSXVNode[]) => {
   let flag = VFlags.NO_CHILDREN;
+  let delta: VDelta | undefined;
   const normalizedChildren: VNode[] = [];
+  if (props) {
+    const rawDelta = <VDelta>(<unknown>props.delta);
+    if (rawDelta && rawDelta.length) {
+      delta = rawDelta;
+      delete props.delta;
+    }
+  }
   if (children) {
     children = Array.isArray(children) ? children : [children];
     const keysInChildren = new Set();
@@ -18,7 +26,7 @@ const h = (tag: string, props?: VProps, children?: JSXVNode[], delta?: VDelta) =
     if (children.every((child) => typeof child === 'string')) {
       flag = VFlags.ONLY_TEXT_CHILDREN;
     }
-    for (let i = 0; i < children.length; i++) {
+    for (let i = 0; i < children.length; ++i) {
       if (
         children[i] !== undefined &&
         children[i] !== null &&
@@ -32,7 +40,7 @@ const h = (tag: string, props?: VProps, children?: JSXVNode[], delta?: VDelta) =
           if (subChildren[i] || subChildren[i] === '') {
             normalizedChildren.push(subChildren[i]);
             if (typeof subChildren[i] === 'object') {
-              if (!hasVElementChildren) hasVElementChildren = true;
+              hasVElementChildren = true;
               if (typeof subChildren[i].key === 'string' && subChildren[i].key !== '') {
                 keysInChildren.add(subChildren[i].key);
               }
@@ -84,25 +92,16 @@ const normalize = (jsxVNode: JSXVNode): VNode | VNode[] | undefined => {
 };
 
 const jsx = (tag: string | FC, props?: VProps, key?: string | null): VNode => {
-  let delta: VDelta | undefined;
+  if (typeof tag === 'function') return tag(props, key);
   let children: JSXVNode[] = [];
   if (props) {
-    const rawDelta = <VDelta>(<unknown>props.delta);
-    if (props.delta && rawDelta.length > 0) {
-      delta = rawDelta;
-      delete props.delta;
-    }
     if (props.children) {
       children = <JSXVNode[]>(<unknown>props.children);
       delete props.children;
     }
     if (key) props.key = key;
   }
-  if (typeof tag === 'function') {
-    return tag(props, children, delta);
-  } else {
-    return h(tag, props, children, delta);
-  }
+  return h(tag, props, ...children);
 };
 
 const Fragment = (props?: VProps): VNode[] | undefined => <VNode[] | undefined>props?.children;
