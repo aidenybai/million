@@ -4,7 +4,7 @@ import { VDriver, VElement, VProps, VTask } from '../types/base';
  * Diffs two VNode props and modifies the DOM node based on the necessary changes
  */
 export const propsDriver =
-  (...drivers: VDriver[]): VDriver =>
+  (): VDriver =>
   // @ts-expect-error Subset of VDriver
   (
     el: HTMLElement | SVGElement,
@@ -12,18 +12,6 @@ export const propsDriver =
     oldVNode?: VElement,
     workStack: VTask[] = [],
   ): ReturnType<VDriver> => {
-    const finish = () => {
-      for (let i = 0; i < drivers.length; ++i) {
-        drivers[i](el, newVNode, oldVNode, workStack);
-      }
-      return {
-        el,
-        newVNode,
-        oldVNode,
-        workStack,
-      };
-    };
-
     const oldProps: VProps = oldVNode?.props ?? {};
     const newProps: VProps = newVNode.props ?? {};
 
@@ -56,5 +44,10 @@ export const propsDriver =
       }
     }
 
-    return finish();
+    return {
+      el,
+      newVNode,
+      oldVNode,
+      workStack,
+    };
   };
