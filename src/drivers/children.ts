@@ -15,7 +15,7 @@ import {
  * Diffs two VNode children and modifies the DOM node based on the necessary changes
  */
 export const childrenDriver =
-  (...drivers: VDriver[]): VDriver =>
+  (): VDriver =>
   // @ts-expect-error Subset of VDriver
   (
     el: HTMLElement | SVGElement,
@@ -23,16 +23,11 @@ export const childrenDriver =
     oldVNode?: VElement,
     workStack: VTask[] = [],
   ): ReturnType<VDriver> => {
-    const finish = () => {
-      for (let i = 0; i < drivers.length; ++i) {
-        drivers[i](el, newVNode, oldVNode, workStack);
-      }
-      return {
-        el,
-        newVNode,
-        oldVNode,
-        workStack,
-      };
+    const data = {
+      el,
+      newVNode,
+      oldVNode,
+      workStack,
     };
 
     const oldVNodeChildren: VNode[] = oldVNode?.children ?? [];
@@ -65,17 +60,17 @@ export const childrenDriver =
             break;
         }
       }
-      return finish();
+      return data;
     }
 
     // Flags allow for greater optimizability by reducing condition branches.
     // Generally, you should use a compiler to generate these flags, but
     // hand-writing them is also possible
     if (!newVNodeChildren || newVNode.flag === VFlags.NO_CHILDREN) {
-      if (!oldVNodeChildren) return finish();
+      if (!oldVNodeChildren) return data;
 
       workStack.push(() => (el.textContent = ''));
-      return finish();
+      return data;
     }
     if (newVNode.flag === undefined || newVNode.flag === VFlags.ANY_CHILDREN) {
       if (oldVNodeChildren) {
@@ -90,11 +85,11 @@ export const childrenDriver =
         const node = createElement(newVNodeChildren[i], false);
         workStack.push(() => el.appendChild(node));
       }
-      return finish();
+      return data;
     }
     if (newVNode.flag === VFlags.ONLY_TEXT_CHILDREN) {
       workStack.push(() => (el.textContent = newVNode.children!.join('')));
-      return finish();
+      return data;
     }
     if (newVNode.flag === VFlags.ONLY_KEYED_CHILDREN) {
       let oldHead = 0;
@@ -174,8 +169,8 @@ export const childrenDriver =
           workStack.push(() => el.removeChild(node));
         }
       }
-      return finish();
+      return data;
     }
 
-    return finish();
+    return data;
   };
