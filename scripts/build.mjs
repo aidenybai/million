@@ -1,7 +1,6 @@
 #!/usr/bin/env zx
 import 'zx/globals';
 import { info, success } from './helpers.mjs';
-$.verbose = false;
 
 await $`rm -rf dist/*`;
 await $`rollup -c`;
