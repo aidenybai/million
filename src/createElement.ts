@@ -2,6 +2,8 @@ import { propsDriver } from './drivers/props';
 import { flushWorkStack } from './patch';
 import { DOMNode, OLD_VNODE_FIELD, VNode } from './types/base';
 
+const patchProps = propsDriver();
+
 /**
  * Creates an Element from a VNode
  */
@@ -12,7 +14,7 @@ export const createElement = (vnode: VNode, attachField = true): DOMNode => {
     ? <SVGElement>document.createElementNS(<string>vnode.props?.ns, vnode.tag)
     : <HTMLElement>document.createElement(vnode.tag);
 
-  flushWorkStack(propsDriver(el, vnode));
+  flushWorkStack(patchProps(el, vnode).workStack);
 
   if (vnode.children) {
     for (let i = 0; i < vnode.children.length; ++i) {

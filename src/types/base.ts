@@ -11,11 +11,16 @@ export type VTask = () => void;
 export type VCommit = (task: VTask) => void;
 
 export type VDriver = (
-  el: HTMLElement | SVGElement,
-  newVNode: VElement,
-  oldVNode?: VElement,
+  el: DOMNode,
+  newVNode: VNode,
+  oldVNode?: VNode,
   workStack?: VTask[],
-) => VTask[];
+) => {
+  el: DOMNode;
+  newVNode: VNode;
+  oldVNode?: VNode;
+  workStack?: VTask[];
+};
 
 export interface VElement {
   tag: string;
