@@ -47,7 +47,7 @@ describe('.patch', () => {
 
     el.textContent = 'foo';
 
-    patch(el, m('div', undefined, undefined, 0));
+    patch(el, m('div', undefined, undefined, VFlags.NO_CHILDREN));
 
     expect(el.textContent).toEqual('');
   });

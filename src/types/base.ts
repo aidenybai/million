@@ -32,12 +32,12 @@ export interface VElement {
 }
 
 export enum VFlags {
-  NO_CHILDREN = 0,
-  ONLY_TEXT_CHILDREN = 1,
-  ONLY_KEYED_CHILDREN = 2,
-  ANY_CHILDREN = 3,
-  REPLACE_NODE = 4,
-  IGNORE_NODE = 5,
+  IGNORE_NODE = 0,
+  REPLACE_NODE = 1,
+  NO_CHILDREN = 2,
+  ONLY_TEXT_CHILDREN = 3,
+  ONLY_KEYED_CHILDREN = 4,
+  ANY_CHILDREN = 5,
 }
 
 export const enum VDeltaOperationTypes {
