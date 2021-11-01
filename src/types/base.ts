@@ -36,6 +36,8 @@ export enum VFlags {
   ONLY_TEXT_CHILDREN = 1,
   ONLY_KEYED_CHILDREN = 2,
   ANY_CHILDREN = 3,
+  REPLACE_NODE = 4,
+  IGNORE_NODE = 5,
 }
 
 export const enum VDeltaOperationTypes {
