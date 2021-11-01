@@ -212,11 +212,4 @@ describe('.patch', () => {
 
     expect(el2).toEqual(document.createElement('a'));
   });
-
-  it('should return el if ignore is set', () => {
-    const el1 = createElement(m('div', { ignore: true }));
-    const el2 = patch(el1, m('a'));
-
-    expect(el2).toEqual(el1);
-  });
 });
