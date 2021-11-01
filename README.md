@@ -2,9 +2,11 @@
 
 English | [中文](https://github.com/aidenybai/million/blob/main/README-zh_CN.md)
 
-### <1kb compiler-focused virtual DOM. It's fast!
+### <1kb _meta_<sup>1</sup> virtual DOM. It's fast!
 
 Current Virtual DOM implementations are inadequate—Ranging from overcomplicated to abandoned, most are unusable without sacrificing raw performance and size. Million aims to fix this, providing a library-agnostic Virtual DOM to serve as the core for Javascript libraries that focus on precompilation and static analysis.
+
+<sup>1</sup> _meta = ["Most Effective Tactic Available"](https://www.grammarly.com/blog/meta-meaning/#:~:text=Meta%20can%20be%20used%20as,or%20beat%20the%20game%20itself.)_
 
 [![CI](https://img.shields.io/github/workflow/status/aidenybai/million/CI?color=FF524C&labelColor=000&style=flat-square&label=build)](https://img.shields.io/github/workflow/status/aidenybai/million)
 ![Code Size](https://badgen.net/badgesize/brotli/https/unpkg.com/million/dist/code-size-measurement.js?style=flat-square&label=size&color=FF524C&labelColor=000) [![NPM Version](https://img.shields.io/npm/v/million?style=flat-square&color=FF524C&labelColor=000)](https://www.npmjs.com/package/million) ![Code Coverage](https://img.shields.io/coveralls/github/aidenybai/million?color=FF524C&labelColor=000&style=flat-square)
