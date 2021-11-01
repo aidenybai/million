@@ -5,4 +5,14 @@ export * from './m';
 export * from './patch';
 export * from './schedule';
 export { OLD_VNODE_FIELD, VFlags } from './types/base';
-export type { VDelta, VElement, VNode, VProps } from './types/base';
+export type {
+  DOMNode,
+  VCommit,
+  VDelta,
+  VDeltaOperation,
+  VDriver,
+  VElement,
+  VNode,
+  VProps,
+  VTask,
+} from './types/base';
