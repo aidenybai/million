@@ -1,3 +1,5 @@
+import { compose, childrenDriver, flushWorkStack } from '../src/index';
+
 const adjectives = [
   'pretty',
   'large',
@@ -71,4 +73,11 @@ export const buildData = (count) => {
     };
   }
   return data;
+};
+
+export const patch = (el, newVNode, oldVNode, workStack = []) => {
+  const composeDriver = compose([childrenDriver()]);
+  const data = composeDriver(el, newVNode, oldVNode, workStack);
+  flushWorkStack(data.workStack);
+  return data.el;
 };
