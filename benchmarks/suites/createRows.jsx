@@ -6,12 +6,11 @@
 import * as simple_virtual_dom from 'simple-virtual-dom';
 import * as snabbdom from 'snabbdom';
 import * as virtual_dom from 'virtual-dom';
-import { childrenDriver, compose, createElement } from '../../src/index';
+import { createElement } from '../../src/index';
 import { Suite, vnodeAdapter } from '../benchmark';
-import { buildData } from '../data';
+import { buildData, patch } from '../data';
 import * as tiny_vdom from '../tiny-vdom';
 
-const patch = compose([childrenDriver]);
 const data = buildData(10000);
 const oldVNode = <table></table>;
 const el = () => createElement(oldVNode);
