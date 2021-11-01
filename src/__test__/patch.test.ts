@@ -2,7 +2,7 @@ import { createElement } from '../createElement';
 import { childrenDriver } from '../drivers/children';
 import { propsDriver } from '../drivers/props';
 import { DELETE, INSERT, m, UPDATE } from '../m';
-import { compose, patch } from '../patch';
+import { compose, flushWorkStack, patch } from '../patch';
 import { VFlags } from '../types/base';
 
 describe('.patch', () => {
@@ -197,11 +197,13 @@ describe('.patch', () => {
 
   it('should compose a custom patch', () => {
     const el1 = createElement(m('div'));
-    const customPatch = compose([propsDriver, childrenDriver]);
-    const el2 = customPatch(el1, m('div', { id: 'app' }));
+    const customPatch = compose([propsDriver(), childrenDriver()]);
+    const data = customPatch(el1, m('div', { id: 'app' }));
 
-    expect((<HTMLElement>el2).id).toEqual('app');
-    expect((<HTMLElement>el2).isEqualNode(el1)).toBeTruthy();
+    flushWorkStack(data.workStack);
+
+    expect((<HTMLElement>data.el).id).toEqual('app');
+    expect((<HTMLElement>data.el).isEqualNode(el1)).toBeTruthy();
   });
 
   it('should hard replace if different tag', () => {
