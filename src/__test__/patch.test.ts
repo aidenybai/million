@@ -47,7 +47,7 @@ describe('.patch', () => {
 
     el.textContent = 'foo';
 
-    patch(el, m('div', undefined, undefined, 0));
+    patch(el, m('div', undefined, undefined, VFlags.NO_CHILDREN));
 
     expect(el.textContent).toEqual('');
   });
@@ -211,12 +211,5 @@ describe('.patch', () => {
     const el2 = patch(el1, m('a'));
 
     expect(el2).toEqual(document.createElement('a'));
-  });
-
-  it('should return el if ignore is set', () => {
-    const el1 = createElement(m('div', { ignore: true }));
-    const el2 = patch(el1, m('a'));
-
-    expect(el2).toEqual(el1);
   });
 });
