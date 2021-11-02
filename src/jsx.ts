@@ -18,7 +18,6 @@ const h = (tag: string, props?: VProps, ...children: JSXVNode[]) => {
     }
   }
   if (children) {
-    children = Array.isArray(children) ? children : [children];
     const keysInChildren = new Set();
     let hasVElementChildren = false;
     flag = VFlags.ANY_CHILDREN;
@@ -100,7 +99,7 @@ const jsx = (tag: string | FC, props?: VProps, key?: string | null): VNode => {
   let children: JSXVNode[] = [];
   if (props) {
     if (props.children) {
-      children = <JSXVNode[]>(<unknown>props.children);
+      children = Array.isArray(children) ? children : [children];
       delete props.children;
     }
     if (key) props.key = key;
