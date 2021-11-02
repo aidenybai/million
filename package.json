@@ -1,7 +1,7 @@
 {
   "name": "million",
   "version": "0.6.8",
-  "description": "<1kb meta virtual DOM. It's fast!",
+  "description": "<1kb compiler-based virtual DOM. It's fast!",
   "main": "dist/million.umd.js",
   "module": "dist/million.esm.js",
   "jsdelivr": "dist/million.esm.js",
