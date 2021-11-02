@@ -13,7 +13,7 @@ authors:
   - family-names: Bai
     given-names: Aiden
     orcid: https://orcid.org/0000-0002-3676-3726
-title: "Million.js: <1kb compiler-based virtual DOM. It's fast!"
+title: "Million.js: <1kb compiler-focused virtual DOM. It's fast!"
 version: ${version}
 date-released: 2021-7-27`,
   );
