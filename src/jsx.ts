@@ -99,7 +99,7 @@ const jsx = (tag: string | FC, props?: VProps, key?: string | null): VNode => {
   let children: JSXVNode[] = [];
   if (props) {
     if (props.children) {
-      children = Array.isArray(children) ? children : [children];
+      children = <JSXVNode[]>(Array.isArray(props.children) ? props.children : [props.children]);
       delete props.children;
     }
     if (key) props.key = key;
