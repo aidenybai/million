@@ -30,6 +30,13 @@ export const childrenDriver =
       workStack,
     };
 
+    if (newVNode.flag === VFlags.IGNORE_NODE) return data;
+
+    if (newVNode.flag === VFlags.REPLACE_NODE) {
+      el.replaceWith(createElement(newVNode));
+      return data;
+    }
+
     const oldVNodeChildren: VNode[] = oldVNode?.children ?? [];
     const newVNodeChildren: VNode[] | undefined = newVNode.children;
     const delta: VDelta | undefined = newVNode.delta;
