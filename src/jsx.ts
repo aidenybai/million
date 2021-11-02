@@ -57,6 +57,10 @@ const h = (tag: string, props?: VProps, ...children: JSXVNode[]) => {
     }
   }
   if (props) {
+    if (typeof props.flag === 'number') {
+      flag = <VFlags>(<unknown>props.flag);
+      delete props.flag;
+    }
     if (typeof props.className === 'object') {
       props.className = className(<Record<string, boolean>>(<unknown>props.className));
     }
