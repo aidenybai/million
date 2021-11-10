@@ -3,7 +3,7 @@ import { VDriver, VElement, VProps, VTask } from '../types/base';
 /**
  * Diffs two VNode props and modifies the DOM node based on the necessary changes
  */
-export const propsDriver =
+export const Props =
   (): VDriver =>
   // @ts-expect-error Subset of VDriver
   (

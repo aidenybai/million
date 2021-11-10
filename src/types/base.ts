@@ -15,11 +15,13 @@ export type VDriver = (
   newVNode: VNode,
   oldVNode?: VNode,
   workStack?: VTask[],
+  driver?: VDriver,
 ) => {
   el: DOMNode;
   newVNode: VNode;
   oldVNode?: VNode;
   workStack?: VTask[];
+  driver?: VDriver;
 };
 
 export interface VElement {

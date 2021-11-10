@@ -1,5 +1,4 @@
 import { createElement } from '../createElement';
-import { patch } from '../patch';
 import {
   DOMNode,
   VDelta,
@@ -14,7 +13,7 @@ import {
 /**
  * Diffs two VNode children and modifies the DOM node based on the necessary changes
  */
-export const childrenDriver =
+export const Children =
   (): VDriver =>
   // @ts-expect-error Subset of VDriver
   (
@@ -22,7 +21,10 @@ export const childrenDriver =
     newVNode: VElement,
     oldVNode?: VElement,
     workStack: VTask[] = [],
+    driver?: VDriver,
   ): ReturnType<VDriver> => {
+    const diff = (el: DOMNode, newVNode: VNode, oldVNode?: VNode) =>
+      driver!(el, newVNode, oldVNode, workStack).workStack!;
     const data = {
       el,
       newVNode,
@@ -56,7 +58,7 @@ export const childrenDriver =
             );
             break;
           case VDeltaOperationTypes.UPDATE:
-            patch(
+            workStack = diff(
               <DOMNode>child,
               newVNodeChildren![deltaPosition],
               oldVNodeChildren[deltaPosition],
@@ -84,7 +86,7 @@ export const childrenDriver =
         // Interates backwards, so in case a childNode is destroyed, it will not shift the nodes
         // and break accessing by index
         for (let i = oldVNodeChildren.length - 1; i >= 0; --i) {
-          patch(<DOMNode>el.childNodes[i], newVNodeChildren[i], oldVNodeChildren[i]);
+          workStack = diff(<DOMNode>el.childNodes[i], newVNodeChildren[i], oldVNodeChildren[i]);
         }
       }
 
