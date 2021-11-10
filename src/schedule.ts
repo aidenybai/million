@@ -25,7 +25,7 @@ export const shouldYield = (): boolean =>
 /**
  * Iterates through stack and runs tasks, defer to next tick if main thread is blocked
  */
-export const flush = (): void => {
+export const flushWorkStack = (): void => {
   deadline = performance.now() + DEADLINE_THRESHOLD;
   while (!shouldYield()) {
     const task = workStack.shift();
@@ -44,7 +44,7 @@ export const nextTick = (): void => {
     // Promise-based solution is by far the fastest solution
     // when compared with MessageChannel (decent) and setTimeout (bad)
     queueMicrotask(() => {
-      resolvedPromise.then(flush);
+      resolvedPromise.then(flushWorkStack);
       queued = true;
     });
   }

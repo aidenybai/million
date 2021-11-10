@@ -1,8 +1,9 @@
 import { createElement } from '../createElement';
-import { childrenDriver } from '../drivers/children';
-import { propsDriver } from '../drivers/props';
+import { Children } from '../drivers/children';
+import { Props } from '../drivers/props';
+import { Node } from '../drivers/node';
 import { DELETE, INSERT, m, UPDATE } from '../m';
-import { compose, flushWorkStack, patch } from '../patch';
+import { flush, patch } from '../patch';
 import { VFlags } from '../types/base';
 
 describe('.patch', () => {
@@ -197,10 +198,10 @@ describe('.patch', () => {
 
   it('should compose a custom patch', () => {
     const el1 = createElement(m('div'));
-    const customPatch = compose([propsDriver(), childrenDriver()]);
-    const data = customPatch(el1, m('div', { id: 'app' }));
+    const diff = Node([Props(), Children()]);
+    const data = diff(el1, m('div', { id: 'app' }));
 
-    flushWorkStack(data.workStack);
+    flush(data.workStack);
 
     expect((<HTMLElement>data.el).id).toEqual('app');
     expect((<HTMLElement>data.el).isEqualNode(el1)).toBeTruthy();

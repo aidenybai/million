@@ -1,4 +1,4 @@
-import { compose, childrenDriver, flushWorkStack } from '../src/index';
+import { Driver, flush } from '../src/index';
 
 const adjectives = [
   'pretty',
@@ -76,8 +76,8 @@ export const buildData = (count) => {
 };
 
 export const patch = (el, newVNode, oldVNode, workStack = []) => {
-  const composeDriver = compose([childrenDriver()]);
-  const data = composeDriver(el, newVNode, oldVNode, workStack);
-  flushWorkStack(data.workStack);
+  const diff = Driver.Node([Driver]);
+  const data = diff(el, newVNode, oldVNode, workStack);
+  flush(data.workStack);
   return data.el;
 };
