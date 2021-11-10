@@ -76,7 +76,7 @@ export const buildData = (count) => {
 };
 
 export const patch = (el, newVNode, oldVNode, workStack = []) => {
-  const diff = Driver.Node([Driver]);
+  const diff = Driver.Node([Driver.Children()]);
   const data = diff(el, newVNode, oldVNode, workStack);
   flush(data.workStack);
   return data.el;
