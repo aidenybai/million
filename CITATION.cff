@@ -1,9 +1,9 @@
 cff-version: 1.1.0
-message: "If you use this software, please cite it as below."
+message: 'If you use this software, please cite it as below.'
 authors:
   - family-names: Bai
     given-names: Aiden
     orcid: https://orcid.org/0000-0002-3676-3726
-title: "Million.js: <1kb compiler-focused virtual DOM. It's fast!"
+title: "Million.js: <1kb compiler-augmented virtual DOM. It's fast!"
 version: 0.7.0
 date-released: 2021-7-27

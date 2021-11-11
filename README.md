@@ -2,7 +2,7 @@
 
 English | [中文](https://github.com/aidenybai/million/blob/main/README-zh_CN.md)
 
-### <1kb compiler-focused virtual DOM. It's fast!
+### <1kb compiler-augmented virtual DOM. It's fast!
 
 Current Virtual DOM implementations are inadequate—Ranging from overcomplicated to abandoned, most are unusable without sacrificing raw performance and size. Million aims to fix this, providing a library-agnostic Virtual DOM to serve as the core for Javascript libraries that focus on precompilation and static analysis.
 
