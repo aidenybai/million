@@ -1,8 +1,8 @@
-import { Props } from './drivers/props';
+import { props } from './drivers/props';
 import { flush } from './patch';
 import { DOMNode, OLD_VNODE_FIELD, VNode } from './types/base';
 
-const diffProps = Props();
+const diffProps = props();
 
 /**
  * Creates an Element from a VNode

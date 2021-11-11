@@ -1,12 +1,6 @@
-import { Children } from './drivers/children';
-import { Node } from './drivers/node';
-import { Props } from './drivers/props';
-
-export const Driver = {
-  Children,
-  Props,
-  Node,
-};
+export * from './drivers/children';
+export * from './drivers/node';
+export * from './drivers/props';
 export * from './createElement';
 export * from './m';
 export * from './patch';

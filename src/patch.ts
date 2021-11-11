@@ -1,6 +1,6 @@
-import { Children } from './drivers/children';
-import { Node } from './drivers/node';
-import { Props } from './drivers/props';
+import { children } from './drivers/children';
+import { node } from './drivers/node';
+import { props } from './drivers/props';
 import { DOMNode, VCommit, VNode, VTask } from './types/base';
 
 /**
@@ -23,7 +23,7 @@ export const patch = (
   oldVNode?: VNode,
   workStack: VTask[] = [],
 ): DOMNode => {
-  const diff = Node([Children(), Props()]);
+  const diff = node([children(), props()]);
   const data = diff(el, newVNode, oldVNode, workStack);
   flush(data.workStack);
   return data.el;
