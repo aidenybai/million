@@ -13,7 +13,7 @@ import {
 /**
  * Diffs two VNode children and modifies the DOM node based on the necessary changes
  */
-export const Children =
+export const children =
   (): VDriver =>
   // @ts-expect-error Subset of VDriver
   (

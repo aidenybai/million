@@ -1,7 +1,7 @@
 import { createElement } from '../createElement';
-import { Children } from '../drivers/children';
-import { Props } from '../drivers/props';
-import { Node } from '../drivers/node';
+import { children } from '../drivers/children';
+import { props } from '../drivers/props';
+import { node } from '../drivers/node';
 import { DELETE, INSERT, m, UPDATE } from '../m';
 import { flush, patch } from '../patch';
 import { VFlags } from '../types/base';
@@ -198,7 +198,7 @@ describe('.patch', () => {
 
   it('should compose a custom patch', () => {
     const el1 = createElement(m('div'));
-    const diff = Node([Props(), Children()]);
+    const diff = node([props(), children()]);
     const data = diff(el1, m('div', { id: 'app' }));
 
     flush(data.workStack);

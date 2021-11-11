@@ -9,7 +9,7 @@ specifiers:
   '@rollup/plugin-node-resolve': 13.0.5
   '@rollup/plugin-strip': ^2.1.0
   '@swc-node/jest': ^1.4.0
-  '@testing-library/dom': ^8.11.0
+  '@testing-library/dom': ^8.11.1
   '@types/glob': ^7.2.0
   '@types/jest': ^27.0.2
   '@types/node': ^16.11.7
@@ -48,7 +48,7 @@ devDependencies:
   '@rollup/plugin-node-resolve': 13.0.5_rollup@2.58.0
   '@rollup/plugin-strip': 2.1.0_rollup@2.58.0
   '@swc-node/jest': 1.4.0
-  '@testing-library/dom': 8.11.0
+  '@testing-library/dom': 8.11.1
   '@types/glob': 7.2.0
   '@types/jest': 27.0.2
   '@types/node': 16.11.7
@@ -2144,8 +2144,8 @@ packages:
       '@swc/core-win32-x64-msvc': 1.2.107
     dev: true
 
-  /@testing-library/dom/8.11.0:
-    resolution: {integrity: sha512-8Ay4UDiMlB5YWy+ZvCeRyFFofs53ebxrWnOFvCoM1HpMAX4cHyuSrCuIM9l2lVuUWUt+Gr3loz/nCwdrnG6ShQ==}
+  /@testing-library/dom/8.11.1:
+    resolution: {integrity: sha512-3KQDyx9r0RKYailW2MiYrSSKEfH0GTkI51UGEvJenvcoDoeRYs0PZpi2SXqtnMClQvCqdtTTpOfFETDTVADpAg==}
     engines: {node: '>=12'}
     dependencies:
       '@babel/code-frame': 7.16.0
@@ -2939,7 +2939,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001279
-      electron-to-chromium: 1.3.893
+      electron-to-chromium: 1.3.894
       escalade: 3.1.1
       nanocolors: 0.1.12
       node-releases: 1.1.77
@@ -2951,7 +2951,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001279
-      electron-to-chromium: 1.3.893
+      electron-to-chromium: 1.3.894
       escalade: 3.1.1
       node-releases: 2.0.1
       picocolors: 1.0.0
@@ -3499,8 +3499,8 @@ packages:
       safer-buffer: 2.1.2
     dev: true
 
-  /electron-to-chromium/1.3.893:
-    resolution: {integrity: sha512-ChtwF7qB03INq1SyMpue08wc6cve+ktj2UC/Y7se9vB+JryfzziJeYwsgb8jLaCA5GMkHCdn5M62PfSMWhifZg==}
+  /electron-to-chromium/1.3.894:
+    resolution: {integrity: sha512-WY8pA4irAZ4cm/Pr7YFPtPLVqj3nU6d0SbfoHF6M7HZNONfPdAnYAarumqQ75go2LuN72uO9wGuCEqnfya/ytg==}
     dev: true
 
   /emittery/0.8.1:

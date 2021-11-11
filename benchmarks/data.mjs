@@ -1,4 +1,4 @@
-import { Driver, flush } from '../src/index';
+import { node, children, flush } from '../src/index';
 
 const adjectives = [
   'pretty',
@@ -76,7 +76,7 @@ export const buildData = (count) => {
 };
 
 export const patch = (el, newVNode, oldVNode, workStack = []) => {
-  const diff = Driver.Node([Driver.Children()]);
+  const diff = node([children()]);
   const data = diff(el, newVNode, oldVNode, workStack);
   flush(data.workStack);
   return data.el;
