@@ -15,7 +15,7 @@ const collapseSharedTypes = (content) => {
   */
   const delimiter = 'type JSXVNode';
   const [, types] = content.split(delimiter);
-  return `import { VDelta, VElement, VNode, VProps } from './million';
+  return `import { VDeltaOperation, VElement, VNode, VProps } from './million';
   ${delimiter}${types}`;
 };
 
