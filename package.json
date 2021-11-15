@@ -76,7 +76,7 @@
     "@rollup/plugin-eslint": "^8.0.1",
     "@rollup/plugin-node-resolve": "13.0.5",
     "@rollup/plugin-strip": "^2.1.0",
-    "@swc-node/jest": "^1.4.0",
+    "@swc-node/jest": "^1.4.1",
     "@testing-library/dom": "^8.11.1",
     "@types/glob": "^7.2.0",
     "@types/jest": "^27.0.2",
