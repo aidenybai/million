@@ -33,6 +33,7 @@ export const props =
           workStack.push(() => (el[propName] = newPropValue));
         } else {
           workStack.push(() => {
+            el[propName] = '';
             el.removeAttribute(propName);
             delete el[propName];
           });
