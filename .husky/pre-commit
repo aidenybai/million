@@ -18,7 +18,7 @@ function success {
 
 info "Updating packages..."
 
-pnpm up
+pnpm up --latest
 pnpm i
 
 git stage package.json
