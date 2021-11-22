@@ -68,7 +68,7 @@ _Why is it called "Million"? The name originated with the goal of being able to 
 
 ## License
 
-Million is [MIT-licensed](LICENSE) open-source software by [Aiden Bai](https://github.com/aidenybai).
+Million is [MIT-licensed](LICENSE) open-source software and [research](https://github.com/aidenybai/million/blob/main/.github/RESEARCH.md) by [Aiden Bai](https://github.com/aidenybai).
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Faidenybai%2Fmillion.svg?type=small)](https://app.fossa.com/projects/git%2Bgithub.com%2Faidenybai%2Fmillion?ref=badge_large)
 
