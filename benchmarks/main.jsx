@@ -1,4 +1,4 @@
-import 'github-markdown-css/github-markdown.css';
+import 'kumiko/dist/kumiko.css';
 import './style.css';
 
 import { createElement, patch } from '../src/index';
@@ -38,20 +38,6 @@ const suites = [
       localStorage.logs = JSON.stringify([...logs, ...history]);
     }),
 );
-
-const generateLogMarkdown = () =>
-  `Benchmarks compiled on \`${new Date().toLocaleString()}\`\n\n**UA:** ${
-    navigator.userAgent
-  }\n\n---\n\n${[...logs]
-    .map((logGroup) => {
-      const logGroupCopy = [...logGroup];
-      const title = logGroupCopy.shift();
-      return `${title.replace('Running: ', '').split(' - ')[0]}\n\n\`\`\`\n${logGroupCopy.join(
-        '\n',
-      )}\n\`\`\`\n`;
-    })
-    .join('\n')}`;
-
 const vnode = () => (
   <div>
     {suites.map((suite) => {
@@ -72,70 +58,18 @@ const vnode = () => (
       );
     })}
     <details open={!!logs.length} style={{ paddingTop: '20px' }}>
-      <summary key="logs">
-        Logs{' '}
-        <button
-          onclick={() => {
-            logs.length = 0;
-            localStorage.logs = JSON.stringify(history);
-            patch(el, vnode());
-          }}
-        >
-          🗑️
-        </button>{' '}
-        <button
-          onclick={async () => {
-            navigator.clipboard.writeText(generateLogMarkdown());
-          }}
-        >
-          📋
-        </button>
-      </summary>
+      <summary key="logs">Logs</summary>
 
       <div style={{ paddingTop: '20px' }}>
-        {logs.map(
-          (logGroup) =>
-            logGroup.length && (
-              <pre>
-                <code>{logGroup.join('\n')}</code>
-              </pre>
-            ),
-        )}
+        {logs.map((logGroup) => logGroup.length && <pre>{logGroup.join('\n')}</pre>)}
       </div>
     </details>
 
     {history.length ? (
       <details style={{ paddingTop: '20px', opacity: 0.5 }}>
-        <summary key="history">
-          History{' '}
-          <button
-            onclick={() => {
-              history.length = 0;
-              delete localStorage.logs;
-              patch(el, vnode());
-            }}
-          >
-            🗑️
-          </button>{' '}
-          <button
-            onclick={async () => {
-              navigator.clipboard.writeText(generateLogMarkdown());
-            }}
-          >
-            📋
-          </button>
-        </summary>
+        <summary key="history">History</summary>
 
-        <div>
-          {history.map(
-            (logGroup) =>
-              logGroup.length && (
-                <pre>
-                  <code>{logGroup.join('\n')}</code>
-                </pre>
-              ),
-          )}
-        </div>
+        <div>{history.map((logGroup) => logGroup.length && <pre>{logGroup.join('\n')}</pre>)}</div>
       </details>
     ) : (
       ''
