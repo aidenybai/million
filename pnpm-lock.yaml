@@ -16,6 +16,7 @@ specifiers:
   '@typescript-eslint/eslint-plugin': ^5.4.0
   '@typescript-eslint/parser': ^5.4.0
   benchmark: ^2.1.4
+  chart.js: ^3.6.0
   eslint: ^8.3.0
   eslint-config-prettier: ^8.3.0
   glob: ^7.2.0
@@ -56,6 +57,7 @@ devDependencies:
   '@typescript-eslint/eslint-plugin': 5.4.0_5c8ff4cecd5a55e744866c0654edac32
   '@typescript-eslint/parser': 5.4.0_eslint@8.3.0+typescript@4.5.2
   benchmark: 2.1.4
+  chart.js: 3.6.0
   eslint: 8.3.0
   eslint-config-prettier: 8.3.0_eslint@8.3.0
   glob: 7.2.0
@@ -3018,6 +3020,10 @@ packages:
   /char-regex/1.0.2:
     resolution: {integrity: sha512-kWWXztvZ5SBQV+eRgKFeh8q5sLuZY2+8WUIzlxWVTg+oGwY14qylx1KbKzHd8P6ZYkAg0xyIDU9JMHhyJMZ1jw==}
     engines: {node: '>=10'}
+    dev: true
+
+  /chart.js/3.6.0:
+    resolution: {integrity: sha512-iOzzDKePL+bj+ccIsVAgWQehCXv8xOKGbaU2fO/myivH736zcx535PGJzQGanvcSGVOqX6yuLZsN3ygcQ35UgQ==}
     dev: true
 
   /chownr/2.0.0:
