@@ -37,3 +37,7 @@
     padding: 15px;
   }
 }
+:root {
+  --color-accent: #4e2372;
+  --links: #4e2372;
+}
