@@ -1,6 +1,3 @@
-import 'kumiko/dist/kumiko.css';
-import './style.css';
-
 import { createElement, patch } from '../src/index';
 import Chart from 'chart.js/auto';
 
