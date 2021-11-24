@@ -125,7 +125,7 @@ const vnode = () => (
 
     <br />
 
-    <details open>
+    <details open={!!logs.length}>
       <summary>Graph (Cumulative)</summary>
       <canvas id="viz" width="400" height="200"></canvas>
     </details>
@@ -135,9 +135,7 @@ const vnode = () => (
     <details open={!!logs.length}>
       <summary key="logs">Logs</summary>
 
-      <div style={{ paddingTop: '20px' }}>
-        {logs.map((logGroup) => logGroup.length && <pre>{logGroup.join('\n')}</pre>)}
-      </div>
+      <div>{logs.map((logGroup) => logGroup.length && <pre>{logGroup.join('\n')}</pre>)}</div>
     </details>
 
     <br />
@@ -198,6 +196,7 @@ const chart = new Chart(ctx, {
     ],
   },
   options: {
+    indexAxis: 'y',
     scales: {
       y: {
         beginAtZero: true,
