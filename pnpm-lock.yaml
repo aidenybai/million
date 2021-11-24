@@ -16,6 +16,7 @@ specifiers:
   '@typescript-eslint/eslint-plugin': ^5.4.0
   '@typescript-eslint/parser': ^5.4.0
   benchmark: ^2.1.4
+  canvas-confetti: ^1.4.0
   chart.js: ^3.6.0
   eslint: ^8.3.0
   eslint-config-prettier: ^8.3.0
@@ -57,6 +58,7 @@ devDependencies:
   '@typescript-eslint/eslint-plugin': 5.4.0_5c8ff4cecd5a55e744866c0654edac32
   '@typescript-eslint/parser': 5.4.0_eslint@8.3.0+typescript@4.5.2
   benchmark: 2.1.4
+  canvas-confetti: 1.4.0
   chart.js: 3.6.0
   eslint: 8.3.0
   eslint-config-prettier: 8.3.0_eslint@8.3.0
@@ -2994,6 +2996,10 @@ packages:
 
   /caniuse-lite/1.0.30001282:
     resolution: {integrity: sha512-YhF/hG6nqBEllymSIjLtR2iWDDnChvhnVJqp+vloyt2tEHFG1yBR+ac2B/rOw0qOK0m0lEXU2dv4E/sMk5P9Kg==}
+    dev: true
+
+  /canvas-confetti/1.4.0:
+    resolution: {integrity: sha512-S18o4Y9PqI/uabdlT/jI3MY7XBJjNxnfapFIkjkMwpz6qNxLFZOm2b22OMf4ZYDL9lpNWI+Ih4fEMVPwO1KHFQ==}
     dev: true
 
   /caseless/0.12.0:
@@ -6052,8 +6058,8 @@ packages:
     resolution: {integrity: sha512-fnWVljUchTro6RiCFvCXBbNhJc2NijN7oIQxbwsyL0buWJPG85v81ehlHI9fXrJsMNgTofEoWIQeClKpgxFLrg==}
     dev: true
 
-  /postcss/8.4.0:
-    resolution: {integrity: sha512-BRMNx3Wy7UI89jN8H4ZVS5lQMPM2OSMkOkvDCSjwXa7PWTs24k7Lm55NXLbMbs070LvraXaxN5l1npSOS6wMVw==}
+  /postcss/8.4.1:
+    resolution: {integrity: sha512-WqLs/TTzXdG+/A4ZOOK9WDZiikrRaiA+eoEb/jz2DT9KUhMNHgP7yKPO8vwi62ZCsb703Gwb7BMZwDzI54Y2Ag==}
     engines: {node: ^10 || ^12 || >=14}
     dependencies:
       nanoid: 3.1.30
@@ -7280,7 +7286,7 @@ packages:
         optional: true
     dependencies:
       esbuild: 0.13.15
-      postcss: 8.4.0
+      postcss: 8.4.1
       resolve: 1.20.0
       rollup: 2.60.1
     optionalDependencies:

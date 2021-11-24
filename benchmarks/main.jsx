@@ -1,5 +1,6 @@
 import { createElement, patch } from '../src/index';
 import Chart from 'chart.js/auto';
+import confetti from 'canvas-confetti';
 
 import appendManyRowsToLargeTable from './suites/appendManyRowsToLargeTable';
 import clearRows from './suites/clearRows';
@@ -44,6 +45,7 @@ const suites = [
       disabled = false;
       patch(el, vnode());
       localStorage.logs = JSON.stringify([...logs, ...history]);
+      celebration();
     }),
 );
 const vnode = () => (
@@ -150,3 +152,43 @@ const chart = new Chart(ctx, {
   },
 });
 chart.options.animation = false;
+
+const fire = (particleRatio, opts) => {
+  confetti(
+    Object.assign(
+      {},
+      {
+        origin: { y: 0.7 },
+      },
+      opts,
+      {
+        particleCount: Math.floor(200 * particleRatio),
+      },
+    ),
+  );
+};
+
+const celebration = () => {
+  fire(0.25, {
+    spread: 26,
+    startVelocity: 55,
+  });
+  fire(0.2, {
+    spread: 60,
+  });
+  fire(0.35, {
+    spread: 100,
+    decay: 0.91,
+    scalar: 0.8,
+  });
+  fire(0.1, {
+    spread: 120,
+    startVelocity: 25,
+    decay: 0.92,
+    scalar: 1.2,
+  });
+  fire(0.1, {
+    spread: 120,
+    startVelocity: 45,
+  });
+};
