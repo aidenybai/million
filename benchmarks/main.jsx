@@ -12,7 +12,7 @@ import replaceAllRows from './suites/replaceAllRows';
 import selectRow from './suites/selectRow';
 import swapRows from './suites/swapRows';
 
-if (navigator.userAgentData.mobile) {
+if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
   alert(
     'Please note that these benchmarks will be degraded and inaccurate on mobile. Usage is experimental on mobile devices and is not guaranteed to be functional or stable, proceed with caution.',
   );
