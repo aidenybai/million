@@ -17,8 +17,8 @@ export const createElement = (vnode: VNode, attachField = true): DOMNode => {
   flush(diffProps(el, vnode).workStack);
 
   if (vnode.children) {
-    for (let i = 0; i < vnode.children.length; ++i) {
-      el.appendChild(createElement(vnode.children[i]));
+    for (const childEl of vnode.children) {
+      el.appendChild(createElement(childEl));
     }
   }
 
