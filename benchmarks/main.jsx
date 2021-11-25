@@ -12,6 +12,12 @@ import replaceAllRows from './suites/replaceAllRows';
 import selectRow from './suites/selectRow';
 import swapRows from './suites/swapRows';
 
+if (navigator.userAgentData.mobile) {
+  alert(
+    'Please note that these benchmarks will be degraded and inaccurate on mobile. Usage is experimental on mobile devices and is not guaranteed to be functional or stable, proceed with caution.',
+  );
+}
+
 const cumulative = {
   million: 0,
   'tiny-vdom': 0,
