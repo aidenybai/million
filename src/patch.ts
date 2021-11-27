@@ -11,7 +11,9 @@ export const flush = (
   workStack: VTask[] = [],
   commit: VCommit = (task: VTask): void => task(),
 ): void => {
-  workStack.forEach(commit);
+  for (const task of workStack) {
+    commit(task);
+  }
 };
 
 /**
