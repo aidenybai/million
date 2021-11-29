@@ -34,16 +34,16 @@ export interface VElement {
 }
 
 export enum VFlags {
-  IGNORE_NODE = 0,
-  REPLACE_NODE = 1,
-  NO_CHILDREN = 2,
-  ONLY_TEXT_CHILDREN = 3,
-  ONLY_KEYED_CHILDREN = 4,
-  ANY_CHILDREN = 5,
+  IGNORE_NODE,
+  REPLACE_NODE,
+  NO_CHILDREN,
+  ONLY_TEXT_CHILDREN,
+  ONLY_KEYED_CHILDREN,
+  ANY_CHILDREN,
 }
 
 export const enum VDeltaOperationTypes {
-  INSERT = 0,
-  UPDATE = 1,
-  DELETE = 2,
+  INSERT,
+  UPDATE,
+  DELETE,
 }
