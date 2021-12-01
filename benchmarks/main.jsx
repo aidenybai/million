@@ -52,6 +52,16 @@ const suites = [
       patch(el, vnode());
       localStorage.logs = JSON.stringify([...logs, ...history]);
       celebration();
+      chart.data.datasets[0].backgroundColor = [
+        'rgba(182, 216, 169, 1)',
+        'rgba(182, 216, 169, 1)',
+        'rgba(215, 227, 184, 1)',
+        'rgba(255, 242, 204, 1)',
+        'rgba(247, 211, 186, 1)',
+        'rgba(240, 178, 169, 1)',
+        'rgba(234, 153, 153, 1)',
+      ];
+      chart.update();
     }),
 );
 const vnode = () => (
@@ -65,6 +75,8 @@ const vnode = () => (
               disabled = name;
               logs.unshift([]);
               log(`Running: ${suite.name} - ${new Date().toLocaleString()}`);
+              chart.data.datasets[0].backgroundColor = new Array(7).fill('rgba(0, 0, 0, 0.2)');
+              chart.update();
               suite.run({ async: true });
               patch(el, vnode());
             }}
@@ -114,16 +126,8 @@ const log = (message) => {
   console.log(String(message));
   const sortedKeys = Object.keys(cumulative).sort((a, b) => cumulative[b] - cumulative[a]);
   const sortedValues = sortedKeys.map((key) => cumulative[key]);
-  const sortedBgColors = sortedKeys.map((key) =>
-    key === 'million' ? 'rgba(255, 82, 76, 0.5)' : 'rgba(78, 35, 114, 0.5)',
-  );
-  const sortedBorderColors = sortedKeys.map((key) =>
-    key === 'million' ? 'rgba(255, 82, 76, 1)' : 'rgba(78, 35, 114, 1)',
-  );
   chart.data.labels = sortedKeys;
   chart.data.datasets[0].data = sortedValues;
-  chart.data.datasets[0].backgroundColor = sortedBgColors;
-  chart.data.datasets[0].borderColor = sortedBorderColors;
   chart.update();
 };
 
@@ -138,18 +142,14 @@ const chart = new Chart(ctx, {
       {
         label: 'operations/second',
         data: Object.values(cumulative),
-        backgroundColor: Object.keys(cumulative).map((key) =>
-          key === 'million' ? 'rgba(255, 82, 76, 0.5)' : 'rgba(78, 35, 114, 0.5)',
-        ),
-        borderColor: Object.keys(cumulative).map((key) =>
-          key === 'million' ? 'rgba(255, 82, 76, 1)' : 'rgba(78, 35, 114, 1)',
-        ),
+        backgroundColor: new Array(7).fill('rgba(0, 0, 0, 0.2)'),
+        borderColor: new Array(7).map(() => 'rgb(0, 0, 0)'),
         borderWidth: 1,
       },
     ],
   },
   options: {
-    indexAxis: 'y',
+    indexAxis: 'x',
     scales: {
       y: {
         beginAtZero: true,
