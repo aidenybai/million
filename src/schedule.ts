@@ -43,9 +43,7 @@ export const nextTick = (): void => {
   if (!queued) {
     // Promise-based solution is by far the fastest solution
     // when compared with MessageChannel (decent) and setTimeout (bad)
-    queueMicrotask(() => {
-      resolvedPromise.then(flushWorkStack);
-      queued = true;
-    });
+    resolvedPromise.then(flushWorkStack);
+    queued = true;
   }
 };
