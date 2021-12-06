@@ -29,7 +29,7 @@ export const flushWorkStack = (): void => {
   deadline = performance.now() + DEADLINE_THRESHOLD;
   while (!shouldYield()) {
     const task = workStack.shift();
-    if (task) task();
+    if (task) requestAnimationFrame(task);
     else break;
   }
   queued = false;
