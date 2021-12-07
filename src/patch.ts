@@ -34,6 +34,9 @@ export const patch = (
   return data.el;
 };
 
+/**
+ * Split rendering work into chunks and spread it out over multiple frames
+ */
 export const schedule = (task: VTask): void => {
   if (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
