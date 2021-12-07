@@ -11,7 +11,7 @@ const config: Config.InitialOptions = {
     '<rootDir>/src/**/*.ts',
     '!src/**/index.*',
     '!src/**/types/*',
-    '!src/**/schedule.ts',
+    '!src/**/patch.ts',
     '!src/**/jsx.ts',
     '!src/**/drivers/*',
   ],
