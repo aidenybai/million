@@ -41,7 +41,7 @@ export const schedule = (task: VTask): void => {
   if (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (<any>navigator)?.scheduling?.isInputPending({ includeContinuous: true }) ||
-    performance.now() >= deadline
+    performance.now() <= deadline
   ) {
     p.then(task);
   } else task();
