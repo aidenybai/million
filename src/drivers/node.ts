@@ -12,9 +12,12 @@ export const node = (drivers: VDriver[]) => {
     workStack: VTask[] = [],
   ): ReturnType<VDriver> => {
     const finish = (element: DOMNode): ReturnType<VDriver> => {
-      workStack.push(() => {
-        if (!oldVNode) element[OLD_VNODE_FIELD] = newVNode;
-      });
+      if (!oldVNode) {
+        workStack.push(() => {
+          element[OLD_VNODE_FIELD] = newVNode;
+        });
+      }
+
       return {
         el: element,
         newVNode,
