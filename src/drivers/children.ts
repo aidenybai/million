@@ -97,7 +97,9 @@ export const children =
       return data;
     }
     if (newVNode.flag === VFlags.ONLY_TEXT_CHILDREN) {
-      workStack.push(() => (el.textContent = newVNode.children!.join('')));
+      if (oldVNode?.children?.join('') !== newVNode.children!.join('')) {
+        workStack.push(() => (el.textContent = newVNode.children!.join('')));
+      }
       return data;
     }
     if (newVNode.flag === VFlags.ONLY_KEYED_CHILDREN) {

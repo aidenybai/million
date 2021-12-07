@@ -3,6 +3,8 @@ import { node } from './drivers/node';
 import { props } from './drivers/props';
 import { DOMNode, VCommit, VNode, VTask } from './types/base';
 
+const p = Promise.resolve();
+
 /**
  * Passes all of the tasks in a given array to a given callback function sequentially.
  * Generally, this is used to call the functions, with an optional modifier
@@ -29,4 +31,8 @@ export const patch = (
   const data = diff(el, newVNode, oldVNode, workStack);
   flush(data.workStack);
   return data.el;
+};
+
+export const schedule = (task: VTask): void => {
+  p.then(() => task());
 };
