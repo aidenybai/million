@@ -4,6 +4,7 @@ import { props } from './drivers/props';
 import { DOMNode, VCommit, VNode, VTask } from './types/base';
 
 const p = Promise.resolve();
+let deadline = 0;
 
 /**
  * Passes all of the tasks in a given array to a given callback function sequentially.
@@ -34,5 +35,12 @@ export const patch = (
 };
 
 export const schedule = (task: VTask): void => {
-  p.then(() => task());
+  if (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (<any>navigator)?.scheduling?.isInputPending({ includeContinuous: true }) ||
+    performance.now() >= deadline
+  ) {
+    p.then(task);
+  } else task();
+  deadline = performance.now() + 16;
 };
