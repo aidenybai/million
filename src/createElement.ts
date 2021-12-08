@@ -1,8 +1,4 @@
-import { props } from './drivers/props';
-import { flush } from './patch';
 import { DOMNode, OLD_VNODE_FIELD, VNode } from './types/base';
-
-const diffProps = props();
 
 /**
  * Creates an Element from a VNode
@@ -14,7 +10,17 @@ export const createElement = (vnode: VNode, attachField = true): DOMNode => {
     ? <SVGElement>document.createElementNS(<string>vnode.props?.ns, vnode.tag)
     : <HTMLElement>document.createElement(vnode.tag);
 
-  flush(diffProps(el, vnode).workStack);
+  for (const propName in vnode.props) {
+    const propValue = vnode.props[propName];
+    if (propName.startsWith('on')) {
+      const eventPropName = propName.slice(2).toLowerCase();
+      el.addEventListener(eventPropName, <EventListener>propValue);
+    } else if (el[propName] !== undefined && !(el instanceof SVGElement)) {
+      el[propName] = propValue;
+    } else {
+      el.setAttribute(propName, String(propValue));
+    }
+  }
 
   if (vnode.children) {
     for (let i = 0; i < vnode.children.length; ++i) {
