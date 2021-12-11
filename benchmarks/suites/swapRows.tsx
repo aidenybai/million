@@ -1,12 +1,13 @@
 /**
- * @name removeRow
- * @description removing one row
+ * @name swapRows
+ * @description swap 2 rows for table with 1,000 rows
  */
+// @ts-nocheck
 
 import * as simple_virtual_dom from 'simple-virtual-dom';
 import * as snabbdom from 'snabbdom';
 import * as virtual_dom from 'virtual-dom';
-import { createElement, DELETE } from '../../src/index';
+import { createElement, UPDATE } from 'million';
 import { Suite, vnodeAdapter } from '../benchmark';
 import { buildData, patch } from '../data';
 import * as tiny_vdom from '../tiny-vdom';
@@ -23,11 +24,15 @@ const oldVNode = (
   </table>
 );
 const el = () => createElement(oldVNode);
-const row = Math.floor(Math.random() * (data.length + 1));
-data.splice(row, 1);
+
+const row1 = 0;
+const row2 = 1;
+const temp = data[row1];
+data[row1] = data[row2];
+data[row2] = temp;
 
 const vnode = (
-  <table delta={[DELETE(row)]}>
+  <table delta={[UPDATE(row1), UPDATE(row2)]}>
     {data.map(({ id, label }) => (
       <tr>
         <td>{id}</td>
@@ -37,7 +42,7 @@ const vnode = (
   </table>
 );
 
-const suite = Suite('remove row (removing one row)', {
+const suite = Suite('swap rows (swap 2 rows for table with 1,000 rows)', {
   million: () => {
     patch(el(), vnode);
   },
@@ -58,12 +63,14 @@ const suite = Suite('remove row (removing one row)', {
   },
   DOM: () => {
     const elClone = el();
-    elClone.removeChild(elClone.childNodes[row]);
+    const tr1 = elClone.childNodes[row1];
+    const tr2 = elClone.childNodes[row2];
+    elClone.replaceChild(tr1.cloneNode(true), tr2);
+    elClone.replaceChild(tr2.cloneNode(true), tr1);
   },
   innerHTML: () => {
     let html = '';
-    data.forEach(({ id, label }, i) => {
-      if (row === i) return;
+    data.forEach(({ id, label }) => {
       html += `<tr><td>${String(id)}</td><td>${label}</td></tr>`;
     });
     el().innerHTML = html;

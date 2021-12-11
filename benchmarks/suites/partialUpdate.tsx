@@ -1,18 +1,19 @@
 /**
- * @name appendManyRowsToLargeTable
- * @description appending 1,000 to a table of 10,000 rows.
+ * @name partialUpdate
+ * @description updating every 10th row for 1,000 rows
  */
+// @ts-nocheck
 
 import * as simple_virtual_dom from 'simple-virtual-dom';
 import * as snabbdom from 'snabbdom';
 import * as virtual_dom from 'virtual-dom';
-import { createElement } from '../../src/index';
+import { createElement, UPDATE } from 'million';
 import { Suite, vnodeAdapter } from '../benchmark';
 import { buildData, patch } from '../data';
 import * as tiny_vdom from '../tiny-vdom';
 
-const data = buildData(10000);
-const createVNode = () => (
+const data = buildData(1000);
+const oldVNode = (
   <table>
     {data.map(({ id, label }) => (
       <tr key={String(id)}>
@@ -22,12 +23,25 @@ const createVNode = () => (
     ))}
   </table>
 );
-const oldVNode = createVNode();
 const el = () => createElement(oldVNode);
-const vnode = createVNode();
-data.push(...buildData(1000));
+const delta = [];
+for (let i = 0; i < 1000; i += 10) {
+  data[i] = buildData(1)[0];
+  delta.unshift(UPDATE(i));
+}
 
-const suite = Suite('append many rows to large table (appending 1,000 to a table of 10,000 rows)', {
+const vnode = (
+  <table>
+    {data.map(({ id, label }) => (
+      <tr key={String(id)}>
+        <td>{id}</td>
+        <td>{label}</td>
+      </tr>
+    ))}
+  </table>
+);
+
+const suite = Suite('partial update (updating every 10th row for 1,000 rows)', {
   million: () => {
     patch(el(), vnode);
   },
@@ -48,7 +62,8 @@ const suite = Suite('append many rows to large table (appending 1,000 to a table
   },
   DOM: () => {
     const elClone = el();
-    [...data].slice(-1000).forEach(({ id, label }) => {
+    for (let i = 0; i < 1000; i += 10) {
+      const { id, label } = data[i];
       const tr = document.createElement('tr');
       const td1 = document.createElement('td');
       const td2 = document.createElement('td');
@@ -56,15 +71,15 @@ const suite = Suite('append many rows to large table (appending 1,000 to a table
       td2.textContent = label;
       tr.appendChild(td1);
       tr.appendChild(td2);
-      elClone.appendChild(tr);
-    });
+      elClone.replaceWith(tr);
+    }
   },
   innerHTML: () => {
     let html = '';
     data.forEach(({ id, label }) => {
       html += `<tr><td>${String(id)}</td><td>${label}</td></tr>`;
     });
-    el().innerHTML += html;
+    el().innerHTML = html;
   },
 });
 
