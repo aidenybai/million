@@ -1,4 +1,4 @@
-import { node, children, flush } from '../src/index';
+import { node, children, flush, DOMNode, VNode, VTask } from 'million';
 
 const adjectives = [
   'pretty',
@@ -56,13 +56,13 @@ const nouns = [
   'keyboard',
 ];
 
-const random = (max) => {
+const random = (max: number) => {
   return Math.round(Math.random() * 1000) % max;
 };
 
 let id = 0;
 
-export const buildData = (count) => {
+export const buildData = (count: number) => {
   const data = new Array(count).fill(0);
   for (let i = 0; i < count; ++i) {
     data[i] = {
@@ -75,7 +75,7 @@ export const buildData = (count) => {
   return data;
 };
 
-export const patch = (el, newVNode, oldVNode, workStack = []) => {
+export const patch = (el: DOMNode, newVNode: VNode, oldVNode?: VNode, workStack: VTask[] = []) => {
   const diff = node([children()]);
   const data = diff(el, newVNode, oldVNode, workStack);
   flush(data.workStack);

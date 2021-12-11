@@ -1,4 +1,5 @@
 import Benchmark from 'benchmark';
+import { VNode } from 'million';
 import _ from 'lodash';
 
 // avoid `Cannot read property 'parentNode' of undefined` error in runScript
@@ -8,10 +9,11 @@ document.body.appendChild(script);
 // Benchmark could not pick up lodash otherwise
 const benchmark = Benchmark.runInContext({ _ });
 
-// avoid `ReferenceError: Benchmark is not defined` error because Benchmark is assumed to be in window
+// @ts-expect-error avoid `ReferenceError: Benchmark is not defined` error because Benchmark is assumed to be in window
 window.Benchmark = benchmark;
 
-export const Suite = (name, tests) => {
+export const Suite = (name: string, tests: Record<string, Function>) => {
+  // @ts-expect-error Suite exists
   const suite = new benchmark.Suite(name);
   Object.entries(tests).forEach(([name, callback]) => {
     suite.add(name, callback);
@@ -19,7 +21,7 @@ export const Suite = (name, tests) => {
   return suite;
 };
 
-export const reformatVNode = (vnode) => {
+export const reformatVNode = (vnode: VNode) => {
   if (typeof vnode === 'string') return;
   if (vnode.key) delete vnode.key;
   if (vnode.props === undefined || vnode.props === null) vnode.props = {};
@@ -34,7 +36,7 @@ export const reformatVNode = (vnode) => {
 // immutable for the benchmark. For this case, we deep
 // copy the vnode. This ensures compatibility throughout
 // the suite tests.
-export const vnodeAdapter = (vnode) => {
+export const vnodeAdapter = (vnode: VNode): VNode => {
   const clonedVNode = _.cloneDeep(vnode);
   reformatVNode(clonedVNode);
   return clonedVNode;

@@ -1,38 +1,24 @@
 /**
- * @name partialUpdate
- * @description updating every 10th row for 1,000 rows
+ * @name createManyRows
+ * @description creating 10,000 rows
  */
+// @ts-nocheck
 
 import * as simple_virtual_dom from 'simple-virtual-dom';
 import * as snabbdom from 'snabbdom';
 import * as virtual_dom from 'virtual-dom';
-import { createElement, UPDATE } from '../../src/index';
+import { createElement } from 'million';
 import { Suite, vnodeAdapter } from '../benchmark';
 import { buildData, patch } from '../data';
 import * as tiny_vdom from '../tiny-vdom';
 
-const data = buildData(1000);
-const oldVNode = (
-  <table>
-    {data.map(({ id, label }) => (
-      <tr key={String(id)}>
-        <td>{id}</td>
-        <td>{label}</td>
-      </tr>
-    ))}
-  </table>
-);
+const data = buildData(10000);
+const oldVNode = <table></table>;
 const el = () => createElement(oldVNode);
-const delta = [];
-for (let i = 0; i < 1000; i += 10) {
-  data[i] = buildData(1)[0];
-  delta.unshift(UPDATE(i));
-}
-
 const vnode = (
   <table>
     {data.map(({ id, label }) => (
-      <tr key={String(id)}>
+      <tr>
         <td>{id}</td>
         <td>{label}</td>
       </tr>
@@ -40,7 +26,7 @@ const vnode = (
   </table>
 );
 
-const suite = Suite('partial update (updating every 10th row for 1,000 rows)', {
+const suite = Suite('create many rows (creating 10,000 rows)', {
   million: () => {
     patch(el(), vnode);
   },
@@ -61,8 +47,7 @@ const suite = Suite('partial update (updating every 10th row for 1,000 rows)', {
   },
   DOM: () => {
     const elClone = el();
-    for (let i = 0; i < 1000; i += 10) {
-      const { id, label } = data[i];
+    data.forEach(({ id, label }) => {
       const tr = document.createElement('tr');
       const td1 = document.createElement('td');
       const td2 = document.createElement('td');
@@ -70,8 +55,8 @@ const suite = Suite('partial update (updating every 10th row for 1,000 rows)', {
       td2.textContent = label;
       tr.appendChild(td1);
       tr.appendChild(td2);
-      elClone.replaceWith(tr);
-    }
+      elClone.appendChild(tr);
+    });
   },
   innerHTML: () => {
     let html = '';

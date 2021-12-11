@@ -1,12 +1,13 @@
 /**
- * @name createManyRows
- * @description creating 10,000 rows
+ * @name createRows
+ * @description creating 1,000 rows
  */
+// @ts-nocheck
 
 import * as simple_virtual_dom from 'simple-virtual-dom';
 import * as snabbdom from 'snabbdom';
 import * as virtual_dom from 'virtual-dom';
-import { createElement } from '../../src/index';
+import { createElement } from 'million';
 import { Suite, vnodeAdapter } from '../benchmark';
 import { buildData, patch } from '../data';
 import * as tiny_vdom from '../tiny-vdom';
@@ -25,7 +26,7 @@ const vnode = (
   </table>
 );
 
-const suite = Suite('create many rows (creating 10,000 rows)', {
+const suite = Suite('create rows (creating 1,000 rows)', {
   million: () => {
     patch(el(), vnode);
   },

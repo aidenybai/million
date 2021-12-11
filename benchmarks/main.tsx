@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { createElement, patch } from '../src/index';
 import Chart from 'chart.js/auto';
 import confetti from 'canvas-confetti';
@@ -27,7 +29,7 @@ const cumulative = {
   DOM: 0,
   innerHTML: 0,
 };
-const logs = [];
+const logs: [string, string][] = [];
 const history = localStorage.logs && localStorage.logs.length ? JSON.parse(localStorage.logs) : [];
 let disabled = false;
 
@@ -159,7 +161,7 @@ const chart = new Chart(ctx, {
 });
 chart.options.animation = false;
 
-const fire = (particleRatio, opts) => {
+const fire = (particleRatio: number, opts: Record<string, number>) => {
   confetti(
     Object.assign(
       {},

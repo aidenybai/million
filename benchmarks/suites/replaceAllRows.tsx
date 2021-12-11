@@ -1,31 +1,47 @@
 /**
- * @name createRows
- * @description creating 1,000 rows
+ * @name replaceAllRows
+ * @description updating all 1,000 rows
  */
+// @ts-nocheck
 
 import * as simple_virtual_dom from 'simple-virtual-dom';
 import * as snabbdom from 'snabbdom';
 import * as virtual_dom from 'virtual-dom';
-import { createElement } from '../../src/index';
+import { createElement } from 'million';
 import { Suite, vnodeAdapter } from '../benchmark';
 import { buildData, patch } from '../data';
 import * as tiny_vdom from '../tiny-vdom';
 
-const data = buildData(10000);
-const oldVNode = <table></table>;
-const el = () => createElement(oldVNode);
-const vnode = (
+const shuffleArray = (array: unknown[]) => {
+  for (
+    let i = array.length - 1 - Math.floor(Math.random() * (data.length / 3 + 1));
+    i > Math.floor(Math.random() * (data.length / 3 + 1));
+    i--
+  ) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+};
+
+const data = buildData(1000);
+const createVNode = () => (
   <table>
     {data.map(({ id, label }) => (
-      <tr>
+      <tr key={String(id)}>
         <td>{id}</td>
         <td>{label}</td>
       </tr>
     ))}
   </table>
 );
+const oldVNode = createVNode();
+const el = () => createElement(oldVNode);
 
-const suite = Suite('create rows (creating 1,000 rows)', {
+shuffleArray(data);
+
+const vnode = createVNode();
+
+const suite = Suite('replace all rows (updating all 1,000 rows)', {
   million: () => {
     patch(el(), vnode);
   },
@@ -45,16 +61,10 @@ const suite = Suite('create rows (creating 1,000 rows)', {
     patch(snabbdom.toVNode(el()), vnodeAdapter(vnode));
   },
   DOM: () => {
-    const elClone = el();
-    data.forEach(({ id, label }) => {
-      const tr = document.createElement('tr');
-      const td1 = document.createElement('td');
-      const td2 = document.createElement('td');
-      td1.textContent = String(id);
-      td2.textContent = label;
-      tr.appendChild(td1);
-      tr.appendChild(td2);
-      elClone.appendChild(tr);
+    el().childNodes.forEach((tr, i) => {
+      const { id, label } = data[i];
+      tr.childNodes[0].textContent = String(id);
+      tr.childNodes[1].textContent = label;
     });
   },
   innerHTML: () => {
