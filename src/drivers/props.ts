@@ -1,4 +1,35 @@
-import { VDriver, VElement, VProps, VTask } from '../types/base';
+import { VDriver, VElement, VTask } from '../types/base';
+
+export const updateProp = (
+  el: HTMLElement | SVGElement,
+  propName: string,
+  oldPropValue: unknown,
+  newPropValue: unknown,
+  workStack: VTask[],
+): void => {
+  if (oldPropValue === newPropValue) return;
+  if (propName.startsWith('on')) {
+    const eventPropName = propName.slice(2).toLowerCase();
+    workStack.push(() => {
+      if (oldPropValue) el.removeEventListener(eventPropName, <EventListener>oldPropValue);
+      el.addEventListener(eventPropName, <EventListener>newPropValue);
+    });
+  } else if (el[propName] !== undefined && !(el instanceof SVGElement)) {
+    if (newPropValue) {
+      workStack.push(() => (el[propName] = newPropValue));
+    } else {
+      workStack.push(() => {
+        el[propName] = '';
+        el.removeAttribute(propName);
+        delete el[propName];
+      });
+    }
+  } else if (!newPropValue) {
+    workStack.push(() => el.removeAttribute(propName));
+  } else {
+    workStack.push(() => el.setAttribute(propName, String(newPropValue)));
+  }
+};
 
 /**
  * Diffs two VNode props and modifies the DOM node based on the necessary changes
@@ -12,36 +43,37 @@ export const props =
     oldVNode?: VElement,
     workStack: VTask[] = [],
   ): ReturnType<VDriver> => {
-    const oldProps: VProps = oldVNode?.props ?? {};
-    const newProps: VProps = newVNode.props ?? {};
+    const oldProps = oldVNode?.props;
+    const newProps = newVNode?.props;
+    if (oldProps === undefined) {
+      for (const propName in newProps) {
+        updateProp(el, propName, undefined, newProps[propName], workStack);
+      }
+    } else if (newProps === undefined) {
+      for (const propName in oldProps) {
+        updateProp(el, propName, oldProps[propName], undefined, workStack);
+      }
+    } else {
+      let matches = 0;
+      for (const propName in oldProps!) {
+        updateProp(
+          el,
+          propName,
+          oldProps[propName],
+          Object.prototype.hasOwnProperty.call(newProps, propName)
+            ? (matches++, newProps![propName])
+            : undefined,
+          workStack,
+        );
+      }
 
-    // Subsequent spreads will overwrite original spreads
-    // e.g. { ...{ foo: 'bar' }, ...{ foo: 'baz' } } becomes { foo: 'baz' }
-    for (const propName in { ...oldProps, ...newProps }) {
-      const oldPropValue = oldProps[propName];
-      const newPropValue = newProps[propName];
-
-      if (oldPropValue === newPropValue) continue;
-      if (propName.startsWith('on')) {
-        const eventPropName = propName.slice(2).toLowerCase();
-        workStack.push(() => {
-          if (oldPropValue) el.removeEventListener(eventPropName, <EventListener>oldPropValue);
-          el.addEventListener(eventPropName, <EventListener>newPropValue);
-        });
-      } else if (el[propName] !== undefined && !(el instanceof SVGElement)) {
-        if (newPropValue) {
-          workStack.push(() => (el[propName] = newPropValue));
-        } else {
-          workStack.push(() => {
-            el[propName] = '';
-            el.removeAttribute(propName);
-            delete el[propName];
-          });
+      const keys = Object.keys(newProps!);
+      for (let i = 0; matches < keys.length && i < keys.length; ++i) {
+        const propName = keys[i];
+        if (!Object.prototype.hasOwnProperty.call(oldProps, propName)) {
+          updateProp(el, propName, undefined, newProps![propName], workStack);
+          ++matches;
         }
-      } else if (!newPropValue) {
-        workStack.push(() => el.removeAttribute(propName));
-      } else {
-        workStack.push(() => el.setAttribute(propName, String(newPropValue)));
       }
     }
 
