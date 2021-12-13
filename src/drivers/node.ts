@@ -13,9 +13,7 @@ export const node = (drivers: VDriver[]) => {
   ): ReturnType<VDriver> => {
     const finish = (element: DOMNode): ReturnType<VDriver> => {
       if (!oldVNode) {
-        workStack.push(() => {
-          element[OLD_VNODE_FIELD] = newVNode;
-        });
+        workStack.push(() => (element[OLD_VNODE_FIELD] = newVNode));
       }
 
       return {
@@ -26,7 +24,7 @@ export const node = (drivers: VDriver[]) => {
       };
     };
 
-    if (!newVNode && newVNode !== '') {
+    if (newVNode === undefined || newVNode === null) {
       workStack.push(() => el.remove());
       return finish(el);
     } else {
@@ -34,7 +32,7 @@ export const node = (drivers: VDriver[]) => {
       const hasString = typeof prevVNode === 'string' || typeof newVNode === 'string';
 
       if (hasString && prevVNode !== newVNode) {
-        const newEl = createElement(newVNode);
+        const newEl = createElement(newVNode, false);
         workStack.push(() => el.replaceWith(newEl));
 
         return finish(newEl);
@@ -47,7 +45,7 @@ export const node = (drivers: VDriver[]) => {
           oldVElement?.key !== newVElement?.key
         ) {
           if (oldVElement?.tag !== newVElement?.tag || el instanceof Text) {
-            const newEl = createElement(newVNode);
+            const newEl = createElement(newVNode, false);
             workStack.push(() => el.replaceWith(newEl));
             return finish(newEl);
           }
