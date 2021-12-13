@@ -25,6 +25,7 @@ const h = (tag: string, props?: VProps, ...children: JSXVNode[]) => {
     if (children.every((child) => typeof child === 'string')) {
       flag = VFlags.ONLY_TEXT_CHILDREN;
     }
+    let childrenLength = 0;
     for (let i = 0; i < children.length; ++i) {
       if (
         children[i] !== undefined &&
@@ -33,7 +34,9 @@ const h = (tag: string, props?: VProps, ...children: JSXVNode[]) => {
         children[i] !== ''
       ) {
         const unwrappedChild = <VNode>normalize(children[i]);
-        const subChildren = Array.isArray(unwrappedChild) ? unwrappedChild : [unwrappedChild];
+        const subChildren = Array.isArray(unwrappedChild)
+          ? ((childrenLength += unwrappedChild.length), unwrappedChild)
+          : (childrenLength++, [unwrappedChild]);
 
         for (let i = 0; i < subChildren.length; i++) {
           if (subChildren[i] || subChildren[i] === '') {
@@ -48,7 +51,7 @@ const h = (tag: string, props?: VProps, ...children: JSXVNode[]) => {
         }
       }
     }
-    if (keysInChildren.size === children.length) {
+    if (keysInChildren.size === childrenLength) {
       flag = VFlags.ONLY_KEYED_CHILDREN;
     }
     if (!hasVElementChildren) {

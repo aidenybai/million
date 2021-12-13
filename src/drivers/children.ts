@@ -54,7 +54,6 @@ export const binarySearch = (sequence: number[], target: number) => {
       min = mid;
     }
   }
-  console.log(min, target);
   return min;
 };
 
@@ -196,38 +195,36 @@ export const children =
           workStack.push(() => el.removeChild(node));
         }
       } else {
-        const I = {};
-        const P: number[] = [];
-        for (let i = newHead; i <= newTail; i++) {
-          I[(<VElement>newVNodeChildren[i]).key!] = i;
-          P[i] = -1;
+        const oldKeyMap: Record<string, number> = {};
+        for (let i = oldTail; i >= oldHead; --i) {
+          oldKeyMap[(<VElement>oldVNodeChildren[i]).key!] = i;
         }
-        for (let i = oldHead; i <= oldTail; i++) {
-          const j = I[(<VElement>oldVNodeChildren[i]).key!];
-          if (j != null) {
-            P[j] = i;
-          } else {
-            const node = el.childNodes[i];
-            workStack.push(() => el.removeChild(node));
-          }
-        }
-        const lis = getLIS(P, newHead);
-        let i = 0;
-
         while (newHead <= newTail) {
           const newVNodeChild = <VElement>newVNodeChildren[newHead];
-          const node = el.childNodes[P[newHead]];
+          const oldVNodePosition = oldKeyMap[newVNodeChild.key!];
+          const node = el.childNodes[oldVNodePosition];
           const newPosition = newHead++;
-          if (newHead === lis[i]) {
-            workStack.push(() => el.insertBefore(node, el.childNodes[P[newPosition]]));
-            i++;
-          } else if (P[newHead] === -1) {
+
+          if (
+            oldVNodePosition !== undefined &&
+            newVNodeChild.key === (<VElement>oldVNodeChildren[oldVNodePosition]).key
+          ) {
+            if (newPosition !== oldVNodePosition) {
+              // Determine move for child that moved: [X, A, B, C] -> [A, B, C, X]
+              workStack.push(() => el.insertBefore(node, el.childNodes[newPosition]));
+            }
+            delete oldKeyMap[newVNodeChild.key!];
+          } else {
+            // VNode doesn't exist yet: [] -> [X]
             workStack.push(() =>
               el.insertBefore(createElement(newVNodeChild, false), el.childNodes[newPosition]),
             );
-          } else {
-            workStack.push(() => el.insertBefore(node, el.childNodes[P[newPosition]]));
           }
+        }
+        for (const oldVNodePosition of Object.values(oldKeyMap)) {
+          // VNode wasn't found in new vnodes, so it's cleaned up: [X] -> []
+          const node = el.childNodes[oldVNodePosition];
+          workStack.push(() => el.removeChild(node));
         }
       }
       return data;
