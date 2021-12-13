@@ -10,6 +10,54 @@ import {
   VTask,
 } from '../types/base';
 
+export const getLIS = (sequence: number[], i: number) => {
+  const lis: number[] = [];
+  const increasingSubsequence: number[] = [];
+  const lengths: number[] = new Array(sequence.length);
+  let maxSubsequenceLength = -1;
+
+  for (; i < sequence.length; ++i) {
+    const number = sequence[i];
+    if (number < 0) continue;
+    const target = binarySearch(lis, number);
+    if (target !== -1) lengths[i] = increasingSubsequence[target];
+    if (target === maxSubsequenceLength) {
+      maxSubsequenceLength++;
+      lis[maxSubsequenceLength] = number;
+      increasingSubsequence[maxSubsequenceLength] = i;
+    } else if (number < lis[target + 1]) {
+      lis[target + 1] = number;
+      increasingSubsequence[target + 1] = i;
+    }
+  }
+  for (
+    i = increasingSubsequence[maxSubsequenceLength];
+    maxSubsequenceLength >= 0;
+    i = lengths[i], maxSubsequenceLength--
+  ) {
+    lis[maxSubsequenceLength] = i;
+  }
+  return lis;
+};
+
+export const binarySearch = (sequence: number[], target: number) => {
+  let min = -1;
+  let max = sequence.length;
+  if (max > 0 && sequence[max - 1] <= target) {
+    return max - 1;
+  }
+  while (max - min > 1) {
+    const mid = (min + max) >> 1;
+    if (sequence[mid] > target) {
+      max = mid;
+    } else {
+      min = mid;
+    }
+  }
+  console.log(min, target);
+  return min;
+};
+
 /**
  * Diffs two VNode children and modifies the DOM node based on the necessary changes
  */
@@ -148,36 +196,38 @@ export const children =
           workStack.push(() => el.removeChild(node));
         }
       } else {
-        const oldKeyMap: Record<string, number> = {};
-        for (let i = oldTail; i >= oldHead; --i) {
-          oldKeyMap[(<VElement>oldVNodeChildren[i]).key!] = i;
+        const I = {};
+        const P: number[] = [];
+        for (let i = newHead; i <= newTail; i++) {
+          I[(<VElement>newVNodeChildren[i]).key!] = i;
+          P[i] = -1;
         }
+        for (let i = oldHead; i <= oldTail; i++) {
+          const j = I[(<VElement>oldVNodeChildren[i]).key!];
+          if (j != null) {
+            P[j] = i;
+          } else {
+            const node = el.childNodes[i];
+            workStack.push(() => el.removeChild(node));
+          }
+        }
+        const lis = getLIS(P, newHead);
+        let i = 0;
+
         while (newHead <= newTail) {
           const newVNodeChild = <VElement>newVNodeChildren[newHead];
-          const oldVNodePosition = oldKeyMap[newVNodeChild.key!];
-          const node = el.childNodes[oldVNodePosition];
+          const node = el.childNodes[P[newHead]];
           const newPosition = newHead++;
-
-          if (
-            oldVNodePosition !== undefined &&
-            newVNodeChild.key === (<VElement>oldVNodeChildren[oldVNodePosition]).key
-          ) {
-            if (newPosition !== oldVNodePosition) {
-              // Determine move for child that moved: [X, A, B, C] -> [A, B, C, X]
-              workStack.push(() => el.insertBefore(node, el.childNodes[newPosition]));
-            }
-            delete oldKeyMap[newVNodeChild.key!];
-          } else {
-            // VNode doesn't exist yet: [] -> [X]
+          if (newHead === lis[i]) {
+            workStack.push(() => el.insertBefore(node, el.childNodes[P[newPosition]]));
+            i++;
+          } else if (P[newHead] === -1) {
             workStack.push(() =>
               el.insertBefore(createElement(newVNodeChild, false), el.childNodes[newPosition]),
             );
+          } else {
+            workStack.push(() => el.insertBefore(node, el.childNodes[P[newPosition]]));
           }
-        }
-        for (const oldVNodePosition of Object.values(oldKeyMap)) {
-          // VNode wasn't found in new vnodes, so it's cleaned up: [X] -> []
-          const node = el.childNodes[oldVNodePosition];
-          workStack.push(() => el.removeChild(node));
         }
       }
       return data;
