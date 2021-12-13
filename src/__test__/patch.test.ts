@@ -156,17 +156,17 @@ describe('.patch', () => {
     patch(el, newVNode1, m('ul', undefined, undefined, VFlags.NO_CHILDREN));
     expect(el).toEqual(createElement(newVNode1));
 
-    // BROKEN TESTS: Ad-hoc work completely fine, but fail in unit tests?
+    const list2 = ['foo', 'baz', 'bar'];
+    const newVNode2 = m(
+      'ul',
+      undefined,
+      list2.map((item) => m('li', { key: item }, [item])),
+      VFlags.ONLY_KEYED_CHILDREN,
+    );
+    patch(el, newVNode2, newVNode1);
+    expect(el).toEqual(createElement(newVNode2));
 
-    // const list2 = ['foo', 'baz', 'bar'];
-    // const newVNode2 = m(
-    //   'ul',
-    //   undefined,
-    //   list2.map((item) => m('li', { key: item }, [item])),
-    //   VFlags.ONLY_KEYED_CHILDREN,
-    // );
-    // patch(el, newVNode2, newVNode1);
-    // expect(el).toEqual(createElement(newVNode2));
+    // BROKEN TESTS: Ad-hoc work completely fine, but fail in unit tests?
 
     // const list3 = ['foo0', 'foo', 'bar', 'foo1', 'bar1', 'baz1'];
     // const newVNode3 = m(
