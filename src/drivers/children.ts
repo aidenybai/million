@@ -97,8 +97,14 @@ export const children =
       return data;
     }
     if (newVNode.flag === VFlags.ONLY_TEXT_CHILDREN) {
-      if (oldVNode?.children?.join('') !== newVNode.children!.join('')) {
-        workStack.push(() => (el.textContent = newVNode.children!.join('')));
+      const oldString = Array.isArray(oldVNode?.children)
+        ? oldVNode?.children.join('')
+        : oldVNode?.children;
+      const newString = Array.isArray(newVNode?.children)
+        ? newVNode?.children.join('')
+        : newVNode?.children;
+      if (oldString !== newString) {
+        workStack.push(() => (el.textContent = newString!));
       }
       return data;
     }
@@ -133,11 +139,10 @@ export const children =
       if (oldHead > oldTail) {
         // There are no dirty old children: [], [X, Y, Z]
         while (newHead <= newTail) {
-          const newHeadIndex = newHead++;
           workStack.push(() =>
             el.insertBefore(
-              createElement(newVNodeChildren[newHeadIndex], false),
-              el.childNodes[newHeadIndex],
+              createElement(newVNodeChildren[newHead], false),
+              el.childNodes[newHead++],
             ),
           );
         }
@@ -156,23 +161,23 @@ export const children =
           const newVNodeChild = <VElement>newVNodeChildren[newHead];
           const oldVNodePosition = oldKeyMap[newVNodeChild.key!];
           const node = el.childNodes[oldVNodePosition];
-          const newPosition = newHead++;
 
           if (
             oldVNodePosition !== undefined &&
             newVNodeChild.key === (<VElement>oldVNodeChildren[oldVNodePosition]).key
           ) {
-            if (newPosition !== oldVNodePosition) {
+            if (newHead !== oldVNodePosition) {
               // Determine move for child that moved: [X, A, B, C] -> [A, B, C, X]
-              workStack.push(() => el.insertBefore(node, el.childNodes[newPosition]));
+              workStack.push(() => el.insertBefore(node, el.childNodes[newHead]));
             }
             delete oldKeyMap[newVNodeChild.key!];
           } else {
             // VNode doesn't exist yet: [] -> [X]
             workStack.push(() =>
-              el.insertBefore(createElement(newVNodeChild, false), el.childNodes[newPosition]),
+              el.insertBefore(createElement(newVNodeChild, false), el.childNodes[newHead]),
             );
           }
+          newHead++;
         }
         for (const oldVNodePosition of Object.values(oldKeyMap)) {
           // VNode wasn't found in new vnodes, so it's cleaned up: [X] -> []
