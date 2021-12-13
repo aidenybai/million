@@ -45,11 +45,11 @@ export const props =
   ): ReturnType<VDriver> => {
     const oldProps = oldVNode?.props;
     const newProps = newVNode?.props;
-    if (oldProps === undefined) {
+    if (oldProps === undefined || newProps === null) {
       for (const propName in newProps) {
         updateProp(el, propName, undefined, newProps[propName], workStack);
       }
-    } else if (newProps === undefined) {
+    } else if (newProps === undefined || newProps === null) {
       for (const propName in oldProps) {
         updateProp(el, propName, oldProps[propName], undefined, workStack);
       }
