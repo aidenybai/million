@@ -76,7 +76,7 @@
     "@rollup/plugin-eslint": "^8.0.1",
     "@rollup/plugin-node-resolve": "13.0.6",
     "@rollup/plugin-strip": "^2.1.0",
-    "@swc-node/jest": "^1.4.1",
+    "@swc-node/jest": "^1.4.2",
     "@testing-library/dom": "^8.11.1",
     "@types/benchmark": "^2.1.1",
     "@types/canvas-confetti": "^1.4.2",
