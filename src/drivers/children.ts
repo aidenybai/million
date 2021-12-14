@@ -166,10 +166,8 @@ export const children =
             oldVNodePosition !== undefined &&
             newVNodeChild.key === (<VElement>oldVNodeChildren[oldVNodePosition]).key
           ) {
-            if (newHead !== oldVNodePosition) {
-              // Determine move for child that moved: [X, A, B, C] -> [A, B, C, X]
-              workStack.push(() => el.insertBefore(node, el.childNodes[newHead]));
-            }
+            // Determine move for child that moved: [X, A, B, C] -> [A, B, C, X]
+            workStack.push(() => el.insertBefore(node, el.childNodes[newHead]));
             delete oldKeyMap[newVNodeChild.key!];
           } else {
             // VNode doesn't exist yet: [] -> [X]
@@ -179,6 +177,7 @@ export const children =
           }
           newHead++;
         }
+
         for (const oldVNodePosition of Object.values(oldKeyMap)) {
           // VNode wasn't found in new vnodes, so it's cleaned up: [X] -> []
           const node = el.childNodes[oldVNodePosition];
