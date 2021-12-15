@@ -146,7 +146,7 @@ describe('.patch', () => {
 
   it('should used keyed algorithm when flag is passed', () => {
     const el = document.createElement('ul');
-    const list1 = ['foo', 'bar', 'baz'];
+    const list1 = ['foo', 'bar', 'baz', 'foo1', 'bar1', 'baz1'];
     const newVNode1 = m(
       'ul',
       undefined,
@@ -156,7 +156,7 @@ describe('.patch', () => {
     patch(el, newVNode1, m('ul', undefined, undefined, VFlags.NO_CHILDREN));
     expect(el).toEqual(createElement(newVNode1));
 
-    const list2 = ['foo', 'baz', 'bar'];
+    const list2 = ['foo', 'baz', 'bar', 'foo1', 'bar1', 'baz1'];
     const newVNode2 = m(
       'ul',
       undefined,
