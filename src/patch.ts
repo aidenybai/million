@@ -45,5 +45,7 @@ export const schedule = (task: VTask): void => {
   ) {
     p.then(task);
   } else task();
+  // We can set a pseudo-deadline to ensure that we don't render too often
+  // and depend on the calls to the function to regulate rendering
   deadline = performance.now() + 16;
 };
