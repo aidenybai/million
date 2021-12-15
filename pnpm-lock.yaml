@@ -121,7 +121,7 @@ packages:
       '@babel/helper-compilation-targets': 7.16.3_@babel+core@7.16.5
       '@babel/helper-module-transforms': 7.16.5
       '@babel/helpers': 7.16.5
-      '@babel/parser': 7.16.5
+      '@babel/parser': 7.16.6
       '@babel/template': 7.16.0
       '@babel/traverse': 7.16.5
       '@babel/types': 7.16.0
@@ -385,8 +385,8 @@ packages:
       js-tokens: 4.0.0
     dev: true
 
-  /@babel/parser/7.16.5:
-    resolution: {integrity: sha512-+Ce7T5iPNWzfu9C1aB5tN3Lyafs5xb3Ic7vBWyZL2KXT3QSdD1dD3CvgOzPmQKoNNRt6uauc0XwNJTQtXC2/Mw==}
+  /@babel/parser/7.16.6:
+    resolution: {integrity: sha512-Gr86ujcNuPDnNOY8mi383Hvi8IYrJVJYuf3XcuBM/Dgd+bINn/7tHqsj+tKkoreMbmGsFLsltI/JJd8fOFWGDQ==}
     engines: {node: '>=6.0.0'}
     hasBin: true
     dev: true
@@ -1222,7 +1222,7 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       '@babel/code-frame': 7.16.0
-      '@babel/parser': 7.16.5
+      '@babel/parser': 7.16.6
       '@babel/types': 7.16.0
     dev: true
 
@@ -1236,7 +1236,7 @@ packages:
       '@babel/helper-function-name': 7.16.0
       '@babel/helper-hoist-variables': 7.16.0
       '@babel/helper-split-export-declaration': 7.16.0
-      '@babel/parser': 7.16.5
+      '@babel/parser': 7.16.6
       '@babel/types': 7.16.0
       debug: 4.3.3
       globals: 11.12.0
@@ -2211,7 +2211,7 @@ packages:
   /@types/babel__core/7.1.17:
     resolution: {integrity: sha512-6zzkezS9QEIL8yCBvXWxPTJPNuMeECJVxSOhxNY/jfq9LxOTHivaYTqr37n9LknWWRTIkzqH2UilS5QFvfa90A==}
     dependencies:
-      '@babel/parser': 7.16.5
+      '@babel/parser': 7.16.6
       '@babel/types': 7.16.0
       '@types/babel__generator': 7.6.3
       '@types/babel__template': 7.4.1
@@ -2227,7 +2227,7 @@ packages:
   /@types/babel__template/7.4.1:
     resolution: {integrity: sha512-azBFKemX6kMg5Io+/rdGT0dkGreboUVR0Cdm3fz9QJWpaQGJRQXl7C+6hOTCZcMll7KFyEQpgbYI2lHdsS4U7g==}
     dependencies:
-      '@babel/parser': 7.16.5
+      '@babel/parser': 7.16.6
       '@babel/types': 7.16.0
     dev: true
 
@@ -4684,7 +4684,7 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       '@babel/core': 7.16.5
-      '@babel/parser': 7.16.5
+      '@babel/parser': 7.16.6
       '@istanbuljs/schema': 0.1.3
       istanbul-lib-coverage: 3.2.0
       semver: 6.3.0
@@ -5100,7 +5100,7 @@ packages:
     dependencies:
       '@babel/core': 7.16.5
       '@babel/generator': 7.16.5
-      '@babel/parser': 7.16.5
+      '@babel/parser': 7.16.6
       '@babel/plugin-syntax-typescript': 7.16.5_@babel+core@7.16.5
       '@babel/traverse': 7.16.5
       '@babel/types': 7.16.0

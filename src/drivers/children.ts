@@ -108,13 +108,160 @@ export const children =
       }
       return data;
     }
+
+    /**
+     * Keyed children diffing.
+     *
+     * Million's keyed children diffing is similar to ivi's[1] design in the fact that
+     * they both are of linear time complexity. However, instead of using a longest
+     * increasing subsequence algorithm, it generates a key map and deals with it
+     * linearly.
+     *
+     * [1] https://github.com/localvoid/ivi/blob/master/packages/ivi/src/vdom/reconciler.ts
+     *
+     * This allows for significantly smaller bundle size and better computational
+     * performance <10,000 nodes. It becomes less efficient when common prefix/suffix
+     * or zero length optimizations can't be applied and there are islands of common
+     * nodes, as unnecessary insertion DOM operations are performed. However, this is
+     * okay, as generally this is not the case and repaint/reflow aren't performed
+     * anyway. Additionally, Million's code it a lot cleaner and easier to read, so
+     * it's much more maintainable.
+     *
+     * This diffing algorithm attempts to reduce the number of DOM operations that
+     * need to be performed by leveraging keys. It works in several steps:
+     *
+     * 1. Common end optimization
+     *
+     * This optimization technique is looking for nodes with identical keys by
+     * simultaneously iterating through nodes in the old children list `oldVNodeChildren`
+     * and new children list `newVNodeChildren` from both the suffix [2] and prefix [3].
+     *
+     *  oldVNodeChildren: -> [a b c d] <-
+     *  newVNodeChildren: -> [a b d] <-
+     *
+     * Skip nodes "a" and "b" at the start, and node "d" at the end.
+     *
+     *  oldVNodeChildren: -> [c] <-
+     *  newVNodeChildren: -> [] <-
+     *
+     * 2. Zero length optimization
+     *
+     * Check if the size of one of the list is equal to zero. When length of the old
+     * children list `oldVNodeChildren` is zero, insert remaining nodes from the new
+     * list `newVNodeChildren` [4]. When length of `newVNodeChildren` is zero, remove
+     * remaining nodes from `oldVNodeChildren` [5].
+     *
+     *  oldVNodeChildren: -> [a b c d] <-
+     *  newVNodeChildren: -> [a d] <-
+     *
+     * Skip nodes "a" and "d" (prefix and suffix optimization).
+     *
+     *  oldVNodeChildren: [b c]
+     *  newVNodeChildren: []
+     *
+     * Remove nodes "b" and "c".
+     *
+     * 3. Index and reorder continuous DOM nodes optimization
+     *
+     * Assign original positions of the nodes from the old children list `oldVNodeChildren`
+     * to key map `oldKeyMap` [6].
+     *
+     *  oldVNodeChildren: [b c d e f]
+     *  newVNodeChildren: [c b h f e]
+     *  oldKeyMap: {
+     *    b: 0, // newVNodeChildren[0] == b
+     *    c: 1, // newVNodeChildren[1] == c
+     *    d: 2,
+     *    e: 3,
+     *    f: 4,
+     *  }
+     *
+     * Iterate through `newVNodeChildren` (bounded by common end optimizations) and
+     * check if the new child key is in the `oldKeyMap`. If it is, then fetch the old
+     * node and insert the node at the new index [7].
+     *
+     * "c" is in the `oldKeyMap`, so fetch the old node at index `oldKeyMap[c] == 1`
+     * and insert it in the DOM at index 0, or the new child index.
+     *
+     *  oldVNodeChildren: [b c d e f]
+     *  newVNodeChildren: [c b h f e]
+     *                     ^
+     *  oldKeyMap: {
+     *    b: 0,
+     *    c: 1, // <- delete
+     *    d: 2,
+     *    e: 3,
+     *    f: 4,
+     *  }
+     *
+     * "b" is in the oldKeyMap, so fetch the old node at index `oldKeyMap[b] == 0`
+     * and insert it in the DOM at index 1, or the new child index.
+     *
+     *  oldVNodeChildren: [b c d e f]
+     *  newVNodeChildren: [c b h f e]
+     *                       ^
+     *  oldKeyMap: {
+     *    b: 0, // <- delete
+     *    d: 2,
+     *    e: 3,
+     *    f: 4,
+     *  }
+     *
+     * "h" is not in the oldKeyMap, create a new node and insert it in the
+     * DOM at index 2, or the new child index [8].
+     *
+     *  oldVNodeChildren: [b c d e f]
+     *  newVNodeChildren: [c b h f e]
+     *                         ^
+     *  oldKeyMap: {
+     *    d: 2,
+     *    e: 3,
+     *    f: 4,
+     *  }
+     *
+     * "f" is in the oldKeyMap, so fetch the old node at index `oldKeyMap[f] == 4`
+     * and insert it in the DOM at index 3, or the new child index.
+     *
+     *  oldVNodeChildren: [b c d e f]
+     *  newVNodeChildren: [c b h f e]
+     *                           ^
+     *  oldKeyMap: {
+     *    d: 2,
+     *    e: 3,
+     *    f: 4, // <- delete
+     *  }
+     *
+     * "e" is in the oldKeyMap, so fetch the old node at index `oldKeyMap[e] == 3`
+     * and insert it in the DOM at index 4, or the new child index.
+     *
+     *  oldVNodeChildren: [b c d e f]
+     *  newVNodeChildren: [c b h f e]
+     *                             ^
+     *  oldKeyMap: {
+     *    d: 2,
+     *    e: 3, // <- delete
+     *  }
+     *
+     * 4. Index and delete removed nodes.
+     *
+     * Iterate through `oldKeyMap` values and remove DOM nodes at those indicies [9].
+     *
+     * "d" is remaining in `oldKeyMap`, so remove old DOM node at index.
+     *
+     *  oldVNodeChildren: [b c d e f]
+     *                         ^
+     *  newVNodeChildren: [c b h f e]
+     *  oldKeyMap: {
+     *    d: 2, // <-
+     *  }
+     */
     if (newVNode.flag === VFlags.ONLY_KEYED_CHILDREN) {
       let oldHead = 0;
       let newHead = 0;
       let oldTail = oldVNodeChildren.length - 1;
       let newTail = newVNodeChildren.length - 1;
 
-      // Constrain tails to dirty vnodes: [X, A, B, C], [Y, A, B, C] -> [X], [Y]
+      // [2] Suffix optimization
       while (oldHead <= oldTail && newHead <= newTail) {
         if (
           (<VElement>oldVNodeChildren[oldTail]).key !== (<VElement>newVNodeChildren[newTail]).key
@@ -125,7 +272,7 @@ export const children =
         newTail--;
       }
 
-      // Constrain heads to dirty vnodes: [A, B, C, X], [A, B, C, Y] -> [X], [Y]
+      // [3] Prefix optimization
       while (oldHead <= oldTail && newHead <= newTail) {
         if (
           (<VElement>oldVNodeChildren[oldHead]).key !== (<VElement>newVNodeChildren[newHead]).key
@@ -137,28 +284,29 @@ export const children =
       }
 
       if (oldHead > oldTail) {
-        // There are no dirty old children: [], [X, Y, Z]
+        // [4] Old children optimization
         while (newHead <= newTail) {
+          const i = newHead++;
           workStack.push(() =>
-            el.insertBefore(
-              createElement(newVNodeChildren[newHead], false),
-              el.childNodes[newHead++],
-            ),
+            el.insertBefore(createElement(newVNodeChildren[i], false), el.childNodes[i]),
           );
         }
       } else if (newHead > newTail) {
-        // There are no dirty new children: [X, Y, Z], []
+        // [5] New children optimization
         while (oldHead <= oldTail) {
           const node = el.childNodes[oldHead++];
           workStack.push(() => el.removeChild(node));
         }
       } else {
+        //  [6] Indexing old children
         const oldKeyMap: Record<string, number> = {};
         for (let i = oldTail; i >= oldHead; --i) {
           oldKeyMap[(<VElement>oldVNodeChildren[i]).key!] = i;
         }
+
         while (newHead <= newTail) {
-          const newVNodeChild = <VElement>newVNodeChildren[newHead];
+          const i = newHead++;
+          const newVNodeChild = <VElement>newVNodeChildren[i];
           const oldVNodePosition = oldKeyMap[newVNodeChild.key!];
           const node = el.childNodes[oldVNodePosition];
 
@@ -166,20 +314,19 @@ export const children =
             oldVNodePosition !== undefined &&
             newVNodeChild.key === (<VElement>oldVNodeChildren[oldVNodePosition]).key
           ) {
-            // Determine move for child that moved: [X, A, B, C] -> [A, B, C, X]
-            workStack.push(() => el.insertBefore(node, el.childNodes[newHead]));
+            // [7] Reordering continuous nodes
+            workStack.push(() => el.insertBefore(node, el.childNodes[i]));
             delete oldKeyMap[newVNodeChild.key!];
           } else {
-            // VNode doesn't exist yet: [] -> [X]
+            // [8] Create new nodes
             workStack.push(() =>
-              el.insertBefore(createElement(newVNodeChild, false), el.childNodes[newHead]),
+              el.insertBefore(createElement(newVNodeChild, false), el.childNodes[i]),
             );
           }
-          newHead++;
         }
 
+        // [9] Clean up removed nodes
         for (const oldVNodePosition of Object.values(oldKeyMap)) {
-          // VNode wasn't found in new vnodes, so it's cleaned up: [X] -> []
           const node = el.childNodes[oldVNodePosition];
           workStack.push(() => el.removeChild(node));
         }
