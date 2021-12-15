@@ -45,6 +45,7 @@ export const props =
   ): ReturnType<VDriver> => {
     const oldProps = oldVNode?.props;
     const newProps = newVNode?.props;
+    // Zero props optimization
     if (oldProps === undefined || newProps === null) {
       for (const propName in newProps) {
         updateProp(el, propName, undefined, newProps[propName], workStack);
@@ -60,6 +61,7 @@ export const props =
           el,
           propName,
           oldProps[propName],
+          // Keep track the number of matches with newProps
           Object.prototype.hasOwnProperty.call(newProps, propName)
             ? (matches++, newProps![propName])
             : undefined,
@@ -68,6 +70,7 @@ export const props =
       }
 
       const keys = Object.keys(newProps!);
+      // Limit to number of matches to reduce the number of iterations
       for (let i = 0; matches < keys.length && i < keys.length; ++i) {
         const propName = keys[i];
         if (!Object.prototype.hasOwnProperty.call(oldProps, propName)) {

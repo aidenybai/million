@@ -121,9 +121,11 @@ export const toVNode = (el: DOMNode): VNode => {
   if (el instanceof Text) return String(el.nodeValue);
 
   const props = {};
+  // We know children length, so we created a fixed array
   const children = new Array(el.children.length).fill(0);
   for (let i = 0; i < el.attributes.length; i++) {
-    props[el.attributes[i].nodeName] = el.attributes[i].nodeValue;
+    const { nodeName, nodeValue } = el.attributes[i];
+    props[nodeName] = nodeValue;
   }
   for (let i = 0; i < el.childNodes.length; i++) {
     children[i] = toVNode(<DOMNode>el.childNodes[i]);

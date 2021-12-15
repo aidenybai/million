@@ -8,7 +8,7 @@ specifiers:
   '@rollup/plugin-eslint': ^8.0.1
   '@rollup/plugin-node-resolve': 13.1.1
   '@rollup/plugin-strip': ^2.1.0
-  '@swc-node/jest': ^1.4.2
+  '@swc-node/jest': ^1.4.3
   '@testing-library/dom': ^8.11.1
   '@types/benchmark': ^2.1.1
   '@types/canvas-confetti': ^1.4.2
@@ -54,7 +54,7 @@ devDependencies:
   '@rollup/plugin-eslint': 8.0.1_rollup@2.61.1
   '@rollup/plugin-node-resolve': 13.1.1_rollup@2.61.1
   '@rollup/plugin-strip': 2.1.0_rollup@2.61.1
-  '@swc-node/jest': 1.4.2
+  '@swc-node/jest': 1.4.3
   '@testing-library/dom': 8.11.1
   '@types/benchmark': 2.1.1
   '@types/canvas-confetti': 1.4.2
@@ -2027,18 +2027,18 @@ packages:
       '@sinonjs/commons': 1.8.3
     dev: true
 
-  /@swc-node/core/1.8.1:
-    resolution: {integrity: sha512-Uv0XF6BrDcjXCdq19bQC3/3uMuJEydFFyfXuTY7r7wHea5iq3cyY8uSBr4BcV9/2H/e8Y+Q6rdWr7OK4kGTOKQ==}
+  /@swc-node/core/1.8.2:
+    resolution: {integrity: sha512-IoJ7tGHQ6JOMSmFe4VhP64uLmFKMNasS0QEgUrLFQ0h/dTvpQMynnoGBEJoPL6LfsebZ/q4uKqbpWrth6/yrAA==}
     engines: {node: '>= 10'}
     dependencies:
       '@swc/core': 1.2.120
     dev: true
 
-  /@swc-node/jest/1.4.2:
-    resolution: {integrity: sha512-1HMhHuiIrt7NUj8aswQAe+yJNvBI91HnPssINlUtWjLH3+EBm1T6kfdzEWmLV6nlawX6IZOWLrIHWkg4pbvyow==}
+  /@swc-node/jest/1.4.3:
+    resolution: {integrity: sha512-pMWida9hKd/c6fUor+Sd+Oikxl7X23o9U/MmXsaPEt2gWx5Ar9JjGo0h0Vd30h5Cua2F0FD4/42qeAmMj0qskw==}
     dependencies:
       '@node-rs/xxhash': 1.0.1
-      '@swc-node/core': 1.8.1
+      '@swc-node/core': 1.8.2
     dev: true
 
   /@swc/core-android-arm64/1.2.120:
