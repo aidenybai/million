@@ -2,6 +2,11 @@
  * Field on DOM node that stores the previous VNode
  */
 export const OLD_VNODE_FIELD = '__m_old_vnode';
+/**
+ * Field on DOM node that deleted keyed object pool
+ */
+export const NODE_OBJECT_POOL_FIELD = '__m_node_object_pool';
+
 export type VProps = Record<string, string | boolean | EventListener>;
 export type DOMNode = HTMLElement | SVGElement | Text;
 export type VNode = VElement | string;

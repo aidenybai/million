@@ -1191,7 +1191,7 @@ packages:
       babel-plugin-polyfill-corejs2: 0.3.0_@babel+core@7.16.5
       babel-plugin-polyfill-corejs3: 0.4.0_@babel+core@7.16.5
       babel-plugin-polyfill-regenerator: 0.3.0_@babel+core@7.16.5
-      core-js-compat: 3.19.3
+      core-js-compat: 3.20.0
       semver: 6.3.0
     transitivePeerDependencies:
       - supports-color
@@ -2798,7 +2798,7 @@ packages:
     dependencies:
       '@babel/core': 7.16.5
       '@babel/helper-define-polyfill-provider': 0.3.0_@babel+core@7.16.5
-      core-js-compat: 3.19.3
+      core-js-compat: 3.20.0
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -2939,7 +2939,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001286
-      electron-to-chromium: 1.4.18
+      electron-to-chromium: 1.4.19
       escalade: 3.1.1
       node-releases: 2.0.1
       picocolors: 1.0.0
@@ -2951,7 +2951,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001286
-      electron-to-chromium: 1.4.18
+      electron-to-chromium: 1.4.19
       escalade: 3.1.1
       node-releases: 2.0.1
       picocolors: 1.0.0
@@ -3281,15 +3281,15 @@ packages:
       safe-buffer: 5.1.2
     dev: true
 
-  /core-js-compat/3.19.3:
-    resolution: {integrity: sha512-59tYzuWgEEVU9r+SRgceIGXSSUn47JknoiXW6Oq7RW8QHjXWz3/vp8pa7dbtuVu40sewz3OP3JmQEcDdztrLhA==}
+  /core-js-compat/3.20.0:
+    resolution: {integrity: sha512-relrah5h+sslXssTTOkvqcC/6RURifB0W5yhYBdBkaPYa5/2KBMiog3XiD+s3TwEHWxInWVv4Jx2/Lw0vng+IQ==}
     dependencies:
       browserslist: 4.19.1
       semver: 7.0.0
     dev: true
 
-  /core-js/3.19.3:
-    resolution: {integrity: sha512-LeLBMgEGSsG7giquSzvgBrTS7V5UL6ks3eQlUSbN8dJStlLFiRzUm5iqsRyzUB8carhfKjkJ2vzKqE6z1Vga9g==}
+  /core-js/3.20.0:
+    resolution: {integrity: sha512-KjbKU7UEfg4YPpskMtMXPhUKn7m/1OdTHTVjy09ScR2LVaoUXe8Jh0UdvN2EKUR6iKTJph52SJP95mAB0MnVLQ==}
     requiresBuild: true
     dev: true
 
@@ -3516,8 +3516,8 @@ packages:
       safer-buffer: 2.1.2
     dev: true
 
-  /electron-to-chromium/1.4.18:
-    resolution: {integrity: sha512-i7nKjGGBE1+YUIbfLObA1EZPmN7J1ITEllbhusDk+KIk6V6gUxN9PFe36v+Sd+8Cg0k3cgUv9lQhQZalr8rggw==}
+  /electron-to-chromium/1.4.19:
+    resolution: {integrity: sha512-TeAjwsC/vhvxEtX/xN1JQUMkl+UrwKXlB4rwLyuLYVuBuRtqJJrU4Jy5pCVihMQg4m1ceZ3MEJ0yYuxHj8vC+w==}
     dev: true
 
   /emittery/0.8.1:
@@ -7305,7 +7305,7 @@ packages:
       '@babel/preset-env': 7.16.5_@babel+core@7.16.5
       '@rollup/plugin-commonjs': 15.1.0_rollup@2.61.1
       chalk: 4.1.2
-      core-js: 3.19.3
+      core-js: 3.20.0
       dedent: 0.7.0
       regenerator-runtime: 0.13.9
       rollup: 2.61.1

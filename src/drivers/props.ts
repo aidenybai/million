@@ -45,37 +45,39 @@ export const props =
   ): ReturnType<VDriver> => {
     const oldProps = oldVNode?.props;
     const newProps = newVNode?.props;
-    // Zero props optimization
-    if (oldProps === undefined || newProps === null) {
-      for (const propName in newProps) {
-        updateProp(el, propName, undefined, newProps[propName], workStack);
-      }
-    } else if (newProps === undefined || newProps === null) {
-      for (const propName in oldProps) {
-        updateProp(el, propName, oldProps[propName], undefined, workStack);
-      }
-    } else {
-      let matches = 0;
-      for (const propName in oldProps!) {
-        updateProp(
-          el,
-          propName,
-          oldProps[propName],
-          // Keep track the number of matches with newProps
-          Object.prototype.hasOwnProperty.call(newProps, propName)
-            ? (matches++, newProps![propName])
-            : undefined,
-          workStack,
-        );
-      }
+    if (oldProps !== newProps) {
+      // Zero props optimization
+      if (oldProps === undefined || newProps === null) {
+        for (const propName in newProps) {
+          updateProp(el, propName, undefined, newProps[propName], workStack);
+        }
+      } else if (newProps === undefined || newProps === null) {
+        for (const propName in oldProps) {
+          updateProp(el, propName, oldProps[propName], undefined, workStack);
+        }
+      } else {
+        let matches = 0;
+        for (const propName in oldProps!) {
+          updateProp(
+            el,
+            propName,
+            oldProps[propName],
+            // Keep track the number of matches with newProps
+            Object.prototype.hasOwnProperty.call(newProps, propName)
+              ? (matches++, newProps![propName])
+              : undefined,
+            workStack,
+          );
+        }
 
-      const keys = Object.keys(newProps!);
-      // Limit to number of matches to reduce the number of iterations
-      for (let i = 0; matches < keys.length && i < keys.length; ++i) {
-        const propName = keys[i];
-        if (!Object.prototype.hasOwnProperty.call(oldProps, propName)) {
-          updateProp(el, propName, undefined, newProps![propName], workStack);
-          ++matches;
+        const keys = Object.keys(newProps!);
+        // Limit to number of matches to reduce the number of iterations
+        for (let i = 0; matches < keys.length && i < keys.length; ++i) {
+          const propName = keys[i];
+          if (!Object.prototype.hasOwnProperty.call(oldProps, propName)) {
+            updateProp(el, propName, undefined, newProps![propName], workStack);
+            ++matches;
+          }
         }
       }
     }
