@@ -1,6 +1,7 @@
 import { createElement } from '../createElement';
 import {
   DOMNode,
+  NODE_OBJECT_POOL_FIELD,
   VDelta,
   VDeltaOperationTypes,
   VDriver,
@@ -110,22 +111,33 @@ export const children =
     }
 
     /**
-     * Keyed children diffing.
+     * "no kizzy"
+     * -> Lightweight keyed children diffing algorithm
      *
      * Million's keyed children diffing is similar to ivi's[1] design in the fact that
      * they both are of linear time complexity. However, instead of using a longest
      * increasing subsequence algorithm, it generates a key map and deals with it
-     * linearly.
+     * linearly. Additionally, Million holds removed keyed nodes in an mapped object
+     * pool, recycling DOM nodes to reduce unnecessary element creation computational.
      *
      * [1] https://github.com/localvoid/ivi/blob/master/packages/ivi/src/vdom/reconciler.ts
      *
      * This allows for significantly smaller bundle size and better computational
      * performance <10,000 nodes. It becomes less efficient when common prefix/suffix
      * or zero length optimizations can't be applied and there are islands of common
-     * nodes, as unnecessary insertion DOM operations are performed. However, this is
-     * okay, as generally this is not the case and repaint/reflow aren't performed
-     * anyway. Additionally, Million's code it a lot cleaner and easier to read, so
-     * it's much more maintainable.
+     * nodes, as unnecessary insertion DOM operations are performed.
+     *
+     * For example, the following end to start movement will produce 4 DOM operations,
+     * regardless of L->R or R->L traversal, while other Virtual DOM libraries like ivi
+     * and Inferno produce 4 DOM operations L->R and 3 DOM operations R->L.
+     *
+     *  oldVNodeChildren: -> [a b c X] <-
+     *                              ^
+     *  newVNodeChildren: -> [X a b c] <-
+     *                        ^
+     *
+     * Despite this, Million's code is lot cleaner and easier to read, so it's much
+     * more maintainable at the sacrifice of marginal performance losses.
      *
      * This diffing algorithm attempts to reduce the number of DOM operations that
      * need to be performed by leveraging keys. It works in several steps:
@@ -252,10 +264,12 @@ export const children =
      *                         ^
      *  newVNodeChildren: [c b h f e]
      *  oldKeyMap: {
-     *    d: 2, // <-
+     *    d: 2, // <- check
      *  }
      */
     if (newVNode.flag === VFlags.ONLY_KEYED_CHILDREN) {
+      if (!el[NODE_OBJECT_POOL_FIELD]) el[NODE_OBJECT_POOL_FIELD] = {};
+
       let oldHead = 0;
       let newHead = 0;
       let oldTail = oldVNodeChildren.length - 1;
@@ -288,13 +302,19 @@ export const children =
         while (newHead <= newTail) {
           const i = newHead++;
           workStack.push(() =>
-            el.insertBefore(createElement(newVNodeChildren[i], false), el.childNodes[i]),
+            el.insertBefore(
+              el[NODE_OBJECT_POOL_FIELD][(<VElement>newVNodeChildren[i]).key!] ??
+                createElement(newVNodeChildren[i], false),
+              el.childNodes[i],
+            ),
           );
         }
       } else if (newHead > newTail) {
         // [5] New children optimization
         while (oldHead <= oldTail) {
-          const node = el.childNodes[oldHead++];
+          const i = oldHead++;
+          const node = el.childNodes[i];
+          el[NODE_OBJECT_POOL_FIELD][(<VElement>oldVNodeChildren[i]).key!] = node;
           workStack.push(() => el.removeChild(node));
         }
       } else {
@@ -320,14 +340,19 @@ export const children =
           } else {
             // [8] Create new nodes
             workStack.push(() =>
-              el.insertBefore(createElement(newVNodeChild, false), el.childNodes[i]),
+              el.insertBefore(
+                el[NODE_OBJECT_POOL_FIELD][newVNodeChild.key] ??
+                  createElement(newVNodeChild, false),
+                el.childNodes[i],
+              ),
             );
           }
         }
 
         // [9] Clean up removed nodes
-        for (const oldVNodePosition of Object.values(oldKeyMap)) {
-          const node = el.childNodes[oldVNodePosition];
+        for (const oldVNodeKey in oldKeyMap) {
+          const node = el.childNodes[oldKeyMap[oldVNodeKey]];
+          el[NODE_OBJECT_POOL_FIELD][oldVNodeKey] = node;
           workStack.push(() => el.removeChild(node));
         }
       }
