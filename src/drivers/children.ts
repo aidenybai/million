@@ -11,53 +11,6 @@ import {
   VTask,
 } from '../types/base';
 
-export const getLIS = (sequence: number[], i: number) => {
-  const lis: number[] = [];
-  const increasingSubsequence: number[] = [];
-  const lengths: number[] = new Array(sequence.length);
-  let maxSubsequenceLength = -1;
-
-  for (; i < sequence.length; ++i) {
-    const number = sequence[i];
-    if (number < 0) continue;
-    const target = binarySearch(lis, number);
-    if (target !== -1) lengths[i] = increasingSubsequence[target];
-    if (target === maxSubsequenceLength) {
-      maxSubsequenceLength++;
-      lis[maxSubsequenceLength] = number;
-      increasingSubsequence[maxSubsequenceLength] = i;
-    } else if (number < lis[target + 1]) {
-      lis[target + 1] = number;
-      increasingSubsequence[target + 1] = i;
-    }
-  }
-  for (
-    i = increasingSubsequence[maxSubsequenceLength];
-    maxSubsequenceLength >= 0;
-    i = lengths[i], maxSubsequenceLength--
-  ) {
-    lis[maxSubsequenceLength] = i;
-  }
-  return lis;
-};
-
-export const binarySearch = (sequence: number[], target: number) => {
-  let min = -1;
-  let max = sequence.length;
-  if (max > 0 && sequence[max - 1] <= target) {
-    return max - 1;
-  }
-  while (max - min > 1) {
-    const mid = (min + max) >> 1;
-    if (sequence[mid] > target) {
-      max = mid;
-    } else {
-      min = mid;
-    }
-  }
-  return min;
-};
-
 /**
  * Diffs two VNode children and modifies the DOM node based on the necessary changes
  */
