@@ -168,23 +168,6 @@ export const children =
      *
      * [1] https://github.com/localvoid/ivi/blob/master/packages/ivi/src/vdom/reconciler.ts
      *
-     * This allows for significantly smaller bundle size and better computational
-     * performance <10,000 nodes. It becomes less efficient when common prefix/suffix
-     * or zero length optimizations can't be applied and there are islands of common
-     * nodes, as unnecessary insertion DOM operations are performed.
-     *
-     * For example, the following end to start movement will produce 5 DOM operations,
-     * regardless of L->R or R->L traversal, while other Virtual DOM libraries like ivi
-     * and Inferno produce 5 DOM operations L->R and 4 DOM operations R->L.
-     *
-     *  oldVNodeChildren: -> [a b c d X] <-
-     *                                ^
-     *  newVNodeChildren: -> [X a b c d] <-
-     *                        ^
-     *
-     * Despite this, Million's code is lot cleaner and easier to read, so it's much
-     * more maintainable at the sacrifice of marginal performance losses.
-     *
      * This diffing algorithm attempts to reduce the number of DOM operations that
      * need to be performed by leveraging keys. It works in several steps:
      *
