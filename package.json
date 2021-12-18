@@ -90,7 +90,7 @@
     "benchmark": "^2.1.4",
     "canvas-confetti": "^1.4.0",
     "chart.js": "^3.6.2",
-    "eslint": "^8.4.1",
+    "eslint": "^8.5.0",
     "eslint-config-prettier": "^8.3.0",
     "glob": "^7.2.0",
     "husky": "^7.0.4",

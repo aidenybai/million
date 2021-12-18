@@ -117,7 +117,7 @@ export const children =
      * they both are of linear time complexity. However, instead of using a longest
      * increasing subsequence algorithm, it generates a key map and deals with it
      * linearly. Additionally, Million holds removed keyed nodes in an mapped object
-     * pool, recycling DOM nodes to reduce unnecessary element creation computational.
+     * pool, recycling DOM nodes to reduce unnecessary element creation computation.
      *
      * [1] https://github.com/localvoid/ivi/blob/master/packages/ivi/src/vdom/reconciler.ts
      *
@@ -128,7 +128,7 @@ export const children =
      *
      * This optimization technique is looking for nodes with identical keys by
      * simultaneously iterating through nodes in the old children list `oldVNodeChildren`
-     * and new children list `newVNodeChildren` from both the suffix [2] and prefix [3].
+     * and new children list `newVNodeChildren` from both the suffix[2] and prefix[3].
      *
      *  oldVNodeChildren: -> [a b c d] <-
      *  newVNodeChildren: -> [a b d] <-
@@ -154,8 +154,8 @@ export const children =
      *
      * Check if the size of one of the list is equal to zero. When length of the old
      * children list `oldVNodeChildren` is zero, insert remaining nodes from the new
-     * list `newVNodeChildren` [6]. When length of `newVNodeChildren` is zero, remove
-     * remaining nodes from `oldVNodeChildren` [7].
+     * list `newVNodeChildren`[6]. When length of `newVNodeChildren` is zero, remove
+     * remaining nodes from `oldVNodeChildren`[7].
      *
      *  oldVNodeChildren: -> [a b c d] <-
      *  newVNodeChildren: -> [a d] <-
@@ -170,7 +170,7 @@ export const children =
      * 4. Index and reorder continuous DOM nodes optimization
      *
      * Assign original positions of the nodes from the old children list `oldVNodeChildren`
-     * to key map `oldKeyMap` [8].
+     * to key map `oldKeyMap`[8].
      *
      *  oldVNodeChildren: [b c d e f]
      *  newVNodeChildren: [c b h f e]
@@ -184,7 +184,7 @@ export const children =
      *
      * Iterate through `newVNodeChildren` (bounded by common end optimizations) and
      * check if the new child key is in the `oldKeyMap`. If it is, then fetch the old
-     * node and insert the node at the new index [9].
+     * node and insert the node at the new index[9].
      *
      * "c" is in the `oldKeyMap`, so fetch the old node at index `oldKeyMap[c] == 1`
      * and insert it in the DOM at index 0, or the new child index.
@@ -250,7 +250,7 @@ export const children =
      *
      * 5. Index and delete removed nodes.
      *
-     * Iterate through `oldKeyMap` values and remove DOM nodes at those indicies [11].
+     * Iterate through `oldKeyMap` values and remove DOM nodes at those indicies[11].
      *
      * "d" is remaining in `oldKeyMap`, so remove old DOM node at index.
      *
@@ -283,16 +283,16 @@ export const children =
           // [3] Prefix optimization
           oldHead++;
           newHead++;
-        } else if (oldTailVNode.key === newHeadVNode.key) {
-          // [4] Right move
-          const node = el.childNodes[oldTail--];
-          const head = newHead++;
-          workStack.push(() => el.insertBefore(node, el.childNodes[head]));
         } else if (oldHeadVNode.key === newTailVNode.key) {
-          // [5] Left move
+          // [4] Right move
           const node = el.childNodes[oldHead++];
           const tail = newTail--;
           workStack.push(() => el.insertBefore(node, el.childNodes[tail].nextSibling));
+        } else if (oldTailVNode.key === newHeadVNode.key) {
+          // [5] Left move
+          const node = el.childNodes[oldTail--];
+          const head = newHead++;
+          workStack.push(() => el.insertBefore(node, el.childNodes[head]));
         } else break;
       }
 
