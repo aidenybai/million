@@ -96,7 +96,7 @@
     "husky": "^7.0.4",
     "jest": "^27.4.5",
     "kumiko": "^0.0.1",
-    "lint-staged": "^12.1.2",
+    "lint-staged": "^12.1.3",
     "lodash": "^4.17.21",
     "ora": "^6.0.1",
     "prettier": "^2.5.1",
