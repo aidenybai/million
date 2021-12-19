@@ -62,7 +62,7 @@ patch(app, m('div', { id: 'app' }, ['Goodbye World']));
 
 ## 鸣谢
 
-Million 从 [Snabbdom](https://github.com/snabbdom/snabbdom) 和 [Fre](https://github.com/yisar/fre) 身上获取了很多灵感，并相信 [React](https://github.com/facebook/react)，[Inferno](https://github.com/infernojs/inferno) 以及 [Moon](https://github.com/kbrsh/moon) 背后的核心理念和价值。如果你有兴趣使用其他库，可以随时查看它们。
+Million 从 [snabbdom](https://github.com/snabbdom/snabbdom)，[ivi](https://github.com/localvoid/ivi)，[React](https://github.com/facebook/react)，[Inferno](https://github.com/infernojs/inferno)，[Bobril](https://github.com/Bobris/Bobril)，[domvm](https://github.com/domvm/domvm)，[kivi](https://github.com/localvoid/kivi)，[vidom](https://github.com/dfilatov/vidom)，[等等](https://krausest.github.io/js-framework-benchmark/2021/table_chrome_96.0.4664.45.html) 身上获取了很多灵感。如果你有兴趣使用其他库，可以随时查看它们。
 
 _为什么叫 "Million"？这个名字源于能够处理的目标 [1M+ ops/sec 基准测试](https://github.com/aidenybai/million/tree/main/benchmarks#readme)_.
 

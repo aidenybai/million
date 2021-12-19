@@ -62,7 +62,7 @@ We expect all Million contributors to abide by the terms of our [Code of Conduct
 
 ## Acknowledgments
 
-Million takes heavy inspiration from [snabbdom](https://github.com/snabbdom/snabbdom) and [ivi](https://github.com/localvoid/ivi), and believes in the core philosophies and values behind [React](https://github.com/facebook/react), [Inferno](https://github.com/infernojs/inferno), and [Moon](https://github.com/kbrsh/moon). Million's runtime optimizations stand on the shoulders of giants ([Bobril](https://github.com/Bobris/Bobril), [domvm](https://github.com/domvm/domvm), [kivi](https://github.com/localvoid/kivi), [vidom](https://github.com/dfilatov/vidom), and [many more](https://krausest.github.io/js-framework-benchmark/2021/table_chrome_96.0.4664.45.html)). Feel free to check them out if you interested in an alternative library to use.
+Million takes heavy inspiration from [snabbdom](https://github.com/snabbdom/snabbdom), [ivi](https://github.com/localvoid/ivi), [React](https://github.com/facebook/react), [Inferno](https://github.com/infernojs/inferno), [Bobril](https://github.com/Bobris/Bobril), [domvm](https://github.com/domvm/domvm), [kivi](https://github.com/localvoid/kivi), [vidom](https://github.com/dfilatov/vidom), [etc](https://krausest.github.io/js-framework-benchmark/2021/table_chrome_96.0.4664.45.html). Feel free to check them out if you interested in an alternative library to use.
 
 _Why is it called "Million"? The name originated with the goal of being able to handle [1M+ ops/sec for benchmarks](https://github.com/aidenybai/million/tree/main/benchmarks#readme)_.
 
