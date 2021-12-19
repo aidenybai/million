@@ -201,10 +201,20 @@ describe('.patch', () => {
     const diff = node([props(), children()]);
     const data = diff(el1, m('div', { id: 'app' }));
 
-    flush(data.workStack);
+    flush(data.workStack, (callback) => callback());
 
     expect((<HTMLElement>data.el).id).toEqual('app');
     expect((<HTMLElement>data.el).isEqualNode(el1)).toBeTruthy();
+  });
+
+  it('should flush workStacks', () => {
+    let i = false;
+    const workStack = [() => (i = true)];
+
+    flush([], (callback) => callback());
+    flush(workStack, (callback) => callback());
+
+    expect(i).toEqual(true);
   });
 
   it('should hard replace if different tag', () => {
