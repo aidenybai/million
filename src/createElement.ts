@@ -6,6 +6,7 @@ import { DOMNode, OLD_VNODE_FIELD, VNode } from './types/base';
 export const createElement = (vnode: VNode, attachField = true): DOMNode => {
   if (typeof vnode === 'string') return document.createTextNode(vnode);
 
+  // istanbul ignore next
   const el = vnode.props?.ns
     ? <SVGElement>document.createElementNS(<string>vnode.props?.ns, vnode.tag)
     : <HTMLElement>document.createElement(vnode.tag);
