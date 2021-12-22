@@ -72,7 +72,9 @@ const vnode = () => (
       {suites.map((suite) => {
         const [name, description] = suite.name.split('(');
         return (
-          <button
+          <a
+            role="button"
+            href="#"
             onclick={() => {
               disabled = name;
               logs.unshift([]);
@@ -82,10 +84,14 @@ const vnode = () => (
               suite.run({ async: true });
               patch(el, vnode());
             }}
-            style={{ margin: '5px', opacity: disabled && disabled !== name ? 0.25 : 1 }}
+            style={{
+              margin: '5px',
+              opacity: disabled && disabled !== name ? 0.25 : 1,
+              pointerEvents: disabled ? 'none' : 'auto',
+            }}
             disabled={disabled}
             title={description.slice(0, -1)}
-          >{`${disabled === name ? '☑️ ' : ''}${name}`}</button>
+          >{`${disabled === name ? '☑️ ' : ''}${name}`}</a>
         );
       })}
     </div>
@@ -102,7 +108,16 @@ const vnode = () => (
     <details open={!!logs.length}>
       <summary key="logs">Logs</summary>
 
-      <div>{logs.map((logGroup) => logGroup.length && <pre>{logGroup.join('\n')}</pre>)}</div>
+      <div>
+        {logs.map(
+          (logGroup) =>
+            logGroup.length && (
+              <pre>
+                <code>{logGroup.join('\n')}</code>
+              </pre>
+            ),
+        )}
+      </div>
     </details>
 
     <br />
@@ -111,7 +126,16 @@ const vnode = () => (
       <details style={{ opacity: 0.5 }}>
         <summary key="history">History</summary>
 
-        <div>{history.map((logGroup) => logGroup.length && <pre>{logGroup.join('\n')}</pre>)}</div>
+        <div>
+          {history.map(
+            (logGroup) =>
+              logGroup.length && (
+                <pre>
+                  <code>{logGroup.join('\n')}</code>
+                </pre>
+              ),
+          )}
+        </div>
       </details>
     ) : (
       ''
@@ -133,7 +157,7 @@ const log = (message) => {
   chart.update();
 };
 
-document.body.appendChild(el);
+document.getElementById('loading').replaceWith(el);
 
 const ctx = document.getElementById('viz');
 const chart = new Chart(ctx, {

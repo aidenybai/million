@@ -1,4 +1,12 @@
-@import url(kumiko/dist/kumiko.css);
+@import url(@picocss/pico/css/pico.classless.min.css);
+
+[data-theme='light'],
+:root:not([data-theme='dark']) {
+  --primary: #4e2372;
+  --primary-hover: #371850;
+  --primary-focus: #4e23722d;
+  --primary-inverse: #fff;
+}
 
 .github-corner:hover .octo-arm {
   animation: octocat-wave 560ms ease-in-out;
@@ -38,8 +46,4 @@
   .markdown-body {
     padding: 15px;
   }
-}
-:root {
-  --color-accent: #4e2372;
-  --links: #4e2372;
 }
