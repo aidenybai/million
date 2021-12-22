@@ -83,18 +83,32 @@ export const children =
       return data;
     }
     if (newVNode.flag === undefined || newVNode.flag === VFlags.ANY_CHILDREN) {
-      if (oldVNodeChildren) {
+      if (oldVNodeChildren && newVNodeChildren) {
+        const commonLength = Math.min(oldVNodeChildren.length, newVNodeChildren.length);
+
         // Interates backwards, so in case a childNode is destroyed, it will not shift the nodes
         // and break accessing by index
-        for (let i = oldVNodeChildren.length - 1; i >= 0; --i) {
+        for (let i = commonLength - 1; i >= 0; --i) {
           workStack = diff(<DOMNode>el.childNodes[i], newVNodeChildren[i], oldVNodeChildren[i]);
+        }
+
+        if (newVNodeChildren.length > oldVNodeChildren.length) {
+          for (let i = commonLength; i < newVNodeChildren.length; ++i) {
+            const node = createElement(newVNodeChildren[i], false);
+            workStack.push(() => el.appendChild(node));
+          }
+        } else if (newVNodeChildren.length < oldVNodeChildren.length) {
+          for (let i = oldVNodeChildren.length - 1; i >= commonLength; --i) {
+            workStack.push(() => el.removeChild(el.childNodes[i]));
+          }
+        }
+      } else if (newVNodeChildren) {
+        for (let i = 0; i < newVNodeChildren.length; ++i) {
+          const node = createElement(newVNodeChildren[i], false);
+          workStack.push(() => el.appendChild(node));
         }
       }
 
-      for (let i = oldVNodeChildren.length ?? 0; i < newVNodeChildren.length ?? 0; ++i) {
-        const node = createElement(newVNodeChildren[i], false);
-        workStack.push(() => el.appendChild(node));
-      }
       return data;
     }
     if (newVNode.flag === VFlags.ONLY_TEXT_CHILDREN) {
@@ -317,7 +331,7 @@ export const children =
           workStack.push(() => el.removeChild(node));
         }
       } else {
-        //  [8] Indexing old children
+        // [8] Indexing old children
         const oldKeyMap: Record<string, number> = {};
         for (let i = oldTail; i >= oldHead; --i) {
           oldKeyMap[(<VElement>oldVNodeChildren[i]).key!] = i;
