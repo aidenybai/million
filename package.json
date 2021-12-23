@@ -78,14 +78,14 @@
     "@types/benchmark": "^2.1.1",
     "@types/canvas-confetti": "^1.4.2",
     "@types/lodash": "^4.14.178",
-    "@types/node": "^17.0.3",
+    "@types/node": "^17.0.4",
     "@types/virtual-dom": "^2.1.1",
     "@typescript-eslint/eslint-plugin": "^5.8.0",
     "@typescript-eslint/parser": "^5.8.0",
     "benchmark": "^2.1.4",
     "c8": "^7.10.0",
     "canvas-confetti": "^1.4.0",
-    "chart.js": "^3.6.2",
+    "chart.js": "^3.7.0",
     "esbuild": "^0.14.8",
     "eslint": "^8.5.0",
     "eslint-config-prettier": "^8.3.0",
@@ -104,7 +104,7 @@
     "virtual-dom": "^2.1.1",
     "vite": "^2.7.6",
     "vite-plugin-legacy": "^2.1.0",
-    "vitest": "^0.0.108",
+    "vitest": "^0.0.109",
     "zx": "^4.2.0"
   }
 }
