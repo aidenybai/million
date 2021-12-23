@@ -17,7 +17,7 @@ export type VCommit = (task: VTask) => void;
 
 export type VDriver = (
   el: DOMNode,
-  newVNode: VNode,
+  newVNode?: VNode,
   oldVNode?: VNode,
   workStack?: VTask[],
   driver?: VDriver,

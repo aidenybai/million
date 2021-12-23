@@ -24,7 +24,7 @@ export const flush = (
  */
 export const patch = (
   el: DOMNode,
-  newVNode: VNode,
+  newVNode?: VNode,
   oldVNode?: VNode,
   workStack: VTask[] = [],
 ): DOMNode => {

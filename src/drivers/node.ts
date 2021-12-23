@@ -7,7 +7,7 @@ import { DOMNode, OLD_VNODE_FIELD, VDriver, VElement, VNode, VTask } from '../ty
 export const node = (drivers: VDriver[]) => {
   const nodeDriver = (
     el: DOMNode,
-    newVNode: VNode,
+    newVNode?: VNode,
     oldVNode?: VNode,
     workStack: VTask[] = [],
   ): ReturnType<VDriver> => {
