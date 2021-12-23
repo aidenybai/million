@@ -23,7 +23,7 @@ export type VDriver = (
   driver?: VDriver,
 ) => {
   el: DOMNode;
-  newVNode: VNode;
+  newVNode?: VNode;
   oldVNode?: VNode;
   workStack?: VTask[];
   driver?: VDriver;
