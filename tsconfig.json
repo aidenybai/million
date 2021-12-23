@@ -4,7 +4,7 @@
     "paths": {
       "million": ["src/index"],
       "million/*": ["src/*"],
-      "million/jsx-runtime": ["src/jsx"]
+      "million/jsx-runtime": ["src/jsx-runtime"]
     },
     "jsx": "react-jsx",
     "jsxImportSource": "million",
