@@ -1,28 +1,33 @@
-import { className, DELETE, INSERT, kebab, m, ns, style, svg, UPDATE, toVNode } from '../m';
-import { OLD_VNODE_FIELD, VDeltaOperationTypes } from '../types/base';
+import { describe, expect, it } from 'vitest';
+import { className, DELETE, INSERT, kebab, m, ns, style, svg, UPDATE, toVNode } from '../src/m';
+import { OLD_VNODE_FIELD, VDeltaOperationTypes, VNode } from '../src/types/base';
 
-describe('.m', () => {
+const expectEqualVNode = (vnode1: VNode, vnode2: VNode) => {
+  expect(JSON.stringify(vnode1)).toEqual(JSON.stringify(vnode2));
+};
+
+describe('m', () => {
   it('should create empty vnode with tag', () => {
-    expect(m('div')).toEqual({ tag: 'div' });
+    expectEqualVNode(m('div'), { tag: 'div' });
   });
 
   it('should create vnode with tag and props', () => {
-    expect(m('div', { id: 'app' })).toEqual({ tag: 'div', props: { id: 'app' } });
+    expectEqualVNode(m('div', { id: 'app' }), { tag: 'div', props: { id: 'app' } });
   });
 
   it('should create vnode with tag and one string child', () => {
-    expect(m('div', undefined, ['foo'])).toEqual({ tag: 'div', children: ['foo'] });
+    expectEqualVNode(m('div', undefined, ['foo']), { tag: 'div', children: ['foo'] });
   });
 
   it('should create vnode with tag and multiple string children', () => {
-    expect(m('div', undefined, ['foo', 'bar', 'baz'])).toEqual({
+    expectEqualVNode(m('div', undefined, ['foo', 'bar', 'baz']), {
       tag: 'div',
       children: ['foo', 'bar', 'baz'],
     });
   });
 
   it('should create vnode with tag and one vnode child', () => {
-    expect(m('div', undefined, [m('div')])).toEqual({
+    expectEqualVNode(m('div', undefined, [m('div')]), {
       tag: 'div',
       children: [
         {
@@ -33,7 +38,7 @@ describe('.m', () => {
   });
 
   it('should create vnode with tag and multiple vnode and string children', () => {
-    expect(m('div', undefined, [m('div'), 'foo', m('div'), 'bar'])).toEqual({
+    expectEqualVNode(m('div', undefined, [m('div'), 'foo', m('div'), 'bar']), {
       tag: 'div',
       children: [
         {
@@ -49,50 +54,52 @@ describe('.m', () => {
   });
 
   it('should create vnode with deeply nested children', () => {
-    expect(
+    expectEqualVNode(
       m('div', undefined, [
         'foo',
         m('div', undefined, ['bar', m('div', undefined, ['baz', m('div', undefined, ['boo'])])]),
       ]),
-    ).toEqual({
-      tag: 'div',
-      children: [
-        'foo',
-        {
-          tag: 'div',
-          children: [
-            'bar',
-            {
-              tag: 'div',
-              children: [
-                'baz',
-                {
-                  tag: 'div',
-                  children: ['boo'],
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    });
+      {
+        tag: 'div',
+        children: [
+          'foo',
+          {
+            tag: 'div',
+            children: [
+              'bar',
+              {
+                tag: 'div',
+                children: [
+                  'baz',
+                  {
+                    tag: 'div',
+                    children: ['boo'],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    );
   });
 
   it('should create a tag with className from class object', () => {
-    expect(
+    expectEqualVNode(
       m('div', { className: className({ class1: true, class2: false, class3: true }) }),
-    ).toEqual({
-      tag: 'div',
-      props: {
-        className: 'class1 class3',
+      {
+        tag: 'div',
+        props: {
+          className: 'class1 class3',
+        },
+        children: undefined,
+        key: undefined,
       },
-      children: undefined,
-      key: undefined,
-    });
+    );
   });
 
   it('should create a tag with style object', () => {
-    expect(m('div', { style: style({ color: 'tomato', margin: '1rem' }) })).toEqual({
+    expectEqualVNode(m('div', { style: style({ color: 'tomato', margin: '1rem' }) }), {
       tag: 'div',
       props: {
         style: 'color:tomato;margin:1rem',
@@ -125,7 +132,7 @@ describe('.m', () => {
       ],
     };
     ns(vnode.tag, vnode.props, vnode.children);
-    expect(vnode).toEqual({
+    expectEqualVNode(vnode, {
       tag: 'svg',
       props: { ns: 'http://www.w3.org/2000/svg' },
       children: [
@@ -154,9 +161,9 @@ describe('.m', () => {
       ],
     };
     ns(vnode.tag, vnode.props, vnode.children);
-    expect(vnode).toEqual({
+    expectEqualVNode(vnode, {
       tag: 'svg',
-      props: { ns: 'http://www.w3.org/2000/svg', class: 'foo' },
+      props: { class: 'foo', ns: 'http://www.w3.org/2000/svg' },
       children: [
         'foo',
         {
@@ -169,27 +176,15 @@ describe('.m', () => {
   it('should attach ns to props using svg helper', () => {
     const vnode = {
       tag: 'svg',
-      children: [
-        'foo',
-        {
-          tag: 'div',
-        },
-      ],
     };
-    expect(svg(vnode)).toEqual({
+    expectEqualVNode(svg(vnode), {
       tag: 'svg',
       props: { ns: 'http://www.w3.org/2000/svg' },
-      children: [
-        'foo',
-        {
-          tag: 'div',
-        },
-      ],
     });
   });
 
   it('should move key to distinct property', () => {
-    expect(m('div', { key: 'foo' }, ['foo', m('div')])).toEqual({
+    expectEqualVNode(m('div', { key: 'foo' }, ['foo', m('div')]), {
       tag: 'div',
       props: {},
       children: [
@@ -229,7 +224,8 @@ describe('.m', () => {
     child.href = 'http://foo.bar';
     el.appendChild(child);
 
-    expect(toVNode(el)).toEqual(
+    expectEqualVNode(
+      toVNode(el),
       m('DIV', { id: 'foo', class: 'bar baz', style: 'color: red;' }, [
         m('A', { href: 'http://foo.bar' }, ['foo bar baz']),
       ]),
@@ -250,7 +246,8 @@ describe('.m', () => {
       m('A', { href: 'http://foo.bar' }, ['foo bar baz']),
     ]);
 
-    expect(toVNode(el)).toEqual(
+    expectEqualVNode(
+      toVNode(el),
       m('DIV', { id: 'foo', class: 'bar baz', style: 'color: red;' }, [
         m('A', { href: 'http://foo.bar' }, ['foo bar baz']),
       ]),

@@ -1,30 +1,31 @@
-import { createElement } from '../createElement';
-import { children } from '../drivers/children';
-import { props } from '../drivers/props';
-import { node } from '../drivers/node';
-import { DELETE, INSERT, m, UPDATE } from '../m';
-import { flush, patch } from '../patch';
-import { VFlags } from '../types/base';
+import { describe, expect, it } from 'vitest';
+import { createElement } from '../src/createElement';
+import { children } from '../src/drivers/children';
+import { props } from '../src/drivers/props';
+import { node } from '../src/drivers/node';
+import { DELETE, INSERT, m, UPDATE } from '../src/m';
+import { flush, patch } from '../src/patch';
+import { VFlags, DOMNode } from '../src/types/base';
 
-describe('.patch', () => {
+const expectEqualNode = (el1: DOMNode, el2: DOMNode) => {
+  expect(el1.isEqualNode(el2)).toBeTruthy();
+};
+
+describe('patch', () => {
   it('should patch element with text as children', () => {
     const el = createElement(m('div', { id: 'el' }, ['foo']));
 
     patch(el, m('div', { id: 'el' }, ['bar']));
-    expect(el).toEqual(createElement(m('div', { id: 'el' }, ['bar'])));
+    expectEqualNode(el, createElement(m('div', { id: 'el' }, ['bar'])));
     patch(el, m('div', { id: 'el', className: 'foo' }, ['baz']));
-    expect(el).toEqual(createElement(m('div', { id: 'el', className: 'foo' }, ['baz'])));
-
-    document.body.textContent = '';
+    expectEqualNode(el, createElement(m('div', { id: 'el', className: 'foo' }, ['baz'])));
   });
 
   it('should patch attributes', () => {
     const el = createElement(m('div', { id: 'el' }, ['foo']));
 
     patch(el, m('div', { 'data-test': 'foo' }, ['bar']));
-    expect(el).toEqual(createElement(m('div', { 'data-test': 'foo' }, ['bar'])));
-
-    document.body.textContent = '';
+    expectEqualNode(el, createElement(m('div', { 'data-test': 'foo' }, ['bar'])));
   });
 
   it('should patch text', () => {
@@ -154,7 +155,7 @@ describe('.patch', () => {
       VFlags.ONLY_KEYED_CHILDREN,
     );
     patch(el, newVNode1, m('ul', undefined, undefined, VFlags.NO_CHILDREN));
-    expect(el).toEqual(createElement(newVNode1));
+    expectEqualNode(el, createElement(newVNode1));
 
     const list2 = ['foo', 'baz', 'bar', 'foo1', 'bar1', 'baz1'];
     const newVNode2 = m(
@@ -164,28 +165,7 @@ describe('.patch', () => {
       VFlags.ONLY_KEYED_CHILDREN,
     );
     patch(el, newVNode2, newVNode1);
-    expect(el).toEqual(createElement(newVNode2));
-
-    // BROKEN TESTS: Ad-hoc work completely fine, but fail in unit tests?
-
-    // const list3 = ['foo0', 'foo', 'bar', 'foo1', 'bar1', 'baz1'];
-    // const newVNode3 = m(
-    //   'ul',
-    //   undefined,
-    //   list3.map((item) => m('li', { key: item }, [item])),
-    //   VFlags.ONLY_KEYED_CHILDREN,
-    // );
-    // patch(el, newVNode3, newVNode2);
-    // expect(patch(el, newVNode3, newVNode2)).toEqual(createElement(newVNode3));
-
-    // const list4 = list3.reverse();
-    // const newVNode4 = m(
-    //   'ul',
-    //   undefined,
-    //   list4.map((item) => m('li', { key: item }, [item])),
-    //   VFlags.ONLY_KEYED_CHILDREN,
-    // );
-    // expect(patch(el, newVNode4, newVNode3)).toEqual(createElement(newVNode4));
+    expectEqualNode(el, createElement(newVNode2));
   });
 
   it('should return new DOM node', () => {
@@ -193,7 +173,7 @@ describe('.patch', () => {
     const el2 = patch(el1, m('div', { id: 'app' }));
 
     expect((<HTMLElement>el2).id).toEqual('app');
-    expect((<HTMLElement>el2).isEqualNode(el1)).toBeTruthy();
+    expectEqualNode(<HTMLElement>el2, el1);
   });
 
   it('should compose a custom patch', () => {
@@ -204,7 +184,7 @@ describe('.patch', () => {
     flush(data.workStack, (callback) => callback());
 
     expect((<HTMLElement>data.el).id).toEqual('app');
-    expect((<HTMLElement>data.el).isEqualNode(el1)).toBeTruthy();
+    expectEqualNode(<HTMLElement>data.el, el1);
   });
 
   it('should flush workStacks', () => {
@@ -221,6 +201,6 @@ describe('.patch', () => {
     const el1 = createElement(m('div'));
     const el2 = patch(el1, m('a'));
 
-    expect(el2).toEqual(document.createElement('a'));
+    expectEqualNode(el2, document.createElement('a'));
   });
 });

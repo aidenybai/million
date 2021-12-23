@@ -1,19 +1,24 @@
-import { createElement } from '../createElement';
-import { m } from '../m';
-import { OLD_VNODE_FIELD } from '../types/base';
+import { describe, expect, it } from 'vitest';
+import { createElement } from '../src/createElement';
+import { m } from '../src/m';
+import { OLD_VNODE_FIELD, DOMNode } from '../src/types/base';
 
-describe('.createElement', () => {
+const expectEqualNode = (el1: DOMNode, el2: DOMNode) => {
+  expect(el1.isEqualNode(el2)).toBeTruthy();
+};
+
+describe('createElement', () => {
   it('should create Text', () => {
-    expect(createElement('foo')).toEqual(document.createTextNode('foo'));
+    expectEqualNode(createElement('foo'), document.createTextNode('foo'));
   });
 
   it('should create HTMLElement from vnode', () => {
-    expect(createElement(m('div'))).toEqual(document.createElement('div') as HTMLElement);
+    expectEqualNode(createElement(m('div')), document.createElement('div') as HTMLElement);
 
     const el = document.createElement('div');
     el.id = 'app';
     el.appendChild(document.createTextNode('foo'));
-    expect(createElement(m('div', { id: 'app' }, ['foo']))).toEqual(el);
+    expectEqualNode(createElement(m('div', { id: 'app' }, ['foo'])), el);
   });
 
   it('should create HTMLElement from vnode with VNode child', () => {
@@ -24,7 +29,8 @@ describe('.createElement', () => {
     child.id = 'foo';
     el.appendChild(child);
 
-    expect(createElement(m('div', { id: 'app' }, [m('section', { id: 'foo' }, ['bar'])]))).toEqual(
+    expectEqualNode(
+      createElement(m('div', { id: 'app' }, [m('section', { id: 'foo' }, ['bar'])])),
       el,
     );
   });
