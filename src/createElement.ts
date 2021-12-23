@@ -20,7 +20,7 @@ export const createElement = (vnode: VNode, attachField = true): DOMNode => {
       } else if (el[propName] !== undefined && !(el instanceof SVGElement)) {
         el[propName] = propValue;
       } else {
-        (<HTMLElement | SVGElement>el).setAttribute(propName, String(propValue));
+        el.setAttribute(propName, String(propValue));
       }
     }
   }
