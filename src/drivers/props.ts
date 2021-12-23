@@ -35,8 +35,7 @@ export const updateProp = (
  * Diffs two VNode props and modifies the DOM node based on the necessary changes
  */
 export const props =
-  (): VDriver =>
-  // @ts-expect-error Subset of VDriver
+  (): Partial<VDriver> =>
   (
     el: HTMLElement | SVGElement,
     newVNode: VElement,
