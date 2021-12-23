@@ -5,5 +5,5 @@ authors:
     given-names: Aiden
     orcid: https://orcid.org/0000-0002-3676-3726
 title: "Million.js: <1kb compiler-augmented virtual DOM. It's fast!"
-version: 1.0.3
+version: 1.0.4
 date-released: 2021-7-27
