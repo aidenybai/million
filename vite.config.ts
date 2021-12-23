@@ -13,4 +13,8 @@ export default defineConfig({
       million: resolve(__dirname, './src'),
     },
   },
+  test: {
+    watch: false,
+    environment: 'jsdom',
+  },
 });
