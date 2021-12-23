@@ -20,14 +20,14 @@ export const createElement = (vnode: VNode, attachField = true): DOMNode => {
       } else if (el[propName] !== undefined && !(el instanceof SVGElement)) {
         el[propName] = propValue;
       } else {
-        el.setAttribute(propName, String(propValue));
+        (<HTMLElement | SVGElement>el).setAttribute(propName, String(propValue));
       }
     }
   }
 
   if (vnode.children) {
     for (let i = 0; i < vnode.children.length; ++i) {
-      el.appendChild(createElement(vnode.children[i]));
+      el.appendChild(createElement(vnode.children[i], false));
     }
   }
 

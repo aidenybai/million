@@ -4,7 +4,7 @@ import { DOMNode, OLD_VNODE_FIELD, VDriver, VElement, VNode, VTask } from '../ty
 /**
  * Diffs a single DOM node and modifies the DOM node based on the necessary changes
  */
-export const node = (drivers: VDriver[]) => {
+export const node = (drivers: Partial<VDriver>[]) => {
   const nodeDriver = (
     el: DOMNode,
     newVNode?: VNode,
@@ -51,7 +51,7 @@ export const node = (drivers: VDriver[]) => {
           }
 
           for (let i = 0; i < drivers.length; ++i) {
-            drivers[i](el, newVElement, oldVElement, workStack, nodeDriver);
+            (<VDriver>drivers[i])(el, newVElement, oldVElement, workStack, nodeDriver);
           }
         }
       }
