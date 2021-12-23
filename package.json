@@ -12,7 +12,7 @@
     "build": "zx scripts/build.mjs",
     "lint": "eslint src/**",
     "cleanup": "prettier --write src --parser typescript",
-    "test": "vitest --coverage",
+    "test": "c8 vitest --reporter=coveralls",
     "bench": "vite --config benchmarks/vite.config.ts",
     "release": "zx scripts/release.mjs && zx scripts/citation.mjs",
     "welcome": "zx scripts/welcome.mjs",
