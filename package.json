@@ -104,7 +104,7 @@
     "virtual-dom": "^2.1.1",
     "vite": "^2.7.6",
     "vite-plugin-legacy": "^2.1.0",
-    "vitest": "^0.0.109",
+    "vitest": "^0.0.110",
     "zx": "^4.2.0"
   }
 }

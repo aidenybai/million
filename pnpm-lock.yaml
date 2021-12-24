@@ -33,7 +33,7 @@ specifiers:
   virtual-dom: ^2.1.1
   vite: ^2.7.6
   vite-plugin-legacy: ^2.1.0
-  vitest: ^0.0.109
+  vitest: ^0.0.110
   zx: ^4.2.0
 
 devDependencies:
@@ -69,7 +69,7 @@ devDependencies:
   virtual-dom: 2.1.1
   vite: 2.7.6
   vite-plugin-legacy: 2.1.0_vite@2.7.6
-  vitest: 0.0.109_f2f257d893e73333b6c066141b943206
+  vitest: 0.0.110_f2f257d893e73333b6c066141b943206
   zx: 4.2.0
 
 packages:
@@ -1513,8 +1513,8 @@ packages:
       '@types/node': 17.0.4
     dev: true
 
-  /@types/istanbul-lib-coverage/2.0.3:
-    resolution: {integrity: sha512-sz7iLqvVUg1gIedBOvlkxPlc8/uVzyS5OwGz1cKjXzkl3FpL3al0crU8YGU1WoHkxn0Wxbw5tyi6hvzJKNzFsw==}
+  /@types/istanbul-lib-coverage/2.0.4:
+    resolution: {integrity: sha512-z/QT1XN4K4KYuslS23k62yDIDLwLFkzxOuMplDtObz0+y7VqJCaO2o+SPwHCvLFZh7xazvvoor2tA/hPz9ee7g==}
     dev: true
 
   /@types/json-schema/7.0.9:
@@ -1970,7 +1970,7 @@ packages:
       foreground-child: 2.0.0
       istanbul-lib-coverage: 3.2.0
       istanbul-lib-report: 3.0.0
-      istanbul-reports: 3.1.1
+      istanbul-reports: 3.1.2
       rimraf: 3.0.2
       test-exclude: 6.0.0
       v8-to-istanbul: 8.1.0
@@ -3502,8 +3502,8 @@ packages:
       supports-color: 7.2.0
     dev: true
 
-  /istanbul-reports/3.1.1:
-    resolution: {integrity: sha512-q1kvhAXWSsXfMjCdNHNPKZZv94OlspKnoGv+R9RGbnqOOQ0VbNfLFgQDVgi7hHenKsndGq3/o0OBdzDXthWcNw==}
+  /istanbul-reports/3.1.2:
+    resolution: {integrity: sha512-0gHxuT1NNC0aEIL1zbJ+MTgPbbHhU77eJPuU35WKA7TgXiSNlCAx4PENoMrH0Or6M2H80TaZcWKhM0IK6V8gRw==}
     engines: {node: '>=8'}
     dependencies:
       html-escaper: 2.0.2
@@ -5003,7 +5003,7 @@ packages:
     resolution: {integrity: sha512-/PRhfd8aTNp9Ggr62HPzXg2XasNFGy5PBt0Rp04du7/8GNNSgxFL6WBTkgMKSL9bFjH+8kKEG3f37FmxiTqUUA==}
     engines: {node: '>=10.12.0'}
     dependencies:
-      '@types/istanbul-lib-coverage': 2.0.3
+      '@types/istanbul-lib-coverage': 2.0.4
       convert-source-map: 1.8.0
       source-map: 0.7.3
     dev: true
@@ -5073,8 +5073,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vitest/0.0.109_f2f257d893e73333b6c066141b943206:
-    resolution: {integrity: sha512-OC0WNQCOEkKljQf6o4FVlPELvubPw1WiprkALqWwE+kwH7f7u8AKwxI2NefP8d0EgfHuOU5TnRhjsE69TeFdaQ==}
+  /vitest/0.0.110_f2f257d893e73333b6c066141b943206:
+    resolution: {integrity: sha512-UeeKJhJn26iCf3yCi8y5pREs/MNyanvHkCkVbhuYlyQITLkDDCMNkdw6ESma2c2v7VoWwp8zXsEr09GT4hMO3w==}
     engines: {node: '>=14.14.0'}
     hasBin: true
     peerDependencies:
