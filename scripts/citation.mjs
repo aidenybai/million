@@ -1,11 +1,12 @@
 #!/usr/bin/env zx
 import 'zx/globals';
+import { write } from 'fsxx';
 import { fail, success, info } from './helpers.mjs';
 $.verbose = false;
 
 try {
   const version = await question('What is the next version? ');
-  await fs.writeFile(
+  await write(
     './CITATION.cff',
     `cff-version: 1.1.0
 message: "If you use this software, please cite it as below."
