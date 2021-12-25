@@ -88,6 +88,7 @@
     "esbuild": "^0.14.8",
     "eslint": "^8.5.0",
     "eslint-config-prettier": "^8.3.0",
+    "fsxx": "^0.0.5",
     "husky": "^7.0.4",
     "jsdom": "^19.0.0",
     "lint-staged": "^12.1.4",

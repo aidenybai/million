@@ -18,6 +18,7 @@ specifiers:
   esbuild: ^0.14.8
   eslint: ^8.5.0
   eslint-config-prettier: ^8.3.0
+  fsxx: ^0.0.5
   husky: ^7.0.4
   jsdom: ^19.0.0
   lint-staged: ^12.1.4
@@ -54,6 +55,7 @@ devDependencies:
   esbuild: 0.14.8
   eslint: 8.5.0
   eslint-config-prettier: 8.3.0_eslint@8.5.0
+  fsxx: 0.0.5
   husky: 7.0.4
   jsdom: 19.0.0
   lint-staged: 12.1.4
@@ -1222,7 +1224,7 @@ packages:
     resolution: {integrity: sha512-eZBRL8Lk3hMNHp1wUMYj0qrZQEsST1ai7KHR8J1IDD9aHgT7L2giciibuQ+Og7vxVhR5WtYDvh9xirXFVPaSkQ==}
     engines: {node: '>=v12'}
     dependencies:
-      conventional-changelog-conventionalcommits: 4.6.1
+      conventional-changelog-conventionalcommits: 4.6.2
     dev: true
 
   /@commitlint/ensure/15.0.0:
@@ -2200,8 +2202,8 @@ packages:
       q: 1.5.1
     dev: true
 
-  /conventional-changelog-conventionalcommits/4.6.1:
-    resolution: {integrity: sha512-lzWJpPZhbM1R0PIzkwzGBCnAkH5RKJzJfFQZcl/D+2lsJxAwGnDKBqn/F4C1RD31GJNn8NuKWQzAZDAVXPp2Mw==}
+  /conventional-changelog-conventionalcommits/4.6.2:
+    resolution: {integrity: sha512-fo+VhM0VtD3wdHZtrPhgvTFjAhAMUjYeQV6B5+DB/cupG1O554pJdTwrvBInq8JLHl+GucKQpZycMPye/OpgSw==}
     engines: {node: '>=10'}
     dependencies:
       compare-func: 2.0.0
@@ -3097,6 +3099,15 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /fsxx/0.0.5:
+    resolution: {integrity: sha512-RTa5vyx0CIyejNaV/mO75LoZCg18NHEzFBN8z/92TNHO6m2lzwBmiDpK7r0KCuEgGhrOOzG+u29jonzTufX5MA==}
+    engines: {node: '>= 14.8.0'}
+    dependencies:
+      fast-glob: 3.2.7
+      fs-extra: 10.0.0
+      zx: 1.15.2
+    dev: true
 
   /function-bind/1.1.1:
     resolution: {integrity: sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A==}
@@ -5284,6 +5295,18 @@ packages:
   /yocto-queue/0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
+    dev: true
+
+  /zx/1.15.2:
+    resolution: {integrity: sha512-UvltPAK8alQ7YXxOZDWCR3m4LppUmOpB3ZpJvc4NL0YEZDikLhC9jd1pnB4Fze/4OcmF3Xff6kK+6DKeqH1efA==}
+    engines: {node: '>= 15.0.0'}
+    hasBin: true
+    dependencies:
+      '@types/node': 16.11.17
+      '@types/node-fetch': 2.5.12
+      chalk: 4.1.2
+      node-fetch: 2.6.6
+      which: 2.0.2
     dev: true
 
   /zx/4.2.0:
