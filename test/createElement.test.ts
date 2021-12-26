@@ -7,7 +7,7 @@ const expectEqualNode = (el1: DOMNode, el2: DOMNode) => {
   expect(el1.isEqualNode(el2)).toBeTruthy();
 };
 
-describe('createElement', () => {
+describe.concurrent('createElement', () => {
   it('should create Text', () => {
     expectEqualNode(createElement('foo'), document.createTextNode('foo'));
   });

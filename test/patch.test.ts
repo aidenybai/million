@@ -11,7 +11,7 @@ const expectEqualNode = (el1: DOMNode, el2: DOMNode) => {
   expect(el1.isEqualNode(el2)).toBeTruthy();
 };
 
-describe('patch', () => {
+describe.concurrent('patch', () => {
   it('should patch element with text as children', () => {
     const el = createElement(m('div', { id: 'el' }, ['foo']));
 
