@@ -6,7 +6,7 @@ const expectEqualVNode = (vnode1: VNode, vnode2: VNode) => {
   expect(JSON.stringify(vnode1)).toEqual(JSON.stringify(vnode2));
 };
 
-describe('m', () => {
+describe.concurrent('m', () => {
   it('should create empty vnode with tag', () => {
     expectEqualVNode(m('div'), { tag: 'div' });
   });

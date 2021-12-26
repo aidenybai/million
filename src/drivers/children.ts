@@ -86,13 +86,13 @@ export const children =
     /**
      * Lightweight keyed children diffing algorithm -> "diff or drown"
      *
-     * Million's keyed children diffing is similar to ivi's[1] design in the fact that
+     * Million's keyed children diffing is similar to mikado's design in the fact that
      * they both are of linear time complexity. However, instead of using a longest
      * increasing subsequence algorithm, it generates a key map and deals with it
      * linearly. Additionally, Million holds removed keyed nodes in an mapped object
      * pool, recycling DOM nodes to reduce unnecessary element creation computation.
      *
-     * [1] https://github.com/localvoid/ivi/blob/master/packages/ivi/src/vdom/reconciler.ts
+     * [1] https://github.com/nextapps-de/mikado/blob/master/doc/reconcile.md
      *
      * This diffing algorithm attempts to reduce the number of DOM operations that
      * need to be performed by leveraging keys. It works in several steps:
@@ -292,6 +292,8 @@ export const children =
       } else {
         // [8] Indexing old children
         const oldKeyMap: Record<string, number> = {};
+        const offsets: number[] = new Array(newTail - newHead + 1);
+        const prefix = Number(newHead);
         for (let i = oldTail; i >= oldHead; --i) {
           oldKeyMap[(<VElement>oldVNodeChildren[i]).key!] = i;
         }
@@ -300,33 +302,90 @@ export const children =
           const head = newHead++;
           const newVNodeChild = <VElement>newVNodeChildren[head];
           const oldVNodePosition = oldKeyMap[newVNodeChild.key!];
-          const node = el.childNodes[oldVNodePosition];
+          offsets[head - prefix] = oldVNodePosition - head;
+        }
 
-          if (
-            oldVNodePosition !== undefined &&
-            newVNodeChild.key === (<VElement>oldVNodeChildren[oldVNodePosition]).key
-          ) {
-            // [9] Reordering continuous nodes
-            workStack.push(() => el.insertBefore(node, el.childNodes[head]));
-            delete oldKeyMap[newVNodeChild.key!];
-          } else {
-            // [10] Create new nodes
-            workStack.push(() =>
-              el.insertBefore(
-                el[NODE_OBJECT_POOL_FIELD][newVNodeChild.key] ??
-                  createElement(newVNodeChild, false),
-                el.childNodes[head],
-              ),
-            );
+        console.log(offsets);
+
+        for (let i = 0; i < offsets.length; ++i) {
+          const skip =
+            offsets[i] === 0 || offsets[i] === offsets[i - 1] || offsets[i] === offsets[i + 1];
+          const node = el.childNodes[prefix + i];
+          if (!skip) {
+            workStack.push(() => el.insertBefore(node, el.childNodes[prefix + i + offsets[i]]));
           }
         }
 
-        // [11] Clean up removed nodes
-        for (const oldVNodeKey in oldKeyMap) {
-          const node = el.childNodes[oldKeyMap[oldVNodeKey]];
-          el[NODE_OBJECT_POOL_FIELD][oldVNodeKey] = node;
-          workStack.push(() => el.removeChild(node));
-        }
+        // for (let i = 0; i < Math.max(oldVNodeChildren.length, newVNodeChildren.length); ++i) {
+        //   const oldVNodeChild = <VElement>oldVNodeChildren[i];
+        //   const newVNodeChild = <VElement>newVNodeChildren[i];
+        //   if (!oldVNodeChild) {
+        //     el.insertBefore(
+        //       el[NODE_OBJECT_POOL_FIELD][(<VElement>newVNodeChildren[i]).key!] ??
+        //         createElement(newVNodeChildren[i], false),
+        //       el.childNodes[i],
+        //     );
+        //     continue;
+        //   }
+        //   if (!newVNodeChild) {
+        //     const node = el.childNodes[i];
+        //     el[NODE_OBJECT_POOL_FIELD][(<VElement>oldVNodeChildren[i]).key!] = node;
+        //     workStack.push(() => el.removeChild(node));
+        //     continue;
+        //   }
+
+        //   const oldVNodePosition = oldKeyMap[newVNodeChild.key!];
+        //   const newVNodePosition = newKeyMap[oldVNodeChild.key!];
+        //   const oldOffset = Math.abs(i - oldVNodePosition);
+        //   const newOffset = Math.abs(i - newVNodePosition);
+
+        //   if (oldOffset !== 0 && newOffset !== 0) {
+        //     const node = el.childNodes[i];
+        //     if (newOffset >= oldOffset) {
+        //       workStack.push(() => el.insertBefore(node, el.childNodes[newVNodePosition]));
+        //     } else {
+        //       workStack.push(() => el.insertBefore(node, el.childNodes[oldVNodePosition]));
+        //     }
+        //   }
+        // }
+
+        // // [8] Indexing old children
+        // const oldKeyMap: Record<string, number> = {};
+        // for (let i = oldTail; i >= oldHead; --i) {
+        //   oldKeyMap[(<VElement>oldVNodeChildren[i]).key!] = i;
+        // }
+
+        // while (newHead <= newTail) {
+        //   const head = newHead++;
+        //   const newVNodeChild = <VElement>newVNodeChildren[head];
+        //   const oldVNodePosition = oldKeyMap[newVNodeChild.key!];
+        //   const node = el.childNodes[oldVNodePosition];
+
+        //   if (
+        //     oldVNodePosition !== undefined &&
+        //     newVNodeChild.key === (<VElement>oldVNodeChildren[oldVNodePosition]).key
+        //   ) {
+        //     // [9] Reordering continuous nodes
+        //     workStack.push(() => el.insertBefore(node, el.childNodes[head]));
+        //     delete oldKeyMap[newVNodeChild.key!];
+        //   } else {
+        //     // [10] Create new nodes
+        //     workStack.push(() =>
+        //       el.insertBefore(
+        //         el[NODE_OBJECT_POOL_FIELD][newVNodeChild.key] ??
+        //           createElement(newVNodeChild, false),
+        //         el.childNodes[head],
+        //       ),
+        //     );
+        //   }
+        // }
+
+        // // [11] Clean up removed nodes
+        // for (const oldVNodeKey in oldKeyMap) {
+        //   const node = el.childNodes[oldKeyMap[oldVNodeKey]];
+        //   el[NODE_OBJECT_POOL_FIELD][oldVNodeKey] = node;
+        //   workStack.push(() => el.removeChild(node));
+        // }
       }
 
       return data;
