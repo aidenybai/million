@@ -166,6 +166,56 @@ describe.concurrent('patch', () => {
     );
     patch(el, newVNode2, newVNode1);
     expectEqualNode(el, createElement(newVNode2));
+
+    const list3 = ['baz1', 'baz', 'bar', 'foo1', 'bar1', 'foo'];
+    const newVNode3 = m(
+      'ul',
+      undefined,
+      list3.map((item) => m('li', { key: item }, [item])),
+      VFlags.ONLY_KEYED_CHILDREN,
+    );
+    patch(el, newVNode3, newVNode2);
+    expectEqualNode(el, createElement(newVNode3));
+
+    const list4 = ['baz1', 'baz', 'foo1', 'bar', 'bar1', 'foo'];
+    const newVNode4 = m(
+      'ul',
+      undefined,
+      list4.map((item) => m('li', { key: item }, [item])),
+      VFlags.ONLY_KEYED_CHILDREN,
+    );
+    patch(el, newVNode4, newVNode3);
+    expectEqualNode(el, createElement(newVNode4));
+
+    const list5 = ['baz1', 'baz', 'bar1', 'foo'];
+    const newVNode5 = m(
+      'ul',
+      undefined,
+      list5.map((item) => m('li', { key: item }, [item])),
+      VFlags.ONLY_KEYED_CHILDREN,
+    );
+    patch(el, newVNode5, newVNode4);
+    expectEqualNode(el, createElement(newVNode5));
+
+    const list6 = ['baz1', 'foo1', 'bar', 'foo'];
+    const newVNode6 = m(
+      'ul',
+      undefined,
+      list6.map((item) => m('li', { key: item }, [item])),
+      VFlags.ONLY_KEYED_CHILDREN,
+    );
+    patch(el, newVNode6, newVNode5);
+    expectEqualNode(el, createElement(newVNode6));
+
+    const list7 = ['baz1', 'foo1', 'bar', 'foo'].reverse();
+    const newVNode7 = m(
+      'ul',
+      undefined,
+      list7.map((item) => m('li', { key: item }, [item])),
+      VFlags.ONLY_KEYED_CHILDREN,
+    );
+    patch(el, newVNode7, newVNode6);
+    expectEqualNode(el, createElement(newVNode7));
   });
 
   it('should return new DOM node', () => {

@@ -292,100 +292,39 @@ export const children =
       } else {
         // [8] Indexing old children
         const oldKeyMap: Record<string, number> = {};
-        const offsets: number[] = new Array(newTail - newHead + 1);
-        const prefix = Number(newHead);
-        for (let i = oldTail; i >= oldHead; --i) {
-          oldKeyMap[(<VElement>oldVNodeChildren[i]).key!] = i;
+
+        for (; oldHead <= oldTail; ) {
+          oldKeyMap[(<VElement>oldVNodeChildren[oldHead]).key!] = oldHead++;
         }
 
         while (newHead <= newTail) {
           const head = newHead++;
           const newVNodeChild = <VElement>newVNodeChildren[head];
           const oldVNodePosition = oldKeyMap[newVNodeChild.key!];
-          offsets[head - prefix] = oldVNodePosition - head;
-        }
 
-        console.log(offsets);
-
-        for (let i = 0; i < offsets.length; ++i) {
-          const skip =
-            offsets[i] === 0 || offsets[i] === offsets[i - 1] || offsets[i] === offsets[i + 1];
-          const node = el.childNodes[prefix + i];
-          if (!skip) {
-            workStack.push(() => el.insertBefore(node, el.childNodes[prefix + i + offsets[i]]));
+          if (oldVNodePosition !== undefined) {
+            // [9] Reordering continuous nodes
+            const node = el.childNodes[oldVNodePosition];
+            workStack.push(() => el.insertBefore(node, el.childNodes[head]));
+            delete oldKeyMap[newVNodeChild.key!];
+          } else {
+            // [10] Create new nodes
+            workStack.push(() =>
+              el.insertBefore(
+                el[NODE_OBJECT_POOL_FIELD][newVNodeChild.key] ??
+                  createElement(newVNodeChild, false),
+                el.childNodes[head],
+              ),
+            );
           }
         }
 
-        // for (let i = 0; i < Math.max(oldVNodeChildren.length, newVNodeChildren.length); ++i) {
-        //   const oldVNodeChild = <VElement>oldVNodeChildren[i];
-        //   const newVNodeChild = <VElement>newVNodeChildren[i];
-        //   if (!oldVNodeChild) {
-        //     el.insertBefore(
-        //       el[NODE_OBJECT_POOL_FIELD][(<VElement>newVNodeChildren[i]).key!] ??
-        //         createElement(newVNodeChildren[i], false),
-        //       el.childNodes[i],
-        //     );
-        //     continue;
-        //   }
-        //   if (!newVNodeChild) {
-        //     const node = el.childNodes[i];
-        //     el[NODE_OBJECT_POOL_FIELD][(<VElement>oldVNodeChildren[i]).key!] = node;
-        //     workStack.push(() => el.removeChild(node));
-        //     continue;
-        //   }
-
-        //   const oldVNodePosition = oldKeyMap[newVNodeChild.key!];
-        //   const newVNodePosition = newKeyMap[oldVNodeChild.key!];
-        //   const oldOffset = Math.abs(i - oldVNodePosition);
-        //   const newOffset = Math.abs(i - newVNodePosition);
-
-        //   if (oldOffset !== 0 && newOffset !== 0) {
-        //     const node = el.childNodes[i];
-        //     if (newOffset >= oldOffset) {
-        //       workStack.push(() => el.insertBefore(node, el.childNodes[newVNodePosition]));
-        //     } else {
-        //       workStack.push(() => el.insertBefore(node, el.childNodes[oldVNodePosition]));
-        //     }
-        //   }
-        // }
-
-        // // [8] Indexing old children
-        // const oldKeyMap: Record<string, number> = {};
-        // for (let i = oldTail; i >= oldHead; --i) {
-        //   oldKeyMap[(<VElement>oldVNodeChildren[i]).key!] = i;
-        // }
-
-        // while (newHead <= newTail) {
-        //   const head = newHead++;
-        //   const newVNodeChild = <VElement>newVNodeChildren[head];
-        //   const oldVNodePosition = oldKeyMap[newVNodeChild.key!];
-        //   const node = el.childNodes[oldVNodePosition];
-
-        //   if (
-        //     oldVNodePosition !== undefined &&
-        //     newVNodeChild.key === (<VElement>oldVNodeChildren[oldVNodePosition]).key
-        //   ) {
-        //     // [9] Reordering continuous nodes
-        //     workStack.push(() => el.insertBefore(node, el.childNodes[head]));
-        //     delete oldKeyMap[newVNodeChild.key!];
-        //   } else {
-        //     // [10] Create new nodes
-        //     workStack.push(() =>
-        //       el.insertBefore(
-        //         el[NODE_OBJECT_POOL_FIELD][newVNodeChild.key] ??
-        //           createElement(newVNodeChild, false),
-        //         el.childNodes[head],
-        //       ),
-        //     );
-        //   }
-        // }
-
-        // // [11] Clean up removed nodes
-        // for (const oldVNodeKey in oldKeyMap) {
-        //   const node = el.childNodes[oldKeyMap[oldVNodeKey]];
-        //   el[NODE_OBJECT_POOL_FIELD][oldVNodeKey] = node;
-        //   workStack.push(() => el.removeChild(node));
-        // }
+        // [11] Clean up removed nodes
+        for (const oldVNodeKey in oldKeyMap) {
+          const node = el.childNodes[oldKeyMap[oldVNodeKey]];
+          el[NODE_OBJECT_POOL_FIELD][oldVNodeKey] = node;
+          workStack.push(() => el.removeChild(node));
+        }
       }
 
       return data;
