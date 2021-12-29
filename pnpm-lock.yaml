@@ -33,8 +33,9 @@ specifiers:
   typescript: ^4.5.4
   virtual-dom: ^2.1.1
   vite: ^2.7.9
+  vite-plugin-compile-time: ^0.1.2
   vite-plugin-legacy: ^2.1.0
-  vitest: ^0.0.118
+  vitest: ^0.0.119
   zx: ^4.2.0
 
 devDependencies:
@@ -70,8 +71,9 @@ devDependencies:
   typescript: 4.5.4
   virtual-dom: 2.1.1
   vite: 2.7.9
+  vite-plugin-compile-time: 0.1.2_vite@2.7.9
   vite-plugin-legacy: 2.1.0_vite@2.7.9
-  vitest: 0.0.118_62180cbf66c12a1f2a411e558299148b
+  vitest: 0.0.119_62180cbf66c12a1f2a411e558299148b
   zx: 4.2.0
 
 packages:
@@ -2388,6 +2390,10 @@ packages:
   /delayed-stream/1.0.0:
     resolution: {integrity: sha1-3zrhmayt+31ECqrgsp4icrJOxhk=}
     engines: {node: '>=0.4.0'}
+    dev: true
+
+  /devalue/2.0.1:
+    resolution: {integrity: sha512-I2TiqT5iWBEyB8GRfTDP0hiLZ0YeDJZ+upDxjBfOC2lebO5LezQMv7QvIUTzdb64jQyAKLf1AHADtGN+jw6v8Q==}
     dev: true
 
   /diff/4.0.2:
@@ -5035,6 +5041,18 @@ packages:
       x-is-string: 0.1.0
     dev: true
 
+  /vite-plugin-compile-time/0.1.2_vite@2.7.9:
+    resolution: {integrity: sha512-+fvg6uy4qHkIOd/0QQMuW5Ef1vB8ZLGJjEEy4gCu+J/2jdog5LNqq8RLDiWbd5FkWvgSmHCv4f8jMMjqcJylzg==}
+    peerDependencies:
+      vite: '>=2'
+    dependencies:
+      bundle-require: 2.2.0_esbuild@0.14.9
+      devalue: 2.0.1
+      esbuild: 0.14.9
+      magic-string: 0.25.7
+      vite: 2.7.9
+    dev: true
+
   /vite-plugin-legacy/2.1.0_vite@2.7.9:
     resolution: {integrity: sha512-Q4+hDF+JeH66uCg0hNKv1chemHEHjhK/PVMWX1FNlnw2FZ4ue/IsRTjJ/7ysufbAnNnCeAjiNjC8A5Hva8xKRg==}
     peerDependencies:
@@ -5080,8 +5098,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vitest/0.0.118_62180cbf66c12a1f2a411e558299148b:
-    resolution: {integrity: sha512-2zBpowIaVAMPFB+/DkHFpt63QNXMz737dKTpLtC2t4RNUfLS4n+KKg14nFexj5VlhMf4ntSkrvDHnrE+6gFTmg==}
+  /vitest/0.0.119_62180cbf66c12a1f2a411e558299148b:
+    resolution: {integrity: sha512-8k71f4LWW2Uvy/6FdsaWjTbspu3vbp/p4ACdRUt5FCY+erEZiGbxld3FJCGu+tkFGa+FnoGcPb4fRxZZ49AcHw==}
     engines: {node: '>=14.14.0'}
     hasBin: true
     peerDependencies:

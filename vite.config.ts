@@ -1,5 +1,6 @@
-import { defineConfig } from 'vite';
 import { resolve } from 'path';
+import { defineConfig } from 'vite';
+import compileTime from 'vite-plugin-compile-time';
 
 export default defineConfig({
   root: 'dev',
@@ -17,4 +18,5 @@ export default defineConfig({
     watch: false,
     environment: 'jsdom',
   },
+  plugins: [compileTime()],
 });
