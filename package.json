@@ -103,8 +103,9 @@
     "typescript": "^4.5.4",
     "virtual-dom": "^2.1.1",
     "vite": "^2.7.9",
+    "vite-plugin-compile-time": "^0.1.2",
     "vite-plugin-legacy": "^2.1.0",
-    "vitest": "^0.0.118",
+    "vitest": "^0.0.119",
     "zx": "^4.2.0"
   }
 }
