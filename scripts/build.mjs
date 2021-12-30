@@ -9,4 +9,5 @@ await $`esbuild src/jsx-runtime.ts --minify --bundle --outfile=dist/code-size-me
 const files = await $`ls -xm -d dist/*`;
 
 info(files);
+await $`export-size .`;
 success('Successfully built distribution files.');
