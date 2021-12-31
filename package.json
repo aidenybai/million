@@ -51,7 +51,7 @@
   "funding": "https://github.com/sponsors/aidenybai",
   "author": {
     "name": "Aiden Bai",
-    "email": "aiden.bai05@gmail.com",
+    "email": "hello@aidenybai.com",
     "url": "https://aidenybai.com"
   },
   "license": "MIT",
@@ -59,6 +59,9 @@
     "url": "https://github.com/aidenybai/million/issues"
   },
   "homepage": "https://github.com/aidenybai/million",
+  "engines": {
+    "node": ">=15.0.0"
+  },
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
