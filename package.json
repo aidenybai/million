@@ -59,9 +59,6 @@
     "url": "https://github.com/aidenybai/million/issues"
   },
   "homepage": "https://github.com/aidenybai/million",
-  "engines": {
-    "node": ">=15.0.0"
-  },
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
