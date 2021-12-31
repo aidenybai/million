@@ -62,14 +62,12 @@ We expect all Million contributors to abide by the terms of our [Code of Conduct
 
 ## Acknowledgments
 
-Million takes heavy inspiration from [snabbdom](https://github.com/snabbdom/snabbdom), [ivi](https://github.com/localvoid/ivi), [React](https://github.com/facebook/react), [Inferno](https://github.com/infernojs/inferno), [Bobril](https://github.com/Bobris/Bobril), [domvm](https://github.com/domvm/domvm), [kivi](https://github.com/localvoid/kivi), [vidom](https://github.com/dfilatov/vidom), [etc](https://krausest.github.io/js-framework-benchmark/2021/table_chrome_96.0.4664.45.html). Feel free to check them out if you interested in an alternative library to use.
+Million takes heavy inspiration from [snabbdom](https://github.com/snabbdom/snabbdom), [ivi](https://github.com/localvoid/ivi), [mikado](https://github.com/nextapps-de/mikado), [and more](https://krausest.github.io/js-framework-benchmark/2021/table_chrome_96.0.4664.45.html). Feel free to check them out if you interested in an alternative library to use.
 
 _Why is it called "Million"? The name originated with the goal of being able to handle [1M+ ops/sec for benchmarks](https://github.com/aidenybai/million/tree/main/benchmarks#readme)_.
 
 ## License
 
 Million is [MIT-licensed](LICENSE) open-source software and [research](https://github.com/aidenybai/million/blob/main/.github/RESEARCH.md) by [Aiden Bai](https://github.com/aidenybai).
-
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Faidenybai%2Fmillion.svg?type=small)](https://app.fossa.com/projects/git%2Bgithub.com%2Faidenybai%2Fmillion?ref=badge_large)
 
 ![View count](https://hits.link/hits?url=https://github.com/aidenybai/million)

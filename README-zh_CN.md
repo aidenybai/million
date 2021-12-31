@@ -62,14 +62,12 @@ patch(app, m('div', { id: 'app' }, ['Goodbye World']));
 
 ## 鸣谢
 
-Million 从 [snabbdom](https://github.com/snabbdom/snabbdom)，[ivi](https://github.com/localvoid/ivi)，[React](https://github.com/facebook/react)，[Inferno](https://github.com/infernojs/inferno)，[Bobril](https://github.com/Bobris/Bobril)，[domvm](https://github.com/domvm/domvm)，[kivi](https://github.com/localvoid/kivi)，[vidom](https://github.com/dfilatov/vidom)，[等等](https://krausest.github.io/js-framework-benchmark/2021/table_chrome_96.0.4664.45.html) 身上获取了很多灵感。如果你有兴趣使用其他库，可以随时查看它们。
+Million 从[snabbdom](https://github.com/snabbdom/snabbdom), [ivi](https://github.com/localvoid/ivi), [mikado](https://github.com/nextapps-de/mikado)，[等等](https://krausest.github.io/js-framework-benchmark/2021/table_chrome_96.0.4664.45.html) 身上获取了很多灵感。如果你有兴趣使用其他库，可以随时查看它们。
 
 _为什么叫 "Million"？这个名字源于能够处理的目标 [1M+ ops/sec 基准测试](https://github.com/aidenybai/million/tree/main/benchmarks#readme)_.
 
 ## 许可证
 
 Million 是属于 [Aiden Bai](https://github.com/aidenybai)，并且获得了 [MIT-licensed](LICENSE) 认可的开源软件。
-
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Faidenybai%2Fmillion.svg?type=small)](https://app.fossa.com/projects/git%2Bgithub.com%2Faidenybai%2Fmillion?ref=badge_large)
 
 ![View count](https://hits.link/hits?url=https://github.com/aidenybai/million)
