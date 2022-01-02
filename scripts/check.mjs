@@ -1,7 +1,6 @@
-#!/usr/bin/env zx
-import 'zx/globals';
+import { $ } from 'zx';
 $.verbose = false;
 
-$`pnpm run cleanup`;
-$`pnpm run lint`;
-$`pnpm run test`;
+$`pnpm cleanup`;
+$`pnpm lint`;
+$`pnpm test`;

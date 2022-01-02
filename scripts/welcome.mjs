@@ -1,5 +1,4 @@
-#!/usr/bin/env zx
-import 'zx/globals';
+import { $ } from 'zx';
 import { sleep, say, typing } from './helpers.mjs';
 $.verbose = false;
 
