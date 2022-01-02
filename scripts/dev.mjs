@@ -1,5 +1,4 @@
-#!/usr/bin/env zx
-import 'zx/globals';
+import { $ } from 'zx';
 import { write, exists } from 'fsxx';
 import { info } from './helpers.mjs';
 

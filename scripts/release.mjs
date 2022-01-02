@@ -1,5 +1,4 @@
-#!/usr/bin/env zx
-import 'zx/globals';
+import { $ } from 'zx';
 import { success, fail, load } from './helpers.mjs';
 $.verbose = false;
 
@@ -15,11 +14,13 @@ success('No errors found.');
 
 current = load('Building distribution bundles...');
 try {
-  await $`pnpm zx scripts/build.mjs`;
+  await $`zx scripts/build.mjs`;
 } catch (_err) {
   fail('build', 'pnpm build');
 }
 current.stop();
 success('Built distribution bundles.');
+
+await $`zx scripts/citation.mjs`;
 
 await $`bumpp --commit --push --tag && pnpm publish`;

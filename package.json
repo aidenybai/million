@@ -14,7 +14,7 @@
     "cleanup": "prettier --write src --parser typescript",
     "test": "c8 --reporter=lcov vitest",
     "bench": "vite --config benchmarks/vite.config.ts",
-    "release": "zx scripts/release.mjs && zx scripts/citation.mjs",
+    "release": "zx scripts/release.mjs",
     "welcome": "zx scripts/welcome.mjs",
     "prepare": "husky install"
   },
@@ -65,7 +65,7 @@
     ]
   },
   "lint-staged": {
-    "*": "zx scripts/check.mjs"
+    "*": "zx scripts/check.ts"
   },
   "devDependencies": {
     "@commitlint/cli": "^16.0.1",
@@ -78,7 +78,7 @@
     "@types/virtual-dom": "^2.1.1",
     "@typescript-eslint/eslint-plugin": "^5.8.1",
     "@typescript-eslint/parser": "^5.8.1",
-    "@vitest/ui": "^0.0.125",
+    "@vitest/ui": "^0.0.127",
     "benchmark": "^2.1.4",
     "bumpp": "^7.1.1",
     "c8": "^7.11.0",
@@ -91,21 +91,20 @@
     "fsxx": "^0.0.5",
     "husky": "^7.0.4",
     "jsdom": "^19.0.0",
-    "lint-staged": "^12.1.4",
+    "lint-staged": "^12.1.5",
     "lodash": "^4.17.21",
     "ora": "^6.0.1",
     "prettier": "^2.5.1",
     "simple-git": "^2.48.0",
     "simple-virtual-dom": "^0.1.10",
     "snabbdom": "^3.2.0",
-    "ts-node": "^10.4.0",
     "tslib": "^2.3.1",
     "tsup": "^5.11.10",
     "typescript": "^4.5.4",
     "virtual-dom": "^2.1.1",
     "vite": "^2.7.10",
     "vite-plugin-legacy": "^2.1.0",
-    "vitest": "^0.0.125",
+    "vitest": "^0.0.127",
     "zx": "^4.2.0"
   }
 }

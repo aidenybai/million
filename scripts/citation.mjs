@@ -1,8 +1,7 @@
-#!/usr/bin/env zx
-import 'zx/globals';
+import { $ } from 'zx';
 import { write } from 'fsxx';
 import simpleGit from 'simple-git';
-import { fail, success, info } from './helpers.mjs';
+import { fail, success } from './helpers.mjs';
 $.verbose = false;
 const git = simpleGit();
 
