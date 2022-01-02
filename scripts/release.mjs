@@ -1,6 +1,6 @@
 #!/usr/bin/env zx
 import 'zx/globals';
-import { info, success, fail, load } from './helpers.mjs';
+import { success, fail, load } from './helpers.mjs';
 $.verbose = false;
 
 let current;
@@ -22,4 +22,4 @@ try {
 current.stop();
 success('Built distribution bundles.');
 
-info(`Run ${chalk.gray('`np --no-cleanup`')} to publish.`);
+await $`bumpp --commit --push --tag && pnpm publish`;
