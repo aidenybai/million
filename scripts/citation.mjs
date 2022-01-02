@@ -1,8 +1,10 @@
 #!/usr/bin/env zx
 import 'zx/globals';
 import { write } from 'fsxx';
+import simpleGit from 'simple-git';
 import { fail, success, info } from './helpers.mjs';
 $.verbose = false;
+const git = simpleGit();
 
 try {
   const version = await question('What is the next version? ');
@@ -22,4 +24,4 @@ date-released: 2021-7-27`,
   fail('build', 'pnpm postrelease');
 }
 success('Updated CITATION.cff');
-info('Please stage, commit, and push CITATION.cff');
+await git.add('./CITATION.cff').commit(`chore: bump CITATION.cff version`).push('origin', 'main');

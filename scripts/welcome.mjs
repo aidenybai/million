@@ -1,6 +1,6 @@
 #!/usr/bin/env zx
 import 'zx/globals';
-import { info, success, fail, load, sleep, say, typing } from './helpers.mjs';
+import { sleep, say, typing } from './helpers.mjs';
 $.verbose = false;
 
 let current;
