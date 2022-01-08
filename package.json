@@ -65,7 +65,7 @@
     ]
   },
   "lint-staged": {
-    "*": "zx scripts/check.ts && zx scripts/bump.ts"
+    "*": "zx scripts/check.mjs && zx scripts/bump.mjs"
   },
   "devDependencies": {
     "@commitlint/cli": "^16.0.1",
