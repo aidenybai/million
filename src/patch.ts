@@ -3,7 +3,6 @@ import { node } from './drivers/node';
 import { props } from './drivers/props';
 import { DOMNode, VCommit, VNode, VTask } from './types/base';
 
-const p = Promise.resolve();
 let deadline = 0;
 
 /**
@@ -34,6 +33,8 @@ export const patch = (
   return data.el;
 };
 
+export const defer = Promise.resolve().then.bind(Promise.resolve());
+
 /**
  * Split rendering work into chunks and spread it out over multiple frames
  */
@@ -43,7 +44,7 @@ export const schedule = (task: VTask): void => {
     (<any>navigator)?.scheduling?.isInputPending({ includeContinuous: true }) ||
     performance.now() <= deadline
   ) {
-    p.then(task);
+    defer(task);
   } else task();
   // We can set a pseudo-deadline to ensure that we don't render too often
   // and depend on the calls to the function to regulate rendering
