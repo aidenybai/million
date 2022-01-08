@@ -65,7 +65,7 @@
     ]
   },
   "lint-staged": {
-    "*": "zx scripts/check.ts"
+    "*": "zx scripts/check.ts && zx scripts/bump.ts"
   },
   "devDependencies": {
     "@commitlint/cli": "^16.0.1",
@@ -74,11 +74,11 @@
     "@types/benchmark": "^2.1.1",
     "@types/canvas-confetti": "^1.4.2",
     "@types/lodash": "^4.14.178",
-    "@types/node": "^17.0.6",
+    "@types/node": "^17.0.8",
     "@types/virtual-dom": "^2.1.1",
-    "@typescript-eslint/eslint-plugin": "^5.8.1",
-    "@typescript-eslint/parser": "^5.8.1",
-    "@vitest/ui": "^0.0.127",
+    "@typescript-eslint/eslint-plugin": "^5.9.0",
+    "@typescript-eslint/parser": "^5.9.0",
+    "@vitest/ui": "^0.0.139",
     "benchmark": "^2.1.4",
     "bumpp": "^7.1.1",
     "c8": "^7.11.0",
@@ -91,7 +91,7 @@
     "fsxx": "^0.0.5",
     "husky": "^7.0.4",
     "jsdom": "^19.0.0",
-    "lint-staged": "^12.1.5",
+    "lint-staged": "^12.1.7",
     "lodash": "^4.17.21",
     "ora": "^6.0.1",
     "prettier": "^2.5.1",
@@ -99,12 +99,12 @@
     "simple-virtual-dom": "^0.1.10",
     "snabbdom": "^3.2.0",
     "tslib": "^2.3.1",
-    "tsup": "^5.11.10",
+    "tsup": "^5.11.11",
     "typescript": "^4.5.4",
     "virtual-dom": "^2.1.1",
     "vite": "^2.7.10",
     "vite-plugin-legacy": "^2.1.0",
-    "vitest": "^0.0.127",
+    "vitest": "^0.0.139",
     "zx": "^4.2.0"
   }
 }
