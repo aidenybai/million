@@ -1,4 +1,4 @@
-import { node, children, flush, DOMNode, VNode, Operation } from 'million';
+import { node, children, DOMNode, VNode, DOMOperation } from 'million';
 
 const adjectives = [
   'pretty',
@@ -79,10 +79,12 @@ export const patch = (
   el: DOMNode,
   newVNode: VNode,
   oldVNode?: VNode,
-  effects: Operation[] = [],
+  effects: DOMOperation[] = [],
 ) => {
   const diff = node([children()]);
   const data = diff(el, newVNode, oldVNode, effects);
-  flush(data.effects);
+  for (let i = 0; i < effects.length; i++) {
+    effects[i]();
+  }
   return data.el;
 };
