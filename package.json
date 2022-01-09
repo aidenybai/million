@@ -1,6 +1,6 @@
 {
   "name": "million",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "<1kb compiler-augmented virtual DOM. It's fast!",
   "main": "dist/index.mjs",
   "module": "dist/index.mjs",
@@ -15,6 +15,7 @@
     "test": "c8 --reporter=lcov vitest",
     "bench": "vite --config benchmarks/vite.config.ts",
     "release": "zx scripts/release.mjs",
+    "bump": "bumpp --commit --push --tag && pnpm publish && zx scripts/citation.mjs",
     "welcome": "zx scripts/welcome.mjs",
     "prepare": "husky install"
   },
