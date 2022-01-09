@@ -68,7 +68,7 @@
     "*": "zx scripts/check.mjs"
   },
   "devDependencies": {
-    "@commitlint/cli": "^16.0.1",
+    "@commitlint/cli": "^16.0.2",
     "@commitlint/config-conventional": "^16.0.0",
     "@picocss/pico": "^1.4.3",
     "@types/benchmark": "^2.1.1",
@@ -84,7 +84,7 @@
     "c8": "^7.11.0",
     "canvas-confetti": "^1.4.0",
     "chart.js": "^3.7.0",
-    "esbuild": "^0.14.10",
+    "esbuild": "^0.14.11",
     "eslint": "^8.6.0",
     "eslint-config-prettier": "^8.3.0",
     "export-size": "^0.5.2",

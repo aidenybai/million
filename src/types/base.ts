@@ -10,23 +10,23 @@ export const NODE_OBJECT_POOL_FIELD = '__m_node_object_pool';
 export type VProps = Record<string, string | boolean | EventListener>;
 export type DOMNode = HTMLElement | SVGElement | Text;
 export type VNode = VElement | string;
-export type VDeltaOperation = [VDeltaOperationTypes, number];
-export type VDelta = VDeltaOperation[];
-export type VTask = () => void;
-export type VCommit = (task: VTask) => void;
-
-export type VDriver = (
+export type DeltaOperation = [DeltaTypes, number];
+export type DOMOperation = () => void;
+export type Commit = (work: () => void) => void;
+export type Driver = (
   el: DOMNode,
   newVNode?: VNode,
   oldVNode?: VNode,
-  workStack?: VTask[],
-  driver?: VDriver,
+  effects?: DOMOperation[],
+  commit?: Commit,
+  driver?: Driver,
 ) => {
   el: DOMNode;
   newVNode?: VNode;
   oldVNode?: VNode;
-  workStack?: VTask[];
-  driver?: VDriver;
+  effects?: DOMOperation[];
+  commit?: Commit;
+  driver?: Driver;
 };
 
 export interface VElement {
@@ -34,11 +34,11 @@ export interface VElement {
   props?: VProps;
   children?: VNode[];
   key?: string;
-  flag?: VFlags;
-  delta?: VDelta;
+  flag?: Flags;
+  delta?: DeltaOperation[];
 }
 
-export enum VFlags {
+export enum Flags {
   IGNORE_NODE,
   REPLACE_NODE,
   NO_CHILDREN,
@@ -47,7 +47,7 @@ export enum VFlags {
   ANY_CHILDREN,
 }
 
-export const enum VDeltaOperationTypes {
+export const enum DeltaTypes {
   INSERT,
   UPDATE,
   DELETE,

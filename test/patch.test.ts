@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { createElement } from '../src/createElement';
 import { children } from '../src/drivers/children';
-import { props } from '../src/drivers/props';
 import { node } from '../src/drivers/node';
-import { DELETE, INSERT, m, UPDATE } from '../src/m';
-import { flush, patch } from '../src/patch';
-import { VFlags, DOMNode } from '../src/types/base';
+import { props } from '../src/drivers/props';
+import { Delta, m } from '../src/m';
+import { patch } from '../src/patch';
+import { DOMNode, Flags } from '../src/types/base';
 
 const expectEqualNode = (el1: DOMNode, el2: DOMNode) => {
   expect(el1.isEqualNode(el2)).toBeTruthy();
@@ -49,7 +49,7 @@ describe.concurrent('patch', () => {
 
     el.textContent = 'foo';
 
-    patch(el, m('div', undefined, undefined, VFlags.NO_CHILDREN));
+    patch(el, m('div', undefined, undefined, Flags.NO_CHILDREN));
 
     expect(el.textContent).toEqual('');
   });
@@ -58,7 +58,7 @@ describe.concurrent('patch', () => {
   it('should execute INSERT deltas', () => {
     const el = document.createElement('div');
     const children: string[] = [];
-    const createVNode = () => m('div', undefined, [...children], undefined, [INSERT(0)]);
+    const createVNode = () => m('div', undefined, [...children], undefined, [Delta.INSERT(0)]);
 
     const prevVNode1 = createVNode();
     children.unshift('foo');
@@ -80,7 +80,7 @@ describe.concurrent('patch', () => {
     const el = document.createElement('div');
     el.textContent = 'foo';
     const children: string[] = ['foo'];
-    const createVNode = () => m('div', undefined, [...children], undefined, [UPDATE(0)]);
+    const createVNode = () => m('div', undefined, [...children], undefined, [Delta.UPDATE(0)]);
 
     const prevVNode1 = createVNode();
     children[0] = 'bar';
@@ -96,7 +96,7 @@ describe.concurrent('patch', () => {
   it('should execute INSERT deltas', () => {
     const el = document.createElement('div');
     const children: string[] = [];
-    const createVNode = () => m('div', undefined, [...children], undefined, [INSERT(0)]);
+    const createVNode = () => m('div', undefined, [...children], undefined, [Delta.INSERT(0)]);
 
     const prevVNode1 = createVNode();
     children.unshift('bar');
@@ -115,7 +115,7 @@ describe.concurrent('patch', () => {
     el.appendChild(document.createTextNode('bar'));
     el.appendChild(document.createTextNode('baz'));
     const children: string[] = ['foo', 'bar', 'baz'];
-    const createVNode = () => m('div', undefined, [...children], undefined, [DELETE(0)]);
+    const createVNode = () => m('div', undefined, [...children], undefined, [Delta.DELETE(0)]);
 
     const prevVNode1 = createVNode();
     children.splice(0, 1);
@@ -132,15 +132,15 @@ describe.concurrent('patch', () => {
     const el = document.createElement('div');
     patch(
       el,
-      m('div', undefined, ['foo'], VFlags.ONLY_TEXT_CHILDREN),
-      m('div', undefined, [], VFlags.ONLY_TEXT_CHILDREN),
+      m('div', undefined, ['foo'], Flags.ONLY_TEXT_CHILDREN),
+      m('div', undefined, [], Flags.ONLY_TEXT_CHILDREN),
     );
     expect(el.textContent).toEqual('foo');
 
     patch(
       el,
-      m('div', undefined, [], VFlags.NO_CHILDREN),
-      m('div', undefined, ['foo'], VFlags.NO_CHILDREN),
+      m('div', undefined, [], Flags.NO_CHILDREN),
+      m('div', undefined, ['foo'], Flags.NO_CHILDREN),
     );
     expect(el.childNodes.length).toEqual(0);
   });
@@ -152,9 +152,9 @@ describe.concurrent('patch', () => {
       'ul',
       undefined,
       list1.map((item) => m('li', { key: item }, [item])),
-      VFlags.ONLY_KEYED_CHILDREN,
+      Flags.ONLY_KEYED_CHILDREN,
     );
-    patch(el, newVNode1, m('ul', undefined, undefined, VFlags.NO_CHILDREN));
+    patch(el, newVNode1, m('ul', undefined, undefined, Flags.NO_CHILDREN));
     expectEqualNode(el, createElement(newVNode1));
 
     const list2 = ['foo', 'baz', 'bar', 'foo1', 'bar1', 'baz1'];
@@ -162,7 +162,7 @@ describe.concurrent('patch', () => {
       'ul',
       undefined,
       list2.map((item) => m('li', { key: item }, [item])),
-      VFlags.ONLY_KEYED_CHILDREN,
+      Flags.ONLY_KEYED_CHILDREN,
     );
     patch(el, newVNode2, newVNode1);
     expectEqualNode(el, createElement(newVNode2));
@@ -172,7 +172,7 @@ describe.concurrent('patch', () => {
       'ul',
       undefined,
       list3.map((item) => m('li', { key: item }, [item])),
-      VFlags.ONLY_KEYED_CHILDREN,
+      Flags.ONLY_KEYED_CHILDREN,
     );
     patch(el, newVNode3, newVNode2);
     expectEqualNode(el, createElement(newVNode3));
@@ -182,7 +182,7 @@ describe.concurrent('patch', () => {
       'ul',
       undefined,
       list4.map((item) => m('li', { key: item }, [item])),
-      VFlags.ONLY_KEYED_CHILDREN,
+      Flags.ONLY_KEYED_CHILDREN,
     );
     patch(el, newVNode4, newVNode3);
     expectEqualNode(el, createElement(newVNode4));
@@ -192,7 +192,7 @@ describe.concurrent('patch', () => {
       'ul',
       undefined,
       list5.map((item) => m('li', { key: item }, [item])),
-      VFlags.ONLY_KEYED_CHILDREN,
+      Flags.ONLY_KEYED_CHILDREN,
     );
     patch(el, newVNode5, newVNode4);
     expectEqualNode(el, createElement(newVNode5));
@@ -202,7 +202,7 @@ describe.concurrent('patch', () => {
       'ul',
       undefined,
       list6.map((item) => m('li', { key: item }, [item])),
-      VFlags.ONLY_KEYED_CHILDREN,
+      Flags.ONLY_KEYED_CHILDREN,
     );
     patch(el, newVNode6, newVNode5);
     expectEqualNode(el, createElement(newVNode6));
@@ -212,7 +212,7 @@ describe.concurrent('patch', () => {
       'ul',
       undefined,
       list7.map((item) => m('li', { key: item }, [item])),
-      VFlags.ONLY_KEYED_CHILDREN,
+      Flags.ONLY_KEYED_CHILDREN,
     );
     patch(el, newVNode7, newVNode6);
     expectEqualNode(el, createElement(newVNode7));
@@ -231,20 +231,12 @@ describe.concurrent('patch', () => {
     const diff = node([props(), children()]);
     const data = diff(el1, m('div', { id: 'app' }));
 
-    flush(data.workStack, (callback) => callback());
+    for (let i = 0; i < data.effects!.length; i++) {
+      data.effects![i]();
+    }
 
     expect((<HTMLElement>data.el).id).toEqual('app');
     expectEqualNode(<HTMLElement>data.el, el1);
-  });
-
-  it('should flush workStacks', () => {
-    let i = false;
-    const workStack = [() => (i = true)];
-
-    flush([], (callback) => callback());
-    flush(workStack, (callback) => callback());
-
-    expect(i).toEqual(true);
   });
 
   it('should hard replace if different tag', () => {
