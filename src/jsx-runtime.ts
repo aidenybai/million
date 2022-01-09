@@ -1,14 +1,14 @@
-import { className, m, style, svg, VFlags } from './index';
+import { className, Flags, m, style, svg } from './index';
 import { kebab } from './m';
-import type { VDelta, VNode, VProps } from './types/base';
+import type { DeltaOperation, VNode, VProps } from './types/base';
 import type { FC, JSX, JSXVNode } from './types/jsx';
 
 const h = (tag: string, props?: VProps, ...children: JSXVNode[]) => {
-  let flag = VFlags.NO_CHILDREN;
-  let delta: VDelta | undefined;
+  let flag = Flags.NO_CHILDREN;
+  let delta: DeltaOperation[] | undefined;
   const normalizedChildren: VNode[] = [];
   if (props) {
-    const rawDelta = <VDelta>(<unknown>props.delta);
+    const rawDelta = <DeltaOperation[]>(<unknown>props.delta);
     if (rawDelta && rawDelta.length) {
       delta = rawDelta;
       delete props.delta;
@@ -17,10 +17,10 @@ const h = (tag: string, props?: VProps, ...children: JSXVNode[]) => {
   if (children) {
     const keysInChildren = new Set();
     let hasVElementChildren = false;
-    flag = VFlags.ANY_CHILDREN;
+    flag = Flags.ANY_CHILDREN;
 
     if (children.every((child) => typeof child === 'string')) {
-      flag = VFlags.ONLY_TEXT_CHILDREN;
+      flag = Flags.ONLY_TEXT_CHILDREN;
     }
     let childrenLength = 0;
     for (let i = 0; i < children.length; ++i) {
@@ -49,15 +49,15 @@ const h = (tag: string, props?: VProps, ...children: JSXVNode[]) => {
       }
     }
     if (keysInChildren.size === childrenLength) {
-      flag = VFlags.ONLY_KEYED_CHILDREN;
+      flag = Flags.ONLY_KEYED_CHILDREN;
     }
     if (!hasVElementChildren) {
-      flag = VFlags.ONLY_TEXT_CHILDREN;
+      flag = Flags.ONLY_TEXT_CHILDREN;
     }
   }
   if (props) {
     if (typeof props.flag === 'number') {
-      flag = <VFlags>(<unknown>props.flag);
+      flag = <Flags>(<unknown>props.flag);
       delete props.flag;
     }
     if (typeof props.className === 'object') {

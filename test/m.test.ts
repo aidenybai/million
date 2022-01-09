@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { className, DELETE, INSERT, kebab, m, ns, style, svg, UPDATE, toVNode } from '../src/m';
-import { OLD_VNODE_FIELD, VDeltaOperationTypes, VNode } from '../src/types/base';
+import { className, Delta, kebab, m, ns, style, svg, toVNode } from '../src/m';
+import { DeltaTypes, OLD_VNODE_FIELD, VNode } from '../src/types/base';
 
 const expectEqualVNode = (vnode1: VNode, vnode2: VNode) => {
   expect(JSON.stringify(vnode1)).toEqual(JSON.stringify(vnode2));
@@ -198,12 +198,12 @@ describe.concurrent('m', () => {
   });
 
   it('should return delta operation when operation helper is used', () => {
-    expect(INSERT()).toEqual([VDeltaOperationTypes.INSERT, 0]);
-    expect(INSERT(5)).toEqual([VDeltaOperationTypes.INSERT, 5]);
-    expect(UPDATE()).toEqual([VDeltaOperationTypes.UPDATE, 0]);
-    expect(UPDATE(5)).toEqual([VDeltaOperationTypes.UPDATE, 5]);
-    expect(DELETE()).toEqual([VDeltaOperationTypes.DELETE, 0]);
-    expect(DELETE(5)).toEqual([VDeltaOperationTypes.DELETE, 5]);
+    expect(Delta.INSERT()).toEqual([DeltaTypes.INSERT, 0]);
+    expect(Delta.INSERT(5)).toEqual([DeltaTypes.INSERT, 5]);
+    expect(Delta.UPDATE()).toEqual([DeltaTypes.UPDATE, 0]);
+    expect(Delta.UPDATE(5)).toEqual([DeltaTypes.UPDATE, 5]);
+    expect(Delta.DELETE()).toEqual([DeltaTypes.DELETE, 0]);
+    expect(Delta.DELETE(5)).toEqual([DeltaTypes.DELETE, 5]);
   });
 
   it('should convert camelCase to kebab-case', () => {
