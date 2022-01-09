@@ -1,47 +1,51 @@
 import { createElement } from '../createElement';
 import {
+  Commit,
+  DeltaOperation,
+  DeltaTypes,
   DOMNode,
+  DOMOperation,
+  Driver,
+  Flags,
   NODE_OBJECT_POOL_FIELD,
-  VDelta,
-  VDeltaOperationTypes,
-  VDriver,
   VElement,
-  VFlags,
   VNode,
-  VTask,
 } from '../types/base';
 
 /**
  * Diffs two VNode children and modifies the DOM node based on the necessary changes
  */
 export const children =
-  (): Partial<VDriver> =>
+  (): Partial<Driver> =>
   (
     el: HTMLElement | SVGElement,
     newVNode: VElement,
     oldVNode?: VElement,
-    workStack: VTask[] = [],
-    driver?: VDriver,
-  ): ReturnType<VDriver> => {
+    effects: DOMOperation[] = [],
+    commit: Commit = (work: () => void) => work(),
+    driver?: Driver,
+  ): ReturnType<Driver> => {
     const data = {
       el,
       newVNode,
       oldVNode,
-      workStack,
+      effects,
+      commit,
+      driver,
     };
 
-    if (newVNode.flag === VFlags.IGNORE_NODE) return data;
+    if (newVNode.flag === Flags.IGNORE_NODE) return data;
 
-    if (newVNode.flag === VFlags.REPLACE_NODE) {
+    if (newVNode.flag === Flags.REPLACE_NODE) {
       el.replaceWith(createElement(newVNode));
       return data;
     }
 
     const oldVNodeChildren: VNode[] = oldVNode?.children ?? [];
     const newVNodeChildren: VNode[] | undefined = newVNode.children;
-    const delta: VDelta | undefined = newVNode.delta;
+    const delta: DeltaOperation[] | undefined = newVNode.delta;
     const diff = (el: DOMNode, newVNode: VNode, oldVNode?: VNode) =>
-      driver!(el, newVNode, oldVNode, workStack).workStack!;
+      driver!(el, newVNode, oldVNode, effects, commit).effects!;
 
     // Deltas are a way for the compile-time to optimize runtime operations
     // by providing a set of predefined operations. This is useful for cases
@@ -52,22 +56,24 @@ export const children =
         const [deltaType, deltaPosition] = delta[i];
         const child = el.childNodes[deltaPosition];
 
-        if (deltaType === VDeltaOperationTypes.INSERT) {
-          workStack.push(() =>
+        if (deltaType === DeltaTypes.INSERT) {
+          effects.push(() =>
             el.insertBefore(createElement(newVNodeChildren![deltaPosition], false), child),
           );
         }
 
-        if (deltaType === VDeltaOperationTypes.UPDATE) {
-          workStack = diff(
-            <DOMNode>child,
-            newVNodeChildren![deltaPosition],
-            oldVNodeChildren[deltaPosition],
-          );
+        if (deltaType === DeltaTypes.UPDATE) {
+          commit(() => {
+            effects = diff(
+              <DOMNode>child,
+              newVNodeChildren![deltaPosition],
+              oldVNodeChildren[deltaPosition],
+            );
+          });
         }
 
-        if (deltaType === VDeltaOperationTypes.DELETE) {
-          workStack.push(() => el.removeChild(child));
+        if (deltaType === DeltaTypes.DELETE) {
+          effects.push(() => el.removeChild(child));
         }
       }
       return data;
@@ -76,10 +82,10 @@ export const children =
     // Flags allow for greater optimizability by reducing condition branches.
     // Generally, you should use a compiler to generate these flags, but
     // hand-writing them is also possible
-    if (!newVNodeChildren || newVNode.flag === VFlags.NO_CHILDREN) {
+    if (!newVNodeChildren || newVNode.flag === Flags.NO_CHILDREN) {
       if (!oldVNodeChildren) return data;
 
-      workStack.push(() => (el.textContent = ''));
+      effects.push(() => (el.textContent = ''));
       return data;
     }
 
@@ -234,7 +240,7 @@ export const children =
      *    d: 2, // <- check
      *  }
      */
-    if (newVNode.flag === VFlags.ONLY_KEYED_CHILDREN) {
+    if (newVNode.flag === Flags.ONLY_KEYED_CHILDREN) {
       if (!el[NODE_OBJECT_POOL_FIELD]) el[NODE_OBJECT_POOL_FIELD] = {};
 
       let oldHead = 0;
@@ -260,12 +266,12 @@ export const children =
           // [4] Right move
           const node = el.childNodes[oldHead++];
           const tail = newTail--;
-          workStack.push(() => el.insertBefore(node, el.childNodes[tail].nextSibling));
+          effects.push(() => el.insertBefore(node, el.childNodes[tail].nextSibling));
         } else if (oldTailVNode.key === newHeadVNode.key) {
           // [5] Left move
           const node = el.childNodes[oldTail--];
           const head = newHead++;
-          workStack.push(() => el.insertBefore(node, el.childNodes[head]));
+          effects.push(() => el.insertBefore(node, el.childNodes[head]));
         } else break;
       }
 
@@ -273,7 +279,7 @@ export const children =
         // [6] Old children optimization
         while (newHead <= newTail) {
           const head = newHead++;
-          workStack.push(() =>
+          effects.push(() =>
             el.insertBefore(
               el[NODE_OBJECT_POOL_FIELD][(<VElement>newVNodeChildren[head]).key!] ??
                 createElement(newVNodeChildren[head], false),
@@ -287,7 +293,7 @@ export const children =
           const head = oldHead++;
           const node = el.childNodes[head];
           el[NODE_OBJECT_POOL_FIELD][(<VElement>oldVNodeChildren[head]).key!] = node;
-          workStack.push(() => el.removeChild(node));
+          effects.push(() => el.removeChild(node));
         }
       } else {
         // [8] Indexing old children
@@ -305,11 +311,11 @@ export const children =
           if (oldVNodePosition !== undefined) {
             // [9] Reordering continuous nodes
             const node = el.childNodes[oldVNodePosition];
-            workStack.push(() => el.insertBefore(node, el.childNodes[head]));
+            effects.push(() => el.insertBefore(node, el.childNodes[head]));
             delete oldKeyMap[newVNodeChild.key!];
           } else {
             // [10] Create new nodes
-            workStack.push(() =>
+            effects.push(() =>
               el.insertBefore(
                 el[NODE_OBJECT_POOL_FIELD][newVNodeChild.key] ??
                   createElement(newVNodeChild, false),
@@ -323,14 +329,14 @@ export const children =
         for (const oldVNodeKey in oldKeyMap) {
           const node = el.childNodes[oldKeyMap[oldVNodeKey]];
           el[NODE_OBJECT_POOL_FIELD][oldVNodeKey] = node;
-          workStack.push(() => el.removeChild(node));
+          effects.push(() => el.removeChild(node));
         }
       }
 
       return data;
     }
 
-    if (newVNode.flag === VFlags.ONLY_TEXT_CHILDREN) {
+    if (newVNode.flag === Flags.ONLY_TEXT_CHILDREN) {
       const oldString = Array.isArray(oldVNode?.children)
         ? oldVNode?.children.join('')
         : oldVNode?.children;
@@ -338,35 +344,37 @@ export const children =
         ? newVNode?.children.join('')
         : newVNode?.children;
       if (oldString !== newString) {
-        workStack.push(() => (el.textContent = newString!));
+        effects.push(() => (el.textContent = newString!));
       }
       return data;
     }
 
-    if (newVNode.flag === undefined || newVNode.flag === VFlags.ANY_CHILDREN) {
+    if (newVNode.flag === undefined || newVNode.flag === Flags.ANY_CHILDREN) {
       if (oldVNodeChildren && newVNodeChildren) {
         const commonLength = Math.min(oldVNodeChildren.length, newVNodeChildren.length);
 
         // Interates backwards, so in case a childNode is destroyed, it will not shift the nodes
         // and break accessing by index
         for (let i = commonLength - 1; i >= 0; --i) {
-          workStack = diff(<DOMNode>el.childNodes[i], newVNodeChildren[i], oldVNodeChildren[i]);
+          commit(() => {
+            effects = diff(<DOMNode>el.childNodes[i], newVNodeChildren[i], oldVNodeChildren[i]);
+          });
         }
 
         if (newVNodeChildren.length > oldVNodeChildren.length) {
           for (let i = commonLength; i < newVNodeChildren.length; ++i) {
             const node = createElement(newVNodeChildren[i], false);
-            workStack.push(() => el.appendChild(node));
+            effects.push(() => el.appendChild(node));
           }
         } else if (newVNodeChildren.length < oldVNodeChildren.length) {
           for (let i = oldVNodeChildren.length - 1; i >= commonLength; --i) {
-            workStack.push(() => el.removeChild(el.childNodes[i]));
+            effects.push(() => el.removeChild(el.childNodes[i]));
           }
         }
       } else if (newVNodeChildren) {
         for (let i = 0; i < newVNodeChildren.length; ++i) {
           const node = createElement(newVNodeChildren[i], false);
-          workStack.push(() => el.appendChild(node));
+          effects.push(() => el.appendChild(node));
         }
       }
 

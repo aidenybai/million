@@ -1,31 +1,40 @@
 import { createElement } from '../createElement';
-import { DOMNode, OLD_VNODE_FIELD, VDriver, VElement, VNode, VTask } from '../types/base';
+import {
+  Commit,
+  DOMNode,
+  DOMOperation,
+  Driver,
+  OLD_VNODE_FIELD,
+  VElement,
+  VNode,
+} from '../types/base';
 
 /**
  * Diffs a single DOM node and modifies the DOM node based on the necessary changes
  */
-export const node = (drivers: Partial<VDriver>[]) => {
+export const node = (drivers: Partial<Driver>[]) => {
   const nodeDriver = (
     el: DOMNode,
     newVNode?: VNode,
     oldVNode?: VNode,
-    workStack: VTask[] = [],
-  ): ReturnType<VDriver> => {
-    const finish = (element: DOMNode): ReturnType<VDriver> => {
+    effects: DOMOperation[] = [],
+    commit: Commit = (work: () => void) => work(),
+  ): ReturnType<Driver> => {
+    const finish = (element: DOMNode): ReturnType<Driver> => {
       if (!oldVNode) {
-        workStack.push(() => (element[OLD_VNODE_FIELD] = newVNode));
+        effects.push(() => (element[OLD_VNODE_FIELD] = newVNode));
       }
 
       return {
         el: element,
         newVNode,
         oldVNode,
-        workStack,
+        effects,
       };
     };
 
     if (newVNode === undefined || newVNode === null) {
-      workStack.push(() => el.remove());
+      effects.push(() => el.remove());
       return finish(el);
     } else {
       const prevVNode: VNode | undefined = oldVNode ?? el[OLD_VNODE_FIELD];
@@ -33,7 +42,7 @@ export const node = (drivers: Partial<VDriver>[]) => {
 
       if (hasString && prevVNode !== newVNode) {
         const newEl = createElement(newVNode, false);
-        workStack.push(() => el.replaceWith(newEl));
+        effects.push(() => el.replaceWith(newEl));
 
         return finish(newEl);
       }
@@ -46,12 +55,14 @@ export const node = (drivers: Partial<VDriver>[]) => {
         ) {
           if (oldVElement?.tag !== newVElement?.tag || el instanceof Text) {
             const newEl = createElement(newVNode, false);
-            workStack.push(() => el.replaceWith(newEl));
+            effects.push(() => el.replaceWith(newEl));
             return finish(newEl);
           }
 
           for (let i = 0; i < drivers.length; ++i) {
-            (<VDriver>drivers[i])(el, newVElement, oldVElement, workStack, nodeDriver);
+            commit(() => {
+              (<Driver>drivers[i])(el, newVElement, oldVElement, effects, commit, nodeDriver);
+            });
           }
         }
       }
