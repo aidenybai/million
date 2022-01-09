@@ -7,7 +7,7 @@
 import * as simple_virtual_dom from 'simple-virtual-dom';
 import * as snabbdom from 'snabbdom';
 import * as virtual_dom from 'virtual-dom';
-import { createElement, UPDATE } from 'million';
+import { createElement, Delta } from 'million';
 import { Suite, vnodeAdapter } from '../benchmark';
 import { buildData, patch } from '../data';
 import * as tiny_vdom from '../tiny-vdom';
@@ -32,7 +32,7 @@ data[row1] = data[row2];
 data[row2] = temp;
 
 const vnode = (
-  <table delta={[UPDATE(row1), UPDATE(row2)]}>
+  <table delta={[Delta.UPDATE(row1), Delta.UPDATE(row2)]}>
     {data.map(({ id, label }) => (
       <tr>
         <td>{id}</td>

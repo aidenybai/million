@@ -7,7 +7,7 @@
 import * as simple_virtual_dom from 'simple-virtual-dom';
 import * as snabbdom from 'snabbdom';
 import * as virtual_dom from 'virtual-dom';
-import { createElement, UPDATE } from 'million';
+import { createElement, Delta } from 'million';
 import { Suite, vnodeAdapter } from '../benchmark';
 import { buildData, patch } from '../data';
 import * as tiny_vdom from '../tiny-vdom';
@@ -27,7 +27,7 @@ const el = () => createElement(oldVNode);
 const delta = [];
 for (let i = 0; i < 1000; i += 10) {
   data[i] = buildData(1)[0];
-  delta.unshift(UPDATE(i));
+  delta.unshift(Delta.UPDATE(i));
 }
 
 const vnode = (

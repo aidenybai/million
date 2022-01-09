@@ -7,7 +7,7 @@
 import * as simple_virtual_dom from 'simple-virtual-dom';
 import * as snabbdom from 'snabbdom';
 import * as virtual_dom from 'virtual-dom';
-import { createElement, DELETE } from 'million';
+import { createElement, Delta } from 'million';
 import { Suite, vnodeAdapter } from '../benchmark';
 import { buildData, patch } from '../data';
 import * as tiny_vdom from '../tiny-vdom';
@@ -28,7 +28,7 @@ const row = Math.floor(Math.random() * (data.length + 1));
 data.splice(row, 1);
 
 const vnode = (
-  <table delta={[DELETE(row)]}>
+  <table delta={[Delta.DELETE(row)]}>
     {data.map(({ id, label }) => (
       <tr>
         <td>{id}</td>
