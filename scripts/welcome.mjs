@@ -1,4 +1,4 @@
-import { $ } from 'zx';
+import { $, question } from 'zx';
 import { sleep, say, typing } from './helpers.mjs';
 $.verbose = false;
 
