@@ -1,18 +1,16 @@
+export * from './createElement';
 export * from './drivers/children';
 export * from './drivers/node';
 export * from './drivers/props';
-export * from './createElement';
 export * from './m';
 export * from './patch';
-export { OLD_VNODE_FIELD, VFlags } from './types/base';
+export { Flags, OLD_VNODE_FIELD } from './types/base';
 export type {
+  DeltaOperation,
   DOMNode,
-  VCommit,
-  VDelta,
-  VDeltaOperation,
-  VDriver,
+  DOMOperation,
+  Driver,
   VElement,
   VNode,
   VProps,
-  VTask,
 } from './types/base';

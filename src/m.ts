@@ -1,11 +1,10 @@
 import {
+  DeltaOperation,
+  DeltaTypes,
   DOMNode,
+  Flags,
   OLD_VNODE_FIELD,
-  VDelta,
-  VDeltaOperation,
-  VDeltaOperationTypes,
   VElement,
-  VFlags,
   VNode,
   VProps,
 } from './types/base';
@@ -65,28 +64,13 @@ export const kebab = (camelCaseObject: Record<string, unknown>): Record<string, 
 };
 
 /**
- * Returns an insert (creation) delta operation
+ * INSERT, UPDATE, or DELETE DeltaOperations
  */
-export const INSERT = (positionIdx = 0): VDeltaOperation => [
-  VDeltaOperationTypes.INSERT,
-  positionIdx,
-];
-
-/**
- * Returns an update (modification) delta operation
- */
-export const UPDATE = (positionIdx = 0): VDeltaOperation => [
-  VDeltaOperationTypes.UPDATE,
-  positionIdx,
-];
-
-/**
- * Returns an delete (removal) delta operation
- */
-export const DELETE = (positionIdx = 0): VDeltaOperation => [
-  VDeltaOperationTypes.DELETE,
-  positionIdx,
-];
+export const Delta = {
+  INSERT: (positionIdx = 0): DeltaOperation => [DeltaTypes.INSERT, positionIdx],
+  UPDATE: (positionIdx = 0): DeltaOperation => [DeltaTypes.UPDATE, positionIdx],
+  DELETE: (positionIdx = 0): DeltaOperation => [DeltaTypes.DELETE, positionIdx],
+};
 
 /**
  * Helper method for creating a VNode
@@ -95,8 +79,8 @@ export const m = (
   tag: string,
   props?: VProps,
   children?: VNode[],
-  flag?: VFlags,
-  delta?: VDelta,
+  flag?: Flags,
+  delta?: DeltaOperation[],
 ): VElement => {
   let key;
   if (props?.key) {

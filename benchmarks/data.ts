@@ -1,4 +1,4 @@
-import { node, children, flush, DOMNode, VNode, VTask } from 'million';
+import { node, children, DOMNode, VNode, DOMOperation } from 'million';
 
 const adjectives = [
   'pretty',
@@ -75,9 +75,16 @@ export const buildData = (count: number) => {
   return data;
 };
 
-export const patch = (el: DOMNode, newVNode: VNode, oldVNode?: VNode, workStack: VTask[] = []) => {
+export const patch = (
+  el: DOMNode,
+  newVNode: VNode,
+  oldVNode?: VNode,
+  effects: DOMOperation[] = [],
+) => {
   const diff = node([children()]);
-  const data = diff(el, newVNode, oldVNode, workStack);
-  flush(data.workStack);
+  const data = diff(el, newVNode, oldVNode, effects);
+  for (let i = 0; i < effects.length; i++) {
+    effects[i]();
+  }
   return data.el;
 };
