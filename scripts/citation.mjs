@@ -1,8 +1,11 @@
-import { $, question } from 'zx';
+import { $ } from 'zx';
 import { write } from 'fsxx';
 import simpleGit from 'simple-git';
 import { fail, success } from './helpers.mjs';
-import { version } from '../package.json';
+import { readFile } from 'fs/promises';
+
+const { version } = JSON.parse(await readFile(new URL('../package.json', import.meta.url)));
+
 $.verbose = false;
 const git = simpleGit();
 
