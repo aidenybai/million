@@ -2,11 +2,11 @@ import { $, question } from 'zx';
 import { write } from 'fsxx';
 import simpleGit from 'simple-git';
 import { fail, success } from './helpers.mjs';
+import { version } from '../package.json';
 $.verbose = false;
 const git = simpleGit();
 
 try {
-  const version = await question('What is the next version? ');
   await write(
     './CITATION.cff',
     `cff-version: 1.1.0
@@ -20,7 +20,7 @@ version: ${version}
 date-released: 2021-7-27`,
   );
 } catch (_err) {
-  fail('build', 'pnpm postrelease');
+  fail('build', 'pnpm release');
 }
 success('Updated CITATION.cff');
 await git.add('./CITATION.cff').commit(`chore: bump CITATION.cff version`).push('origin', 'main');

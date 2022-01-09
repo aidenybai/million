@@ -21,6 +21,6 @@ try {
 current.stop();
 success('Built distribution bundles.');
 
-await $`zx scripts/citation.mjs`;
-
 await $`bumpp --commit --push --tag && pnpm publish`;
+
+await $`zx scripts/citation.mjs`;
