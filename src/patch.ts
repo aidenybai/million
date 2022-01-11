@@ -6,7 +6,12 @@ import { Commit, DOMNode, DOMOperation, VNode } from './types/base';
 let deadline = 0;
 
 /**
- * Diffs two VNodes and modifies the DOM node based on the necessary changes
+ * Diffs two VNodes
+ */
+export const diff = node([children(), props()]);
+
+/**
+ * Patches two VNodes and modifies the DOM node based on the necessary changes
  */
 export const patch = (
   el: DOMNode,
@@ -15,7 +20,6 @@ export const patch = (
   effects: DOMOperation[] = [],
   commit: Commit = (work: () => void) => work(),
 ): DOMNode => {
-  const diff = node([children(), props()]);
   const data = diff(el, newVNode, oldVNode, effects, commit);
   for (let i = 0; i < effects.length; i++) {
     effects[i]();
