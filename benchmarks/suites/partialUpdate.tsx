@@ -24,12 +24,6 @@ const oldVNode = (
   </table>
 );
 const el = () => createElement(oldVNode);
-const delta = [];
-for (let i = 0; i < 1000; i += 10) {
-  data[i] = buildData(1)[0];
-  delta.unshift(Delta.UPDATE(i));
-}
-
 const vnode = (
   <table>
     {data.map(({ id, label }) => (
