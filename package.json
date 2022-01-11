@@ -77,9 +77,9 @@
     "@types/lodash": "^4.14.178",
     "@types/node": "^17.0.8",
     "@types/virtual-dom": "^2.1.1",
-    "@typescript-eslint/eslint-plugin": "^5.9.0",
-    "@typescript-eslint/parser": "^5.9.0",
-    "@vitest/ui": "^0.0.139",
+    "@typescript-eslint/eslint-plugin": "^5.9.1",
+    "@typescript-eslint/parser": "^5.9.1",
+    "@vitest/ui": "^0.0.140",
     "benchmark": "^2.1.4",
     "c8": "^7.11.0",
     "canvas-confetti": "^1.4.0",
@@ -105,7 +105,7 @@
     "virtual-dom": "^2.1.1",
     "vite": "^2.7.10",
     "vite-plugin-legacy": "^2.1.0",
-    "vitest": "^0.0.139",
+    "vitest": "^0.0.140",
     "zx": "^4.2.0"
   }
 }
