@@ -75,13 +75,14 @@ export const buildData = (count: number) => {
   return data;
 };
 
+export const diff = node([children()]);
+
 export const patch = (
   el: DOMNode,
   newVNode: VNode,
   oldVNode?: VNode,
   effects: DOMOperation[] = [],
 ) => {
-  const diff = node([children()]);
   const data = diff(el, newVNode, oldVNode, effects);
   for (let i = 0; i < effects.length; i++) {
     effects[i]();
