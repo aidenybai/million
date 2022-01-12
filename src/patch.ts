@@ -1,6 +1,6 @@
-import { children } from './drivers/children';
-import { node } from './drivers/node';
-import { props } from './drivers/props';
+import { useChildren } from './drivers/useChildren';
+import { useNode } from './drivers/useNode';
+import { useProps } from './drivers/useProps';
 import { Commit, DOMNode, DOMOperation, VNode } from './types/base';
 
 let deadline = 0;
@@ -8,7 +8,7 @@ let deadline = 0;
 /**
  * Diffs two VNodes
  */
-export const diff = node([children(), props()]);
+export const diff = useNode([useChildren(), useProps()]);
 
 /**
  * Patches two VNodes and modifies the DOM node based on the necessary changes

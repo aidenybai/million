@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { createElement } from '../src/createElement';
-import { children } from '../src/drivers/children';
-import { node } from '../src/drivers/node';
-import { props } from '../src/drivers/props';
+import { useChildren } from '../src/drivers/useChildren';
+import { useNode } from '../src/drivers/useNode';
+import { useProps } from '../src/drivers/useProps';
 import { Delta, m } from '../src/m';
 import { patch } from '../src/patch';
 import { DOMNode, Flags } from '../src/types/base';
@@ -228,7 +228,7 @@ describe.concurrent('patch', () => {
 
   it('should compose a custom patch', () => {
     const el1 = createElement(m('div'));
-    const diff = node([props(), children()]);
+    const diff = useNode([useProps(), useChildren()]);
     const data = diff(el1, m('div', { id: 'app' }));
 
     for (let i = 0; i < data.effects!.length; i++) {

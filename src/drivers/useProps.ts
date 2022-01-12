@@ -34,7 +34,7 @@ export const updateProp = (
 /**
  * Diffs two VNode props and modifies the DOM node based on the necessary changes
  */
-export const props =
+export const useProps =
   (): Partial<Driver> =>
   (
     el: HTMLElement | SVGElement,
