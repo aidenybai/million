@@ -1,4 +1,4 @@
-import { node, children, DOMNode, VNode, DOMOperation } from 'million';
+import { useNode, useChildren, DOMNode, VNode, DOMOperation } from 'million';
 
 const adjectives = [
   'pretty',
@@ -75,7 +75,7 @@ export const buildData = (count: number) => {
   return data;
 };
 
-export const diff = node([children()]);
+export const diff = useNode([useChildren()]);
 
 export const patch = (
   el: DOMNode,
