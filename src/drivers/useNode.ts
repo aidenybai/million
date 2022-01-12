@@ -12,7 +12,7 @@ import {
 /**
  * Diffs a single DOM node and modifies the DOM node based on the necessary changes
  */
-export const node = (drivers: Partial<Driver>[]) => {
+export const useNode = (drivers: Partial<Driver>[]) => {
   const nodeDriver = (
     el: DOMNode,
     newVNode?: VNode,

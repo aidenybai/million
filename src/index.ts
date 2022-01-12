@@ -1,7 +1,7 @@
 export * from './createElement';
-export * from './drivers/children';
-export * from './drivers/node';
-export * from './drivers/props';
+export * from './drivers/useChildren';
+export * from './drivers/useNode';
+export * from './drivers/useProps';
 export * from './m';
 export * from './patch';
 export { Flags, OLD_VNODE_FIELD } from './types/base';

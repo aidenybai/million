@@ -15,7 +15,7 @@ import {
 /**
  * Diffs two VNode children and modifies the DOM node based on the necessary changes
  */
-export const children =
+export const useChildren =
   (): Partial<Driver> =>
   (
     el: HTMLElement | SVGElement,
