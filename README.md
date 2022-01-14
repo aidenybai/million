@@ -26,21 +26,28 @@ Million doesn't require [build tools by default](https://million.js.org/essentia
 npm install million
 ```
 
-## Hello World Example
+## Quick Start
 
-Below is an extremely simple implementation of a Hello World page using Million.
+Below is an extremely simple implementation of a Counter page using Million.
 
 ```js
 import { m, createElement, patch } from 'million';
 
-// Initialize app
-const app = createElement(m('div', { id: 'app' }, ['Hello World']));
-document.body.appendChild(app);
-// Patch content
-patch(app, m('div', { id: 'app' }, ['Goodbye World']));
+const view = (seconds) => m('p', undefined, [`Time elapsed: ${seconds}`]);
+
+const el = createElement(view(0));
+
+let seconds = 0;
+
+setInterval(() => {
+  patch(el, view(seconds));
+  seconds++;
+}, 1000);
+
+document.body.appendChild(el);
 ```
 
-[**→ Check out more examples**](https://million.js.org)
+[**→ Check out more examples**](https://million.js.org/docs/getting-started#quick-start)
 
 ## Sponsors
 

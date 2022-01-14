@@ -26,21 +26,28 @@ Million 在默认情况下不需要 [构建工具](https://million.js.org/essent
 npm install million
 ```
 
-## Hello World 示例
+## 开始
 
-下面是一个使用 Million 实现的极简 Hello World 页面。
+下面是一个使用 Million 实现的极简 Counter 页面。
 
 ```js
 import { m, createElement, patch } from 'million';
 
-// Initialize app
-const app = createElement(m('div', { id: 'app' }, ['Hello World']));
-document.body.appendChild(app);
-// Patch content
-patch(app, m('div', { id: 'app' }, ['Goodbye World']));
+const view = (seconds) => m('p', undefined, [`Time elapsed: ${seconds}`]);
+
+const el = createElement(view(0));
+
+let seconds = 0;
+
+setInterval(() => {
+  patch(el, view(seconds));
+  seconds++;
+}, 1000);
+
+document.body.appendChild(el);
 ```
 
-[**→ 查看更多示例**](https://million.js.org)
+[**→ 查看更多示例**](https://million.js.org/docs/getting-started#quick-start)
 
 ## 赞助
 
