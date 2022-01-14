@@ -90,15 +90,15 @@ export const useChildren =
     }
 
     /**
-     * Lightweight keyed children diffing algorithm -> "diff or drown"
+     * `DIFF || DROWN` ("diff or drown")
      *
-     * Million's keyed children diffing is similar to mikado's design in the fact that
-     * they both are of linear time complexity. However, instead of using a longest
-     * increasing subsequence algorithm, it generates a key map and deals with it
-     * linearly. Additionally, Million holds removed keyed nodes in an mapped object
+     * Million's keyed children diffing is similar to Hunt-Szymanski algorithm in the
+     * fact that they both are of linear time complexity. However, instead of using a
+     * longest increasing subsequence algorithm, it generates a key map and deals with
+     * it linearly. Additionally, Million holds removed keyed nodes in an mapped object
      * pool, recycling DOM nodes to reduce unnecessary element creation computation.
      *
-     * [1] https://github.com/nextapps-de/mikado/blob/master/doc/reconcile.md
+     * [1] https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.608.1614&rep=rep1&type=pdf
      *
      * This diffing algorithm attempts to reduce the number of DOM operations that
      * need to be performed by leveraging keys. It works in several steps:
