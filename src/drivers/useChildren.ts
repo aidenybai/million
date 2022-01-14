@@ -93,13 +93,15 @@ export const useChildren =
      * ∆drown - "diff or drown"
      *
      * Million's keyed children diffing is a variant of Hunt-Szymanski[1] algorithm. They
-     * both are in O(ND) time to find shortest edit script[2]. However, instead of using a
+     * both are in O(ND) time to find shortest edit distance. However, instead of using a
      * longest increasing subsequence algorithm, it generates a key map and deals with
      * it linearly. Additionally, Million holds removed keyed nodes in an mapped object
      * pool, recycling DOM nodes to reduce unnecessary element creation computation.
      *
-     * [1] https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.608.1614&rep=rep1&type=pdf
-     * [2] https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.4.6927&rep=rep1&type=pdf
+     * [1] Hunt-Szymanski algorithm:
+     *  - https://neil.fraser.name/writing/diff
+     *  - https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.608.1614&rep=rep1&type=pdf
+     *  - https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.4.6927&rep=rep1&type=pdf
      *
      * This diffing algorithm attempts to reduce the number of DOM operations that
      * need to be performed by leveraging keys. It works in several steps:
