@@ -4,7 +4,10 @@ import { DOMNode, OLD_VNODE_FIELD, VElement, VEntity, VNode } from './types/base
  * Creates an Element from a VNode
  */
 export const createElement = (vnode: VNode | VEntity, attachField = true): DOMNode => {
-  if ((<VEntity>vnode).data) vnode = (<VEntity>vnode).resolve();
+  if ((<VEntity>vnode).data) {
+    if ((<VEntity>vnode).el) return (<VEntity>vnode).el!;
+    else vnode = (<VEntity>vnode).resolve();
+  }
   if (typeof vnode === 'string') return document.createTextNode(vnode);
   const velement = <VElement>vnode;
 

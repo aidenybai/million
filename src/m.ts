@@ -76,9 +76,14 @@ export const Delta = {
 /**
  * Helper function for constructing entities
  */
-export const entity = (data: Record<string, unknown>, resolve: () => VNode): VEntity => ({
+export const entity = (
+  data: Record<string, unknown>,
+  resolve: () => VNode,
+  el?: DOMNode,
+): VEntity => ({
   data,
   resolve,
+  el,
 });
 
 /**
