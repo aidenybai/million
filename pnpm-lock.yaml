@@ -3799,8 +3799,8 @@ packages:
       slash: 3.0.0
     dev: true
 
-  /globby/12.0.2:
-    resolution: {integrity: sha512-lAsmb/5Lww4r7MM9nCCliDZVIKbZTavrsunAsHLr9oHthrZP1qi7/gAnHOsUs9bLvEt2vKVJhHmxuL7QbDuPdQ==}
+  /globby/12.1.0:
+    resolution: {integrity: sha512-YULDaNwsoUZkRy9TWSY/M7Obh0abamTKoKzTfOI3uU+hfpX2FZqOq8LFDxsjYheF1RH7ITdArgbQnsNBFgcdBA==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dependencies:
       array-union: 3.0.1
@@ -6824,7 +6824,7 @@ packages:
       '@types/node-fetch': 2.5.12
       chalk: 4.1.2
       fs-extra: 10.0.0
-      globby: 12.0.2
+      globby: 12.1.0
       minimist: 1.2.5
       node-fetch: 2.6.6
       ps-tree: 1.2.0
