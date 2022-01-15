@@ -30,6 +30,7 @@ export type Driver = (
 };
 
 export interface VEntity {
+  el?: DOMNode;
   data: Record<string, unknown>;
   resolve: () => VNode;
 }
