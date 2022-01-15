@@ -183,8 +183,8 @@ packages:
       regexpu-core: 4.8.0
     dev: true
 
-  /@babel/helper-define-polyfill-provider/0.3.0_@babel+core@7.16.7:
-    resolution: {integrity: sha512-7hfT8lUljl/tM3h+izTX/pO3W3frz2ok6Pk+gzys8iJqDfZrZy2pXjRTZAvG2YmfHun1X4q8/UZRLatMfqc5Tg==}
+  /@babel/helper-define-polyfill-provider/0.3.1_@babel+core@7.16.7:
+    resolution: {integrity: sha512-J9hGMpJQmtWmj46B3kBHmL38UhJGhYX7eqkcq+2gsstyYt341HmPeWspihX43yVRA0mS+8GGk2Gckc7bY/HCmA==}
     peerDependencies:
       '@babel/core': ^7.4.0-0
     dependencies:
@@ -1143,10 +1143,10 @@ packages:
       '@babel/plugin-transform-unicode-regex': 7.16.7_@babel+core@7.16.7
       '@babel/preset-modules': 0.1.5_@babel+core@7.16.7
       '@babel/types': 7.16.8
-      babel-plugin-polyfill-corejs2: 0.3.0_@babel+core@7.16.7
-      babel-plugin-polyfill-corejs3: 0.5.0_@babel+core@7.16.7
-      babel-plugin-polyfill-regenerator: 0.3.0_@babel+core@7.16.7
-      core-js-compat: 3.20.2
+      babel-plugin-polyfill-corejs2: 0.3.1_@babel+core@7.16.7
+      babel-plugin-polyfill-corejs3: 0.5.1_@babel+core@7.16.7
+      babel-plugin-polyfill-regenerator: 0.3.1_@babel+core@7.16.7
+      core-js-compat: 3.20.3
       semver: 6.3.0
     transitivePeerDependencies:
       - supports-color
@@ -2038,38 +2038,38 @@ packages:
       object.assign: 4.1.2
     dev: true
 
-  /babel-plugin-polyfill-corejs2/0.3.0_@babel+core@7.16.7:
-    resolution: {integrity: sha512-wMDoBJ6uG4u4PNFh72Ty6t3EgfA91puCuAwKIazbQlci+ENb/UU9A3xG5lutjUIiXCIn1CY5L15r9LimiJyrSA==}
+  /babel-plugin-polyfill-corejs2/0.3.1_@babel+core@7.16.7:
+    resolution: {integrity: sha512-v7/T6EQcNfVLfcN2X8Lulb7DjprieyLWJK/zOWH5DUYcAgex9sP3h25Q+DLsX9TloXe3y1O8l2q2Jv9q8UVB9w==}
     peerDependencies:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/compat-data': 7.16.8
       '@babel/core': 7.16.7
-      '@babel/helper-define-polyfill-provider': 0.3.0_@babel+core@7.16.7
+      '@babel/helper-define-polyfill-provider': 0.3.1_@babel+core@7.16.7
       semver: 6.3.0
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /babel-plugin-polyfill-corejs3/0.5.0_@babel+core@7.16.7:
-    resolution: {integrity: sha512-Hcrgnmkf+4JTj73GbK3bBhlVPiLL47owUAnoJIf69Hakl3q+KfodbDXiZWGMM7iqCZTxCG3Z2VRfPNYES4rXqQ==}
+  /babel-plugin-polyfill-corejs3/0.5.1_@babel+core@7.16.7:
+    resolution: {integrity: sha512-TihqEe4sQcb/QcPJvxe94/9RZuLQuF1+To4WqQcRvc+3J3gLCPIPgDKzGLG6zmQLfH3nn25heRuDNkS2KR4I8A==}
     peerDependencies:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.16.7
-      '@babel/helper-define-polyfill-provider': 0.3.0_@babel+core@7.16.7
-      core-js-compat: 3.20.2
+      '@babel/helper-define-polyfill-provider': 0.3.1_@babel+core@7.16.7
+      core-js-compat: 3.20.3
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /babel-plugin-polyfill-regenerator/0.3.0_@babel+core@7.16.7:
-    resolution: {integrity: sha512-dhAPTDLGoMW5/84wkgwiLRwMnio2i1fUe53EuvtKMv0pn2p3S8OCoV1xAzfJPl0KOX7IB89s2ib85vbYiea3jg==}
+  /babel-plugin-polyfill-regenerator/0.3.1_@babel+core@7.16.7:
+    resolution: {integrity: sha512-Y2B06tvgHYt1x0yz17jGkGeeMr5FeKUu+ASJ+N6nB5lQ8Dapfg42i0OVrf8PNGJ3zKL4A23snMi1IRwrqqND7A==}
     peerDependencies:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.16.7
-      '@babel/helper-define-polyfill-provider': 0.3.0_@babel+core@7.16.7
+      '@babel/helper-define-polyfill-provider': 0.3.1_@babel+core@7.16.7
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -2587,15 +2587,15 @@ packages:
       safe-buffer: 5.1.2
     dev: true
 
-  /core-js-compat/3.20.2:
-    resolution: {integrity: sha512-qZEzVQ+5Qh6cROaTPFLNS4lkvQ6mBzE3R6A6EEpssj7Zr2egMHgsy4XapdifqJDGC9CBiNv7s+ejI96rLNQFdg==}
+  /core-js-compat/3.20.3:
+    resolution: {integrity: sha512-c8M5h0IkNZ+I92QhIpuSijOxGAcj3lgpsWdkCqmUTZNwidujF4r3pi6x1DCN+Vcs5qTS2XWWMfWSuCqyupX8gw==}
     dependencies:
       browserslist: 4.19.1
       semver: 7.0.0
     dev: true
 
-  /core-js/3.20.2:
-    resolution: {integrity: sha512-nuqhq11DcOAbFBV4zCbKeGbKQsUDRqTX0oqx7AttUBuqe3h20ixsE039QHelbL6P4h+9kytVqyEtyZ6gsiwEYw==}
+  /core-js/3.20.3:
+    resolution: {integrity: sha512-vVl8j8ph6tRS3B8qir40H7yw7voy17xL0piAjlbBUsH7WIfzoedL/ZOr1OV9FyZQLWXsayOJyV4tnRyXR85/ag==}
     requiresBuild: true
     dev: true
 
@@ -6517,7 +6517,7 @@ packages:
       '@babel/preset-env': 7.16.8_@babel+core@7.16.7
       '@rollup/plugin-commonjs': 15.1.0_rollup@2.64.0
       chalk: 4.1.2
-      core-js: 3.20.2
+      core-js: 3.20.3
       dedent: 0.7.0
       regenerator-runtime: 0.13.9
       rollup: 2.64.0

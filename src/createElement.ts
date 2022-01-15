@@ -1,19 +1,21 @@
-import { DOMNode, OLD_VNODE_FIELD, VNode } from './types/base';
+import { DOMNode, OLD_VNODE_FIELD, VElement, VEntity, VNode } from './types/base';
 
 /**
  * Creates an Element from a VNode
  */
-export const createElement = (vnode: VNode, attachField = true): DOMNode => {
+export const createElement = (vnode: VNode | VEntity, attachField = true): DOMNode => {
+  if ((<VEntity>vnode).data) vnode = (<VEntity>vnode).resolve();
   if (typeof vnode === 'string') return document.createTextNode(vnode);
+  const velement = <VElement>vnode;
 
   // istanbul ignore next
-  const el = vnode.props?.ns
-    ? <SVGElement>document.createElementNS(<string>vnode.props?.ns, vnode.tag)
-    : <HTMLElement>document.createElement(vnode.tag);
+  const el = velement.props?.ns
+    ? <SVGElement>document.createElementNS(<string>velement.props?.ns, velement.tag)
+    : <HTMLElement>document.createElement(velement.tag);
 
-  if (vnode.props) {
-    for (const propName in vnode.props) {
-      const propValue = vnode.props[propName];
+  if (velement.props) {
+    for (const propName in velement.props) {
+      const propValue = velement.props[propName];
       if (propName.startsWith('on')) {
         const eventPropName = propName.slice(2).toLowerCase();
         el.addEventListener(eventPropName, <EventListener>propValue);
@@ -25,9 +27,9 @@ export const createElement = (vnode: VNode, attachField = true): DOMNode => {
     }
   }
 
-  if (vnode.children) {
-    for (let i = 0; i < vnode.children.length; ++i) {
-      el.appendChild(createElement(vnode.children[i], false));
+  if (velement.children) {
+    for (let i = 0; i < velement.children.length; ++i) {
+      el.appendChild(createElement(velement.children[i], false));
     }
   }
 

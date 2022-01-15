@@ -3,7 +3,7 @@ import { createElement } from '../src/createElement';
 import { useChildren } from '../src/drivers/useChildren';
 import { useNode } from '../src/drivers/useNode';
 import { useProps } from '../src/drivers/useProps';
-import { Delta, m } from '../src/m';
+import { Delta, entity, m } from '../src/m';
 import { patch } from '../src/patch';
 import { DOMNode, Flags } from '../src/types/base';
 
@@ -244,5 +244,24 @@ describe.concurrent('patch', () => {
     const el2 = patch(el1, m('a'));
 
     expectEqualNode(el2, document.createElement('a'));
+  });
+
+  it('should create entity', () => {
+    const el = createElement(entity({}, () => m('div')));
+
+    expectEqualNode(el, document.createElement('div'));
+  });
+
+  it('should patch entity', () => {
+    const data = { local: 0 };
+    const entity1 = entity(data, () => {
+      data.local++;
+      return m('a');
+    });
+    const el1 = createElement(entity({}, () => m('div')));
+    const el2 = patch(el1, entity1);
+
+    expectEqualNode(el2, document.createElement('a'));
+    expect(entity1.data.local).toEqual(1);
   });
 });

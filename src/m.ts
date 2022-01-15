@@ -5,6 +5,7 @@ import {
   Flags,
   OLD_VNODE_FIELD,
   VElement,
+  VEntity,
   VNode,
   VProps,
 } from './types/base';
@@ -71,6 +72,14 @@ export const Delta = {
   UPDATE: (positionIdx = 0): DeltaOperation => [DeltaTypes.UPDATE, positionIdx],
   DELETE: (positionIdx = 0): DeltaOperation => [DeltaTypes.DELETE, positionIdx],
 };
+
+/**
+ * Helper function for constructing entities
+ */
+export const entity = (data: Record<string, unknown>, resolve: () => VNode): VEntity => ({
+  data,
+  resolve,
+});
 
 /**
  * Helper method for creating a VNode
