@@ -1,6 +1,6 @@
 {
   "name": "million",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "<1kb compiler-augmented virtual DOM. It's fast!",
   "main": "dist/index.mjs",
   "module": "dist/index.mjs",
