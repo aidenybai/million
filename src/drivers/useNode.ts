@@ -6,6 +6,7 @@ import {
   Driver,
   OLD_VNODE_FIELD,
   VElement,
+  VEntity,
   VNode,
 } from '../types/base';
 
@@ -15,8 +16,8 @@ import {
 export const useNode = (drivers: Partial<Driver>[]) => {
   const nodeDriver = (
     el: DOMNode,
-    newVNode?: VNode,
-    oldVNode?: VNode,
+    newVNode?: VNode | VEntity,
+    oldVNode?: VNode | VEntity,
     effects: DOMOperation[] = [],
     commit: Commit = (work: () => void) => work(),
   ): ReturnType<Driver> => {
@@ -27,8 +28,8 @@ export const useNode = (drivers: Partial<Driver>[]) => {
 
       return {
         el: element,
-        newVNode,
-        oldVNode,
+        newVNode: <VNode>newVNode,
+        oldVNode: <VNode>oldVNode,
         effects,
       };
     };
@@ -37,16 +38,19 @@ export const useNode = (drivers: Partial<Driver>[]) => {
       effects.push(() => el.remove());
       return finish(el);
     } else {
-      const prevVNode: VNode | undefined = oldVNode ?? el[OLD_VNODE_FIELD];
+      let prevVNode: VNode | VEntity | undefined = oldVNode ?? el[OLD_VNODE_FIELD];
       const hasString = typeof prevVNode === 'string' || typeof newVNode === 'string';
 
       if (hasString && prevVNode !== newVNode) {
-        const newEl = createElement(newVNode, false);
+        const newEl = createElement(<string>newVNode, false);
         effects.push(() => el.replaceWith(newEl));
 
         return finish(newEl);
       }
       if (!hasString) {
+        if ((<VEntity>prevVNode)?.data) prevVNode = (<VEntity>prevVNode).resolve();
+        if ((<VEntity>newVNode)?.data) newVNode = (<VEntity>newVNode).resolve();
+
         const oldVElement = <VElement>prevVNode;
         const newVElement = <VElement>newVNode;
         if (
@@ -54,7 +58,7 @@ export const useNode = (drivers: Partial<Driver>[]) => {
           oldVElement?.key !== newVElement?.key
         ) {
           if (oldVElement?.tag !== newVElement?.tag || el instanceof Text) {
-            const newEl = createElement(newVNode, false);
+            const newEl = createElement(newVElement, false);
             effects.push(() => el.replaceWith(newEl));
             return finish(newEl);
           }

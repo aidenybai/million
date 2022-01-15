@@ -29,6 +29,11 @@ export type Driver = (
   driver?: Driver;
 };
 
+export interface VEntity {
+  data: Record<string, unknown>;
+  resolve: () => VNode;
+}
+
 export interface VElement {
   tag: string;
   props?: VProps;

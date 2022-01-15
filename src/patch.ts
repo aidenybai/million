@@ -1,7 +1,7 @@
 import { useChildren } from './drivers/useChildren';
 import { useNode } from './drivers/useNode';
 import { useProps } from './drivers/useProps';
-import { Commit, DOMNode, DOMOperation, VNode } from './types/base';
+import { Commit, DOMNode, DOMOperation, VEntity, VNode } from './types/base';
 
 let deadline = 0;
 
@@ -15,8 +15,8 @@ export const diff = useNode([useChildren(), useProps()]);
  */
 export const patch = (
   el: DOMNode,
-  newVNode?: VNode,
-  oldVNode?: VNode,
+  newVNode?: VNode | VEntity,
+  oldVNode?: VNode | VEntity,
   effects: DOMOperation[] = [],
   commit: Commit = (work: () => void) => work(),
 ): DOMNode => {

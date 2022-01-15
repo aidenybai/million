@@ -12,6 +12,7 @@ export type {
   DOMOperation,
   Driver,
   VElement,
+  VEntity,
   VNode,
   VProps,
 } from './types/base';
