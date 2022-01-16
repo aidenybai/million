@@ -48,8 +48,11 @@ export const useNode = (drivers: Partial<Driver>[]) => {
         return finish(newEl);
       }
       if (!hasString) {
-        if ((<VEntity>prevVNode)?.data) prevVNode = (<VEntity>prevVNode).resolve();
-        if ((<VEntity>newVNode)?.data) newVNode = (<VEntity>newVNode).resolve();
+        const prevVEntity = <VEntity>prevVNode;
+        const newVEntity = <VEntity>newVNode;
+        if (newVEntity.ignore) return finish(el);
+        if (prevVEntity?.data) prevVNode = prevVEntity.resolve();
+        if (newVEntity?.data) newVNode = newVEntity.resolve();
 
         const oldVElement = <VElement>prevVNode;
         const newVElement = <VElement>newVNode;
