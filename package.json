@@ -71,7 +71,7 @@
   "devDependencies": {
     "@commitlint/cli": "^16.0.2",
     "@commitlint/config-conventional": "^16.0.0",
-    "@picocss/pico": "^1.4.3",
+    "@picocss/pico": "^1.4.4",
     "@types/benchmark": "^2.1.1",
     "@types/canvas-confetti": "^1.4.2",
     "@types/lodash": "^4.14.178",
@@ -79,13 +79,13 @@
     "@types/virtual-dom": "^2.1.1",
     "@typescript-eslint/eslint-plugin": "^5.9.1",
     "@typescript-eslint/parser": "^5.9.1",
-    "@vitest/ui": "^0.1.16",
+    "@vitest/ui": "^0.1.17",
     "benchmark": "^2.1.4",
     "c8": "^7.11.0",
     "canvas-confetti": "^1.4.0",
     "chart.js": "^3.7.0",
     "esbuild": "^0.14.11",
-    "eslint": "^8.6.0",
+    "eslint": "^8.7.0",
     "eslint-config-prettier": "^8.3.0",
     "export-size": "^0.5.2",
     "fsxx": "^0.0.5",
@@ -105,7 +105,7 @@
     "virtual-dom": "^2.1.1",
     "vite": "^2.7.12",
     "vite-plugin-legacy": "^2.1.0",
-    "vitest": "^0.1.16",
-    "zx": "^4.2.0"
+    "vitest": "^0.1.17",
+    "zx": "^4.3.0"
   }
 }
