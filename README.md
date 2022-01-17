@@ -47,7 +47,13 @@ setInterval(() => {
 document.body.appendChild(el);
 ```
 
-[**→ Check out more examples**](https://million.js.org/docs/getting-started#quick-start)
+`patch()` function has a standard interface that is used in many Virtual DOM libraries. First argument is a DOM node that will be used as the live DOM reference, and the second one is a Virtual DOM to render.
+
+`createElement()` function converts a "Virtual DOM" node into a real DOM node.
+
+`m()` function will instantiate a "Virtual DOM" node for an element.
+
+[**→ See live example**](https://million.js.org/docs/getting-started#quick-start)
 
 ## Sponsors
 

@@ -47,7 +47,13 @@ setInterval(() => {
 document.body.appendChild(el);
 ```
 
-[**→ 查看更多示例**](https://million.js.org/docs/getting-started#quick-start)
+`patch()` 函数有一个标准接口，用于许多虚拟 DOM 库。 第一个参数是将用作实时 DOM 引用的 DOM 节点，第二个参数是要渲染的虚拟 DOM。
+
+`createElement()` 函数将“虚拟 DOM”节点转换为真正的 DOM 节点。
+
+`m()` 函数将为元素实例化一个“虚拟 DOM”节点。
+
+[**→ 查看示例**](https://million.js.org/docs/getting-started#quick-start)
 
 ## 赞助
 
