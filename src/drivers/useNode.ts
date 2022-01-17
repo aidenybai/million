@@ -45,7 +45,7 @@ export const useNode = (drivers: Partial<Driver>[]) => {
         const newEl = createElement(<string>newVNode, false);
         effects.push(() => el.replaceWith(newEl));
 
-        return finish(newEl);
+        return finish(<DOMNode>newEl);
       }
       if (!hasString) {
         const prevVEntity = <VEntity>prevVNode;
@@ -63,7 +63,7 @@ export const useNode = (drivers: Partial<Driver>[]) => {
           if (oldVElement?.tag !== newVElement?.tag || el instanceof Text) {
             const newEl = createElement(newVElement, false);
             effects.push(() => el.replaceWith(newEl));
-            return finish(newEl);
+            return finish(<DOMNode>newEl);
           }
 
           for (let i = 0; i < drivers.length; ++i) {
