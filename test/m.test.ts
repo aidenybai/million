@@ -252,5 +252,16 @@ describe.concurrent('m', () => {
         m('A', { href: 'http://foo.bar' }, ['foo bar baz']),
       ]),
     );
+
+    it('should convert HTML string to VNode', () => {
+      expectEqualVNode(
+        toVNode(
+          '<div id="foo" class="bar baz" style="color: red; "><a href="http://foo.bar">foo bar baz</a></div>',
+        ),
+        m('DIV', { id: 'foo', class: 'bar baz', style: 'color: red;' }, [
+          m('A', { href: 'http://foo.bar' }, ['foo bar baz']),
+        ]),
+      );
+    });
   });
 });
