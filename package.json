@@ -30,12 +30,12 @@
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
+      "require": "./dist/index.cjs",
       "types": "./dist/index.d.ts"
     },
     "./jsx-runtime": {
       "import": "./dist/jsx-runtime.mjs",
-      "require": "./dist/jsx-runtime.js",
+      "require": "./dist/jsx-runtime.cjs",
       "types": "./jsx-runtime.d.ts"
     }
   },
@@ -79,7 +79,7 @@
     "@types/virtual-dom": "^2.1.1",
     "@typescript-eslint/eslint-plugin": "^5.10.0",
     "@typescript-eslint/parser": "^5.10.0",
-    "@vitest/ui": "^0.1.23",
+    "@vitest/ui": "^0.1.24",
     "benchmark": "^2.1.4",
     "c8": "^7.11.0",
     "canvas-confetti": "^1.4.0",
@@ -100,12 +100,12 @@
     "simple-virtual-dom": "^0.1.10",
     "snabbdom": "^3.3.1",
     "tslib": "^2.3.1",
-    "tsup": "^5.11.11",
     "typescript": "^4.5.4",
+    "unbuild": "^0.6.7",
     "virtual-dom": "^2.1.1",
     "vite": "^2.7.13",
     "vite-plugin-legacy": "^2.1.0",
-    "vitest": "^0.1.23",
+    "vitest": "^0.1.24",
     "zx": "^4.3.0"
   }
 }
