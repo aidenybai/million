@@ -12,7 +12,7 @@ export type DOMNode = HTMLElement | SVGElement | Text;
 export type VNode = VElement | string;
 export type DeltaOperation = [DeltaTypes, number];
 export type DOMOperation = () => void;
-export type Commit = (work: () => void) => void;
+export type Commit = (work: () => void, data: ReturnType<Driver>) => void;
 export type Driver = (
   el: DOMNode,
   newVNode?: VNode,
