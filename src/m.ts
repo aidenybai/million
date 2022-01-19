@@ -114,7 +114,13 @@ export const m = (
 /**
  * Turns a DOMNode into a VNode
  */
-export const toVNode = (el: DOMNode): VNode => {
+export const toVNode = (el: DOMNode | string): VNode => {
+  if (typeof el === 'string') {
+    const temp = document.createElement('div');
+    temp.innerHTML = el;
+    el = <DOMNode>temp.firstChild;
+  }
+
   if (el[OLD_VNODE_FIELD]) return el[OLD_VNODE_FIELD];
   if (el instanceof Text) return String(el.nodeValue);
 
