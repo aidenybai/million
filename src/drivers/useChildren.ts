@@ -69,7 +69,7 @@ export const useChildren =
               newVNodeChildren![deltaPosition],
               oldVNodeChildren[deltaPosition],
             );
-          });
+          }, data);
         }
 
         if (deltaType === DeltaTypes.DELETE) {
@@ -361,7 +361,7 @@ export const useChildren =
         for (let i = commonLength - 1; i >= 0; --i) {
           commit(() => {
             effects = diff(<DOMNode>el.childNodes[i], newVNodeChildren[i], oldVNodeChildren[i]);
-          });
+          }, data);
         }
 
         if (newVNodeChildren.length > oldVNodeChildren.length) {

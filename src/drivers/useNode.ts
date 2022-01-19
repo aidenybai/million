@@ -67,9 +67,17 @@ export const useNode = (drivers: Partial<Driver>[]) => {
           }
 
           for (let i = 0; i < drivers.length; ++i) {
-            commit(() => {
-              (<Driver>drivers[i])(el, newVElement, oldVElement, effects, commit, nodeDriver);
-            });
+            commit(
+              () => {
+                (<Driver>drivers[i])(el, newVElement, oldVElement, effects, commit, nodeDriver);
+              },
+              {
+                el,
+                newVNode: <VNode>newVNode,
+                oldVNode: <VNode>oldVNode,
+                effects,
+              },
+            );
           }
         }
       }
