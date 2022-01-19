@@ -112,7 +112,7 @@ export const m = (
 };
 
 /**
- * Turns a DOMNode into a VNode
+ * Turns a DOMNode or HTML string into a VNode
  */
 export const toVNode = (el: DOMNode | string): VNode => {
   if (typeof el === 'string') {
