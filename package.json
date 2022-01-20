@@ -79,12 +79,12 @@
     "@types/virtual-dom": "^2.1.1",
     "@typescript-eslint/eslint-plugin": "^5.10.0",
     "@typescript-eslint/parser": "^5.10.0",
-    "@vitest/ui": "^0.1.24",
+    "@vitest/ui": "^0.1.25",
     "benchmark": "^2.1.4",
     "c8": "^7.11.0",
     "canvas-confetti": "^1.4.0",
     "chart.js": "^3.7.0",
-    "esbuild": "^0.14.11",
+    "esbuild": "^0.14.12",
     "eslint": "^8.7.0",
     "eslint-config-prettier": "^8.3.0",
     "export-size": "^0.5.2",
@@ -105,7 +105,7 @@
     "virtual-dom": "^2.1.1",
     "vite": "^2.7.13",
     "vite-plugin-legacy": "^2.1.0",
-    "vitest": "^0.1.24",
+    "vitest": "^0.1.25",
     "zx": "^4.3.0"
   }
 }
