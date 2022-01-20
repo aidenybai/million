@@ -78,7 +78,6 @@ const vnode = () => (
             onclick={() => {
               disabled = name;
               logs.unshift([]);
-              document.getElementById('graph').scrollIntoView();
               log(`Running: ${suite.name} - ${new Date().toLocaleString()}`);
               chart.data.datasets[0].backgroundColor = new Array(7).fill('rgba(0, 0, 0, 0.2)');
               chart.update();
@@ -99,7 +98,7 @@ const vnode = () => (
 
     <br />
 
-    <details id="graph" open={!!logs.length}>
+    <details open={!!logs.length}>
       <summary>Graph (Cumulative)</summary>
       <canvas id="viz" width="400" height="200"></canvas>
     </details>
