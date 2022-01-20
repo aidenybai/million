@@ -8,8 +8,8 @@
 
 当前虚拟 DOM 的实施功效并没有充分发挥出来。有些过于复杂而限制其有效地实施；有些则半途而废。如果不牺牲其初始性能和规模，其中大多数实际上是不可用的。大多要以牺牲性能和大小为代价进行调整，才变得可用。Million 就是针对这个问题的一套解决方案。它提供了一个与库无关的虚拟 DOM 作为 Javascript 库的核心，专注于预编译和静态分析。
 
-[![CI](https://img.shields.io/github/workflow/status/aidenybai/million/CI?color=FF524C&labelColor=000&style=flat-square&label=build)](https://img.shields.io/github/workflow/status/aidenybai/million)
-![Code Size](https://badgen.net/badgesize/brotli/https/unpkg.com/million/dist/code-size-measurement.js?style=flat-square&label=size&color=FF524C&labelColor=000) [![NPM Version](https://img.shields.io/npm/v/million?style=flat-square&color=FF524C&labelColor=000)](https://www.npmjs.com/package/million) ![Code Coverage](https://img.shields.io/coveralls/github/aidenybai/million?color=FF524C&labelColor=000&style=flat-square)
+[![CI](https://img.shields.io/github/workflow/status/aidenybai/million/CI?color=9765e1&labelColor=000&style=flat-square&label=build)](https://img.shields.io/github/workflow/status/aidenybai/million)
+![Code Size](https://badgen.net/badgesize/brotli/https/unpkg.com/million/dist/code-size-measurement.js?style=flat-square&label=size&color=9765e1&labelColor=000) [![NPM Version](https://img.shields.io/npm/v/million?style=flat-square&color=9765e1&labelColor=000)](https://www.npmjs.com/package/million) ![Code Coverage](https://img.shields.io/coveralls/github/aidenybai/million?color=9765e1&labelColor=000&style=flat-square)
 
 [**→ 查看 Million 文档**](https://million.js.org)
 
