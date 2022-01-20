@@ -2,15 +2,21 @@ import { $ } from 'zx';
 import { write, exists } from 'fsxx';
 import { info } from './helpers.mjs';
 
-const index_html = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Million Playground</title><link rel="stylesheet" href="./style.css"><script type="module" src="./script.tsx"></script></head><body></body></html>`;
+const index_html = `<!DOCTYPE html><html><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="stylesheet" href="./style.css"><script type="module" src="./script.tsx"></script></head><body></body></html>`;
 const script_tsx = `import { m, createElement, patch } from 'million';
 
-const app = createElement(m('div', { id: 'app' }, ['Hello World']));
-document.body.appendChild(app);
+const view = (seconds) => m('p', undefined, [\`Time elapsed: \$\{seconds\}\`]);
 
-setTimeout(() => {
-  patch(app, m('div', { id: 'app' }, ['Goodbye World']));
-}, 1000);`;
+const el = createElement(view(0));
+
+let seconds = 0;
+
+setInterval(() => {
+  patch(el, view(seconds));
+  seconds++;
+}, 1000);
+
+document.body.appendChild(el);`;
 const style_css = `body { font-size: 2em; display: flex; justify-content: center; align-items: start; padding-top: 2em; font-family: Arial; }`;
 
 if (!(await exists('dev'))) {

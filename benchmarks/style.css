@@ -2,10 +2,17 @@
 
 [data-theme='light'],
 :root:not([data-theme='dark']) {
+  --form-element-spacing-vertical: 0.25rem;
   --primary: #000;
   --primary-hover: rgba(0, 0, 0, 0.8);
-  --primary-focus: rgba(0, 0, 0, 0.8);
+  --primary-focus: rgba(0, 0, 0, 0.1);
   --primary-inverse: #fff;
+}
+
+details {
+  border: 1px solid rgba(0, 0, 0, 0.2) !important;
+  padding: 0.75rem;
+  border-radius: 0.25rem;
 }
 
 .github-corner:hover .octo-arm {
