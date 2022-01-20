@@ -1,4 +1,6 @@
-# <a href="https://million.js.org"><img src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/logo.svg" height="69" alt="Million Logo" aria-label="Million Logo" /></a>
+<a href="https://million.js.org">
+  <img src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/banner.svg" />
+</a>
 
 中文 | [English](https://github.com/aidenybai/million/blob/main/README.md)
 
