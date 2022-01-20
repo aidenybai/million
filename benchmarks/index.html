@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <link rel="stylesheet" href="./style.css" />
+    <link
+      rel="icon"
+      href="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/icon.svg"
+      type="image/svg+xml"
+    />
 
     <title>Million Benchmarks</title>
   </head>
@@ -34,36 +39,50 @@
         ></path></svg
     ></a>
 
-    <h4>
-      <img
-        src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/logo.svg"
-        style="height: 50px"
-      />
-    </h4>
-    <p>
-      These benchmarks mirror a subset of the
-      <a href="https://github.com/krausest/js-framework-benchmark" target="_blank"
-        >JS Framework Benchmark</a
-      >.
-    </p>
-    <p>
-      <a
-        href="https://docs.google.com/spreadsheets/d/e/2PACX-1vS-zBSBzc0LW1V6BoPEw-V98P4_gox4qC0wZuQT5Yls_NDTDwM612aIYL_U988gfp4Xbl0ed7_9uYly/pubhtml"
-        target="_blank"
-        ><b>→ View the official benchmark results</b></a
-      >
-    </p>
-    <p>Please note that benchmark results are unstable. To have more stable results:</p>
-    <ol>
-      <li>Restart OS. Do not run any applications. Put power cable to laptop.</li>
-      <li>Run tests 5 times.</li>
-      <li>Take the best result for each candidate.</li>
-    </ol>
-    <p>
-      <a href="https://github.com/aidenybai/million/tree/main/benchmarks" target="_blank"
-        ><b>→ Click to check out the benchmark source code!</b></a
-      >
-    </p>
+    <dialog id="modal" open>
+      <article>
+        <h4>
+          <img
+            src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/logo.svg"
+            style="height: 50px"
+          />
+        </h4>
+        <p>
+          These benchmarks mirror a subset of the
+          <a href="https://github.com/krausest/js-framework-benchmark" target="_blank"
+            >JS Framework Benchmark</a
+          >.
+        </p>
+        <p>
+          <a
+            href="https://docs.google.com/spreadsheets/d/e/2PACX-1vS-zBSBzc0LW1V6BoPEw-V98P4_gox4qC0wZuQT5Yls_NDTDwM612aIYL_U988gfp4Xbl0ed7_9uYly/pubhtml"
+            target="_blank"
+            ><b>→ View the official benchmark results</b></a
+          >
+        </p>
+        <p>Please note that benchmark results are unstable. To have more stable results:</p>
+        <ol>
+          <li>Restart OS. Do not run any applications. Put power cable to laptop.</li>
+          <li>Run tests 5 times.</li>
+          <li>Take the best result for each candidate.</li>
+        </ol>
+        <p>
+          <a href="https://github.com/aidenybai/million/tree/main/benchmarks" target="_blank"
+            ><b>→ Click to check out the benchmark source code!</b></a
+          >
+        </p>
+        <footer>
+          <button
+            role="button"
+            data-target="modal"
+            onClick="document.getElementById('modal').removeAttribute('open')"
+          >
+            Understood
+          </button>
+        </footer>
+      </article>
+    </dialog>
+
     <article id="loading" aria-busy="true">Loading benchmarks...</article>
 
     <script src="./main.tsx" type="module"></script>
