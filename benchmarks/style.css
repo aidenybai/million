@@ -2,9 +2,9 @@
 
 [data-theme='light'],
 :root:not([data-theme='dark']) {
-  --primary: #4e2372;
-  --primary-hover: #371850;
-  --primary-focus: #4e23722d;
+  --primary: #7956ea;
+  --primary-hover: #6546c9;
+  --primary-focus: #7956ea2d;
   --primary-inverse: #fff;
 }
 
