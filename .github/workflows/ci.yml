@@ -33,7 +33,7 @@ jobs:
       - name: Prettify code
         uses: creyD/prettier_action@v4.2
         with:
-          prettier_options: --write src/*.{ts}
+          prettier_options: --write src/**/*.ts
           only_changed: True
       - name: Coveralls Parallel
         uses: coverallsapp/github-action@master
