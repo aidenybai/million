@@ -114,7 +114,7 @@ export const m = (
 /**
  * Turns a DOMNode or HTML string into a VNode
  */
-export const toVNode = (el: DOMNode | string): VNode => {
+export const toVNode = (el: DOMNode | string): VNode | undefined => {
   if (typeof el === 'string') {
     const temp = document.createElement('div');
     temp.innerHTML = el;
@@ -123,6 +123,7 @@ export const toVNode = (el: DOMNode | string): VNode => {
 
   if (el[OLD_VNODE_FIELD]) return el[OLD_VNODE_FIELD];
   if (el instanceof Text) return String(el.nodeValue);
+  if (el instanceof Comment) return undefined;
 
   const props = {};
   // We know children length, so we created a fixed array
