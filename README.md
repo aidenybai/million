@@ -2,7 +2,7 @@
   <img src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/banner.svg" />
 </a>
 
-<p align="center">A <b>lightweight (&lt;1kB)</b> compiler-augmented Virtual DOM. It's <a href="https://million.js.org/benchmarks"><b>fast</b></a>!</p>
+<p align="center">A <b>lightweight (&lt;1kB)</b> compiler-augmented Virtual DOM. It's <a href="https://million.js.org/benchmarks"><b><i>fast</i></b></a>!</p>
 
 <div align="center">
   <img src="https://img.shields.io/github/workflow/status/aidenybai/million/CI?color=9765e1&amp;labelColor=000&amp;style=flat-square&amp;label=build" alt="CI" />
