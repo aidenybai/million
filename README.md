@@ -10,7 +10,7 @@
   <img src="https://badgen.net/badgesize/brotli/https/unpkg.com/million/dist/code-size-measurement.js?style=flat-square&amp;label=size&amp;color=9765e1&amp;labelColor=000" alt="Code Size" />
   <img src="https://img.shields.io/npm/v/million?style=flat-square&amp;color=9765e1&amp;labelColor=000" alt="NPM Version" />
   <img src="https://img.shields.io/coveralls/github/aidenybai/million?color=9765e1&amp;labelColor=000&amp;style=flat-square" alt="Code Coverage" />
-
+  <br />
   <br />
   <a href="https://million.js.org/">Website</a>
   <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
