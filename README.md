@@ -2,25 +2,35 @@
   <img src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/banner.svg" />
 </a>
 
-[![CI](https://img.shields.io/github/workflow/status/aidenybai/million/CI?color=9765e1&labelColor=000&style=flat-square&label=build)](https://img.shields.io/github/workflow/status/aidenybai/million)
-![Code Size](https://badgen.net/badgesize/brotli/https/unpkg.com/million/dist/code-size-measurement.js?style=flat-square&label=size&color=9765e1&labelColor=000) [![NPM Version](https://img.shields.io/npm/v/million?style=flat-square&color=9765e1&labelColor=000)](https://www.npmjs.com/package/million) ![Code Coverage](https://img.shields.io/coveralls/github/aidenybai/million?color=9765e1&labelColor=000&style=flat-square)
+<p align="center">A <b>lightweight (&lt;1kB)</b> compiler-augmented Virtual DOM. It's <a href="https://million.js.org/benchmarks"><b>fast</b></a>!</p>
 
-### <1kb compiler-augmented virtual DOM. It's fast!
+<div align="center">
+  <img src="https://img.shields.io/github/workflow/status/aidenybai/million/CI?color=9765e1&amp;labelColor=000&amp;style=flat-square&amp;label=build" alt="CI" />
+  <img src="https://badgen.net/badgesize/brotli/https/unpkg.com/million/dist/code-size-measurement.js?style=flat-square&amp;label=size&amp;color=9765e1&amp;labelColor=000" alt="Code Size" />
+  <img src="https://img.shields.io/npm/v/million?style=flat-square&amp;color=9765e1&amp;labelColor=000" alt="NPM Version" />
+  <img src="https://img.shields.io/coveralls/github/aidenybai/million?color=9765e1&amp;labelColor=000&amp;style=flat-square" alt="Code Coverage" />
+</div>
 
-Current Virtual DOM implementations are inadequate—Ranging from overcomplicated to abandoned, most are unusable without sacrificing raw performance and size. Million aims to fix this, providing a library-agnostic Virtual DOM to serve as the core for Javascript libraries that focus on precompilation and static analysis.
+---
 
-[**→ Check out the Million site**](https://million.js.org)
+## What is Million?
+
+Current Virtual DOM implementations are **inadequate**—Ranging from overcomplicated to abandoned, most are unusable without sacrificing **raw performance and size**.
+
+Million aims to fix this, providing a **library-agnostic** Virtual DOM to serve as the core for Javascript libraries that focus on pre**compilation** and static analysis.
+
+[**→ Check out the Million website**](https://million.js.org)
 
 ## Why Million?
 
-- 🦁 Built for libraries that compile
-- 📦 Lightweight bundle size (<1kb brotli+min)
-- ⚡ Fast runtime operations
-- 🛠️ Composable using drivers, sensible by default
+- 🦁 Built for libraries that **compile**
+- 📦 Lightweight bundle size (**<1kb** brotli+min)
+- ⚡ **Fast** runtime operations
+- 🛠️ **Composable** using drivers, **sensible** by default
 
 ## Installing Million
 
-Million doesn't require [build tools by default](https://million.js.org/essentials/installation), but it is highly recommended you use NPM to install.
+Inside your project directory, run the following command:
 
 ```sh
 npm install million
@@ -55,12 +65,6 @@ document.body.appendChild(el);
 
 [**→ See live example**](https://million.js.org/docs/getting-started#quick-start)
 
-## Sponsors
-
-<a href="https://vercel.com/?utm_source=millionjs&utm_campaign=oss" target="_blank"><img height="44" src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/vercel-logo.svg" alt="Vercel"></a>
-
-**Want your logo here? [→ Sponsor Million](https://github.com/sponsors/aidenybai)**
-
 ## Resources & Contributing Back
 
 Looking for the docs? Check the [documentation](https://million.js.org) out.
@@ -77,10 +81,18 @@ We expect all Million contributors to abide by the terms of our [Code of Conduct
 
 Million takes heavy inspiration from [snabbdom](https://github.com/snabbdom/snabbdom), [ivi](https://github.com/localvoid/ivi), [mikado](https://github.com/nextapps-de/mikado), [and more](https://krausest.github.io/js-framework-benchmark/2021/table_chrome_96.0.4664.45.html). Feel free to check them out if you interested in an alternative library to use.
 
-_Why is it called "Million"? The name originated with the goal of being able to handle [1M+ ops/sec for benchmarks](https://github.com/aidenybai/million/tree/main/benchmarks#readme)_.
+_Why is it called "Million"? The name originated with the goal of being able to handle [1M+ ops/sec for benchmarks](https://github.com/aidenybai/million/tree/main/benchmarks#readme)._
+
+_What is the logo? The logo stems from the suffix of Mil**lion**, and is a graphic of the nose and mouth of a lion._
+
+## Sponsors
+
+<a href="https://vercel.com/?utm_source=millionjs&utm_campaign=oss" target="_blank"><img height="44" src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/vercel-logo.svg" alt="Vercel"></a>
+
+**Want your logo here? [→ Sponsor Million](https://github.com/sponsors/aidenybai)**
 
 ## License
 
 Million is [MIT-licensed](LICENSE) open-source software and [research](https://github.com/aidenybai/million/blob/main/.github/RESEARCH.md) by [Aiden Bai](https://github.com/aidenybai).
 
-![View count](https://hits.link/hits?url=https://github.com/aidenybai/million)
+![View count](https://hits.link/hits?url=https://github.com/aidenybai/million&bgRight=9765e1&bgLeft=000)
