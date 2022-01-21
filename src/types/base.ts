@@ -7,6 +7,11 @@ export const OLD_VNODE_FIELD = '__m_old_vnode';
  */
 export const NODE_OBJECT_POOL_FIELD = '__m_node_object_pool';
 
+export const XLINK_NS = 'http://www.w3.org/1999/xlink';
+export const XML_NS = 'http://www.w3.org/XML/1998/namespace';
+export const COLON_CHAR = 58;
+export const X_CHAR = 120;
+
 export type VProps = Record<string, string | boolean | EventListener>;
 export type DOMNode = HTMLElement | SVGElement | Text | Comment;
 export type VNode = VElement | string;

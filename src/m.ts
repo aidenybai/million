@@ -101,7 +101,7 @@ export const m = (
     key = <string | undefined>props.key;
     delete props.key;
   }
-  return {
+  const vnode = {
     tag,
     props,
     children,
@@ -109,6 +109,7 @@ export const m = (
     flag,
     delta,
   };
+  return vnode.tag.toLowerCase() === 'svg' ? svg(vnode) : vnode;
 };
 
 /**

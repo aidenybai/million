@@ -16,5 +16,8 @@ export default defineConfig({
   test: {
     watch: false,
     environment: 'jsdom',
+    coverage: {
+      reporter: ['lcov'],
+    },
   },
 });

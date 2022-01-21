@@ -1,4 +1,12 @@
-import { DOMOperation, Driver, VElement } from '../types/base';
+import {
+  COLON_CHAR,
+  DOMOperation,
+  Driver,
+  VElement,
+  XLINK_NS,
+  XML_NS,
+  X_CHAR,
+} from '../types/base';
 
 export const updateProp = (
   el: HTMLElement | SVGElement,
@@ -14,6 +22,12 @@ export const updateProp = (
       if (oldPropValue) el.removeEventListener(eventPropName, <EventListener>oldPropValue);
       el.addEventListener(eventPropName, <EventListener>newPropValue);
     });
+  } else if (propName.charCodeAt(0) === X_CHAR) {
+    if (propName.charCodeAt(3) === COLON_CHAR) {
+      el.setAttributeNS(XML_NS, propName, String(newPropValue));
+    } else if (propName.charCodeAt(5) === COLON_CHAR) {
+      el.setAttributeNS(XLINK_NS, propName, String(newPropValue));
+    }
   } else if (el[propName] !== undefined && !(el instanceof SVGElement)) {
     if (newPropValue) {
       effects.push(() => (el[propName] = newPropValue));
