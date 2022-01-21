@@ -11,7 +11,7 @@ specifiers:
   '@types/virtual-dom': ^2.1.1
   '@typescript-eslint/eslint-plugin': ^5.10.0
   '@typescript-eslint/parser': ^5.10.0
-  '@vitest/ui': ^0.1.26
+  '@vitest/ui': ^0.1.27
   benchmark: ^2.1.4
   c8: ^7.11.0
   canvas-confetti: ^1.4.0
@@ -37,7 +37,7 @@ specifiers:
   virtual-dom: ^2.1.1
   vite: ^2.7.13
   vite-plugin-legacy: ^2.1.0
-  vitest: ^0.1.26
+  vitest: ^0.1.27
   zx: ^4.3.0
 
 devDependencies:
@@ -51,7 +51,7 @@ devDependencies:
   '@types/virtual-dom': 2.1.1
   '@typescript-eslint/eslint-plugin': 5.10.0_706fb07ce74b1db611f19a02ad2ce784
   '@typescript-eslint/parser': 5.10.0_eslint@8.7.0+typescript@4.5.5
-  '@vitest/ui': 0.1.26
+  '@vitest/ui': 0.1.27
   benchmark: 2.1.4
   c8: 7.11.0
   canvas-confetti: 1.4.0
@@ -77,7 +77,7 @@ devDependencies:
   virtual-dom: 2.1.1
   vite: 2.7.13
   vite-plugin-legacy: 2.1.0_vite@2.7.13
-  vitest: 0.1.26_ac86556cd747a838cfbe27b6bf313117
+  vitest: 0.1.27_a69cbe1f8a560e080540f63c277b678f
   zx: 4.3.0
 
 packages:
@@ -1855,8 +1855,8 @@ packages:
       eslint-visitor-keys: 3.2.0
     dev: true
 
-  /@vitest/ui/0.1.26:
-    resolution: {integrity: sha512-bY6kGhXkbvWqFN33wGFpD670Gz3qHc2jXLXcIxvXHFFZefB381l5PKXmqMQ0iWn/Rv6hhxyEInEb5cjPEl5E3g==}
+  /@vitest/ui/0.1.27:
+    resolution: {integrity: sha512-Qu1L8FXFStnM9QgjdjfConySUVizdMdG9EVo5XJVtkxgWikIT+CBGIp/N9CoOOxu58I1do6WIIXsFYSCaQmS3Q==}
     dependencies:
       sirv: 2.0.2
     dev: true
@@ -2182,7 +2182,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001301
-      electron-to-chromium: 1.4.49
+      electron-to-chromium: 1.4.50
       escalade: 3.1.1
       node-releases: 2.0.1
       picocolors: 1.0.0
@@ -2865,8 +2865,8 @@ packages:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
     dev: true
 
-  /electron-to-chromium/1.4.49:
-    resolution: {integrity: sha512-k/0t1TRfonHIp8TJKfjBu2cKj8MqYTiEpOhci+q7CVEE5xnCQnx1pTa+V8b/sdhe4S3PR4p4iceEQWhGrKQORQ==}
+  /electron-to-chromium/1.4.50:
+    resolution: {integrity: sha512-g5X/6oVoqLyzKfsZ1HsJvxKoUAToFMCuq1USbmp/GPIwJDRYV1IEcv+plYTdh6h11hg140hycCBId0vf7rL0+Q==}
     dev: true
 
   /elegant-spinner/1.0.1:
@@ -6578,8 +6578,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vitest/0.1.26_ac86556cd747a838cfbe27b6bf313117:
-    resolution: {integrity: sha512-RYW9AMWlvF0WJXlQoFAyuhaPkNGLGssDa4IQ7k3U8+wYsggXrNptS1PhuLjgK00j9yb2RzSrrylhm9r1ZNK6Ug==}
+  /vitest/0.1.27_a69cbe1f8a560e080540f63c277b678f:
+    resolution: {integrity: sha512-w95Izu+jzust3Ov0KdvN9xZPQm8dG5P1hNOB+uKQ+HFexFcdUW/oa0C0/NR2m2wVpsr23psRPzrBPNlBKgm0qA==}
     engines: {node: '>=14.14.0'}
     hasBin: true
     peerDependencies:
@@ -6599,7 +6599,7 @@ packages:
     dependencies:
       '@types/chai': 4.3.0
       '@types/chai-subset': 1.3.3
-      '@vitest/ui': 0.1.26
+      '@vitest/ui': 0.1.27
       c8: 7.11.0
       chai: 4.3.4
       jsdom: 19.0.0
