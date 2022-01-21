@@ -1,4 +1,14 @@
-import { DOMNode, OLD_VNODE_FIELD, VElement, VEntity, VNode } from './types/base';
+import {
+  COLON_CHAR,
+  DOMNode,
+  OLD_VNODE_FIELD,
+  VElement,
+  VEntity,
+  VNode,
+  XLINK_NS,
+  XML_NS,
+  X_CHAR,
+} from './types/base';
 
 /**
  * Creates an Element from a VNode
@@ -23,6 +33,12 @@ export const createElement = (vnode?: VNode | VEntity | null, attachField = true
       if (propName.startsWith('on')) {
         const eventPropName = propName.slice(2).toLowerCase();
         el.addEventListener(eventPropName, <EventListener>propValue);
+      } else if (propName.charCodeAt(0) === X_CHAR) {
+        if (propName.charCodeAt(3) === COLON_CHAR) {
+          el.setAttributeNS(XML_NS, propName, String(propValue));
+        } else if (propName.charCodeAt(5) === COLON_CHAR) {
+          el.setAttributeNS(XLINK_NS, propName, String(propValue));
+        }
       } else if (el[propName] !== undefined && !(el instanceof SVGElement)) {
         el[propName] = propValue;
       } else {

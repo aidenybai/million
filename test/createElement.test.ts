@@ -44,8 +44,6 @@ describe.concurrent('createElement', () => {
     const svg = <HTMLElement>createElement(m('svg', { ns: 'http://www.w3.org/2000/svg' }));
     expect(svg.namespaceURI).toEqual('http://www.w3.org/2000/svg');
     expect(svg instanceof SVGElement).toBeTruthy();
-    const el = <HTMLElement>createElement(m('svg'));
-    expect(el.namespaceURI).toEqual('http://www.w3.org/1999/xhtml');
   });
 
   it('should create event listener', () => {
