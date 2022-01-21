@@ -12,13 +12,14 @@ const git = simpleGit();
 try {
   await write(
     './CITATION.cff',
-    `cff-version: 1.1.0
-message: "If you use this software, please cite it as below."
+    `cff-version: 1.2.0
+message: 'If you use this software, please cite it as below.'
+url: 'https://aidenybai.com/work/million-js'
 authors:
   - family-names: Bai
     given-names: Aiden
     orcid: https://orcid.org/0000-0002-3676-3726
-title: "Million.js: <1kb compiler-augmented virtual DOM. It's fast!"
+title: 'Million.js: A Fast, Compiler-Augmented Virtual DOM For Performant JavaScript UI Libraries
 version: ${version}
 date-released: 2021-7-27`,
   );
