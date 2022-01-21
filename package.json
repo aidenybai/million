@@ -12,7 +12,7 @@
     "build": "zx scripts/build.mjs",
     "lint": "eslint src/**",
     "cleanup": "prettier --write src --parser typescript",
-    "test": "c8 --reporter=lcov vitest",
+    "test": "c8 --reporter=lcov vitest --coverage",
     "bench": "vite --config benchmarks/vite.config.ts",
     "release": "zx scripts/release.mjs",
     "bump": "np && zx scripts/citation.mjs",

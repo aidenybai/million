@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createElement } from '../src/createElement';
-import { m } from '../src/m';
+import { m, entity } from '../src/m';
 import { DOMNode, OLD_VNODE_FIELD } from '../src/types/base';
 
 const expectEqualNode = (el1: DOMNode, el2: DOMNode) => {
@@ -52,5 +52,14 @@ describe.concurrent('createElement', () => {
     const el = document.createElement('div');
     el.addEventListener('click', () => undefined);
     expect(createElement(m('div', { onclick: () => undefined }))).toBeTruthy();
+  });
+
+  it('should resolve entity', () => {
+    expectEqualNode(createElement(entity({}, () => m('div'))), createElement(m('div')));
+  });
+
+  it('should create empty comment', () => {
+    const el = document.createComment('');
+    expectEqualNode(createElement(null), el);
   });
 });

@@ -3,12 +3,12 @@ import { DOMNode, OLD_VNODE_FIELD, VElement, VEntity, VNode } from './types/base
 /**
  * Creates an Element from a VNode
  */
-export const createElement = (vnode: VNode | VEntity, attachField = true): DOMNode | Comment => {
-  if ((<VEntity>vnode).data) {
-    if ((<VEntity>vnode).el) return (<VEntity>vnode).el!;
-    else vnode = (<VEntity>vnode).resolve();
+export const createElement = (vnode?: VNode | VEntity | null, attachField = true): DOMNode => {
+  if ((<VEntity>vnode)?.data) {
+    if ((<VEntity>vnode)?.el) return (<VEntity>vnode).el!;
+    else return createElement((<VEntity>vnode)?.resolve());
   }
-  if (vnode === undefined || vnode === null) return document.createComment(vnode);
+  if (vnode === undefined || vnode === null) return document.createComment('');
   if (typeof vnode === 'string') return document.createTextNode(vnode);
   const velement = <VElement>vnode;
 
