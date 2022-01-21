@@ -2,10 +2,8 @@
   <img src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/banner.svg" />
 </a>
 
-<img src="https://img.shields.io/github/workflow/status/aidenybai/million/CI?color=9765e1&amp;labelColor=000&amp;style=flat-square&amp;label=build" alt="CI" />
-  <img src="https://badgen.net/badgesize/brotli/https/unpkg.com/million/dist/code-size-measurement.js?style=flat-square&amp;label=size&amp;color=9765e1&amp;labelColor=000" alt="Code Size" />
-  <img src="https://img.shields.io/npm/v/million?style=flat-square&amp;color=9765e1&amp;labelColor=000" alt="NPM Version" />
-  <img src="https://img.shields.io/coveralls/github/aidenybai/million?color=9765e1&amp;labelColor=000&amp;style=flat-square" alt="Code Coverage" />
+[![CI](https://img.shields.io/github/workflow/status/aidenybai/million/CI?color=9765e1&labelColor=000&style=flat-square&label=build)](https://img.shields.io/github/workflow/status/aidenybai/million)
+![Code Size](https://badgen.net/badgesize/brotli/https/unpkg.com/million/dist/code-size-measurement.js?style=flat-square&label=size&color=9765e1&labelColor=000) [![NPM Version](https://img.shields.io/npm/v/million?style=flat-square&color=9765e1&labelColor=000)](https://www.npmjs.com/package/million) ![Code Coverage](https://img.shields.io/coveralls/github/aidenybai/million?color=9765e1&labelColor=000&style=flat-square)
 
 ### <1kb compiler-augmented virtual DOM. It's fast!
 
