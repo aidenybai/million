@@ -2,28 +2,10 @@
   <img src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/banner.svg" />
 </a>
 
----
-
-<div align="center">
-  <h1>Million</h1>
-  <img src="https://img.shields.io/github/workflow/status/aidenybai/million/CI?color=9765e1&amp;labelColor=000&amp;style=flat-square&amp;label=build" alt="CI" />
+<img src="https://img.shields.io/github/workflow/status/aidenybai/million/CI?color=9765e1&amp;labelColor=000&amp;style=flat-square&amp;label=build" alt="CI" />
   <img src="https://badgen.net/badgesize/brotli/https/unpkg.com/million/dist/code-size-measurement.js?style=flat-square&amp;label=size&amp;color=9765e1&amp;labelColor=000" alt="Code Size" />
   <img src="https://img.shields.io/npm/v/million?style=flat-square&amp;color=9765e1&amp;labelColor=000" alt="NPM Version" />
   <img src="https://img.shields.io/coveralls/github/aidenybai/million?color=9765e1&amp;labelColor=000&amp;style=flat-square" alt="Code Coverage" />
-  <br />
-  <br />
-  <a href="https://million.js.org/">Website</a>
-  <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-  <a href="https://million.js.org/docs">Docs</a>
-  <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-  <a href="https://million.js.org/blog">Blog</a>
-  <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-  <a href="https://million.js.org/benchmarks">Benchmarks</a>
-  <br />
-  <hr />
-</div>
-
-## What is Million?
 
 ### <1kb compiler-augmented virtual DOM. It's fast!
 
