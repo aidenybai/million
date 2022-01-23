@@ -5,11 +5,8 @@ import { useNode } from '../src/drivers/useNode';
 import { useProps } from '../src/drivers/useProps';
 import { Delta, entity, m } from '../src/m';
 import { patch } from '../src/patch';
-import { DOMNode, Flags } from '../src/types/base';
-
-const expectEqualNode = (el1: DOMNode, el2: DOMNode) => {
-  expect(el1.isEqualNode(el2)).toBeTruthy();
-};
+import { Flags } from '../src/types/base';
+import { expectEqualNode } from './utils';
 
 describe.concurrent('patch', () => {
   it('should patch element with text as children', () => {
