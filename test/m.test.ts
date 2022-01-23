@@ -225,7 +225,7 @@ describe.concurrent('m', () => {
     el.appendChild(child);
 
     expectEqualVNode(
-      toVNode(el),
+      toVNode(el)!,
       m('DIV', { id: 'foo', class: 'bar baz', style: 'color: red;' }, [
         m('A', { href: 'http://foo.bar' }, ['foo bar baz']),
       ]),
@@ -247,7 +247,7 @@ describe.concurrent('m', () => {
     ]);
 
     expectEqualVNode(
-      toVNode(el),
+      toVNode(el)!,
       m('DIV', { id: 'foo', class: 'bar baz', style: 'color: red;' }, [
         m('A', { href: 'http://foo.bar' }, ['foo bar baz']),
       ]),
@@ -257,7 +257,7 @@ describe.concurrent('m', () => {
       expectEqualVNode(
         toVNode(
           '<div id="foo" class="bar baz" style="color: red; "><a href="http://foo.bar">foo bar baz</a></div>',
-        ),
+        )!,
         m('DIV', { id: 'foo', class: 'bar baz', style: 'color: red;' }, [
           m('A', { href: 'http://foo.bar' }, ['foo bar baz']),
         ]),
