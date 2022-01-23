@@ -96,7 +96,7 @@
     "np": "^7.6.0",
     "ora": "^6.0.1",
     "prettier": "^2.5.1",
-    "simple-git": "^3.0.3",
+    "simple-git": "^3.0.4",
     "simple-virtual-dom": "^0.1.10",
     "snabbdom": "^3.3.1",
     "tslib": "^2.3.1",
