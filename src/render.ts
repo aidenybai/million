@@ -28,15 +28,19 @@ export const patch = (
   return data.el;
 };
 
-export const render = (parentEl: DOMNode, newVNode?: VNode | VEntity) => {
+/**
+ * Renders a VNode to the DOM
+ */
+export const render = (parentEl: DOMNode, newVNode?: VNode | VEntity): DOMNode => {
   const el = parentEl[DOM_REF_FIELD];
   if (el) {
-    patch(el, newVNode);
+    return patch(el, newVNode);
   } else {
     const newEl = createElement(newVNode);
     parentEl.textContent = '';
     parentEl.appendChild(newEl);
     parentEl[DOM_REF_FIELD] = newEl;
+    return newEl;
   }
 };
 
