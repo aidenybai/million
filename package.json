@@ -79,7 +79,7 @@
     "@types/virtual-dom": "^2.1.1",
     "@typescript-eslint/eslint-plugin": "^5.10.0",
     "@typescript-eslint/parser": "^5.10.0",
-    "@vitest/ui": "^0.1.27",
+    "@vitest/ui": "^0.2.0",
     "benchmark": "^2.1.4",
     "c8": "^7.11.0",
     "canvas-confetti": "^1.4.0",
@@ -105,7 +105,7 @@
     "virtual-dom": "^2.1.1",
     "vite": "^2.7.13",
     "vite-plugin-legacy": "^2.1.0",
-    "vitest": "^0.1.27",
+    "vitest": "^0.2.0",
     "zx": "^4.3.0"
   }
 }

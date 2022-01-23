@@ -39,13 +39,6 @@ export const useNode = (drivers: Partial<Driver>[]) => {
       return finish(el);
     } else {
       let prevVNode: VNode | VEntity | undefined = oldVNode ?? el[OLD_VNODE_FIELD];
-      // mounting
-      if (!prevVNode) {
-        const newEl = createElement(<string>newVNode, false);
-        effects.push(() => el.appendChild(newEl));
-
-        return finish(<DOMNode>newEl);
-      }
       const hasString = typeof prevVNode === 'string' || typeof newVNode === 'string';
 
       if (hasString && prevVNode !== newVNode) {

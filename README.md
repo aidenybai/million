@@ -41,25 +41,17 @@ npm install million
 Below is an extremely simple implementation of a Counter page using Million.
 
 ```js
-import { m, createElement, patch } from 'million';
-
-const view = (seconds) => m('p', undefined, [`Time elapsed: ${seconds}`]);
-
-const el = createElement(view(0));
+import { m, render } from 'million';
 
 let seconds = 0;
 
 setInterval(() => {
-  patch(el, view(seconds));
+  render(document.body, m('p', undefined, [`Time elapsed: ${seconds}`]));
   seconds++;
 }, 1000);
-
-document.body.appendChild(el);
 ```
 
-`patch()` function has a standard interface that is used in many Virtual DOM libraries. First argument is a DOM node that will be used as the live DOM reference, and the second one is a Virtual DOM to render.
-
-`createElement()` function converts a "Virtual DOM" node into a real DOM node.
+`render()` function has a standard interface that is used in many Virtual DOM libraries. First argument is a DOM node that will be used as the parent DOM reference, and the second one is a Virtual DOM to render.
 
 `m()` function will instantiate a "Virtual DOM" node for an element.
 

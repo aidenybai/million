@@ -1,7 +1,8 @@
+import { createElement } from './createElement';
 import { useChildren } from './drivers/useChildren';
 import { useNode } from './drivers/useNode';
 import { useProps } from './drivers/useProps';
-import { Commit, DOMNode, DOMOperation, VEntity, VNode } from './types/base';
+import { Commit, DOMNode, DOMOperation, VEntity, VNode, DOM_REF_FIELD } from './types/base';
 
 let deadline = 0;
 
@@ -25,6 +26,18 @@ export const patch = (
     effects[i]();
   }
   return data.el;
+};
+
+export const render = (parentEl: DOMNode, newVNode?: VNode | VEntity) => {
+  const el = parentEl[DOM_REF_FIELD];
+  if (el) {
+    patch(el, newVNode);
+  } else {
+    const newEl = createElement(newVNode);
+    parentEl.textContent = '';
+    parentEl.appendChild(newEl);
+    parentEl[DOM_REF_FIELD] = newEl;
+  }
 };
 
 export const defer = Promise.resolve().then.bind(Promise.resolve());
