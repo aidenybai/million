@@ -4,11 +4,22 @@ import { useChildren } from '../src/drivers/useChildren';
 import { useNode } from '../src/drivers/useNode';
 import { useProps } from '../src/drivers/useProps';
 import { Delta, entity, m } from '../src/m';
-import { patch } from '../src/patch';
-import { Flags } from '../src/types/base';
-import { expectEqualNode } from './utils';
+import { patch, render } from '../src/render';
+import { Flags, DOMNode } from '../src/types/base';
 
-describe.concurrent('patch', () => {
+export const expectEqualNode = (el1: DOMNode, el2: DOMNode) => {
+  expect(el1.isEqualNode(el2)).toBeTruthy();
+};
+
+describe.concurrent('render', () => {
+  it('should render element correctly', () => {
+    const root = document.createElement('div');
+    render(root, m('div', {}, ['foo']));
+    expectEqualNode(<DOMNode>root.firstChild, createElement(m('div', {}, ['foo'])));
+    render(root, m('div', {}, ['bar']));
+    expectEqualNode(<DOMNode>root.firstChild, createElement(m('div', {}, ['bar'])));
+  });
+
   it('should patch element with text as children', () => {
     const el = createElement(m('div', { id: 'el' }, ['foo']));
 

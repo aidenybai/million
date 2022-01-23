@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { className, Delta, kebab, m, ns, style, svg, toVNode } from '../src/m';
-import { DeltaTypes, OLD_VNODE_FIELD } from '../src/types/base';
-import { expectEqualVNode } from './utils';
+import { DeltaTypes, OLD_VNODE_FIELD, VNode } from '../src/types/base';
+
+export const expectEqualVNode = (vnode1: VNode, vnode2: VNode) => {
+  expect(JSON.stringify(vnode1)).toEqual(JSON.stringify(vnode2));
+};
 
 describe.concurrent('m', () => {
   it('should create empty vnode with tag', () => {
