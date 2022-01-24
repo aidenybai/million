@@ -16,7 +16,7 @@ import {
  * Diffs two VNode children and modifies the DOM node based on the necessary changes
  */
 export const useChildren =
-  (): Partial<Driver> =>
+  (drivers: Partial<Driver>[] = []): Partial<Driver> =>
   (
     el: HTMLElement | SVGElement,
     newVNode: VElement,
@@ -25,13 +25,23 @@ export const useChildren =
     commit: Commit = (work: () => void) => work(),
     driver?: Driver,
   ): ReturnType<Driver> => {
-    const data = {
-      el,
+    const getData = (element: DOMNode): ReturnType<Driver> => ({
+      el: element,
       newVNode,
       oldVNode,
       effects,
       commit,
       driver,
+    });
+
+    const finish = (element: DOMNode): ReturnType<Driver> => {
+      const data = getData(element);
+      for (let i = 0; i < drivers.length; ++i) {
+        commit(() => {
+          (<Driver>drivers[i])(el, newVNode, oldVNode, effects, commit, driver);
+        }, data);
+      }
+      return data;
     };
 
     const oldVNodeChildren: VNode[] = oldVNode?.children ?? [];
@@ -47,7 +57,7 @@ export const useChildren =
     if (delta) {
       for (let i = 0; i < delta.length; ++i) {
         const [deltaType, deltaPosition] = delta[i];
-        const child = el.childNodes[deltaPosition];
+        const child = <DOMNode>el.childNodes[deltaPosition];
 
         if (deltaType === DeltaTypes.INSERT) {
           effects.push(() =>
@@ -58,28 +68,28 @@ export const useChildren =
         if (deltaType === DeltaTypes.UPDATE) {
           commit(() => {
             effects = diff(
-              <DOMNode>child,
+              child,
               newVNodeChildren![deltaPosition],
               oldVNodeChildren[deltaPosition],
             );
-          }, data);
+          }, getData(child));
         }
 
         if (deltaType === DeltaTypes.DELETE) {
           effects.push(() => el.removeChild(child));
         }
       }
-      return data;
+      return finish(el);
     }
 
     // Flags allow for greater optimizability by reducing condition branches.
     // Generally, you should use a compiler to generate these flags, but
     // hand-writing them is also possible
     if (!newVNodeChildren || newVNode.flag === Flags.NO_CHILDREN) {
-      if (!oldVNodeChildren) return data;
+      if (!oldVNodeChildren) return finish(el);
 
       effects.push(() => (el.textContent = ''));
-      return data;
+      return finish(el);
     }
 
     /**
@@ -329,7 +339,7 @@ export const useChildren =
         }
       }
 
-      return data;
+      return finish(el);
     }
 
     if (newVNode.flag === Flags.ONLY_TEXT_CHILDREN) {
@@ -342,7 +352,7 @@ export const useChildren =
       if (oldString !== newString) {
         effects.push(() => (el.textContent = newString!));
       }
-      return data;
+      return finish(el);
     }
 
     if (newVNode.flag === undefined || newVNode.flag === Flags.ANY_CHILDREN) {
@@ -354,7 +364,7 @@ export const useChildren =
         for (let i = commonLength - 1; i >= 0; --i) {
           commit(() => {
             effects = diff(<DOMNode>el.childNodes[i], newVNodeChildren[i], oldVNodeChildren[i]);
-          }, data);
+          }, getData(el));
         }
 
         if (newVNodeChildren.length > oldVNodeChildren.length) {
@@ -374,8 +384,8 @@ export const useChildren =
         }
       }
 
-      return data;
+      return finish(el);
     }
 
-    return data;
+    return finish(el);
   };
