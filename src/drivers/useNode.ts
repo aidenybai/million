@@ -4,6 +4,7 @@ import {
   DOMNode,
   DOMOperation,
   Driver,
+  Flags,
   OLD_VNODE_FIELD,
   VElement,
   VEntity,
@@ -56,6 +57,15 @@ export const useNode = (drivers: Partial<Driver>[]) => {
 
         const oldVElement = <VElement>prevVNode;
         const newVElement = <VElement>newVNode;
+
+        if (newVElement.flag === Flags.IGNORE_NODE) return finish(el);
+
+        if (newVElement.flag === Flags.REPLACE_NODE) {
+          const newEl = createElement(newVNode);
+          el.replaceWith(newEl);
+          return finish(el);
+        }
+
         if (
           (oldVElement?.key === undefined && newVElement?.key === undefined) ||
           oldVElement?.key !== newVElement?.key
