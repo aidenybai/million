@@ -23,12 +23,12 @@ specifiers:
   fsxx: ^0.0.5
   husky: ^7.0.4
   jsdom: ^19.0.0
-  lint-staged: ^12.2.2
+  lint-staged: ^12.3.1
   lodash: ^4.17.21
   np: ^7.6.0
   ora: ^6.0.1
   prettier: ^2.5.1
-  simple-git: ^3.0.4
+  simple-git: ^3.1.0
   simple-virtual-dom: ^0.1.10
   snabbdom: ^3.3.1
   tslib: ^2.3.1
@@ -63,12 +63,12 @@ devDependencies:
   fsxx: 0.0.5
   husky: 7.0.4
   jsdom: 19.0.0
-  lint-staged: 12.2.2
+  lint-staged: 12.3.1
   lodash: 4.17.21
   np: 7.6.0
   ora: 6.0.1
   prettier: 2.5.1
-  simple-git: 3.0.4
+  simple-git: 3.1.0
   simple-virtual-dom: 0.1.10
   snabbdom: 3.3.1
   tslib: 2.3.1
@@ -4508,8 +4508,8 @@ packages:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
     dev: true
 
-  /lint-staged/12.2.2:
-    resolution: {integrity: sha512-bcHEoM1M/f+K1BYdHcEuIn8K+zMOSJR3mkny6PAuQiTgcSUcRbUWaUD6porAYypxF4k1vYZZ2HutZt1p94Z1jQ==}
+  /lint-staged/12.3.1:
+    resolution: {integrity: sha512-Ocht/eT+4/siWOZDJpNUKcKX2UeWW/pDbohJ4gRsrafAjBi79JK8kiNVk2ciIVNKdw0Q4ABptl2nr6uQAlRImw==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     hasBin: true
     dependencies:
@@ -4519,7 +4519,7 @@ packages:
       debug: 4.3.3_supports-color@9.2.1
       execa: 5.1.1
       lilconfig: 2.0.4
-      listr2: 3.14.0
+      listr2: 4.0.1
       micromatch: 4.0.4
       normalize-path: 3.0.0
       object-inspect: 1.12.0
@@ -4593,9 +4593,9 @@ packages:
       - zen-observable
     dev: true
 
-  /listr2/3.14.0:
-    resolution: {integrity: sha512-TyWI8G99GX9GjE54cJ+RrNMcIFBfwMPxc3XTFiAYGN4s10hWROGtOg7+O6u6LE3mNkyld7RSLE6nrKBvTfcs3g==}
-    engines: {node: '>=10.0.0'}
+  /listr2/4.0.1:
+    resolution: {integrity: sha512-D65Nl+zyYHL2jQBGmxtH/pU8koPZo5C8iCNE8EoB04RwPgQG1wuaKwVbeZv9LJpiH4Nxs0FCp+nNcG8OqpniiA==}
+    engines: {node: '>=12'}
     peerDependencies:
       enquirer: '>= 2.3.0 < 3'
     peerDependenciesMeta:
@@ -5828,8 +5828,8 @@ packages:
     resolution: {integrity: sha512-sDl4qMFpijcGw22U5w63KmD3cZJfBuFlVNbVMKje2keoKML7X2UzWbc4XrmEbDwg0NXJc3yv4/ox7b+JWb57kQ==}
     dev: true
 
-  /simple-git/3.0.4:
-    resolution: {integrity: sha512-Jx5G2Fh981wu5h4RrQrAxTOMS56HE+ab9vsUkUd7mV4sVkfY69++yakJ6H7cWWEPMCNc5Sipdmm57u5pHk6A6Q==}
+  /simple-git/3.1.0:
+    resolution: {integrity: sha512-XpiIA5CBB8S40cJwkLhVe3ysyuLjvOrPo/xjorJl+hspFBgJFueqKXQbKhUl5Ujh2TWMt2jhxl5UTGciFnkXmA==}
     dependencies:
       '@kwsites/file-exists': 1.1.1
       '@kwsites/promise-deferred': 1.1.1
