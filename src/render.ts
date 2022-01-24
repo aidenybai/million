@@ -31,10 +31,14 @@ export const patch = (
 /**
  * Renders a VNode to the DOM
  */
-export const render = (parentEl: DOMNode, newVNode?: VNode | VEntity): DOMNode => {
+export const render = (
+  parentEl: DOMNode,
+  newVNode?: VNode | VEntity,
+  oldVNode?: VNode | VEntity,
+): DOMNode => {
   const el = parentEl[DOM_REF_FIELD];
   if (el) {
-    return patch(el, newVNode);
+    return patch(el, newVNode, oldVNode);
   } else {
     const newEl = createElement(newVNode);
     parentEl.textContent = '';
