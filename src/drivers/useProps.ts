@@ -1,5 +1,6 @@
 import {
   COLON_CHAR,
+  Commit,
   DOMOperation,
   Driver,
   VElement,
@@ -49,15 +50,22 @@ export const updateProp = (
  * Diffs two VNode props and modifies the DOM node based on the necessary changes
  */
 export const useProps =
-  (): Partial<Driver> =>
+  (drivers: Partial<Driver>[] = []): Partial<Driver> =>
   (
     el: HTMLElement | SVGElement,
     newVNode: VElement,
     oldVNode?: VElement,
     effects: DOMOperation[] = [],
+    commit: Commit = (work: () => void) => work(),
   ): ReturnType<Driver> => {
     const oldProps = oldVNode?.props;
     const newProps = newVNode?.props;
+    const data = {
+      el,
+      newVNode,
+      oldVNode,
+      effects,
+    };
     if (oldProps !== newProps) {
       // Zero props optimization
       if (oldProps === undefined || newProps === null) {
@@ -94,11 +102,10 @@ export const useProps =
         }
       }
     }
-
-    return {
-      el,
-      newVNode,
-      oldVNode,
-      effects,
-    };
+    for (let i = 0; i < drivers.length; ++i) {
+      commit(() => {
+        (<Driver>drivers[i])(el, newVNode, oldVNode, effects, commit);
+      }, data);
+    }
+    return data;
   };
