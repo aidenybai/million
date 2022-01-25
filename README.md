@@ -61,7 +61,9 @@ setInterval(() => {
 
 Looking for the docs? Check the [documentation](https://million.js.org) out.
 
-Have a question about Million? Post it on the [GitHub Discussions](https://github.com/aidenybai/million/discussions) and ask the community for help.
+Want to talk to the community? Hop in our [Slack](https://join.slack.com/t/slack-rli2608/shared_invite/zt-12alg8z77-rTt4~xuSJvLKA9Om8Mw_pg) and share your ideas and what you've build with Million.
+
+Have a question about Million? Join our [Slack](https://join.slack.com/t/slack-rli2608/shared_invite/zt-12alg8z77-rTt4~xuSJvLKA9Om8Mw_pg) or post it on the [GitHub Discussions](https://github.com/aidenybai/million/discussions) and ask the community for help.
 
 Find a bug? Head over to our [issue tracker](https://github.com/aidenybai/million/issues) and we'll do our best to help. We love pull requests, too!
 
