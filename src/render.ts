@@ -53,7 +53,7 @@ export const defer = Promise.resolve().then.bind(Promise.resolve());
 /**
  * Split rendering work into chunks and spread it out over multiple frames
  */
-export const schedule: Commit = (work: () => void): void => {
+export const schedule = (work: () => void): void => {
   if (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (<any>navigator)?.scheduling?.isInputPending({ includeContinuous: true }) ||
