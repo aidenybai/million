@@ -16,7 +16,8 @@ export const XML_NS = 'http://www.w3.org/XML/1998/namespace';
 export const COLON_CHAR = 58;
 export const X_CHAR = 120;
 
-export type VProps = Record<string, string | boolean | EventListener>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type VProps = Record<string, any>;
 export type DOMNode = HTMLElement | SVGElement | Text | Comment;
 export type VNode = VElement | string;
 export type DeltaOperation = [DeltaTypes, number];
