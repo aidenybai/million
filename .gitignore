@@ -8,3 +8,4 @@ coverage
 .DS_Store
 .pnpm-debug.log
 *.tgz
+/*.d.ts

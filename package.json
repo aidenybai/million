@@ -36,12 +36,12 @@
     "./jsx-runtime": {
       "import": "./dist/jsx-runtime.mjs",
       "require": "./dist/jsx-runtime.cjs",
-      "types": "./dist/jsx-runtime.d.ts"
+      "types": "./jsx-runtime.d.ts"
     },
     "./refresh": {
       "import": "./dist/refresh.mjs",
       "require": "./dist/refresh.cjs",
-      "types": "./dist/refresh.d.ts"
+      "types": "./refresh.d.ts"
     }
   },
   "sideEffects": false,
