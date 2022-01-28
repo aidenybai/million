@@ -36,7 +36,12 @@
     "./jsx-runtime": {
       "import": "./dist/jsx-runtime.mjs",
       "require": "./dist/jsx-runtime.cjs",
-      "types": "./jsx-runtime.d.ts"
+      "types": "./dist/jsx-runtime.d.ts"
+    },
+    "./refresh": {
+      "import": "./dist/refresh.mjs",
+      "require": "./dist/refresh.cjs",
+      "types": "./dist/refresh.d.ts"
     }
   },
   "sideEffects": false,
@@ -75,11 +80,11 @@
     "@types/benchmark": "^2.1.1",
     "@types/canvas-confetti": "^1.4.2",
     "@types/lodash": "^4.14.178",
-    "@types/node": "^17.0.12",
+    "@types/node": "^17.0.13",
     "@types/virtual-dom": "^2.1.1",
     "@typescript-eslint/eslint-plugin": "^5.10.1",
     "@typescript-eslint/parser": "^5.10.1",
-    "@vitest/ui": "^0.2.3",
+    "@vitest/ui": "^0.2.5",
     "benchmark": "^2.1.4",
     "c8": "^7.11.0",
     "canvas-confetti": "^1.4.0",
@@ -101,11 +106,11 @@
     "snabbdom": "^3.3.1",
     "tslib": "^2.3.1",
     "typescript": "^4.5.5",
-    "unbuild": "^0.6.8",
+    "unbuild": "^0.6.9",
     "virtual-dom": "^2.1.1",
     "vite": "^2.7.13",
     "vite-plugin-legacy": "^2.1.0",
-    "vitest": "^0.2.3",
+    "vitest": "^0.2.5",
     "zx": "^4.3.0"
   }
 }
