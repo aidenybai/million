@@ -225,9 +225,9 @@ describe.concurrent('m', () => {
     el.appendChild(child);
 
     expectEqualVNode(
-      toVNode(el)!,
-      m('DIV', { id: 'foo', class: 'bar baz', style: 'color: red;' }, [
-        m('A', { href: 'http://foo.bar' }, ['foo bar baz']),
+      <VNode>toVNode(el),
+      m('div', { id: 'foo', class: 'bar baz', style: 'color: red;' }, [
+        m('a', { href: 'http://foo.bar' }, ['foo bar baz']),
       ]),
     );
   });
@@ -242,26 +242,15 @@ describe.concurrent('m', () => {
     child.href = 'http://foo.bar';
     el.appendChild(child);
 
-    el[OLD_VNODE_FIELD] = m('DIV', { id: 'foo', class: 'bar baz', style: 'color: red;' }, [
-      m('A', { href: 'http://foo.bar' }, ['foo bar baz']),
+    el[OLD_VNODE_FIELD] = m('div', { id: 'foo', class: 'bar baz', style: 'color: red;' }, [
+      m('a', { href: 'http://foo.bar' }, ['foo bar baz']),
     ]);
 
     expectEqualVNode(
-      toVNode(el)!,
-      m('DIV', { id: 'foo', class: 'bar baz', style: 'color: red;' }, [
-        m('A', { href: 'http://foo.bar' }, ['foo bar baz']),
+      <VNode>toVNode(el),
+      m('div', { id: 'foo', class: 'bar baz', style: 'color: red;' }, [
+        m('a', { href: 'http://foo.bar' }, ['foo bar baz']),
       ]),
     );
-
-    it('should convert HTML string to VNode', () => {
-      expectEqualVNode(
-        toVNode(
-          '<div id="foo" class="bar baz" style="color: red; "><a href="http://foo.bar">foo bar baz</a></div>',
-        )!,
-        m('DIV', { id: 'foo', class: 'bar baz', style: 'color: red;' }, [
-          m('A', { href: 'http://foo.bar' }, ['foo bar baz']),
-        ]),
-      );
-    });
   });
 });

@@ -113,15 +113,9 @@ export const m = (
 };
 
 /**
- * Turns a DOMNode or HTML string into a VNode
+ * Turns a DOMNode into a VNode
  */
-export const toVNode = (el: DOMNode | string): VNode | undefined => {
-  if (typeof el === 'string') {
-    const temp = document.createElement('div');
-    temp.innerHTML = el;
-    el = <DOMNode>temp.firstChild;
-  }
-
+export const toVNode = (el: DOMNode): VNode | undefined => {
   if (el[OLD_VNODE_FIELD]) return el[OLD_VNODE_FIELD];
   if (el instanceof Text) return String(el.nodeValue);
   if (el instanceof Comment) return undefined;
@@ -137,7 +131,7 @@ export const toVNode = (el: DOMNode | string): VNode | undefined => {
     children[i] = toVNode(<DOMNode>el.childNodes[i]);
   }
 
-  const vnode = m(el.tagName, props, children);
+  const vnode = m(el.tagName.toLowerCase(), props, children);
   el[OLD_VNODE_FIELD] = vnode;
   return vnode;
 };
