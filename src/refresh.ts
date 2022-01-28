@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { toVNode as toVNodeDefault } from './m';
 import { patch } from './render';
-import { VNode, Driver, OLD_VNODE_FIELD } from './types/base';
+import { VNode, Driver } from './types/base';
 
 const parser = new DOMParser();
 const cache = new Map<string, VNode>();
@@ -34,18 +34,6 @@ export const noRefreshCommit = (work: () => void, data: ReturnType<Driver>) => {
 export const refresh = (html: string, toVNode: Function = toVNodeDefault) => {
   const { head, body } = parser.parseFromString(html, 'text/html');
 
-  patch(
-    document.head,
-    getCache(head, head.innerHTML, toVNode),
-    document.head[OLD_VNODE_FIELD],
-    [],
-    noRefreshCommit,
-  );
-  patch(
-    document.body,
-    getCache(body, body.innerHTML, toVNode),
-    document.body[OLD_VNODE_FIELD],
-    [],
-    noRefreshCommit,
-  );
+  patch(document.head, getCache(head, head.innerHTML, toVNode), undefined, [], noRefreshCommit);
+  patch(document.body, getCache(body, body.innerHTML, toVNode), undefined, [], noRefreshCommit);
 };
