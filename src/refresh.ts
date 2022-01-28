@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { toVNode } from './m';
+import { toVNode as toVNodeDefault } from './m';
 import { patch } from './render';
-import { VNode, Driver, DOMNode, OLD_VNODE_FIELD } from './types/base';
+import { VNode, Driver, OLD_VNODE_FIELD } from './types/base';
 
 const parser = new DOMParser();
-const temp = document.createElement('div');
 const cache = new Map<string, VNode>();
 
 export const getCache = (el: HTMLElement, key: string, toVNode: Function): VNode | undefined => {
@@ -32,33 +31,20 @@ export const noRefreshCommit = (work: () => void, data: ReturnType<Driver>) => {
   }
 };
 
-export const toVNodeFromHTML = (el: string | DOMNode): VNode[] | VNode => {
-  if (typeof el === 'string') {
-    temp.innerHTML = el;
-    const vnodes: (string | VNode)[] = new Array(temp.childNodes.length).fill(0);
-    for (let i = 0; i < temp.childNodes.length; ++i) {
-      vnodes[i] = <VNode>toVNodeFromHTML(<string | DOMNode>temp.childNodes[i])!;
-    }
-    return vnodes;
-  } else {
-    return <VNode>toVNode(el);
-  }
-};
-
-export const refresh = (html: string, toVNode: Function = toVNodeFromHTML) => {
+export const refresh = (html: string, toVNode: Function = toVNodeDefault) => {
   const { head, body } = parser.parseFromString(html, 'text/html');
 
   patch(
     document.head,
     getCache(head, head.innerHTML, toVNode),
-    head[OLD_VNODE_FIELD],
+    document.head[OLD_VNODE_FIELD],
     [],
     noRefreshCommit,
   );
   patch(
     document.body,
     getCache(body, body.innerHTML, toVNode),
-    body[OLD_VNODE_FIELD],
+    document.body[OLD_VNODE_FIELD],
     [],
     noRefreshCommit,
   );
