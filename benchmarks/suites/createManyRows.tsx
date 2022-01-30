@@ -4,13 +4,13 @@
  */
 // @ts-nocheck
 
+import { createElement } from 'million';
 import * as simple_virtual_dom from 'simple-virtual-dom';
 import * as snabbdom from 'snabbdom';
+import * as tiny_vdom from 'tiny-vdom';
 import * as virtual_dom from 'virtual-dom';
-import { createElement } from 'million';
 import { Suite, vnodeAdapter } from '../benchmark';
 import { buildData, patch } from '../data';
-import * as tiny_vdom from '../tiny-vdom';
 
 const data = buildData(10000);
 const oldVNode = <table></table>;

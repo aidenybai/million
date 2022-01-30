@@ -10,7 +10,8 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      million: resolve(__dirname, './src'),
+      '@million': resolve(__dirname, '../packages'),
+      million: resolve(__dirname, '../packages/million'),
     },
   },
   test: {

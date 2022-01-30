@@ -2,9 +2,9 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "million": ["src/index"],
-      "million/*": ["src/*"],
-      "million/jsx-runtime": ["src/jsx-runtime"]
+      "million": ["packages/million/index"],
+      "million/*": ["packages/million/*"],
+      "@million/*": ["packages/*"]
     },
     "jsx": "react-jsx",
     "jsxImportSource": "million",
