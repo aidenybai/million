@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import { createElement, patch } from '../src/index';
+import { createElement, patch } from '../packages/million';
 import Chart from 'chart.js/auto';
 import confetti from 'canvas-confetti';
 import { highlight } from 'sugar-high';
