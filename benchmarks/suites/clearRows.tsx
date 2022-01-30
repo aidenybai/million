@@ -4,7 +4,7 @@
  */
 // @ts-nocheck
 
-import { createElement } from 'million';
+import { createElement } from 'packages/million';
 import * as simple_virtual_dom from 'simple-virtual-dom';
 import * as snabbdom from 'snabbdom';
 import * as tiny_vdom from 'tiny-vdom';

@@ -2,9 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "million": ["packages/million/index"],
-      "million/*": ["packages/million/*"],
-      "@million/*": ["packages/*"]
+      "packages/*": ["packages/*"]
     },
     "jsx": "react-jsx",
     "jsxImportSource": "million",
@@ -27,5 +25,5 @@
     "strict": true
   },
   "include": ["./**/*.ts", "./**/*.tsx"],
-  "exclude": ["node_modules", "dist", "./src/**/*.js", "./src/**/*.test.ts"]
+  "exclude": ["node_modules", "dist"]
 }

@@ -1,4 +1,4 @@
-import { useNode, useChildren, DOMNode, VNode, DOMOperation } from 'million';
+import { useNode, useChildren, DOMNode, VNode, DOMOperation } from 'packages/million';
 
 const adjectives = [
   'pretty',
