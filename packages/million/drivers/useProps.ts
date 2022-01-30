@@ -7,7 +7,7 @@ import {
   XLINK_NS,
   XML_NS,
   X_CHAR,
-} from '../types/base';
+} from '../types';
 
 export const updateProp = (
   el: HTMLElement | SVGElement,

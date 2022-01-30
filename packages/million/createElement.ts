@@ -8,7 +8,7 @@ import {
   XLINK_NS,
   XML_NS,
   X_CHAR,
-} from './types/base';
+} from './types';
 
 /**
  * Creates an Element from a VNode

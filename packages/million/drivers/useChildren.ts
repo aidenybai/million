@@ -10,7 +10,7 @@ import {
   NODE_OBJECT_POOL_FIELD,
   VElement,
   VNode,
-} from '../types/base';
+} from '../types';
 
 /**
  * Diffs two VNode children and modifies the DOM node based on the necessary changes

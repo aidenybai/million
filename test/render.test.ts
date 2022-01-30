@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { createElement } from '../src/createElement';
-import { useChildren } from '../src/drivers/useChildren';
-import { useNode } from '../src/drivers/useNode';
-import { useProps } from '../src/drivers/useProps';
-import { Delta, entity, m } from '../src/m';
-import { patch, render } from '../src/render';
-import { Flags, DOMNode } from '../src/types/base';
+import { createElement } from '../packages/million/createElement';
+import { useChildren } from '../packages/million/drivers/useChildren';
+import { useNode } from '../packages/million/drivers/useNode';
+import { useProps } from '../packages/million/drivers/useProps';
+import { Delta, entity, m } from '../packages/million/m';
+import { patch, render } from '../packages/million/render';
+import { Flags, DOMNode } from '../packages/million/types';
 
 export const expectEqualNode = (el1: DOMNode, el2: DOMNode) => {
   expect(el1.isEqualNode(el2)).toBeTruthy();
