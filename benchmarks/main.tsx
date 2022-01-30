@@ -3,6 +3,8 @@
 import { createElement, patch } from '../src/index';
 import Chart from 'chart.js/auto';
 import confetti from 'canvas-confetti';
+import { highlight } from 'sugar-high';
+import { camelCase } from 'lodash';
 
 import appendManyRowsToLargeTable from './suites/appendManyRowsToLargeTable';
 import clearRows from './suites/clearRows';
@@ -84,13 +86,26 @@ const vnode = () => (
               suite.run({ async: true });
               patch(el, vnode());
             }}
+            data-tooltip={description.slice(0, -1)}
+            oncontextmenu={(event) => {
+              const modal = document.getElementById('modal');
+              event.preventDefault();
+              modal.open = true;
+              modal.querySelector('article').innerHTML = `<h2>${name}</h2><p>${description.slice(
+                0,
+                -1,
+              )}</p><p><a href="https://github.com/aidenybai/million/blob/main/benchmarks/suites/${camelCase(
+                name,
+              )}.tsx"><b>→ View Source Code</b></a></p><p><details><summary>Benchmark Config</summary><pre><code>${highlight(
+                JSON.stringify(suite, null, 2),
+              )}</code></pre></details></p><footer><button role="button" data-target="modal" onClick="document.getElementById('modal').removeAttribute('open')">Understood</button></footer>`;
+            }}
             style={{
               margin: '5px',
               opacity: disabled && disabled !== name ? 0.25 : 1,
               pointerEvents: disabled ? 'none' : 'auto',
             }}
             disabled={disabled}
-            title={description.slice(0, -1)}
           >{`${disabled === name ? '☑️ ' : ''}${name}`}</a>
         );
       })}

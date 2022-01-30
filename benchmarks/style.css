@@ -9,6 +9,26 @@
   --primary-inverse: #fff;
 }
 
+.sh__7 {
+  color: #3476cb;
+}
+.sh__6 {
+  color: #2d333b;
+}
+.sh__5 {
+  color: #818c9b;
+  font-weight: bold;
+}
+.sh__3 {
+  color: #00a99a;
+}
+.sh__1 {
+  color: #f47067;
+}
+.sh__0 {
+  color: #818c9b;
+}
+
 details {
   border: 1px solid rgba(0, 0, 0, 0.2) !important;
   padding: 0.75rem;

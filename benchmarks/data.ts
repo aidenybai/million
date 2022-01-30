@@ -87,5 +87,6 @@ export const patch = (
   for (let i = 0; i < effects.length; i++) {
     effects[i]();
   }
+
   return data.el;
 };
