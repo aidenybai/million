@@ -1,4 +1,4 @@
-import type { DeltaOperation, VElement, VNode, VProps } from './base';
+import type { VElement, VNode, VProps } from '../million/types';
 
 export type JSXVNode = VNode | number | boolean | undefined | null;
 export type FC = (props?: VProps, key?: string | null) => VElement;
@@ -10,5 +10,3 @@ export namespace JSX {
     [elemName: string]: VProps;
   }
 }
-
-export { DeltaOperation, VElement, VNode, VProps };

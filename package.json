@@ -2,16 +2,16 @@
   "name": "million",
   "version": "1.4.3-1",
   "description": "<1kb compiler-augmented virtual DOM. It's fast!",
-  "main": "dist/index.mjs",
-  "module": "dist/index.mjs",
-  "jsdelivr": "dist/index.mjs",
-  "unpkg": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "main": "dist/million.mjs",
+  "module": "dist/million.mjs",
+  "jsdelivr": "dist/million.mjs",
+  "unpkg": "dist/million.mjs",
+  "types": "dist/million.d.ts",
   "scripts": {
     "dev": "zx scripts/dev.mjs",
     "build": "zx scripts/build.mjs",
-    "lint": "eslint src/**",
-    "cleanup": "prettier --write src --parser typescript",
+    "lint": "eslint packages/**",
+    "cleanup": "prettier --write packages",
     "test": "vitest --coverage",
     "bench": "vite --config benchmarks/vite.config.ts",
     "release": "zx scripts/release.mjs",
@@ -30,9 +30,9 @@
   ],
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts"
+      "import": "./dist/million.mjs",
+      "require": "./dist/million.cjs",
+      "types": "./dist/million.d.ts"
     },
     "./jsx-runtime": {
       "import": "./dist/jsx-runtime.mjs",
@@ -105,7 +105,7 @@
     "simple-git": "^3.1.1",
     "simple-virtual-dom": "^0.1.10",
     "snabbdom": "^3.3.1",
-    "sugar-high": "^0.0.5",
+    "sugar-high": "^0.0.6",
     "tslib": "^2.3.1",
     "typescript": "^4.5.5",
     "unbuild": "^0.6.9",

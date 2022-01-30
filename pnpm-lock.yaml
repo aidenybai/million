@@ -31,7 +31,7 @@ specifiers:
   simple-git: ^3.1.1
   simple-virtual-dom: ^0.1.10
   snabbdom: ^3.3.1
-  sugar-high: ^0.0.5
+  sugar-high: ^0.0.6
   tslib: ^2.3.1
   typescript: ^4.5.5
   unbuild: ^0.6.9
@@ -72,7 +72,7 @@ devDependencies:
   simple-git: 3.1.1
   simple-virtual-dom: 0.1.10
   snabbdom: 3.3.1
-  sugar-high: 0.0.5
+  sugar-high: 0.0.6
   tslib: 2.3.1
   typescript: 4.5.5
   unbuild: 0.6.9
@@ -6096,8 +6096,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /sugar-high/0.0.5:
-    resolution: {integrity: sha512-wY8jKy6UC87ya0tQxiNk2jULZSfDLgfnW5ABx2qZAiY4nYIyakYm4bwNPYKYd6+/9K9FVVHGOEb1TiuLC72yqA==}
+  /sugar-high/0.0.6:
+    resolution: {integrity: sha512-8mbbAlcezoXTQDCFnmCBzg8vzdeeqlEyQf78tHbdpQPIc53YfiCNDroZUHF4sGXYZfNBco0zhKVTEwlvWvbUYg==}
     dev: true
 
   /supports-color/2.0.0:

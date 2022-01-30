@@ -8,7 +8,7 @@ import {
   VEntity,
   VNode,
   VProps,
-} from './types/base';
+} from './types';
 
 /**
  * Attaches ns props to svg element

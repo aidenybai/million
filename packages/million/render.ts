@@ -2,7 +2,7 @@ import { createElement } from './createElement';
 import { useChildren } from './drivers/useChildren';
 import { useNode } from './drivers/useNode';
 import { useProps } from './drivers/useProps';
-import { Commit, DOMNode, DOMOperation, VEntity, VNode, DOM_REF_FIELD } from './types/base';
+import { Commit, DOMNode, DOMOperation, VEntity, VNode, DOM_REF_FIELD } from './types';
 
 let deadline = 0;
 

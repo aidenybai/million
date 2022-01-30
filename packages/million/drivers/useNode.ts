@@ -9,7 +9,7 @@ import {
   VElement,
   VEntity,
   VNode,
-} from '../types/base';
+} from '../types';
 
 /**
  * Diffs a single DOM node and modifies the DOM node based on the necessary changes
