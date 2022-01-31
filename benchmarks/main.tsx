@@ -78,16 +78,6 @@ const vnode = () => (
             role="button"
             href="#"
             onclick={() => {
-              disabled = name;
-              logs.unshift([]);
-              log(`Running: ${suite.name} - ${new Date().toLocaleString()}`);
-              chart.data.datasets[0].backgroundColor = new Array(7).fill('rgba(0, 0, 0, 0.2)');
-              chart.update();
-              suite.run({ async: true });
-              patch(el, vnode());
-            }}
-            data-tooltip={description.slice(0, -1)}
-            oncontextmenu={(event) => {
               const modal = document.getElementById('modal');
               event.preventDefault();
               modal.open = true;
@@ -99,6 +89,13 @@ const vnode = () => (
               )}.tsx"><b>→ View Source Code</b></a></p><p><details><summary>Benchmark Config</summary><pre><code>${highlight(
                 JSON.stringify(suite, null, 2),
               )}</code></pre></details></p><footer><button role="button" data-target="modal" onClick="document.getElementById('modal').removeAttribute('open')">Understood</button></footer>`;
+              disabled = name;
+              logs.unshift([]);
+              log(`Running: ${suite.name} - ${new Date().toLocaleString()}`);
+              chart.data.datasets[0].backgroundColor = new Array(7).fill('rgba(0, 0, 0, 0.2)');
+              chart.update();
+              suite.run({ async: true });
+              patch(el, vnode());
             }}
             style={{
               margin: '5px',
