@@ -109,7 +109,7 @@ export const m = (
     flag,
     delta,
   };
-  return vnode.tag.toLowerCase() === 'svg' ? svg(vnode) : vnode;
+  return vnode.tag?.toLowerCase() === 'svg' ? svg(vnode) : vnode;
 };
 
 /**
