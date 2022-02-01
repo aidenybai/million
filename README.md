@@ -19,7 +19,7 @@ Current Virtual DOM implementations are **inadequate**—Ranging from overcompli
 
 Million aims to fix this, providing a **library-agnostic** Virtual DOM to serve as the core for Javascript libraries that focus on pre**compilation** and static analysis.
 
-[**→ Check out the Million website**](https://million.js.org)
+[**→ Learn Million in <10 minutes!**](https://million.js.org/docs/start-here)
 
 ## Why Million?
 
@@ -55,7 +55,7 @@ setInterval(() => {
 
 `m()` function will instantiate a "Virtual DOM" node for an element.
 
-[**→ See live example**](https://million.js.org/docs/getting-started#quick-start)
+[**→ More examples**](https://million.js.org/docs/quick-start)
 
 ## Resources & Contributing Back
 
