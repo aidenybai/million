@@ -89,4 +89,4 @@ _What is the logo? The logo stems from the suffix of Mil**lion**, and is a graph
 
 Million is [MIT-licensed](LICENSE) open-source software and [research](https://github.com/aidenybai/million/blob/main/.github/RESEARCH.md) by [Aiden Bai](https://github.com/aidenybai).
 
-![View count](https://hits.link/hits?url=https://github.com/aidenybai/million&bgRight=9765e1&bgLeft=000)
+![View count](https://hits.link/hits?url=https://github.com/aidenybai/million&bgRight=000&bgLeft=000)
