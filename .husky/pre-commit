@@ -18,7 +18,7 @@ function success {
 
 info "Updating packages..."
 
-taze minor
+taze -w minor
 
 git stage package.json
 git stage pnpm-lock.yaml
