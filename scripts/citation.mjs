@@ -19,7 +19,7 @@ authors:
   - family-names: Bai
     given-names: Aiden
     orcid: https://orcid.org/0000-0002-3676-3726
-title: 'Million.js: A Fast, Compiler-Augmented Virtual DOM For Performant JavaScript UI Libraries
+title: 'Million.js: A Fast, Compiler-Augmented Virtual DOM For Performant JavaScript UI Libraries'
 version: ${version}
 date-released: 2021-7-27`,
   );
