@@ -9,24 +9,23 @@
   --primary-inverse: #fff;
 }
 
-.sh__7 {
-  color: #3476cb;
+.sh__class {
+  color: #2d5e9d;
 }
-.sh__6 {
+.sh__identifier {
   color: #2d333b;
 }
-.sh__5 {
-  color: #818c9b;
-  font-weight: bold;
+.sh__sign {
+  color: #8996a3;
 }
-.sh__3 {
+.sh__string {
   color: #00a99a;
 }
-.sh__1 {
+.sh__keyword {
   color: #f47067;
 }
-.sh__0 {
-  color: #818c9b;
+.sh__comment {
+  color: #a19595;
 }
 
 details {
