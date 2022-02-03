@@ -1,29 +1,21 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { toVNode as toVNodeDefault } from '../million/m';
 import { patch } from '../million/render';
-import { Driver } from '../million/types';
-import { memo } from './memo';
+import { OLD_VNODE_FIELD } from '../million/types';
+import { memo, needsPatch } from './memo';
 
 const parser = new DOMParser();
 
-export const noRefreshCommit = (work: () => void, data: ReturnType<Driver>) => {
-  // @ts-expect-error Avoid re-fetching their contents of <link> and <script>
-  const newVNodeTag = data.newVNode?.tag;
-  // @ts-expect-error Avoid re-fetching their contents of <link> and <script>
-  const oldVNodeTag = data.oldVNode?.tag;
-  if (
-    newVNodeTag !== 'link' &&
-    oldVNodeTag !== 'link' &&
-    newVNodeTag !== 'script' &&
-    oldVNodeTag !== 'script'
-  ) {
-    work();
-  }
-};
-
-export const refresh = (html: string, toVNode: Function = toVNodeDefault) => {
+export const refresh = (html: string, toVNode: Function = toVNodeDefault, cache = true) => {
   const { head, body } = parser.parseFromString(html, 'text/html');
 
-  patch(document.head, memo(head, head.innerHTML, toVNode), undefined, [], noRefreshCommit);
-  patch(document.body, memo(body, body.innerHTML, toVNode), undefined, [], noRefreshCommit);
+  if (!document.head[OLD_VNODE_FIELD]) document.head[OLD_VNODE_FIELD] = toVNode(document.head);
+  if (!document.body[OLD_VNODE_FIELD]) document.body[OLD_VNODE_FIELD] = toVNode(document.body);
+
+  if (!cache || needsPatch(head.innerHTML)) {
+    patch(document.head, cache ? memo(head, head.innerHTML, toVNode) : toVNode(head));
+  }
+  if (!cache || needsPatch(body.innerHTML)) {
+    patch(document.body, cache ? memo(body, body.innerHTML, toVNode) : toVNode(body));
+  }
 };
