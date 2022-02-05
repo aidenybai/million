@@ -58,9 +58,10 @@ export const useNode = (drivers: Partial<Driver>[]) => {
         const oldVElement = <VElement>prevVNode;
         const newVElement = <VElement>newVNode;
 
-        if (newVElement.flag === Flags.IGNORE_NODE) return finish(el);
+        if (newVElement.flag === Flags.IGNORE_NODE || oldVElement.flag === Flags.IGNORE_NODE)
+          return finish(el);
 
-        if (newVElement.flag === Flags.REPLACE_NODE) {
+        if (newVElement.flag === Flags.REPLACE_NODE || oldVElement.flag === Flags.REPLACE_NODE) {
           const newEl = createElement(newVNode);
           el.replaceWith(newEl);
           return finish(el);
