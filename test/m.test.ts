@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { className, Delta, kebab, m, ns, style, svg, toVNode } from '../packages/million/m';
-import { DeltaTypes, OLD_VNODE_FIELD, VNode } from '../packages/million/types';
+import { className, Delta, kebab, m, ns, style, svg } from '../packages/million/m';
+import { DeltaTypes, VNode } from '../packages/million/types';
 
 export const expectEqualVNode = (vnode1: VNode, vnode2: VNode) => {
   expect(JSON.stringify(vnode1)).toEqual(JSON.stringify(vnode2));
@@ -212,45 +212,5 @@ describe.concurrent('m', () => {
     expect(kebab({ iHaveNumbers1: 'iHaveNumbers1' })).toEqual({
       'i-have-numbers1': 'iHaveNumbers1',
     });
-  });
-
-  it('should convert real HTMLElement to VNode', () => {
-    const el = document.createElement('div');
-    const child = document.createElement('a');
-    el.id = 'foo';
-    el.className = 'bar baz';
-    el.style.color = 'red';
-    child.textContent = 'foo bar baz';
-    child.href = 'http://foo.bar';
-    el.appendChild(child);
-
-    expectEqualVNode(
-      <VNode>toVNode(el),
-      m('div', { id: 'foo', class: 'bar baz', style: 'color: red;' }, [
-        m('a', { href: 'http://foo.bar' }, ['foo bar baz']),
-      ]),
-    );
-  });
-
-  it('should convert real HTMLElement to VNode with OLD_VNODE_FIELD', () => {
-    const el = document.createElement('div');
-    const child = document.createElement('a');
-    el.id = 'foo';
-    el.className = 'bar baz';
-    el.style.color = 'red';
-    child.textContent = 'foo bar baz';
-    child.href = 'http://foo.bar';
-    el.appendChild(child);
-
-    el[OLD_VNODE_FIELD] = m('div', { id: 'foo', class: 'bar baz', style: 'color: red;' }, [
-      m('a', { href: 'http://foo.bar' }, ['foo bar baz']),
-    ]);
-
-    expectEqualVNode(
-      <VNode>toVNode(el),
-      m('div', { id: 'foo', class: 'bar baz', style: 'color: red;' }, [
-        m('a', { href: 'http://foo.bar' }, ['foo bar baz']),
-      ]),
-    );
   });
 });
