@@ -7,7 +7,7 @@ await $`unbuild`;
 await $`esbuild packages/jsx-runtime/index.ts --minify --bundle --outfile=dist/code-size-measurement.js`;
 
 await write('./jsx-runtime.d.ts', `export * from './dist/jsx-runtime';`);
-await write('./refresh.d.ts', `export * from './dist/refresh';`);
+await write('./ssr.d.ts', `export * from './dist/ssr';`);
 
 const files = await $`ls -xm -d dist/*`;
 
