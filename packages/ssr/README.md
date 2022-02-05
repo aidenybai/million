@@ -1,4 +1,4 @@
-# `million/refresh`
+# `million/ssr`
 
 Adds HMR support for [Million](https://github.com/aidenybai/million) for SSR.
 

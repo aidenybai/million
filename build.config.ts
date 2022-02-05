@@ -1,7 +1,7 @@
 import { defineBuildConfig } from 'unbuild';
 
 export default defineBuildConfig({
-  entries: ['./packages/million', './packages/jsx-runtime', './packages/refresh'],
+  entries: ['./packages/million', './packages/jsx-runtime', './packages/ssr'],
   declaration: true,
   clean: true,
   rollup: {

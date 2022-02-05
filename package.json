@@ -39,10 +39,10 @@
       "require": "./dist/jsx-runtime.cjs",
       "types": "./jsx-runtime.d.ts"
     },
-    "./refresh": {
-      "import": "./dist/refresh.mjs",
-      "require": "./dist/refresh.cjs",
-      "types": "./refresh.d.ts"
+    "./ssr": {
+      "import": "./dist/ssr.mjs",
+      "require": "./dist/ssr.cjs",
+      "types": "./ssr.d.ts"
     }
   },
   "sideEffects": false,
@@ -95,6 +95,7 @@
     "eslint-config-prettier": "^8.3.0",
     "export-size": "^0.5.2",
     "fsxx": "^0.0.5",
+    "htmlparser2": "^7.2.0",
     "husky": "^7.0.4",
     "jsdom": "^19.0.0",
     "lint-staged": "^12.3.3",

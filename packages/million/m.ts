@@ -3,7 +3,6 @@ import {
   DeltaTypes,
   DOMNode,
   Flags,
-  OLD_VNODE_FIELD,
   VElement,
   VEntity,
   VNode,
@@ -110,28 +109,4 @@ export const m = (
     delta,
   };
   return vnode.tag?.toLowerCase() === 'svg' ? svg(vnode) : vnode;
-};
-
-/**
- * Turns a DOMNode into a VNode
- */
-export const toVNode = (el: DOMNode): VNode | undefined => {
-  if (el[OLD_VNODE_FIELD]) return el[OLD_VNODE_FIELD];
-  if (el instanceof Text) return String(el.nodeValue);
-  if (el instanceof Comment) return undefined;
-
-  const props = {};
-  // We know children length, so we created a fixed array
-  const children = new Array(el.children.length).fill(0);
-  for (let i = 0; i < el.attributes.length; i++) {
-    const { nodeName, nodeValue } = el.attributes[i];
-    props[nodeName] = nodeValue;
-  }
-  for (let i = 0; i < el.childNodes.length; i++) {
-    children[i] = toVNode(<DOMNode>el.childNodes[i]);
-  }
-
-  const vnode = m(el.tagName.toLowerCase(), props, children);
-  el[OLD_VNODE_FIELD] = vnode;
-  return vnode;
 };
