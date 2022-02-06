@@ -9,6 +9,10 @@
   <img src="https://img.shields.io/coveralls/github/aidenybai/million?style=flat&colorA=000000&colorB=000000" />
 </div>
 
+<center>
+  by <a href="https://github.com/aidenybai">@aidenybai</a>
+</center>
+
 > Hi! Aiden here, author of Million. I hope you find it easy to use and powerful enough for all your use cases. If you have any issues or suggestions, please [open an issue](https://github.com/aidenybai/million/issues)!
 >
 > If you're interested in tuning into the development and future of Million, please **leave a star** :)
