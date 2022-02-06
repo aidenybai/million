@@ -3,10 +3,10 @@ import { h } from '../jsx-runtime/h';
 import { DOMNode, OLD_VNODE_FIELD, VNode, Flags } from '../million/types';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const nodeToVNode = (node: any): VNode => {
+export const fromNodeToVNode = (node: any): VNode => {
   const vnode =
     node.type === 'tag'
-      ? h(node.name, node.attribs, ...node.children.map(nodeToVNode))
+      ? h(node.name, node.attribs, ...node.children.map(fromNodeToVNode))
       : node.type === 'text'
       ? node.data
       : '';
@@ -18,7 +18,7 @@ export const nodeToVNode = (node: any): VNode => {
   return vnode;
 };
 
-export const domNodeToVNode = (el: DOMNode): VNode | undefined => {
+export const fromDomNodeToVNode = (el: DOMNode): VNode | undefined => {
   if (el[OLD_VNODE_FIELD]) return el[OLD_VNODE_FIELD];
   if (el instanceof Text) return String(el.nodeValue);
   if (el instanceof Comment) return undefined;
@@ -31,7 +31,7 @@ export const domNodeToVNode = (el: DOMNode): VNode | undefined => {
     props[nodeName] = nodeValue;
   }
   for (let i = 0; i < el.childNodes.length; i++) {
-    children[i] = domNodeToVNode(<DOMNode>el.childNodes[i]);
+    children[i] = fromDomNodeToVNode(<DOMNode>el.childNodes[i]);
   }
 
   const vnode = h(el.tagName.toLowerCase(), props, ...children);
@@ -39,6 +39,19 @@ export const domNodeToVNode = (el: DOMNode): VNode | undefined => {
   return vnode;
 };
 
-export const toVNode = (html: string): VNode => {
-  return nodeToVNode(parseDocument(html).children[0]);
+export const fromStringToVNode = (html: string): VNode => {
+  return fromNodeToVNode(parseDocument(html).children[0]);
+};
+
+export const fromVNodeToString = (vnode: VNode): string => {
+  if (typeof vnode === 'string') return vnode;
+  if (!vnode.tag) return '<!-- -->';
+  const props = vnode.props ?? {};
+  const children = vnode.props ?? [];
+  const startTag = `<${vnode.tag}${props
+    .map((prop: string) => ` ${prop}='${props[prop]}'`)
+    .join('')}>`;
+  const childrenOfTag = typeof children === 'string' ? children : children.join('');
+  const endTag = `</${vnode.tag}>`;
+  return `${startTag}${childrenOfTag}${endTag}`;
 };
