@@ -2,14 +2,14 @@
   <img src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/banner.svg" />
 </a>
 
-<p align="center">A <b>lightweight (<code>&lt;1kb</code>)</b> compiler-augmented Virtual DOM. It's <a href="https://million.js.org/benchmarks" target="_blank"><b><i>fast</i></b></a>!</p>
-
 <div align="center">
   <img src="https://img.shields.io/github/workflow/status/aidenybai/million/CI?style=flat&colorA=000000&colorB=000000" alt="CI" />
   <img src="https://badgen.net/badgesize/brotli/https/unpkg.com/million/dist/code-size-measurement.js?color=000000&labelColor=000000" alt="Code Size" />
   <img src="https://img.shields.io/npm/v/million?style=flat&colorA=000000&colorB=000000" alt="NPM Version" />
   <img src="https://img.shields.io/coveralls/github/aidenybai/million?style=flat&colorA=000000&colorB=000000" />
 </div>
+
+<p align="center">A <b>lightweight (<code>&lt;1kb</code>)</b> compiler-augmented Virtual DOM. It's <a href="https://million.js.org/benchmarks" target="_blank"><b><i>fast</i></b></a>!</p>
 
 > Hi! Aiden here, author of Million. I hope you find it easy to use and powerful enough for all your use cases. If you have any issues or suggestions, please [open an issue](https://github.com/aidenybai/million/issues)!
 >
