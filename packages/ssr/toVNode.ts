@@ -1,4 +1,4 @@
-import { DomHandler, Parser } from 'htmlparser2';
+import { parseDocument } from 'htmlparser2';
 import { h } from '../jsx-runtime/h';
 import { DOMNode, OLD_VNODE_FIELD, VNode, Flags } from '../million/types';
 
@@ -40,9 +40,5 @@ export const domNodeToVNode = (el: DOMNode): VNode | undefined => {
 };
 
 export const toVNode = (html: string): VNode => {
-  const handler = new DomHandler();
-  const parser = new Parser(handler);
-  parser.write(html);
-  parser.end();
-  return nodeToVNode(handler.dom[0]);
+  return nodeToVNode(parseDocument(html).children[0]);
 };
