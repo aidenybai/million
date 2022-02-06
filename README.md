@@ -11,9 +11,15 @@
   <img src="https://img.shields.io/coveralls/github/aidenybai/million?style=flat&colorA=000000&colorB=000000" />
 </div>
 
+> Hi! Aiden here, author of Million. I hope you find it easy to use and powerful enough for all your use cases. If you have any issues or suggestions, please [open an issue](https://github.com/aidenybai/million/issues)!
+>
+> ~ Aiden ([@aidenybai](https://github.com/aidenybai))
+
 ---
 
 ## What is Million?
+
+Million is a **lightweight (`<1kb`)** compiler-augmented Virtual DOM. It's [**_fast_**](https://million.js.org/benchmarks)!
 
 Current Virtual DOM implementations are **inadequate**—Ranging from overcomplicated to abandoned, most are unusable without sacrificing **raw performance and size**.
 
@@ -87,6 +93,6 @@ _What is the logo? The logo stems from the suffix of Mil**lion**, and is a graph
 
 ## License
 
-Million is [MIT-licensed](LICENSE) open-source software and [research](https://github.com/aidenybai/million/blob/main/.github/RESEARCH.md) by [Aiden Bai](https://github.com/aidenybai).
+Million is [MIT-licensed](LICENSE) open-source software and [research project](https://github.com/aidenybai/million/blob/main/.github/RESEARCH.md) by [Aiden Bai](https://github.com/aidenybai).
 
 ![View count](https://hits.link/hits?url=https://github.com/aidenybai/million&bgRight=000&bgLeft=000)
