@@ -2,14 +2,14 @@
 import { OLD_VNODE_FIELD } from 'packages/million';
 import { patch } from '../million/render';
 import { memo } from './memo';
-import { domNodeToVNode } from './toVNode';
+import { fromDomNodeToVNode } from './convert';
 
 export const refresh = (head?: string, body?: string) => {
   if (!document.head[OLD_VNODE_FIELD]) {
-    document.head[OLD_VNODE_FIELD] = domNodeToVNode(document.head);
+    document.head[OLD_VNODE_FIELD] = fromDomNodeToVNode(document.head);
   }
   if (!document.body[OLD_VNODE_FIELD]) {
-    document.body[OLD_VNODE_FIELD] = domNodeToVNode(document.body);
+    document.body[OLD_VNODE_FIELD] = fromDomNodeToVNode(document.body);
   }
 
   if (head) patch(document.head, memo(head));
