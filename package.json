@@ -90,7 +90,7 @@
     "c8": "^7.11.0",
     "canvas-confetti": "^1.4.0",
     "chart.js": "^3.7.0",
-    "esbuild": "^0.14.18",
+    "esbuild": "^0.14.19",
     "eslint": "^8.8.0",
     "eslint-config-prettier": "^8.3.0",
     "export-size": "^0.5.2",
