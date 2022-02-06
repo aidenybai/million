@@ -9,11 +9,11 @@
   <img src="https://img.shields.io/coveralls/github/aidenybai/million?style=flat&colorA=000000&colorB=000000" />
 </div>
 
-<p align="center">A <b>lightweight (<code>&lt;1kb</code>)</b> compiler-augmented Virtual DOM. It's <a href="https://million.js.org/benchmarks" target="_blank"><b><i>fast</i></b></a>!</p>
-
 > Hi! Aiden here, author of Million. I hope you find it easy to use and powerful enough for all your use cases. If you have any issues or suggestions, please [open an issue](https://github.com/aidenybai/million/issues)!
 >
-> ~ Aiden ([@aidenybai](https://github.com/aidenybai))
+> If you're interested in tuning into the development and future of Million, please **leave a star** :)
+>
+> -Aiden ([@aidenybai](https://github.com/aidenybai))
 
 ---
 
