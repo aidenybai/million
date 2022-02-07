@@ -2,20 +2,17 @@
   <img src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/banner.svg" />
 </a>
 
-<div align="center">
-  <img src="https://img.shields.io/github/workflow/status/aidenybai/million/CI?style=flat&colorA=000000&colorB=000000" alt="CI" />
-  <img src="https://badgen.net/badgesize/brotli/https/unpkg.com/million/dist/code-size-measurement.js?color=000000&labelColor=000000" alt="Code Size" />
-  <img src="https://img.shields.io/npm/v/million?style=flat&colorA=000000&colorB=000000" alt="NPM Version" />
-  <img src="https://img.shields.io/coveralls/github/aidenybai/million?style=flat&colorA=000000&colorB=000000" />
-</div>
+<p align="center">
+  <a href="https://github.com/aidenybai/million/actions/workflows/ci.yml" target="_blank"><img src="https://img.shields.io/github/workflow/status/aidenybai/million/CI?style=flat&colorA=000000&colorB=000000" alt="CI" /></a>
+  <img src="https://badgen.net/badgesize/brotli/https/unpkg.com/million/dist/code-size-measurement.js?color=000000&labelColor=00000&label=bundle%20size" alt="Code Size" />
+  <a href="https://www.npmjs.com/package/million" target="_blank"><img src="https://img.shields.io/npm/v/million?style=flat&colorA=000000&colorB=000000" alt="NPM Version" /></a>
+  <a href="https://coveralls.io/github/aidenybai/million" target="_blank"><img src="https://img.shields.io/coveralls/github/aidenybai/million?style=flat&colorA=000000&colorB=000000" /></a>
+  <a href="https://discord.gg/X9yFbcV2rF" target="_blank"><img src="https://img.shields.io/discord/938129049539186758?style=flat&colorA=000000&colorB=000000&label=discord&logo=discord&logoColor=ffffff" /></a>
+</p>
 
-<br />
-
-<div align="center">
-  by <a href="https://github.com/aidenybai">@aidenybai</a>
-</div>
-
-<br />
+<p align="center">
+by <a href="https://github.com/aidenybai">@aidenybai</a>
+</p>
 
 > Hi! Aiden here, author of Million. I hope you find it easy to use and powerful enough for all your use cases. If you have any issues or suggestions, please [open an issue](https://github.com/aidenybai/million/issues)!
 >
@@ -47,7 +44,7 @@ Million aims to fix this, providing a **library-agnostic** Virtual DOM to serve 
 Inside your project directory, run the following command:
 
 ```sh
-npm install million
+npm install million # yarn add million
 ```
 
 ## Quick Start
@@ -91,7 +88,7 @@ Million takes heavy inspiration from [snabbdom](https://github.com/snabbdom/snab
 
 _Why is it called "Million"? The name originated with the goal of being able to handle [1M+ ops/sec for benchmarks](https://github.com/aidenybai/million/tree/main/benchmarks#readme)._
 
-_What is the logo? The logo stems from the suffix of Mil**lion**, and is a graphic of the nose and mouth of a lion._
+_What is the logo? The logo stems from the suffix of Mil**LION**, and is a graphic of the nose and mouth of a lion._
 
 ## Sponsors
 
