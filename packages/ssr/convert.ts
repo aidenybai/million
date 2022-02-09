@@ -1,6 +1,6 @@
 import { parseDocument } from 'htmlparser2';
 import { h } from '../jsx-runtime/h';
-import { DOMNode, OLD_VNODE_FIELD, VNode, Flags } from '../million/types';
+import { DOMNode, Flags, OLD_VNODE_FIELD, VNode, VProps } from '../million/types';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const fromNodeToVNode = (node: any): VNode => {
@@ -23,7 +23,7 @@ export const fromDomNodeToVNode = (el: DOMNode): VNode | undefined => {
   if (el instanceof Text) return String(el.nodeValue);
   if (el instanceof Comment) return undefined;
 
-  const props = {};
+  const props: VProps = {};
   // We know children length, so we created a fixed array
   const children = new Array(el.children.length).fill(0);
   for (let i = 0; i < el.attributes.length; i++) {

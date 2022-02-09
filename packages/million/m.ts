@@ -95,7 +95,7 @@ export const m = (
   flag?: Flags,
   delta?: DeltaOperation[],
 ): VElement => {
-  let key;
+  let key = undefined;
   if (props?.key) {
     key = <string | undefined>props.key;
     delete props.key;
