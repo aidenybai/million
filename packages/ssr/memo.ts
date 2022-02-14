@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/ban-types */
 import { VNode } from '../million/types';
-import { fromStringToVNode } from './convert';
+import { fromStringToVNode } from '../shared/convert';
 
 const cache = new Map<string, VNode>();
 

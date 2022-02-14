@@ -1,5 +1,5 @@
 import { parseDocument } from 'htmlparser2';
-import { h } from '../jsx-runtime/h';
+import { h } from './h';
 import { DOMNode, Flags, OLD_VNODE_FIELD, VNode, VProps } from '../million/types';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

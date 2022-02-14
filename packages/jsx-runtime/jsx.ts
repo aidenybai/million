@@ -1,5 +1,5 @@
 import type { VNode, VProps } from '../million/types';
-import { h } from './h';
+import { h } from '../shared/h';
 import type { FC, JSXVNode } from './types';
 
 const jsx = (tag: string | FC, props?: VProps, key?: string | null): VNode => {

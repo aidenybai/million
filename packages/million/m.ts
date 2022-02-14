@@ -79,11 +79,19 @@ export const entity = (
   data: Record<string, unknown>,
   resolve: () => VNode,
   el?: DOMNode,
-): VEntity => ({
-  data,
-  resolve,
-  el,
-});
+): VEntity => {
+  let key = undefined;
+  if (data.key) {
+    key = <string | undefined>data.key;
+    delete data.key;
+  }
+  return {
+    data,
+    resolve,
+    el,
+    key,
+  };
+};
 
 /**
  * Helper method for creating a VNode
