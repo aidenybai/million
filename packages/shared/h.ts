@@ -1,7 +1,7 @@
 import { className, Flags, m, style, svg } from '../million/index';
 import { kebab } from '../million/m';
 import type { DeltaOperation, VNode, VProps } from '../million/types';
-import type { JSXVNode } from './types';
+import type { JSXVNode } from '../jsx-runtime/types';
 
 export const normalize = (jsxVNode: JSXVNode): VNode | VNode[] | undefined => {
   if (Array.isArray(jsxVNode)) {

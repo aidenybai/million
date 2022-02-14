@@ -8,6 +8,8 @@ await $`esbuild packages/jsx-runtime/index.ts --minify --bundle --outfile=dist/c
 
 await write('./jsx-runtime.d.ts', `export * from './dist/jsx-runtime';`);
 await write('./ssr.d.ts', `export * from './dist/ssr';`);
+await write('./block.d.ts', `export * from './dist/block';`);
+await write('./shared.d.ts', `export * from './dist/shared';`);
 
 const files = await $`ls -xm -d dist/*`;
 

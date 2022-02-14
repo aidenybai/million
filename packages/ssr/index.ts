@@ -1,3 +1,3 @@
-export * from './convert';
+export * from '../shared';
 export * from './memo';
 export * from './refresh';

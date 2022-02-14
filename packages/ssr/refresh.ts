@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { OLD_VNODE_FIELD } from 'packages/million';
 import { patch } from '../million/render';
-import { fromDomNodeToVNode } from './convert';
+import { fromDomNodeToVNode } from '../shared/convert';
 import { memo } from './memo';
 
 export const refresh = (head?: string, body?: string) => {
