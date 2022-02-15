@@ -105,7 +105,6 @@
     "eslint-config-prettier": "^8.3.0",
     "export-size": "^0.5.2",
     "fsxx": "^0.0.5",
-    "htmlparser2": "^7.2.0",
     "husky": "^7.0.4",
     "jsdom": "^19.0.0",
     "lint-staged": "^12.3.4",

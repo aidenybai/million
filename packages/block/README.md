@@ -1,6 +1,6 @@
 # `million/block`
 
-Adds [blockdom-like] support for Million, reducing memory and fast DOM creation with `cloneNode(true)`.
+Adds [blockdom-like](https://github.com/ged-odoo/blockdom) support for Million, reducing memory and fast DOM creation with `cloneNode(true)`.
 
 ## License
 
