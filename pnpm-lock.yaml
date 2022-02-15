@@ -38,7 +38,7 @@ specifiers:
   typescript: ^4.5.5
   unbuild: ^0.6.9
   virtual-dom: ^2.1.1
-  vite: ^2.8.2
+  vite: ^2.8.3
   vite-plugin-legacy: ^2.1.0
   vitest: ^0.2.8
   zx: ^4.3.0
@@ -81,8 +81,8 @@ devDependencies:
   typescript: 4.5.5
   unbuild: 0.6.9
   virtual-dom: 2.1.1
-  vite: 2.8.2
-  vite-plugin-legacy: 2.1.0_vite@2.8.2
+  vite: 2.8.3
+  vite-plugin-legacy: 2.1.0_vite@2.8.3
   vitest: 0.2.8_5620f78d906964220d5f2e4462535054
   zx: 4.3.0
 
@@ -7393,7 +7393,7 @@ packages:
       x-is-string: 0.1.0
     dev: true
 
-  /vite-plugin-legacy/2.1.0_vite@2.8.2:
+  /vite-plugin-legacy/2.1.0_vite@2.8.3:
     resolution: {integrity: sha512-Q4+hDF+JeH66uCg0hNKv1chemHEHjhK/PVMWX1FNlnw2FZ4ue/IsRTjJ/7ysufbAnNnCeAjiNjC8A5Hva8xKRg==}
     peerDependencies:
       vite: '>2.0.0-0'
@@ -7408,14 +7408,14 @@ packages:
       regenerator-runtime: 0.13.9
       rollup: 2.66.1
       rollup-plugin-terser: 7.0.2_rollup@2.66.1
-      vite: 2.8.2
+      vite: 2.8.3
     transitivePeerDependencies:
       - acorn
       - supports-color
     dev: true
 
-  /vite/2.8.2:
-    resolution: {integrity: sha512-zawfykcPVPYva4KusIWORNLr324Qx86/3NpfQSIOJdjnL5pYhwDoImLYMOh4lFLcP/7//tNuWM2vx2F5OSVC9w==}
+  /vite/2.8.3:
+    resolution: {integrity: sha512-967klrEiG7HEsN7fQYYVETs5495Iu6GpI7YyxoO5yVTJCRxjV8HhWgNWKgrbazjoOB9DQuztL53/nUoNqHNsWg==}
     engines: {node: '>=12.2.0'}
     hasBin: true
     peerDependencies:
@@ -7466,7 +7466,7 @@ packages:
       local-pkg: 0.4.1
       tinypool: 0.1.1
       tinyspy: 0.2.10
-      vite: 2.8.2
+      vite: 2.8.3
     transitivePeerDependencies:
       - less
       - sass

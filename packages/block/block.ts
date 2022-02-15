@@ -5,12 +5,11 @@ import { fromDomNodeToVNode, fromStringToDomNode } from '../shared/convert';
 const cache = new Map<string, VEntity>();
 
 export const block = (html: string): VEntity => {
-  const el = fromStringToDomNode(html);
-  const vnode = fromDomNodeToVNode(el)!;
-
   if (cache.has(html)) {
     return cache.get(html)!;
   } else {
+    const el = fromStringToDomNode(html);
+    const vnode = fromDomNodeToVNode(el)!;
     const blockEntity = entity(
       {
         get el() {
