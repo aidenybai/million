@@ -1,13 +1,13 @@
 import { VNode } from '../million/types';
-import { fromStringToVNode } from '../shared/convert';
+import { fromStringToDomNode, fromDomNodeToVNode } from '../shared/convert';
 
-const cache = new Map<string, VNode>();
+const cache = new Map<string, VNode | undefined>();
 
 export const memo = (key: string): VNode | undefined => {
   if (cache.has(key)) {
     return cache.get(key);
   } else {
-    const vnode = fromStringToVNode(key);
+    const vnode = fromDomNodeToVNode(fromStringToDomNode(key));
     cache.set(key, vnode);
     return vnode;
   }
