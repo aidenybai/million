@@ -17,7 +17,7 @@ authors:
     orcid: 0000-0002-3676-3726
     affiliation: 1
 affiliations:
-  - name: Camas High School
+  - name: Independent Researcher
     index: 1
 date: 14 Feb 2022
 bibliography: paper.bib
@@ -25,11 +25,11 @@ bibliography: paper.bib
 
 # Summary
 
-The need for developing and delivering interactive web applications has grown rapidly. Thus, JavaScript User Interface (UI) libraries were introduced [@grov2015], at the detriment of performance and bundle size. To solve this problem, Million.js was created to allow for the creation of compiler-augmented JavaScript UI libraries that are extensible, performant, and lightweight. This was accomplished by designing a computationally efficient diffing algorithm that relies on a compiler, and then measuring the performance with a series of relevant and exhaustive benchmarks.
+The need for developing and delivering interactive web applications has grown rapidly. Thus, JavaScript User Interface (UI) libraries were introduced [@grov:2015], at the detriment of performance and bundle size. To solve this problem, Million.js was created to allow for the creation of compiler-augmented JavaScript UI libraries that are extensible, performant, and lightweight. This was accomplished by designing a computationally efficient diffing algorithm that relies on a compiler, and then measuring the performance with a series of relevant and exhaustive benchmarks.
 
 The following mechanisms are built-in to allow for imperative or skip optimizations, reducing runtime diffing:
 
-- **Keyed diffing:** Special diffing algorithm allows minimizes unnecessary DOM operations [@myers1986; @hunt1977]
+- **Keyed diffing:** Special diffing algorithm allows minimizes unnecessary DOM operations [@myers:1986; @hunt:1977]
 - **Flags:** Allows patching algorithm to skip condition branches and regulates tree diffing behavior.
 - **Deltas:** Hard coded imperative operations alongside diffing to optimize consistent operations.
 - **Blocks:** Serialize blocks of virtual nodes to reduce memory usage.
