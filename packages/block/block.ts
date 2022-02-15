@@ -1,12 +1,11 @@
 import { entity } from 'packages/million/m';
-import { DOMNode, VEntity } from 'packages/million/types';
-import { fromDomNodeToVNode } from '../shared/convert';
+import { VEntity } from 'packages/million/types';
+import { fromDomNodeToVNode, fromStringToDomNode } from '../shared/convert';
 
 const cache = new Map<string, VEntity>();
 
 export const block = (html: string): VEntity => {
-  const doc = new DOMParser().parseFromString(`<t>${html.trim()}</t>`, 'text/xml');
-  const el = <DOMNode>doc.firstChild!.firstChild!;
+  const el = fromStringToDomNode(html);
   const vnode = fromDomNodeToVNode(el)!;
 
   if (cache.has(html)) {

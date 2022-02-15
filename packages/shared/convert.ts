@@ -1,6 +1,5 @@
-import { parseDocument } from 'htmlparser2';
-import { h } from './h';
 import { DOMNode, Flags, OLD_VNODE_FIELD, VNode, VProps } from '../million/types';
+import { h } from './h';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const fromNodeToVNode = (node: any): VNode => {
@@ -39,8 +38,10 @@ export const fromDomNodeToVNode = (el: DOMNode): VNode | undefined => {
   return vnode;
 };
 
-export const fromStringToVNode = (html: string): VNode => {
-  return fromNodeToVNode(parseDocument(html).children[0]);
+export const fromStringToDomNode = (html: string): DOMNode => {
+  const doc = new DOMParser().parseFromString(`<t>${html.trim()}</t>`, 'text/xml');
+  const el = <DOMNode>doc.firstChild!.firstChild!;
+  return el;
 };
 
 export const fromVNodeToString = (vnode: VNode): string => {
