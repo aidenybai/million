@@ -37,6 +37,12 @@ The following mechanisms are built-in to allow for imperative or skip optimizati
 
 When compared to other methods of virtual DOM rendering, these findings showed that Million.js had higher benchmark metrics, with 133% to 300% more operations per second than other Virtual DOM libraries.
 
+# Statement of need
+
+Million is a Virtual DOM aimed at improving the performance of JavaScript UI libraries. It is designed to be a compiler-augmented JavaScript UI library, and is extensible to allow for complex functionality like components. The API for Million was designed to provide functional and composable building blocks for building modules for UI libraries.
+
+Million was designed to be used by human-computer interaction (HCI) researchers for data visualization and web development. It is already being considered for use in Static Site Generators, which have the potential to allow for faster intereactive visualizations of data on the web.
+
 # Related works
 
 - [snabbdom](https://github.com/snabbdom/snabbdom): General purpose, composable virtual DOM library.
