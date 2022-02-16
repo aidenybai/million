@@ -39,9 +39,9 @@ When compared to other methods of virtual DOM rendering, these findings showed t
 
 # Statement of need
 
-Million is a Virtual DOM aimed at improving the performance of JavaScript UI libraries. It is designed to be a compiler-augmented JavaScript UI library, and is extensible to allow for complex functionality like components. The API for Million was designed to provide functional and composable building blocks for building modules for UI libraries.
+Million.js is a Virtual DOM aimed at improving the performance of JavaScript UI libraries. It is designed to be a compiler-augmented JavaScript UI library, and is extensible to allow for complex functionality like components. The API for Million.js was designed to provide functional and composable building blocks for building modules for UI libraries.
 
-Million was designed to be used by human-computer interaction (HCI) researchers for data visualization and web development. It is already being considered for use in static site generators, which have the potential to allow for faster interactive visualizations of data on the web.
+Million.js was designed to be used by human-computer interaction (HCI) researchers for data visualization and web development. It is already being considered for use in static site generators, which have the potential to allow for faster interactive visualizations of data on the web.
 
 # Related works
 
