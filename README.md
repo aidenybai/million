@@ -98,6 +98,6 @@ _What is the logo? The logo stems from the suffix of Mil**LION**, and is a graph
 
 ## License
 
-Million is [MIT-licensed](LICENSE) open-source software and [research project](https://github.com/aidenybai/million/blob/main/.github/RESEARCH.md) by [Aiden Bai](https://github.com/aidenybai).
+Million is [MIT-licensed](LICENSE) open-source software and [research project](https://joss.theoj.org/papers/e654b920c08f83da3a09ff462f61c3a6) by [Aiden Bai](https://github.com/aidenybai).
 
 ![View count](https://hits.link/hits?url=https://github.com/aidenybai/million&bgRight=000&bgLeft=000)
