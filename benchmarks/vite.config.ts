@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
-import legacy from 'vite-plugin-legacy';
+import legacy from '@vitejs/plugin-legacy';
 
 export default defineConfig({
   root: 'benchmarks',
