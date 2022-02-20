@@ -101,9 +101,9 @@
     "c8": "^7.11.0",
     "canvas-confetti": "^1.5.1",
     "chart.js": "^3.7.1",
-    "esbuild": "^0.14.22",
+    "esbuild": "^0.14.23",
     "eslint": "^8.9.0",
-    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-prettier": "^8.4.0",
     "export-size": "^0.5.2",
     "fsxx": "^0.0.5",
     "husky": "^7.0.4",
@@ -123,7 +123,7 @@
     "typescript": "^4.5.5",
     "unbuild": "^0.6.9",
     "virtual-dom": "^2.1.1",
-    "vite": "^2.8.3",
+    "vite": "^2.8.4",
     "vitest": "^0.2.8",
     "zx": "^4.3.0"
   }
