@@ -48,7 +48,7 @@ const suite = Suite('select row (highlighting a selected row)', {
     patch(snabbdom.toVNode(el()), vnodeAdapter(vnode));
   },
   DOM: () => {
-    el().childNodes[row].style.background = 'red';
+    el().childNodes.item(row).style.background = 'red';
   },
   innerHTML: () => {
     let html = '';

@@ -30,7 +30,7 @@ export const fromDomNodeToVNode = (el: DOMNode): VNode | undefined => {
     props[nodeName] = nodeValue;
   }
   for (let i = 0; i < el.childNodes.length; i++) {
-    children[i] = fromDomNodeToVNode(<DOMNode>el.childNodes[i]);
+    children[i] = fromDomNodeToVNode(<DOMNode>el.childNodes.item(i));
   }
 
   const vnode = h(el.tagName.toLowerCase(), props, ...children);
