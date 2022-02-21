@@ -63,8 +63,8 @@ const suite = Suite('replace all rows (updating all 1,000 rows)', {
   DOM: () => {
     el().childNodes.forEach((tr, i) => {
       const { id, label } = data[i];
-      tr.childNodes[0].textContent = String(id);
-      tr.childNodes[1].textContent = label;
+      tr.childNodes.item(0).textContent = String(id);
+      tr.childNodes.item(1).textContent = label;
     });
   },
   innerHTML: () => {

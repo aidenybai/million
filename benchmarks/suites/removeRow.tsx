@@ -59,7 +59,7 @@ const suite = Suite('remove row (removing one row)', {
   },
   DOM: () => {
     const elClone = el();
-    elClone.removeChild(elClone.childNodes[row]);
+    elClone.removeChild(elClone.childNodes.item(row));
   },
   innerHTML: () => {
     let html = '';

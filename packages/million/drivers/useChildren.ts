@@ -57,7 +57,7 @@ export const useChildren =
     if (delta) {
       for (let i = 0; i < delta.length; ++i) {
         const [deltaType, deltaPosition] = delta[i];
-        const child = <DOMNode>el.childNodes[deltaPosition];
+        const child = <DOMNode>el.childNodes.item(deltaPosition);
 
         if (deltaType === DeltaTypes.INSERT) {
           effects.push(() =>
@@ -270,14 +270,14 @@ export const useChildren =
           newHead++;
         } else if (oldHeadVNode.key === newTailVNode.key) {
           // [4] Right move
-          const node = el.childNodes[oldHead++];
+          const node = el.childNodes.item(oldHead++);
           const tail = newTail--;
-          effects.push(() => el.insertBefore(node, el.childNodes[tail].nextSibling));
+          effects.push(() => el.insertBefore(node, el.childNodes.item(tail).nextSibling));
         } else if (oldTailVNode.key === newHeadVNode.key) {
           // [5] Left move
-          const node = el.childNodes[oldTail--];
+          const node = el.childNodes.item(oldTail--);
           const head = newHead++;
-          effects.push(() => el.insertBefore(node, el.childNodes[head]));
+          effects.push(() => el.insertBefore(node, el.childNodes.item(head)));
         } else break;
       }
 
@@ -289,7 +289,7 @@ export const useChildren =
             el.insertBefore(
               el[NODE_OBJECT_POOL_FIELD][(<VElement>newVNodeChildren[head]).key!] ??
                 createElement(newVNodeChildren[head], false),
-              el.childNodes[head],
+              el.childNodes.item(head),
             ),
           );
         }
@@ -297,7 +297,7 @@ export const useChildren =
         // [7] New children optimization
         while (oldHead <= oldTail) {
           const head = oldHead++;
-          const node = el.childNodes[head];
+          const node = el.childNodes.item(head);
           el[NODE_OBJECT_POOL_FIELD][(<VElement>oldVNodeChildren[head]).key!] = node;
           effects.push(() => el.removeChild(node));
         }
@@ -316,8 +316,8 @@ export const useChildren =
 
           if (oldVNodePosition !== undefined) {
             // [9] Reordering continuous nodes
-            const node = el.childNodes[oldVNodePosition];
-            effects.push(() => el.insertBefore(node, el.childNodes[head]));
+            const node = el.childNodes.item(oldVNodePosition);
+            effects.push(() => el.insertBefore(node, el.childNodes.item(head)));
             delete oldKeyMap[newVNodeChild.key!];
           } else {
             // [10] Create new nodes
@@ -325,7 +325,7 @@ export const useChildren =
               el.insertBefore(
                 el[NODE_OBJECT_POOL_FIELD][newVNodeChild.key] ??
                   createElement(newVNodeChild, false),
-                el.childNodes[head],
+                el.childNodes.item(head),
               ),
             );
           }
@@ -333,7 +333,7 @@ export const useChildren =
 
         // [11] Clean up removed nodes
         for (const oldVNodeKey in oldKeyMap) {
-          const node = el.childNodes[oldKeyMap[oldVNodeKey]];
+          const node = el.childNodes.item(oldKeyMap[oldVNodeKey]);
           el[NODE_OBJECT_POOL_FIELD][oldVNodeKey] = node;
           effects.push(() => el.removeChild(node));
         }
@@ -363,7 +363,11 @@ export const useChildren =
         // and break accessing by index
         for (let i = commonLength - 1; i >= 0; --i) {
           commit(() => {
-            effects = diff(<DOMNode>el.childNodes[i], newVNodeChildren[i], oldVNodeChildren[i]);
+            effects = diff(
+              <DOMNode>el.childNodes.item(i),
+              newVNodeChildren[i],
+              oldVNodeChildren[i],
+            );
           }, getData(el));
         }
 
@@ -374,7 +378,7 @@ export const useChildren =
           }
         } else if (newVNodeChildren.length < oldVNodeChildren.length) {
           for (let i = oldVNodeChildren.length - 1; i >= commonLength; --i) {
-            effects.push(() => el.removeChild(el.childNodes[i]));
+            effects.push(() => el.removeChild(el.childNodes.item(i)));
           }
         }
       } else if (newVNodeChildren) {

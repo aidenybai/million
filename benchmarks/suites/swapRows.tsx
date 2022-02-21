@@ -63,8 +63,8 @@ const suite = Suite('swap rows (swap 2 rows for table with 1,000 rows)', {
   },
   DOM: () => {
     const elClone = el();
-    const tr1 = elClone.childNodes[row1];
-    const tr2 = elClone.childNodes[row2];
+    const tr1 = elClone.childNodes.item(row1);
+    const tr2 = elClone.childNodes.item(row2);
     elClone.replaceChild(tr1.cloneNode(true), tr2);
     elClone.replaceChild(tr2.cloneNode(true), tr1);
   },
