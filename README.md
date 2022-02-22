@@ -55,6 +55,8 @@ Below is an extremely simple implementation of a Hello World page using Million.
 import { m, render } from 'million';
 
 render(document.body, m('p', undefined, ['Hello World!']));
+
+// <p>Hello World</p> rendered to <body>
 ```
 
 `render()` function has a standard interface that is used in many Virtual DOM libraries. First argument is a DOM node that will be used as the parent DOM reference, and the second one is a Virtual DOM to render.
