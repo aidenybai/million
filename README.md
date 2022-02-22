@@ -30,7 +30,7 @@ Current Virtual DOM implementations are **inadequate**—Ranging from overcompli
 
 Million aims to fix this, providing a **library-agnostic** Virtual DOM to serve as the core for Javascript libraries that focus on pre**compilation** and static analysis.
 
-[**→ Learn Million in <10 minutes!**](https://million.js.org/docs/start-here)
+#### ⮑ [**Learn Million in 10 minutes!**](https://million.js.org/docs/start-here) ⮐
 
 ## Why Million?
 
