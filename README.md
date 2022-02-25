@@ -83,7 +83,7 @@ We expect all Million contributors to abide by the terms of our [Code of Conduct
 
 Million takes heavy inspiration from [snabbdom](https://github.com/snabbdom/snabbdom), [ivi](https://github.com/localvoid/ivi), [mikado](https://github.com/nextapps-de/mikado), [and more](https://krausest.github.io/js-framework-benchmark/2021/table_chrome_96.0.4664.45.html). Feel free to check them out if you interested in an alternative library to use.
 
-Million is being used by open source tools like [tinypages](https://github.com/Borrus-sudo/tinypages), [hacky](https://github.com/aidenybai/hacky), and [others](https://github.com/aidenybai/million/network/dependents).
+Million is being used in open source work like [tinypages](https://github.com/Borrus-sudo/tinypages), [hacky](https://github.com/aidenybai/hacky), [and more](https://github.com/aidenybai/million/network/dependents).
 
 ## Sponsors
 
