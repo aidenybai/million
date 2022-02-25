@@ -91,14 +91,20 @@ Million is being used by open source tools like [tinypages](https://github.com/B
 
 **Want your logo here? [→ Sponsor Million](https://github.com/sponsors/aidenybai)**
 
+## Misc
+
+#### _Why is it called "Million"?_
+
+The name originated with the goal of being able to handle [1M+ ops/sec for benchmarks](https://github.com/aidenybai/million/tree/main/benchmarks#readme).
+
+#### _What is the logo?_
+
+The logo stems from the suffix of Mil**LION**, and is a graphic of the nose and mouth of a lion.
+
 ## License
 
 Million is [MIT-licensed](LICENSE) open-source software and [research project](https://arxiv.org/abs/2202.08409) by [Aiden Bai](https://aidenybai.com).
 
----
-
-_Why is it called "Million"? The name originated with the goal of being able to handle [1M+ ops/sec for benchmarks](https://github.com/aidenybai/million/tree/main/benchmarks#readme)._
-
-_What is the logo? The logo stems from the suffix of Mil**LION**, and is a graphic of the nose and mouth of a lion._
+[![DOI](https://zenodo.org/badge/372046384.svg)](https://zenodo.org/badge/latestdoi/372046384)
 
 ![View count](https://hits.link/hits?url=https://github.com/aidenybai/million&bgRight=000&bgLeft=000)
