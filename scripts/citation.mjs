@@ -14,14 +14,14 @@ try {
     './CITATION.cff',
     `cff-version: 1.2.0
 message: 'If you use this software, please cite it as below.'
-url: 'https://aidenybai.com/work/million-js'
+url: 'https://github.com/aidenybai/million'
 authors:
-  - family-names: Bai
-    given-names: Aiden
-    orcid: https://orcid.org/0000-0002-3676-3726
+  - family-names: 'Bai'
+    given-names: 'Aiden'
+    orcid: 'https://orcid.org/0000-0002-3676-3726'
 title: 'Million.js: A Fast, Compiler-Augmented Virtual DOM For Performant JavaScript UI Libraries'
 version: ${version}
-date-released: 2021-7-27`,
+date-released: ${new Date().toISOString().slice(0, 10)}`,
   );
 } catch (_err) {
   fail('build', 'pnpm release');
