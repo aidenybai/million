@@ -30,7 +30,7 @@ Current Virtual DOM implementations are **inadequate**—Ranging from overcompli
 
 Million aims to fix this, providing a **library-agnostic** Virtual DOM to serve as the core for Javascript libraries that focus on pre**compilation** and static analysis.
 
-#### ⮑ [**Learn Million in 10 minutes!**](https://million.js.org/docs/start-here) ⮐
+### [**📚 Learn Million in 10 minutes! →**](https://million.js.org/docs/start-here)
 
 ## Why Million?
 
@@ -90,16 +90,6 @@ Million is being used by open source tools like [tinypages](https://github.com/B
 <a href="https://vercel.com/?utm_source=millionjs&utm_campaign=oss" target="_blank"><img height="44" src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/vercel-logo.svg" alt="Vercel"></a>
 
 **Want your logo here? [→ Sponsor Million](https://github.com/sponsors/aidenybai)**
-
-## Misc
-
-#### _Why is it called "Million"?_
-
-The name originated with the goal of being able to handle [1M+ ops/sec for benchmarks](https://github.com/aidenybai/million/tree/main/benchmarks#readme).
-
-#### _What is the logo?_
-
-The logo stems from the suffix of Mil**LION**, and is a graphic of the nose and mouth of a lion.
 
 ## License
 
