@@ -49,6 +49,11 @@
       "require": "./dist/block.cjs",
       "types": "./block.d.ts"
     },
+    "./router": {
+      "import": "./dist/router.mjs",
+      "require": "./dist/router.cjs",
+      "types": "./router.d.ts"
+    },
     "./shared": {
       "import": "./dist/shared.mjs",
       "require": "./dist/shared.cjs",

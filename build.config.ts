@@ -7,6 +7,7 @@ export default defineBuildConfig({
     './packages/ssr',
     './packages/shared',
     './packages/block',
+    './packages/router',
   ],
   declaration: true,
   clean: true,
