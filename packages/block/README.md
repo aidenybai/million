@@ -4,4 +4,4 @@ Adds [blockdom-like](https://github.com/ged-odoo/blockdom) support for Million, 
 
 ## License
 
-Million is [MIT-licensed](../../../LICENSE) open-source software and [research](https://arxiv.org/abs/2202.08409) by [Aiden Bai](https://github.com/aidenybai).
+Million is [MIT-licensed](../../../LICENSE) open-source software and [research](https://arxiv.org/abs/2202.08409) by [Aiden Bai](https://aidenybai.com).

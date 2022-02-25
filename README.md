@@ -44,7 +44,7 @@ Million aims to fix this, providing a **library-agnostic** Virtual DOM to serve 
 Inside your project directory, run the following command:
 
 ```sh
-npm install million # yarn add million
+npm install million
 ```
 
 ## Quick Start
@@ -54,7 +54,7 @@ Below is an extremely simple implementation of a Hello World page using Million.
 ```js
 import { m, render } from 'million';
 
-render(document.body, m('p', undefined, ['Hello World!']));
+render(document.body, m('h1', undefined, ['Hello World!']));
 
 // <p>Hello World</p> rendered to <body>
 ```
@@ -83,9 +83,7 @@ We expect all Million contributors to abide by the terms of our [Code of Conduct
 
 Million takes heavy inspiration from [snabbdom](https://github.com/snabbdom/snabbdom), [ivi](https://github.com/localvoid/ivi), [mikado](https://github.com/nextapps-de/mikado), [and more](https://krausest.github.io/js-framework-benchmark/2021/table_chrome_96.0.4664.45.html). Feel free to check them out if you interested in an alternative library to use.
 
-_Why is it called "Million"? The name originated with the goal of being able to handle [1M+ ops/sec for benchmarks](https://github.com/aidenybai/million/tree/main/benchmarks#readme)._
-
-_What is the logo? The logo stems from the suffix of Mil**LION**, and is a graphic of the nose and mouth of a lion._
+Million is being used by open source tools like [tinypages](https://github.com/Borrus-sudo/tinypages), [hacky](https://github.com/aidenybai/hacky), and [others](https://github.com/aidenybai/million/network/dependents).
 
 ## Sponsors
 
@@ -95,6 +93,12 @@ _What is the logo? The logo stems from the suffix of Mil**LION**, and is a graph
 
 ## License
 
-Million is [MIT-licensed](LICENSE) open-source software and [research project](https://arxiv.org/abs/2202.08409) by [Aiden Bai](https://github.com/aidenybai).
+Million is [MIT-licensed](LICENSE) open-source software and [research project](https://arxiv.org/abs/2202.08409) by [Aiden Bai](https://aidenybai.com).
+
+---
+
+_Why is it called "Million"? The name originated with the goal of being able to handle [1M+ ops/sec for benchmarks](https://github.com/aidenybai/million/tree/main/benchmarks#readme)._
+
+_What is the logo? The logo stems from the suffix of Mil**LION**, and is a graphic of the nose and mouth of a lion._
 
 ![View count](https://hits.link/hits?url=https://github.com/aidenybai/million&bgRight=000&bgLeft=000)

@@ -91,7 +91,7 @@
     "@types/benchmark": "^2.1.1",
     "@types/canvas-confetti": "^1.4.2",
     "@types/lodash": "^4.14.178",
-    "@types/node": "^17.0.19",
+    "@types/node": "^17.0.21",
     "@types/virtual-dom": "^2.1.1",
     "@typescript-eslint/eslint-plugin": "^5.12.1",
     "@typescript-eslint/parser": "^5.12.1",
