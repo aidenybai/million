@@ -11,14 +11,17 @@ const send = async (message, time) => {
   say(message);
 };
 
-await send(`Hi there! I'm ${chalk.red('Mil the Lion')}! Welcome to the Million codebase!`, 2000);
+await send(
+  `Hi there! I'm ${chalk.magenta('Mil the Lion')}! Welcome to the Million codebase!`,
+  2000,
+);
 await send(`Before we get started, make sure you have ${chalk.gray('`pnpm`')} installed.`, 3000);
 await send(
   `You can install ${chalk.gray('`pnpm`')} by running ${chalk.gray('`npm i -g pnpm`')}.`,
   3000,
 );
 const hasPnpmInstalled =
-  (await question(`${chalk.red('→')} Do you have pnpm? ${chalk.gray('(yes/no)')} `)) === 'yes';
+  (await question(`${chalk.magenta('→')} Do you have pnpm? ${chalk.gray('(yes/no)')} `)) === 'yes';
 if (!hasPnpmInstalled) throw new Error('Please install `pnpm`');
 await send(`Ok! Let me install the necessary packages for you.`, 3000);
 await $`pnpm i`;

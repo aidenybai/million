@@ -26,7 +26,7 @@ export const fail = async (message, fix) => {
 
 export const sleep = (time) => new Promise((resolve) => setTimeout(resolve, time));
 
-export const say = (message) => console.log(`${chalk.bold(chalk.red('→'))} ${message}`);
+export const say = (message) => console.log(`${chalk.bold(chalk.magenta('→'))} ${message}`);
 
 export const typing = (message) => {
   const loader = ora({
