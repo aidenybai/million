@@ -63,7 +63,7 @@ render(document.body, m('h1', undefined, ['Hello World!']));
 
 `m()` function will instantiate a "Virtual DOM" node for an element.
 
-[**→ More examples**](https://million.js.org/docs/quick-start)
+[**→ More examples**](https://million.js.org/docs/start-here)
 
 ## Resources & Contributing Back
 
