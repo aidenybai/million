@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { OLD_VNODE_FIELD } from 'packages/million';
+import { OLD_VNODE_FIELD } from '../million';
 import { patch } from '../million/render';
 import { fromDomNodeToVNode } from '../shared/convert';
 import { memo } from './memo';

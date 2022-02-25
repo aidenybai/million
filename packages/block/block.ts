@@ -1,5 +1,5 @@
-import { entity } from 'packages/million/m';
-import { VEntity } from 'packages/million/types';
+import { entity } from '../million/m';
+import { VEntity } from '../million/types';
 import { fromDomNodeToVNode, fromStringToDomNode } from '../shared/convert';
 
 const cache = new Map<string, VEntity>();
