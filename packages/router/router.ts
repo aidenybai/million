@@ -30,7 +30,7 @@ export const navigate = async (url: URL, isBack = false) => {
   patch(document.body, fromDomNodeToVNode(html.body));
 };
 
-export const init = () => {
+export const router = () => {
   if (typeof window !== 'undefined') {
     window.addEventListener('click', (event) => {
       const url = getURL(event);
