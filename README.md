@@ -34,10 +34,19 @@ Million aims to fix this, providing a **library-agnostic** Virtual DOM to serve 
 
 ## Why Million?
 
+#### Advantages
+
 - 🦁 Built for libraries that **compile**
 - 📦 Lightweight bundle size (**<1kb** brotli+min)
 - ⚡ **Fast** runtime operations
 - 🛠️ **Composable** using drivers, **sensible** by default
+
+#### Use Cases
+
+- [Efficiently updating nodes](https://million.js.org/docs/api/basics/render)
+- [Creating UI libraries](https://github.com/aidenybai/hacky)
+- [Turning MPAs into SPAs](https://million.js.org/docs/api/advanced/router)
+- [Use granular HMR updates](https://million.js.org/docs/tooling/ssg-ssr)
 
 ## Installing Million
 
