@@ -1,4 +1,4 @@
-<a href="https://million.js.org">
+<a href="https://millionjs.org">
   <img src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/banner.svg" />
 </a>
 
@@ -24,13 +24,13 @@ by <a href="https://github.com/aidenybai">@aidenybai</a>
 
 ## What is Million?
 
-Million is a **lightweight (`<1kb`)** compiler-augmented Virtual DOM. It's [**_fast_**](https://million.js.org/benchmarks)!
+Million is a **lightweight (`<1kb`)** compiler-augmented Virtual DOM. It's [**_fast_**](https://millionjs.org/benchmarks)!
 
 Current Virtual DOM implementations are **inadequate**—Ranging from overcomplicated to abandoned, most are unusable without sacrificing **raw performance and size**.
 
 Million aims to fix this, providing a **library-agnostic** Virtual DOM to serve as the core for Javascript libraries that focus on pre**compilation** and static analysis.
 
-### [**📚 Learn Million in 10 minutes! →**](https://million.js.org/docs/start-here)
+### [**📚 Learn Million in 10 minutes! →**](https://millionjs.org/docs/start-here)
 
 ## Why Million?
 
@@ -43,10 +43,10 @@ Million aims to fix this, providing a **library-agnostic** Virtual DOM to serve 
 
 #### Use Cases
 
-- [Efficiently updating nodes](https://million.js.org/docs/api/basics/render)
+- [Efficiently updating nodes](https://millionjs.org/docs/api/basics/render)
 - [Creating UI libraries](https://github.com/aidenybai/hacky)
-- [Turning MPAs into SPAs](https://million.js.org/docs/api/advanced/router)
-- [Use granular HMR updates](https://million.js.org/docs/tooling/ssg-ssr)
+- [Turning MPAs into SPAs](https://millionjs.org/docs/api/advanced/router)
+- [Use granular HMR updates](https://millionjs.org/docs/tooling/ssg-ssr)
 
 ## Installing Million
 
@@ -72,11 +72,11 @@ render(document.body, m('h1', undefined, ['Hello World!']));
 
 `m()` function will instantiate a "Virtual DOM" node for an element.
 
-[**→ More examples**](https://million.js.org/docs/start-here)
+[**→ More examples**](https://millionjs.org/docs/start-here)
 
 ## Resources & Contributing Back
 
-Looking for the docs? Check the [documentation](https://million.js.org) out.
+Looking for the docs? Check the [documentation](https://millionjs.org) out.
 
 Want to talk to the community? Hop in our [Discord](https://discord.gg/X9yFbcV2rF) and share your ideas and what you've build with Million.
 
