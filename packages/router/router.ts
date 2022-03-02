@@ -17,7 +17,11 @@ export const navigate = async (url: URL, isBack = false) => {
       window.location.assign(url);
     });
   if (!newPageHtmlString) return;
-  const html = parser.parseFromString(newPageHtmlString, 'text/html');
+  updatePage(newPageHtmlString, url);
+};
+
+export const updatePage = (htmlString: string, url: URL) => {
+  const html = parser.parseFromString(htmlString, 'text/html');
   normalizeRelativeURLs(html, url);
 
   if (!document.head[OLD_VNODE_FIELD]) {
@@ -31,14 +35,25 @@ export const navigate = async (url: URL, isBack = false) => {
   patch(document.body, fromDomNodeToVNode(html.body));
 };
 
-export const router = () => {
+export const router = (routes?: Record<string, string>) => {
   if (typeof window !== 'undefined') {
+    const routesMap = new Map();
+    if (routes) {
+      for (const route in routes) {
+        routesMap.set(new URL(route).pathname, routes[route]);
+      }
+    }
+
     window.addEventListener('click', (event) => {
       const url = getURL(event);
       if (!url) return;
       event.preventDefault();
       try {
-        navigate(url);
+        if (routesMap.has(url)) {
+          updatePage(routesMap.get(url), url);
+        } else {
+          navigate(url);
+        }
       } catch (e) {
         window.location.assign(url);
       }
