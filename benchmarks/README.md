@@ -10,7 +10,7 @@ Please note that Benchmark results are unstable. To have more stable results:
 2. Run tests 5 times.
 3. Take the best result for each candidate.
 
-[**→ Click to test benchmarks live yourself!**](https://million.js.org/benchmarks/)
+[**→ Click to test benchmarks live yourself!**](https://millionjs.org/benchmarks/)
 
 ---
 
@@ -34,6 +34,6 @@ Please note that Benchmark results are unstable. To have more stable results:
 >
 > _Results last taken 1:04 PM PST, 7/23/2021. Results may differ from the main implementation, and will most likely keep differing based on the elapsed time_
 >
-> [**→ Click to test benchmarks live yourself!**](https://million.js.org/benchmarks/)
+> [**→ Click to test benchmarks live yourself!**](https://millionjs.org/benchmarks/)
 >
 > _Note: results you test may differ from the official benchmarks, due to differing hardware, browsers, extensions, etc._

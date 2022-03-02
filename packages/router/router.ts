@@ -5,6 +5,7 @@ import { OLD_VNODE_FIELD } from '../million/types';
 import { getURL } from './utils';
 
 const parser: DOMParser = new DOMParser();
+
 export const navigate = async (url: URL, isBack = false) => {
   if (!isBack) {
     history.pushState({}, '', url);
