@@ -22,13 +22,14 @@ export type DOMNode = HTMLElement | SVGElement | Text | Comment;
 export type VNode = VElement | string;
 export type DeltaOperation = [DeltaTypes, number];
 export type DOMOperation = () => void;
+export type Hook = (el?: DOMNode, newVNode?: VNode, oldVNode?: VNode) => boolean;
 export type Commit = (work: () => void, data: ReturnType<Driver>) => void;
 export type Driver = (
   el: DOMNode,
   newVNode?: VNode,
   oldVNode?: VNode,
-  effects?: DOMOperation[],
   commit?: Commit,
+  effects?: DOMOperation[],
   driver?: Driver,
 ) => {
   el: DOMNode;

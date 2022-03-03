@@ -55,8 +55,8 @@ export const useProps =
     el: HTMLElement | SVGElement,
     newVNode: VElement,
     oldVNode?: VElement,
+    commit?: Commit,
     effects: DOMOperation[] = [],
-    commit: Commit = (work: () => void) => work(),
   ): ReturnType<Driver> => {
     const oldProps = oldVNode?.props;
     const newProps = newVNode?.props;
@@ -103,8 +103,8 @@ export const useProps =
       }
     }
     for (let i = 0; i < drivers.length; ++i) {
-      commit(() => {
-        (<Driver>drivers[i])(el, newVNode, oldVNode, effects, commit);
+      commit!(() => {
+        (<Driver>drivers[i])(el, newVNode, oldVNode, commit, effects);
       }, data);
     }
     return data;

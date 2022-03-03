@@ -1,4 +1,4 @@
-import { useNode, useChildren, DOMNode, VNode, DOMOperation } from 'packages/million';
+import { useNode, useChildren, DOMNode, VNode } from 'packages/million';
 
 const adjectives = [
   'pretty',
@@ -77,15 +77,11 @@ export const buildData = (count: number) => {
 
 export const diff = useNode([useChildren()]);
 
-export const patch = (
-  el: DOMNode,
-  newVNode: VNode,
-  oldVNode?: VNode,
-  effects: DOMOperation[] = [],
-) => {
-  const data = diff(el, newVNode, oldVNode, effects);
-  for (let i = 0; i < effects.length; i++) {
-    effects[i]();
+export const patch = (el: DOMNode, newVNode: VNode, oldVNode?: VNode) => {
+  const data = diff(el, newVNode, oldVNode);
+  console.log(data.effects);
+  for (let i = 0; i < data.effects!.length; i++) {
+    data.effects![i]();
   }
 
   return data.el;

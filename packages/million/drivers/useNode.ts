@@ -19,8 +19,8 @@ export const useNode = (drivers: Partial<Driver>[]) => {
     el: DOMNode,
     newVNode?: VNode | VEntity,
     oldVNode?: VNode | VEntity,
+    commit?: Commit,
     effects: DOMOperation[] = [],
-    commit: Commit = (work: () => void) => work(),
   ): ReturnType<Driver> => {
     const finish = (element: DOMNode): ReturnType<Driver> => {
       if (!oldVNode) {
@@ -82,9 +82,9 @@ export const useNode = (drivers: Partial<Driver>[]) => {
           }
 
           for (let i = 0; i < drivers.length; ++i) {
-            commit(
+            commit!(
               () => {
-                (<Driver>drivers[i])(el, newVElement, oldVElement, effects, commit, nodeDriver);
+                (<Driver>drivers[i])(el, newVElement, oldVElement, commit, effects, nodeDriver);
               },
               {
                 el,

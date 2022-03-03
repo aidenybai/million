@@ -21,8 +21,8 @@ export const useChildren =
     el: HTMLElement | SVGElement,
     newVNode: VElement,
     oldVNode?: VElement,
+    commit?: Commit,
     effects: DOMOperation[] = [],
-    commit: Commit = (work: () => void) => work(),
     driver?: Driver,
   ): ReturnType<Driver> => {
     const getData = (element: DOMNode): ReturnType<Driver> => ({
@@ -37,8 +37,8 @@ export const useChildren =
     const finish = (element: DOMNode): ReturnType<Driver> => {
       const data = getData(element);
       for (let i = 0; i < drivers.length; ++i) {
-        commit(() => {
-          (<Driver>drivers[i])(el, newVNode, oldVNode, effects, commit, driver);
+        commit!(() => {
+          (<Driver>drivers[i])(el, newVNode, oldVNode, commit, effects, driver);
         }, data);
       }
       return data;
@@ -48,7 +48,7 @@ export const useChildren =
     const newVNodeChildren: VNode[] | undefined = newVNode.children;
     const delta: DeltaOperation[] | undefined = newVNode.delta;
     const diff = (el: DOMNode, newVNode: VNode, oldVNode?: VNode) =>
-      driver!(el, newVNode, oldVNode, effects, commit).effects!;
+      driver!(el, newVNode, oldVNode, commit, effects).effects!;
 
     // Deltas are a way for the compile-time to optimize runtime operations
     // by providing a set of predefined operations. This is useful for cases
@@ -66,7 +66,7 @@ export const useChildren =
         }
 
         if (deltaType === DeltaTypes.UPDATE) {
-          commit(() => {
+          commit!(() => {
             effects = diff(
               child,
               newVNodeChildren![deltaPosition],
@@ -362,7 +362,7 @@ export const useChildren =
         // Interates backwards, so in case a childNode is destroyed, it will not shift the nodes
         // and break accessing by index
         for (let i = commonLength - 1; i >= 0; --i) {
-          commit(() => {
+          commit!(() => {
             effects = diff(
               <DOMNode>el.childNodes.item(i),
               newVNodeChildren[i],
