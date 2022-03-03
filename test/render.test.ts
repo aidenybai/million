@@ -234,6 +234,13 @@ describe.concurrent('render', () => {
     expectEqualNode(<HTMLElement>el2, el1);
   });
 
+  it('should skip node based on hook', () => {
+    const el1 = createElement(m('div'));
+    const el2 = patch(el1, m('div', { id: 'app' }), undefined, () => false);
+
+    expect((<HTMLElement>el2).id).toEqual('');
+  });
+
   it('should compose a custom patch', () => {
     const el1 = createElement(m('div'));
     const diff = useNode([useProps(), useChildren()]);

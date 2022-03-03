@@ -55,7 +55,7 @@ export const useProps =
     el: HTMLElement | SVGElement,
     newVNode: VElement,
     oldVNode?: VElement,
-    commit?: Commit,
+    commit: Commit = (work: () => void) => work(),
     effects: DOMOperation[] = [],
   ): ReturnType<Driver> => {
     const oldProps = oldVNode?.props;
