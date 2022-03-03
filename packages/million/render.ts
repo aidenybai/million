@@ -2,16 +2,7 @@ import { createElement } from './createElement';
 import { useChildren } from './drivers/useChildren';
 import { useNode } from './drivers/useNode';
 import { useProps } from './drivers/useProps';
-import {
-  Commit,
-  DOMNode,
-  DOMOperation,
-  DOM_REF_FIELD,
-  Driver,
-  Hook,
-  VEntity,
-  VNode,
-} from './types';
+import { DOMNode, DOMOperation, DOM_REF_FIELD, Driver, Hook, VEntity, VNode } from './types';
 
 let deadline = 0;
 
