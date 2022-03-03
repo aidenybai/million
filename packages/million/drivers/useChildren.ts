@@ -21,7 +21,7 @@ export const useChildren =
     el: HTMLElement | SVGElement,
     newVNode: VElement,
     oldVNode?: VElement,
-    commit?: Commit,
+    commit: Commit = (work: () => void) => work(),
     effects: DOMOperation[] = [],
     driver?: Driver,
   ): ReturnType<Driver> => {

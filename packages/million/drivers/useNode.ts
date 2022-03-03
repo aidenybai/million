@@ -19,7 +19,7 @@ export const useNode = (drivers: Partial<Driver>[]) => {
     el: DOMNode,
     newVNode?: VNode | VEntity,
     oldVNode?: VNode | VEntity,
-    commit?: Commit,
+    commit: Commit = (work: () => void) => work(),
     effects: DOMOperation[] = [],
   ): ReturnType<Driver> => {
     const finish = (element: DOMNode): ReturnType<Driver> => {
