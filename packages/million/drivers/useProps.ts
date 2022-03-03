@@ -103,7 +103,7 @@ export const useProps =
       }
     }
     for (let i = 0; i < drivers.length; ++i) {
-      commit!(() => {
+      commit(() => {
         (<Driver>drivers[i])(el, newVNode, oldVNode, commit, effects);
       }, data);
     }

@@ -37,7 +37,7 @@ export const useChildren =
     const finish = (element: DOMNode): ReturnType<Driver> => {
       const data = getData(element);
       for (let i = 0; i < drivers.length; ++i) {
-        commit!(() => {
+        commit(() => {
           (<Driver>drivers[i])(el, newVNode, oldVNode, commit, effects, driver);
         }, data);
       }
@@ -66,7 +66,7 @@ export const useChildren =
         }
 
         if (deltaType === DeltaTypes.UPDATE) {
-          commit!(() => {
+          commit(() => {
             effects = diff(
               child,
               newVNodeChildren![deltaPosition],
@@ -362,7 +362,7 @@ export const useChildren =
         // Interates backwards, so in case a childNode is destroyed, it will not shift the nodes
         // and break accessing by index
         for (let i = commonLength - 1; i >= 0; --i) {
-          commit!(() => {
+          commit(() => {
             effects = diff(
               <DOMNode>el.childNodes.item(i),
               newVNodeChildren[i],
