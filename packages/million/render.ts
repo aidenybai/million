@@ -2,7 +2,16 @@ import { createElement } from './createElement';
 import { useChildren } from './drivers/useChildren';
 import { useNode } from './drivers/useNode';
 import { useProps } from './drivers/useProps';
-import { Commit, DOMNode, DOMOperation, VEntity, VNode, DOM_REF_FIELD } from './types';
+import {
+  Commit,
+  DOMNode,
+  DOMOperation,
+  DOM_REF_FIELD,
+  Driver,
+  Hook,
+  VEntity,
+  VNode,
+} from './types';
 
 let deadline = 0;
 
@@ -18,10 +27,15 @@ export const patch = (
   el: DOMNode,
   newVNode?: VNode | VEntity,
   oldVNode?: VNode | VEntity,
+  hook: Hook = () => true,
   effects: DOMOperation[] = [],
-  commit: Commit = (work: () => void) => work(),
 ): DOMNode => {
-  const data = diff(el, newVNode, oldVNode, effects, commit);
+  const commit = (work: () => void, data: ReturnType<Driver>) => {
+    if (hook(data.el, data.newVNode, data.oldVNode)) {
+      work();
+    }
+  };
+  const data = diff(el, newVNode, oldVNode, commit, effects);
   for (let i = 0; i < effects.length; i++) {
     effects[i]();
   }
@@ -35,10 +49,11 @@ export const render = (
   parentEl: DOMNode,
   newVNode?: VNode | VEntity,
   oldVNode?: VNode | VEntity,
+  hook?: Hook,
 ): DOMNode => {
   const el = parentEl[DOM_REF_FIELD];
   if (el) {
-    return patch(el, newVNode, oldVNode);
+    return patch(el, newVNode, oldVNode, hook);
   } else {
     const newEl = createElement(newVNode);
     parentEl.textContent = '';
