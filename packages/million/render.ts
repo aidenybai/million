@@ -42,7 +42,7 @@ export const render = (
   oldVNode?: VNode | VEntity,
   hook?: Hook,
 ): DOMNode => {
-  const el = parentEl[DOM_REF_FIELD];
+  const el: DOMNode = parentEl[DOM_REF_FIELD];
   if (el) {
     return patch(el, newVNode, oldVNode, hook);
   } else {
