@@ -24,7 +24,7 @@ specifiers:
   fsxx: ^0.0.5
   husky: ^7.0.4
   jsdom: ^19.0.0
-  lint-staged: ^12.3.4
+  lint-staged: ^12.3.5
   lodash: ^4.17.21
   np: ^7.6.0
   ora: ^6.1.0
@@ -67,7 +67,7 @@ devDependencies:
   fsxx: 0.0.5
   husky: 7.0.4
   jsdom: 19.0.0
-  lint-staged: 12.3.4
+  lint-staged: 12.3.5
   lodash: 4.17.21
   np: 7.6.0
   ora: 6.1.0
@@ -3772,8 +3772,8 @@ packages:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
     dev: true
 
-  /lint-staged/12.3.4:
-    resolution: {integrity: sha512-yv/iK4WwZ7/v0GtVkNb3R82pdL9M+ScpIbJLJNyCXkJ1FGaXvRCOg/SeL59SZtPpqZhE7BD6kPKFLIDUhDx2/w==}
+  /lint-staged/12.3.5:
+    resolution: {integrity: sha512-oOH36RUs1It7b9U/C7Nl/a0sLfoIBcMB8ramiB3nuJ6brBqzsWiUAFSR5DQ3yyP/OR7XKMpijtgKl2DV1lQ3lA==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     hasBin: true
     dependencies:
