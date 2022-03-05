@@ -6,5 +6,5 @@ authors:
     given-names: 'Aiden'
     orcid: 'https://orcid.org/0000-0002-3676-3726'
 title: 'Million.js: A Fast, Compiler-Augmented Virtual DOM For Performant JavaScript UI Libraries'
-version: 1.5.0
-date-released: 2022-03-02
+version: 1.5.1
+date-released: 2022-03-05
