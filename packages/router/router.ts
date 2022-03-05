@@ -6,23 +6,23 @@ import { getURL } from './utils';
 
 const parser: DOMParser = new DOMParser();
 
-export const navigate = async (url: URL, isBack = false) => {
+export const navigate = async (url: URL, isBack = false, htmlString?: string) => {
   if (!isBack) {
     history.pushState({}, '', url);
     window.scrollTo({ top: 0 });
   }
-  const newPageHtmlString = await fetch(String(url))
-    .then((res) => res.text())
-    .catch(() => {
-      window.location.assign(url);
-    });
+  const newPageHtmlString =
+    htmlString ??
+    (await fetch(String(url))
+      .then((res) => res.text())
+      .catch(() => {
+        window.location.assign(url);
+      }));
   if (!newPageHtmlString) return;
-  updatePage(newPageHtmlString, url);
-};
 
-export const updatePage = (htmlString: string, url: URL) => {
-  const html = parser.parseFromString(htmlString, 'text/html');
+  const html = parser.parseFromString(newPageHtmlString, 'text/html');
   normalizeRelativeURLs(html, url);
+  console.log(htmlString);
 
   if (!document.head[OLD_VNODE_FIELD]) {
     document.head[OLD_VNODE_FIELD] = fromDomNodeToVNode(document.head);
@@ -40,7 +40,7 @@ export const router = (routes?: Record<string, string>) => {
     const routesMap = new Map();
     if (routes) {
       for (const route in routes) {
-        routesMap.set(new URL(route).pathname, routes[route]);
+        routesMap.set(route, routes[route]);
       }
     }
 
@@ -49,11 +49,7 @@ export const router = (routes?: Record<string, string>) => {
       if (!url) return;
       event.preventDefault();
       try {
-        if (routesMap.has(url)) {
-          updatePage(routesMap.get(url), url);
-        } else {
-          navigate(url);
-        }
+        navigate(url, false, routesMap.get(url.pathname));
       } catch (e) {
         window.location.assign(url);
       }
@@ -61,8 +57,9 @@ export const router = (routes?: Record<string, string>) => {
 
     window.addEventListener('popstate', () => {
       if (window.location.hash) return;
+      const url = new URL(window.location.toString());
       try {
-        navigate(new URL(window.location.toString()), true);
+        navigate(url, true, routesMap.get(url.pathname));
       } catch (e) {
         window.location.reload();
       }
