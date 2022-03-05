@@ -1,7 +1,7 @@
+import type { FC, JSXVNode } from '../jsx-runtime/types';
 import { className, Flags, m, style, svg } from '../million/index';
 import { kebab } from '../million/m';
 import type { DeltaOperation, VNode, VProps } from '../million/types';
-import type { JSXVNode } from '../jsx-runtime/types';
 
 export const normalize = (jsxVNode: JSXVNode): VNode | VNode[] | undefined => {
   if (Array.isArray(jsxVNode)) {
@@ -21,7 +21,8 @@ export const normalize = (jsxVNode: JSXVNode): VNode | VNode[] | undefined => {
   }
 };
 
-export const h = (tag: string, props?: VProps, ...children: JSXVNode[]) => {
+export const h = (tag: string | FC, props?: VProps, ...children: JSXVNode[]) => {
+  if (typeof tag === 'function') return tag(props);
   let flag = Flags.NO_CHILDREN;
   let delta: DeltaOperation[] | undefined;
   const normalizedChildren: VNode[] = [];
