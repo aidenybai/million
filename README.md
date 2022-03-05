@@ -104,6 +104,4 @@ Million is being used in open source work like [tinypages](https://github.com/Bo
 
 Million is [MIT-licensed](LICENSE) open-source software and [research project](https://arxiv.org/abs/2202.08409) by [Aiden Bai](https://aidenybai.com).
 
-[![DOI](https://zenodo.org/badge/372046384.svg)](https://zenodo.org/badge/latestdoi/372046384)
-
 ![View count](https://hits.link/hits?url=https://github.com/aidenybai/million&bgRight=000&bgLeft=000)

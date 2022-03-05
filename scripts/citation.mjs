@@ -21,6 +21,7 @@ authors:
     orcid: 'https://orcid.org/0000-0002-3676-3726'
 title: 'Million.js: A Fast, Compiler-Augmented Virtual DOM For Performant JavaScript UI Libraries'
 version: ${version}
+doi: 10.48550/arXiv.2202.08409
 date-released: ${new Date().toISOString().slice(0, 10)}`,
   );
 } catch (_err) {
