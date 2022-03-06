@@ -24,7 +24,7 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 
 const cumulative = {
   million: 0,
-  'tiny-vdom': 0,
+  hundred: 0,
   'simple-virtual-dom': 0,
   'virtual-dom': 0,
   snabbdom: 0,

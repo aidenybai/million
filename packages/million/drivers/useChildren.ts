@@ -92,6 +92,13 @@ export const useChildren =
       return finish(el);
     }
 
+    if (!oldVNodeChildren || oldVNodeChildren?.length === 0) {
+      for (let i = 0; i < newVNodeChildren.length; ++i) {
+        effects.push(() => el.appendChild(createElement(newVNodeChildren[i], false)));
+      }
+      return finish(el);
+    }
+
     /**
      * ∆drown - "diff or drown"
      *

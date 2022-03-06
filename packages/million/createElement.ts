@@ -5,6 +5,7 @@ import {
   VElement,
   VEntity,
   VNode,
+  Flags,
   XLINK_NS,
   XML_NS,
   X_CHAR,
@@ -48,8 +49,14 @@ export const createElement = (vnode?: VNode | VEntity | null, attachField = true
   }
 
   if (velement.children) {
-    for (let i = 0; i < velement.children.length; ++i) {
-      el.appendChild(createElement(velement.children[i], false));
+    if (velement.flag === Flags.ONLY_TEXT_CHILDREN) {
+      el.textContent = Array.isArray(velement.children)
+        ? velement.children?.join('')
+        : velement.children;
+    } else {
+      for (let i = 0; i < velement.children.length; ++i) {
+        el.appendChild(createElement(velement.children[i], false));
+      }
     }
   }
 
