@@ -7,7 +7,7 @@
 import { createElement } from 'packages/million';
 import * as simple_virtual_dom from 'simple-virtual-dom';
 import * as snabbdom from 'snabbdom';
-import * as tiny_vdom from 'tiny-vdom';
+import * as hundred from 'hundred';
 import * as virtual_dom from 'virtual-dom';
 import { Suite, vnodeAdapter } from '../benchmark';
 import { buildData, patch } from '../data';
@@ -32,8 +32,8 @@ const suite = Suite('select row (highlighting a selected row)', {
   million: () => {
     patch(el(), vnode);
   },
-  'tiny-vdom': () => {
-    tiny_vdom.patch(el(), vnodeAdapter(vnode), vnodeAdapter(oldVNode));
+  hundred: () => {
+    hundred.patch(el(), vnodeAdapter(vnode), vnodeAdapter(oldVNode));
   },
   'simple-virtual-dom': () => {
     const patches = simple_virtual_dom.diff(vnodeAdapter(oldVNode), vnodeAdapter(vnode));
@@ -51,12 +51,12 @@ const suite = Suite('select row (highlighting a selected row)', {
     el().childNodes.item(row).style.background = 'red';
   },
   innerHTML: () => {
-    let html = '';
+    const element = el();
     data.forEach(({ id, label }, i) => {
-      if (row === i) html += `<tr style="background: red;"><td>${id}</td><td>${label}</td></tr>`;
-      else html += `<tr><td>${String(id)}</td><td>${label}</td></tr>`;
+      if (row === i)
+        element.innerHTML += `<tr style="background: red;"><td>${id}</td><td>${label}</td></tr>`;
+      else element.innerHTML += `<tr><td>${String(id)}</td><td>${label}</td></tr>`;
     });
-    el().innerHTML = html;
   },
 });
 
