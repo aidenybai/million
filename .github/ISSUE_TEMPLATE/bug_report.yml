@@ -1,63 +1,41 @@
+---
 name: Bug report
 description: Create a report to help us improve
 title: 'Bug: '
 labels: [bug]
 assignees:
   - aidenybai
-body:
-  - type: textarea
-    id: bug
-    attributes:
-      label: Describe the bug
-      description: A clear and concise description of what the bug is.
-      render: markdown
-    validations:
-      required: true
-  - type: textarea
-    id: repro
-    attributes:
-      label: To Reproduce
-      description: Steps to reproduce the behavior
-      render: markdown
-    validations:
-      required: true
-  - type: textarea
-    id: expected
-    attributes:
-      label: Expected behavior
-      description: A clear and concise description of what you expected to happen.
-      render: markdown
-    validations:
-      required: true
-  - type: textarea
-    id: screenshots
-    attributes:
-      label: Screenshots
-      description: If applicable, add screenshots to help explain your problem.
-      render: markdown
-    validations:
-      required: false
-  - type: input
-    id: os
-    attributes:
-      label: Operating System
-      description: What operating system are you running when experiencing your issue?
-      placeholder: MacOS Big Sur
-    validations:
-      required: true
-  - type: input
-    id: browser
-    attributes:
-      label: Browser
-      description: What browser are you running when experiencing your issue?
-      placeholder: Google Chrome 90
-    validations:
-      required: true
-  - type: textarea
-    id: context
-    attributes:
-      label: Additional context
-      description: Add any other context about the problem here.
-      render: markdown
-    validations:
-      required: false
+---
+
+**Describe the bug**
+A clear and concise description of what the bug is.
+
+**To Reproduce**
+Steps to reproduce the behavior:
+
+1. Go to '...'
+2. Click on '....'
+3. Scroll down to '....'
+4. See error
+
+**Expected behavior**
+A clear and concise description of what you expected to happen.
+
+**Screenshots**
+If applicable, add screenshots to help explain your problem.
+
+**Desktop (please complete the following information):**
+
+- OS: [e.g. iOS]
+- Browser [e.g. chrome, safari]
+- Version [e.g. 22]
+
+**Smartphone (please complete the following information):**
+
+- Device: [e.g. iPhone6]
+- OS: [e.g. iOS8.1]
+- Browser [e.g. stock browser, safari]
+- Version [e.g. 22]
+
+**Additional context**
+Add any other context about the problem here.
