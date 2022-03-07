@@ -65,7 +65,7 @@ import { m, render } from 'million';
 
 render(document.body, m('h1', undefined, ['Hello World!']));
 
-// <p>Hello World</p> rendered to <body>
+// <h1>Hello World</h1> rendered to <body>
 ```
 
 `render()` function has a standard interface that is used in many Virtual DOM libraries. First argument is a DOM node that will be used as the parent DOM reference, and the second one is a Virtual DOM to render.
