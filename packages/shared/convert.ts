@@ -50,7 +50,7 @@ export const fromVNodeToString = (vnode: VNode): string => {
   const props = vnode.props ?? {};
   const children = vnode.props ?? [];
   const startTag = `<${vnode.tag}${props
-    .map((prop: string) => ` ${prop}='${props[prop]}'`)
+    .map((prop: string) => ` ${prop}="${props[prop].toString()}"`)
     .join('')}>`;
   const childrenOfTag = typeof children === 'string' ? children : children.join('');
   const endTag = `</${vnode.tag}>`;
