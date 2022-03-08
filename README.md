@@ -14,7 +14,7 @@
 by <a href="https://github.com/aidenybai">@aidenybai</a>
 </p>
 
-> Hi! Aiden here, author of Million. I hope you find it easy to use and powerful enough for all your use cases. If you have any issues or suggestions, please [open an issue](https://github.com/aidenybai/million/issues)!
+> Hi! Aiden here, author of Million. Before you continue, I highly recommend watching the [**Million explained in 1 minute**](https://www.youtube.com/watch?v=28SMGi-6mNc) video.
 >
 > If you're interested in tuning into the development and future of Million, please **leave a ★** :)
 >
