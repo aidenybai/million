@@ -61,9 +61,9 @@ npm install million
 Below is an extremely simple implementation of a Hello World page using Million.
 
 ```js
-import { m, render } from 'million';
+import { _, m, render } from 'million';
 
-render(document.body, m('h1', undefined, ['Hello World!']));
+render(document.body, m('h1', _, ['Hello World!']));
 
 // <h1>Hello World</h1> rendered to <body>
 ```
@@ -71,6 +71,8 @@ render(document.body, m('h1', undefined, ['Hello World!']));
 `render()` function has a standard interface that is used in many Virtual DOM libraries. First argument is a DOM node that will be used as the parent DOM reference, and the second one is a Virtual DOM to render.
 
 `m()` function will instantiate a "Virtual DOM" node for an element.
+
+`_` is a shorthand for the `undefined` value.
 
 [**→ More examples**](https://millionjs.org/docs/start-here)
 

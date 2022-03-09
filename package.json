@@ -111,6 +111,7 @@
     "eslint-config-prettier": "^8.5.0",
     "export-size": "^0.5.2",
     "fsxx": "^0.0.5",
+    "htm": "^3.1.0",
     "hundred": "^0.1.0",
     "husky": "^7.0.4",
     "jsdom": "^19.0.0",
