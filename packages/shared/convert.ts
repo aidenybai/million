@@ -43,16 +43,3 @@ export const fromStringToDomNode = (html: string): DOMNode => {
   const el = <DOMNode>doc.firstChild!.firstChild!;
   return el;
 };
-
-export const fromVNodeToString = (vnode: VNode): string => {
-  if (typeof vnode === 'string') return vnode;
-  if (!vnode.tag) return '<!-- -->';
-  const props = vnode.props ?? {};
-  const children = vnode.props ?? [];
-  const startTag = `<${vnode.tag}${props
-    .map((prop: string) => ` ${prop}="${props[prop].toString()}"`)
-    .join('')}>`;
-  const childrenOfTag = typeof children === 'string' ? children : children.join('');
-  const endTag = `</${vnode.tag}>`;
-  return `${startTag}${childrenOfTag}${endTag}`;
-};
