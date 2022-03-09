@@ -16,3 +16,4 @@ export type {
   VNode,
   VProps,
 } from './types';
+export const _ = undefined;
