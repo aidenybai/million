@@ -4,4 +4,4 @@ Adds a SPA router for [Million](https://github.com/aidenybai/million), adapted f
 
 ## License
 
-Million is [MIT-licensed](../../../LICENSE) open-source software and [research](https://arxiv.org/abs/2202.08409) by [Aiden Bai](https://aidenybai.com).
+Million is [MIT-licensed](https://github.com/aidenybai/million/blob/main/LICENSE) open-source software and [research](https://arxiv.org/abs/2202.08409) by [Aiden Bai](https://aidenybai.com).
