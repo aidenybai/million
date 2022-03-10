@@ -54,6 +54,11 @@
       "require": "./dist/router.cjs",
       "types": "./router.d.ts"
     },
+    "./html": {
+      "import": "./dist/html.mjs",
+      "require": "./dist/html.cjs",
+      "types": "./html.d.ts"
+    },
     "./shared": {
       "import": "./dist/shared.mjs",
       "require": "./dist/shared.cjs",
