@@ -8,6 +8,7 @@ export default defineBuildConfig({
     './packages/shared',
     './packages/block',
     './packages/router',
+    './packages/html',
   ],
   declaration: true,
   clean: true,
