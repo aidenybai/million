@@ -68,9 +68,9 @@ render(document.body, m('h1', _, ['Hello World!']));
 // <h1>Hello World</h1> rendered to <body>
 ```
 
-`render()` function has a standard interface that is used in many Virtual DOM libraries. First argument is a DOM node that will be used as the parent DOM reference, and the second one is a Virtual DOM to render.
+[`render()`](https://millionjs.org/docs/api/basics/render) function has a standard interface that is used in many Virtual DOM libraries. First argument is a DOM node that will be used as the parent DOM reference, and the second one is a Virtual DOM to render.
 
-`m()` function will instantiate a "Virtual DOM" node for an element.
+[`m()`](https://millionjs.org/docs/api/basics/m) function will instantiate a "Virtual DOM" node for an element.
 
 `_` is a shorthand for the `undefined` value.
 
