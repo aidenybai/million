@@ -1,21 +1,5 @@
-import { DOMNode, Flags, OLD_VNODE_FIELD, VNode, VProps } from '../million/types';
+import { DOMNode, OLD_VNODE_FIELD, VNode, VProps } from '../million/types';
 import { h } from './h';
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const fromNodeToVNode = (node: any): VNode => {
-  const vnode =
-    node.type === 'tag'
-      ? h(node.name, node.attribs, ...node.children.map(fromNodeToVNode))
-      : node.type === 'text'
-      ? node.data
-      : '';
-
-  if (vnode.props?.ignore !== undefined && vnode.props?.ignore !== null) {
-    vnode.flag = Flags.IGNORE_NODE;
-  }
-
-  return vnode;
-};
 
 export const fromDomNodeToVNode = (el: DOMNode): VNode | undefined => {
   if (el[OLD_VNODE_FIELD]) return el[OLD_VNODE_FIELD];
