@@ -1,14 +1,14 @@
-import { VNode } from '../million/types';
-import { fromStringToDomNode, fromDomNodeToVNode } from '../shared/convert';
+import { DOMNode, VNode } from '../million/types';
+import { fromDomNodeToVNode, fromStringToDomNode } from '../shared';
 
-const cache = new Map<string, VNode | undefined>();
+const cache = new Map<DOMNode | string, VNode>();
 
 export const memo = (key: string): VNode | undefined => {
   if (cache.has(key)) {
     return cache.get(key);
   } else {
     const vnode = fromDomNodeToVNode(fromStringToDomNode(key));
-    cache.set(key, vnode);
+    cache.set(key, vnode!);
     return vnode;
   }
 };
