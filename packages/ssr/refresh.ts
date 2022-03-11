@@ -1,17 +1,6 @@
-/* eslint-disable @typescript-eslint/ban-types */
-import { OLD_VNODE_FIELD } from '../million';
-import { patch } from '../million/render';
-import { fromDomNodeToVNode } from '../shared/convert';
-import { memo } from './memo';
+import { morph } from '../morph/morph';
 
 export const refresh = (head?: string, body?: string) => {
-  if (!document.head[OLD_VNODE_FIELD]) {
-    document.head[OLD_VNODE_FIELD] = fromDomNodeToVNode(document.head);
-  }
-  if (!document.body[OLD_VNODE_FIELD]) {
-    document.body[OLD_VNODE_FIELD] = fromDomNodeToVNode(document.body);
-  }
-
-  if (head) patch(document.head, memo(head));
-  if (body) patch(document.body, memo(body));
+  if (head) morph(head, document.head);
+  if (body) morph(body, document.body);
 };

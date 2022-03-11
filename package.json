@@ -59,6 +59,11 @@
       "require": "./dist/html.cjs",
       "types": "./html.d.ts"
     },
+    "./morph": {
+      "import": "./dist/morph.mjs",
+      "require": "./dist/morph.cjs",
+      "types": "./morph.d.ts"
+    },
     "./shared": {
       "import": "./dist/shared.mjs",
       "require": "./dist/shared.cjs",
@@ -125,7 +130,7 @@
     "np": "^7.6.0",
     "ora": "^6.1.0",
     "prettier": "^2.5.1",
-    "simple-git": "^3.2.6",
+    "simple-git": "^3.3.0",
     "simple-virtual-dom": "^0.1.10",
     "snabbdom": "^3.3.1",
     "sugar-high": "^0.0.9",

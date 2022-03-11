@@ -9,6 +9,7 @@ export default defineBuildConfig({
     './packages/block',
     './packages/router',
     './packages/html',
+    './packages/morph',
   ],
   declaration: true,
   clean: true,
