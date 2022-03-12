@@ -13,11 +13,11 @@
 </div>
 
 <h4 align="center">
-  <a href="https://www.youtube.com/watch?v=28SMGi-6mNc">Explained in 1 minute</a>
+  <a href="https://www.youtube.com/watch?v=28SMGi-6mNc">⏰ Explained in 1 minute</a>
   <span> | </span>
-  <a href="https://millionjs.org">Read the docs</a>
+  <a href="https://millionjs.org">📚 Read the docs</a>
   <span> | </span>
-  <a href="https://discord.gg/X9yFbcV2rF">Join our Discord</a>
+  <a href="https://discord.gg/X9yFbcV2rF">💬 Join our Discord</a>
 </h4>
 
 ---
