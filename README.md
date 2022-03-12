@@ -10,21 +10,20 @@
   <a href="https://discord.gg/X9yFbcV2rF" target="_blank"><img src="https://img.shields.io/discord/938129049539186758?style=flat&colorA=000000&colorB=000000&label=discord&logo=discord&logoColor=ffffff" /></a>
 </p>
 
-<p align="center">
-by <a href="https://github.com/aidenybai">@aidenybai</a>
-</p>
+<h4 align="center">
+  <a href="https://millionjs.org">Read the docs</a>
+  <span> | </span>
+  <a href="ttps://www.youtube.com/watch?v=28SMGi-6mNc">Explained in 1 minute</a>
+  <span> | </span>
+  <a href="https://discord.gg/X9yFbcV2rF">Join our Discord</a>
+</h4>
 
-> Hi! Aiden here, author of Million. Before you continue, I highly recommend watching the [**Million explained in 1 minute**](https://www.youtube.com/watch?v=28SMGi-6mNc) video.
->
-> If you're interested in tuning into the development and future of Million, please **leave a ★** :)
->
-> -Aiden ([@aidenybai](https://github.com/aidenybai))
-
----
-
-## What is Million?
+<br />
+<br />
 
 Million is a **lightweight (`<1kb`)** compiler-augmented Virtual DOM. It's [**_fast_**](https://millionjs.org/benchmarks)!
+
+---
 
 Current Virtual DOM implementations are **inadequate**—Ranging from overcomplicated to abandoned, most are unusable without sacrificing **raw performance and size**.
 
