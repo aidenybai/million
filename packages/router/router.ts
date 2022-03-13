@@ -1,7 +1,5 @@
 import { normalizeRelativeURLs } from './utils';
-import { fromDomNodeToVNode } from '../shared/convert';
-import { patch } from '../million/render';
-import { OLD_VNODE_FIELD } from '../million/types';
+import { morph } from '../morph/morph';
 import { getURL } from './utils';
 
 const parser: DOMParser = new DOMParser();
@@ -22,17 +20,14 @@ export const navigate = async (url: URL, isBack = false, htmlString?: string) =>
 
   const html = parser.parseFromString(newPageHtmlString, 'text/html');
   normalizeRelativeURLs(html, url);
-  console.log(htmlString);
 
-  if (!document.head[OLD_VNODE_FIELD]) {
-    document.head[OLD_VNODE_FIELD] = fromDomNodeToVNode(document.head);
-  }
-  if (!document.body[OLD_VNODE_FIELD]) {
-    document.body[OLD_VNODE_FIELD] = fromDomNodeToVNode(document.body);
+  const title = html.querySelector('title');
+  if (title) {
+    document.title = title.text;
   }
 
-  patch(document.head, fromDomNodeToVNode(html.head));
-  patch(document.body, fromDomNodeToVNode(html.body));
+  morph(html.head, document.head);
+  morph(html.body, document.body);
 };
 
 export const router = (routes?: Record<string, string>) => {

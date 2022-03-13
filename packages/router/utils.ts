@@ -3,8 +3,8 @@ export const setAttribute = (el: Element, attr: string, base: string | URL) => {
 };
 
 export const normalizeRelativeURLs = (el: Element | Document, base: string | URL) => {
-  const hrefs = el.querySelectorAll(':is([href^="./"], [href^="../"])');
-  const srcs = el.querySelectorAll(':is([src^="./"], [src^="../"])');
+  const hrefs = el.querySelectorAll('[href^="./"], [href^="../"]');
+  const srcs = el.querySelectorAll('[src^="./"], [src^="../"]');
   for (let i = 0; i < hrefs.length; i++) {
     setAttribute(hrefs[i], 'href', base);
   }
