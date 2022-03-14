@@ -2,7 +2,7 @@ import {
   Commit,
   createElement,
   DOMNode,
-  DOMOperation,
+  Mutation,
   Driver,
   OLD_VNODE_FIELD,
   useChildren,
@@ -92,7 +92,7 @@ const useNode = (drivers: Partial<Driver>[]) => {
     newVNode?: VNode,
     oldVNode?: VNode,
     commit: Commit = (work: () => void) => work(),
-    effects: DOMOperation[] = [],
+    effects: Mutation[] = [],
   ): ReturnType<Driver> => {
     const finish = (element: DOMNode): ReturnType<Driver> => {
       if (!oldVNode) {

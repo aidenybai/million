@@ -1,20 +1,11 @@
-import {
-  COLON_CHAR,
-  Commit,
-  DOMOperation,
-  Driver,
-  VElement,
-  XLINK_NS,
-  XML_NS,
-  X_CHAR,
-} from '../types';
+import { COLON_CHAR, Commit, Mutation, Driver, VElement, XLINK_NS, XML_NS, X_CHAR } from '../types';
 
 export const updateProp = (
   el: HTMLElement | SVGElement,
   propName: string,
   oldPropValue: unknown,
   newPropValue: unknown,
-  effects: DOMOperation[],
+  effects: Mutation[],
 ): void => {
   if (oldPropValue === newPropValue) return;
   if (propName.startsWith('on')) {
@@ -56,7 +47,7 @@ export const useProps =
     newVNode: VElement,
     oldVNode?: VElement,
     commit: Commit = (work: () => void) => work(),
-    effects: DOMOperation[] = [],
+    effects: Mutation[] = [],
   ): ReturnType<Driver> => {
     const oldProps = oldVNode?.props;
     const newProps = newVNode?.props;

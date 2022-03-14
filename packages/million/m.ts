@@ -1,13 +1,4 @@
-import {
-  DeltaOperation,
-  DeltaTypes,
-  DOMNode,
-  Flags,
-  VElement,
-  VEntity,
-  VNode,
-  VProps,
-} from './types';
+import { Delta, DeltaTypes, DOMNode, Flags, VElement, VEntity, VNode, VProps } from './types';
 
 /**
  * Attaches ns props to svg element
@@ -64,12 +55,12 @@ export const kebab = (camelCaseObject: Record<string, unknown>): Record<string, 
 };
 
 /**
- * INSERT, UPDATE, or DELETE DeltaOperations
+ * INSERT, UPDATE, or DELETE Deltas
  */
-export const Delta = {
-  INSERT: (positionIdx = 0): DeltaOperation => [DeltaTypes.INSERT, positionIdx],
-  UPDATE: (positionIdx = 0): DeltaOperation => [DeltaTypes.UPDATE, positionIdx],
-  DELETE: (positionIdx = 0): DeltaOperation => [DeltaTypes.DELETE, positionIdx],
+export const Deltas = {
+  INSERT: (positionIdx = 0): Delta => [DeltaTypes.INSERT, positionIdx],
+  UPDATE: (positionIdx = 0): Delta => [DeltaTypes.UPDATE, positionIdx],
+  DELETE: (positionIdx = 0): Delta => [DeltaTypes.DELETE, positionIdx],
 };
 
 /**
@@ -101,7 +92,7 @@ export const m = (
   props?: VProps,
   children?: VNode[],
   flag?: Flags,
-  delta?: DeltaOperation[],
+  delta?: Delta[],
 ): VElement => {
   let key = undefined;
   if (props?.key) {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { className, Delta, kebab, m, ns, style, svg } from '../packages/million/m';
+import { className, Deltas, kebab, m, ns, style, svg } from '../packages/million/m';
 import { DeltaTypes, VNode } from '../packages/million/types';
 
 export const expectEqualVNode = (vnode1: VNode, vnode2: VNode) => {
@@ -198,12 +198,12 @@ describe.concurrent('m', () => {
   });
 
   it('should return delta operation when operation helper is used', () => {
-    expect(Delta.INSERT()).toEqual([DeltaTypes.INSERT, 0]);
-    expect(Delta.INSERT(5)).toEqual([DeltaTypes.INSERT, 5]);
-    expect(Delta.UPDATE()).toEqual([DeltaTypes.UPDATE, 0]);
-    expect(Delta.UPDATE(5)).toEqual([DeltaTypes.UPDATE, 5]);
-    expect(Delta.DELETE()).toEqual([DeltaTypes.DELETE, 0]);
-    expect(Delta.DELETE(5)).toEqual([DeltaTypes.DELETE, 5]);
+    expect(Deltas.INSERT()).toEqual([DeltaTypes.INSERT, 0]);
+    expect(Deltas.INSERT(5)).toEqual([DeltaTypes.INSERT, 5]);
+    expect(Deltas.UPDATE()).toEqual([DeltaTypes.UPDATE, 0]);
+    expect(Deltas.UPDATE(5)).toEqual([DeltaTypes.UPDATE, 5]);
+    expect(Deltas.DELETE()).toEqual([DeltaTypes.DELETE, 0]);
+    expect(Deltas.DELETE(5)).toEqual([DeltaTypes.DELETE, 5]);
   });
 
   it('should convert camelCase to kebab-case', () => {

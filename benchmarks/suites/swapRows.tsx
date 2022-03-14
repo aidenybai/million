@@ -32,7 +32,7 @@ data[row1] = data[row2];
 data[row2] = temp;
 
 const vnode = (
-  <table delta={[Delta.UPDATE(row1), Delta.UPDATE(row2)]}>
+  <table delta={[Deltas.UPDATE(row1), Deltas.UPDATE(row2)]}>
     {data.map(({ id, label }) => (
       <tr>
         <td>{id}</td>

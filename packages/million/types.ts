@@ -20,8 +20,8 @@ export const X_CHAR = 120;
 export type VProps = Record<string, any>;
 export type DOMNode = HTMLElement | SVGElement | Text | Comment;
 export type VNode = VElement | string;
-export type DeltaOperation = [DeltaTypes, number];
-export type DOMOperation = () => void;
+export type Delta = [DeltaTypes, number];
+export type Mutation = () => void;
 export type Hook = (el?: DOMNode, newVNode?: VNode, oldVNode?: VNode) => boolean;
 export type Commit = (work: () => void, data: ReturnType<Driver>) => void;
 export type Driver = (
@@ -29,13 +29,13 @@ export type Driver = (
   newVNode?: VNode,
   oldVNode?: VNode,
   commit?: Commit,
-  effects?: DOMOperation[],
+  effects?: Mutation[],
   driver?: Driver,
 ) => {
   el: DOMNode;
   newVNode?: VNode;
   oldVNode?: VNode;
-  effects?: DOMOperation[];
+  effects?: Mutation[];
   commit?: Commit;
   driver?: Driver;
 };
@@ -54,7 +54,7 @@ export interface VElement {
   children?: VNode[];
   key?: string;
   flag?: Flags;
-  delta?: DeltaOperation[];
+  delta?: Delta[];
 }
 
 export enum Flags {

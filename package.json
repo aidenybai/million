@@ -102,7 +102,7 @@
   "devDependencies": {
     "@commitlint/cli": "^16.2.1",
     "@commitlint/config-conventional": "^16.2.1",
-    "@picocss/pico": "^1.4.4",
+    "@picocss/pico": "^1.5.0",
     "@types/benchmark": "^2.1.1",
     "@types/canvas-confetti": "^1.4.2",
     "@types/lodash": "^4.14.179",
@@ -116,7 +116,7 @@
     "c8": "^7.11.0",
     "canvas-confetti": "^1.5.1",
     "chart.js": "^3.7.1",
-    "esbuild": "^0.14.25",
+    "esbuild": "^0.14.26",
     "eslint": "^8.11.0",
     "eslint-config-prettier": "^8.5.0",
     "export-size": "^0.5.2",

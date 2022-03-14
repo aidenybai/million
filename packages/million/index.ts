@@ -1,3 +1,4 @@
+export const _ = undefined;
 export * from './createElement';
 export * from './drivers/useChildren';
 export * from './drivers/useNode';
@@ -7,13 +8,12 @@ export * from './render';
 export { DeltaTypes, Flags, OLD_VNODE_FIELD } from './types';
 export type {
   Commit,
-  DeltaOperation,
+  Delta,
   DOMNode,
-  DOMOperation,
+  Mutation,
   Driver,
   VElement,
   VEntity,
   VNode,
   VProps,
 } from './types';
-export const _ = undefined;

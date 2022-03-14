@@ -2,7 +2,7 @@ import { createElement } from './createElement';
 import { useChildren } from './drivers/useChildren';
 import { useNode } from './drivers/useNode';
 import { useProps } from './drivers/useProps';
-import { DOMNode, DOMOperation, DOM_REF_FIELD, Driver, Hook, VEntity, VNode } from './types';
+import { DOMNode, Mutation, DOM_REF_FIELD, Driver, Hook, VEntity, VNode } from './types';
 
 let deadline = 0;
 
@@ -19,7 +19,7 @@ export const patch = (
   newVNode?: VNode | VEntity,
   oldVNode?: VNode | VEntity,
   hook: Hook = () => true,
-  effects: DOMOperation[] = [],
+  effects: Mutation[] = [],
 ): DOMNode => {
   const commit = (work: () => void, data: ReturnType<Driver>) => {
     if (hook(data.el, data.newVNode, data.oldVNode)) {
