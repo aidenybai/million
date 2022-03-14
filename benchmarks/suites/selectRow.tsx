@@ -52,11 +52,12 @@ const suite = Suite('select row (highlighting a selected row)', {
   },
   innerHTML: () => {
     const element = el();
+    let html = '';
     data.forEach(({ id, label }, i) => {
-      if (row === i)
-        element.innerHTML += `<tr style="background: red;"><td>${id}</td><td>${label}</td></tr>`;
-      else element.innerHTML += `<tr><td>${String(id)}</td><td>${label}</td></tr>`;
+      if (row === i) html += `<tr style="background: red;"><td>${id}</td><td>${label}</td></tr>`;
+      else html += `<tr><td>${String(id)}</td><td>${label}</td></tr>`;
     });
+    element.innerHTML = html;
   },
 });
 

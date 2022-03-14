@@ -21,7 +21,6 @@ export type VProps = Record<string, any>;
 export type DOMNode = HTMLElement | SVGElement | Text | Comment;
 export type VNode = VElement | string;
 export type Delta = [DeltaTypes, number];
-export type Mutation = () => void;
 export type Hook = (el?: DOMNode, newVNode?: VNode, oldVNode?: VNode) => boolean;
 export type Commit = (work: () => void, data: ReturnType<Driver>) => void;
 export type Driver = (
@@ -29,16 +28,21 @@ export type Driver = (
   newVNode?: VNode,
   oldVNode?: VNode,
   commit?: Commit,
-  effects?: Mutation[],
+  effects?: Effect[],
   driver?: Driver,
 ) => {
   el: DOMNode;
   newVNode?: VNode;
   oldVNode?: VNode;
-  effects?: Mutation[];
+  effects?: Effect[];
   commit?: Commit;
   driver?: Driver;
 };
+
+export interface Effect {
+  type: EffectTypes;
+  flush: () => void;
+}
 
 export interface VEntity {
   el?: DOMNode;
@@ -64,6 +68,15 @@ export enum Flags {
   ONLY_TEXT_CHILDREN,
   ONLY_KEYED_CHILDREN,
   ANY_CHILDREN,
+}
+
+export enum EffectTypes {
+  CREATE,
+  REMOVE,
+  REPLACE,
+  UPDATE,
+  SET_PROP,
+  REMOVE_PROP,
 }
 
 export const enum DeltaTypes {

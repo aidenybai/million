@@ -247,7 +247,7 @@ describe.concurrent('render', () => {
     const data = diff(el1, m('div', { id: 'app' }));
 
     for (let i = 0; i < data.effects!.length; i++) {
-      data.effects![i]();
+      data.effects![i].flush();
     }
 
     expect((<HTMLElement>data.el).id).toEqual('app');

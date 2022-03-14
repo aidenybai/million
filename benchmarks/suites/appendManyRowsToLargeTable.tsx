@@ -62,9 +62,11 @@ const suite = Suite('append many rows to large table (appending 1,000 to a table
   },
   innerHTML: () => {
     const element = el();
+    let html = '';
     data.forEach(({ id, label }) => {
-      element.innerHTML += `<tr><td>${String(id)}</td><td>${label}</td></tr>`;
+      html += `<tr><td>${String(id)}</td><td>${label}</td></tr>`;
     });
+    element.innerHTML = html;
   },
 });
 

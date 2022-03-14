@@ -60,9 +60,11 @@ const suite = Suite('create rows (creating 1,000 rows)', {
   },
   innerHTML: () => {
     const element = el();
+    let html = '';
     data.forEach(({ id, label }) => {
-      element.innerHTML += `<tr><td>${String(id)}</td><td>${label}</td></tr>`;
+      html += `<tr><td>${String(id)}</td><td>${label}</td></tr>`;
     });
+    element.innerHTML = html;
   },
 });
 
