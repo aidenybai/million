@@ -4,7 +4,7 @@
  */
 // @ts-nocheck
 
-import { createElement, Delta } from 'packages/million';
+import { createElement, Deltas } from 'packages/million';
 import * as simple_virtual_dom from 'simple-virtual-dom';
 import * as snabbdom from 'snabbdom';
 import * as hundred from 'hundred';
@@ -70,9 +70,11 @@ const suite = Suite('swap rows (swap 2 rows for table with 1,000 rows)', {
   },
   innerHTML: () => {
     const element = el();
+    let html = '';
     data.forEach(({ id, label }) => {
-      element.innerHTML += `<tr><td>${String(id)}</td><td>${label}</td></tr>`;
+      html += `<tr><td>${String(id)}</td><td>${label}</td></tr>`;
     });
+    element.innerHTML += html;
   },
 });
 

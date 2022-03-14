@@ -2,9 +2,10 @@ import { createElement } from '../createElement';
 import {
   Commit,
   DOMNode,
-  Mutation,
   Driver,
   Flags,
+  Effect,
+  EffectTypes,
   OLD_VNODE_FIELD,
   VElement,
   VEntity,
@@ -20,11 +21,14 @@ export const useNode = (drivers: Partial<Driver>[]) => {
     newVNode?: VNode | VEntity,
     oldVNode?: VNode | VEntity,
     commit: Commit = (work: () => void) => work(),
-    effects: Mutation[] = [],
+    effects: Effect[] = [],
   ): ReturnType<Driver> => {
     const finish = (element: DOMNode): ReturnType<Driver> => {
       if (!oldVNode) {
-        effects.push(() => (element[OLD_VNODE_FIELD] = newVNode));
+        effects.push({
+          type: EffectTypes.SET_PROP,
+          flush: () => (element[OLD_VNODE_FIELD] = newVNode),
+        });
       }
 
       return {
@@ -43,7 +47,10 @@ export const useNode = (drivers: Partial<Driver>[]) => {
     }
 
     if (newVNode === undefined || newVNode === null) {
-      effects.push(() => el.remove());
+      effects.push({
+        type: EffectTypes.REMOVE,
+        flush: () => el.remove(),
+      });
       return finish(el);
     } else {
       let prevVNode: VNode | VEntity | undefined = oldVNode ?? el[OLD_VNODE_FIELD];
@@ -51,7 +58,10 @@ export const useNode = (drivers: Partial<Driver>[]) => {
 
       if (hasString && prevVNode !== newVNode) {
         const newEl = createElement(<string>newVNode, false);
-        effects.push(() => el.replaceWith(newEl));
+        effects.push({
+          type: EffectTypes.REPLACE,
+          flush: () => el.replaceWith(newEl),
+        });
 
         return finish(<DOMNode>newEl);
       }
@@ -77,7 +87,10 @@ export const useNode = (drivers: Partial<Driver>[]) => {
         ) {
           if (oldVElement?.tag !== newVElement?.tag || el instanceof Text) {
             const newEl = createElement(newVElement, false);
-            effects.push(() => el.replaceWith(newEl));
+            effects.push({
+              type: EffectTypes.REPLACE,
+              flush: () => el.replaceWith(newEl),
+            });
             return finish(<DOMNode>newEl);
           }
 

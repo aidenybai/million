@@ -4,9 +4,10 @@ import {
   Delta,
   DeltaTypes,
   DOMNode,
-  Mutation,
   Driver,
   Flags,
+  Effect,
+  EffectTypes,
   NODE_OBJECT_POOL_FIELD,
   VElement,
   VNode,
@@ -22,7 +23,7 @@ export const useChildren =
     newVNode: VElement,
     oldVNode?: VElement,
     commit: Commit = (work: () => void) => work(),
-    effects: Mutation[] = [],
+    effects: Effect[] = [],
     driver?: Driver,
   ): ReturnType<Driver> => {
     const getData = (element: DOMNode): ReturnType<Driver> => ({
@@ -60,9 +61,11 @@ export const useChildren =
         const child = <DOMNode>el.childNodes.item(deltaPosition);
 
         if (deltaType === DeltaTypes.INSERT) {
-          effects.push(() =>
-            el.insertBefore(createElement(newVNodeChildren![deltaPosition], false), child),
-          );
+          effects.push({
+            type: EffectTypes.CREATE,
+            flush: () =>
+              el.insertBefore(createElement(newVNodeChildren![deltaPosition], false), child),
+          });
         }
 
         if (deltaType === DeltaTypes.UPDATE) {
@@ -76,7 +79,10 @@ export const useChildren =
         }
 
         if (deltaType === DeltaTypes.DELETE) {
-          effects.push(() => el.removeChild(child));
+          effects.push({
+            type: EffectTypes.REMOVE,
+            flush: () => el.removeChild(child),
+          });
         }
       }
       return finish(el);
@@ -88,13 +94,19 @@ export const useChildren =
     if (!newVNodeChildren || newVNode.flag === Flags.NO_CHILDREN) {
       if (!oldVNodeChildren) return finish(el);
 
-      effects.push(() => (el.textContent = ''));
+      effects.push({
+        type: EffectTypes.REMOVE,
+        flush: () => (el.textContent = ''),
+      });
       return finish(el);
     }
 
     if (!oldVNodeChildren || oldVNodeChildren?.length === 0) {
       for (let i = 0; i < newVNodeChildren.length; ++i) {
-        effects.push(() => el.appendChild(createElement(newVNodeChildren[i], false)));
+        effects.push({
+          type: EffectTypes.CREATE,
+          flush: () => el.appendChild(createElement(newVNodeChildren[i], false)),
+        });
       }
       return finish(el);
     }
@@ -279,12 +291,18 @@ export const useChildren =
           // [4] Right move
           const node = el.childNodes.item(oldHead++);
           const tail = newTail--;
-          effects.push(() => el.insertBefore(node, el.childNodes.item(tail).nextSibling));
+          effects.push({
+            type: EffectTypes.CREATE,
+            flush: () => el.insertBefore(node, el.childNodes.item(tail).nextSibling),
+          });
         } else if (oldTailVNode.key === newHeadVNode.key) {
           // [5] Left move
           const node = el.childNodes.item(oldTail--);
           const head = newHead++;
-          effects.push(() => el.insertBefore(node, el.childNodes.item(head)));
+          effects.push({
+            type: EffectTypes.CREATE,
+            flush: () => el.insertBefore(node, el.childNodes.item(head)),
+          });
         } else break;
       }
 
@@ -292,13 +310,15 @@ export const useChildren =
         // [6] Old children optimization
         while (newHead <= newTail) {
           const head = newHead++;
-          effects.push(() =>
-            el.insertBefore(
-              el[NODE_OBJECT_POOL_FIELD][(<VElement>newVNodeChildren[head]).key!] ??
-                createElement(newVNodeChildren[head], false),
-              el.childNodes.item(head),
-            ),
-          );
+          effects.push({
+            type: EffectTypes.CREATE,
+            flush: () =>
+              el.insertBefore(
+                el[NODE_OBJECT_POOL_FIELD][(<VElement>newVNodeChildren[head]).key!] ??
+                  createElement(newVNodeChildren[head], false),
+                el.childNodes.item(head),
+              ),
+          });
         }
       } else if (newHead > newTail) {
         // [7] New children optimization
@@ -306,7 +326,10 @@ export const useChildren =
           const head = oldHead++;
           const node = el.childNodes.item(head);
           el[NODE_OBJECT_POOL_FIELD][(<VElement>oldVNodeChildren[head]).key!] = node;
-          effects.push(() => el.removeChild(node));
+          effects.push({
+            type: EffectTypes.REMOVE,
+            flush: () => el.removeChild(node),
+          });
         }
       } else {
         // [8] Indexing old children
@@ -324,17 +347,22 @@ export const useChildren =
           if (oldVNodePosition !== undefined) {
             // [9] Reordering continuous nodes
             const node = el.childNodes.item(oldVNodePosition);
-            effects.push(() => el.insertBefore(node, el.childNodes.item(head)));
+            effects.push({
+              type: EffectTypes.CREATE,
+              flush: () => el.insertBefore(node, el.childNodes.item(head)),
+            });
             delete oldKeyMap[newVNodeChild.key!];
           } else {
             // [10] Create new nodes
-            effects.push(() =>
-              el.insertBefore(
-                el[NODE_OBJECT_POOL_FIELD][newVNodeChild.key] ??
-                  createElement(newVNodeChild, false),
-                el.childNodes.item(head),
-              ),
-            );
+            effects.push({
+              type: EffectTypes.CREATE,
+              flush: () =>
+                el.insertBefore(
+                  el[NODE_OBJECT_POOL_FIELD][newVNodeChild.key] ??
+                    createElement(newVNodeChild, false),
+                  el.childNodes.item(head),
+                ),
+            });
           }
         }
 
@@ -342,7 +370,10 @@ export const useChildren =
         for (const oldVNodeKey in oldKeyMap) {
           const node = el.childNodes.item(oldKeyMap[oldVNodeKey]);
           el[NODE_OBJECT_POOL_FIELD][oldVNodeKey] = node;
-          effects.push(() => el.removeChild(node));
+          effects.push({
+            type: EffectTypes.REMOVE,
+            flush: () => el.removeChild(node),
+          });
         }
       }
 
@@ -357,7 +388,10 @@ export const useChildren =
         ? newVNode?.children.join('')
         : newVNode?.children;
       if (oldString !== newString) {
-        effects.push(() => (el.textContent = newString!));
+        effects.push({
+          type: EffectTypes.REPLACE,
+          flush: () => (el.textContent = newString!),
+        });
       }
       return finish(el);
     }
@@ -381,17 +415,23 @@ export const useChildren =
         if (newVNodeChildren.length > oldVNodeChildren.length) {
           for (let i = commonLength; i < newVNodeChildren.length; ++i) {
             const node = createElement(newVNodeChildren[i], false);
-            effects.push(() => el.appendChild(node));
+            effects.push({ type: EffectTypes.CREATE, flush: () => el.appendChild(node) });
           }
         } else if (newVNodeChildren.length < oldVNodeChildren.length) {
           for (let i = oldVNodeChildren.length - 1; i >= commonLength; --i) {
-            effects.push(() => el.removeChild(el.childNodes.item(i)));
+            effects.push({
+              type: EffectTypes.REMOVE,
+              flush: () => el.removeChild(el.childNodes.item(i)),
+            });
           }
         }
       } else if (newVNodeChildren) {
         for (let i = 0; i < newVNodeChildren.length; ++i) {
           const node = createElement(newVNodeChildren[i], false);
-          effects.push(() => el.appendChild(node));
+          effects.push({
+            type: EffectTypes.CREATE,
+            flush: () => el.appendChild(node),
+          });
         }
       }
 

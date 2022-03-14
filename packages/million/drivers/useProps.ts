@@ -1,18 +1,31 @@
-import { COLON_CHAR, Commit, Mutation, Driver, VElement, XLINK_NS, XML_NS, X_CHAR } from '../types';
+import {
+  COLON_CHAR,
+  Commit,
+  Effect,
+  Driver,
+  VElement,
+  XLINK_NS,
+  XML_NS,
+  X_CHAR,
+  EffectTypes,
+} from '../types';
 
 export const updateProp = (
   el: HTMLElement | SVGElement,
   propName: string,
   oldPropValue: unknown,
   newPropValue: unknown,
-  effects: Mutation[],
+  effects: Effect[],
 ): void => {
   if (oldPropValue === newPropValue) return;
   if (propName.startsWith('on')) {
     const eventPropName = propName.slice(2).toLowerCase();
-    effects.push(() => {
-      if (oldPropValue) el.removeEventListener(eventPropName, <EventListener>oldPropValue);
-      el.addEventListener(eventPropName, <EventListener>newPropValue);
+    effects.push({
+      type: EffectTypes.SET_PROP,
+      flush: () => {
+        if (oldPropValue) el.removeEventListener(eventPropName, <EventListener>oldPropValue);
+        el.addEventListener(eventPropName, <EventListener>newPropValue);
+      },
     });
   } else if (propName.charCodeAt(0) === X_CHAR) {
     if (propName.charCodeAt(3) === COLON_CHAR) {
@@ -22,18 +35,30 @@ export const updateProp = (
     }
   } else if (el[propName] !== undefined && !(el instanceof SVGElement)) {
     if (newPropValue) {
-      effects.push(() => (el[propName] = newPropValue));
+      effects.push({
+        type: EffectTypes.SET_PROP,
+        flush: () => (el[propName] = newPropValue),
+      });
     } else {
-      effects.push(() => {
-        el[propName] = '';
-        el.removeAttribute(propName);
-        delete el[propName];
+      effects.push({
+        type: EffectTypes.REMOVE_PROP,
+        flush: () => {
+          el[propName] = '';
+          el.removeAttribute(propName);
+          delete el[propName];
+        },
       });
     }
   } else if (!newPropValue) {
-    effects.push(() => el.removeAttribute(propName));
+    effects.push({
+      type: EffectTypes.REMOVE_PROP,
+      flush: () => el.removeAttribute(propName),
+    });
   } else {
-    effects.push(() => el.setAttribute(propName, String(newPropValue)));
+    effects.push({
+      type: EffectTypes.SET_PROP,
+      flush: () => el.setAttribute(propName, String(newPropValue)),
+    });
   }
 };
 
@@ -47,7 +72,7 @@ export const useProps =
     newVNode: VElement,
     oldVNode?: VElement,
     commit: Commit = (work: () => void) => work(),
-    effects: Mutation[] = [],
+    effects: Effect[] = [],
   ): ReturnType<Driver> => {
     const oldProps = oldVNode?.props;
     const newProps = newVNode?.props;

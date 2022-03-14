@@ -63,10 +63,12 @@ const suite = Suite('remove row (removing one row)', {
   },
   innerHTML: () => {
     const element = el();
+    let html = '';
     data.forEach(({ id, label }, i) => {
       if (row === i) return;
-      element.innerHTML += `<tr><td>${String(id)}</td><td>${label}</td></tr>`;
+      html += `<tr><td>${String(id)}</td><td>${label}</td></tr>`;
     });
+    element.innerHTML = html;
   },
 });
 
