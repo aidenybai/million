@@ -4,10 +4,10 @@
  */
 // @ts-nocheck
 
+import * as hundred from 'hundred';
 import { createElement } from 'packages/million';
 import * as simple_virtual_dom from 'simple-virtual-dom';
 import * as snabbdom from 'snabbdom';
-import * as hundred from 'hundred';
 import * as virtual_dom from 'virtual-dom';
 import { Suite, vnodeAdapter } from '../benchmark';
 import { buildData, patch } from '../data';

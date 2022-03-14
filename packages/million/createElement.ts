@@ -1,11 +1,11 @@
 import {
   COLON_CHAR,
   DOMNode,
+  Flags,
   OLD_VNODE_FIELD,
   VElement,
   VEntity,
   VNode,
-  Flags,
   XLINK_NS,
   XML_NS,
   X_CHAR,

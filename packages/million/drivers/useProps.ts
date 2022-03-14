@@ -1,13 +1,13 @@
 import {
   COLON_CHAR,
   Commit,
-  Effect,
   Driver,
+  Effect,
+  EffectTypes,
   VElement,
   XLINK_NS,
   XML_NS,
   X_CHAR,
-  EffectTypes,
 } from '../types';
 
 export const updateProp = (
