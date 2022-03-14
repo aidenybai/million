@@ -4,7 +4,7 @@
  */
 // @ts-nocheck
 
-import { createElement, Delta } from 'packages/million';
+import { createElement, Deltas } from 'packages/million';
 import * as simple_virtual_dom from 'simple-virtual-dom';
 import * as snabbdom from 'snabbdom';
 import * as hundred from 'hundred';
@@ -28,7 +28,7 @@ const row = Math.floor(Math.random() * (data.length + 1));
 data.splice(row, 1);
 
 const vnode = (
-  <table delta={[Delta.DELETE(row)]}>
+  <table delta={[Deltas.DELETE(row)]}>
     {data.map(({ id, label }) => (
       <tr>
         <td>{id}</td>

@@ -1,10 +1,10 @@
 import { createElement } from '../createElement';
 import {
   Commit,
-  DeltaOperation,
+  Delta,
   DeltaTypes,
   DOMNode,
-  DOMOperation,
+  Mutation,
   Driver,
   Flags,
   NODE_OBJECT_POOL_FIELD,
@@ -22,7 +22,7 @@ export const useChildren =
     newVNode: VElement,
     oldVNode?: VElement,
     commit: Commit = (work: () => void) => work(),
-    effects: DOMOperation[] = [],
+    effects: Mutation[] = [],
     driver?: Driver,
   ): ReturnType<Driver> => {
     const getData = (element: DOMNode): ReturnType<Driver> => ({
@@ -46,7 +46,7 @@ export const useChildren =
 
     const oldVNodeChildren: VNode[] = oldVNode?.children ?? [];
     const newVNodeChildren: VNode[] | undefined = newVNode.children;
-    const delta: DeltaOperation[] | undefined = newVNode.delta;
+    const delta: Delta[] | undefined = newVNode.delta;
     const diff = (el: DOMNode, newVNode: VNode, oldVNode?: VNode) =>
       driver!(el, newVNode, oldVNode, commit, effects).effects!;
 

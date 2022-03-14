@@ -3,7 +3,7 @@ import { createElement } from '../packages/million/createElement';
 import { useChildren } from '../packages/million/drivers/useChildren';
 import { useNode } from '../packages/million/drivers/useNode';
 import { useProps } from '../packages/million/drivers/useProps';
-import { Delta, entity, m } from '../packages/million/m';
+import { Deltas, entity, m } from '../packages/million/m';
 import { patch, render } from '../packages/million/render';
 import { Flags, DOMNode } from '../packages/million/types';
 
@@ -66,7 +66,7 @@ describe.concurrent('render', () => {
   it('should execute INSERT deltas', () => {
     const el = document.createElement('div');
     const children: string[] = [];
-    const createVNode = () => m('div', undefined, [...children], undefined, [Delta.INSERT(0)]);
+    const createVNode = () => m('div', undefined, [...children], undefined, [Deltas.INSERT(0)]);
 
     const prevVNode1 = createVNode();
     children.unshift('foo');
@@ -88,7 +88,7 @@ describe.concurrent('render', () => {
     const el = document.createElement('div');
     el.textContent = 'foo';
     const children: string[] = ['foo'];
-    const createVNode = () => m('div', undefined, [...children], undefined, [Delta.UPDATE(0)]);
+    const createVNode = () => m('div', undefined, [...children], undefined, [Deltas.UPDATE(0)]);
 
     const prevVNode1 = createVNode();
     children[0] = 'bar';
@@ -104,7 +104,7 @@ describe.concurrent('render', () => {
   it('should execute INSERT deltas', () => {
     const el = document.createElement('div');
     const children: string[] = [];
-    const createVNode = () => m('div', undefined, [...children], undefined, [Delta.INSERT(0)]);
+    const createVNode = () => m('div', undefined, [...children], undefined, [Deltas.INSERT(0)]);
 
     const prevVNode1 = createVNode();
     children.unshift('bar');
@@ -123,7 +123,7 @@ describe.concurrent('render', () => {
     el.appendChild(document.createTextNode('bar'));
     el.appendChild(document.createTextNode('baz'));
     const children: string[] = ['foo', 'bar', 'baz'];
-    const createVNode = () => m('div', undefined, [...children], undefined, [Delta.DELETE(0)]);
+    const createVNode = () => m('div', undefined, [...children], undefined, [Deltas.DELETE(0)]);
 
     const prevVNode1 = createVNode();
     children.splice(0, 1);
