@@ -45,7 +45,7 @@ Million aims to fix this, providing a **library-agnostic** Virtual DOM to serve 
 
 - [Efficiently updating nodes](https://millionjs.org/docs/api/basics/render)
 - [Creating UI libraries](https://github.com/aidenybai/hacky)
-- [Turning MPAs into SPAs](https://millionjs.org/docs/api/advanced/router)
+- [Turning MPAs into SPAs](https://millionjs.org/docs/api/extra/router)
 - [Use granular HMR updates](https://millionjs.org/docs/tooling/ssg-ssr)
 
 ## Installing Million
