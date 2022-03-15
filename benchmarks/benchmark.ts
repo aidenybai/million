@@ -1,5 +1,9 @@
 import Benchmark from 'benchmark';
 import { VNode } from 'million';
+import { h } from 'snabbdom';
+import VirtualDom_VNode from 'virtual-dom/vnode/vnode';
+import VirtualDom_VText from 'virtual-dom/vnode/vtext';
+import { el } from 'simple-virtual-dom';
 import _ from 'lodash';
 
 // avoid `Cannot read property 'parentNode' of undefined` error in runScript
@@ -21,25 +25,22 @@ export const Suite = (name: string, tests: Record<string, Function>) => {
   return suite;
 };
 
-export const reformatVNode = (vnode: VNode) => {
-  if (typeof vnode === 'string') return;
-  if (vnode.key) delete vnode.key;
-  if (vnode.props === undefined || vnode.props === null) vnode.props = {};
-  if (vnode.children === undefined || vnode.children === null) vnode.children = [];
-  if (vnode.children.length > 0) {
-    vnode.children.forEach(reformatVNode);
-  }
+export const snabbdomAdapter = (vnode: VNode): any => {
+  if (typeof vnode === 'string') return vnode;
+  // @ts-ignore
+  return _.clone(h(vnode.tag, null, vnode.children.map(snabbdomAdapter)));
 };
 
-// Virtual DOM libraries like snabbdom, virtual-dom will
-// mutate the vnode, even though the vnode must be
-// immutable for the benchmark. For this case, we deep
-// copy the vnode. This ensures compatibility throughout
-// the suite tests.
-export const vnodeAdapter = (vnode: VNode): VNode => {
-  const clonedVNode = _.cloneDeep(vnode);
-  reformatVNode(clonedVNode);
-  return clonedVNode;
+export const virtualDomAdapter = (vnode: VNode): any => {
+  if (typeof vnode === 'string') return new VirtualDom_VText(vnode);
+  // @ts-ignore
+  return _.clone(new VirtualDom_VNode(vnode.tag, {}, vnode.children.map(virtualDomAdapter)));
+};
+
+export const simpleVirtualDomAdapter = (vnode: VNode): any => {
+  if (typeof vnode === 'string') return vnode;
+  // @ts-ignore
+  return _.clone(el(vnode.tag, {}, vnode.children.map(simpleVirtualDomAdapter)));
 };
 
 export default benchmark;
