@@ -9,7 +9,13 @@ import { createElement } from 'packages/million';
 import * as simple_virtual_dom from 'simple-virtual-dom';
 import * as snabbdom from 'snabbdom';
 import * as virtual_dom from 'virtual-dom';
-import { simpleVirtualDomAdapter, snabbdomAdapter, Suite, virtualDomAdapter } from '../benchmark';
+import {
+  hundredAdapter,
+  simpleVirtualDomAdapter,
+  snabbdomAdapter,
+  Suite,
+  virtualDomAdapter,
+} from '../benchmark';
 import { buildData, patch } from '../data';
 
 const data = buildData(1000);
@@ -31,7 +37,7 @@ const suite = Suite('clear rows (clearing a table with 1,000 rows)', {
     patch(el(), vnode);
   },
   hundred: () => {
-    hundred.patch(el(), vnode, oldVNode);
+    hundred.patch(el(), hundredAdapter(vnode), hundredAdapter(oldVNode));
   },
   'simple-virtual-dom': () => {
     const patches = simple_virtual_dom.diff(
