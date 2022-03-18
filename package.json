@@ -100,7 +100,7 @@
     "*": "zx scripts/check.mjs"
   },
   "devDependencies": {
-    "@commitlint/cli": "^16.2.1",
+    "@commitlint/cli": "^16.2.3",
     "@commitlint/config-conventional": "^16.2.1",
     "@picocss/pico": "^1.5.0",
     "@types/benchmark": "^2.1.1",
@@ -125,11 +125,11 @@
     "hundred": "^0.1.0",
     "husky": "^7.0.4",
     "jsdom": "^19.0.0",
-    "lint-staged": "^12.3.5",
+    "lint-staged": "^12.3.7",
     "lodash": "^4.17.21",
     "np": "^7.6.0",
     "ora": "^6.1.0",
-    "prettier": "^2.5.1",
+    "prettier": "^2.6.0",
     "simple-git": "^3.3.0",
     "simple-virtual-dom": "^0.1.10",
     "snabbdom": "^3.3.1",
