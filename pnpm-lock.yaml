@@ -31,7 +31,7 @@ specifiers:
   np: ^7.6.0
   ora: ^6.1.0
   prettier: ^2.6.0
-  simple-git: ^3.3.0
+  simple-git: ^3.4.0
   simple-virtual-dom: ^0.1.10
   snabbdom: ^3.3.1
   sugar-high: ^0.0.9
@@ -75,7 +75,7 @@ devDependencies:
   np: 7.6.0
   ora: 6.1.0
   prettier: 2.6.0
-  simple-git: 3.3.0
+  simple-git: 3.4.0
   simple-virtual-dom: 0.1.10
   snabbdom: 3.3.1
   sugar-high: 0.0.9
@@ -5337,8 +5337,8 @@ packages:
     resolution: {integrity: sha512-sDl4qMFpijcGw22U5w63KmD3cZJfBuFlVNbVMKje2keoKML7X2UzWbc4XrmEbDwg0NXJc3yv4/ox7b+JWb57kQ==}
     dev: true
 
-  /simple-git/3.3.0:
-    resolution: {integrity: sha512-K9qcbbZwPHhk7MLi0k0ekvSFXJIrRoXgHhqMXAFM75qS68vdHTcuzmul1ilKI02F/4lXshVgBoDll2t++JK0PQ==}
+  /simple-git/3.4.0:
+    resolution: {integrity: sha512-sBRdudUc1yvi0xQQPuHXc1L9gTWkRn4hP2bbc7q4BTxR502d3JJAGsDOhrmsBY+wAZAw5JLl82tx55fSWYE65w==}
     dependencies:
       '@kwsites/file-exists': 1.1.1
       '@kwsites/promise-deferred': 1.1.1

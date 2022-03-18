@@ -1,6 +1,6 @@
 {
   "name": "million",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "<1kb compiler-augmented virtual DOM. It's fast!",
   "main": "dist/million.mjs",
   "module": "dist/million.mjs",
@@ -130,7 +130,7 @@
     "np": "^7.6.0",
     "ora": "^6.1.0",
     "prettier": "^2.6.0",
-    "simple-git": "^3.3.0",
+    "simple-git": "^3.4.0",
     "simple-virtual-dom": "^0.1.10",
     "snabbdom": "^3.3.1",
     "sugar-high": "^0.0.9",
