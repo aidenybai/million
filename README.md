@@ -10,17 +10,23 @@
   <a href="https://www.npmjs.com/package/million" target="_blank"><img src="https://img.shields.io/npm/v/million?style=flat&colorA=000000&colorB=000000" alt="NPM Version" /></a>
   <a href="https://coveralls.io/github/aidenybai/million" target="_blank"><img src="https://img.shields.io/coveralls/github/aidenybai/million?style=flat&colorA=000000&colorB=000000" /></a>
   <a href="https://discord.gg/X9yFbcV2rF" target="_blank"><img src="https://img.shields.io/discord/938129049539186758?style=flat&colorA=000000&colorB=000000&label=discord&logo=discord&logoColor=ffffff" /></a>
+
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <a href="https://www.youtube.com/watch?v=28SMGi-6mNc">⏰ Explained in 1 minute</a>
+        </td>
+        <td>
+          <a href="https://millionjs.org">📚 Read the docs</a>
+        </td>
+        <td>
+          <a href="https://discord.gg/X9yFbcV2rF">💬 Join our Discord</a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
-
-<h4 align="center">
-  <a href="https://www.youtube.com/watch?v=28SMGi-6mNc">⏰ Explained in 1 minute</a>
-  <span> | </span>
-  <a href="https://millionjs.org">📚 Read the docs</a>
-  <span> | </span>
-  <a href="https://discord.gg/X9yFbcV2rF">💬 Join our Discord</a>
-</h4>
-
----
 
 ## What is Million?
 
