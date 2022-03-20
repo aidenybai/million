@@ -16,6 +16,7 @@ export const navigate = async (url: URL, isBack = false, htmlString?: string) =>
       .catch(() => {
         window.location.assign(url);
       }));
+
   if (!newPageHtmlString) return;
 
   const html = parser.parseFromString(newPageHtmlString, 'text/html');

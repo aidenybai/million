@@ -8,8 +8,8 @@ const jsx = (tag: string | FC, props?: VProps, key?: string | null): VNode => {
   if (props) {
     if (props.children) {
       children = <JSXVNode[]>(Array.isArray(props.children) ? props.children : [props.children]);
-      delete props.children;
     }
+    delete props.children;
     if (key) props.key = key;
   }
   return h(tag, props, ...children);
