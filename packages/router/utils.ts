@@ -23,7 +23,7 @@ export const isLocalURL = (href: string) => {
       return true;
     }
     // eslint-disable-next-line no-empty
-  } catch (e) {}
+  } catch (err) {}
   return false;
 };
 

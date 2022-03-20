@@ -53,26 +53,25 @@ Million aims to fix this, providing a **library-agnostic** Virtual DOM to serve 
       </td>
     </tr>
     <tr>
-    <td>
-
-<ul>
-<li>🦁 Built for libraries that <strong>compile</strong></li>
-<li>📦 Lightweight bundle size (<strong>&lt;1kb</strong> brotli+min)</li>
-<li>⚡ <strong>Fast</strong> runtime operations</li>
-<li>🛠️ <strong>Composable</strong> using drivers, <strong>sensible</strong> by default</li>
-</ul>
+      <td>
+        <ul>
+          <li>🦁 Built for libraries that <strong>compile</strong></li>
+          <li>📦 Lightweight bundle size (<strong>&lt;1kb</strong> brotli+min)</li>
+          <li>⚡ <strong>Fast</strong> runtime operations</li>
+          <li>🛠️ <strong>Composable</strong> using drivers, <strong>sensible</strong> by default</li>
+        </ul>
       </td>
       <td>
-<ul>
-<li><a href="https://millionjs.org/docs/api/basics/render">Efficiently updating nodes</a></li>
-<li><a href="https://github.com/aidenybai/hacky">Creating UI libraries</a></li>
-<li><a href="https://millionjs.org/docs/api/extra/router">Turning MPAs into SPAs</a></li>
-<li><a href="https://millionjs.org/docs/tooling/ssg-ssr">Use granular HMR updates</a></li>
-</ul>
+        <ul>
+          <li><a href="https://millionjs.org/docs/api/basics/render">Efficiently updating nodes</a></li>
+          <li><a href="https://github.com/aidenybai/hacky">Creating UI libraries</a></li>
+          <li><a href="https://millionjs.org/docs/api/extra/router">Turning MPAs into SPAs</a></li>
+          <li><a href="https://millionjs.org/docs/tooling/ssg-ssr">Use granular HMR updates</a></li>
+        </ul>
       </td>
     </tr>
-    </tbody>
-  </table>
+  </tbody>
+</table>
 
 ## Installing Million
 
