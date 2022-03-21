@@ -58,9 +58,9 @@ export const kebab = (camelCaseObject: Record<string, unknown>): Record<string, 
  * INSERT, UPDATE, or DELETE Deltas
  */
 export const Deltas = {
-  INSERT: (positionIdx = 0): Delta => [DeltaTypes.INSERT, positionIdx],
-  UPDATE: (positionIdx = 0): Delta => [DeltaTypes.UPDATE, positionIdx],
-  DELETE: (positionIdx = 0): Delta => [DeltaTypes.DELETE, positionIdx],
+  CREATE: (i = 0): Delta => [DeltaTypes.CREATE, i],
+  UPDATE: (i = 0): Delta => [DeltaTypes.UPDATE, i],
+  REMOVE: (i = 0): Delta => [DeltaTypes.REMOVE, i],
 };
 
 /**
