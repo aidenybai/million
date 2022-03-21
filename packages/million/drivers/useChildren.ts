@@ -60,7 +60,7 @@ export const useChildren =
         const [deltaType, deltaPosition] = delta[i];
         const child = <DOMNode>el.childNodes.item(deltaPosition);
 
-        if (deltaType === DeltaTypes.INSERT) {
+        if (deltaType === DeltaTypes.CREATE) {
           effects.push({
             type: EffectTypes.CREATE,
             flush: () =>
@@ -78,7 +78,7 @@ export const useChildren =
           }, getData(child));
         }
 
-        if (deltaType === DeltaTypes.DELETE) {
+        if (deltaType === DeltaTypes.REMOVE) {
           effects.push({
             type: EffectTypes.REMOVE,
             flush: () => el.removeChild(child),

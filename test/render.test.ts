@@ -63,10 +63,10 @@ describe.concurrent('render', () => {
   });
 
   // Deltas are behaving weird because they are "delayed" patching
-  it('should execute INSERT deltas', () => {
+  it('should execute CREATE deltas', () => {
     const el = document.createElement('div');
     const children: string[] = [];
-    const createVNode = () => m('div', undefined, [...children], undefined, [Deltas.INSERT(0)]);
+    const createVNode = () => m('div', undefined, [...children], undefined, [Deltas.CREATE(0)]);
 
     const prevVNode1 = createVNode();
     children.unshift('foo');
@@ -101,10 +101,10 @@ describe.concurrent('render', () => {
     expect(el.textContent).toEqual('baz');
   });
 
-  it('should execute INSERT deltas', () => {
+  it('should execute CREATE deltas', () => {
     const el = document.createElement('div');
     const children: string[] = [];
-    const createVNode = () => m('div', undefined, [...children], undefined, [Deltas.INSERT(0)]);
+    const createVNode = () => m('div', undefined, [...children], undefined, [Deltas.CREATE(0)]);
 
     const prevVNode1 = createVNode();
     children.unshift('bar');
@@ -117,13 +117,13 @@ describe.concurrent('render', () => {
     expect(el.childNodes.length).toEqual(2);
   });
 
-  it('should execute DELETE deltas', () => {
+  it('should execute REMOVE deltas', () => {
     const el = document.createElement('div');
     el.appendChild(document.createTextNode('foo'));
     el.appendChild(document.createTextNode('bar'));
     el.appendChild(document.createTextNode('baz'));
     const children: string[] = ['foo', 'bar', 'baz'];
-    const createVNode = () => m('div', undefined, [...children], undefined, [Deltas.DELETE(0)]);
+    const createVNode = () => m('div', undefined, [...children], undefined, [Deltas.REMOVE(0)]);
 
     const prevVNode1 = createVNode();
     children.splice(0, 1);

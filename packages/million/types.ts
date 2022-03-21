@@ -80,7 +80,7 @@ export enum EffectTypes {
 }
 
 export const enum DeltaTypes {
-  INSERT,
+  CREATE,
   UPDATE,
-  DELETE,
+  REMOVE,
 }

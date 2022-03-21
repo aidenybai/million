@@ -34,7 +34,7 @@ const row = Math.floor(Math.random() * (data.length + 1));
 data.splice(row, 1);
 
 const vnode = (
-  <table delta={[Deltas.DELETE(row)]}>
+  <table delta={[Deltas.REMOVE(row)]}>
     {data.map(({ id, label }) => (
       <tr>
         <td>{id}</td>

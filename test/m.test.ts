@@ -198,12 +198,12 @@ describe.concurrent('m', () => {
   });
 
   it('should return delta operation when operation helper is used', () => {
-    expect(Deltas.INSERT()).toEqual([DeltaTypes.INSERT, 0]);
-    expect(Deltas.INSERT(5)).toEqual([DeltaTypes.INSERT, 5]);
+    expect(Deltas.CREATE()).toEqual([DeltaTypes.CREATE, 0]);
+    expect(Deltas.CREATE(5)).toEqual([DeltaTypes.CREATE, 5]);
     expect(Deltas.UPDATE()).toEqual([DeltaTypes.UPDATE, 0]);
     expect(Deltas.UPDATE(5)).toEqual([DeltaTypes.UPDATE, 5]);
-    expect(Deltas.DELETE()).toEqual([DeltaTypes.DELETE, 0]);
-    expect(Deltas.DELETE(5)).toEqual([DeltaTypes.DELETE, 5]);
+    expect(Deltas.REMOVE()).toEqual([DeltaTypes.REMOVE, 0]);
+    expect(Deltas.REMOVE(5)).toEqual([DeltaTypes.REMOVE, 5]);
   });
 
   it('should convert camelCase to kebab-case', () => {
