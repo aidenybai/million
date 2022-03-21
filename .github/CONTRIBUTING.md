@@ -7,6 +7,8 @@
 1. Fork this repository and clone it to your local machine
 2. Make sure you have `pnpm` installed. If you don't, run `npm install -g pnpm`
 3. Install all packages with the `pnpm` command in the project root.
+4. Run `pnpm welcome` to get onboarded.
+5. Read the [wiki](https://github.com/aidenybai/million/wiki) to understand the internals.
 
 ## Required Steps
 
