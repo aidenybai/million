@@ -22,9 +22,7 @@ export const patch = (
   effects: Effect[] = [],
 ): DOMNode => {
   const commit = (work: () => void, data: ReturnType<Driver>) => {
-    if (hook(data.el, data.newVNode, data.oldVNode)) {
-      work();
-    }
+    if (hook(data.el, data.newVNode, data.oldVNode)) work();
   };
   const data = diff(el, newVNode, oldVNode, commit, effects);
   for (let i = 0; i < effects.length; i++) {
