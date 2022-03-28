@@ -27,10 +27,10 @@ export const h = (tag: string | FC, props?: VProps, ...children: JSXVNode[]) => 
   let delta: Delta[] | undefined;
   const normalizedChildren: VNode[] = [];
   if (props) {
-    const rawDelta = <Delta[]>(<unknown>props.delta);
+    const rawDelta = <Delta[]>props.delta;
     if (rawDelta && rawDelta.length) {
       delta = rawDelta;
-      delete props.delta;
+      props.delta = undefined;
     }
   }
   if (children) {
@@ -76,14 +76,14 @@ export const h = (tag: string | FC, props?: VProps, ...children: JSXVNode[]) => 
   }
   if (props) {
     if (typeof props.flag === 'number') {
-      flag = <Flags>(<unknown>props.flag);
-      delete props.flag;
+      flag = <Flags>props.flag;
+      props.flag = undefined;
     }
     if (typeof props.className === 'object') {
-      props.className = className(<Record<string, boolean>>(<unknown>props.className));
+      props.className = className(<Record<string, boolean>>props.className);
     }
     if (typeof props.style === 'object') {
-      const rawStyle = <Record<string, string>>(<unknown>props.style);
+      const rawStyle = <Record<string, string>>props.style;
       const normalizedStyle = Object.keys(rawStyle).some((key) => /[-A-Z]/gim.test(key))
         ? kebab(rawStyle)
         : rawStyle;

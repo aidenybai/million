@@ -5,7 +5,6 @@ export const factory = (tagName: string) => {
   function vnode(props: VProps): VNode;
   function vnode(children: JSXVNode[]): VNode;
   function vnode(props: VProps, children: JSXVNode[]): VNode;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function vnode(param1?: any, param2?: any): VNode {
     if (Array.isArray(param1)) {
       return h(tagName, param2, ...param1);
