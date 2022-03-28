@@ -17,7 +17,7 @@ import {
  * Diffs two VNode children and modifies the DOM node based on the necessary changes
  */
 export const useChildren =
-  (drivers: Partial<Driver>[] = []): Partial<Driver> =>
+  (drivers: any[] = []): any =>
   (
     el: HTMLElement | SVGElement,
     newVNode: VElement,

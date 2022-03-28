@@ -66,7 +66,7 @@ export const updateProp = (
  * Diffs two VNode props and modifies the DOM node based on the necessary changes
  */
 export const useProps =
-  (drivers: Partial<Driver>[] = []): Partial<Driver> =>
+  (drivers: any[] = []): any =>
   (
     el: HTMLElement | SVGElement,
     newVNode: VElement,

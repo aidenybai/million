@@ -1,4 +1,14 @@
-import { Delta, DeltaTypes, DOMNode, Flags, VElement, VEntity, VNode, VProps } from './types';
+import {
+  Delta,
+  DeltaTypes,
+  DOMNode,
+  Flags,
+  VElement,
+  VEntity,
+  VNode,
+  VProps,
+  VTypes,
+} from './types';
 
 /**
  * Attaches ns props to svg element
@@ -81,6 +91,7 @@ export const entity = (
     resolve,
     el,
     key,
+    type: VTypes.ENTITY,
   };
 };
 
@@ -99,13 +110,14 @@ export const m = (
     key = <string | undefined>props.key;
     delete props.key;
   }
-  const vnode = {
+  const velement: VElement = {
     tag,
     props,
     children,
     key,
     flag,
     delta,
+    type: VTypes.ELEMENT,
   };
-  return vnode.tag?.toLowerCase() === 'svg' ? svg(vnode) : vnode;
+  return velement.tag.toLowerCase() === 'svg' ? svg(velement) : velement;
 };

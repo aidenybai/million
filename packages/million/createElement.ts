@@ -6,6 +6,7 @@ import {
   VElement,
   VEntity,
   VNode,
+  VTypes,
   XLINK_NS,
   XML_NS,
   X_CHAR,
@@ -15,9 +16,9 @@ import {
  * Creates an Element from a VNode
  */
 export const createElement = (vnode?: VNode | VEntity | null, attachField = true): DOMNode => {
-  if ((<VEntity>vnode)?.data) {
-    if ((<VEntity>vnode)?.el) return (<VEntity>vnode).el!;
-    else return createElement((<VEntity>vnode)?.resolve());
+  if (typeof vnode === 'object' && vnode?.type === VTypes.ENTITY) {
+    if (vnode.el) return vnode.el;
+    else return createElement(vnode.resolve());
   }
   if (vnode === undefined || vnode === null) return document.createComment('');
   if (typeof vnode === 'string') return document.createTextNode(vnode);
