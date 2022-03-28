@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { className, Deltas, kebab, m, ns, style, svg } from '../packages/million/m';
-import { DeltaTypes, VNode } from '../packages/million/types';
+import { DeltaTypes, VElement, VNode, VTypes } from '../packages/million/types';
 
 export const expectEqualVNode = (vnode1: VNode, vnode2: VNode) => {
   expect(JSON.stringify(vnode1)).toEqual(JSON.stringify(vnode2));
@@ -8,21 +8,30 @@ export const expectEqualVNode = (vnode1: VNode, vnode2: VNode) => {
 
 describe.concurrent('m', () => {
   it('should create empty vnode with tag', () => {
-    expectEqualVNode(m('div'), { tag: 'div' });
+    expectEqualVNode(m('div'), { tag: 'div', type: VTypes.ELEMENT });
   });
 
   it('should create vnode with tag and props', () => {
-    expectEqualVNode(m('div', { id: 'app' }), { tag: 'div', props: { id: 'app' } });
+    expectEqualVNode(m('div', { id: 'app' }), {
+      tag: 'div',
+      props: { id: 'app' },
+      type: VTypes.ELEMENT,
+    });
   });
 
   it('should create vnode with tag and one string child', () => {
-    expectEqualVNode(m('div', undefined, ['foo']), { tag: 'div', children: ['foo'] });
+    expectEqualVNode(m('div', undefined, ['foo']), {
+      tag: 'div',
+      children: ['foo'],
+      type: VTypes.ELEMENT,
+    });
   });
 
   it('should create vnode with tag and multiple string children', () => {
     expectEqualVNode(m('div', undefined, ['foo', 'bar', 'baz']), {
       tag: 'div',
       children: ['foo', 'bar', 'baz'],
+      type: VTypes.ELEMENT,
     });
   });
 
@@ -32,8 +41,10 @@ describe.concurrent('m', () => {
       children: [
         {
           tag: 'div',
+          type: VTypes.ELEMENT,
         },
       ],
+      type: VTypes.ELEMENT,
     });
   });
 
@@ -43,13 +54,16 @@ describe.concurrent('m', () => {
       children: [
         {
           tag: 'div',
+          type: VTypes.ELEMENT,
         },
         'foo',
         {
           tag: 'div',
+          type: VTypes.ELEMENT,
         },
         'bar',
       ],
+      type: VTypes.ELEMENT,
     });
   });
 
@@ -74,12 +88,16 @@ describe.concurrent('m', () => {
                   {
                     tag: 'div',
                     children: ['boo'],
+                    type: VTypes.ELEMENT,
                   },
                 ],
+                type: VTypes.ELEMENT,
               },
             ],
+            type: VTypes.ELEMENT,
           },
         ],
+        type: VTypes.ELEMENT,
       },
     );
   });
@@ -94,6 +112,7 @@ describe.concurrent('m', () => {
         },
         children: undefined,
         key: undefined,
+        type: VTypes.ELEMENT,
       },
     );
   });
@@ -106,6 +125,7 @@ describe.concurrent('m', () => {
       },
       children: undefined,
       key: undefined,
+      type: VTypes.ELEMENT,
     });
   });
 
@@ -120,7 +140,7 @@ describe.concurrent('m', () => {
   });
 
   it('should attach ns to props with children with props', () => {
-    const vnode = {
+    const vnode: VElement = {
       tag: 'svg',
       props: {},
       children: [
@@ -128,10 +148,12 @@ describe.concurrent('m', () => {
         {
           tag: 'div',
           props: {},
+          type: VTypes.ELEMENT,
         },
       ],
+      type: VTypes.ELEMENT,
     };
-    ns(vnode.tag, vnode.props, vnode.children);
+    ns(vnode.tag, vnode.props!, vnode.children);
     expectEqualVNode(vnode, {
       tag: 'svg',
       props: { ns: 'http://www.w3.org/2000/svg' },
@@ -142,13 +164,15 @@ describe.concurrent('m', () => {
           props: {
             ns: 'http://www.w3.org/2000/svg',
           },
+          type: VTypes.ELEMENT,
         },
       ],
+      type: VTypes.ELEMENT,
     });
   });
 
   it('should attach ns to props with children without props', () => {
-    const vnode = {
+    const vnode: VElement = {
       tag: 'svg',
       props: {
         className: 'foo',
@@ -157,10 +181,12 @@ describe.concurrent('m', () => {
         'foo',
         {
           tag: 'div',
+          type: VTypes.ELEMENT,
         },
       ],
+      type: VTypes.ELEMENT,
     };
-    ns(vnode.tag, vnode.props, vnode.children);
+    ns(vnode.tag, vnode.props!, vnode.children);
     expectEqualVNode(vnode, {
       tag: 'svg',
       props: { class: 'foo', ns: 'http://www.w3.org/2000/svg' },
@@ -168,17 +194,21 @@ describe.concurrent('m', () => {
         'foo',
         {
           tag: 'div',
+          type: VTypes.ELEMENT,
         },
       ],
+      type: VTypes.ELEMENT,
     });
   });
 
   it('should attach ns to props using svg helper', () => {
-    const vnode = {
+    const vnode: VElement = {
       tag: 'svg',
+      type: VTypes.ELEMENT,
     };
     expectEqualVNode(svg(vnode), {
       tag: 'svg',
+      type: VTypes.ELEMENT,
       props: { ns: 'http://www.w3.org/2000/svg' },
     });
   });
@@ -191,9 +221,11 @@ describe.concurrent('m', () => {
         'foo',
         {
           tag: 'div',
+          type: VTypes.ELEMENT,
         },
       ],
       key: 'foo',
+      type: VTypes.ELEMENT,
     });
   });
 

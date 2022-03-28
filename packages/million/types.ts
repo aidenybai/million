@@ -45,14 +45,15 @@ export interface Effect {
 }
 
 export interface VEntity {
+  type: VTypes.ENTITY;
   el?: DOMNode;
-  ignore?: boolean;
   key?: string;
   data: Record<string, unknown>;
   resolve: () => VNode;
 }
 
 export interface VElement {
+  type: VTypes.ELEMENT;
   tag: string;
   props?: VProps;
   children?: VNode[];
@@ -84,3 +85,15 @@ export const enum DeltaTypes {
   UPDATE,
   REMOVE,
 }
+
+export const enum VTypes {
+  ELEMENT,
+  ENTITY,
+}
+
+export const resolveVNode = (entity?: VNode | VEntity): VNode | null | undefined => {
+  if (typeof entity === 'object' && entity.type === VTypes.ENTITY) {
+    return resolveVNode(entity.resolve());
+  }
+  return entity;
+};

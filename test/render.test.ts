@@ -1,8 +1,5 @@
 import { describe, expect, it } from 'vitest';
 import { createElement } from '../packages/million/createElement';
-import { useChildren } from '../packages/million/drivers/useChildren';
-import { useNode } from '../packages/million/drivers/useNode';
-import { useProps } from '../packages/million/drivers/useProps';
 import { Deltas, entity, m } from '../packages/million/m';
 import { patch, render } from '../packages/million/render';
 import { Flags, DOMNode } from '../packages/million/types';
@@ -239,19 +236,6 @@ describe.concurrent('render', () => {
     const el2 = patch(el1, m('div', { id: 'app' }), undefined, () => false);
 
     expect((<HTMLElement>el2).id).toEqual('');
-  });
-
-  it('should compose a custom patch', () => {
-    const el1 = createElement(m('div'));
-    const diff = useNode([useProps(), useChildren()]);
-    const data = diff(el1, m('div', { id: 'app' }));
-
-    for (let i = 0; i < data.effects!.length; i++) {
-      data.effects![i].flush();
-    }
-
-    expect((<HTMLElement>data.el).id).toEqual('app');
-    expectEqualNode(<HTMLElement>data.el, el1);
   });
 
   it('should hard replace if different tag', () => {
