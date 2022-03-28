@@ -57,7 +57,6 @@ export const render = (
  */
 export const schedule = (work: () => void): void => {
   if (
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (<any>navigator)?.scheduling?.isInputPending({ includeContinuous: true }) ||
     performance.now() <= deadline
   ) {

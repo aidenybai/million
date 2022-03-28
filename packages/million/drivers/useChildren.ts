@@ -266,7 +266,7 @@ export const useChildren =
      *  }
      */
     if (newVNode.flag === Flags.ONLY_KEYED_CHILDREN) {
-      if (!el[NODE_OBJECT_POOL_FIELD]) el[NODE_OBJECT_POOL_FIELD] = {};
+      if (!el[NODE_OBJECT_POOL_FIELD]) el[NODE_OBJECT_POOL_FIELD] = new Map<string, DOMNode>();
 
       let oldHead = 0;
       let newHead = 0;
@@ -314,7 +314,7 @@ export const useChildren =
             type: EffectTypes.CREATE,
             flush: () =>
               el.insertBefore(
-                el[NODE_OBJECT_POOL_FIELD][(<VElement>newVNodeChildren[head]).key!] ??
+                el[NODE_OBJECT_POOL_FIELD].get((<VElement>newVNodeChildren[head]).key!) ??
                   createElement(newVNodeChildren[head], false),
                 el.childNodes.item(head),
               ),
@@ -325,7 +325,7 @@ export const useChildren =
         while (oldHead <= oldTail) {
           const head = oldHead++;
           const node = el.childNodes.item(head);
-          el[NODE_OBJECT_POOL_FIELD][(<VElement>oldVNodeChildren[head]).key!] = node;
+          el[NODE_OBJECT_POOL_FIELD].set((<VElement>oldVNodeChildren[head]).key!, node);
           effects.push({
             type: EffectTypes.REMOVE,
             flush: () => el.removeChild(node),
@@ -333,16 +333,16 @@ export const useChildren =
         }
       } else {
         // [8] Indexing old children
-        const oldKeyMap: Record<string, number> = {};
+        const oldKeyMap = new Map<string, number>();
 
         for (; oldHead <= oldTail; ) {
-          oldKeyMap[(<VElement>oldVNodeChildren[oldHead]).key!] = oldHead++;
+          oldKeyMap.set((<VElement>oldVNodeChildren[oldHead]).key!, oldHead++);
         }
 
         while (newHead <= newTail) {
           const head = newHead++;
           const newVNodeChild = <VElement>newVNodeChildren[head];
-          const oldVNodePosition = oldKeyMap[newVNodeChild.key!];
+          const oldVNodePosition = oldKeyMap.get(newVNodeChild.key!);
 
           if (oldVNodePosition !== undefined) {
             // [9] Reordering continuous nodes
@@ -351,14 +351,14 @@ export const useChildren =
               type: EffectTypes.CREATE,
               flush: () => el.insertBefore(node, el.childNodes.item(head)),
             });
-            delete oldKeyMap[newVNodeChild.key!];
+            oldKeyMap.delete(newVNodeChild.key!);
           } else {
             // [10] Create new nodes
             effects.push({
               type: EffectTypes.CREATE,
               flush: () =>
                 el.insertBefore(
-                  el[NODE_OBJECT_POOL_FIELD][newVNodeChild.key] ??
+                  el[NODE_OBJECT_POOL_FIELD].get(newVNodeChild.key) ??
                     createElement(newVNodeChild, false),
                   el.childNodes.item(head),
                 ),
@@ -367,9 +367,9 @@ export const useChildren =
         }
 
         // [11] Clean up removed nodes
-        for (const oldVNodeKey in oldKeyMap) {
-          const node = el.childNodes.item(oldKeyMap[oldVNodeKey]);
-          el[NODE_OBJECT_POOL_FIELD][oldVNodeKey] = node;
+        for (const [oldVNodeKey, oldVNodeValue] of oldKeyMap) {
+          const node = el.childNodes.item(oldVNodeValue);
+          el[NODE_OBJECT_POOL_FIELD].set(oldVNodeKey, node);
           effects.push({
             type: EffectTypes.REMOVE,
             flush: () => el.removeChild(node),

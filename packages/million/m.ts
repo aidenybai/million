@@ -26,7 +26,7 @@ export const svg = (vnode: VElement): VElement => {
 export const ns = (tag: string, props: VProps, children?: VNode[]): void => {
   if (props.className) {
     props.class = props.className;
-    delete props.className;
+    props.className = undefined;
   }
   props.ns = 'http://www.w3.org/2000/svg';
   if (children && tag !== 'foreignObject') {
@@ -64,9 +64,6 @@ export const kebab = (camelCaseObject: Record<string, unknown>): Record<string, 
   return kebabCaseObject;
 };
 
-/**
- * INSERT, UPDATE, or DELETE Deltas
- */
 export const Deltas = {
   CREATE: (i = 0): Delta => [DeltaTypes.CREATE, i],
   UPDATE: (i = 0): Delta => [DeltaTypes.UPDATE, i],
@@ -84,7 +81,7 @@ export const entity = (
   let key = undefined;
   if (data.key) {
     key = <string | undefined>data.key;
-    delete data.key;
+    data.key = undefined;
   }
   return {
     data,
@@ -108,7 +105,7 @@ export const m = (
   let key = undefined;
   if (props?.key) {
     key = <string | undefined>props.key;
-    delete props.key;
+    props.key = undefined;
   }
   const velement: VElement = {
     tag,
