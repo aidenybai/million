@@ -7,6 +7,6 @@ export type FC = (props?: VProps, key?: string | null) => VElement;
 export namespace JSX {
   export type Element = VNode;
   export interface IntrinsicElements {
-    [elemName: string]: VProps;
+    [el: string]: VProps;
   }
 }
