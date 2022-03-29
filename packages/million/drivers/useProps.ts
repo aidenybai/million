@@ -45,7 +45,7 @@ export const updateProp = (
         flush: () => {
           el[propName] = '';
           el.removeAttribute(propName);
-          el[propName] = undefined;
+          delete el[propName];
         },
       });
     }
