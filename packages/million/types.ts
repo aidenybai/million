@@ -41,6 +41,7 @@ export type Driver = (
 
 export interface Effect {
   type: EffectTypes;
+  el: DOMNode;
   flush: () => void;
 }
 

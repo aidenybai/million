@@ -34,6 +34,7 @@ export const useNode = (drivers: any[]): any => {
       if (isRoot) {
         isRoot = false;
         effects.push({
+          el,
           type: EffectTypes.SET_PROP,
           flush: () => (element[OLD_VNODE_FIELD] = resolvedNewVNode),
         });
@@ -49,6 +50,7 @@ export const useNode = (drivers: any[]): any => {
 
     if (resolvedNewVNode === undefined || resolvedNewVNode === null) {
       effects.push({
+        el,
         type: EffectTypes.REMOVE,
         flush: () => el.remove(),
       });
@@ -60,6 +62,7 @@ export const useNode = (drivers: any[]): any => {
       if (hasString && resolvedOldVNode !== resolvedNewVNode) {
         const newEl = createElement(resolvedNewVNode, false);
         effects.push({
+          el,
           type: EffectTypes.REPLACE,
           flush: () => el.replaceWith(newEl),
         });
@@ -95,6 +98,7 @@ export const useNode = (drivers: any[]): any => {
           if (resolvedOldVNode.tag !== resolvedNewVNode.tag) {
             const newEl = createElement(resolvedNewVNode, false);
             effects.push({
+              el,
               type: EffectTypes.REPLACE,
               flush: () => el.replaceWith(newEl),
             });

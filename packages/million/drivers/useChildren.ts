@@ -62,6 +62,7 @@ export const useChildren =
 
         if (deltaType === DeltaTypes.CREATE) {
           effects.push({
+            el,
             type: EffectTypes.CREATE,
             flush: () =>
               el.insertBefore(createElement(newVNodeChildren![deltaPosition], false), child),
@@ -80,6 +81,7 @@ export const useChildren =
 
         if (deltaType === DeltaTypes.REMOVE) {
           effects.push({
+            el,
             type: EffectTypes.REMOVE,
             flush: () => el.removeChild(child),
           });
@@ -95,6 +97,7 @@ export const useChildren =
       if (!oldVNodeChildren) return finish(el);
 
       effects.push({
+        el,
         type: EffectTypes.REMOVE,
         flush: () => (el.textContent = ''),
       });
@@ -104,6 +107,7 @@ export const useChildren =
     if (!oldVNodeChildren || oldVNodeChildren?.length === 0) {
       for (let i = 0; i < newVNodeChildren.length; ++i) {
         effects.push({
+          el,
           type: EffectTypes.CREATE,
           flush: () => el.appendChild(createElement(newVNodeChildren[i], false)),
         });
@@ -292,6 +296,7 @@ export const useChildren =
           const node = el.childNodes.item(oldHead++);
           const tail = newTail--;
           effects.push({
+            el,
             type: EffectTypes.CREATE,
             flush: () => el.insertBefore(node, el.childNodes.item(tail).nextSibling),
           });
@@ -300,6 +305,7 @@ export const useChildren =
           const node = el.childNodes.item(oldTail--);
           const head = newHead++;
           effects.push({
+            el,
             type: EffectTypes.CREATE,
             flush: () => el.insertBefore(node, el.childNodes.item(head)),
           });
@@ -311,6 +317,7 @@ export const useChildren =
         while (newHead <= newTail) {
           const head = newHead++;
           effects.push({
+            el,
             type: EffectTypes.CREATE,
             flush: () =>
               el.insertBefore(
@@ -327,6 +334,7 @@ export const useChildren =
           const node = el.childNodes.item(head);
           el[NODE_OBJECT_POOL_FIELD].set((<VElement>oldVNodeChildren[head]).key!, node);
           effects.push({
+            el,
             type: EffectTypes.REMOVE,
             flush: () => el.removeChild(node),
           });
@@ -348,6 +356,7 @@ export const useChildren =
             // [9] Reordering continuous nodes
             const node = el.childNodes.item(oldVNodePosition);
             effects.push({
+              el,
               type: EffectTypes.CREATE,
               flush: () => el.insertBefore(node, el.childNodes.item(head)),
             });
@@ -355,6 +364,7 @@ export const useChildren =
           } else {
             // [10] Create new nodes
             effects.push({
+              el,
               type: EffectTypes.CREATE,
               flush: () =>
                 el.insertBefore(
@@ -371,6 +381,7 @@ export const useChildren =
           const node = el.childNodes.item(oldVNodeValue);
           el[NODE_OBJECT_POOL_FIELD].set(oldVNodeKey, node);
           effects.push({
+            el,
             type: EffectTypes.REMOVE,
             flush: () => el.removeChild(node),
           });
@@ -389,6 +400,7 @@ export const useChildren =
         : newVNode?.children;
       if (oldString !== newString) {
         effects.push({
+          el,
           type: EffectTypes.REPLACE,
           flush: () => (el.textContent = newString!),
         });
@@ -415,11 +427,12 @@ export const useChildren =
         if (newVNodeChildren.length > oldVNodeChildren.length) {
           for (let i = commonLength; i < newVNodeChildren.length; ++i) {
             const node = createElement(newVNodeChildren[i], false);
-            effects.push({ type: EffectTypes.CREATE, flush: () => el.appendChild(node) });
+            effects.push({ el, type: EffectTypes.CREATE, flush: () => el.appendChild(node) });
           }
         } else if (newVNodeChildren.length < oldVNodeChildren.length) {
           for (let i = oldVNodeChildren.length - 1; i >= commonLength; --i) {
             effects.push({
+              el,
               type: EffectTypes.REMOVE,
               flush: () => el.removeChild(el.childNodes.item(i)),
             });
@@ -429,6 +442,7 @@ export const useChildren =
         for (let i = 0; i < newVNodeChildren.length; ++i) {
           const node = createElement(newVNodeChildren[i], false);
           effects.push({
+            el,
             type: EffectTypes.CREATE,
             flush: () => el.appendChild(node),
           });

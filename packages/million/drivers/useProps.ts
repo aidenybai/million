@@ -21,6 +21,7 @@ export const updateProp = (
   if (propName.startsWith('on')) {
     const eventPropName = propName.slice(2).toLowerCase();
     effects.push({
+      el,
       type: EffectTypes.SET_PROP,
       flush: () => {
         if (oldPropValue) el.removeEventListener(eventPropName, <EventListener>oldPropValue);
@@ -36,11 +37,13 @@ export const updateProp = (
   } else if (el[propName] !== undefined && !(el instanceof SVGElement)) {
     if (newPropValue) {
       effects.push({
+        el,
         type: EffectTypes.SET_PROP,
         flush: () => (el[propName] = newPropValue),
       });
     } else {
       effects.push({
+        el,
         type: EffectTypes.REMOVE_PROP,
         flush: () => {
           el[propName] = '';
@@ -51,11 +54,13 @@ export const updateProp = (
     }
   } else if (!newPropValue) {
     effects.push({
+      el,
       type: EffectTypes.REMOVE_PROP,
       flush: () => el.removeAttribute(propName),
     });
   } else {
     effects.push({
+      el,
       type: EffectTypes.SET_PROP,
       flush: () => el.setAttribute(propName, String(newPropValue)),
     });
