@@ -89,10 +89,3 @@ export const enum VTypes {
   ELEMENT,
   ENTITY,
 }
-
-export const resolveVNode = (entity?: VNode | VEntity): VNode | null | undefined => {
-  if (typeof entity === 'object' && entity.type === VTypes.ENTITY) {
-    return resolveVNode(entity.resolve());
-  }
-  return entity;
-};

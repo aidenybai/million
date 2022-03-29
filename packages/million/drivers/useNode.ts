@@ -1,5 +1,6 @@
 import { fromDomNodeToVNode } from '../../shared/convert';
 import { createElement } from '../createElement';
+import { resolveVNode } from '../m';
 import {
   Commit,
   DOMNode,
@@ -8,7 +9,6 @@ import {
   EffectTypes,
   Flags,
   OLD_VNODE_FIELD,
-  resolveVNode,
   VEntity,
   VNode,
   VTypes,

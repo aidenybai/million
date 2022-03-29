@@ -11,6 +11,7 @@ import {
   XML_NS,
   X_CHAR,
 } from './types';
+import { resolveVNode } from './m';
 
 /**
  * Creates an Element from a VNode
@@ -18,7 +19,7 @@ import {
 export const createElement = (vnode?: VNode | VEntity | null, attachField = true): DOMNode => {
   if (typeof vnode === 'object' && vnode?.type === VTypes.ENTITY) {
     if (vnode.el) return vnode.el;
-    else return createElement(vnode.resolve());
+    else return createElement(resolveVNode(vnode));
   }
   if (vnode === undefined || vnode === null) return document.createComment('');
   if (typeof vnode === 'string') return document.createTextNode(vnode);
