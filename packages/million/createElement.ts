@@ -1,3 +1,4 @@
+import { resolveVNode } from './m';
 import {
   COLON_CHAR,
   DOMNode,
@@ -6,33 +7,29 @@ import {
   VElement,
   VEntity,
   VNode,
-  VTypes,
   XLINK_NS,
   XML_NS,
   X_CHAR,
 } from './types';
-import { resolveVNode } from './m';
 
 /**
  * Creates an Element from a VNode
  */
 export const createElement = (vnode?: VNode | VEntity | null, attachField = true): DOMNode => {
-  if (typeof vnode === 'object' && vnode?.type === VTypes.ENTITY) {
+  if (vnode === undefined || vnode === null) return document.createComment('');
+  if (typeof vnode === 'string') return document.createTextNode(vnode);
+  if (typeof vnode === 'object' && vnode?.flag === Flags.ENTITY) {
     if (vnode.el) return vnode.el;
     else return createElement(resolveVNode(vnode));
   }
-  if (vnode === undefined || vnode === null) return document.createComment('');
-  if (typeof vnode === 'string') return document.createTextNode(vnode);
-  const velement = <VElement>vnode;
 
-  // istanbul ignore next
-  const el = velement.props?.ns
-    ? <SVGElement>document.createElementNS(<string>velement.props?.ns, velement.tag)
-    : <HTMLElement>document.createElement(velement.tag);
+  const el = vnode.props?.ns
+    ? <SVGElement>document.createElementNS(<string>vnode.props?.ns, vnode.tag)
+    : <HTMLElement>document.createElement(vnode.tag);
 
-  if (velement.props) {
-    for (const propName in velement.props) {
-      const propValue = velement.props[propName];
+  if (vnode.props) {
+    for (const propName in vnode.props) {
+      const propValue = vnode.props[propName];
       if (propName.startsWith('on')) {
         const eventPropName = propName.slice(2).toLowerCase();
         el.addEventListener(eventPropName, <EventListener>propValue);
@@ -50,14 +47,12 @@ export const createElement = (vnode?: VNode | VEntity | null, attachField = true
     }
   }
 
-  if (velement.children) {
-    if (velement.flag === Flags.ONLY_TEXT_CHILDREN) {
-      el.textContent = Array.isArray(velement.children)
-        ? velement.children?.join('')
-        : velement.children;
+  if (vnode.children) {
+    if (vnode.flag === Flags.ELEMENT_TEXT_CHILDREN) {
+      el.textContent = Array.isArray(vnode.children) ? vnode.children?.join('') : vnode.children;
     } else {
-      for (let i = 0; i < velement.children.length; ++i) {
-        el.appendChild(createElement(velement.children[i], false));
+      for (let i = 0; i < vnode.children.length; ++i) {
+        el.appendChild(createElement(vnode.children[i], false));
       }
     }
   }

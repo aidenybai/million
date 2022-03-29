@@ -6,7 +6,7 @@ specifiers:
   '@picocss/pico': ^1.5.0
   '@types/benchmark': ^2.1.1
   '@types/canvas-confetti': ^1.4.2
-  '@types/lodash': ^4.14.180
+  '@types/lodash': ^4.14.181
   '@types/node': ^17.0.23
   '@types/virtual-dom': ^2.1.1
   '@typescript-eslint/eslint-plugin': ^5.17.0
@@ -50,7 +50,7 @@ devDependencies:
   '@picocss/pico': 1.5.0
   '@types/benchmark': 2.1.1
   '@types/canvas-confetti': 1.4.2
-  '@types/lodash': 4.14.180
+  '@types/lodash': 4.14.181
   '@types/node': 17.0.23
   '@types/virtual-dom': 2.1.1
   '@typescript-eslint/eslint-plugin': 5.17.0_689ff565753ecf7c3328c07fad067df5
@@ -732,8 +732,8 @@ packages:
       '@types/node': 17.0.23
     dev: true
 
-  /@types/lodash/4.14.180:
-    resolution: {integrity: sha512-XOKXa1KIxtNXgASAnwj7cnttJxS4fksBRywK/9LzRV5YxrF80BXZIGeQSuoESQ/VkUj30Ae0+YcuHc15wJCB2g==}
+  /@types/lodash/4.14.181:
+    resolution: {integrity: sha512-n3tyKthHJbkiWhDZs3DkhkCzt2MexYHXlX0td5iMplyfwketaOeKboEVBqzceH7juqvEg3q5oUoBFxSLu7zFag==}
     dev: true
 
   /@types/minimist/1.2.2:

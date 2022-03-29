@@ -54,7 +54,7 @@ describe.concurrent('render', () => {
 
     el.textContent = 'foo';
 
-    patch(el, m('div', undefined, undefined, Flags.NO_CHILDREN));
+    patch(el, m('div', undefined, undefined, Flags.ELEMENT_NO_CHILDREN));
 
     expect(el.textContent).toEqual('');
   });
@@ -137,15 +137,15 @@ describe.concurrent('render', () => {
     const el = document.createElement('div');
     patch(
       el,
-      m('div', undefined, ['foo'], Flags.ONLY_TEXT_CHILDREN),
-      m('div', undefined, [], Flags.ONLY_TEXT_CHILDREN),
+      m('div', undefined, ['foo'], Flags.ELEMENT_TEXT_CHILDREN),
+      m('div', undefined, [], Flags.ELEMENT_TEXT_CHILDREN),
     );
     expect(el.textContent).toEqual('foo');
 
     patch(
       el,
-      m('div', undefined, [], Flags.NO_CHILDREN),
-      m('div', undefined, ['foo'], Flags.NO_CHILDREN),
+      m('div', undefined, [], Flags.ELEMENT_NO_CHILDREN),
+      m('div', undefined, ['foo'], Flags.ELEMENT_NO_CHILDREN),
     );
     expect(el.childNodes.length).toEqual(0);
   });
@@ -157,9 +157,9 @@ describe.concurrent('render', () => {
       'ul',
       undefined,
       list1.map((item) => m('li', { key: item }, [item])),
-      Flags.ONLY_KEYED_CHILDREN,
+      Flags.ELEMENT_KEYED_CHILDREN,
     );
-    patch(el, newVNode1, m('ul', undefined, undefined, Flags.NO_CHILDREN));
+    patch(el, newVNode1, m('ul', undefined, undefined, Flags.ELEMENT_NO_CHILDREN));
     expectEqualNode(el, createElement(newVNode1));
 
     const list2 = ['foo', 'baz', 'bar', 'foo1', 'bar1', 'baz1'];
@@ -167,7 +167,7 @@ describe.concurrent('render', () => {
       'ul',
       undefined,
       list2.map((item) => m('li', { key: item }, [item])),
-      Flags.ONLY_KEYED_CHILDREN,
+      Flags.ELEMENT_KEYED_CHILDREN,
     );
     patch(el, newVNode2, newVNode1);
     expectEqualNode(el, createElement(newVNode2));
@@ -177,7 +177,7 @@ describe.concurrent('render', () => {
       'ul',
       undefined,
       list3.map((item) => m('li', { key: item }, [item])),
-      Flags.ONLY_KEYED_CHILDREN,
+      Flags.ELEMENT_KEYED_CHILDREN,
     );
     patch(el, newVNode3, newVNode2);
     expectEqualNode(el, createElement(newVNode3));
@@ -187,7 +187,7 @@ describe.concurrent('render', () => {
       'ul',
       undefined,
       list4.map((item) => m('li', { key: item }, [item])),
-      Flags.ONLY_KEYED_CHILDREN,
+      Flags.ELEMENT_KEYED_CHILDREN,
     );
     patch(el, newVNode4, newVNode3);
     expectEqualNode(el, createElement(newVNode4));
@@ -197,7 +197,7 @@ describe.concurrent('render', () => {
       'ul',
       undefined,
       list5.map((item) => m('li', { key: item }, [item])),
-      Flags.ONLY_KEYED_CHILDREN,
+      Flags.ELEMENT_KEYED_CHILDREN,
     );
     patch(el, newVNode5, newVNode4);
     expectEqualNode(el, createElement(newVNode5));
@@ -207,7 +207,7 @@ describe.concurrent('render', () => {
       'ul',
       undefined,
       list6.map((item) => m('li', { key: item }, [item])),
-      Flags.ONLY_KEYED_CHILDREN,
+      Flags.ELEMENT_KEYED_CHILDREN,
     );
     patch(el, newVNode6, newVNode5);
     expectEqualNode(el, createElement(newVNode6));
@@ -217,7 +217,7 @@ describe.concurrent('render', () => {
       'ul',
       undefined,
       list7.map((item) => m('li', { key: item }, [item])),
-      Flags.ONLY_KEYED_CHILDREN,
+      Flags.ELEMENT_KEYED_CHILDREN,
     );
     patch(el, newVNode7, newVNode6);
     expectEqualNode(el, createElement(newVNode7));

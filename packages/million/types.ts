@@ -22,6 +22,7 @@ export type VNode = VElement | string;
 export type Delta = [DeltaTypes, number];
 export type Hook = (el?: DOMNode, newVNode?: VNode, oldVNode?: VNode) => boolean;
 export type Commit = (work: () => void, data: ReturnType<Driver>) => void;
+export type VElementFlags = Exclude<Flags, Flags.ENTITY>;
 export type Driver = (
   el: DOMNode,
   newVNode?: VNode,
@@ -44,30 +45,31 @@ export interface Effect {
 }
 
 export interface VEntity {
-  type: VTypes.ENTITY;
-  el?: DOMNode;
-  key?: string;
+  flag: Flags.ENTITY;
   data: Record<string, unknown>;
   resolve: () => VNode;
+  el?: DOMNode;
+  key?: string;
 }
 
 export interface VElement {
-  type: VTypes.ELEMENT;
+  flag: VElementFlags;
   tag: string;
   props?: VProps;
   children?: VNode[];
   key?: string;
-  flag?: Flags;
   delta?: Delta[];
 }
 
 export enum Flags {
-  IGNORE_NODE,
-  REPLACE_NODE,
-  NO_CHILDREN,
-  ONLY_TEXT_CHILDREN,
-  ONLY_KEYED_CHILDREN,
-  ANY_CHILDREN,
+  ENTITY,
+  ELEMENT,
+  ELEMENT_LEAF,
+  ELEMENT_IGNORE,
+  ELEMENT_SKIP_DIFF,
+  ELEMENT_NO_CHILDREN,
+  ELEMENT_TEXT_CHILDREN,
+  ELEMENT_KEYED_CHILDREN,
 }
 
 export enum EffectTypes {
@@ -83,9 +85,4 @@ export const enum DeltaTypes {
   CREATE,
   UPDATE,
   REMOVE,
-}
-
-export const enum VTypes {
-  ELEMENT,
-  ENTITY,
 }
