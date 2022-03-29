@@ -64,7 +64,6 @@ export interface VElement {
 export enum Flags {
   ENTITY,
   ELEMENT,
-  ELEMENT_LEAF,
   ELEMENT_IGNORE,
   ELEMENT_SKIP_DIFF,
   ELEMENT_NO_CHILDREN,
