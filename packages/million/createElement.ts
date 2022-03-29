@@ -4,7 +4,6 @@ import {
   DOMNode,
   Flags,
   OLD_VNODE_FIELD,
-  VElement,
   VEntity,
   VNode,
   XLINK_NS,
