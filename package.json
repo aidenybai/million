@@ -130,7 +130,7 @@
     "np": "^7.6.1",
     "ora": "^6.1.0",
     "prettier": "^2.6.1",
-    "simple-git": "^3.4.0",
+    "simple-git": "^3.5.0",
     "simple-virtual-dom": "^0.1.10",
     "snabbdom": "^3.4.0",
     "sugar-high": "^0.0.9",
