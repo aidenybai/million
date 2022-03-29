@@ -1,7 +1,7 @@
 import type { FC, JSXVNode } from '../jsx-runtime/types';
 import { className, Flags, m, style, svg } from '../million/index';
 import { kebab } from '../million/m';
-import type { Delta, VNode, VProps } from '../million/types';
+import type { Delta, VElementFlags, VNode, VProps } from '../million/types';
 
 export const normalize = (jsxVNode: JSXVNode): VNode | VNode[] | undefined => {
   if (Array.isArray(jsxVNode)) {
@@ -23,7 +23,7 @@ export const normalize = (jsxVNode: JSXVNode): VNode | VNode[] | undefined => {
 
 export const h = (tag: string | FC, props?: VProps, ...children: JSXVNode[]) => {
   if (typeof tag === 'function') return tag(props);
-  let flag = Flags.NO_CHILDREN;
+  let flag = Flags.ELEMENT_NO_CHILDREN;
   let delta: Delta[] | undefined;
   const normalizedChildren: VNode[] = [];
   if (props) {
@@ -36,10 +36,10 @@ export const h = (tag: string | FC, props?: VProps, ...children: JSXVNode[]) => 
   if (children) {
     const keysInChildren = new Set();
     let hasVElementChildren = false;
-    flag = Flags.ANY_CHILDREN;
+    flag = Flags.ELEMENT;
 
     if (children.every((child) => typeof child === 'string')) {
-      flag = Flags.ONLY_TEXT_CHILDREN;
+      flag = Flags.ELEMENT_TEXT_CHILDREN;
     }
     let childrenLength = 0;
     for (let i = 0; i < children.length; ++i) {
@@ -68,15 +68,15 @@ export const h = (tag: string | FC, props?: VProps, ...children: JSXVNode[]) => 
       }
     }
     if (keysInChildren.size === childrenLength) {
-      flag = Flags.ONLY_KEYED_CHILDREN;
+      flag = Flags.ELEMENT_KEYED_CHILDREN;
     }
     if (!hasVElementChildren) {
-      flag = Flags.ONLY_TEXT_CHILDREN;
+      flag = Flags.ELEMENT_TEXT_CHILDREN;
     }
   }
   if (props) {
     if (typeof props.flag === 'number') {
-      flag = <Flags>props.flag;
+      flag = props.flag;
       props.flag = undefined;
     }
     if (typeof props.className === 'object') {
@@ -91,6 +91,6 @@ export const h = (tag: string | FC, props?: VProps, ...children: JSXVNode[]) => 
     }
   }
 
-  const vnode = m(tag, props, normalizedChildren, flag, delta);
+  const vnode = m(tag, props, normalizedChildren, <VElementFlags>flag, delta);
   return tag === 'svg' ? svg(vnode) : vnode;
 };

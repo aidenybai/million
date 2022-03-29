@@ -91,7 +91,7 @@ export const useChildren =
     // Flags allow for greater optimizability by reducing condition branches.
     // Generally, you should use a compiler to generate these flags, but
     // hand-writing them is also possible
-    if (!newVNodeChildren || newVNode.flag === Flags.NO_CHILDREN) {
+    if (!newVNodeChildren || newVNode.flag === Flags.ELEMENT_NO_CHILDREN) {
       if (!oldVNodeChildren) return finish(el);
 
       effects.push({
@@ -265,7 +265,7 @@ export const useChildren =
      *    d: 2, // <- check
      *  }
      */
-    if (newVNode.flag === Flags.ONLY_KEYED_CHILDREN) {
+    if (newVNode.flag === Flags.ELEMENT_KEYED_CHILDREN) {
       if (!el[NODE_OBJECT_POOL_FIELD]) el[NODE_OBJECT_POOL_FIELD] = new Map<string, DOMNode>();
 
       let oldHead = 0;
@@ -380,7 +380,7 @@ export const useChildren =
       return finish(el);
     }
 
-    if (newVNode.flag === Flags.ONLY_TEXT_CHILDREN) {
+    if (newVNode.flag === Flags.ELEMENT_TEXT_CHILDREN) {
       const oldString = Array.isArray(oldVNode?.children)
         ? oldVNode?.children.join('')
         : oldVNode?.children;
@@ -396,7 +396,7 @@ export const useChildren =
       return finish(el);
     }
 
-    if (newVNode.flag === undefined || newVNode.flag === Flags.ANY_CHILDREN) {
+    if (newVNode.flag === undefined || newVNode.flag === Flags.ELEMENT) {
       if (oldVNodeChildren && newVNodeChildren) {
         const commonLength = Math.min(oldVNodeChildren.length, newVNodeChildren.length);
 

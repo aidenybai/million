@@ -11,7 +11,6 @@ import {
   OLD_VNODE_FIELD,
   VEntity,
   VNode,
-  VTypes,
 } from '../types';
 
 /**
@@ -72,57 +71,55 @@ export const useNode = (drivers: any[]): any => {
         typeof resolvedNewVNode === 'object'
       ) {
         if (
-          resolvedNewVNode.flag === Flags.IGNORE_NODE ||
-          resolvedOldVNode.flag === Flags.IGNORE_NODE
+          resolvedNewVNode.flag === Flags.ELEMENT_IGNORE ||
+          resolvedOldVNode.flag === Flags.ELEMENT_IGNORE
         ) {
           return finish(el);
         }
-        if (resolvedOldVNode.type === VTypes.ELEMENT && resolvedNewVNode.type === VTypes.ELEMENT) {
-          if (
-            resolvedNewVNode.flag === Flags.REPLACE_NODE ||
-            resolvedOldVNode.flag === Flags.REPLACE_NODE
-          ) {
-            const newEl = createElement(newVNode);
-            el.replaceWith(newEl);
-            return finish(el);
+        if (
+          resolvedNewVNode.flag === Flags.ELEMENT_SKIP_DIFF ||
+          resolvedOldVNode.flag === Flags.ELEMENT_SKIP_DIFF
+        ) {
+          const newEl = createElement(newVNode);
+          el.replaceWith(newEl);
+          return finish(el);
+        }
+
+        // We handle two cases here:
+        // 1. Both keys are undefined so no comparison necessary
+        // 2. Keys are not the same
+        if (
+          (resolvedOldVNode.key === undefined && resolvedNewVNode.key === undefined) ||
+          resolvedOldVNode.key !== resolvedNewVNode?.key
+        ) {
+          if (resolvedOldVNode.tag !== resolvedNewVNode.tag) {
+            const newEl = createElement(resolvedNewVNode, false);
+            effects.push({
+              type: EffectTypes.REPLACE,
+              flush: () => el.replaceWith(newEl),
+            });
+            return finish(newEl);
           }
 
-          // We handle two cases here:
-          // 1. Both keys are undefined so no comparison necessary
-          // 2. Keys are not the same
-          if (
-            (resolvedOldVNode.key === undefined && resolvedNewVNode.key === undefined) ||
-            resolvedOldVNode.key !== resolvedNewVNode?.key
-          ) {
-            if (resolvedOldVNode.tag !== resolvedNewVNode.tag) {
-              const newEl = createElement(resolvedNewVNode, false);
-              effects.push({
-                type: EffectTypes.REPLACE,
-                flush: () => el.replaceWith(newEl),
-              });
-              return finish(newEl);
-            }
-
-            for (let i = 0; i < drivers.length; ++i) {
-              commit(
-                () => {
-                  (<Driver>drivers[i])(
-                    el,
-                    resolvedNewVNode,
-                    resolvedOldVNode,
-                    commit,
-                    effects,
-                    nodeDriver,
-                  );
-                },
-                {
+          for (let i = 0; i < drivers.length; ++i) {
+            commit(
+              () => {
+                (<Driver>drivers[i])(
                   el,
-                  newVNode: resolvedNewVNode,
-                  oldVNode: resolvedOldVNode,
+                  resolvedNewVNode,
+                  resolvedOldVNode,
+                  commit,
                   effects,
-                },
-              );
-            }
+                  nodeDriver,
+                );
+              },
+              {
+                el,
+                newVNode: resolvedNewVNode,
+                oldVNode: resolvedOldVNode,
+                effects,
+              },
+            );
           }
         }
       }

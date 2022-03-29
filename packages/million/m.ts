@@ -4,10 +4,10 @@ import {
   DOMNode,
   Flags,
   VElement,
+  VElementFlags,
   VEntity,
   VNode,
   VProps,
-  VTypes,
 } from './types';
 
 /**
@@ -84,11 +84,11 @@ export const entity = (
     data.key = undefined;
   }
   return {
+    flag: Flags.ENTITY,
     data,
     resolve,
     el,
     key,
-    type: VTypes.ENTITY,
   };
 };
 
@@ -99,7 +99,7 @@ export const m = (
   tag: string,
   props?: VProps,
   children?: VNode[],
-  flag?: Flags,
+  flag: VElementFlags = Flags.ELEMENT,
   delta?: Delta[],
 ): VElement => {
   let key = undefined;
@@ -114,13 +114,12 @@ export const m = (
     key,
     flag,
     delta,
-    type: VTypes.ELEMENT,
   };
   return velement.tag.toLowerCase() === 'svg' ? svg(velement) : velement;
 };
 
 export const resolveVNode = (entity?: VNode | VEntity): VNode | null | undefined => {
-  if (typeof entity === 'object' && entity.type === VTypes.ENTITY) {
+  if (typeof entity === 'object' && entity.flag === Flags.ENTITY) {
     return resolveVNode(entity.resolve());
   }
   return entity;
