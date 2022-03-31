@@ -108,7 +108,7 @@ export const useNode = (drivers: any[]): any => {
           for (let i = 0; i < drivers.length; ++i) {
             commit(
               () => {
-                (<Driver>drivers[i])(
+                (drivers[i] as Driver)(
                   el,
                   resolvedNewVNode,
                   resolvedOldVNode,

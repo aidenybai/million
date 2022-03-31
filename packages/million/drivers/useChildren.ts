@@ -39,7 +39,7 @@ export const useChildren =
       const data = getData(element);
       for (let i = 0; i < drivers.length; ++i) {
         commit(() => {
-          (<Driver>drivers[i])(el, newVNode, oldVNode, commit, effects, driver);
+          (drivers[i] as Driver)(el, newVNode, oldVNode, commit, effects, driver);
         }, data);
       }
       return data;
@@ -58,7 +58,7 @@ export const useChildren =
     if (delta) {
       for (let i = 0; i < delta.length; ++i) {
         const [deltaType, deltaPosition] = delta[i];
-        const child = <DOMNode>el.childNodes.item(deltaPosition);
+        const child = el.childNodes.item(deltaPosition) as DOMNode;
 
         if (deltaType === DeltaTypes.CREATE) {
           effects.push({
@@ -278,10 +278,10 @@ export const useChildren =
       let newTail = newVNodeChildren.length - 1;
 
       while (oldHead <= oldTail && newHead <= newTail) {
-        const oldTailVNode = <VElement>oldVNodeChildren[oldTail];
-        const newTailVNode = <VElement>newVNodeChildren[newTail];
-        const oldHeadVNode = <VElement>oldVNodeChildren[oldHead];
-        const newHeadVNode = <VElement>newVNodeChildren[newHead];
+        const oldTailVNode = oldVNodeChildren[oldTail] as VElement;
+        const newTailVNode = newVNodeChildren[newTail] as VElement;
+        const oldHeadVNode = oldVNodeChildren[oldHead] as VElement;
+        const newHeadVNode = newVNodeChildren[newHead] as VElement;
 
         if (oldTailVNode.key === newTailVNode.key) {
           // [2] Suffix optimization
@@ -321,7 +321,7 @@ export const useChildren =
             type: EffectTypes.CREATE,
             flush: () =>
               el.insertBefore(
-                el[NODE_OBJECT_POOL_FIELD].get((<VElement>newVNodeChildren[head]).key!) ??
+                el[NODE_OBJECT_POOL_FIELD].get((newVNodeChildren[head] as VElement).key!) ??
                   createElement(newVNodeChildren[head], false),
                 el.childNodes.item(head),
               ),
@@ -332,7 +332,7 @@ export const useChildren =
         while (oldHead <= oldTail) {
           const head = oldHead++;
           const node = el.childNodes.item(head);
-          el[NODE_OBJECT_POOL_FIELD].set((<VElement>oldVNodeChildren[head]).key!, node);
+          el[NODE_OBJECT_POOL_FIELD].set((oldVNodeChildren[head] as VElement).key!, node);
           effects.push({
             el,
             type: EffectTypes.REMOVE,
@@ -344,12 +344,12 @@ export const useChildren =
         const oldKeyMap = new Map<string, number>();
 
         for (; oldHead <= oldTail; ) {
-          oldKeyMap.set((<VElement>oldVNodeChildren[oldHead]).key!, oldHead++);
+          oldKeyMap.set((oldVNodeChildren[oldHead] as VElement).key!, oldHead++);
         }
 
         while (newHead <= newTail) {
           const head = newHead++;
-          const newVNodeChild = <VElement>newVNodeChildren[head];
+          const newVNodeChild = newVNodeChildren[head] as VElement;
           const oldVNodePosition = oldKeyMap.get(newVNodeChild.key!);
 
           if (oldVNodePosition !== undefined) {
@@ -417,7 +417,7 @@ export const useChildren =
         for (let i = commonLength - 1; i >= 0; --i) {
           commit(() => {
             effects = diff(
-              <DOMNode>el.childNodes.item(i),
+              el.childNodes.item(i) as DOMNode,
               newVNodeChildren[i],
               oldVNodeChildren[i],
             );

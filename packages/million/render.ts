@@ -57,7 +57,7 @@ export const render = (
  */
 export const schedule = (work: () => void): void => {
   if (
-    (<any>navigator)?.scheduling?.isInputPending({ includeContinuous: true }) ||
+    (navigator as any)?.scheduling?.isInputPending({ includeContinuous: true }) ||
     performance.now() <= deadline
   ) {
     requestAnimationFrame(work);

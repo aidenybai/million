@@ -28,7 +28,7 @@ export const isLocalURL = (href: string) => {
 };
 
 export const getURL = ({ target }: Event): URL | undefined => {
-  const a = (<HTMLElement>target).closest('a');
+  const a = (target as HTMLElement).closest('a');
   if (!a || !isLocalURL(a.href)) return undefined;
   else return new URL(a.href);
 };

@@ -14,7 +14,7 @@ export const fromDomNodeToVNode = (el: DOMNode): VNode | undefined => {
     props[nodeName] = nodeValue;
   }
   for (let i = 0; i < el.childNodes.length; i++) {
-    children[i] = fromDomNodeToVNode(<DOMNode>el.childNodes.item(i));
+    children[i] = fromDomNodeToVNode(el.childNodes.item(i) as DOMNode);
   }
 
   const vnode = h(el.tagName.toLowerCase(), props, ...children);
@@ -24,6 +24,6 @@ export const fromDomNodeToVNode = (el: DOMNode): VNode | undefined => {
 
 export const fromStringToDomNode = (html: string): DOMNode => {
   const doc = new DOMParser().parseFromString(`<t>${html.trim()}</t>`, 'text/xml');
-  const el = <DOMNode>doc.firstChild!.firstChild!;
+  const el = doc.firstChild!.firstChild! as DOMNode;
   return el;
 };
