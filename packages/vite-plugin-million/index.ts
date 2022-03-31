@@ -3,7 +3,8 @@ import { types, parse, visit, print } from 'recast';
 import { PluginOption } from 'vite';
 
 const { literal, property, objectExpression, arrayExpression } = types.builders;
-export const jsxFactory = '__MILLION_JSX';
+const seed = Math.floor(Math.random() * 1e5);
+export const jsxFactory = `__MILLION_JSX_${seed}`;
 
 export const fromASTNodeToVNode = (value: any) => {
   const args = value.arguments;
