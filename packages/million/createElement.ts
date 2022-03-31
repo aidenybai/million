@@ -23,15 +23,15 @@ export const createElement = (vnode?: VNode | VEntity | null, attachField = true
   }
 
   const el = vnode.props?.ns
-    ? <SVGElement>document.createElementNS(<string>vnode.props?.ns, vnode.tag)
-    : <HTMLElement>document.createElement(vnode.tag);
+    ? (document.createElementNS(vnode.props?.ns as string, vnode.tag) as SVGElement)
+    : (document.createElement(vnode.tag) as HTMLElement);
 
   if (vnode.props) {
     for (const propName in vnode.props) {
       const propValue = vnode.props[propName];
       if (propName.startsWith('on')) {
         const eventPropName = propName.slice(2).toLowerCase();
-        el.addEventListener(eventPropName, <EventListener>propValue);
+        el.addEventListener(eventPropName, propValue as EventListener);
       } else if (propName.charCodeAt(0) === X_CHAR) {
         if (propName.charCodeAt(3) === COLON_CHAR) {
           el.setAttributeNS(XML_NS, propName, String(propValue));

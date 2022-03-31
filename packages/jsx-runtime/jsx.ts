@@ -7,7 +7,7 @@ const jsx = (tag: string | FC, props?: VProps, key?: string | null): VNode => {
   let children: JSXVNode[] = [];
   if (props) {
     if (props.children) {
-      children = <JSXVNode[]>(Array.isArray(props.children) ? props.children : [props.children]);
+      children = Array.isArray(props.children) ? props.children : [props.children];
     }
     props.children = undefined;
     if (key) props.key = key;
@@ -15,6 +15,6 @@ const jsx = (tag: string | FC, props?: VProps, key?: string | null): VNode => {
   return h(tag, props, ...children);
 };
 
-const Fragment = (props?: VProps): VNode[] | undefined => <VNode[] | undefined>props?.children;
+const Fragment = (props?: VProps): VNode[] | undefined => props?.children as VNode[] | undefined;
 
 export { h, jsx, jsx as jsxs, Fragment };

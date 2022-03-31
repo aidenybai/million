@@ -5,8 +5,18 @@ import { info, success } from './helpers.mjs';
 await $`rm -rf dist/*`;
 await $`unbuild`;
 await $`esbuild packages/jsx-runtime/index.ts --minify --bundle --outfile=dist/code-size-measurement.js`;
+await $`esbuild packages/vite-plugin-million/index.ts --bundle --platform=node --outfile=dist/vite-plugin-million.js`;
 
-const packages = ['jsx-runtime', 'ssr', 'block', 'router', 'html', 'morph', 'shared'];
+const packages = [
+  'jsx-runtime',
+  'ssr',
+  'block',
+  'router',
+  'html',
+  'morph',
+  'vite-plugin-million',
+  'shared',
+];
 
 for (const pkg of packages) {
   await write(`./${pkg}.d.ts`, `export * from './dist/${pkg}';`);

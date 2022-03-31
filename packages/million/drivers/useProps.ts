@@ -24,8 +24,8 @@ export const updateProp = (
       el,
       type: EffectTypes.SET_PROP,
       flush: () => {
-        if (oldPropValue) el.removeEventListener(eventPropName, <EventListener>oldPropValue);
-        el.addEventListener(eventPropName, <EventListener>newPropValue);
+        if (oldPropValue) el.removeEventListener(eventPropName, oldPropValue as EventListener);
+        el.addEventListener(eventPropName, newPropValue as EventListener);
       },
     });
   } else if (propName.charCodeAt(0) === X_CHAR) {
@@ -125,7 +125,7 @@ export const useProps =
     }
     for (let i = 0; i < drivers.length; ++i) {
       commit(() => {
-        (<Driver>drivers[i])(el, newVNode, oldVNode, commit, effects);
+        (drivers[i] as Driver)(el, newVNode, oldVNode, commit, effects);
       }, data);
     }
     return data;

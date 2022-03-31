@@ -80,7 +80,7 @@ export const entity = (
 ): VEntity => {
   let key = undefined;
   if (data.key) {
-    key = <string | undefined>data.key;
+    key = data.key as string | undefined;
     data.key = undefined;
   }
   return {
@@ -104,7 +104,7 @@ export const m = (
 ): VElement => {
   let key = undefined;
   if (props?.key) {
-    key = <string | undefined>props.key;
+    key = props.key as string | undefined;
     props.key = undefined;
   }
   const velement: VElement = {

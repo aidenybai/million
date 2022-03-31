@@ -98,6 +98,7 @@ const useNode = (drivers: Partial<Driver>[]) => {
     const finish = (element: DOMNode): ReturnType<Driver> => {
       if (!oldVNode) {
         effects.push({
+          el,
           type: EffectTypes.SET_PROP,
           flush: () => (element[OLD_VNODE_FIELD] = newVNode),
         });
@@ -105,14 +106,15 @@ const useNode = (drivers: Partial<Driver>[]) => {
 
       return {
         el: element,
-        newVNode: <VNode>newVNode,
-        oldVNode: <VNode>oldVNode,
+        newVNode: newVNode as VNode,
+        oldVNode: oldVNode as VNode,
         effects,
       };
     };
 
     if (newVNode === undefined || newVNode === null) {
       effects.push({
+        el,
         type: EffectTypes.REMOVE,
         flush: () => el.remove(),
       });
@@ -122,17 +124,18 @@ const useNode = (drivers: Partial<Driver>[]) => {
       const hasString = typeof prevVNode === 'string' || typeof newVNode === 'string';
 
       if (hasString && prevVNode !== newVNode) {
-        const newEl = createElement(<string>newVNode, false);
+        const newEl = createElement(newVNode as string, false);
         effects.push({
+          el,
           type: EffectTypes.REPLACE,
           flush: () => el.replaceWith(newEl),
         });
 
-        return finish(<DOMNode>newEl);
+        return finish(newEl);
       }
       if (!hasString) {
-        const oldVElement = <VElement>prevVNode;
-        const newVElement = <VElement>newVNode;
+        const oldVElement = prevVNode as VElement;
+        const newVElement = newVNode as VElement;
 
         if (
           (oldVElement?.key === undefined && newVElement?.key === undefined) ||
@@ -141,20 +144,21 @@ const useNode = (drivers: Partial<Driver>[]) => {
           if (oldVElement?.tag !== newVElement?.tag || el instanceof Text) {
             const newEl = createElement(newVElement, false);
             effects.push({
+              el,
               type: EffectTypes.REPLACE,
               flush: () => el.replaceWith(newEl),
             });
-            return finish(<DOMNode>newEl);
+            return finish(newEl);
           }
 
           commit(
             () => {
-              (<Driver>drivers[0])(el, newVElement, oldVElement, commit, effects, nodeDriver);
+              (drivers[0] as Driver)(el, newVElement, oldVElement, commit, effects, nodeDriver);
             },
             {
               el,
-              newVNode: <VNode>newVNode,
-              oldVNode: <VNode>oldVNode,
+              newVNode: newVNode as VNode,
+              oldVNode: oldVNode as VNode,
               effects,
             },
           );

@@ -7,7 +7,7 @@ export const normalize = (jsxVNode: JSXVNode): VNode | VNode[] | undefined => {
   if (Array.isArray(jsxVNode)) {
     const normalizedChildren: VNode[] = [];
     for (let i = 0; i < jsxVNode.length; i++) {
-      normalizedChildren.push(<VNode>normalize(jsxVNode[i]));
+      normalizedChildren.push(normalize(jsxVNode[i]) as VNode);
     }
     return normalizedChildren;
   } else if (
@@ -17,7 +17,7 @@ export const normalize = (jsxVNode: JSXVNode): VNode | VNode[] | undefined => {
   ) {
     return String(jsxVNode);
   } else {
-    return <VNode>jsxVNode;
+    return jsxVNode as VNode;
   }
 };
 
@@ -27,7 +27,7 @@ export const h = (tag: string | FC, props?: VProps, ...children: JSXVNode[]) => 
   let delta: Delta[] | undefined;
   const normalizedChildren: VNode[] = [];
   if (props) {
-    const rawDelta = <Delta[]>props.delta;
+    const rawDelta = props.delta as Delta[];
     if (rawDelta && rawDelta.length) {
       delta = rawDelta;
       props.delta = undefined;
@@ -49,7 +49,7 @@ export const h = (tag: string | FC, props?: VProps, ...children: JSXVNode[]) => 
         children[i] !== false &&
         children[i] !== ''
       ) {
-        const unwrappedChild = <VNode>normalize(children[i]);
+        const unwrappedChild = normalize(children[i]) as VNode;
         const subChildren = Array.isArray(unwrappedChild)
           ? ((childrenLength += unwrappedChild.length), unwrappedChild)
           : (childrenLength++, [unwrappedChild]);
@@ -80,17 +80,17 @@ export const h = (tag: string | FC, props?: VProps, ...children: JSXVNode[]) => 
       props.flag = undefined;
     }
     if (typeof props.className === 'object') {
-      props.className = className(<Record<string, boolean>>props.className);
+      props.className = className(props.className as Record<string, boolean>);
     }
     if (typeof props.style === 'object') {
-      const rawStyle = <Record<string, string>>props.style;
+      const rawStyle = props.style as Record<string, string>;
       const normalizedStyle = Object.keys(rawStyle).some((key) => /[-A-Z]/gim.test(key))
         ? kebab(rawStyle)
         : rawStyle;
-      props.style = style(<Record<string, string>>normalizedStyle);
+      props.style = style(normalizedStyle as Record<string, string>);
     }
   }
 
-  const vnode = m(tag, props, normalizedChildren, <VElementFlags>flag, delta);
+  const vnode = m(tag, props, normalizedChildren, flag as VElementFlags, delta);
   return tag === 'svg' ? svg(vnode) : vnode;
 };
