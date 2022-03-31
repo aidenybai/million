@@ -3,7 +3,7 @@ import { types, parse, visit, print } from 'recast';
 import { PluginOption } from 'vite';
 
 const { literal, property, objectExpression, arrayExpression } = types.builders;
-export const jsxFactory = '$$MILLION_JSX_CALL_EXPRESSION$$';
+export const jsxFactory = '__MILLION_JSX';
 
 export const fromASTNodeToVNode = (value: any) => {
   const args = value.arguments;
@@ -23,18 +23,26 @@ export const fromASTNodeToVNode = (value: any) => {
       vnodeProps[astProp.key.name] = vnodeObject;
     } else if (astProp.value.type.includes('Function')) {
       vnodeProps[astProp.key.name] = () => astProp;
-    } else {
+    } else if (astProp.value.type === 'Literal') {
       vnodeProps[astProp.key.name] = astProp.value.value;
+    } else {
+      return value;
     }
   }
 
   for (const child of astChildren) {
-    if (child.type === 'CallExpression' && child.callee.name === jsxFactory) {
-      vnodeChildren.push(fromASTNodeToVNode(child));
+    if (child.type === 'CallExpression') {
+      if (child.callee.name === jsxFactory) vnodeChildren.push(fromASTNodeToVNode(child));
+      else return value;
+    } else if (
+      child.type === 'Literal' &&
+      child.value !== undefined &&
+      child.value !== null &&
+      child.value !== false
+    ) {
+      vnodeChildren.push(String(child.value));
     } else {
-      if (child.type === 'Literal' && (child.value !== undefined || child.value !== null)) {
-        vnodeChildren.push(String(child.value));
-      }
+      return value;
     }
   }
 
@@ -42,6 +50,7 @@ export const fromASTNodeToVNode = (value: any) => {
 };
 
 export const fromVNodeToASTNode = (vnode: any) => {
+  if (vnode.value || vnode.type) return vnode;
   const astProps = objectExpression(
     Object.entries(vnode.props)
       .filter(([, value]) => value !== undefined && value !== null)
@@ -78,7 +87,7 @@ export const fromVNodeToASTNode = (vnode: any) => {
   return objectExpression(astVNode);
 };
 
-export const plugin = (): PluginOption[] => [
+export const plugin = (options?: any): PluginOption[] => [
   {
     name: 'vite:million-config',
     enforce: 'pre',
@@ -86,6 +95,10 @@ export const plugin = (): PluginOption[] => [
       return {
         esbuild: {
           jsxFactory,
+          jsxFragment: `${jsxFactory}_FRAGMENT`,
+          jsxInject: `import { h as ${jsxFactory}, Fragment as ${jsxFactory}_FRAGMENT } from '${
+            options.importSource || 'million/jsx-runtime'
+          }';`,
         },
       };
     },
@@ -110,8 +123,6 @@ export const plugin = (): PluginOption[] => [
       for (const path of callExpressionPaths) {
         path.replace(fromVNodeToASTNode(fromASTNodeToVNode(path.value)));
       }
-
-      console.log('id', id);
 
       return { code: print(ast).code };
     },
