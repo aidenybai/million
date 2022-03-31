@@ -9,7 +9,7 @@ export default defineConfig({
       packages: resolve(__dirname, './packages'),
     },
   },
-  plugins: [million()],
+  plugins: [million({ importSource: 'packages/jsx-runtime' })],
   test: {
     watch: false,
     environment: 'jsdom',
