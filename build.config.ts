@@ -10,9 +10,11 @@ export default defineBuildConfig({
     './packages/router',
     './packages/html',
     './packages/morph',
+    './packages/vite-plugin-million',
   ],
   declaration: true,
   clean: true,
+  externals: ['recast']
   rollup: {
     emitCJS: true,
   },

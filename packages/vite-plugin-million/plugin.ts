@@ -1,9 +1,8 @@
 import { parse, print, visit } from 'recast';
-import { PluginOption } from 'vite';
 import { compile } from './compile';
 import { jsxFactory } from './index';
 
-export const plugin = (options?: { importSource: string }): PluginOption[] => [
+export const plugin = (options?: { importSource: string }): any[] => [
   {
     name: 'vite:million-config',
     enforce: 'pre',
@@ -21,7 +20,7 @@ export const plugin = (options?: { importSource: string }): PluginOption[] => [
   },
   {
     name: 'vite:million-jsx',
-    async transform(code, id) {
+    async transform(code: string, id: string) {
       if (id.includes('node_modules') || !/\.(jsx|tsx)$/.test(id)) return;
 
       const ast = parse(code);
