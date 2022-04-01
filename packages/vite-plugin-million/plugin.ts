@@ -2,7 +2,7 @@ import { parse, print, visit } from 'recast';
 import { compile } from './compile';
 import { jsxFactory } from './index';
 
-export const plugin = (options?: { importSource: string }): any[] => [
+export const million = (options?: { importSource: string }): any[] => [
   {
     name: 'vite:million-config',
     enforce: 'pre',
@@ -43,5 +43,3 @@ export const plugin = (options?: { importSource: string }): any[] => [
     },
   },
 ];
-
-export default plugin;
