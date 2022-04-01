@@ -3,7 +3,7 @@ import { PluginOption } from 'vite';
 import { compile } from './compile';
 import { jsxFactory } from './index';
 
-export const plugin = (options?: any): PluginOption[] => [
+export const plugin = (options?: { importSource: string }): PluginOption[] => [
   {
     name: 'vite:million-config',
     enforce: 'pre',
@@ -13,7 +13,7 @@ export const plugin = (options?: any): PluginOption[] => [
           jsxFactory,
           jsxFragment: `${jsxFactory}_FRAGMENT`,
           jsxInject: `import { h as ${jsxFactory}, Fragment as ${jsxFactory}_FRAGMENT } from '${
-            options.importSource || 'million/jsx-runtime'
+            options?.importSource || 'million/jsx-runtime'
           }';`,
         },
       };
