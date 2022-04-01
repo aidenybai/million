@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
 import legacy from '@vitejs/plugin-legacy';
-import million from '../packages/vite-plugin-million';
+import { million } from '../packages/vite-plugin-million';
 
 export default defineConfig({
   root: 'benchmarks',

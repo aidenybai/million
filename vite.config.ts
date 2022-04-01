@@ -1,6 +1,6 @@
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
-import million from './packages/vite-plugin-million';
+import { million } from './packages/vite-plugin-million';
 
 export default defineConfig({
   root: 'dev',
