@@ -77,7 +77,7 @@ const vnode = () => (
           <a
             role="button"
             href="#"
-            onclick={() => {
+            onclick={(event) => {
               const modal = document.getElementById('modal');
               event.preventDefault();
               modal.open = true;

@@ -18,7 +18,7 @@ function success {
 
 info "Updating packages..."
 
-taze -w minor
+taze -w major
 pnpm i
 
 git stage package.json
