@@ -25,8 +25,7 @@
   },
   "files": [
     "dist/**/*",
-    "jsx-runtime.d.ts",
-    "refresh.d.ts"
+    "/*.d.ts"
   ],
   "exports": {
     ".": {
