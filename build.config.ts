@@ -14,7 +14,6 @@ export default defineBuildConfig({
   ],
   declaration: true,
   clean: true,
-  externals: ['recast']
   rollup: {
     emitCJS: true,
   },
