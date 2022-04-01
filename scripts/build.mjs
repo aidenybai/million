@@ -5,7 +5,6 @@ import { info, success } from './helpers.mjs';
 await $`rm -rf dist/*`;
 await $`unbuild`;
 await $`esbuild packages/jsx-runtime/index.ts --minify --bundle --outfile=dist/code-size-measurement.js`;
-await $`esbuild packages/vite-plugin-million/index.ts --minify --bundle --platform=node --outfile=dist/vite-plugin-million.js`;
 
 const packages = [
   'jsx-runtime',
