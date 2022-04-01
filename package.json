@@ -64,8 +64,9 @@
       "types": "./morph.d.ts"
     },
     "./vite-plugin-million": {
-      "import": "./dist/vite-plugin-million.js",
-      "require": "./dist/vite-plugin-million.js"
+      "import": "./dist/vite-plugin-million.mjs",
+      "require": "./dist/vite-plugin-million.cjs",
+      "types": "./vite-plugin-million.d.ts"
     },
     "./shared": {
       "import": "./dist/shared.mjs",
