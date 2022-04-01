@@ -1,40 +1,54 @@
 import { types } from 'recast';
 import { h, JSXVNode } from '../jsx-runtime';
 import { jsxFactory } from './index';
+import {
+  CallExpression,
+  Expression,
+  Identifier,
+  Literal,
+  ObjectExpression,
+  Property,
+} from './types';
 
 const { literal, property, objectExpression, arrayExpression } = types.builders;
 
 /*
  * Million's VNode compiling tries to keep the VNode factory in one place:
  * 1. Parse out AST nodes using recast and grab critical information (tag, props, children)
- * 2. Pass the information to the h() VNode factory in million/jsx-runtime
+ * 2. Pass the information to the h() VNode factory in million/jsx-runtime.
+ *      NOTE: Non recognized data types will be hard returned so that the VNode factory
+ *            can handle it during runtime
  * 3. Reconstruct AST node from the VNode created by h()
- * 4. Replace path
+ * 4. Replace the old AST node with the new AST node
  */
-export const compile = (astNode: any) => {
+export const compile = (astNode: CallExpression) => {
   return fromVNodeToASTNode(fromASTNodeToVNode(astNode));
 };
 
-export const fromASTNodeToVNode = (astNode: any) => {
+export const fromASTNodeToVNode = (astNode: CallExpression): JSXVNode | CallExpression => {
   const args = astNode.arguments;
-  const astProps = astNode.arguments[1];
+  const astProps = astNode.arguments[1] as ObjectExpression;
   const astChildren = args.slice(2);
   const vnodeChildren: JSXVNode[] = [];
   const vnodeProps = {};
 
   for (let i = 0; i < astProps.properties?.length; i++) {
-    const astProp = astProps.properties[i];
+    const astProp = astProps.properties[i] as Property;
+    const astPropKey = astProp.key as Identifier;
     if (astProp.value.type === 'ObjectExpression') {
       const vnodeObject = {};
       const astObject = astProp.value.properties;
       for (let j = 0; j < astObject.length; j++) {
-        vnodeObject[astObject[j].key.name] = astObject[j].value.value;
+        const astObjectProp = astObject[j] as Property;
+        vnodeObject[(astObjectProp.key as Identifier).name] = (
+          astObjectProp.value as Literal
+        ).value;
       }
-      vnodeProps[astProp.key.name] = vnodeObject;
+      vnodeProps[astPropKey.name] = vnodeObject;
     } else if (astProp.value.type.includes('Function')) {
-      vnodeProps[astProp.key.name] = () => astProp;
+      vnodeProps[astPropKey.name] = () => astProp;
     } else if (astProp.value.type === 'Literal') {
-      vnodeProps[astProp.key.name] = astProp.value.value;
+      vnodeProps[astPropKey.name] = astProp.value.value;
     } else {
       return astNode;
     }
@@ -42,7 +56,8 @@ export const fromASTNodeToVNode = (astNode: any) => {
 
   for (const child of astChildren) {
     if (child.type === 'CallExpression') {
-      if (child.callee.name === jsxFactory) vnodeChildren.push(fromASTNodeToVNode(child));
+      if ((child.callee as Identifier).name === jsxFactory)
+        vnodeChildren.push(fromASTNodeToVNode(child) as JSXVNode);
       else return astNode;
     } else if (
       child.type === 'Literal' &&
@@ -56,43 +71,49 @@ export const fromASTNodeToVNode = (astNode: any) => {
     }
   }
 
-  return h(astNode.arguments[0].value, vnodeProps, ...vnodeChildren);
+  return h(String((astNode.arguments[0] as Literal).value), vnodeProps, ...vnodeChildren);
 };
 
-export const fromVNodeToASTNode = (vnode: any) => {
-  if (vnode.value || vnode.type) return vnode;
-  const astProps = objectExpression(
-    Object.entries(vnode.props)
-      .filter(([, value]) => value !== undefined && value !== null)
-      .map(([name, value]) => {
-        return typeof value === 'function'
-          ? value()
-          : property('init', literal(name), literal(value as string | number | boolean));
+export const fromVNodeToASTNode = (vnode: JSXVNode | CallExpression): Expression => {
+  if ((vnode as unknown as Literal)?.value || (vnode as unknown as Expression)?.type)
+    return vnode as Expression;
+  if (typeof vnode === 'object') {
+    const velement = vnode as Exclude<JSXVNode, string | number | boolean>;
+    const astProps = objectExpression(
+      Object.entries(velement?.props || {})
+        .filter(([, value]) => value !== undefined && value !== null)
+        .map(([name, value]) => {
+          return typeof value === 'function'
+            ? value()
+            : property('init', literal(name), literal(value as string | number | boolean));
+        }),
+    );
+
+    const astChildren = arrayExpression(
+      (velement?.children || []).map((child: JSXVNode): Literal | CallExpression => {
+        if (typeof child === 'string') {
+          return literal(child);
+        } else {
+          return fromVNodeToASTNode(child) as Literal | CallExpression;
+        }
       }),
-  );
+    );
 
-  const astChildren = arrayExpression(
-    vnode.children.map((child: any) => {
-      if (typeof child === 'string') {
-        return literal(child);
-      } else {
-        return fromVNodeToASTNode(child);
-      }
-    }),
-  );
-
-  const astVNode = [
-    property('init', literal('tag'), literal(vnode.tag)),
-    property('init', literal('flag'), literal(vnode.flag)),
-  ];
-  if (vnode.props && Object.keys(vnode.props).length > 0) {
-    astVNode.push(property('init', literal('props'), astProps));
+    const astVNode = [
+      property('init', literal('tag'), literal(velement!.tag)),
+      property('init', literal('flag'), literal(velement!.flag)),
+    ];
+    if (velement?.props && Object.keys(velement.props).length > 0) {
+      astVNode.push(property('init', literal('props'), astProps));
+    }
+    if (velement?.children && velement.children.length > 0) {
+      astVNode.push(property('init', literal('children'), astChildren));
+    }
+    if (velement?.key) {
+      astVNode.push(property('init', literal('key'), literal(String(velement.key))));
+    }
+    return objectExpression(astVNode);
+  } else {
+    return literal(vnode ?? null);
   }
-  if (vnode.children && vnode.children.length > 0) {
-    astVNode.push(property('init', literal('children'), astChildren));
-  }
-  if (vnode.key) {
-    astVNode.push(property('init', literal('key'), literal(String(vnode.key))));
-  }
-  return objectExpression(astVNode);
 };
