@@ -39,7 +39,9 @@ export const million = (options?: { importSource: string }): any[] => [
         astNodes[i].replace(compile(astNodes[i].value));
       }
 
-      return { code: print(ast).code };
+      const result = print(ast);
+
+      return { code: result.code, map: result.map };
     },
   },
 ];
