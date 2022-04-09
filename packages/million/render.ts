@@ -3,6 +3,7 @@ import { useChildren } from './drivers/useChildren';
 import { useNode } from './drivers/useNode';
 import { useProps } from './drivers/useProps';
 import { DOMNode, DOM_REF_FIELD, Driver, Effect, Hook, VEntity, VNode } from './types';
+import { schedule } from './schedule';
 
 /**
  * Diffs two VNodes
@@ -20,7 +21,7 @@ export const patch = (
   effects: Effect[] = [],
 ): DOMNode => {
   const commit = (work: () => void, data: ReturnType<Driver>) => {
-    startTransition(() => {
+    schedule(() => {
       if (hook(data.el, data.newVNode, data.oldVNode)) work();
     });
   };
@@ -50,31 +51,4 @@ export const render = (
     parentEl[DOM_REF_FIELD] = newEl;
     return newEl;
   }
-};
-
-const workQueue: (() => void)[] = [];
-let isFlushing = false;
-
-export const startTransition = (work: () => void): void => {
-  workQueue.push(work);
-  if (!isFlushing) requestIdleCallback(flushQueue);
-};
-
-export const flushQueue = (
-  deadline: IdleDeadline = {
-    didTimeout: false,
-    timeRemaining: () => Number.MAX_VALUE,
-  },
-): void => {
-  isFlushing = true;
-  while (
-    !(<any>navigator)?.scheduling?.isInputPending({ includeContinuous: true }) &&
-    deadline.timeRemaining() > 0 &&
-    workQueue.length > 0
-  ) {
-    const work = workQueue.shift();
-    if (work) work();
-  }
-  isFlushing = false;
-  if (workQueue.length > 0) requestIdleCallback(flushQueue);
 };
