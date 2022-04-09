@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { createElement } from '../packages/million/createElement';
 import { Deltas, entity, m } from '../packages/million/m';
 import { patch, render } from '../packages/million/render';
@@ -7,6 +7,16 @@ import { Flags, DOMNode } from '../packages/million/types';
 export const expectEqualNode = (el1: DOMNode, el2: DOMNode) => {
   expect(el1.isEqualNode(el2)).toBeTruthy();
 };
+
+vi.stubGlobal(
+  'requestIdleCallback',
+  vi.fn((cb: () => void) => cb()),
+);
+
+vi.stubGlobal(
+  'requestAnimationFrame',
+  vi.fn((cb: () => void) => cb()),
+);
 
 describe.concurrent('render', () => {
   it('should render element correctly', () => {
