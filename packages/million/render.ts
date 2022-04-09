@@ -4,8 +4,6 @@ import { useNode } from './drivers/useNode';
 import { useProps } from './drivers/useProps';
 import { DOMNode, DOM_REF_FIELD, Driver, Effect, Hook, VEntity, VNode } from './types';
 
-let deadline = 0;
-
 /**
  * Diffs two VNodes
  */
@@ -22,11 +20,13 @@ export const patch = (
   effects: Effect[] = [],
 ): DOMNode => {
   const commit = (work: () => void, data: ReturnType<Driver>) => {
-    if (hook(data.el, data.newVNode, data.oldVNode)) work();
+    startTransition(() => {
+      if (hook(data.el, data.newVNode, data.oldVNode)) work();
+    });
   };
   const data = diff(el, newVNode, oldVNode, commit, effects);
   for (let i = 0; i < effects.length; i++) {
-    effects[i].flush();
+    requestAnimationFrame(effects[i].flush);
   }
   return data.el;
 };
@@ -52,17 +52,25 @@ export const render = (
   }
 };
 
-/**
- * Split rendering work into chunks and spread it out over multiple frames
- */
-export const schedule = (work: () => void): void => {
-  if (
-    (navigator as any)?.scheduling?.isInputPending({ includeContinuous: true }) ||
-    performance.now() <= deadline
-  ) {
-    requestAnimationFrame(work);
-  } else work();
-  // We can set a pseudo-deadline to ensure that we don't render too often
-  // and depend on the calls to the function to regulate rendering
-  deadline = performance.now() + 16;
+const workQueue: (() => void)[] = [];
+let isFlushing = false;
+
+export const startTransition = (work: () => void): void => {
+  workQueue.push(work);
+  if (!isFlushing) requestIdleCallback(flushQueue);
+};
+
+export const flushQueue = (
+  deadline: IdleDeadline = {
+    didTimeout: false,
+    timeRemaining: () => Number.MAX_VALUE,
+  },
+): void => {
+  isFlushing = true;
+  while (deadline.timeRemaining() > 0 && workQueue.length > 0) {
+    const work = workQueue.shift();
+    if (work) work();
+  }
+  isFlushing = false;
+  if (workQueue.length > 0) requestIdleCallback(flushQueue);
 };
