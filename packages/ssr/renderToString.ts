@@ -1,6 +1,6 @@
 import { VNode } from '../million/types';
 
-export const serialize = (vnode: VNode): string => {
+export const renderToString = (vnode: VNode): string => {
   if (typeof vnode === 'string') return vnode;
   if (vnode === undefined) return '<!-- -->';
 
@@ -14,7 +14,7 @@ export const serialize = (vnode: VNode): string => {
     }
   }
   for (const child of vnode.children || []) {
-    children += serialize(child);
+    children += renderToString(child);
   }
 
   return `<${vnode.tag}${attributes}>${children}</${vnode.tag}>`;

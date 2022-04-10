@@ -1,3 +1,3 @@
 export * from '../shared';
 export * from './refresh';
-export * from './serialize';
+export * from './renderToString';
