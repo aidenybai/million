@@ -1,7 +1,7 @@
 const workQueue: (() => void)[] = [];
 let isFlushing = false;
 
-export const schedule = (work: () => void): void => {
+export const startTransition = (work: () => void): void => {
   workQueue.push(work);
   if (!isFlushing) requestIdleCallback(flushQueue);
 };

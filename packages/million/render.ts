@@ -3,7 +3,7 @@ import { useChildren } from './drivers/useChildren';
 import { useNode } from './drivers/useNode';
 import { useProps } from './drivers/useProps';
 import { DOMNode, DOM_REF_FIELD, Driver, Effect, Hook, VEntity, VNode } from './types';
-import { schedule } from './schedule';
+import { startTransition } from './startTransition';
 
 /**
  * Diffs two VNodes
@@ -52,11 +52,12 @@ export const render = (
 };
 
 export const hydrate = (el: HTMLElement, vnode: VNode, intersect = true): void => {
+  const update = () => patch(el, vnode);
   if (intersect) {
     const io = new IntersectionObserver((entries) => {
       for (let i = 0; i < entries.length; i++) {
         if (entries[i].isIntersecting) {
-          schedule(() => patch(el, vnode));
+          startTransition(update);
           io.disconnect();
           break;
         }
@@ -64,6 +65,6 @@ export const hydrate = (el: HTMLElement, vnode: VNode, intersect = true): void =
     });
     io.observe(el);
   } else {
-    schedule(() => patch(el, vnode));
+    startTransition(update);
   }
 };
