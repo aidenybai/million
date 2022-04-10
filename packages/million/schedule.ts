@@ -14,7 +14,7 @@ export const flushQueue = (
 ): void => {
   isFlushing = true;
   while (
-    !(<any>navigator)?.scheduling?.isInputPending({ includeContinuous: true }) &&
+    !(navigator as any)?.scheduling?.isInputPending({ includeContinuous: true }) &&
     deadline.timeRemaining() > 0 &&
     workQueue.length > 0
   ) {
