@@ -21,9 +21,7 @@ export const patch = (
   effects: Effect[] = [],
 ): DOMNode => {
   const commit = (work: () => void, data: ReturnType<Driver>) => {
-    schedule(() => {
-      if (hook(data.el, data.newVNode, data.oldVNode)) work();
-    });
+    if (hook(data.el, data.newVNode, data.oldVNode)) work();
   };
   const data = diff(el, newVNode, oldVNode, commit, effects);
   for (let i = 0; i < effects.length; i++) {
@@ -50,5 +48,22 @@ export const render = (
     parentEl.appendChild(newEl);
     parentEl[DOM_REF_FIELD] = newEl;
     return newEl;
+  }
+};
+
+export const hydrate = (el: HTMLElement, vnode: VNode, intersect = true): void => {
+  if (intersect) {
+    const io = new IntersectionObserver((entries) => {
+      for (let i = 0; i < entries.length; i++) {
+        if (entries[i].isIntersecting) {
+          schedule(() => patch(el, vnode));
+          io.disconnect();
+          break;
+        }
+      }
+    });
+    io.observe(el);
+  } else {
+    schedule(() => patch(el, vnode));
   }
 };
