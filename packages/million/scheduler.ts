@@ -1,6 +1,8 @@
 const workQueue: (() => void)[] = [];
 let isFlushing = false;
 
+export const isPending = () => isFlushing;
+
 export const startTransition = (work: () => void): void => {
   workQueue.push(work);
   if (!isFlushing) requestIdleCallback(flushQueue);
@@ -21,6 +23,6 @@ export const flushQueue = (
     const work = workQueue.shift();
     if (work) work();
   }
-  isFlushing = false;
   if (workQueue.length > 0) requestIdleCallback(flushQueue);
+  else isFlushing = false;
 };

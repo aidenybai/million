@@ -115,7 +115,7 @@
     "@typescript-eslint/eslint-plugin": "^5.18.0",
     "@typescript-eslint/parser": "^5.18.0",
     "@vitejs/plugin-legacy": "^1.8.0",
-    "@vitest/ui": "^0.9.2",
+    "@vitest/ui": "^0.9.3",
     "benchmark": "^2.1.4",
     "c8": "^7.11.0",
     "canvas-confetti": "^1.5.1",
@@ -135,7 +135,7 @@
     "ora": "^6.1.0",
     "prettier": "^2.6.2",
     "recast": "^0.21.0",
-    "simple-git": "^3.5.0",
+    "simple-git": "^3.6.0",
     "simple-virtual-dom": "^0.1.10",
     "snabbdom": "^3.4.0",
     "source-map": "^0.7.3",
@@ -146,7 +146,7 @@
     "unbuild": "^0.7.2",
     "virtual-dom": "^2.1.1",
     "vite": "^2.9.1",
-    "vitest": "^0.9.2",
+    "vitest": "^0.9.3",
     "zx": "^6.0.7"
   }
 }
