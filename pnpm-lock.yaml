@@ -12,7 +12,7 @@ specifiers:
   '@typescript-eslint/eslint-plugin': ^5.18.0
   '@typescript-eslint/parser': ^5.18.0
   '@vitejs/plugin-legacy': ^1.8.0
-  '@vitest/ui': ^0.9.2
+  '@vitest/ui': ^0.9.3
   benchmark: ^2.1.4
   c8: ^7.11.0
   canvas-confetti: ^1.5.1
@@ -32,7 +32,7 @@ specifiers:
   ora: ^6.1.0
   prettier: ^2.6.2
   recast: ^0.21.0
-  simple-git: ^3.5.0
+  simple-git: ^3.6.0
   simple-virtual-dom: ^0.1.10
   snabbdom: ^3.4.0
   source-map: ^0.7.3
@@ -43,7 +43,7 @@ specifiers:
   unbuild: ^0.7.2
   virtual-dom: ^2.1.1
   vite: ^2.9.1
-  vitest: ^0.9.2
+  vitest: ^0.9.3
   zx: ^6.0.7
 
 devDependencies:
@@ -58,7 +58,7 @@ devDependencies:
   '@typescript-eslint/eslint-plugin': 5.18.0_0dd9be2ba5ed9805045f3fec8be848f5
   '@typescript-eslint/parser': 5.18.0_eslint@8.13.0+typescript@4.6.3
   '@vitejs/plugin-legacy': 1.8.0_vite@2.9.1
-  '@vitest/ui': 0.9.2
+  '@vitest/ui': 0.9.3
   benchmark: 2.1.4
   c8: 7.11.0
   canvas-confetti: 1.5.1
@@ -78,7 +78,7 @@ devDependencies:
   ora: 6.1.0
   prettier: 2.6.2
   recast: 0.21.0
-  simple-git: 3.5.0
+  simple-git: 3.6.0
   simple-virtual-dom: 0.1.10
   snabbdom: 3.4.0
   source-map: 0.7.3
@@ -89,7 +89,7 @@ devDependencies:
   unbuild: 0.7.2
   virtual-dom: 2.1.1
   vite: 2.9.1
-  vitest: 0.9.2_4aa9a5270d5c4a567efc2f04e86d9d38
+  vitest: 0.9.3_b3c95fdf6a320f4075c1a77216ad51b0
   zx: 6.0.7
 
 packages:
@@ -1106,8 +1106,8 @@ packages:
       vite: 2.9.1
     dev: true
 
-  /@vitest/ui/0.9.2:
-    resolution: {integrity: sha512-IKyAjQcEBuwMr2GO6wp/qDVJAETCjzwfqkoEVHGTP/mZTF1pwMd7HZ89MfRHvGEUa0E1boJB8PHqvgoECfUsqA==}
+  /@vitest/ui/0.9.3:
+    resolution: {integrity: sha512-tnf/qFWSnoj8+DVaO9MJIu7uuRyFx7L4dgSwm+PzKUjavUILSVQjzrLfZOO9+KbKf4e4wcTcxkoYK0mG1MAXgA==}
     dependencies:
       sirv: 2.0.2
     dev: true
@@ -5633,8 +5633,8 @@ packages:
     resolution: {integrity: sha512-sDl4qMFpijcGw22U5w63KmD3cZJfBuFlVNbVMKje2keoKML7X2UzWbc4XrmEbDwg0NXJc3yv4/ox7b+JWb57kQ==}
     dev: true
 
-  /simple-git/3.5.0:
-    resolution: {integrity: sha512-fZsaq5nzdxQRhMNs6ESGLpMUHoL5GRP+boWPhq9pMYMKwOGZV2jHOxi8AbFFA2Y/6u4kR99HoULizSbpzaODkA==}
+  /simple-git/3.6.0:
+    resolution: {integrity: sha512-2e+4QhOVO59GeLsHgwSMKNrSKCnuACeA/gMNrLCYR8ID9qwm4hViVt4WsODcUGjx//KDv6GMLC6Hs/MeosgXxg==}
     dependencies:
       '@kwsites/file-exists': 1.1.1
       '@kwsites/promise-deferred': 1.1.1
@@ -6484,8 +6484,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vitest/0.9.2_4aa9a5270d5c4a567efc2f04e86d9d38:
-    resolution: {integrity: sha512-XgR42njw350OxBfKD4MK0cNIzgQrhSUKJq9sgbgRR+bD8GonPCyjpFFmPejptaiEyjmQ2FXpEvFHN37b9X2HJA==}
+  /vitest/0.9.3_b3c95fdf6a320f4075c1a77216ad51b0:
+    resolution: {integrity: sha512-hKjqdBI732cV5giNLERyAsaJBebstrX5mvTbZr+jUDYUHnX1O4DpAJcHtqBOutuBi7lVIGQ5IF8eWvHHqbCHBA==}
     engines: {node: '>=v14.16.0'}
     hasBin: true
     peerDependencies:
@@ -6505,7 +6505,7 @@ packages:
     dependencies:
       '@types/chai': 4.3.0
       '@types/chai-subset': 1.3.3
-      '@vitest/ui': 0.9.2
+      '@vitest/ui': 0.9.3
       c8: 7.11.0
       chai: 4.3.6
       jsdom: 19.0.0

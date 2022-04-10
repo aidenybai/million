@@ -5,7 +5,7 @@ export * from './drivers/useNode';
 export * from './drivers/useProps';
 export * from './m';
 export * from './render';
-export * from './startTransition';
+export * from './scheduler';
 export { DeltaTypes, EffectTypes, Flags, OLD_VNODE_FIELD } from './types';
 export type {
   Commit,
