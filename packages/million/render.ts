@@ -3,7 +3,7 @@ import { useChildren } from './drivers/useChildren';
 import { useNode } from './drivers/useNode';
 import { useProps } from './drivers/useProps';
 import { DOMNode, DOM_REF_FIELD, Driver, Effect, Hook, VEntity, VNode } from './types';
-import { startTransition } from './startTransition';
+import { startTransition } from './scheduler';
 
 /**
  * Diffs two VNodes
