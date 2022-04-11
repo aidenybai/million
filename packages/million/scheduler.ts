@@ -1,11 +1,11 @@
 const workQueue: (() => void)[] = [];
-let isFlushing = false;
+let pending = false;
 
-export const isPending = () => isFlushing;
+export const isPending = () => pending;
 
 export const startTransition = (work: () => void): void => {
   workQueue.push(work);
-  if (!isFlushing) requestIdleCallback(flushQueue);
+  if (!pending) requestIdleCallback(flushQueue);
 };
 
 export const flushQueue = (
@@ -14,7 +14,7 @@ export const flushQueue = (
     timeRemaining: () => Number.MAX_VALUE,
   },
 ): void => {
-  isFlushing = true;
+  pending = true;
   while (
     !(navigator as any)?.scheduling?.isInputPending({ includeContinuous: true }) &&
     deadline.timeRemaining() > 0 &&
@@ -24,5 +24,5 @@ export const flushQueue = (
     if (work) work();
   }
   if (workQueue.length > 0) requestIdleCallback(flushQueue);
-  else isFlushing = false;
+  else pending = false;
 };
