@@ -105,7 +105,7 @@ export const m = (
   let key = undefined;
   if (props?.key) {
     key = props.key as string | undefined;
-    props.key = undefined;
+    delete props.key;
   }
   const velement: VElement = {
     tag,
