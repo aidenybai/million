@@ -1,4 +1,4 @@
-import { DOMNode, OLD_VNODE_FIELD, VNode, VProps } from '../million/types';
+import { DOMNode, OLD_VNODE_FIELD, VNode, VProps, Flags } from '../million/types';
 import { h } from './h';
 
 export const fromDomNodeToVNode = (el: DOMNode): VNode | undefined => {
@@ -11,7 +11,7 @@ export const fromDomNodeToVNode = (el: DOMNode): VNode | undefined => {
   const children = new Array(el.children.length).fill(0);
   for (let i = 0; i < el.attributes.length; i++) {
     const { nodeName, nodeValue } = el.attributes[i];
-    props[nodeName] = nodeValue;
+    props[nodeName] = nodeName === 'data-flag' ? Flags[nodeName] : nodeValue;
   }
   for (let i = 0; i < el.childNodes.length; i++) {
     children[i] = fromDomNodeToVNode(el.childNodes.item(i) as DOMNode);
