@@ -1,9 +1,19 @@
 import { patch } from '../million/render';
 import { VElement } from '../million/types';
+import { m } from '../million/m';
 import { morph } from '../morph/morph';
+import { fromDomNodeToVNode } from '../shared/convert';
 import { getURL, normalizeRelativeURLs } from './utils';
 
 const parser: DOMParser = new DOMParser();
+
+export const fetchPage = async (url: URL): Promise<string | void> => {
+  return fetch(String(url))
+    .then((res) => res.text())
+    .catch(() => {
+      window.location.assign(url);
+    });
+};
 
 export const navigate = async (url: URL, isBack = false, vnode?: VElement) => {
   if (!isBack) {
@@ -16,21 +26,15 @@ export const navigate = async (url: URL, isBack = false, vnode?: VElement) => {
     if (head) patch(document.head, head);
     if (body) patch(document.body, body);
   } else {
-    const newPageHtmlString = await fetch(String(url))
-      .then((res) => res.text())
-      .catch(() => {
-        window.location.assign(url);
-      });
+    const newPageHtmlString = await fetchPage(url);
 
     if (!newPageHtmlString) return;
 
     const html = parser.parseFromString(newPageHtmlString, 'text/html');
     normalizeRelativeURLs(html, url);
 
-    const title = html.querySelector('title');
-    if (title) {
-      document.title = title.text;
-    }
+    const title = html.head.querySelector('title');
+    if (title) document.title = title.text;
 
     morph(html.head, document.head);
     morph(html.body, document.body);
@@ -54,6 +58,22 @@ export const router = (routes?: Record<string, VElement>) => {
         navigate(url, false, routesMap.get(url.pathname));
       } catch (e) {
         window.location.assign(url);
+      }
+    });
+
+    window.addEventListener('mouseover', async (event) => {
+      const url = getURL(event);
+      if (!url) return;
+      event.preventDefault();
+      if (routesMap.has(url.pathname)) return;
+      const newPageHtmlString = await fetchPage(url);
+      if (newPageHtmlString) {
+        const html = parser.parseFromString(newPageHtmlString, 'text/html');
+        const vnode = m('html', undefined, [
+          fromDomNodeToVNode(html.head)!,
+          fromDomNodeToVNode(html.body)!,
+        ]);
+        routesMap.set(url.pathname, vnode);
       }
     });
 

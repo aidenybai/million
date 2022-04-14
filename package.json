@@ -114,7 +114,7 @@
     "@types/virtual-dom": "^2.1.1",
     "@typescript-eslint/eslint-plugin": "^5.19.0",
     "@typescript-eslint/parser": "^5.19.0",
-    "@vitejs/plugin-legacy": "^1.8.0",
+    "@vitejs/plugin-legacy": "^1.8.1",
     "@vitest/ui": "^0.9.3",
     "benchmark": "^2.1.4",
     "c8": "^7.11.0",
@@ -143,9 +143,9 @@
     "taze": "^0.5.0",
     "tslib": "^2.3.1",
     "typescript": "^4.6.3",
-    "unbuild": "^0.7.3",
+    "unbuild": "^0.7.4",
     "virtual-dom": "^2.1.1",
-    "vite": "^2.9.1",
+    "vite": "^2.9.4",
     "vitest": "^0.9.3",
     "zx": "^6.0.7"
   }
