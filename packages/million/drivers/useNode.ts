@@ -17,7 +17,6 @@ import {
  * Diffs a single DOM node and modifies the DOM node based on the necessary changes
  */
 export const useNode = (drivers: any[]): any => {
-  let isRoot = true;
   const nodeDriver = (
     el: DOMNode,
     newVNode?: VNode | VEntity,
@@ -25,6 +24,7 @@ export const useNode = (drivers: any[]): any => {
     commit: Commit = (work: () => void) => work(),
     effects: Effect[] = [],
   ): ReturnType<Driver> => {
+    const isRoot = effects.length === 0;
     // resolved VNode -> stored VNode -> generated VNode
     const resolvedOldVNode: VNode =
       resolveVNode(oldVNode) ?? el[OLD_VNODE_FIELD] ?? fromDomNodeToVNode(el);
@@ -32,7 +32,6 @@ export const useNode = (drivers: any[]): any => {
 
     const finish = (element: DOMNode): ReturnType<Driver> => {
       if (isRoot) {
-        isRoot = false;
         effects.push({
           el,
           type: EffectTypes.SET_PROP,

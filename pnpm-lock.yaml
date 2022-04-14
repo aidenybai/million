@@ -11,7 +11,7 @@ specifiers:
   '@types/virtual-dom': ^2.1.1
   '@typescript-eslint/eslint-plugin': ^5.19.0
   '@typescript-eslint/parser': ^5.19.0
-  '@vitejs/plugin-legacy': ^1.8.0
+  '@vitejs/plugin-legacy': ^1.8.1
   '@vitest/ui': ^0.9.3
   benchmark: ^2.1.4
   c8: ^7.11.0
@@ -40,9 +40,9 @@ specifiers:
   taze: ^0.5.0
   tslib: ^2.3.1
   typescript: ^4.6.3
-  unbuild: ^0.7.3
+  unbuild: ^0.7.4
   virtual-dom: ^2.1.1
-  vite: ^2.9.1
+  vite: ^2.9.4
   vitest: ^0.9.3
   zx: ^6.0.7
 
@@ -57,7 +57,7 @@ devDependencies:
   '@types/virtual-dom': 2.1.1
   '@typescript-eslint/eslint-plugin': 5.19.0_f34adc8488d2e4f014fe61432d70cbf2
   '@typescript-eslint/parser': 5.19.0_eslint@8.13.0+typescript@4.6.3
-  '@vitejs/plugin-legacy': 1.8.0_vite@2.9.1
+  '@vitejs/plugin-legacy': 1.8.1_vite@2.9.4
   '@vitest/ui': 0.9.3
   benchmark: 2.1.4
   c8: 7.11.0
@@ -86,9 +86,9 @@ devDependencies:
   taze: 0.5.0
   tslib: 2.3.1
   typescript: 4.6.3
-  unbuild: 0.7.3
+  unbuild: 0.7.4
   virtual-dom: 2.1.1
-  vite: 2.9.1
+  vite: 2.9.4
   vitest: 0.9.3_b3c95fdf6a320f4075c1a77216ad51b0
   zx: 6.0.7
 
@@ -281,8 +281,8 @@ packages:
     hasBin: true
     dev: true
 
-  /@babel/standalone/7.17.8:
-    resolution: {integrity: sha512-tr3SDpVnxR/fzrxyG+HZPAyEA9eTHZIAjy4eqrc7m+KBwsdo1YvTbUfJ6teWHQ177mk6GmdmltsIiOYCcvRPWA==}
+  /@babel/standalone/7.17.9:
+    resolution: {integrity: sha512-9wL9AtDlga8avxUrBvQJmhUtJWrelsUL0uV+TcP+49Sb6Pj8/bNIzQzU4dDp0NAPOvnZR/7msFIKsKoCl/W1/w==}
     engines: {node: '>=6.9.0'}
     dev: true
 
@@ -1092,18 +1092,18 @@ packages:
       eslint-visitor-keys: 3.3.0
     dev: true
 
-  /@vitejs/plugin-legacy/1.8.0_vite@2.9.1:
-    resolution: {integrity: sha512-S3+uL1zp8GLUbmJAQk2wQbZLTyISKRFSMBwCFI3XQVRD3OZshqkiPyOKdRiSPlP9HoGz+q90kk+1qPm1tJRqCg==}
+  /@vitejs/plugin-legacy/1.8.1_vite@2.9.4:
+    resolution: {integrity: sha512-kmBWKq7EeNvzS4AqPBqUKdoWG/NYQXh7StUFMWR3D21aN5Mfmar7CTO2a7K+bBxJH/vAL9gnnueA0wb7cycCmQ==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       vite: ^2.8.0
     dependencies:
-      '@babel/standalone': 7.17.8
+      '@babel/standalone': 7.17.9
       core-js: 3.21.1
       magic-string: 0.26.1
       regenerator-runtime: 0.13.9
       systemjs: 6.12.1
-      vite: 2.9.1
+      vite: 2.9.4
     dev: true
 
   /@vitest/ui/0.9.3:
@@ -4507,8 +4507,8 @@ packages:
     resolution: {integrity: sha512-zMq5n3cOf4fOzA4WoeulxagbAgMChdev3MgP6K51k7M0u2whTXxupfIY4VVzws4vxkiWhwH1rVQcsw7zDGfRhA==}
     dev: true
 
-  /mlly/0.5.1:
-    resolution: {integrity: sha512-0axKqxbYyQvaAfi6BNqDluCJqg6RkjdsdFxSDoiP6l5HplSTr3ie5Vkxvw9U9ogdj65x56amTnAn+xSoP727Rg==}
+  /mlly/0.5.2:
+    resolution: {integrity: sha512-4GTELSSErv6ZZJYU98fZNuIBJcXSz+ktHdRrCYEqU1m6ZlebOCG0jwZ+IEd9vOrbpYsVBBMC5OTrEyLnKRcauQ==}
     dependencies:
       pathe: 0.2.0
       pkg-types: 0.3.2
@@ -6296,8 +6296,8 @@ packages:
     hasBin: true
     dev: true
 
-  /unbuild/0.7.3:
-    resolution: {integrity: sha512-P3w2ZBhQ9bBOBbIEJx1n9I9lhe+WMfqHk6nIqd0D71kW8Vua+Rpn4IhWCsLYIxwP5sgy90ZRXUKa2Fbox/KITw==}
+  /unbuild/0.7.4:
+    resolution: {integrity: sha512-gJvfMw4h5Q7xieMCeW/d3wtNKZDpFyDR9651s8kL+AGp95sMNhAFRLxy24AUKC3b5EQbB74vaDoU5R+XwsZC6A==}
     hasBin: true
     dependencies:
       '@rollup/plugin-alias': 3.1.9_rollup@2.70.1
@@ -6315,7 +6315,7 @@ packages:
       magic-string: 0.26.1
       mkdirp: 1.0.4
       mkdist: 0.3.10_typescript@4.6.3
-      mlly: 0.5.1
+      mlly: 0.5.2
       mri: 1.2.0
       pathe: 0.2.0
       pkg-types: 0.3.2
@@ -6364,7 +6364,7 @@ packages:
     resolution: {integrity: sha512-sY6u8RedwfLfBis0copfU/fzROieyAndqPs8Kn2PfyzTjtA88vCk81J1b5z+8/VJc+cwfGy23/AqOCpvAbkNVw==}
     dependencies:
       '@babel/core': 7.17.8
-      '@babel/standalone': 7.17.8
+      '@babel/standalone': 7.17.9
       '@babel/types': 7.17.0
       scule: 0.2.1
     transitivePeerDependencies:
@@ -6467,8 +6467,8 @@ packages:
       x-is-string: 0.1.0
     dev: true
 
-  /vite/2.9.1:
-    resolution: {integrity: sha512-vSlsSdOYGcYEJfkQ/NeLXgnRv5zZfpAsdztkIrs7AZHV8RCMZQkwjo4DS5BnrYTqoWqLoUe1Cah4aVO4oNNqCQ==}
+  /vite/2.9.4:
+    resolution: {integrity: sha512-7pO6ruZMsyTpaPB7kGtW+yj15Ze5g+E4w4Ramk1sAJLIuI4uPd5sauqubmZNpq0Yc1vLVxoXRf2Uj+qWxk5aXw==}
     engines: {node: '>=12.2.0'}
     hasBin: true
     peerDependencies:
@@ -6486,7 +6486,7 @@ packages:
       esbuild: 0.14.36
       postcss: 8.4.12
       resolve: 1.22.0
-      rollup: 2.66.1
+      rollup: 2.70.1
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
@@ -6519,7 +6519,7 @@ packages:
       local-pkg: 0.4.1
       tinypool: 0.1.2
       tinyspy: 0.3.2
-      vite: 2.9.1
+      vite: 2.9.4
     transitivePeerDependencies:
       - less
       - sass
