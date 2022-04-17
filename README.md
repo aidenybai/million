@@ -123,9 +123,10 @@ Million is being used in open source work like [tinypages](https://github.com/Bo
 
 ## Sponsors
 
-<a href="https://vercel.com/?utm_source=millionjs&utm_campaign=oss" target="_blank"><img height="44" src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/vercel-logo.svg" alt="Vercel"></a>
-
-<a href="https://deta.sh/?utm_source=millionjs&utm_campaign=oss" target="_blank"><img height="44" src="https://www.deta.sh/dist/images/deta_logo.svg" alt="Deta"></a>
+<div>
+  <a href="https://vercel.com/?utm_source=millionjs&utm_campaign=oss" target="_blank"><img height="44" src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/vercel-logo.svg" alt="Vercel"></a>&nbsp;&nbsp;
+  <a href="https://deta.sh/?utm_source=millionjs&utm_campaign=oss" target="_blank"><img height="44" src="https://www.deta.sh/dist/images/deta_logo.svg" alt="Deta"></a>
+</div>
 
 **Want your logo here? [→ Sponsor Million](https://github.com/sponsors/aidenybai)**
 
