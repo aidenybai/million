@@ -26,7 +26,7 @@ specifiers:
   hundred: ^0.1.0
   husky: ^7.0.4
   jsdom: ^19.0.0
-  lint-staged: ^12.3.7
+  lint-staged: ^12.3.8
   lodash: ^4.17.21
   np: ^7.6.1
   ora: ^6.1.0
@@ -44,7 +44,7 @@ specifiers:
   virtual-dom: ^2.1.1
   vite: ^2.9.5
   vitest: ^0.9.3
-  zx: ^6.0.7
+  zx: ^6.1.0
 
 devDependencies:
   '@commitlint/cli': 16.2.3
@@ -72,7 +72,7 @@ devDependencies:
   hundred: 0.1.0
   husky: 7.0.4
   jsdom: 19.0.0
-  lint-staged: 12.3.7
+  lint-staged: 12.3.8
   lodash: 4.17.21
   np: 7.6.1
   ora: 6.1.0
@@ -90,7 +90,7 @@ devDependencies:
   virtual-dom: 2.1.1
   vite: 2.9.5
   vitest: 0.9.3_b3c95fdf6a320f4075c1a77216ad51b0
-  zx: 6.0.7
+  zx: 6.1.0
 
 packages:
 
@@ -4034,8 +4034,8 @@ packages:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
     dev: true
 
-  /lint-staged/12.3.7:
-    resolution: {integrity: sha512-/S4D726e2GIsDVWIk1XGvheCaDm1SJRQp8efamZFWJxQMVEbOwSysp7xb49Oo73KYCdy97mIWinhlxcoNqIfIQ==}
+  /lint-staged/12.3.8:
+    resolution: {integrity: sha512-0+UpNaqIwKRSGAFOCcpuYNIv/j5QGVC+xUVvmSdxHO+IfIGoHbFLo3XcPmV/LLnsVj5EAncNHVtlITSoY5qWGQ==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     hasBin: true
     dependencies:
@@ -4415,6 +4415,10 @@ packages:
 
   /minimist/1.2.5:
     resolution: {integrity: sha512-FM9nNUYrRBAELZQT3xeZQ7fmMOBg6nWNmJKTcgsJeaLstP/UODVpGsr5OhXhhXg6f+qtJ8uiZ+PUxkDWcgIXLw==}
+    dev: true
+
+  /minimist/1.2.6:
+    resolution: {integrity: sha512-Jsjnk4bw3YJqYzbdyBiNsPWHPfO++UGG749Cxs6peCu5Xg4nrena6OVxOYxrQTqww0Jmwt+Ref8rggumkTLz9Q==}
     dev: true
 
   /minipass-collect/1.0.2:
@@ -6705,6 +6709,11 @@ packages:
     engines: {node: '>= 6'}
     dev: true
 
+  /yaml/2.0.1:
+    resolution: {integrity: sha512-1NpAYQ3wjzIlMs0mgdBmYzLkFgWBIWrzYVDYfrixhoFNNgJ444/jT2kUT2sicRbJES3oQYRZugjB6Ro8SjKeFg==}
+    engines: {node: '>= 14'}
+    dev: true
+
   /yargs-parser/20.2.9:
     resolution: {integrity: sha512-y11nGElTIV+CT3Zv9t7VKl+Q3hTQoT9a1Qzezhhl6Rp21gJ/IVTW7Z3y9EWXhuUBC2Shnf+DX0antecpAwSP8w==}
     engines: {node: '>=10'}
@@ -6765,8 +6774,8 @@ packages:
       - encoding
     dev: true
 
-  /zx/6.0.7:
-    resolution: {integrity: sha512-aJTTKN4m9m8wM02yQ4jMOXMp53Ni+r+VDAs0D+bo9l9x9nCMhOocNWeTjoaancHkb7LpNb4oLILp58HzTy0GpQ==}
+  /zx/6.1.0:
+    resolution: {integrity: sha512-LcvyN946APdktLPm1ta4wfNiJaDuq1iHOTDwApP69ug5hNYWzMYaVMC5Ek6Ny4nnSLpJ6wdY42feR/2LY5/nVA==}
     engines: {node: '>= 16.0.0'}
     hasBin: true
     dependencies:
@@ -6777,9 +6786,9 @@ packages:
       chalk: 5.0.1
       fs-extra: 10.0.1
       globby: 13.1.1
-      minimist: 1.2.5
+      minimist: 1.2.6
       node-fetch: 3.2.3
       ps-tree: 1.2.0
       which: 2.0.2
-      yaml: 1.10.2
+      yaml: 2.0.1
     dev: true

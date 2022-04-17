@@ -82,17 +82,6 @@ export const router = (routes?: Record<string, VElement>) => {
       }
     });
 
-    window.addEventListener('popstate', () => {
-      if (window.location.hash) return;
-      const url = new URL(window.location.toString());
-      try {
-        navigate(url, {}, true);
-      } catch (e) {
-        window.location.reload();
-      }
-      return;
-    });
-
     window.addEventListener('submit', async (event) => {
       event.stopPropagation();
       event.preventDefault();
@@ -114,6 +103,17 @@ export const router = (routes?: Record<string, VElement>) => {
             ? `?${new URLSearchParams(body)}`
             : JSON.stringify(body),
       });
+    });
+
+    window.addEventListener('popstate', () => {
+      if (window.location.hash) return;
+      const url = new URL(window.location.toString());
+      try {
+        navigate(url, {}, true);
+      } catch (e) {
+        window.location.reload();
+      }
+      return;
     });
   }
 };
