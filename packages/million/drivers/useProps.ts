@@ -105,9 +105,7 @@ export const useProps =
             propName,
             oldProps[propName],
             // Keep track the number of matches with newProps
-            Object.prototype.hasOwnProperty.call(newProps, propName)
-              ? (matches++, newProps![propName])
-              : undefined,
+            Reflect.has(newProps, propName) ? (matches++, newProps![propName]) : undefined,
             effects,
           );
         }
@@ -116,7 +114,7 @@ export const useProps =
         // Limit to number of matches to reduce the number of iterations
         for (let i = 0; matches < keys.length && i < keys.length; ++i) {
           const propName = keys[i];
-          if (!Object.prototype.hasOwnProperty.call(oldProps, propName)) {
+          if (!Reflect.has(oldProps, propName)) {
             updateProp(el, propName, undefined, newProps![propName], effects);
             ++matches;
           }
