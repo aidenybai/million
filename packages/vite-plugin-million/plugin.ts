@@ -1,6 +1,9 @@
+import { transformAsync } from '@babel/core';
 import { parse, print, visit } from 'recast';
 import { compile } from './compile';
 import { jsxFactory } from './index';
+
+const JSX_FILTER = /\.(jsx|tsx)$/;
 
 export const million = (options?: { importSource: string }): any[] => [
   {
@@ -19,9 +22,24 @@ export const million = (options?: { importSource: string }): any[] => [
     },
   },
   {
-    name: 'vite:million-jsx',
+    name: 'vite:million-jsx-static-hoist',
+    enforce: 'pre',
     async transform(code: string, id: string) {
-      if (id.includes('node_modules') || !/\.(jsx|tsx)$/.test(id)) return;
+      if (id.includes('node_modules') || !JSX_FILTER.test(id)) return;
+      const result = await transformAsync(code, {
+        filename: id,
+        plugins: [
+          '@babel/plugin-transform-react-constant-elements',
+          ['@babel/plugin-transform-react-jsx', { runtime: 'classic', pragma: jsxFactory }],
+        ],
+      });
+      return { code: result?.code, map: result?.map };
+    },
+  },
+  {
+    name: 'vite:million-static-vnode',
+    async transform(code: string, id: string) {
+      if (id.includes('node_modules') || !JSX_FILTER.test(id)) return;
 
       const ast = parse(code);
       const astNodes: any[] = [];
