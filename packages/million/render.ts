@@ -1,9 +1,21 @@
+import { fromDomNodeToVNode } from '../shared/convert';
 import { createElement } from './createElement';
 import { useChildren } from './drivers/useChildren';
 import { useNode } from './drivers/useNode';
 import { useProps } from './drivers/useProps';
-import { DOMNode, DOM_REF_FIELD, Driver, Effect, Hook, VEntity, VNode } from './types';
+import { resolveVNode } from './m';
 import { startTransition } from './scheduler';
+import {
+  DOMNode,
+  DOM_REF_FIELD,
+  Driver,
+  Effect,
+  EffectTypes,
+  Hook,
+  OLD_VNODE_FIELD,
+  VEntity,
+  VNode,
+} from './types';
 
 /**
  * Diffs two VNodes
@@ -24,6 +36,11 @@ export const patch = (
     if (hook(data.el, data.newVNode, data.oldVNode)) work();
   };
   const data = diff(el, newVNode, oldVNode, commit, effects);
+  effects.push({
+    el: data.el,
+    type: EffectTypes.SET_PROP,
+    flush: () => (data.el[OLD_VNODE_FIELD] = resolveVNode(newVNode)),
+  });
   for (let i = 0; i < effects.length; i++) {
     requestAnimationFrame(effects[i].flush);
   }

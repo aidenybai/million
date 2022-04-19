@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
 import legacy from '@vitejs/plugin-legacy';
-import { million } from '../packages/vite-plugin-million';
 
 export default defineConfig({
   root: 'benchmarks',
@@ -10,8 +9,12 @@ export default defineConfig({
       packages: resolve(__dirname, '../packages'),
     },
   },
+  esbuild: {
+    jsxFactory: 'h',
+    jsxFragment: 'Fragment',
+    jsxInject: `import { h, Fragment } from 'packages/jsx-runtime';`,
+  },
   plugins: [
-    million({ importSource: 'packages/jsx-runtime' }),
     legacy({
       targets: ['> 0.25%', 'last 2 versions', 'Firefox ESR', 'not dead'],
     }),

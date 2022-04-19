@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import { createElement, patch } from 'packages/million';
+import { createElement, patch, render } from 'packages/million';
 import Chart from 'chart.js/auto';
 import confetti from 'canvas-confetti';
 import { highlight } from 'sugar-high';
@@ -31,8 +31,6 @@ const cumulative = {
   DOM: 0,
   innerHTML: 0,
 };
-const logs: [string, string][] = [];
-const history = localStorage.logs && localStorage.logs.length ? JSON.parse(localStorage.logs) : [];
 let disabled = false;
 
 const suites = [
@@ -54,7 +52,6 @@ const suites = [
       log(`Fastest is ${suite.filter('fastest').map('name')}`);
       disabled = false;
       patch(el, vnode());
-      localStorage.logs = JSON.stringify([...logs, ...history]);
       celebration();
       chart.data.datasets[0].backgroundColor = [
         'rgba(182, 216, 169, 1)',
@@ -68,94 +65,85 @@ const suites = [
       chart.update();
     }),
 );
-const vnode = () => (
-  <div>
+const vnode = () => {
+  return (
     <div>
-      {suites.map((suite) => {
-        const [name, description] = suite.name.split('(');
-        return (
-          <a
-            role="button"
-            href="#"
-            onclick={(event) => {
-              const modal = document.getElementById('modal');
-              event.preventDefault();
-              modal.open = true;
-              modal.querySelector('article').innerHTML = `<h2>${name}</h2><p>${description.slice(
-                0,
-                -1,
-              )}</p><p><a href="https://github.com/aidenybai/million/blob/main/benchmarks/suites/${camelCase(
-                name,
-              )}.tsx"><b>→ View Source Code</b></a></p><p><details><summary>Benchmark Config</summary><pre><code>${highlight(
-                JSON.stringify(suite, null, 2),
-              )}</code></pre></details></p><footer><button role="button" data-target="modal" onClick="document.getElementById('modal').removeAttribute('open')">Understood</button></footer>`;
-              disabled = name;
-              logs.unshift([]);
-              log(`Running: ${suite.name} - ${new Date().toLocaleString()}`);
-              chart.data.datasets[0].backgroundColor = new Array(7).fill('rgba(0, 0, 0, 0.2)');
-              chart.update();
-              suite.run({ async: true });
-              patch(el, vnode());
-            }}
-            style={{
-              margin: '5px',
-              opacity: disabled && disabled !== name ? 0.25 : 1,
-              pointerEvents: disabled ? 'none' : 'auto',
-            }}
-            disabled={disabled}
-          >{`${disabled === name ? '☑️ ' : ''}${name}`}</a>
-        );
-      })}
-    </div>
-
-    <br />
-
-    <details open={!!logs.length}>
-      <summary>Graph (Cumulative)</summary>
-      <canvas id="viz" width="400" height="200"></canvas>
-    </details>
-
-    <details open={!!logs.length}>
-      <summary key="logs">Logs</summary>
-
       <div>
-        {logs.map(
-          (logGroup) =>
-            logGroup.length && (
-              <pre>
-                <code>{logGroup.join('\n')}</code>
-              </pre>
-            ),
-        )}
+        {suites.map((suite) => {
+          const [name, description] = suite.name.split('(');
+          return (
+            <a
+              role="button"
+              href="#"
+              onclick={(event) => {
+                const modal = document.getElementById('modal');
+                event.preventDefault();
+                modal.open = true;
+                render(
+                  modal.querySelector('article'),
+                  <div>
+                    <h2>{name}</h2>
+                    <p>{description.slice(0, -1)}</p>
+                    <p>
+                      <a
+                        href={`https://github.com/aidenybai/million/blob/main/benchmarks/suites/${camelCase(
+                          name,
+                        )}.tsx`}
+                      >
+                        <b>→ View Source Code</b>
+                      </a>
+                    </p>
+                    <p>
+                      <details>
+                        <summary>Benchmark Config</summary>
+                        <pre>
+                          <code innerHTML={highlight(JSON.stringify(suite, null, 2))}></code>
+                        </pre>
+                      </details>
+                    </p>
+                    <footer>
+                      <button
+                        role="button"
+                        data-target="modal"
+                        onClick={() => document.getElementById('modal').removeAttribute('open')}
+                      >
+                        Understood
+                      </button>
+                    </footer>
+                  </div>,
+                );
+                disabled = name;
+                log(`Running: ${suite.name} - ${new Date().toLocaleString()}`);
+                chart.data.datasets[0].backgroundColor = new Array(7).fill('rgba(0, 0, 0, 0.2)');
+                chart.update();
+                suite.run({ async: true });
+                patch(el, vnode());
+              }}
+              style={{
+                margin: '5px',
+                opacity: disabled && disabled !== name ? 0.25 : 1,
+                pointerEvents: disabled ? 'none' : 'auto',
+              }}
+              disabled={disabled}
+            >{`${disabled === name ? '☑️ ' : ''}${name}`}</a>
+          );
+        })}
       </div>
-    </details>
 
-    {history.length ? (
-      <details style={{ opacity: 0.5 }}>
-        <summary key="history">History</summary>
+      <br />
 
-        <div>
-          {history.map(
-            (logGroup) =>
-              logGroup.length && (
-                <pre>
-                  <code>{logGroup.join('\n')}</code>
-                </pre>
-              ),
-          )}
-        </div>
+      <details open={true}>
+        <summary>Graph (Cumulative)</summary>
+        <canvas id="viz" width="400" height="200"></canvas>
       </details>
-    ) : (
-      ''
-    )}
-  </div>
-);
+    </div>
+  );
+};
 
 const el = createElement(vnode());
 
 const log = (message) => {
   if (message.name) cumulative[message.name] += Math.round(message.hz);
-  logs[0].push(String(message));
   patch(el, vnode());
   console.log(String(message));
   const sortedKeys = Object.keys(cumulative).sort((a, b) => cumulative[b] - cumulative[a]);

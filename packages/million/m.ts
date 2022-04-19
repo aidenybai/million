@@ -118,9 +118,9 @@ export const m = (
   return velement.tag.toLowerCase() === 'svg' ? svg(velement) : velement;
 };
 
-export const resolveVNode = (entity?: VNode | VEntity): VNode | null | undefined => {
-  if (typeof entity === 'object' && entity.flag === Flags.ENTITY) {
-    return resolveVNode(entity.resolve());
+export const resolveVNode = (entityMaybe?: VNode | VEntity): VNode | null | undefined => {
+  if (typeof entityMaybe === 'object' && entityMaybe.flag === Flags.ENTITY) {
+    return resolveVNode(entityMaybe.resolve());
   }
-  return entity;
+  return entityMaybe;
 };

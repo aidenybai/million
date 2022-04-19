@@ -28,9 +28,10 @@ export const million = (options?: { importSource: string }): any[] => [
       if (id.includes('node_modules') || !JSX_FILTER.test(id)) return;
       const result = await transformAsync(code, {
         filename: id,
+        presets: ['@babel/preset-typescript'],
         plugins: [
-          '@babel/plugin-transform-react-constant-elements',
           ['@babel/plugin-transform-react-jsx', { runtime: 'classic', pragma: jsxFactory }],
+          '@babel/plugin-transform-react-constant-elements',
         ],
       });
       return { code: result?.code, map: result?.map };

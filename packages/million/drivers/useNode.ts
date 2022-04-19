@@ -24,21 +24,12 @@ export const useNode = (drivers: any[]): any => {
     commit: Commit = (work: () => void) => work(),
     effects: Effect[] = [],
   ): ReturnType<Driver> => {
-    const isRoot = effects.length === 0;
     // resolved VNode -> stored VNode -> generated VNode
     const resolvedOldVNode: VNode =
       resolveVNode(oldVNode) ?? el[OLD_VNODE_FIELD] ?? fromDomNodeToVNode(el);
     const resolvedNewVNode: VNode = resolveVNode(newVNode)!;
 
     const finish = (element: DOMNode): ReturnType<Driver> => {
-      if (isRoot) {
-        effects.push({
-          el,
-          type: EffectTypes.SET_PROP,
-          flush: () => (element[OLD_VNODE_FIELD] = resolvedNewVNode),
-        });
-      }
-
       return {
         el: element,
         newVNode: resolvedNewVNode,
