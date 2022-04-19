@@ -1,4 +1,3 @@
-import { fromDomNodeToVNode } from '../shared/convert';
 import { createElement } from './createElement';
 import { useChildren } from './drivers/useChildren';
 import { useNode } from './drivers/useNode';
