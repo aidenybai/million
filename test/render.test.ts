@@ -271,6 +271,6 @@ describe.concurrent('render', () => {
     const el2 = patch(el1, entity1);
 
     expectEqualNode(el2, document.createElement('a'));
-    expect(entity1.data.local).toEqual(1);
+    expect(entity1.data.local).toEqual(2);
   });
 });
