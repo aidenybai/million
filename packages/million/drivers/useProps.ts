@@ -24,7 +24,7 @@ export const updateProp = (
       el,
       type: EffectTypes.SET_PROP,
       flush: () => {
-        if (oldPropValue) el.removeEventListener(eventPropName, oldPropValue as EventListener);
+        el.removeEventListener(eventPropName, oldPropValue as EventListener);
         el.addEventListener(eventPropName, newPropValue as EventListener);
       },
     });
