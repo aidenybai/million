@@ -44,12 +44,10 @@ Million aims to fix this, providing a **library-agnostic** Virtual DOM to serve 
   <tbody>
     <tr>
       <td>
-        <img width="500" height="0px">
-        <h4>Advantages</h4>
+        <h3>Advantages</h3>
       </td>
       <td>
-        <img width="500" height="0px">
-        <h4>Use Cases</h4>
+        <h3>Use Cases</h3>
       </td>
     </tr>
     <tr>
