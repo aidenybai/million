@@ -44,12 +44,12 @@ Million aims to fix this, providing a **library-agnostic** Virtual DOM to serve 
   <tbody>
     <tr>
       <td>
-        <img width="500" height="1px">
-        <h3>Advantages</h3>
+        <img width="500" height="0px">
+        <h4>Advantages</h4>
       </td>
       <td>
-        <img width="500" height="1px">
-        <h3>Use Cases</h3>
+        <img width="500" height="0px">
+        <h4>Use Cases</h4>
       </td>
     </tr>
     <tr>
@@ -123,11 +123,16 @@ Million is being used in open source work like [tinypages](https://github.com/Bo
 
 ## Sponsors
 
-<div>
-  <a href="https://vercel.com/?utm_source=millionjs&utm_campaign=oss" target="_blank"><img height="44" src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/vercel-logo.svg" alt="Vercel"></a>&nbsp;&nbsp;
-  <a href="https://deta.sh/?utm_source=millionjs&utm_campaign=oss" target="_blank"><img height="44" src="https://www.deta.sh/dist/images/deta_logo.svg" alt="Deta"></a>
-</div>
-
+<table>
+  <tr>
+    <td>
+      <a href="https://vercel.com/?utm_source=millionjs&utm_campaign=oss" target="_blank"><img height="44" src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/vercel-logo.svg" alt="Vercel"></a>
+    </td>
+    <td>
+      <a href="https://deta.sh/?utm_source=millionjs&utm_campaign=oss" target="_blank"><img height="44" src="https://www.deta.sh/dist/images/deta_logo.svg" alt="Deta"></a>
+    </td>
+  </tr>
+</table>
 <br />
 
 **Want your logo here? [→ Sponsor Million](https://github.com/sponsors/aidenybai)**
