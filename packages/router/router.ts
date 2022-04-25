@@ -7,6 +7,7 @@ import { getURL, normalizeRelativeURLs } from './utils';
 
 const parser = new DOMParser();
 const routesMap = new Map<string, VElement>();
+const listeners = new Map<string, (() => any)[]>();
 
 export const parsePageContent = (content: string, url: URL): Document => {
   const html = parser.parseFromString(content, 'text/html');
@@ -26,6 +27,13 @@ export const getPageContent = async (
 };
 
 export const navigate = async (url: URL, opts?: RequestInit, goBack = false): Promise<void> => {
+  if (listeners.has(url.pathname)) {
+    const currentListeners = listeners.get(url.pathname)!;
+    for (let i = 0; i < currentListeners.length; i++) {
+      currentListeners[i]();
+    }
+  }
+
   if (!goBack) {
     history.pushState({}, '', url);
     window.scrollTo({ top: 0 });
@@ -50,70 +58,96 @@ export const navigate = async (url: URL, opts?: RequestInit, goBack = false): Pr
 };
 
 export const router = (routes?: Record<string, VElement>) => {
-  if (typeof window !== 'undefined') {
-    for (const route in routes) {
-      routesMap.set(route, routes[route]);
-    }
-
-    window.addEventListener('click', (event) => {
-      const url = getURL(event);
-      if (!url) return;
-      event.preventDefault();
-      try {
-        navigate(url);
-      } catch (_err) {
-        window.location.assign(url);
-      }
-    });
-
-    window.addEventListener('mouseover', async (event) => {
-      const url = getURL(event);
-      if (!url) return;
-      event.preventDefault();
-      if (routesMap.has(url.pathname)) return;
-      const content = await getPageContent(url);
-      if (content) {
-        const html = parsePageContent(content, url);
-        const vnode = m('html', undefined, [
-          fromDomNodeToVNode(html.head)!,
-          fromDomNodeToVNode(html.body)!,
-        ]);
-        routesMap.set(url.pathname, vnode);
-      }
-    });
-
-    window.addEventListener('submit', async (event) => {
-      event.stopPropagation();
-      event.preventDefault();
-
-      const el = event.target;
-      if (!(el instanceof HTMLFormElement)) return;
-
-      const formData = new FormData(el);
-      const body = {};
-      formData.forEach((value, key) => {
-        body[key] = value;
-      });
-
-      navigate(new URL(el.action), {
-        method: el.method,
-        redirect: 'follow',
-        body:
-          !el.method || el.method.toLowerCase() === 'get'
-            ? `?${new URLSearchParams(body)}`
-            : JSON.stringify(body),
-      });
-    });
-
-    window.addEventListener('popstate', () => {
-      if (window.location.hash) return;
-      const url = new URL(window.location.toString());
-      try {
-        navigate(url, {}, true);
-      } catch (e) {
-        window.location.reload();
-      }
-      return;
-    });
+  for (const route in routes) {
+    routesMap.set(route, routes[route]);
   }
+
+  window.addEventListener('click', (event) => {
+    const url = getURL(event);
+    if (!url) return;
+    event.preventDefault();
+    try {
+      navigate(url);
+    } catch (_err) {
+      window.location.assign(url);
+    }
+  });
+
+  window.addEventListener('mouseover', async (event) => {
+    const url = getURL(event);
+    if (!url) return;
+    event.preventDefault();
+    if (routesMap.has(url.pathname)) return;
+    const content = await getPageContent(url);
+    if (content) {
+      const html = parsePageContent(content, url);
+      const vnode = m('html', undefined, [
+        fromDomNodeToVNode(html.head)!,
+        fromDomNodeToVNode(html.body)!,
+      ]);
+      routesMap.set(url.pathname, vnode);
+    }
+  });
+
+  window.addEventListener('submit', async (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+
+    const el = event.target;
+    if (!(el instanceof HTMLFormElement)) return;
+
+    const formData = new FormData(el);
+    const body = {};
+    formData.forEach((value, key) => {
+      body[key] = value;
+    });
+
+    navigate(new URL(el.action), {
+      method: el.method,
+      redirect: 'follow',
+      body:
+        !el.method || el.method.toLowerCase() === 'get'
+          ? `?${new URLSearchParams(body)}`
+          : JSON.stringify(body),
+    });
+  });
+
+  window.addEventListener('popstate', () => {
+    if (window.location.hash) return;
+    const url = new URL(window.location.toString());
+    try {
+      navigate(url, {}, true);
+    } catch (e) {
+      window.location.reload();
+    }
+    return;
+  });
+
+  const controller = {
+    on: (path: string, listener: () => any) => {
+      if (listeners.has(path)) {
+        listeners.set(path, [listener, ...listeners.get(path)!]);
+      } else {
+        listeners.set(path, [listener]);
+      }
+      return controller;
+    },
+    off: (path: string, listener: () => any) => {
+      const currentListeners = listeners.get(path)!;
+      listeners.set(
+        path,
+        currentListeners.filter((l) => l !== listener),
+      );
+      return controller;
+    },
+    add: (path: string, vnode: VElement) => {
+      routesMap.set(path, vnode);
+      return controller;
+    },
+    remove: (path: string) => {
+      routesMap.delete(path);
+      return controller;
+    },
+  };
+  return controller;
 };

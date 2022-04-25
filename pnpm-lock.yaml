@@ -42,7 +42,6 @@ specifiers:
   simple-virtual-dom: ^0.1.10
   snabbdom: ^3.4.0
   source-map: ^0.7.3
-  sugar-high: ^0.4.0
   taze: ^0.5.0
   tslib: ^2.4.0
   typescript: ^4.6.3
@@ -94,7 +93,6 @@ devDependencies:
   simple-virtual-dom: 0.1.10
   snabbdom: 3.4.0
   source-map: 0.7.3
-  sugar-high: 0.4.0
   taze: 0.5.0
   tslib: 2.4.0
   typescript: 4.6.3
@@ -6157,10 +6155,6 @@ packages:
   /strip-json-comments/3.1.1:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
-    dev: true
-
-  /sugar-high/0.4.0:
-    resolution: {integrity: sha512-B3b8RUKXz/+ta2TkLseQNo6YLnxRgKTOrZz6lilVYPVjuNi+7wI1HSiaKZPcMVa48txElVIEl1udj5Wk+Q2spQ==}
     dev: true
 
   /supports-color/2.0.0:

@@ -3,7 +3,6 @@
 import { createElement, patch, render } from 'packages/million';
 import Chart from 'chart.js/auto';
 import confetti from 'canvas-confetti';
-import { highlight } from 'sugar-high';
 import { camelCase } from 'lodash';
 
 import appendManyRowsToLargeTable from './suites/appendManyRowsToLargeTable';
@@ -97,7 +96,7 @@ const vnode = () => {
                       <details>
                         <summary>Benchmark Config</summary>
                         <pre>
-                          <code innerHTML={highlight(JSON.stringify(suite, null, 2))}></code>
+                          <code>{JSON.stringify(suite, null, 2)}</code>
                         </pre>
                       </details>
                     </p>
