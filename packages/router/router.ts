@@ -3,6 +3,7 @@ import { patch } from '../million/render';
 import { VElement } from '../million/types';
 import { morph } from '../morph/morph';
 import { fromDomNodeToVNode } from '../shared/convert';
+import { Controller } from './types';
 import { getURL, normalizeRelativeURLs } from './utils';
 
 const parser = new DOMParser();
@@ -57,7 +58,7 @@ export const navigate = async (url: URL, opts?: RequestInit, goBack = false): Pr
   }
 };
 
-export const router = (routes?: Record<string, VElement>) => {
+export const router = (routes?: Record<string, VElement>): Controller => {
   for (const route in routes) {
     routesMap.set(route, routes[route]);
   }
@@ -123,7 +124,7 @@ export const router = (routes?: Record<string, VElement>) => {
     return;
   });
 
-  const controller = {
+  const controller: Controller = {
     on: (path: string, listener: () => any) => {
       if (listeners.has(path)) {
         listeners.set(path, [listener, ...listeners.get(path)!]);
