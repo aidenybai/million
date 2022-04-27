@@ -1,6 +1,5 @@
-import { m } from '../million/m';
 import { patch } from '../million/render';
-import { VElement } from '../million/types';
+import { VElement, VElementFlags, Flags } from '../million/types';
 import { morph } from '../morph/morph';
 import { fromDomNodeToVNode } from '../shared/convert';
 import { Listener, Controller } from './types';
@@ -82,11 +81,12 @@ export const router = (routes?: Record<string, VElement>): Controller => {
     const content = await getContent(url);
     if (content) {
       const html = parseContent(content, url);
-      const vnode = m('html', undefined, [
-        fromDomNodeToVNode(html.head)!,
-        fromDomNodeToVNode(html.body)!,
-      ]);
-      routeMap.set(url.pathname, vnode);
+
+      routeMap.set(url.pathname, {
+        tag: 'html',
+        children: [fromDomNodeToVNode(html.head)!, fromDomNodeToVNode(html.body)!],
+        flag: Flags.ELEMENT as VElementFlags,
+      });
     }
   });
 
