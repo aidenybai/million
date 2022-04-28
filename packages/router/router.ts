@@ -57,14 +57,17 @@ export const navigate = async (url: URL, opts?: RequestInit, goBack = false): Pr
   }
 };
 
-export const router = (routes?: Record<string, VElement>): Controller => {
+export const router = (
+  routes: Record<string, VElement> = {},
+  hook: (url: URL) => boolean = () => true,
+): Controller => {
   for (const route in routes) {
     routeMap.set(route, routes[route]);
   }
 
   window.addEventListener('click', (event) => {
     const url = getURL(event);
-    if (!url) return;
+    if (!url || !hook(url)) return;
     event.preventDefault();
     try {
       navigate(url);
@@ -75,7 +78,7 @@ export const router = (routes?: Record<string, VElement>): Controller => {
 
   window.addEventListener('mouseover', async (event) => {
     const url = getURL(event);
-    if (!url) return;
+    if (!url || !hook(url)) return;
     event.preventDefault();
     if (routeMap.has(url.pathname)) return;
     const content = await getContent(url);
@@ -94,8 +97,9 @@ export const router = (routes?: Record<string, VElement>): Controller => {
     event.stopPropagation();
     event.preventDefault();
 
-    const el = event.target;
-    if (!(el instanceof HTMLFormElement)) return;
+    const el = event.target as HTMLFormElement;
+    const url = new URL(el.action);
+    if (!el.action || !hook(url) || !(el instanceof HTMLFormElement)) return;
 
     const formData = new FormData(el);
     const body = {};
@@ -103,7 +107,7 @@ export const router = (routes?: Record<string, VElement>): Controller => {
       body[key] = value;
     });
 
-    navigate(new URL(el.action), {
+    navigate(url, {
       method: el.method,
       redirect: 'follow',
       body:
@@ -114,8 +118,8 @@ export const router = (routes?: Record<string, VElement>): Controller => {
   });
 
   window.addEventListener('popstate', () => {
-    if (window.location.hash) return;
     const url = new URL(window.location.toString());
+    if (window.location.hash || !hook(url)) return;
     try {
       navigate(url, {}, true);
     } catch (e) {
