@@ -95,7 +95,7 @@ export const useNode = (drivers: any[]): any => {
             return finish(newEl);
           }
 
-          if (resolvedNewVNode.flag === Flags.ELEMENT_SKIP_DRIVERS) {
+          if (resolvedNewVNode.flag !== Flags.ELEMENT_SKIP_DRIVERS) {
             for (let i = 0; i < drivers.length; ++i) {
               commit(
                 () => {
