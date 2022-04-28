@@ -63,7 +63,7 @@ export const million = (options?: { importSource: string }): any[] => [
 
       const result = print(ast);
 
-      return { code: code, map: result.map };
+      return { code: result.code, map: result.map };
     },
   },
 ];
