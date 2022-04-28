@@ -22,7 +22,13 @@ export const normalize = (jsxVNode: JSXVNode): VNode | VNode[] | undefined => {
 };
 
 export const h = (tag: string | FC, props?: VProps, ...children: JSXVNode[]) => {
-  if (typeof tag === 'function') return tag(props);
+  if (typeof tag === 'function') {
+    if (children.length) {
+      if (!props) props = {};
+      props.children = children;
+    }
+    return tag(props);
+  }
   let flag = Flags.ELEMENT_NO_CHILDREN;
   let delta: Delta[] | undefined;
   const normalizedChildren: VNode[] = [];
