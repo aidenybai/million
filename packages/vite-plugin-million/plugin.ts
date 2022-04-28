@@ -4,6 +4,7 @@ import { compile } from './compile';
 import { jsxFactory } from './index';
 
 const JSX_FILTER = /\.(jsx|tsx)$/;
+const jsxFragment = `${jsxFactory}_FRAGMENT`;
 
 export const million = (options?: { importSource: string }): any[] => [
   {
@@ -13,8 +14,8 @@ export const million = (options?: { importSource: string }): any[] => [
       return {
         esbuild: {
           jsxFactory,
-          jsxFragment: `${jsxFactory}_FRAGMENT`,
-          jsxInject: `import { h as ${jsxFactory}, Fragment as ${jsxFactory}_FRAGMENT } from '${
+          jsxFragment,
+          jsxInject: `import { h as ${jsxFactory}, Fragment as ${jsxFragment} } from '${
             options?.importSource || 'million/jsx-runtime'
           }';`,
         },
@@ -32,7 +33,7 @@ export const million = (options?: { importSource: string }): any[] => [
         plugins: [
           [
             '@babel/plugin-transform-react-jsx',
-            { runtime: 'classic', pragma: jsxFactory, pragmaFrag: `${jsxFactory}_FRAGMENT` },
+            { runtime: 'classic', pragma: jsxFactory, pragmaFrag: jsxFragment },
           ],
           '@babel/plugin-transform-react-constant-elements',
         ],
@@ -48,17 +49,19 @@ export const million = (options?: { importSource: string }): any[] => [
       const ast = parse(code);
       const astNodes: any[] = [];
 
-      visit(ast, {
-        visitCallExpression(path) {
-          if (path.value.callee.name === jsxFactory) {
-            astNodes.push(path);
-          }
-          this.traverse(path);
-        },
-      });
+      if (!code.includes(jsxFragment)) {
+        visit(ast, {
+          visitCallExpression(path) {
+            if (path.value.callee.name === jsxFactory) {
+              astNodes.push(path);
+            }
+            this.traverse(path);
+          },
+        });
 
-      for (let i = 0; i < astNodes.length; i++) {
-        astNodes[i].replace(compile(astNodes[i].value));
+        for (let i = 0; i < astNodes.length; i++) {
+          astNodes[i].replace(compile(astNodes[i].value));
+        }
       }
 
       const result = print(ast);

@@ -26,6 +26,10 @@ export const compile = (astNode: CallExpression) => {
 };
 
 export const fromASTNodeToVNode = (astNode: CallExpression): JSXVNode | CallExpression => {
+  if (astNode.arguments[0].type !== 'Literal') {
+    return astNode;
+  }
+
   const args = astNode.arguments;
   const astProps = astNode.arguments[1] as ObjectExpression;
   const astChildren = args.slice(2);
@@ -56,9 +60,9 @@ export const fromASTNodeToVNode = (astNode: CallExpression): JSXVNode | CallExpr
 
   for (const child of astChildren) {
     if (child.type === 'CallExpression') {
-      if ((child.callee as Identifier).name === jsxFactory)
+      if ((child.callee as Identifier).name === jsxFactory) {
         vnodeChildren.push(fromASTNodeToVNode(child) as JSXVNode);
-      else return astNode;
+      } else return astNode;
     } else if (
       child.type === 'Literal' &&
       child.value !== undefined &&
