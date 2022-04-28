@@ -30,7 +30,10 @@ export const million = (options?: { importSource: string }): any[] => [
         filename: id,
         presets: ['@babel/preset-typescript'],
         plugins: [
-          ['@babel/plugin-transform-react-jsx', { runtime: 'classic', pragma: jsxFactory }],
+          [
+            '@babel/plugin-transform-react-jsx',
+            { runtime: 'classic', pragma: jsxFactory, pragmaFrag: `${jsxFactory}_FRAGMENT` },
+          ],
           '@babel/plugin-transform-react-constant-elements',
         ],
       });
@@ -60,7 +63,7 @@ export const million = (options?: { importSource: string }): any[] => [
 
       const result = print(ast);
 
-      return { code: result.code, map: result.map };
+      return { code: code, map: result.map };
     },
   },
 ];

@@ -70,8 +70,8 @@ export const useNode = (drivers: any[]): any => {
           return finish(el);
         }
         if (
-          resolvedNewVNode.flag === Flags.ELEMENT_SKIP_DIFF ||
-          resolvedOldVNode.flag === Flags.ELEMENT_SKIP_DIFF
+          resolvedNewVNode.flag === Flags.ELEMENT_FORCE_UPDATE ||
+          resolvedOldVNode.flag === Flags.ELEMENT_FORCE_UPDATE
         ) {
           const newEl = createElement(newVNode);
           el.replaceWith(newEl);
@@ -95,25 +95,27 @@ export const useNode = (drivers: any[]): any => {
             return finish(newEl);
           }
 
-          for (let i = 0; i < drivers.length; ++i) {
-            commit(
-              () => {
-                (drivers[i] as Driver)(
+          if (resolvedNewVNode.flag === Flags.ELEMENT_SKIP_DRIVERS) {
+            for (let i = 0; i < drivers.length; ++i) {
+              commit(
+                () => {
+                  (drivers[i] as Driver)(
+                    el,
+                    resolvedNewVNode,
+                    resolvedOldVNode,
+                    commit,
+                    effects,
+                    nodeDriver,
+                  );
+                },
+                {
                   el,
-                  resolvedNewVNode,
-                  resolvedOldVNode,
-                  commit,
+                  newVNode: resolvedNewVNode,
+                  oldVNode: resolvedOldVNode,
                   effects,
-                  nodeDriver,
-                );
-              },
-              {
-                el,
-                newVNode: resolvedNewVNode,
-                oldVNode: resolvedOldVNode,
-                effects,
-              },
-            );
+                },
+              );
+            }
           }
         }
       }
