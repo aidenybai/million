@@ -1,10 +1,14 @@
 import { VElement } from '../million/types';
 
+export interface Route {
+  vnode?: VElement;
+  html?: Document;
+  hook?: (url: URL) => boolean;
+}
+
 export type Listener = (data: { url: URL; opts?: RequestInit; goBack: boolean }) => void;
 
 export interface Controller {
-  on: (path: string, listener: Listener) => Controller;
-  off: (path: string, listener: Listener) => Controller;
-  add: (path: string, vnode: VElement) => Controller;
-  remove: (path: string) => Controller;
+  setRoute: (path: string, vnode: VElement) => Controller;
+  removeRoute: (path: string) => Controller;
 }
