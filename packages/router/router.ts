@@ -1,13 +1,16 @@
 import { patch } from '../million/render';
-import { VElement, VElementFlags, Flags } from '../million/types';
+import { VElement } from '../million/types';
 import { morph } from '../morph/morph';
-import { fromDomNodeToVNode } from '../shared/convert';
-import { Listener, Controller } from './types';
+import { Controller, Listener } from './types';
 import { getURL, normalizeRelativeURLs } from './utils';
 
 const parser = new DOMParser();
-const routeMap = new Map<string, VElement>();
+const routeMap = new Map<string, VElement | Document>();
 const listenerMap = new Map<string, Listener[]>();
+
+export const getEl = (el: HTMLElement, selector?: string): HTMLElement => {
+  return selector ? el.querySelector<HTMLElement>(selector)! : el;
+};
 
 export const parseContent = (content: string, url: URL): Document => {
   const html = parser.parseFromString(content, 'text/html');
@@ -26,7 +29,12 @@ export const getContent = async (
     });
 };
 
-export const navigate = async (url: URL, opts?: RequestInit, goBack = false): Promise<void> => {
+export const navigate = async (
+  url: URL,
+  selector?: string,
+  opts?: RequestInit,
+  goBack = false,
+): Promise<void> => {
   if (listenerMap.has(url.pathname)) {
     const currentListeners = listenerMap.get(url.pathname)!;
     for (let i = 0; i < currentListeners.length; i++) {
@@ -40,26 +48,33 @@ export const navigate = async (url: URL, opts?: RequestInit, goBack = false): Pr
   }
 
   if (routeMap.has(url.pathname)) {
-    const vnode = routeMap.get(url.pathname)!;
-    if (!vnode.children) return;
-    const [head, body] = vnode.children;
+    const vnodeOrElement = routeMap.get(url.pathname)!;
 
-    if (head) patch(document.head, head);
-    if (body) patch(document.body, body);
+    if (vnodeOrElement instanceof Document) {
+      morph(
+        getEl(vnodeOrElement.documentElement, selector),
+        getEl(document.documentElement, selector),
+      );
+      if (selector) document.title = vnodeOrElement.title;
+    } else {
+      patch(getEl(document.documentElement, selector), vnodeOrElement);
+    }
   } else {
     const content = await getContent(url, opts);
     if (!content) return;
 
     const html = parseContent(content, url);
 
-    morph(html.head, document.head);
-    morph(html.body, document.body);
+    if (selector) document.title = html.title;
+
+    morph(getEl(html.documentElement, selector), getEl(document.documentElement, selector));
   }
 };
 
 export const router = (
   routes: Record<string, VElement> = {},
-  hook: (url: URL) => boolean = () => true,
+  selector?: string,
+  hook: (url?: URL) => boolean = () => true,
 ): Controller => {
   for (const route in routes) {
     routeMap.set(route, routes[route]);
@@ -70,7 +85,7 @@ export const router = (
     if (!url || !hook(url)) return;
     event.preventDefault();
     try {
-      navigate(url);
+      navigate(url, selector);
     } catch (_err) {
       window.location.assign(url);
     }
@@ -85,11 +100,7 @@ export const router = (
     if (content) {
       const html = parseContent(content, url);
 
-      routeMap.set(url.pathname, {
-        tag: 'html',
-        children: [fromDomNodeToVNode(html.head)!, fromDomNodeToVNode(html.body)!],
-        flag: Flags.ELEMENT as VElementFlags,
-      });
+      routeMap.set(url.pathname, html);
     }
   });
 
@@ -107,7 +118,7 @@ export const router = (
       body[key] = value;
     });
 
-    navigate(url, {
+    navigate(url, selector, {
       method: el.method,
       redirect: 'follow',
       body:
@@ -121,7 +132,7 @@ export const router = (
     const url = new URL(window.location.toString());
     if (window.location.hash || !hook(url)) return;
     try {
-      navigate(url, {}, true);
+      navigate(url, selector, {}, true);
     } catch (e) {
       window.location.reload();
     }
