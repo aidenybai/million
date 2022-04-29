@@ -1,12 +1,25 @@
 import { patch } from '../million/render';
 import { VElement } from '../million/types';
 import { morph } from '../morph/morph';
-import { Controller, Listener } from './types';
+import { Controller, Listener, Route } from './types';
 import { getURL, normalizeRelativeURLs } from './utils';
 
 const parser = new DOMParser();
-const routeMap = new Map<string, VElement | Document>();
-const listenerMap = new Map<string, Listener[]>();
+const routeMap = new Map<string, Route>();
+
+export const setRoute = (path: string, route: Route) => {
+  routeMap.set(path, { ...routeMap.get(path), ...route });
+};
+
+export const createRoute = (
+  vnode: VElement,
+  listener: Listener,
+  hook: (url: URL) => boolean = () => true,
+) => ({
+  vnode,
+  listener,
+  hook,
+});
 
 export const getEl = (el: HTMLElement, selector?: string): HTMLElement => {
   return selector ? el.querySelector<HTMLElement>(selector)! : el;
@@ -35,29 +48,19 @@ export const navigate = async (
   opts?: RequestInit,
   goBack = false,
 ): Promise<void> => {
-  if (listenerMap.has(url.pathname)) {
-    const currentListeners = listenerMap.get(url.pathname)!;
-    for (let i = 0; i < currentListeners.length; i++) {
-      currentListeners[i]({ url, opts, goBack });
-    }
-  }
-
   if (!goBack) {
     history.pushState({}, '', url);
     window.scrollTo({ top: 0 });
   }
 
   if (routeMap.has(url.pathname)) {
-    const vnodeOrElement = routeMap.get(url.pathname)!;
+    const route = routeMap.get(url.pathname)!;
 
-    if (vnodeOrElement instanceof Document) {
-      morph(
-        getEl(vnodeOrElement.documentElement, selector),
-        getEl(document.documentElement, selector),
-      );
-      if (selector) document.title = vnodeOrElement.title;
-    } else {
-      patch(getEl(document.documentElement, selector), vnodeOrElement);
+    if (route.vnode) {
+      patch(getEl(document.documentElement, selector), route.vnode);
+    } else if (route.html) {
+      morph(getEl(route.html.documentElement, selector), getEl(document.documentElement, selector));
+      if (selector) document.title = route.html.title;
     }
   } else {
     const content = await getContent(url, opts);
@@ -65,24 +68,24 @@ export const navigate = async (
 
     const html = parseContent(content, url);
 
+    setRoute(url.pathname, { html });
+
     if (selector) document.title = html.title;
 
     morph(getEl(html.documentElement, selector), getEl(document.documentElement, selector));
   }
 };
 
-export const router = (
-  routes: Record<string, VElement> = {},
-  selector?: string,
-  hook: (url?: URL) => boolean = () => true,
-): Controller => {
-  for (const route in routes) {
-    routeMap.set(route, routes[route]);
+export const router = (selector?: string, routes: Record<string, Route> = {}): Controller => {
+  for (const path in routes) {
+    setRoute(path, routes[path]);
   }
 
   window.addEventListener('click', (event) => {
     const url = getURL(event);
-    if (!url || !hook(url)) return;
+    if (!url) return;
+    const route = routeMap.get(url.pathname);
+    if (route && route.hook && !route.hook(url)) return;
     event.preventDefault();
     try {
       navigate(url, selector);
@@ -93,24 +96,27 @@ export const router = (
 
   window.addEventListener('mouseover', async (event) => {
     const url = getURL(event);
-    if (!url || !hook(url)) return;
+    if (!url) return;
+    const route = routeMap.get(url.pathname);
+    if (route && route.hook && !route.hook(url)) return;
     event.preventDefault();
     if (routeMap.has(url.pathname)) return;
     const content = await getContent(url);
     if (content) {
       const html = parseContent(content, url);
-
-      routeMap.set(url.pathname, html);
+      setRoute(url.pathname, { html });
     }
   });
 
   window.addEventListener('submit', async (event) => {
-    event.stopPropagation();
-    event.preventDefault();
-
     const el = event.target as HTMLFormElement;
     const url = new URL(el.action);
-    if (!el.action || !hook(url) || !(el instanceof HTMLFormElement)) return;
+    if (!el.action || !(el instanceof HTMLFormElement)) return;
+    const route = routeMap.get(el.action);
+    if (route && route.hook && !route.hook(url)) return;
+
+    event.stopPropagation();
+    event.preventDefault();
 
     const formData = new FormData(el);
     const body = {};
@@ -130,7 +136,10 @@ export const router = (
 
   window.addEventListener('popstate', () => {
     const url = new URL(window.location.toString());
-    if (window.location.hash || !hook(url)) return;
+    if (window.location.hash) return;
+    const route = routeMap.get(url.pathname);
+    if (route && route.hook && !route.hook(url)) return;
+
     try {
       navigate(url, selector, {}, true);
     } catch (e) {
@@ -140,27 +149,11 @@ export const router = (
   });
 
   const controller: Controller = {
-    on: (path: string, listener: Listener) => {
-      if (listenerMap.has(path)) {
-        listenerMap.set(path, [listener, ...listenerMap.get(path)!]);
-      } else {
-        listenerMap.set(path, [listener]);
-      }
+    setRoute: (path: string, vnode: VElement) => {
+      routeMap.set(path, { vnode });
       return controller;
     },
-    off: (path: string, listener: Listener) => {
-      const currentListeners = listenerMap.get(path)!;
-      listenerMap.set(
-        path,
-        currentListeners.filter((l) => l !== listener),
-      );
-      return controller;
-    },
-    add: (path: string, vnode: VElement) => {
-      routeMap.set(path, vnode);
-      return controller;
-    },
-    remove: (path: string) => {
+    removeRoute: (path: string) => {
       routeMap.delete(path);
       return controller;
     },
