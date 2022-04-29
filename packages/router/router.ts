@@ -69,6 +69,10 @@ export const navigate = async (
 
     morph(getEl(html.documentElement, selector), getEl(document.documentElement, selector));
   }
+
+  const navigateEvent = new CustomEvent('million:navigate', { detail: { url } });
+
+  window.dispatchEvent(navigateEvent);
 };
 
 export const router = (selector?: string, routes: Record<string, Route> = {}): Controller => {
