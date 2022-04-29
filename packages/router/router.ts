@@ -1,7 +1,7 @@
 import { patch } from '../million/render';
 import { VElement } from '../million/types';
 import { morph } from '../morph/morph';
-import { Controller, Listener, Route } from './types';
+import { Controller, Route } from './types';
 import { getURL, normalizeRelativeURLs } from './utils';
 
 const parser = new DOMParser();
@@ -85,7 +85,7 @@ export const router = (selector?: string, routes: Record<string, Route> = {}): C
     const url = getURL(event);
     if (!url) return;
     const route = routeMap.get(url.pathname);
-    if (route && route.hook && !route.hook(url)) return;
+    if (route && route.hook && !route.hook(url, route)) return;
     event.preventDefault();
     try {
       navigate(url, selector);
@@ -98,7 +98,7 @@ export const router = (selector?: string, routes: Record<string, Route> = {}): C
     const url = getURL(event);
     if (!url) return;
     const route = routeMap.get(url.pathname);
-    if (route && route.hook && !route.hook(url)) return;
+    if (route && route.hook && !route.hook(url, route)) return;
     event.preventDefault();
     if (routeMap.has(url.pathname)) return;
     const content = await getContent(url);
@@ -113,7 +113,7 @@ export const router = (selector?: string, routes: Record<string, Route> = {}): C
     const url = new URL(el.action);
     if (!el.action || !(el instanceof HTMLFormElement)) return;
     const route = routeMap.get(el.action);
-    if (route && route.hook && !route.hook(url)) return;
+    if (route && route.hook && !route.hook(url, route)) return;
 
     event.stopPropagation();
     event.preventDefault();
@@ -138,7 +138,7 @@ export const router = (selector?: string, routes: Record<string, Route> = {}): C
     const url = new URL(window.location.toString());
     if (window.location.hash) return;
     const route = routeMap.get(url.pathname);
-    if (route && route.hook && !route.hook(url)) return;
+    if (route && route.hook && !route.hook(url, route)) return;
 
     try {
       navigate(url, selector, {}, true);

@@ -3,10 +3,10 @@ import { VElement } from '../million/types';
 export interface Route {
   vnode?: VElement;
   html?: Document;
-  hook?: (url: URL) => boolean;
+  hook?: RouteHook;
 }
 
-export type Listener = (data: { url: URL; opts?: RequestInit; goBack: boolean }) => void;
+export type RouteHook = (url: URL, route: Route) => boolean;
 
 export interface Controller {
   setRoute: (path: string, vnode: VElement) => Controller;
