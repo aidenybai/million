@@ -11,13 +11,8 @@ export const setRoute = (path: string, route: Route) => {
   routeMap.set(path, { ...routeMap.get(path), ...route });
 };
 
-export const createRoute = (
-  vnode: VElement,
-  listener: Listener,
-  hook: (url: URL) => boolean = () => true,
-) => ({
+export const createRoute = (vnode: VElement, hook: (url: URL) => boolean = () => true) => ({
   vnode,
-  listener,
   hook,
 });
 
