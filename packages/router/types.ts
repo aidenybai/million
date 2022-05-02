@@ -7,8 +7,3 @@ export interface Route {
 }
 
 export type RouteHook = (url: URL, route: Route) => boolean;
-
-export interface Controller {
-  setRoute: (path: string, vnode: VElement) => Controller;
-  removeRoute: (path: string) => Controller;
-}

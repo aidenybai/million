@@ -1,11 +1,13 @@
 import { patch } from '../million/render';
 import { VElement } from '../million/types';
 import { morph } from '../morph/morph';
-import { Controller, Route } from './types';
+import { Route } from './types';
 import { getURL, normalizeRelativeURLs } from './utils';
+import { createProgressBar, startTrickle, stopTrickle } from './progress';
 
 const parser = new DOMParser();
 const routeMap = new Map<string, Route>();
+const progressBar = createProgressBar();
 
 export const setRoute = (path: string, route: Route) => {
   routeMap.set(path, { ...routeMap.get(path), ...route });
@@ -43,6 +45,8 @@ export const navigate = async (
   opts?: RequestInit,
   goBack = false,
 ): Promise<void> => {
+  startTrickle(progressBar);
+
   if (!goBack) {
     history.pushState({}, '', url);
     window.scrollTo({ top: 0 });
@@ -73,9 +77,14 @@ export const navigate = async (
   const navigateEvent = new CustomEvent('million:navigate', { detail: { url } });
 
   window.dispatchEvent(navigateEvent);
+
+  stopTrickle(progressBar);
 };
 
-export const router = (selector?: string, routes: Record<string, Route> = {}): Controller => {
+export const router = (
+  selector?: string,
+  routes: Record<string, Route> = {},
+): Map<string, Route> => {
   for (const path in routes) {
     setRoute(path, routes[path]);
   }
@@ -147,15 +156,5 @@ export const router = (selector?: string, routes: Record<string, Route> = {}): C
     return;
   });
 
-  const controller: Controller = {
-    setRoute: (path: string, vnode: VElement) => {
-      routeMap.set(path, { vnode });
-      return controller;
-    },
-    removeRoute: (path: string) => {
-      routeMap.delete(path);
-      return controller;
-    },
-  };
-  return controller;
+  return routeMap;
 };
