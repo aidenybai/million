@@ -21,16 +21,16 @@ export const createProgressBar = (): HTMLElement => {
 
   const el = document.createElement('div');
   el.className = 'million-progress-bar';
-  el.style.width = '0';
-  el.style.opacity = '1';
 
   return el;
 };
 
 export const startTrickle = (el: HTMLElement): void => {
   let value = 0;
+  el.style.width = '0';
+  el.style.opacity = '1';
   document.documentElement.insertBefore(el, document.body);
-  window.setInterval(() => {
+  interval = window.setInterval(() => {
     value += Math.random() / 100;
     requestAnimationFrame(() => {
       el.style.width = `${10 + value * 90}%`;
@@ -39,11 +39,11 @@ export const startTrickle = (el: HTMLElement): void => {
 };
 
 export const stopTrickle = (el: HTMLElement): void => {
-  el.style.opacity = '0';
+  clearInterval(interval);
+  interval = undefined;
   el.style.width = '100%';
+  el.style.opacity = '0';
   setTimeout(() => {
-    clearInterval(interval);
-    interval = undefined;
     document.documentElement.removeChild(el);
   }, ANIMATION_DURATION * 1.5);
 };
