@@ -121,7 +121,7 @@
     "@typescript-eslint/eslint-plugin": "^5.22.0",
     "@typescript-eslint/parser": "^5.22.0",
     "@vitejs/plugin-legacy": "^1.8.2",
-    "@vitest/ui": "^0.10.1",
+    "@vitest/ui": "^0.10.2",
     "benchmark": "^2.1.4",
     "c8": "^7.11.2",
     "canvas-confetti": "^1.5.1",
@@ -151,7 +151,7 @@
     "unbuild": "^0.7.4",
     "virtual-dom": "^2.1.1",
     "vite": "^2.9.7",
-    "vitest": "^0.10.1",
+    "vitest": "^0.10.2",
     "zx": "^6.1.0"
   }
 }

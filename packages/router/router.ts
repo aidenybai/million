@@ -1,9 +1,10 @@
+import { createElement } from '../million/createElement';
 import { patch } from '../million/render';
 import { VElement } from '../million/types';
 import { morph } from '../morph/morph';
+import { createProgressBar, startTrickle, stopTrickle } from './progress';
 import { Route } from './types';
 import { getURL, normalizeRelativeURLs } from './utils';
-import { createProgressBar, startTrickle, stopTrickle } from './progress';
 
 const parser = new DOMParser();
 const routeMap = new Map<string, Route>();
@@ -49,6 +50,7 @@ export const navigate = async (
 ): Promise<void> => {
   lastUrl = url;
   startTrickle(progressBar);
+  const currentEl = getEl(document.documentElement, selector);
 
   if (!goBack) {
     history.pushState({ scroll: document.documentElement.scrollTop }, '', url);
@@ -59,10 +61,20 @@ export const navigate = async (
     const route = routeMap.get(url.pathname)!;
 
     if (route.vnode) {
-      patch(getEl(document.documentElement, selector), route.vnode);
+      try {
+        patch(currentEl, route.vnode);
+      } catch (_err) {
+        const el = createElement(route.vnode);
+        currentEl.replaceWith(el);
+      }
     } else if (route.html) {
-      morph(getEl(route.html.documentElement, selector), getEl(document.documentElement, selector));
+      const newEl = getEl(route.html.documentElement, selector);
       if (selector) document.title = route.html.title;
+      try {
+        morph(newEl, currentEl);
+      } catch (_err) {
+        currentEl.replaceWith(newEl);
+      }
     }
   } else {
     const content = await getContent(url, opts);
@@ -74,7 +86,12 @@ export const navigate = async (
 
     if (selector) document.title = html.title;
 
-    morph(getEl(html.documentElement, selector), getEl(document.documentElement, selector));
+    const newEl = getEl(html.documentElement, selector);
+    try {
+      morph(newEl, currentEl);
+    } catch (_err) {
+      currentEl.replaceWith(newEl);
+    }
   }
 
   const navigateEvent = new CustomEvent('million:navigate', { detail: { url } });
