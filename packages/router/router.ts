@@ -45,14 +45,15 @@ export const navigate = async (
   selector?: string,
   opts?: RequestInit,
   goBack = false,
+  scroll = 0,
 ): Promise<void> => {
   lastUrl = url;
   startTrickle(progressBar);
 
   if (!goBack) {
-    history.pushState({}, '', url);
-    window.scrollTo({ top: 0 });
+    history.pushState({ scroll: document.documentElement.scrollTop }, '', url);
   }
+  window.scrollTo({ top: scroll, behavior: 'auto' });
 
   if (routeMap.has(url.pathname)) {
     const route = routeMap.get(url.pathname)!;
@@ -144,7 +145,7 @@ export const router = (
     });
   });
 
-  window.addEventListener('popstate', () => {
+  window.addEventListener('popstate', (event: PopStateEvent) => {
     const url = new URL(window.location.toString());
 
     if (url.hash && url.pathname === lastUrl?.pathname) {
@@ -156,7 +157,7 @@ export const router = (
     if (route && route.hook && !route.hook(url, route)) return;
 
     try {
-      navigate(url, selector, {}, true);
+      navigate(url, selector, {}, true, event.state?.scroll);
     } catch (_err) {
       window.location.reload();
     }

@@ -44,6 +44,8 @@ export const stopTrickle = (el: HTMLElement): void => {
   el.style.width = '100%';
   el.style.opacity = '0';
   setTimeout(() => {
-    document.documentElement.removeChild(el);
+    if (document.documentElement.contains(el)) {
+      document.documentElement.removeChild(el);
+    }
   }, ANIMATION_DURATION * 1.5);
 };
