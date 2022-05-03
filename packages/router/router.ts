@@ -186,3 +186,13 @@ export const router = (
 
   return routeMap;
 };
+
+export const reload = (callback: () => any, delay?: number) => {
+  window.addEventListener('million:navigate', () => {
+    if (delay) {
+      setTimeout(() => requestAnimationFrame(callback), delay);
+    } else {
+      requestAnimationFrame(callback);
+    }
+  });
+};
