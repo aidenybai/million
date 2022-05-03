@@ -187,12 +187,8 @@ export const router = (
   return routeMap;
 };
 
-export const reload = (callback: () => any, delay?: number) => {
+export const reload = (callback: () => any, delay = 0) => {
   window.addEventListener('million:navigate', () => {
-    if (delay) {
-      setTimeout(() => requestAnimationFrame(callback), delay);
-    } else {
-      requestAnimationFrame(callback);
-    }
+    setTimeout(() => requestAnimationFrame(callback), delay);
   });
 };
