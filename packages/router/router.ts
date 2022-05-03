@@ -64,7 +64,9 @@ export const navigate = async (
       try {
         patch(currentEl, route.vnode);
       } catch (_err) {
-        const el = createElement(route.vnode);
+        const el = route.html
+          ? getEl(route.html.documentElement, selector)
+          : createElement(route.vnode);
         currentEl.replaceWith(el);
       }
     } else if (route.html) {
