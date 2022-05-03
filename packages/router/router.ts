@@ -8,6 +8,7 @@ import { createProgressBar, startTrickle, stopTrickle } from './progress';
 const parser = new DOMParser();
 const routeMap = new Map<string, Route>();
 const progressBar = createProgressBar();
+let lastUrl: URL | undefined;
 
 export const setRoute = (path: string, route: Route) => {
   routeMap.set(path, { ...routeMap.get(path), ...route });
@@ -45,6 +46,7 @@ export const navigate = async (
   opts?: RequestInit,
   goBack = false,
 ): Promise<void> => {
+  lastUrl = url;
   startTrickle(progressBar);
 
   if (!goBack) {
@@ -144,15 +146,21 @@ export const router = (
 
   window.addEventListener('popstate', () => {
     const url = new URL(window.location.toString());
-    if (window.location.hash) return;
+
+    if (url.hash && url.pathname === lastUrl?.pathname) {
+      lastUrl = url;
+      return;
+    }
+
     const route = routeMap.get(url.pathname);
     if (route && route.hook && !route.hook(url, route)) return;
 
     try {
       navigate(url, selector, {}, true);
-    } catch (e) {
+    } catch (_err) {
       window.location.reload();
     }
+
     return;
   });
 
