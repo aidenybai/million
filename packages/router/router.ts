@@ -55,7 +55,12 @@ export const navigate = async (
   if (!goBack) {
     history.pushState({ scroll: document.documentElement.scrollTop }, '', url);
   }
-  window.scrollTo({ top: scroll, behavior: 'auto' });
+  if (window.location.hash) {
+    const anchor = document.querySelector<HTMLElement>(window.location.hash);
+    if (anchor) anchor.scrollIntoView();
+  } else {
+    window.scrollTo({ top: scroll });
+  }
 
   if (routeMap.has(url.pathname)) {
     const route = routeMap.get(url.pathname)!;
@@ -127,15 +132,11 @@ export const router = (
   window.addEventListener('mouseover', async (event) => {
     const url = getURL(event);
     if (!url) return;
-    const route = routeMap.get(url.pathname);
-    if (route && route.hook && !route.hook(url, route)) return;
-    event.preventDefault();
     if (routeMap.has(url.pathname)) return;
-    const content = await getContent(url);
-    if (content) {
-      const html = parseContent(content, url);
-      setRoute(url.pathname, { html });
-    }
+    const route = routeMap.get(url.pathname)!;
+    if (route.hook && !route.hook(url, route)) return;
+    event.preventDefault();
+    prefetch(url);
   });
 
   window.addEventListener('submit', async (event) => {
@@ -180,11 +181,19 @@ export const router = (
     } catch (_err) {
       window.location.reload();
     }
-
-    return;
   });
 
   return routeMap;
+};
+
+export const prefetch = async (path: string | URL) => {
+  const url = typeof path === 'string' ? new URL(path) : path;
+  if (routeMap.has(url.pathname)) return;
+  const content = await getContent(url);
+  if (content) {
+    const html = parseContent(content, url);
+    setRoute(url.pathname, { html });
+  }
 };
 
 export const reload = (callback: () => any, delay = 0) => {
