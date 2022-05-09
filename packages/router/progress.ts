@@ -1,7 +1,7 @@
 const ANIMATION_DURATION = 300;
 let interval: number | undefined;
 
-export const createProgressBar = (): HTMLElement => {
+export const createProgressBar = (color = '#0076ff'): HTMLElement => {
   const style = document.createElement('style');
   style.type = 'text/css';
   style.textContent = `.million-progress-bar {
@@ -10,7 +10,7 @@ export const createProgressBar = (): HTMLElement => {
     top: 0;
     left: 0;
     height: 2px;
-    background: #0076ff;
+    background: ${color};
     z-index: 2147483647;
     transition:
       width ${ANIMATION_DURATION}ms ease-out,
@@ -26,10 +26,11 @@ export const createProgressBar = (): HTMLElement => {
 };
 
 export const startTrickle = (el: HTMLElement): void => {
+  const htmlEl = document.documentElement;
   let value = 0;
   el.style.width = '0';
   el.style.opacity = '1';
-  document.documentElement.insertBefore(el, document.body);
+  htmlEl.insertBefore(el, document.body);
   interval = window.setInterval(() => {
     value += Math.random() / 100;
     requestAnimationFrame(() => {
@@ -39,13 +40,14 @@ export const startTrickle = (el: HTMLElement): void => {
 };
 
 export const stopTrickle = (el: HTMLElement): void => {
+  const htmlEl = document.documentElement;
   clearInterval(interval);
   interval = undefined;
   el.style.width = '100%';
   el.style.opacity = '0';
   setTimeout(() => {
-    if (document.documentElement.contains(el)) {
-      document.documentElement.removeChild(el);
+    if (htmlEl.contains(el)) {
+      htmlEl.removeChild(el);
     }
   }, ANIMATION_DURATION * 1.5);
 };
