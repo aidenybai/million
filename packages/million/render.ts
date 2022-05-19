@@ -2,6 +2,7 @@ import { createElement } from './createElement';
 import { useChildren } from './drivers/useChildren';
 import { useNode } from './drivers/useNode';
 import { useProps } from './drivers/useProps';
+import { createEffectQueuer } from './effect';
 import { resolveVNode } from './m';
 import { startTransition } from './scheduler';
 import {
@@ -28,18 +29,15 @@ export const patch = (
   el: DOMNode,
   newVNode?: VNode | VEntity,
   oldVNode?: VNode | VEntity,
-  hook: Hook = () => true,
+  hook: Hook = (work: () => void) => work(),
   effects: Effect[] = [],
 ): DOMNode => {
+  const queueEffect = createEffectQueuer(el, effects);
   const commit = (work: () => void, data: ReturnType<Driver>) => {
-    if (hook(data.el, data.newVNode, data.oldVNode)) work();
+    hook(work, data.el, data.newVNode, data.oldVNode);
   };
   const data = diff(el, newVNode, oldVNode, commit, effects);
-  effects.push({
-    el: data.el,
-    type: EffectTypes.SET_PROP,
-    flush: () => (data.el[OLD_VNODE_FIELD] = resolveVNode(newVNode)),
-  });
+  queueEffect(EffectTypes.SET_PROP, () => (data.el[OLD_VNODE_FIELD] = resolveVNode(newVNode)));
   for (let i = 0; i < effects.length; i++) {
     requestAnimationFrame(effects[i].flush);
   }
