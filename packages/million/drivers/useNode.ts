@@ -1,5 +1,6 @@
 import { fromDomNodeToVNode } from '../../shared/convert';
 import { createElement } from '../createElement';
+import { createEffectQueuer } from '../effect';
 import { resolveVNode } from '../m';
 import {
   Commit,
@@ -28,6 +29,7 @@ export const useNode = (drivers: any[]): any => {
     const resolvedOldVNode: VNode =
       resolveVNode(oldVNode) ?? el[OLD_VNODE_FIELD] ?? fromDomNodeToVNode(el);
     const resolvedNewVNode: VNode = resolveVNode(newVNode)!;
+    const queueEffect = createEffectQueuer(el, effects);
 
     const finish = (element: DOMNode): ReturnType<Driver> => {
       return {
@@ -39,11 +41,7 @@ export const useNode = (drivers: any[]): any => {
     };
 
     if (resolvedNewVNode === undefined || resolvedNewVNode === null) {
-      effects.push({
-        el,
-        type: EffectTypes.REMOVE,
-        flush: () => el.remove(),
-      });
+      queueEffect(EffectTypes.REMOVE, () => el.remove());
       return finish(el);
     } else {
       const hasString =
@@ -51,11 +49,7 @@ export const useNode = (drivers: any[]): any => {
 
       if (hasString && resolvedOldVNode !== resolvedNewVNode) {
         const newEl = createElement(resolvedNewVNode, false);
-        effects.push({
-          el,
-          type: EffectTypes.REPLACE,
-          flush: () => el.replaceWith(newEl),
-        });
+        queueEffect(EffectTypes.REPLACE, () => el.replaceWith(newEl));
         return finish(newEl);
       }
       if (
@@ -87,11 +81,7 @@ export const useNode = (drivers: any[]): any => {
         ) {
           if (resolvedOldVNode.tag !== resolvedNewVNode.tag) {
             const newEl = createElement(resolvedNewVNode, false);
-            effects.push({
-              el,
-              type: EffectTypes.REPLACE,
-              flush: () => el.replaceWith(newEl),
-            });
+            queueEffect(EffectTypes.REPLACE, () => el.replaceWith(newEl));
             return finish(newEl);
           }
 

@@ -1,3 +1,4 @@
+import { createEffectQueuer } from '../effect';
 import {
   COLON_CHAR,
   Commit,
@@ -18,15 +19,12 @@ export const updateProp = (
   effects: Effect[],
 ): void => {
   if (oldPropValue === newPropValue) return;
+  const queueEffect = createEffectQueuer(el, effects);
   if (propName.startsWith('on')) {
     const eventPropName = propName.slice(2).toLowerCase();
-    effects.push({
-      el,
-      type: EffectTypes.SET_PROP,
-      flush: () => {
-        el.removeEventListener(eventPropName, oldPropValue as EventListener);
-        el.addEventListener(eventPropName, newPropValue as EventListener);
-      },
+    queueEffect(EffectTypes.SET_PROP, () => {
+      el.removeEventListener(eventPropName, oldPropValue as EventListener);
+      el.addEventListener(eventPropName, newPropValue as EventListener);
     });
   } else if (propName.charCodeAt(0) === X_CHAR) {
     if (propName.charCodeAt(3) === COLON_CHAR) {
@@ -36,34 +34,18 @@ export const updateProp = (
     }
   } else if (el[propName] !== undefined && !(el instanceof SVGElement)) {
     if (newPropValue) {
-      effects.push({
-        el,
-        type: EffectTypes.SET_PROP,
-        flush: () => (el[propName] = newPropValue),
-      });
+      queueEffect(EffectTypes.SET_PROP, () => (el[propName] = newPropValue));
     } else {
-      effects.push({
-        el,
-        type: EffectTypes.REMOVE_PROP,
-        flush: () => {
-          el[propName] = '';
-          el.removeAttribute(propName);
-          delete el[propName];
-        },
+      queueEffect(EffectTypes.REMOVE_PROP, () => {
+        el[propName] = '';
+        el.removeAttribute(propName);
+        delete el[propName];
       });
     }
   } else if (!newPropValue) {
-    effects.push({
-      el,
-      type: EffectTypes.REMOVE_PROP,
-      flush: () => el.removeAttribute(propName),
-    });
+    queueEffect(EffectTypes.REMOVE_PROP, () => el.removeAttribute(propName));
   } else {
-    effects.push({
-      el,
-      type: EffectTypes.SET_PROP,
-      flush: () => el.setAttribute(propName, String(newPropValue)),
-    });
+    queueEffect(EffectTypes.SET_PROP, () => el.setAttribute(propName, String(newPropValue)));
   }
 };
 

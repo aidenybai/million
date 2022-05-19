@@ -20,7 +20,7 @@ export type VProps = Record<string, any>;
 export type DOMNode = HTMLElement | SVGElement | Text | Comment;
 export type VNode = VElement | string;
 export type Delta = [DeltaTypes, number];
-export type Hook = (el?: DOMNode, newVNode?: VNode, oldVNode?: VNode) => boolean;
+export type Hook = (work: () => void, el?: DOMNode, newVNode?: VNode, oldVNode?: VNode) => void;
 export type Commit = (work: () => void, data: ReturnType<Driver>) => void;
 export type VElementFlags = Exclude<Flags, Flags.ENTITY>;
 export type Driver = (
