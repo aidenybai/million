@@ -26,7 +26,7 @@ git stage pnpm-lock.yaml
 
 info "Checking for errors..."
 
-if [ -n "$(git status packages --porcelain)" ]; then
+if [ -n "$(git status src --porcelain)" ]; then
   npx --no-install lint-staged --quiet || exit 1
 fi
 

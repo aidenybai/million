@@ -1,4 +1,4 @@
-import { patch } from 'packages/million';
+import { patch } from 'src/million';
 
 const adjectives = [
   'pretty',

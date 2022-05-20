@@ -1,3 +1,3 @@
-export * from '../shared/h';
+export * from '../million/vnode';
 export * from './jsx';
 export * from './types';

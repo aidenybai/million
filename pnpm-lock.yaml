@@ -18,7 +18,7 @@ specifiers:
   '@typescript-eslint/eslint-plugin': ^5.25.0
   '@typescript-eslint/parser': ^5.25.0
   '@vitejs/plugin-legacy': ^1.8.2
-  '@vitest/ui': ^0.12.6
+  '@vitest/ui': ^0.12.7
   benchmark: ^2.1.4
   c8: ^7.11.3
   canvas-confetti: ^1.5.1
@@ -48,7 +48,7 @@ specifiers:
   unbuild: ^0.7.4
   virtual-dom: ^2.1.1
   vite: ^2.9.9
-  vitest: ^0.12.6
+  vitest: ^0.12.7
   zx: ^6.1.0
 
 devDependencies:
@@ -69,7 +69,7 @@ devDependencies:
   '@typescript-eslint/eslint-plugin': 5.25.0_qo2hgs5jt7x2a3p77h2rutcdae
   '@typescript-eslint/parser': 5.25.0_hcfsmds2fshutdssjqluwm76uu
   '@vitejs/plugin-legacy': 1.8.2_vite@2.9.9
-  '@vitest/ui': 0.12.6
+  '@vitest/ui': 0.12.7
   benchmark: 2.1.4
   c8: 7.11.3
   canvas-confetti: 1.5.1
@@ -99,7 +99,7 @@ devDependencies:
   unbuild: 0.7.4
   virtual-dom: 2.1.1
   vite: 2.9.9
-  vitest: 0.12.6_rhe3np6hbbdnkdawtvjd3iddlm
+  vitest: 0.12.7_dvk4gpcaqws5m5hovqvxnn6jcu
   zx: 6.1.0
 
 packages:
@@ -1329,8 +1329,8 @@ packages:
       vite: 2.9.9
     dev: true
 
-  /@vitest/ui/0.12.6:
-    resolution: {integrity: sha512-3qHt0YWveaEmZEp7yr23Sn4nCWdDSAYjBLSoBHbnDXwpNhryLQz2KVR5XkJ74mQnOInXd+mh//GPMeLrJi7LJA==}
+  /@vitest/ui/0.12.7:
+    resolution: {integrity: sha512-Zbg4gKS5Ow8iXXkeEt5JvODpVOJB64xsUJ7aLh3rilUrh6MBTm0Fy7dQIa9eoRTG366kWSlfQxjwSGVQuKezPQ==}
     dependencies:
       sirv: 2.0.2
     dev: true
@@ -6585,8 +6585,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vitest/0.12.6_rhe3np6hbbdnkdawtvjd3iddlm:
-    resolution: {integrity: sha512-YWbCTv0XKBuBw5YtuW/iufuguoi8QhGpYyi2g57Oo7akpscMkkWTAaZGgY0ux1oJJtO/pc/8GFt0EF32WFBUUQ==}
+  /vitest/0.12.7_dvk4gpcaqws5m5hovqvxnn6jcu:
+    resolution: {integrity: sha512-rQsb9i/zEw+HtiTNr+5p+tOUMu0Ojp0jtZc/6FfE4T1xL2bhMq74tfUgu7hav3rFF9eGKpJeZBVlEszjdCuYQg==}
     engines: {node: '>=v14.16.0'}
     hasBin: true
     peerDependencies:
@@ -6606,9 +6606,10 @@ packages:
     dependencies:
       '@types/chai': 4.3.1
       '@types/chai-subset': 1.3.3
-      '@vitest/ui': 0.12.6
+      '@vitest/ui': 0.12.7
       c8: 7.11.3
       chai: 4.3.6
+      debug: 4.3.4
       jsdom: 19.0.0
       local-pkg: 0.4.1
       tinypool: 0.1.3
@@ -6618,6 +6619,7 @@ packages:
       - less
       - sass
       - stylus
+      - supports-color
     dev: true
 
   /w3c-hr-time/1.0.2:

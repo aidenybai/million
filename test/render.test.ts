@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
-import { createElement } from '../packages/million/createElement';
-import { Deltas, entity, m } from '../packages/million/m';
-import { patch, render } from '../packages/million/render';
-import { Flags, DOMNode } from '../packages/million/types';
+import { createElement } from '../src/million/createElement';
+import { Deltas, m } from '../src/million/vnode';
+import { patch, render } from '../src/million/render';
+import { Flags, DOMNode } from '../src/million/types';
 
 export const expectEqualNode = (el1: DOMNode, el2: DOMNode) => {
   expect(el1.isEqualNode(el2)).toBeTruthy();
@@ -253,24 +253,5 @@ describe.concurrent('render', () => {
     const el2 = patch(el1, m('a'));
 
     expectEqualNode(el2, document.createElement('a'));
-  });
-
-  it('should create entity', () => {
-    const el = createElement(entity({}, () => m('div')));
-
-    expectEqualNode(el, document.createElement('div'));
-  });
-
-  it('should patch entity', () => {
-    const data = { local: 0 };
-    const entity1 = entity(data, () => {
-      data.local++;
-      return m('a');
-    });
-    const el1 = createElement(entity({}, () => m('div')));
-    const el2 = patch(el1, entity1);
-
-    expectEqualNode(el2, document.createElement('a'));
-    expect(entity1.data.local).toEqual(2);
   });
 });

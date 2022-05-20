@@ -1,10 +1,10 @@
-import type { VNode, VProps } from '../million/types';
-import { h } from '../shared/h';
-import type { FC, JSXVNode } from './types';
+import type { VNode, VProps, RawVNode } from '../million/types';
+import { h } from '../million/vnode';
+import type { FC } from './types';
 
 const jsx = (tag: string | FC, props?: VProps, key?: string | null): VNode => {
   if (typeof tag === 'function') return tag(props, key);
-  let children: JSXVNode[] = [];
+  let children: RawVNode[] = [];
   if (props) {
     if (props.children) {
       children = Array.isArray(props.children) ? props.children : [props.children];

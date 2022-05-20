@@ -2,15 +2,14 @@ import { defineBuildConfig } from 'unbuild';
 
 export default defineBuildConfig({
   entries: [
-    './packages/million',
-    './packages/jsx-runtime',
-    './packages/ssr',
-    './packages/shared',
-    './packages/block',
-    './packages/router',
-    './packages/html',
-    './packages/morph',
-    './packages/vite-plugin-million',
+    './src/million',
+    './src/jsx-runtime',
+    './src/ssr',
+    './src/utils',
+    './src/router',
+    './src/html',
+    './src/morph',
+    './src/vite-plugin-million',
   ],
   declaration: true,
   clean: true,

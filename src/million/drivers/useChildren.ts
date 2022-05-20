@@ -371,40 +371,36 @@ export const useChildren =
       return finish(el);
     }
 
-    if (newVNode.flag === undefined || newVNode.flag === Flags.ELEMENT) {
-      if (oldVNodeChildren && newVNodeChildren) {
-        const commonLength = Math.min(oldVNodeChildren.length, newVNodeChildren.length);
+    if (oldVNodeChildren && newVNodeChildren) {
+      const commonLength = Math.min(oldVNodeChildren.length, newVNodeChildren.length);
 
-        // Interates backwards, so in case a childNode is destroyed, it will not shift the nodes
-        // and break accessing by index
-        for (let i = commonLength - 1; i >= 0; --i) {
-          commit(() => {
-            effects = diff(
-              el.childNodes.item(i) as DOMNode,
-              newVNodeChildren[i],
-              oldVNodeChildren[i],
-            );
-          }, getData(el));
-        }
+      // Interates backwards, so in case a childNode is destroyed, it will not shift the nodes
+      // and break accessing by index
+      for (let i = commonLength - 1; i >= 0; --i) {
+        commit(() => {
+          effects = diff(
+            el.childNodes.item(i) as DOMNode,
+            newVNodeChildren[i],
+            oldVNodeChildren[i],
+          );
+        }, getData(el));
+      }
 
-        if (newVNodeChildren.length > oldVNodeChildren.length) {
-          for (let i = commonLength; i < newVNodeChildren.length; ++i) {
-            const node = createElement(newVNodeChildren[i], false);
-            queueEffect(EffectTypes.CREATE, () => el.appendChild(node));
-          }
-        } else if (newVNodeChildren.length < oldVNodeChildren.length) {
-          for (let i = oldVNodeChildren.length - 1; i >= commonLength; --i) {
-            queueEffect(EffectTypes.REMOVE, () => el.removeChild(el.childNodes.item(i)));
-          }
-        }
-      } else if (newVNodeChildren) {
-        for (let i = 0; i < newVNodeChildren.length; ++i) {
+      if (newVNodeChildren.length > oldVNodeChildren.length) {
+        for (let i = commonLength; i < newVNodeChildren.length; ++i) {
           const node = createElement(newVNodeChildren[i], false);
           queueEffect(EffectTypes.CREATE, () => el.appendChild(node));
         }
+      } else if (newVNodeChildren.length < oldVNodeChildren.length) {
+        for (let i = oldVNodeChildren.length - 1; i >= commonLength; --i) {
+          queueEffect(EffectTypes.REMOVE, () => el.removeChild(el.childNodes.item(i)));
+        }
       }
-
-      return finish(el);
+    } else if (newVNodeChildren) {
+      for (let i = 0; i < newVNodeChildren.length; ++i) {
+        const node = createElement(newVNodeChildren[i], false);
+        queueEffect(EffectTypes.CREATE, () => el.appendChild(node));
+      }
     }
 
     return finish(el);

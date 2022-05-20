@@ -2,10 +2,10 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "packages/*": ["packages/*"]
+      "src/*": ["src/*"]
     },
     "jsx": "react-jsx",
-    "jsxImportSource": "packages",
+    "jsxImportSource": "src",
     "lib": ["dom", "esnext"],
     "declarationDir": "dist",
     "outDir": "dist",

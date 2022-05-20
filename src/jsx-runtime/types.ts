@@ -1,6 +1,5 @@
 import type { VNode, VProps } from '../million/types';
 
-export type JSXVNode = VNode | number | boolean | undefined | null;
 export type FC = (props?: VProps, key?: string | null) => any;
 
 // eslint-disable-next-line @typescript-eslint/no-namespace

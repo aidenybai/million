@@ -10,8 +10,8 @@
   "scripts": {
     "dev": "zx scripts/dev.mjs",
     "build": "zx scripts/build.mjs",
-    "lint": "eslint packages/**",
-    "cleanup": "prettier --write packages",
+    "lint": "eslint src/**",
+    "cleanup": "prettier --write src",
     "test": "vitest --coverage",
     "bench": "vite --config benchmarks/vite.config.ts",
     "release": "zx scripts/release.mjs",
@@ -43,11 +43,6 @@
       "require": "./dist/ssr.cjs",
       "types": "./ssr.d.ts"
     },
-    "./block": {
-      "import": "./dist/block.mjs",
-      "require": "./dist/block.cjs",
-      "types": "./block.d.ts"
-    },
     "./router": {
       "import": "./dist/router.mjs",
       "require": "./dist/router.cjs",
@@ -68,10 +63,10 @@
       "require": "./dist/vite-plugin-million.cjs",
       "types": "./vite-plugin-million.d.ts"
     },
-    "./shared": {
-      "import": "./dist/shared.mjs",
-      "require": "./dist/shared.cjs",
-      "types": "./shared.d.ts"
+    "./utils": {
+      "import": "./dist/utils.mjs",
+      "require": "./dist/utils.cjs",
+      "types": "./utils.d.ts"
     }
   },
   "sideEffects": false,
@@ -121,7 +116,7 @@
     "@typescript-eslint/eslint-plugin": "^5.25.0",
     "@typescript-eslint/parser": "^5.25.0",
     "@vitejs/plugin-legacy": "^1.8.2",
-    "@vitest/ui": "^0.12.6",
+    "@vitest/ui": "^0.12.7",
     "benchmark": "^2.1.4",
     "c8": "^7.11.3",
     "canvas-confetti": "^1.5.1",
@@ -151,7 +146,7 @@
     "unbuild": "^0.7.4",
     "virtual-dom": "^2.1.1",
     "vite": "^2.9.9",
-    "vitest": "^0.12.6",
+    "vitest": "^0.12.7",
     "zx": "^6.1.0"
   }
 }

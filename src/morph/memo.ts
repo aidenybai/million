@@ -1,5 +1,5 @@
 import { DOMNode, VNode } from '../million/types';
-import { fromDomNodeToVNode, fromStringToDomNode } from '../shared';
+import { fromDomNodeToVNode, fromStringToDomNode } from '../utils';
 
 const cache = new Map<DOMNode | string, VNode>();
 
