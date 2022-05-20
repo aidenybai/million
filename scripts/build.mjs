@@ -4,17 +4,16 @@ import { info, success } from './helpers.mjs';
 
 await $`rm -rf dist/*`;
 await $`unbuild`;
-await $`esbuild packages/jsx-runtime/index.ts --minify --bundle --outfile=dist/code-size-measurement.js`;
+await $`esbuild src/jsx-runtime/index.ts --minify --bundle --outfile=dist/code-size-measurement.js`;
 
 const packages = [
   'jsx-runtime',
   'ssr',
-  'block',
   'router',
   'html',
   'morph',
   'vite-plugin-million',
-  'shared',
+  'utils',
 ];
 
 for (const pkg of packages) {

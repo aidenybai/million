@@ -6,13 +6,13 @@ export default defineConfig({
   root: 'benchmarks',
   resolve: {
     alias: {
-      packages: resolve(__dirname, '../packages'),
+      src: resolve(__dirname, '../src'),
     },
   },
   esbuild: {
     jsxFactory: 'h',
     jsxFragment: 'Fragment',
-    jsxInject: `import { h, Fragment } from 'packages/jsx-runtime';`,
+    jsxInject: `import { h, Fragment } from 'src/jsx-runtime';`,
   },
   plugins: [
     legacy({

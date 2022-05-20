@@ -3,7 +3,6 @@ import { useChildren } from './drivers/useChildren';
 import { useNode } from './drivers/useNode';
 import { useProps } from './drivers/useProps';
 import { createEffectQueuer } from './effect';
-import { resolveVNode } from './m';
 import { startTransition } from './scheduler';
 import {
   DOMNode,
@@ -13,7 +12,6 @@ import {
   EffectTypes,
   Hook,
   OLD_VNODE_FIELD,
-  VEntity,
   VNode,
 } from './types';
 
@@ -27,17 +25,17 @@ export const diff = useNode([useChildren(), useProps()]);
  */
 export const patch = (
   el: DOMNode,
-  newVNode?: VNode | VEntity,
-  oldVNode?: VNode | VEntity,
-  hook: Hook = (work: () => void) => work(),
+  newVNode?: VNode,
+  oldVNode?: VNode,
+  hook: Hook = () => true,
   effects: Effect[] = [],
 ): DOMNode => {
   const queueEffect = createEffectQueuer(el, effects);
   const commit = (work: () => void, data: ReturnType<Driver>) => {
-    hook(work, data.el, data.newVNode, data.oldVNode);
+    if (hook(data.el, data.newVNode, data.oldVNode)) work();
   };
   const data = diff(el, newVNode, oldVNode, commit, effects);
-  queueEffect(EffectTypes.SET_PROP, () => (data.el[OLD_VNODE_FIELD] = resolveVNode(newVNode)));
+  queueEffect(EffectTypes.SET_PROP, () => (data.el[OLD_VNODE_FIELD] = newVNode));
   for (let i = 0; i < effects.length; i++) {
     requestAnimationFrame(effects[i].flush);
   }
@@ -49,8 +47,8 @@ export const patch = (
  */
 export const render = (
   parentEl: DOMNode,
-  newVNode?: VNode | VEntity,
-  oldVNode?: VNode | VEntity,
+  newVNode?: VNode,
+  oldVNode?: VNode,
   hook?: Hook,
 ): DOMNode => {
   const el: DOMNode = parentEl[DOM_REF_FIELD];

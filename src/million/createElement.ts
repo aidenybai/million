@@ -1,10 +1,8 @@
-import { resolveVNode } from './m';
 import {
   COLON_CHAR,
   DOMNode,
   Flags,
   OLD_VNODE_FIELD,
-  VEntity,
   VNode,
   XLINK_NS,
   XML_NS,
@@ -14,13 +12,9 @@ import {
 /**
  * Creates an Element from a VNode
  */
-export const createElement = (vnode?: VNode | VEntity | null, attachField = true): DOMNode => {
+export const createElement = (vnode?: VNode | null, attachField = true): DOMNode => {
   if (vnode === undefined || vnode === null) return document.createComment('');
   if (typeof vnode === 'string') return document.createTextNode(vnode);
-  if (typeof vnode === 'object' && vnode?.flag === Flags.ENTITY) {
-    if (vnode.el) return vnode.el;
-    else return createElement(resolveVNode(vnode));
-  }
 
   const el = vnode.props?.ns
     ? (document.createElementNS(vnode.props?.ns as string, vnode.tag) as SVGElement)

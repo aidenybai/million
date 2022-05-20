@@ -1,5 +1,6 @@
 import { types } from 'recast';
-import { h, JSXVNode } from '../jsx-runtime';
+import { h } from '../jsx-runtime';
+import { RawVNode } from '../million/types';
 import { jsxFactory } from './index';
 import {
   CallExpression,
@@ -25,7 +26,7 @@ export const compile = (astNode: CallExpression) => {
   return fromVNodeToASTNode(fromASTNodeToVNode(astNode));
 };
 
-export const fromASTNodeToVNode = (astNode: CallExpression): JSXVNode | CallExpression => {
+export const fromASTNodeToVNode = (astNode: CallExpression): RawVNode | CallExpression => {
   if (astNode.arguments[0].type !== 'Literal') {
     return astNode;
   }
@@ -33,7 +34,7 @@ export const fromASTNodeToVNode = (astNode: CallExpression): JSXVNode | CallExpr
   const args = astNode.arguments;
   const astProps = astNode.arguments[1] as ObjectExpression;
   const astChildren = args.slice(2);
-  const vnodeChildren: JSXVNode[] = [];
+  const vnodeChildren: RawVNode[] = [];
   const vnodeProps = {};
 
   for (let i = 0; i < astProps.properties?.length; i++) {
@@ -61,7 +62,7 @@ export const fromASTNodeToVNode = (astNode: CallExpression): JSXVNode | CallExpr
   for (const child of astChildren) {
     if (child.type === 'CallExpression') {
       if ((child.callee as Identifier).name === jsxFactory) {
-        vnodeChildren.push(fromASTNodeToVNode(child) as JSXVNode);
+        vnodeChildren.push(fromASTNodeToVNode(child) as RawVNode);
       } else return astNode;
     } else if (
       child.type === 'Literal' &&
@@ -78,11 +79,11 @@ export const fromASTNodeToVNode = (astNode: CallExpression): JSXVNode | CallExpr
   return h(String((astNode.arguments[0] as Literal).value), vnodeProps, ...vnodeChildren);
 };
 
-export const fromVNodeToASTNode = (vnode: JSXVNode | CallExpression): Expression => {
+export const fromVNodeToASTNode = (vnode: RawVNode | CallExpression): Expression => {
   if ((vnode as unknown as Literal)?.value || (vnode as unknown as Expression)?.type)
     return vnode as Expression;
   if (typeof vnode === 'object') {
-    const velement = vnode as Exclude<JSXVNode, string | number | boolean>;
+    const velement = vnode as Exclude<RawVNode, string | number | boolean>;
     const astProps = objectExpression(
       Object.entries(velement?.props || {})
         .filter(([, value]) => value !== undefined && value !== null)
@@ -94,7 +95,7 @@ export const fromVNodeToASTNode = (vnode: JSXVNode | CallExpression): Expression
     );
 
     const astChildren = arrayExpression(
-      (velement?.children || []).map((child: JSXVNode): Literal | CallExpression => {
+      (velement?.children || []).map((child: RawVNode): Literal | CallExpression => {
         if (typeof child === 'string') {
           return literal(child);
         } else {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { className, Deltas, kebab, m, ns, style, svg } from '../packages/million/m';
-import { DeltaTypes, Flags, VElement, VNode } from '../packages/million/types';
+import { className, Deltas, kebab, m, ns, style, svg } from '../src/million/vnode';
+import { DeltaTypes, Flags, VElement, VNode } from '../src/million/types';
 
 export const expectEqualVNode = (vnode1: VNode, vnode2: VNode) => {
   expect(JSON.stringify(vnode1)).toEqual(JSON.stringify(vnode2));

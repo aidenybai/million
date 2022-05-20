@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import { createElement, patch, render } from 'packages/million';
+import { createElement, patch, render } from 'src/million';
 import Chart from 'chart.js/auto';
 import confetti from 'canvas-confetti';
 import { camelCase } from 'lodash';

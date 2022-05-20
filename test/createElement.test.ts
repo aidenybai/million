@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { createElement } from '../packages/million/createElement';
-import { entity, m } from '../packages/million/m';
-import { DOMNode, OLD_VNODE_FIELD } from '../packages/million/types';
+import { createElement } from '../src/million/createElement';
+import { m } from '../src/million/vnode';
+import { DOMNode, OLD_VNODE_FIELD } from '../src/million/types';
 
 export const expectEqualNode = (el1: DOMNode, el2: DOMNode) => {
   expect(el1.isEqualNode(el2)).toBeTruthy();
@@ -36,7 +36,9 @@ describe.concurrent('createElement', () => {
   });
 
   it('should create HTMLElement from vnode', () => {
-    expect(createElement(m('div'), true)[OLD_VNODE_FIELD]).toEqual(m('div'));
+    expect(JSON.stringify(createElement(m('div'), true)[OLD_VNODE_FIELD])).toEqual(
+      JSON.stringify(m('div')),
+    );
     expect(createElement(m('div'), false)[OLD_VNODE_FIELD]).toBeUndefined();
   });
 
@@ -50,10 +52,6 @@ describe.concurrent('createElement', () => {
     const el = document.createElement('div');
     el.addEventListener('click', () => undefined);
     expect(createElement(m('div', { onclick: () => undefined }))).toBeTruthy();
-  });
-
-  it('should resolve entity', () => {
-    expectEqualNode(createElement(entity({}, () => m('div'))), createElement(m('div')));
   });
 
   it('should create empty comment', () => {

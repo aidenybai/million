@@ -1,10 +1,10 @@
-import { h, JSXVNode } from '../../packages/jsx-runtime';
-import { VNode, VProps } from '../../packages/million/types';
+import { h } from '../../src/jsx-runtime';
+import { VNode, VProps, RawVNode } from '../../src/million/types';
 
 export const factory = (tagName: string) => {
   function vnode(props: VProps): VNode;
-  function vnode(children: JSXVNode[]): VNode;
-  function vnode(props: VProps, children: JSXVNode[]): VNode;
+  function vnode(children: RawVNode[]): VNode;
+  function vnode(props: VProps, children: RawVNode[]): VNode;
   function vnode(param1?: any, param2?: any): VNode {
     if (Array.isArray(param1)) {
       return h(tagName, param2, ...param1);

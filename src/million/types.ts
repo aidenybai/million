@@ -18,11 +18,11 @@ export const X_CHAR = 120;
 
 export type VProps = Record<string, any>;
 export type DOMNode = HTMLElement | SVGElement | Text | Comment;
-export type VNode = VElement | string;
+export type VNode = VElement | Thunk | string;
+export type RawVNode = VNode | number | boolean | undefined | null;
 export type Delta = [DeltaTypes, number];
-export type Hook = (work: () => void, el?: DOMNode, newVNode?: VNode, oldVNode?: VNode) => void;
+export type Hook = (el?: DOMNode, newVNode?: VNode, oldVNode?: VNode) => boolean;
 export type Commit = (work: () => void, data: ReturnType<Driver>) => void;
-export type VElementFlags = Exclude<Flags, Flags.ENTITY>;
 export type Driver = (
   el: DOMNode,
   newVNode?: VNode,
@@ -45,25 +45,32 @@ export interface Effect {
   flush: () => void;
 }
 
-export interface VEntity {
-  flag: Flags.ENTITY;
-  data: Record<string, unknown>;
-  resolve: () => VNode;
-  el?: DOMNode;
-  key?: string;
-}
-
-export interface VElement {
+export interface VElement extends V {
   flag: VElementFlags;
   tag: string;
   props?: VProps;
   children?: VNode[];
   key?: string;
   delta?: Delta[];
+  hook?: Hook;
+}
+
+export interface Thunk extends V {
+  flag: Flags.ELEMENT_THUNK;
+  tag: string;
+  props?: VProps;
+  children?: VNode[];
+  key?: string;
+  delta?: Delta[];
+  hook?: Hook;
+  args: any[];
+}
+
+export interface V {
+  flag: Flags;
 }
 
 export enum Flags {
-  ENTITY,
   ELEMENT,
   ELEMENT_IGNORE,
   ELEMENT_FORCE_UPDATE,
@@ -71,7 +78,17 @@ export enum Flags {
   ELEMENT_NO_CHILDREN,
   ELEMENT_TEXT_CHILDREN,
   ELEMENT_KEYED_CHILDREN,
+  ELEMENT_THUNK,
 }
+
+export type VElementFlags =
+  | Flags.ELEMENT
+  | Flags.ELEMENT_FORCE_UPDATE
+  | Flags.ELEMENT_IGNORE
+  | Flags.ELEMENT_KEYED_CHILDREN
+  | Flags.ELEMENT_NO_CHILDREN
+  | Flags.ELEMENT_SKIP_DRIVERS
+  | Flags.ELEMENT_TEXT_CHILDREN;
 
 export enum EffectTypes {
   CREATE,
