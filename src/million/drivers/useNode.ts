@@ -1,4 +1,4 @@
-import { fromDomNodeToVNode } from '../../utils/convert';
+import { fromDomNodeToVNode } from '../../utils';
 import { createElement } from '../createElement';
 import { createEffectQueuer } from '../effect';
 import {
