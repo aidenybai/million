@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { className, Deltas, kebab, m, ns, style, svg } from '../src/million/vnode';
+import { className, Deltas, kebab, m, ns, style, svg } from '../src/million/m';
 import { DeltaTypes, Flags, VElement, VNode } from '../src/million/types';
 
 export const expectEqualVNode = (vnode1: VNode, vnode2: VNode) => {

@@ -19,7 +19,6 @@ export const X_CHAR = 120;
 export type VProps = Record<string, any>;
 export type DOMNode = HTMLElement | SVGElement | Text | Comment;
 export type VNode = VElement | Thunk | string;
-export type RawVNode = VNode | number | boolean | undefined | null;
 export type Delta = [DeltaTypes, number];
 export type Hook = (el?: DOMNode, newVNode?: VNode, oldVNode?: VNode) => boolean;
 export type Commit = (work: () => void, data: ReturnType<Driver>) => void;

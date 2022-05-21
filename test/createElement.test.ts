@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createElement } from '../src/million/createElement';
-import { m } from '../src/million/vnode';
+import { m } from '../src/million/m';
 import { DOMNode, OLD_VNODE_FIELD } from '../src/million/types';
 
 export const expectEqualNode = (el1: DOMNode, el2: DOMNode) => {

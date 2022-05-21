@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { createElement } from '../src/million/createElement';
-import { Deltas, m } from '../src/million/vnode';
+import { Deltas, m } from '../src/million/m';
 import { patch, render } from '../src/million/render';
 import { Flags, DOMNode } from '../src/million/types';
 

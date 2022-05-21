@@ -1,3 +1,5 @@
+import { render } from './render';
+
 const workQueue: (() => void)[] = [];
 let pending = false;
 
@@ -25,4 +27,39 @@ export const flushQueue = (
   }
   if (workQueue.length > 0) requestIdleCallback(flushQueue);
   else pending = false;
+};
+
+export const batch = (limit?: number) => {
+  let force: number;
+  let timer: number;
+  let callback: () => typeof render;
+  const invoke = () => {
+    reset();
+    callback();
+  };
+  const reset = () => {
+    force = limit || Infinity;
+    timer = 0;
+  };
+  const stop = (flush: boolean) => {
+    const didStop = !!timer;
+    if (didStop) {
+      cancelAnimationFrame(timer);
+      if (flush) invoke();
+    }
+    return didStop;
+  };
+  reset();
+  return (_callback: () => typeof render) => {
+    callback = _callback;
+    if (!timer) {
+      timer = requestAnimationFrame(() => {
+        force = limit || Infinity;
+        timer = 0;
+        callback();
+      });
+    }
+    if (--force < 0) stop(true);
+    return stop;
+  };
 };
