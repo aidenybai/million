@@ -1,4 +1,4 @@
-import { createEffectQueue } from '../effect';
+import { effect } from '../effect';
 import {
   COLON_CHAR,
   Commit,
@@ -19,7 +19,7 @@ export const updateProp = (
   effects: Effect[],
 ): void => {
   if (oldPropValue === newPropValue) return;
-  const queueEffect = createEffectQueue(el, effects);
+  const queueEffect = effect(el, effects);
   if (propName.startsWith('on')) {
     const eventPropName = propName.slice(2).toLowerCase();
     queueEffect(EffectTypes.SET_PROP, () => {
