@@ -116,7 +116,7 @@
     "@typescript-eslint/eslint-plugin": "^5.25.0",
     "@typescript-eslint/parser": "^5.25.0",
     "@vitejs/plugin-legacy": "^1.8.2",
-    "@vitest/ui": "^0.12.7",
+    "@vitest/ui": "^0.12.9",
     "augmentor": "^2.2.0",
     "benchmark": "^2.1.4",
     "c8": "^7.11.3",
@@ -148,7 +148,7 @@
     "unbuild": "^0.7.4",
     "virtual-dom": "^2.1.1",
     "vite": "^2.9.9",
-    "vitest": "^0.12.7",
+    "vitest": "^0.12.9",
     "zx": "^6.1.0"
   }
 }
