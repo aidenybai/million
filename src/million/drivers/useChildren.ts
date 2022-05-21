@@ -1,5 +1,5 @@
 import { createElement } from '../createElement';
-import { createEffectQueuer } from '../effect';
+import { createEffectQueue } from '../effect';
 import {
   Commit,
   Delta,
@@ -27,7 +27,7 @@ export const useChildren =
     effects: Effect[] = [],
     driver?: Driver,
   ): ReturnType<Driver> => {
-    const queueEffect = createEffectQueuer(el, effects);
+    const queueEffect = createEffectQueue(el, effects);
     const getData = (element: DOMNode): ReturnType<Driver> => ({
       el: element,
       newVNode,
