@@ -1,6 +1,6 @@
 import { fromDomNodeToVNode } from '../../utils';
 import { createElement } from '../createElement';
-import { createEffectQueuer } from '../effect';
+import { createEffectQueue } from '../effect';
 import {
   Commit,
   DOMNode,
@@ -25,7 +25,7 @@ export const useNode = (drivers: any[]): any => {
   ): ReturnType<Driver> => {
     // resolved VNode -> stored VNode -> generated VNode
     oldVNode = oldVNode ?? el[OLD_VNODE_FIELD] ?? fromDomNodeToVNode(el);
-    const queueEffect = createEffectQueuer(el, effects);
+    const queueEffect = createEffectQueue(el, effects);
 
     const finish = (element: DOMNode): ReturnType<Driver> => {
       return {
