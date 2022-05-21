@@ -3,7 +3,7 @@ export * from './createElement';
 export * from './drivers/useChildren';
 export * from './drivers/useNode';
 export * from './drivers/useProps';
-export * from './vnode';
+export * from './m';
 export * from './render';
 export * from './scheduler';
 export { DeltaTypes, EffectTypes, Flags, OLD_VNODE_FIELD } from './types';

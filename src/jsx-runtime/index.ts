@@ -1,3 +1,3 @@
-export { h } from '../million/vnode';
+export * from './h';
 export * from './jsx';
 export * from './types';
