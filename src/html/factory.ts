@@ -1,5 +1,6 @@
-import { h } from '../../src/jsx-runtime';
-import { VNode, VProps, RawVNode } from '../../src/million/types';
+import { h } from '../../src/jsx-runtime/h';
+import { RawVNode } from '../../src/jsx-runtime/types';
+import { VNode, VProps } from '../../src/million/types';
 
 export const factory = (tagName: string) => {
   function vnode(props: VProps): VNode;
