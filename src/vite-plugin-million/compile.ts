@@ -1,6 +1,6 @@
 import { types } from 'recast';
 import { h } from '../jsx-runtime';
-import { RawVNode } from '../million/types';
+import { RawVNode } from '../jsx-runtime/types';
 import { jsxFactory } from './index';
 import {
   CallExpression,

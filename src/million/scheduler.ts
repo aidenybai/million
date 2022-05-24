@@ -29,10 +29,10 @@ export const flushQueue = (
   else pending = false;
 };
 
-export const batch = (limit?: number) => {
+export const batch = (limit?: number): ((_callback: () => any) => (flush: boolean) => boolean) => {
   let force: number;
   let timer: number;
-  let callback: () => typeof render;
+  let callback: () => any;
   const invoke = () => {
     reset();
     callback();
@@ -50,7 +50,7 @@ export const batch = (limit?: number) => {
     return didStop;
   };
   reset();
-  return (_callback: () => typeof render) => {
+  return (_callback: () => any) => {
     callback = _callback;
     if (!timer) {
       timer = requestAnimationFrame(() => {

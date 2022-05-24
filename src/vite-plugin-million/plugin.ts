@@ -49,7 +49,7 @@ export const million = (options?: { importSource: string }): any[] => [
       const ast = parse(code);
       const astNodes: any[] = [];
 
-      if (!code.includes(jsxFragment)) {
+      if (!code.includes(`${jsxFragment}(`)) {
         visit(ast, {
           visitCallExpression(path) {
             if (path.value.callee.name === jsxFactory) {
