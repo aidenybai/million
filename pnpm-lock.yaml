@@ -19,7 +19,6 @@ specifiers:
   '@typescript-eslint/parser': ^5.26.0
   '@vitejs/plugin-legacy': ^1.8.2
   '@vitest/ui': ^0.12.9
-  augmentor: ^2.2.0
   benchmark: ^2.1.4
   c8: ^7.11.3
   canvas-confetti: ^1.5.1
@@ -70,7 +69,6 @@ devDependencies:
   '@typescript-eslint/parser': 5.26.0_utdtartgf6fqqgkivzeynh76la
   '@vitejs/plugin-legacy': 1.8.2_vite@2.9.9
   '@vitest/ui': 0.12.9
-  augmentor: 2.2.0
   benchmark: 2.1.4
   c8: 7.11.3
   canvas-confetti: 1.5.1
@@ -1565,13 +1563,6 @@ packages:
 
   /asynckit/0.4.0:
     resolution: {integrity: sha1-x57Zf380y48robyXkLzDZkdLS3k=}
-    dev: true
-
-  /augmentor/2.2.0:
-    resolution: {integrity: sha512-BEQAG1w74b794ec4FpWpu9AZZUZngKy5zGgb8OIhU2hcVhm8F5Y/VS0/3EAA+ExgtJDCTR+L2rvnjtIt2oo1xQ==}
-    dependencies:
-      reraf: 1.1.1
-      umap: 1.0.2
     dev: true
 
   /balanced-match/1.0.2:
@@ -5434,10 +5425,6 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /reraf/1.1.1:
-    resolution: {integrity: sha512-uwOsqdTxJAQCxqvJF4Kiz4orwO9B8OBJkGeW7/NWNirapPutgig/3xU3emruvfwUbb+t51V0zHtNw6d83RDlJQ==}
-    dev: true
-
   /resolve-cwd/3.0.0:
     resolution: {integrity: sha512-OrZaX2Mb+rJCpH/6CpSqt9xFVpN++x01XnN2ie9g6P5/3xelLAkXWVADpdz1IHD/KFfEXyE6V0U01OQ3UO2rEg==}
     engines: {node: '>=8'}
@@ -6234,10 +6221,6 @@ packages:
     resolution: {integrity: sha512-9ia/jWHIEbo49HfjrLGfKbZSuWo9iTMwXO+Ca3pRsSpbsMbc7/IU8NKdCZVRRBafVPGnoJeFL76ZOAA84I9fEg==}
     engines: {node: '>=4.2.0'}
     hasBin: true
-    dev: true
-
-  /umap/1.0.2:
-    resolution: {integrity: sha512-bW127HgG4H4VAD6qlqO5vCC+7bnlYvZ6A6BdwyGblkWvlEG7VYpj1bcpf3iJpvyKmkPZWDIeZDmoULz67ec7NA==}
     dev: true
 
   /unbuild/0.7.4:
