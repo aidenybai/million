@@ -1,5 +1,3 @@
-import { render } from './render';
-
 const workQueue: (() => void)[] = [];
 let pending = false;
 
