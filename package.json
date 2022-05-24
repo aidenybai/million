@@ -140,7 +140,6 @@
     "taze": "^0.7.3",
     "tslib": "^2.4.0",
     "typescript": "^4.6.4",
-    "uhooks": "^0.4.0",
     "unbuild": "^0.7.4",
     "virtual-dom": "^2.1.1",
     "vite": "^2.9.9",

@@ -45,7 +45,6 @@ specifiers:
   taze: ^0.7.3
   tslib: ^2.4.0
   typescript: ^4.6.4
-  uhooks: ^0.4.0
   unbuild: ^0.7.4
   virtual-dom: ^2.1.1
   vite: ^2.9.9
@@ -97,7 +96,6 @@ devDependencies:
   taze: 0.7.3
   tslib: 2.4.0
   typescript: 4.6.4
-  uhooks: 0.4.0
   unbuild: 0.7.4
   virtual-dom: 2.1.1
   vite: 2.9.9
@@ -6236,10 +6234,6 @@ packages:
     resolution: {integrity: sha512-9ia/jWHIEbo49HfjrLGfKbZSuWo9iTMwXO+Ca3pRsSpbsMbc7/IU8NKdCZVRRBafVPGnoJeFL76ZOAA84I9fEg==}
     engines: {node: '>=4.2.0'}
     hasBin: true
-    dev: true
-
-  /uhooks/0.4.0:
-    resolution: {integrity: sha512-LP3Gu1LLsjWs8YcG0Lk7wbjqRcPHGPHD7pz7Wi2bHOg1K0r4gLifs+14hlOxKzH5TcdvRxUw1NyhYRHVfVB2OA==}
     dev: true
 
   /umap/1.0.2:
