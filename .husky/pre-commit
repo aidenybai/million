@@ -27,7 +27,7 @@ git stage pnpm-lock.yaml
 info "Checking for errors..."
 
 if [ -n "$(git status src --porcelain)" ]; then
-  pnpm test || exit 1
+  zx scripts/check.mjs || exit 1
 fi
 
 success "No errors found. Attempting to commit your changes!"
