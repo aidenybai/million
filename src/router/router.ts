@@ -48,13 +48,15 @@ export const navigate = async (
   goBack = false,
   scroll = 0,
 ): Promise<void> => {
-  lastUrl = url;
-  startTrickle(progressBar);
-  const currentEl = getEl(document.documentElement, selector);
-
   if (!goBack) {
     history.pushState({ scroll: document.documentElement.scrollTop }, '', url);
+  } else {
+    startTrickle(progressBar);
   }
+
+  lastUrl = url;
+  const currentEl = getEl(document.documentElement, selector);
+
   if (window.location.hash) {
     const anchor = document.querySelector<HTMLElement>(window.location.hash);
     if (anchor) anchor.scrollIntoView();
@@ -105,7 +107,7 @@ export const navigate = async (
 
   window.dispatchEvent(navigateEvent);
 
-  stopTrickle(progressBar);
+  if (!goBack) stopTrickle(progressBar);
 };
 
 export const router = (
