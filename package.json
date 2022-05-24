@@ -114,7 +114,6 @@
     "@typescript-eslint/parser": "^5.26.0",
     "@vitejs/plugin-legacy": "^1.8.2",
     "@vitest/ui": "^0.12.9",
-    "augmentor": "^2.2.0",
     "benchmark": "^2.1.4",
     "c8": "^7.11.3",
     "canvas-confetti": "^1.5.1",
