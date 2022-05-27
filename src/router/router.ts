@@ -11,7 +11,7 @@ const parser = new DOMParser();
 const routeMap = new Map<string, Route>();
 const controllerMap = new Map<
   string,
-  { controller: AbortController; queuedFetch: Promise<string | void> }
+  { controller: AbortController; pendingContent: Promise<string | void> }
 >();
 const PROGRESS_BAR_COLOR = getComputedStyle(document.body).getPropertyValue(
   '--million-progress-bar-color',
@@ -79,10 +79,12 @@ export const navigate = async (
     window.scrollTo({ top: scroll });
   }
 
-  for (const [path, { controller, queuedFetch }] of controllerMap.entries()) {
+  for (const [path, prefetch] of controllerMap.entries()) {
     if (path !== url.pathname) {
-      controller.abort();
-    } else pendingContent = queuedFetch;
+      prefetch.controller.abort();
+    } else {
+      pendingContent = prefetch.pendingContent;
+    }
   }
   controllerMap.clear();
 
@@ -219,10 +221,10 @@ export const prefetch = async (path: string | URL) => {
   if (routeMap.has(url.pathname)) return;
 
   const controller = new AbortController();
-  const queuedFetch = getContent(url, { signal: controller.signal });
-  controllerMap.set(url.pathname, { controller, queuedFetch });
+  const pendingContent = getContent(url, { signal: controller.signal });
+  controllerMap.set(url.pathname, { controller, pendingContent });
 
-  const content = await queuedFetch;
+  const content = await pendingContent;
   controllerMap.delete(url.pathname);
   if (content) {
     const html = parseContent(content, url);
