@@ -8,7 +8,10 @@ import { getURL, normalizeRelativeURLs } from './utils';
 
 const parser = new DOMParser();
 const routeMap = new Map<string, Route>();
-const progressBar = createProgressBar();
+const PROGRESS_BAR_COLOR = getComputedStyle(document.body).getPropertyValue(
+  '--million-progress-bar-color',
+);
+const progressBar = createProgressBar(PROGRESS_BAR_COLOR);
 let lastUrl: URL | undefined;
 
 export const setRoute = (path: string, route: Route) => {
