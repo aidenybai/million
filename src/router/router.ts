@@ -59,8 +59,13 @@ export const swr = async (
     signal: controller.signal,
     ...options,
   })
+    .catch((err) => {
+      return err instanceof TypeError && err.message === 'Failed to fetch'
+        ? undefined
+        : Promise.reject(err);
+    })
     .then((res) => {
-      if (res instanceof TypeError && res.message === 'Failed to fetch') {
+      if (res === undefined || res.status === 504) {
         controller.abort();
         controller = new AbortController();
         controllerMap.delete(urlString);
@@ -105,20 +110,13 @@ export const navigate = async (
   scroll = 0,
 ): Promise<void> => {
   if (!goBack) {
-    history.pushState({ scroll: document.documentElement.scrollTop }, '', url);
+    history.pushState({}, '', url);
     startTrickle(progressBar);
   }
 
   lastUrl = url;
   let pendingContent;
   const currentEl = getEl(document.documentElement, selector);
-
-  if (window.location.hash) {
-    const anchor = document.querySelector<HTMLElement>(window.location.hash);
-    if (anchor) anchor.scrollIntoView();
-  } else {
-    window.scrollTo({ top: scroll });
-  }
 
   for (const [path, prefetch] of controllerMap.entries()) {
     if (path !== url.pathname) {
@@ -170,7 +168,15 @@ export const navigate = async (
 
   const navigateEvent = new CustomEvent('million:navigate', { detail: { url } });
 
-  window.dispatchEvent(navigateEvent);
+  requestAnimationFrame(() => {
+    if (window.location.hash) {
+      const anchor = document.querySelector<HTMLElement>(`[href="${window.location.hash}"]`);
+      if (anchor) anchor.scrollIntoView();
+    } else {
+      window.scrollTo({ top: scroll });
+    }
+    window.dispatchEvent(navigateEvent);
+  });
 
   if (!goBack) stopTrickle(progressBar);
 };
@@ -239,7 +245,7 @@ export const router = (
     });
   });
 
-  window.addEventListener('popstate', (event: PopStateEvent) => {
+  window.addEventListener('popstate', () => {
     const url = new URL(window.location.toString());
 
     if (url.hash && url.pathname === lastUrl?.pathname) {
@@ -252,7 +258,7 @@ export const router = (
 
     try {
       queueNavigation(() => {
-        navigate(url, selector, {}, true, event.state?.scroll);
+        navigate(url, selector, {}, true);
       });
     } catch (_err) {
       window.location.reload();
