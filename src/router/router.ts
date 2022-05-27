@@ -7,6 +7,8 @@ import { createProgressBar, startTrickle, stopTrickle } from './progress';
 import { Route } from './types';
 import { getURL, normalizeRelativeURLs } from './utils';
 
+const ONE_DAY = 86400000;
+const FIVE_MINUTES = 300000;
 const parser = new DOMParser();
 const routeMap = new Map<string, Route>();
 const controllerMap = new Map<
@@ -43,11 +45,50 @@ export const parseContent = (content: string, url: URL): Document => {
   return html;
 };
 
-export const getContent = async (
+export const swr = async (
   url: URL | string,
   options?: RequestInit,
+  controller: AbortController = new AbortController(),
+  threshold = FIVE_MINUTES,
 ): Promise<string | void> => {
-  return fetch(String(url), options)
+  const urlString = new URL(url).pathname;
+  // Stale-while-revalidate strategy for fetching
+  return fetch(urlString, {
+    cache: 'only-if-cached',
+    mode: 'same-origin',
+    signal: controller.signal,
+    ...options,
+  })
+    .then((res) => {
+      if (res instanceof TypeError && res.message === 'Failed to fetch') {
+        controller.abort();
+        controller = new AbortController();
+        controllerMap.delete(urlString);
+        return fetch(urlString, {
+          cache: 'force-cache',
+          mode: 'same-origin',
+          signal: controller.signal,
+        });
+      }
+
+      const date = res.headers.has('date') ? new Date(res.headers.get('date')!).getTime() : 0;
+
+      if (date < Date.now() - ONE_DAY) {
+        controller.abort();
+        controller = new AbortController();
+        return fetch(urlString, {
+          cache: 'reload',
+          mode: 'same-origin',
+          signal: controller.signal,
+        });
+      }
+
+      if (date < Date.now() - threshold) {
+        fetch(urlString, { cache: 'no-cache', mode: 'same-origin' });
+      }
+
+      return res;
+    })
     .then((res) => res.text())
     .catch((err) => {
       if (err.name !== 'AbortError') {
@@ -110,7 +151,7 @@ export const navigate = async (
       }
     }
   } else {
-    const content = await (pendingContent ?? getContent(url, opts));
+    const content = await (pendingContent ?? swr(url, opts));
     if (!content) return;
 
     const html = parseContent(content, url);
@@ -140,6 +181,11 @@ export const router = (
 ): Map<string, Route> => {
   for (const path in routes) {
     setRoute(path, routes[path]);
+  }
+
+  if (!routeMap.has(window.location.pathname)) {
+    const html = parseContent(document.documentElement.outerHTML, new URL(window.location.href));
+    setRoute(window.location.pathname, { html });
   }
 
   window.addEventListener('click', (event) => {
@@ -221,7 +267,7 @@ export const prefetch = async (path: string | URL) => {
   if (routeMap.has(url.pathname)) return;
 
   const controller = new AbortController();
-  const pendingContent = getContent(url, { signal: controller.signal });
+  const pendingContent = swr(url, {}, controller);
   controllerMap.set(url.pathname, { controller, pendingContent });
 
   const content = await pendingContent;
