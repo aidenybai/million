@@ -180,10 +180,7 @@ export const navigate = async (
   });
 };
 
-export const router = (
-  selector?: string,
-  routes: Record<string, Route> = {},
-): Map<string, Route> => {
+export const router = (selector?: string, routes: Record<string, Route> = {}): (() => void) => {
   for (const path in routes) {
     setRoute(path, routes[path]);
   }
@@ -193,7 +190,7 @@ export const router = (
     setRoute(window.location.pathname, { html });
   }
 
-  window.addEventListener('click', (event) => {
+  const clickHandler = (event: Event) => {
     const url = getURL(event);
     if (!url) return;
     const route = routeMap.get(url.pathname);
@@ -204,9 +201,9 @@ export const router = (
     } catch (_err) {
       window.location.assign(url);
     }
-  });
+  };
 
-  window.addEventListener('mouseover', async (event) => {
+  const mouseoverHandler = async (event: Event) => {
     const url = getURL(event);
     if (!url) return;
     if (routeMap.has(url.pathname)) return;
@@ -214,9 +211,9 @@ export const router = (
     if (route && route.hook && !route.hook(url, route)) return;
     event.preventDefault();
     queuePrefetch(() => prefetch(url));
-  });
+  };
 
-  window.addEventListener('submit', async (event) => {
+  const submitHandler = async (event: Event) => {
     const el = event.target as HTMLFormElement;
     const url = new URL(el.action);
     if (!el.action || !(el instanceof HTMLFormElement)) return;
@@ -242,9 +239,9 @@ export const router = (
             : JSON.stringify(body),
       });
     });
-  });
+  };
 
-  window.addEventListener('popstate', () => {
+  const popstateHandler = () => {
     const url = new URL(window.location.toString());
 
     if (url.hash && url.pathname === lastUrl?.pathname) {
@@ -262,9 +259,23 @@ export const router = (
     } catch (_err) {
       window.location.reload();
     }
-  });
+  };
 
-  return routeMap;
+  window.addEventListener('click', clickHandler);
+  window.addEventListener('mouseover', mouseoverHandler);
+  window.addEventListener('submit', submitHandler);
+  window.addEventListener('popstate', popstateHandler);
+
+  return () => {
+    window.removeEventListener('click', clickHandler);
+    window.removeEventListener('mouseover', mouseoverHandler);
+    window.removeEventListener('submit', submitHandler);
+    window.removeEventListener('popstate', popstateHandler);
+    routeMap.clear();
+    controllerMap.clear();
+    lastUrl = undefined;
+    stopTrickle(progressBar);
+  };
 };
 
 export const prefetch = async (path: string | URL) => {
