@@ -176,9 +176,8 @@ export const navigate = async (
       window.scrollTo({ top: scroll });
     }
     window.dispatchEvent(navigateEvent);
+    if (!goBack) stopTrickle(progressBar);
   });
-
-  if (!goBack) stopTrickle(progressBar);
 };
 
 export const router = (
