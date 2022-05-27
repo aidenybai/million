@@ -1,3 +1,4 @@
+import { batch } from '../million/scheduler';
 import { createElement } from '../million/createElement';
 import { patch } from '../million/render';
 import { VElement } from '../million/types';
@@ -11,7 +12,7 @@ const routeMap = new Map<string, Route>();
 const PROGRESS_BAR_COLOR = getComputedStyle(document.body).getPropertyValue(
   '--million-progress-bar-color',
 );
-const progressBar = createProgressBar(PROGRESS_BAR_COLOR);
+const progressBar = createProgressBar(PROGRESS_BAR_COLOR || '#0076ff');
 let lastUrl: URL | undefined;
 
 export const setRoute = (path: string, route: Route) => {
@@ -46,6 +47,9 @@ export const getContent = async (
     });
 };
 
+export const queueNavigation = batch();
+export const queuePrefetch = batch();
+
 export const navigate = async (
   url: URL,
   selector?: string,
@@ -55,7 +59,6 @@ export const navigate = async (
 ): Promise<void> => {
   if (!goBack) {
     history.pushState({ scroll: document.documentElement.scrollTop }, '', url);
-  } else {
     startTrickle(progressBar);
   }
 
@@ -130,7 +133,7 @@ export const router = (
     if (route && route.hook && !route.hook(url, route)) return;
     event.preventDefault();
     try {
-      navigate(url, selector);
+      queueNavigation(() => navigate(url, selector));
     } catch (_err) {
       window.location.assign(url);
     }
@@ -143,7 +146,7 @@ export const router = (
     const route = routeMap.get(url.pathname)!;
     if (route && route.hook && !route.hook(url, route)) return;
     event.preventDefault();
-    prefetch(url);
+    queuePrefetch(() => prefetch(url));
   });
 
   window.addEventListener('submit', async (event) => {
@@ -162,13 +165,15 @@ export const router = (
       body[key] = value;
     });
 
-    navigate(url, selector, {
-      method: el.method,
-      redirect: 'follow',
-      body:
-        !el.method || el.method.toLowerCase() === 'get'
-          ? `?${new URLSearchParams(body)}`
-          : JSON.stringify(body),
+    queueNavigation(() => {
+      navigate(url, selector, {
+        method: el.method,
+        redirect: 'follow',
+        body:
+          !el.method || el.method.toLowerCase() === 'get'
+            ? `?${new URLSearchParams(body)}`
+            : JSON.stringify(body),
+      });
     });
   });
 
@@ -184,7 +189,9 @@ export const router = (
     if (route && route.hook && !route.hook(url, route)) return;
 
     try {
-      navigate(url, selector, {}, true, event.state?.scroll);
+      queueNavigation(() => {
+        navigate(url, selector, {}, true, event.state?.scroll);
+      });
     } catch (_err) {
       window.location.reload();
     }
