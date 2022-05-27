@@ -18,6 +18,8 @@ export const setRoute = (path: string, route: Route) => {
   routeMap.set(path, { ...routeMap.get(path), ...route });
 };
 
+export const getRoute = (path: string) => routeMap.get(path);
+
 export const createRoute = (vnode: VElement, hook: (url: URL) => boolean = () => true) => ({
   vnode,
   hook,
@@ -139,7 +141,7 @@ export const router = (
     if (!url) return;
     if (routeMap.has(url.pathname)) return;
     const route = routeMap.get(url.pathname)!;
-    if (route.hook && !route.hook(url, route)) return;
+    if (route && route.hook && !route.hook(url, route)) return;
     event.preventDefault();
     prefetch(url);
   });

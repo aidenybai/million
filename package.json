@@ -118,7 +118,7 @@
     "c8": "^7.11.3",
     "canvas-confetti": "^1.5.1",
     "chart.js": "^3.8.0",
-    "esbuild": "^0.14.40",
+    "esbuild": "^0.14.41",
     "eslint": "^8.16.0",
     "eslint-config-prettier": "^8.5.0",
     "export-size": "^0.5.2",
