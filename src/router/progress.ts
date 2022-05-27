@@ -32,8 +32,8 @@ export const startTrickle = (el: HTMLElement): void => {
   el.style.opacity = '1';
   htmlEl.insertBefore(el, document.body);
   interval = window.setInterval(() => {
-    value += Math.random() / 100;
     requestAnimationFrame(() => {
+      value += Math.random() / 100;
       el.style.width = `${10 + value * 90}%`;
     });
   }, ANIMATION_DURATION);
