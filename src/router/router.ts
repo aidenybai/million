@@ -1,6 +1,6 @@
-import { batch } from '../million/scheduler';
 import { createElement } from '../million/createElement';
 import { patch } from '../million/render';
+import { batch } from '../million/scheduler';
 import { VElement } from '../million/types';
 import { morph } from '../morph/morph';
 import { createProgressBar, startTrickle, stopTrickle } from './progress';
@@ -13,7 +13,11 @@ const PROGRESS_BAR_COLOR = getComputedStyle(document.body).getPropertyValue(
   '--million-progress-bar-color',
 );
 const progressBar = createProgressBar(PROGRESS_BAR_COLOR || '#0076ff');
+const controller = new AbortController();
 let lastUrl: URL | undefined;
+
+export const queueNavigation = batch();
+export const queuePrefetch = batch();
 
 export const setRoute = (path: string, route: Route) => {
   routeMap.set(path, { ...routeMap.get(path), ...route });
@@ -42,13 +46,12 @@ export const getContent = async (
 ): Promise<string | void> => {
   return fetch(String(url), options)
     .then((res) => res.text())
-    .catch(() => {
-      window.location.assign(url);
+    .catch((err) => {
+      if (err.name !== 'AbortError') {
+        window.location.assign(url);
+      }
     });
 };
-
-export const queueNavigation = batch();
-export const queuePrefetch = batch();
 
 export const navigate = async (
   url: URL,
@@ -71,6 +74,8 @@ export const navigate = async (
   } else {
     window.scrollTo({ top: scroll });
   }
+
+  controller.abort();
 
   if (routeMap.has(url.pathname)) {
     const route = routeMap.get(url.pathname)!;
@@ -203,7 +208,7 @@ export const router = (
 export const prefetch = async (path: string | URL) => {
   const url = typeof path === 'string' ? new URL(path) : path;
   if (routeMap.has(url.pathname)) return;
-  const content = await getContent(url);
+  const content = await getContent(url, { signal: controller.signal });
   if (content) {
     const html = parseContent(content, url);
     setRoute(url.pathname, { html });
