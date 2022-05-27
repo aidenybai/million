@@ -1,7 +1,7 @@
 const ANIMATION_DURATION = 300;
 let interval: number | undefined;
 
-export const createProgressBar = (color = '#0076ff'): HTMLElement => {
+export const createProgressBar = (color: string): HTMLElement => {
   const style = document.createElement('style');
   style.type = 'text/css';
   style.textContent = `.million-progress-bar {
