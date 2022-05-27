@@ -9,11 +9,14 @@ import { getURL, normalizeRelativeURLs } from './utils';
 
 const parser = new DOMParser();
 const routeMap = new Map<string, Route>();
+const controllerMap = new Map<
+  string,
+  { controller: AbortController; queuedFetch: Promise<string | void> }
+>();
 const PROGRESS_BAR_COLOR = getComputedStyle(document.body).getPropertyValue(
   '--million-progress-bar-color',
 );
 const progressBar = createProgressBar(PROGRESS_BAR_COLOR || '#0076ff');
-const controller = new AbortController();
 let lastUrl: URL | undefined;
 
 export const queueNavigation = batch();
@@ -66,6 +69,7 @@ export const navigate = async (
   }
 
   lastUrl = url;
+  let pendingContent;
   const currentEl = getEl(document.documentElement, selector);
 
   if (window.location.hash) {
@@ -75,7 +79,12 @@ export const navigate = async (
     window.scrollTo({ top: scroll });
   }
 
-  controller.abort();
+  for (const [path, { controller, queuedFetch }] of controllerMap.entries()) {
+    if (path !== url.pathname) {
+      controller.abort();
+    } else pendingContent = queuedFetch;
+  }
+  controllerMap.clear();
 
   if (routeMap.has(url.pathname)) {
     const route = routeMap.get(url.pathname)!;
@@ -99,7 +108,7 @@ export const navigate = async (
       }
     }
   } else {
-    const content = await getContent(url, opts);
+    const content = await (pendingContent ?? getContent(url, opts));
     if (!content) return;
 
     const html = parseContent(content, url);
@@ -208,7 +217,13 @@ export const router = (
 export const prefetch = async (path: string | URL) => {
   const url = typeof path === 'string' ? new URL(path) : path;
   if (routeMap.has(url.pathname)) return;
-  const content = await getContent(url, { signal: controller.signal });
+
+  const controller = new AbortController();
+  const queuedFetch = getContent(url, { signal: controller.signal });
+  controllerMap.set(url.pathname, { controller, queuedFetch });
+
+  const content = await queuedFetch;
+  controllerMap.delete(url.pathname);
   if (content) {
     const html = parseContent(content, url);
     setRoute(url.pathname, { html });
