@@ -94,12 +94,7 @@ export const swr = async (
 
       return res;
     })
-    .then((res) => res.text())
-    .catch((err) => {
-      if (err.name !== 'AbortError') {
-        window.location.assign(url);
-      }
-    });
+    .then((res) => res.text());
 };
 
 export const navigate = async (
