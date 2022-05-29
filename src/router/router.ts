@@ -20,7 +20,7 @@ const PROGRESS_BAR_COLOR = getComputedStyle(document.body).getPropertyValue(
 );
 const progressBar = createProgressBar(PROGRESS_BAR_COLOR || '#0076ff');
 let lastUrl: URL | undefined;
-let applyFunction: ((doc: Document) => any) | undefined;
+let applyFunction: ((doc: Document, url: URL) => any) | undefined;
 
 export const queueNavigation = batch();
 export const queuePrefetch = batch();
@@ -40,14 +40,14 @@ export const getEl = (el: HTMLElement, selector?: string): HTMLElement => {
   return selector ? el.querySelector<HTMLElement>(selector)! : el;
 };
 
-export const apply = (fn: (doc: Document) => any) => {
+export const apply = (fn: (doc: Document, url: URL) => any) => {
   applyFunction = fn;
 };
 
 export const parseContent = (content: string, url: URL): Document => {
   const html = parser.parseFromString(content, 'text/html');
   normalizeRelativeURLs(html, url);
-  if (applyFunction) applyFunction(html);
+  if (applyFunction) applyFunction(html, url);
   return html;
 };
 
@@ -188,7 +188,7 @@ export const router = (selector?: string, routes: Record<string, Route> = {}): (
 
   if (!routeMap.has(window.location.pathname)) {
     const html = parseContent(document.documentElement.outerHTML, new URL(window.location.href));
-    if (applyFunction) applyFunction(html);
+    if (applyFunction) applyFunction(html, new URL(window.location.href));
     setRoute(window.location.pathname, { html });
   }
 
