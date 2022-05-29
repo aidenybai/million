@@ -8,7 +8,6 @@ await $`esbuild src/jsx-runtime/index.ts --minify --bundle --outfile=dist/code-s
 
 const packages = [
   'jsx-runtime',
-  'ssr',
   'router',
   'html',
   'morph',

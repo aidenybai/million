@@ -4,7 +4,6 @@ export default defineBuildConfig({
   entries: [
     './src/million',
     './src/jsx-runtime',
-    './src/ssr',
     './src/utils',
     './src/router',
     './src/html',
