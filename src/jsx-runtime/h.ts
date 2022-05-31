@@ -20,7 +20,10 @@ export const normalize = (rawVNode: RawVNode): VNode | VNode[] | undefined => {
   }
 };
 
-export const h = (tag: string, props?: VProps, ...children: RawVNode[]) => {
+// eslint-disable-next-line @typescript-eslint/ban-types
+export const h = (tag: string | Function, props?: VProps, ...children: RawVNode[]) => {
+  if (typeof tag === 'function') return tag(props, props?.key);
+
   let flag: VElementFlags = Flags.ELEMENT_NO_CHILDREN;
   let delta: Delta[] | undefined;
   const normalizedChildren: VNode[] = [];

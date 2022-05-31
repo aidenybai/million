@@ -10,6 +10,7 @@ const packages = [
   'jsx-runtime',
   'router',
   'html',
+  'react',
   'morph',
   'vite-plugin-million',
   'utils',
