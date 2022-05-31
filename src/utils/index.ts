@@ -1,5 +1,8 @@
 import { DOMNode, OLD_VNODE_FIELD, VNode, VProps, Flags } from '../million/types';
+import { html } from '../html';
 import { h } from '../jsx-runtime/h';
+
+export const fromStringToVNode = (htmlString: string): VNode => html([htmlString]);
 
 export const fromDomNodeToVNode = (el: DOMNode): VNode | undefined => {
   if (el[OLD_VNODE_FIELD]) return el[OLD_VNODE_FIELD];
