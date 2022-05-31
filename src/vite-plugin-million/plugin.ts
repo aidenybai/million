@@ -1,9 +1,9 @@
 import { parse, print, visit } from 'recast';
 import { compile } from './compile';
-import { jsxFactory } from './index';
 
 const JSX_FILTER = /\.(jsx|tsx)$/;
-const jsxFragment = `${jsxFactory}_FRAGMENT`;
+const jsxFactory = '__MILLION_JSX'
+const jsxFragment = `__MILLION_JSX_FRAGMENT`;
 
 export const million = (options?: { importSource: string }): any[] => [
   {
