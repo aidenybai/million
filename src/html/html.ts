@@ -21,7 +21,7 @@ const PROPS_ASSIGN = 4;
 const PROP_SET = MODE_PROP_SET;
 const PROP_APPEND = MODE_PROP_APPEND;
 
-export const html = htm.bind(h);
+const CACHES = new Map();
 
 export const htm = function (statics) {
   let tmp = CACHES.get(this);
@@ -37,6 +37,8 @@ export const htm = function (statics) {
   );
   return tmp.length > 1 ? tmp : tmp[0];
 };
+
+export const html = htm.bind(h);
 
 // Turn a result of a build(...) call into a tree that is more
 // convenient to analyze and transform (e.g. Babel plugins).

@@ -117,7 +117,7 @@
     "eslint": "^8.16.0",
     "eslint-config-prettier": "^8.5.0",
     "export-size": "^0.5.2",
-    "fsxx": "^0.0.5",
+    "fsxx": "^0.1.0",
     "htm": "^3.1.1",
     "hundred": "^0.1.0",
     "husky": "^8.0.1",
