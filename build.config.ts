@@ -7,6 +7,7 @@ export default defineBuildConfig({
     './src/utils',
     './src/router',
     './src/html',
+    './src/react',
     './src/morph',
     './src/vite-plugin-million',
   ],

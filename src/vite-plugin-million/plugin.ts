@@ -1,4 +1,3 @@
-import { transformAsync } from '@babel/core';
 import { parse, print, visit } from 'recast';
 import { compile } from './compile';
 import { jsxFactory } from './index';
@@ -20,25 +19,6 @@ export const million = (options?: { importSource: string }): any[] => [
           }';`,
         },
       };
-    },
-  },
-  {
-    name: 'vite:million-jsx-static-hoist',
-    enforce: 'pre',
-    async transform(code: string, id: string) {
-      if (id.includes('node_modules') || !JSX_FILTER.test(id)) return;
-      const result = await transformAsync(code, {
-        filename: id,
-        presets: ['@babel/preset-typescript'],
-        plugins: [
-          [
-            '@babel/plugin-transform-react-jsx',
-            { runtime: 'classic', pragma: jsxFactory, pragmaFrag: jsxFragment },
-          ],
-          '@babel/plugin-transform-react-constant-elements',
-        ],
-      });
-      return { code: result?.code, map: result?.map };
     },
   },
   {

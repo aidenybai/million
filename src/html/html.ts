@@ -1,3 +1,4 @@
+/*! (c) Jason Miller - Apache */
 // Copied from https://github.com/developit/htm
 
 /* eslint-disable prefer-rest-params */
