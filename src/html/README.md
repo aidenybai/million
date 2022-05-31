@@ -1,6 +1,6 @@
 # `million/html`
 
-Adds element factory functions and tagged template support for [Million](https://github.com/aidenybai/million).
+Adds tagged template support for [Million](https://github.com/aidenybai/million).
 
 ## License
 
