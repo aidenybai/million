@@ -27,11 +27,13 @@
 
 ## What is Million?
 
-Million is a **lightweight (`<1kb`)** compiler-augmented Virtual DOM. It's [**_fast_**](https://millionjs.org/benchmarks)!
+Million is a lightweight (`<1kb`) Virtual DOM. It's [_**really fast**_](https://millionjs.org/benchmarks) and makes it easy to create and update your user interfaces.
 
 Current Virtual DOM implementations are **inadequate**—Ranging from overcomplicated to abandoned, most are unusable without sacrificing **raw performance and size**.
 
-Million aims to fix this, providing a **library-agnostic** Virtual DOM to serve as the core for Javascript libraries that focus on pre**compilation** and static analysis.
+Million makes creating user interfaces as easy as [React](https://reactjs.org), but with faster performance and smaller bundle size for the end user. By computing the UI beforehand with a compiler, Million reduces the overhead of traditional Virtual DOM.
+
+> Unlike other Virtual DOM based libraries, Million is the first to **optimize through compilation.** [It can get _**fast**_!](https://millionjs.org/benchmarks)
 
 ### [**📚 Learn Million in 10 minutes! →**](https://millionjs.org/docs/start-here)
 
