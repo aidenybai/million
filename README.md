@@ -88,23 +88,38 @@ npm install million
 
 ## Quick Start
 
-Here is an extremely simple implementation of a Hello World page using Million.
+Here is an extremely simple implementation of a Counter app using Million.
 
 ```js
-import { _, m, render } from 'million';
+import { compat, createRoot, useState } from 'million/react';
 
-render(document.body, m('h1', _, ['Hello World!']));
+function Counter({ init }) {
+  const [value, setValue] = useState(init);
 
-// <h1>Hello World</h1> rendered to <body>
+  return (
+    <div>
+      <div>Counter: {value}</div>
+      <button onClick={() => setValue(value + 1)}>Increment</button>
+      <button onClick={() => setValue(value - 1)}>Decrement</button>
+    </div>
+  );
+}
+
+const root = createRoot(document.querySelector('#app'));
+
+// Million wraps render functions inside a compat function
+compat(() => {
+  root.render(<Counter init={0} />);
+});
 ```
 
-[`render()`](https://millionjs.org/docs/api/basics/render) function has a standard interface that is used in many Virtual DOM libraries. First argument is a DOM node that will be used as the parent DOM reference, and the second one is a Virtual DOM to render.
+Here, you can write React code. Million will automagically optimize it during compile time, allowing for a super speedy Virtual DOM.
 
-[`m()`](https://millionjs.org/docs/api/basics/m) function will instantiate a "Virtual DOM" node for an element.
+Open the project to start tinkering:
 
-`_` is a shorthand for the `undefined` value.
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/aidenybai/million-react-compat)
 
-[**→ More examples**](https://millionjs.org/docs/start-here)
+Need help on using React? Check out the [React documentation](https://beta.reactjs.org/apis).
 
 ## Codebase
 
