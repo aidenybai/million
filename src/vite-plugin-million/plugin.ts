@@ -11,7 +11,7 @@ export const million = (options?: { importSource: string; react: boolean }): any
     enforce: 'pre',
     config() {
       const resolve =
-        options && (options.react === undefined || options.react === true)
+        options?.react === undefined || options?.react === true
           ? {
               alias: {
                 react: 'million/react',
