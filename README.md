@@ -29,7 +29,7 @@
 
 Million is a lightweight (`<1kb`) Virtual DOM. It's [_**really fast**_](https://millionjs.org/benchmarks) and makes it easy to create user interfaces.
 
-> Oh man... Another `/virtual dom|javascript/i` library? I'm fine with [React](https://reactjs.org) already, why should I bother switching?
+> Oh man... Another [`/virtual dom|javascript/gim`](https://regexr.com/6mr5f) library? I'm fine with [React](https://reactjs.org) already, why should I bother switching?
 
 Million makes creating user interfaces as easy as [React](https://reactjs.org), but with faster performance and smaller bundle size for the end user. By computing the user interface beforehand with a compiler, Million reduces the overhead of traditional Virtual DOM.
 
@@ -37,7 +37,7 @@ Million makes creating user interfaces as easy as [React](https://reactjs.org), 
 
 While alternative libraries like [Preact](https://preactjs.com/) reduce bundle sizes by efficient code design, Million takes it a step further by **leveraging compilation** to make a quantum leap in improving bundle size **and** render speed.
 
-Think of it as if [Preact](https://preactjs.com/) and [Svelte](https://svelte.dev/) had a baby. [A baby with _**superspeed! 👶**_](https://millionjs.org/benchmarks)
+Think of it as if [Preact](https://preactjs.com/) and [Svelte](https://svelte.dev/) had a baby. [A baby with _**super speed! 👶**_](https://millionjs.org/benchmarks)
 
 ### [**📚 Learn Million in 10 minutes! →**](https://millionjs.org/docs/start-here)
 
@@ -56,6 +56,7 @@ Think of it as if [Preact](https://preactjs.com/) and [Svelte](https://svelte.de
     <tr>
       <td>
         <ul>
+          <li>⚛️ Familiar React API (`million/react`)</li>
           <li>🦁 Built for libraries that <strong>compile</strong></li>
           <li>📦 Lightweight bundle size (<strong>&lt;1kb</strong> brotli+min)</li>
           <li>⚡ <strong>Fast</strong> runtime operations</li>
@@ -64,6 +65,7 @@ Think of it as if [Preact](https://preactjs.com/) and [Svelte](https://svelte.de
       </td>
       <td>
         <ul>
+          <li><a href="https://github.com/aidenybai/million-react-compat">Write React with a fast Virtual DOM _(experimental)_</a></li>
           <li><a href="https://millionjs.org/docs/api/basics/render">Efficiently updating nodes</a></li>
           <li><a href="https://github.com/aidenybai/hacky">Creating UI libraries</a></li>
           <li><a href="https://millionjs.org/docs/api/extra/router">Turning MPAs into SPAs</a></li>
