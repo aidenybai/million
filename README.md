@@ -56,7 +56,7 @@ Think of it as if [Preact](https://preactjs.com/) and [Svelte](https://svelte.de
     <tr>
       <td>
         <ul>
-          <li>⚛️ Familiar React API (`million/react`)</li>
+          <li>⚛️ Familiar React API (with <code>million/react</code>)</li>
           <li>🦁 Built for libraries that <strong>compile</strong></li>
           <li>📦 Lightweight bundle size (<strong>&lt;1kb</strong> brotli+min)</li>
           <li>⚡ <strong>Fast</strong> runtime operations</li>
@@ -65,7 +65,7 @@ Think of it as if [Preact](https://preactjs.com/) and [Svelte](https://svelte.de
       </td>
       <td>
         <ul>
-          <li><a href="https://github.com/aidenybai/million-react-compat">Write React with a fast Virtual DOM <i>(experimental)</i></a></li>
+          <li><a href="https://github.com/aidenybai/million-react-compat">Write React with a fast Virtual DOM </a></li>
           <li><a href="https://millionjs.org/docs/api/basics/render">Efficiently updating nodes</a></li>
           <li><a href="https://github.com/aidenybai/hacky">Creating UI libraries</a></li>
           <li><a href="https://millionjs.org/docs/api/extra/router">Turning MPAs into SPAs</a></li>
@@ -110,7 +110,7 @@ render(document.body, m('h1', _, ['Hello World!']));
 
 This repo is a "mono-repo" with modules. Million ships as one NPM package, but has first class modules for more complex, but important extensions. Each module has its own folder in the `/src` directory.
 
-| Module                                                                                       | Description                                                                                                                                                                                  |
+| Module                                                                                        | Description                                                                                                                                                                                  |
 | --------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [million](https://github.com/aidenybai/million/tree/main/src/million)                         | The main Virtual DOM with all of Million's core                                                                                                                                              |
 | [react](https://github.com/aidenybai/million/tree/main/src/react)                             | Adds basic React compatability to Million                                                                                                                                                    |
@@ -118,7 +118,7 @@ This repo is a "mono-repo" with modules. Million ships as one NPM package, but h
 | [jsx-runtime](https://github.com/aidenybai/million/tree/main/src/jsx-runtime)                 | Utility functions for JSX                                                                                                                                                                    |
 | [html](https://github.com/aidenybai/million/tree/main/src/html)                               | Provides factory functions and tagged template for easier virtual node creation without the need for a preprocessor                                                                          |
 | [morph](https://github.com/aidenybai/million/tree/main/src/morph)                             | Utility for morphing HTML with just DOM nodes (like [morphdom](https://github.com/patrick-steele-idem/morphdom)) inside the page. Works great for implementing hot refresh in SSR frameworks |
-| [utils](https://github.com/aidenybai/million/tree/main/src/utils)                             | Conversion utilities between `VNode`, `DOMNode`, and `string`                                                                                                                                      |
+| [utils](https://github.com/aidenybai/million/tree/main/src/utils)                             | Conversion utilities between `VNode`, `DOMNode`, and `string`                                                                                                                                |
 | [vite-plugin-million](https://github.com/aidenybai/million/tree/main/src/vite-plugin-million) | A Vite plugin that optimizes the user interface (**"the compiler"**)                                                                                                                         |
 
 ## Resources & Contributing Back
