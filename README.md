@@ -65,7 +65,7 @@ Think of it as if [Preact](https://preactjs.com/) and [Svelte](https://svelte.de
       </td>
       <td>
         <ul>
-          <li><a href="https://github.com/aidenybai/million-react-compat">Write React with a fast Virtual DOM _(experimental)_</a></li>
+          <li><a href="https://github.com/aidenybai/million-react-compat">Write React with a fast Virtual DOM <i>(experimental)</i></a></li>
           <li><a href="https://millionjs.org/docs/api/basics/render">Efficiently updating nodes</a></li>
           <li><a href="https://github.com/aidenybai/hacky">Creating UI libraries</a></li>
           <li><a href="https://millionjs.org/docs/api/extra/router">Turning MPAs into SPAs</a></li>
