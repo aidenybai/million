@@ -37,7 +37,7 @@ Million makes creating user interfaces as easy as [React](https://reactjs.org), 
 
 While alternative libraries like [Preact](https://preactjs.com/) reduce bundle sizes by efficient code design, Million takes it a step further by **leveraging compilation** to make a quantum leap in improving bundle size **and** render speed.
 
-Think of it as if [Preact](https://preactjs.com/) and [Svelte](https://svelte.dev/) had a baby. [A baby with _**super speed! 👶**_](https://millionjs.org/benchmarks)
+Think of it as if [React](https://preactjs.com/)'s API and [Svelte](https://svelte.dev/)'s compiler had a baby. [A baby with _**super speed! 👶**_](https://millionjs.org/benchmarks)
 
 ### [**📚 Learn Million in 10 minutes! →**](https://millionjs.org/docs/start-here)
 
