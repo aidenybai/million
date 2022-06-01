@@ -19,7 +19,7 @@ import {
 import { buildData, patch } from '../data';
 
 const data = buildData(10000);
-const createVNode = () => (
+const createVNode = (data) => (
   <table>
     {data.map(({ id, label }) => (
       <tr key={String(id)}>
@@ -29,10 +29,10 @@ const createVNode = () => (
     ))}
   </table>
 );
-const oldVNode = createVNode();
+const oldVNode = createVNode(data);
+const vnode = createVNode([...data, ...buildData(1000)]);
+
 const el = () => createElement(oldVNode);
-const vnode = createVNode();
-data.push(...buildData(1000));
 
 const suite = Suite('append many rows to large table (appending 1,000 to a table of 10,000 rows)', {
   million: () => {
