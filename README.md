@@ -100,7 +100,9 @@ render(document.body, m('h1', _, ['Hello World!']));
 
 ## Codebase
 
-| Package                                                                                       | Description                                                                                                                                                                                  |
+This repo is a "mono-repo" with modules. Million ships as one NPM package, but has first class modules for more complex, but important extensions. Each module has its own folder in the `/src` directory.
+
+| Module                                                                                       | Description                                                                                                                                                                                  |
 | --------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [million](https://github.com/aidenybai/million/tree/main/src/million)                         | The main Virtual DOM with all of Million's core                                                                                                                                              |
 | [react](https://github.com/aidenybai/million/tree/main/src/react)                             | Adds basic React compatability to Million                                                                                                                                                    |
