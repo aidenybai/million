@@ -29,14 +29,15 @@
 
 Million is a lightweight (`<1kb`) Virtual DOM. It's [_**really fast**_](https://millionjs.org/benchmarks) and makes it easy to create user interfaces.
 
-> Oh man... Another `/virtual dom|javascript/` library? Why bother switching to yet another one? I'm fine with [React](https://reactjs.org) already, and if I need something a bit more simpler, I'll just use [Preact](https://preactjs.com/).
+> Oh man... Another `/virtual dom|javascript/` library? I'm fine with [React](https://reactjs.org) already, why should I bother switching?
 
 Million makes creating user interfaces as easy as [React](https://reactjs.org), but with faster performance and smaller bundle size for the end user. By computing the user interface beforehand with a compiler, Million reduces the overhead of traditional Virtual DOM.
 
-While alternative libraries like [Preact](https://preactjs.com/) reduce bundle sizes by efficient code design, Million takes it a step further by **leveraging compilation** to make a quantum leap in render speed.
+> Okay cool... but why should I use Million if I can just use [Preact](https://preactjs.com/) if I need something a bit more lightweight?
+
+While alternative libraries like [Preact](https://preactjs.com/) reduce bundle sizes by efficient code design, Million takes it a step further by **leveraging compilation** to make a quantum leap in improving bundle size **and** render speed.
 
 Think of it as if [Preact](https://preactjs.com/) and [Svelte](https://svelte.dev/) had a baby. [A _**really fast**_ baby 👶](https://millionjs.org/benchmarks)
-
 
 ### [**📚 Learn Million in 10 minutes! →**](https://millionjs.org/docs/start-here)
 
@@ -72,6 +73,8 @@ Think of it as if [Preact](https://preactjs.com/) and [Svelte](https://svelte.de
     </tr>
   </tbody>
 </table>
+
+> 🚧 Million now supports [experimental React compatability](https://github.com/aidenybai/million-react-compat).
 
 ## Installing Million
 
