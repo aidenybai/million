@@ -5,11 +5,20 @@ const JSX_FILTER = /\.(jsx|tsx)$/;
 const jsxFactory = '__MILLION_JSX';
 const jsxFragment = '__MILLION_JSX_FRAGMENT';
 
-export const million = (options?: { importSource: string }): any[] => [
+export const million = (options?: { importSource: string; react: boolean }): any[] => [
   {
     name: 'vite:million-config',
     enforce: 'pre',
     config() {
+      const resolve =
+        options && (options.react === undefined || options.react === true)
+          ? {
+              alias: {
+                react: 'million/react',
+                'react-dom': 'million/react',
+              },
+            }
+          : {};
       return {
         esbuild: {
           jsxFactory,
@@ -18,6 +27,7 @@ export const million = (options?: { importSource: string }): any[] => [
             options?.importSource || 'million/jsx-runtime'
           }';`,
         },
+        resolve,
       };
     },
   },
