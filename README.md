@@ -98,6 +98,19 @@ render(document.body, m('h1', _, ['Hello World!']));
 
 [**→ More examples**](https://millionjs.org/docs/start-here)
 
+## Codebase
+
+| Package                                                               | Description                                                                                                                                                                                  |
+| --------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [million](https://github.com/aidenybai/million/tree/main/src/million) | The main Virtual DOM with all of Million's core                                                                                                                                              |
+| [react](https://github.com/aidenybai/million/tree/main/src/react)     | Adds basic React compatability to Million                                                                                                                                                    |
+| [router](https://github.com/aidenybai/million/tree/main/src/router)   | Router that turns MPA to SPA                                                                                                                                                                 |
+| [jsx-runtime](packages/docs)                                          | Utility functions for JSX                                                                                                                                                                    |
+| [html](packages/focus)                                                | Provides factory functions and tagged template for easier virtual node creation without the need for a preprocessor                                                                          |
+| [morph](packages/history)                                             | Utility for morphing HTML with just DOM nodes (like [morphdom](https://github.com/patrick-steele-idem/morphdom)) inside the page. Works great for implementing hot refresh in SSR frameworks |
+| [utils](packages/intersect)                                           | A plugin for triggering JS expressions based on elements intersecting with the viewport                                                                                                      |
+| [vite-plugin-million](packages/mask)                                  | A Vite plugin that optimizes the user interface (**"the compiler"**)                                                                                                                         |
+
 ## Resources & Contributing Back
 
 Looking for the docs? Check the [documentation](https://millionjs.org) out.
