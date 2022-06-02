@@ -1,7 +1,9 @@
-import { render, hydrate } from '../million';
-import { VNode, DOM_REF_FIELD } from '../million/types';
-import { augmentor } from './hooks';
+import { h } from '../jsx-runtime';
+import { hydrate, patch, render } from '../million';
 import { startTransition } from '../million/scheduler';
+import { DOM_REF_FIELD, VElement, VNode } from '../million/types';
+import { fromDomNodeToVNode } from '../utils';
+import { augmentor } from './hooks';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 const compat = (fn: Function) => augmentor(fn)();
@@ -13,12 +15,20 @@ const hydrateRoot = (vnode: VNode, root: HTMLElement): HTMLElement => {
 
 const createRoot = (root: HTMLElement) => {
   // eslint-disable-next-line @typescript-eslint/ban-types
-  const renderer = (fn: Function) => {
-    return (vnode: VNode) => fn(root, vnode);
+  const renderer = (renderFn: Function, patchFn: Function) => {
+    return (vnode: VNode | VNode[]) => {
+      if (Array.isArray(vnode)) {
+        const rootVNode = fromDomNodeToVNode(root) as VElement;
+        patchFn(root, h(rootVNode.tag, rootVNode.props, ...vnode));
+        requestAnimationFrame(() => (root[DOM_REF_FIELD] = root.firstChild));
+      } else {
+        renderFn(root, vnode);
+      }
+    };
   };
   return {
-    render: renderer(render),
-    hydrate: renderer(hydrate),
+    render: renderer(render, patch),
+    hydrate: renderer(hydrate, patch),
     unmount: () => {
       root.textContent = '';
       root[DOM_REF_FIELD] = undefined;
@@ -27,13 +37,13 @@ const createRoot = (root: HTMLElement) => {
 };
 
 // https://github.com/facebook/react/blob/main/packages/react-dom/index.modern.fb.js
-export default {
+export {
   compat,
   // __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED,
   // createPortal,
   createRoot,
   hydrateRoot,
-  flushSync: startTransition,
+  startTransition as flushSync,
   // unstable_batchedUpdates,
   // unstable_createEventHandle,
   // unstable_flushControlled,
