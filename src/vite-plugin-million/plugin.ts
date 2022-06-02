@@ -1,5 +1,4 @@
 import { parse, print, visit } from 'recast';
-import MagicString from 'magic-string';
 import { compile } from './compile';
 
 const JSX_FILTER = /\.(jsx|tsx)$/;
