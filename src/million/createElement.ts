@@ -50,6 +50,9 @@ export const createElement = (vnode?: VNode | null, attachField = true): DOMNode
     }
   }
 
+  if (vnode.ref) {
+    vnode.ref.current = el;
+  }
   if (attachField) el[OLD_VNODE_FIELD] = vnode;
 
   return el;

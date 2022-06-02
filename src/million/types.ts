@@ -67,6 +67,9 @@ export interface Thunk extends V {
 
 export interface V {
   flag: Flags;
+  ref?: {
+    current: any;
+  };
 }
 
 export enum Flags {

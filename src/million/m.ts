@@ -83,9 +83,14 @@ export const m = (
   hook: Hook = () => true,
 ): VElement => {
   let key = undefined;
+  let ref = undefined;
   if (props?.key) {
     key = props.key as string | undefined;
     delete props.key;
+  }
+  if (props?.ref) {
+    ref = props.ref as { current: any };
+    delete props.ref;
   }
   const velement: VElement = {
     tag,
@@ -95,6 +100,7 @@ export const m = (
     flag,
     delta,
     hook,
+    ref,
   };
   return velement.tag.toLowerCase() === 'svg' ? svg(velement) : velement;
 };
