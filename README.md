@@ -86,41 +86,6 @@ Inside your project directory, run the following command:
 npm install million
 ```
 
-## Quick Start
-
-Here is an extremely simple implementation of a Counter app using Million.
-
-```js
-import { compat, createRoot, useState } from 'million/react';
-
-function Counter({ init }) {
-  const [value, setValue] = useState(init);
-
-  return (
-    <div>
-      <div>Counter: {value}</div>
-      <button onClick={() => setValue(value + 1)}>Increment</button>
-      <button onClick={() => setValue(value - 1)}>Decrement</button>
-    </div>
-  );
-}
-
-const root = createRoot(document.querySelector('#app'));
-
-// Million wraps render functions inside a compat function
-compat(() => {
-  root.render(<Counter init={0} />);
-});
-```
-
-Here, you can write React code. Million will automagically optimize it during compile time, allowing for a super speedy Virtual DOM.
-
-Open the project to start tinkering:
-
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/aidenybai/million-react-compat)
-
-Need help on using React? Check out the [React documentation](https://beta.reactjs.org/apis).
-
 ## Codebase
 
 This repo is a "mono-repo" with modules. Million ships as one NPM package, but has first class modules for more complex, but important extensions. Each module has its own folder in the `/src` directory.
