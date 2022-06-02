@@ -1,7 +1,8 @@
 import { Fragment, h, jsx, jsxs } from '../jsx-runtime';
-import { startTransition } from '../million/scheduler';
+import { batch, startTransition } from '../million/scheduler';
 import { VNode } from '../million/types';
 import {
+  augmentor,
   createContext,
   useCallback,
   useContext,
@@ -12,6 +13,15 @@ import {
   useRef,
   useState,
 } from './hooks';
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+let rerender: Function;
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+const compat = (fn: Function) => {
+  rerender = fn;
+  augmentor(fn)();
+};
 
 const cloneElement = (vnode: VNode) => {
   if (typeof vnode === 'string') return vnode;
@@ -74,18 +84,115 @@ const Children = {
   toArray: toChildArray,
 };
 
+// eslint-disable-next-line @typescript-eslint/ban-types
+const lazy = (loader: () => Promise<Function>) => {
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  let promise: Promise<Function>;
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  let component: Function;
+  let err: Error;
+  return (props: Record<string, any>) => {
+    if (!promise) {
+      promise = loader();
+      promise.then(
+        (exports: any) => (component = exports.default || exports),
+        (e) => (err = e),
+      );
+    }
+    if (err) throw err;
+    if (!component) throw promise;
+    return h(component, props);
+  };
+};
+
+const Suspense = (props: { fallback: VNode; children: VNode[] }) => {
+  return props.children;
+};
+
+const SuspenseList = (props: Record<string, any>) => {
+  return props.children;
+};
+
+const StrictMode = (props: { children: VNode[] }) => {
+  return props.children;
+};
+
+class Component {
+  props: Record<string, any>;
+  context: any;
+  queueRender: (_callback: () => any) => void;
+  state: Record<string, any>;
+  isReactComponent = {};
+
+  constructor(props: Record<string, any>, context: any) {
+    this.props = props;
+    this.context = context;
+    this.state = {};
+    this.queueRender = batch();
+  }
+
+  componentDidMount() {
+    // unsupported
+    return false;
+  }
+
+  componentDidUnmount() {
+    // unsupported
+    return false;
+  }
+
+  componentDidUpdate() {
+    // unsupported
+    return true;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  shouldComponentUpdate(_newProps: Record<string, any>, _newState: Record<string, any>) {
+    return true;
+  }
+
+  setState(
+    update: Record<string, any>,
+    callback?: (state: Record<string, any>, props: Record<string, any>) => Record<string, any>,
+  ) {
+    const newState = {
+      ...this.state,
+      ...(typeof update === 'function' ? update(this.state, this.props) : update),
+    };
+    if (!this.shouldComponentUpdate(this.props, newState)) return;
+    if (callback) callback(this.state, this.props);
+    this.state = newState;
+
+    this.queueRender(() => rerender(this.props));
+  }
+
+  render(props?: Record<string, any>) {
+    return Fragment(props);
+  }
+}
+
+class PureComponent extends Component {
+  isReactComponent = {};
+  isPureReactComponent = {};
+
+  shouldComponentUpdate(newProps: Record<string, any>, newState: Record<string, any>) {
+    return (newProps !== this.props && newState !== this.state);
+  }
+}
+
 export {
+  compat,
   // __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED,
   // act as unstable_act,
   Children,
-  // Component,
+  Component,
   Fragment,
   // Profiler,
-  // PureComponent,
-  // StrictMode,
-  // Suspense,
-  // SuspenseList,
-  // SuspenseList as unstable_SuspenseList,
+  PureComponent,
+  StrictMode,
+  Suspense,
+  SuspenseList,
+  SuspenseList as unstable_SuspenseList,
   cloneElement,
   createContext,
   h as createElement,
@@ -95,7 +202,7 @@ export {
   // createServerContext,
   // forwardRef,
   isValidElement,
-  // lazy,
+  lazy,
   memo,
   startTransition,
   startTransition as unstable_startTransition, // TODO: Remove once call sights updated to startTransition
