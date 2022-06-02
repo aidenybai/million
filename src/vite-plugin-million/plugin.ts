@@ -1,4 +1,5 @@
 import { parse, print, visit } from 'recast';
+import MagicString from 'magic-string';
 import { compile } from './compile';
 
 const JSX_FILTER = /\.(jsx|tsx)$/;
@@ -11,7 +12,7 @@ export const million = (options?: { importSource: string; react: boolean }): any
     enforce: 'pre',
     config() {
       const resolve =
-        options?.react === undefined || options?.react === true
+        options?.react === true
           ? {
               alias: {
                 react: 'million/react',
@@ -19,6 +20,7 @@ export const million = (options?: { importSource: string; react: boolean }): any
               },
             }
           : {};
+
       return {
         esbuild: {
           jsxFactory,

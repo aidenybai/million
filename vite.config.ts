@@ -8,7 +8,7 @@ export default defineConfig({
       src: resolve(__dirname, './src'),
     },
   },
-  plugins: [million({ importSource: 'src/jsx-runtime' })],
+  plugins: [million({ importSource: 'src/jsx-runtime', react: true })],
   test: {
     watch: false,
     environment: 'jsdom',
