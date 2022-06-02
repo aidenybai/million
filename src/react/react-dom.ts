@@ -36,17 +36,22 @@ const createRoot = (root: HTMLElement) => {
   };
 };
 
+const createPortal = (children: VNode[], el: HTMLElement) => {
+  const rootVNode = fromDomNodeToVNode(el) as VElement;
+  patch(el, h(rootVNode.tag, rootVNode.props, ...children));
+};
+
 // https://github.com/facebook/react/blob/main/packages/react-dom/index.modern.fb.js
 export {
   compat,
-  // __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED,
-  // createPortal,
+  createPortal,
   createRoot,
   hydrateRoot,
   startTransition as flushSync,
+  // __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED,
   // unstable_batchedUpdates,
   // unstable_createEventHandle,
   // unstable_flushControlled,
   // unstable_isNewReconciler,
-  // unstable_runWithPriority, // DO NOT USE: Temporarily exposed to migrate off of Scheduler.runWithPriority.
+  // unstable_runWithPriority,
 };
