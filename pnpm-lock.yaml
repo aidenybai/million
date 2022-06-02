@@ -718,7 +718,7 @@ packages:
       estree-walker: 2.0.2
       glob: 7.2.0
       is-reference: 1.2.1
-      magic-string: 0.25.7
+      magic-string: 0.25.9
       resolve: 1.22.0
       rollup: 2.70.1
     dev: true
@@ -768,7 +768,7 @@ packages:
       rollup: ^1.20.0 || ^2.0.0
     dependencies:
       '@rollup/pluginutils': 3.1.0_rollup@2.70.1
-      magic-string: 0.25.7
+      magic-string: 0.25.9
       rollup: 2.70.1
     dev: true
 
@@ -1107,7 +1107,7 @@ packages:
     dependencies:
       '@babel/standalone': 7.17.11
       core-js: 3.22.4
-      magic-string: 0.26.1
+      magic-string: 0.26.2
       regenerator-runtime: 0.13.9
       systemjs: 6.12.1
       vite: 2.9.9
@@ -4056,14 +4056,14 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /magic-string/0.25.7:
-    resolution: {integrity: sha512-4CrMT5DOHTDk4HYDlzmwu4FVCcIYI8gauveasrdCu2IKIFOJ3f0v/8MDGJCDL9oD2ppz/Av1b0Nj345H9M+XIA==}
+  /magic-string/0.25.9:
+    resolution: {integrity: sha512-RmF0AsMzgt25qzqqLc1+MbHmhdx0ojF2Fvs4XnOqz2ZOBXzzkEwc/dJQZCYHAn7v1jbVOjAZfK8msRn4BxO4VQ==}
     dependencies:
       sourcemap-codec: 1.4.8
     dev: true
 
-  /magic-string/0.26.1:
-    resolution: {integrity: sha512-ndThHmvgtieXe8J/VGPjG+Apu7v7ItcD5mhEIvOscWjPF/ccOiLxHaSuCAS2G+3x4GKsAbT8u7zdyamupui8Tg==}
+  /magic-string/0.26.2:
+    resolution: {integrity: sha512-NzzlXpclt5zAbmo6h6jNc8zl2gNRGHvmsZW4IvZhTC4W7k4OlLP+S5YLussa/r3ixNT66KOQfNORlXHSOy/X4A==}
     engines: {node: '>=12'}
     dependencies:
       sourcemap-codec: 1.4.8
@@ -5277,7 +5277,7 @@ packages:
       rollup: ^2.70
       typescript: ^4.6
     dependencies:
-      magic-string: 0.26.1
+      magic-string: 0.26.2
       rollup: 2.70.1
       typescript: 4.7.2
     optionalDependencies:
@@ -5990,7 +5990,7 @@ packages:
       esbuild: 0.14.42
       hookable: 5.1.1
       jiti: 1.13.0
-      magic-string: 0.26.1
+      magic-string: 0.26.2
       mkdirp: 1.0.4
       mkdist: 0.3.10_typescript@4.7.2
       mlly: 0.5.2
