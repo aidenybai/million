@@ -26,27 +26,63 @@ const isValidElement = (vnode: VNode) => {
   return false;
 };
 
+const memo =
+  (
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    component: Function,
+    areEqual: (prev: Record<string, any>, next: Record<string, any>) => boolean,
+  ) =>
+  () => {
+    let lastProps: Record<string, any>;
+    let lastResult: VNode;
+    return (props: Record<string, any>) => {
+      const isEqual =
+        areEqual ??
+        ((prev, next) =>
+          prev === next || Object.entries(prev).toString() === Object.entries(next).toString());
+
+      if (isEqual(lastProps, props)) {
+        return lastResult;
+      } else {
+        const result = component();
+        lastResult = result;
+        return result;
+      }
+    };
+  };
+
 export {
   Fragment,
+  cloneElement,
+  createContext,
+  h as createElement,
+  isValidElement,
+  startTransition,
+  startTransition as unstable_startTransition,
+  useCallback,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+  jsx,
+  jsxs,
+  jsx as jsxDEV,
+  memo,
+  // createMutableSource,
+  // createMutableSource as unstable_createMutableSource,
+  // createRef,
+  // createServerContext,
+  // forwardRef,
+  // lazy,
   // Profiler,
   // PureComponent,
   // StrictMode,
   // Suspense,
   // SuspenseList,
   // SuspenseList as unstable_SuspenseList, // TODO: Remove once call sights updated to SuspenseList
-  cloneElement,
-  createContext,
-  h as createElement,
-  // createMutableSource,
-  // createMutableSource as unstable_createMutableSource,
-  // createRef,
-  // createServerContext,
-  // forwardRef,
-  isValidElement,
-  // lazy,
-  // memo,
-  startTransition,
-  startTransition as unstable_startTransition,
   // unstable_Cache,
   // unstable_DebugTracingMode,
   // unstable_LegacyHidden,
@@ -56,25 +92,14 @@ export {
   // unstable_getCacheForType,
   // unstable_useCacheRefresh,
   // useId,
-  useCallback,
-  useContext,
   // useDebugValue,
   // useDeferredValue,
   // useDeferredValue as unstable_useDeferredValue, // TODO: Remove once call sights updated to useDeferredValue
-  useEffect,
   // useImperativeHandle,
   // useInsertionEffect,
-  useLayoutEffect,
-  useMemo,
   // useMutableSource,
   // useMutableSource as unstable_useMutableSource,
-  useReducer,
-  useRef,
-  useState,
   // useSyncExternalStore,
   // useTransition,
   // useTransition as unstable_useTransition,
-  jsx,
-  jsxs,
-  jsx as jsxDEV,
 };
