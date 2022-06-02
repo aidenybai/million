@@ -10,7 +10,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import { batch } from '../million/scheduler';
+import { batch, startTransition, isPending } from '../million/scheduler';
 
 let state = null;
 
@@ -196,6 +196,11 @@ export const useRef = (value) => {
   const { stack, length } = state;
   if (i === length) state.length = stack.push({ current: value });
   return stack[i];
+};
+
+// useTransition
+export const useTransition = () => {
+  return [isPending, startTransition];
 };
 
 function different(value, i) {
