@@ -1,5 +1,6 @@
 import { className, kebab, m, style, svg } from '../million/m';
 import { Delta, Flags, VElementFlags, VNode, VProps } from '../million/types';
+import { Fragment } from './jsx';
 import { RawVNode } from './types';
 
 export const normalize = (rawVNode: RawVNode): VNode | VNode[] | undefined => {
@@ -22,6 +23,7 @@ export const normalize = (rawVNode: RawVNode): VNode | VNode[] | undefined => {
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const h = (tag: string | Function, props?: VProps, ...children: RawVNode[]) => {
+  if (tag === Fragment) return children;
   if (typeof tag === 'function') return tag(props, props?.key);
 
   let flag: VElementFlags = Flags.ELEMENT_NO_CHILDREN;

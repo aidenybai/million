@@ -1,6 +1,6 @@
-import { h, jsx, jsxs } from '../jsx-runtime';
-import { VNode } from '../million/types';
+import { Fragment, h, jsx, jsxs } from '../jsx-runtime';
 import { startTransition } from '../million/scheduler';
+import { VNode } from '../million/types';
 import {
   createContext,
   useCallback,
@@ -26,12 +26,8 @@ const isValidElement = (vnode: VNode) => {
   return false;
 };
 
-export default {
-  // __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED,
-  // act as unstable_act,
-  // Children,
-  // Component,
-  // Fragment,
+export {
+  Fragment,
   // Profiler,
   // PureComponent,
   // StrictMode,
@@ -40,7 +36,7 @@ export default {
   // SuspenseList as unstable_SuspenseList, // TODO: Remove once call sights updated to SuspenseList
   cloneElement,
   createContext,
-  createElement: h,
+  h as createElement,
   // createMutableSource,
   // createMutableSource as unstable_createMutableSource,
   // createRef,
@@ -50,7 +46,7 @@ export default {
   // lazy,
   // memo,
   startTransition,
-  unstable_startTransition: startTransition,
+  startTransition as unstable_startTransition,
   // unstable_Cache,
   // unstable_DebugTracingMode,
   // unstable_LegacyHidden,
@@ -80,5 +76,5 @@ export default {
   // useTransition as unstable_useTransition,
   jsx,
   jsxs,
-  jsxDEV: jsx,
+  jsx as jsxDEV,
 };
