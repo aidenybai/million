@@ -12,6 +12,7 @@ import {
   useReducer,
   useRef,
   useState,
+  useTransition
 } from './hooks';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -176,7 +177,7 @@ class PureComponent extends Component {
   isPureReactComponent = {};
 
   shouldComponentUpdate(newProps: Record<string, any>, newState: Record<string, any>) {
-    return (newProps !== this.props && newState !== this.state);
+    return newProps !== this.props && newState !== this.state;
   }
 }
 
@@ -231,8 +232,8 @@ export {
   useRef,
   useState,
   // useSyncExternalStore,
-  // useTransition,
-  // useTransition as unstable_useTransition,
+  useTransition,
+  useTransition as unstable_useTransition,
   jsx,
   jsxs,
   jsx as jsxDEV,
