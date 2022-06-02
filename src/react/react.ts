@@ -1,6 +1,7 @@
 import { Fragment, h, jsx, jsxs } from '../jsx-runtime';
 import { batch, startTransition } from '../million/scheduler';
 import { VNode } from '../million/types';
+import { thunk } from '../million/m';
 import {
   augmentor,
   createContext,
@@ -37,30 +38,12 @@ const isValidElement = (vnode: VNode) => {
   return false;
 };
 
-const memo =
-  (
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    component: Function,
-    areEqual: (prev: Record<string, any>, next: Record<string, any>) => boolean,
-  ) =>
-  () => {
-    let lastProps: Record<string, any>;
-    let lastResult: VNode;
-    return (props: Record<string, any>) => {
-      const isEqual =
-        areEqual ??
-        ((prev, next) =>
-          prev === next || Object.entries(prev).toString() === Object.entries(next).toString());
-
-      if (isEqual(lastProps, props)) {
-        return lastResult;
-      } else {
-        const result = component();
-        lastResult = result;
-        return result;
-      }
-    };
+// eslint-disable-next-line @typescript-eslint/ban-types
+const memo = (component: Function) => () => {
+  return (props: Record<string, any>) => {
+    return thunk(component as any, Object.values(props));
   };
+};
 
 const toChildArray = (children: VNode[]): VNode[] => {
   return h('_', {}, ...children).children;
