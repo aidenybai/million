@@ -51,38 +51,54 @@ const memo =
     };
   };
 
+const toChildArray = (children: VNode[]): VNode[] => {
+  return h('_', {}, ...children).children;
+};
+
+const mapFn = (children: VNode[], fn: (this: VNode) => VNode) => {
+  if (children == null) return null;
+  return toChildArray(toChildArray(children).map(fn));
+};
+
+const Children = {
+  map: mapFn,
+  forEach: mapFn,
+  count(children: VNode[]) {
+    return children ? toChildArray(children).length : 0;
+  },
+  only(children: VNode[]) {
+    const normalized = toChildArray(children);
+    if (normalized.length !== 1) throw 'Children.only';
+    return normalized[0];
+  },
+  toArray: toChildArray,
+};
+
 export {
+  // __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED,
+  // act as unstable_act,
+  Children,
+  // Component,
   Fragment,
-  cloneElement,
-  createContext,
-  h as createElement,
-  isValidElement,
-  startTransition,
-  startTransition as unstable_startTransition,
-  useCallback,
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useReducer,
-  useRef,
-  useState,
-  jsx,
-  jsxs,
-  jsx as jsxDEV,
-  memo,
-  // createMutableSource,
-  // createMutableSource as unstable_createMutableSource,
-  // createRef,
-  // createServerContext,
-  // forwardRef,
-  // lazy,
   // Profiler,
   // PureComponent,
   // StrictMode,
   // Suspense,
   // SuspenseList,
-  // SuspenseList as unstable_SuspenseList, // TODO: Remove once call sights updated to SuspenseList
+  // SuspenseList as unstable_SuspenseList,
+  cloneElement,
+  createContext,
+  h as createElement,
+  // createMutableSource,
+  // createMutableSource as unstable_createMutableSource,
+  // createRef,
+  // createServerContext,
+  // forwardRef,
+  isValidElement,
+  // lazy,
+  memo,
+  startTransition,
+  startTransition as unstable_startTransition, // TODO: Remove once call sights updated to startTransition
   // unstable_Cache,
   // unstable_DebugTracingMode,
   // unstable_LegacyHidden,
@@ -92,14 +108,25 @@ export {
   // unstable_getCacheForType,
   // unstable_useCacheRefresh,
   // useId,
+  useCallback,
+  useContext,
   // useDebugValue,
   // useDeferredValue,
-  // useDeferredValue as unstable_useDeferredValue, // TODO: Remove once call sights updated to useDeferredValue
+  // useDeferredValue as unstable_useDeferredValue,
+  useEffect,
   // useImperativeHandle,
   // useInsertionEffect,
+  useLayoutEffect,
+  useMemo,
   // useMutableSource,
   // useMutableSource as unstable_useMutableSource,
+  useReducer,
+  useRef,
+  useState,
   // useSyncExternalStore,
   // useTransition,
   // useTransition as unstable_useTransition,
+  jsx,
+  jsxs,
+  jsx as jsxDEV,
 };
