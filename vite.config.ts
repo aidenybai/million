@@ -2,13 +2,15 @@ import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import { million } from './src/vite-plugin-million';
 
+const src = resolve(__dirname, './src');
+
 export default defineConfig({
   resolve: {
     alias: {
-      src: resolve(__dirname, './src'),
+      src,
     },
   },
-  plugins: [million({ importSource: 'src/jsx-runtime', react: true })],
+  plugins: [million({ importSource: src, react: true })],
   test: {
     watch: false,
     environment: 'jsdom',
