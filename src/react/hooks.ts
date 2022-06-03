@@ -20,7 +20,7 @@ export const umap = (_) => ({
 });
 
 // main exports
-export const augmentor = (fn) => {
+export const hook = (fn) => {
   const stack = [];
   return function hook() {
     const prev = state;
