@@ -3,7 +3,7 @@ import { batch, startTransition } from '../million/scheduler';
 import { VNode } from '../million/types';
 import { thunk } from '../million/m';
 import {
-  augmentor,
+  hook,
   createContext,
   useCallback,
   useContext,
@@ -22,7 +22,7 @@ let rerender: Function;
 // eslint-disable-next-line @typescript-eslint/ban-types
 const compat = (fn: Function) => {
   rerender = fn;
-  augmentor(fn)();
+  hook(fn)();
 };
 
 const cloneElement = (vnode: VNode) => {
@@ -165,6 +165,7 @@ class PureComponent extends Component {
 }
 
 export {
+  hook,
   compat,
   // __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED,
   // act as unstable_act,
