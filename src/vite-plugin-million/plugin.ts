@@ -28,7 +28,7 @@ export const million = (options?: { importSource?: string; react?: boolean }): a
           jsxFactory,
           jsxFragment,
           jsxInject: `import { h as ${jsxFactory}, Fragment as ${jsxFragment} } from '${
-            `${options?.importSource}/jsx-runtime` || 'million/jsx-runtime'
+            options?.importSource ? `${options?.importSource}/jsx-runtime` : 'million/jsx-runtime'
           }';`,
         },
         resolve,
