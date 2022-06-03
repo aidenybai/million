@@ -10,12 +10,15 @@ export const million = (options?: { importSource?: string; react?: boolean }): a
     name: 'vite:million-config',
     enforce: 'pre',
     config() {
+      const alias = `${options?.importSource}/react`;
       const resolve =
         options?.react === true
           ? {
               alias: {
-                react: 'million/react',
-                'react-dom': 'million/react',
+                react: alias,
+                'react-dom/client': alias,
+                'react-dom/server': alias,
+                'react-dom': alias,
               },
             }
           : {};
@@ -25,7 +28,7 @@ export const million = (options?: { importSource?: string; react?: boolean }): a
           jsxFactory,
           jsxFragment,
           jsxInject: `import { h as ${jsxFactory}, Fragment as ${jsxFragment} } from '${
-            options?.importSource || 'million/jsx-runtime'
+            `${options?.importSource}/jsx-runtime` || 'million/jsx-runtime'
           }';`,
         },
         resolve,
