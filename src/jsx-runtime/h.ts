@@ -29,7 +29,7 @@ export const h = (tag: string | Function, props?: VProps, ...children: RawVNode[
     return new (tag as any)(props).render();
   }
   if (typeof tag === 'function') {
-    return tag(props, props?.key);
+    return createComponent(tag, props, props?.key);
   }
 
   let flag: VElementFlags = Flags.ELEMENT_NO_CHILDREN;
