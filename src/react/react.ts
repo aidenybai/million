@@ -17,13 +17,6 @@ import {
   useTransition,
 } from './hooks';
 
-let rerender: Function;
-
-const compat = (fn: Function) => {
-  rerender = fn;
-  hook(fn)();
-};
-
 const cloneElement = (vnode: VNode) => {
   if (typeof vnode === 'string') return vnode;
   return h(vnode.tag, vnode.props, ...(vnode.children ?? []));
@@ -102,7 +95,7 @@ class Component {
   context: any;
   queueRender: (_callback: () => any) => void;
   state: Record<string, any>;
-  isReactComponent = {};
+  rerender?: Function;
 
   constructor(props: Record<string, any>, context: any) {
     this.props = props;
@@ -143,18 +136,17 @@ class Component {
     if (callback) callback(this.state, this.props);
     this.state = newState;
 
-    this.queueRender(() => rerender(this.props));
+    this.queueRender(() => {
+      if (this.rerender) this.rerender();
+    });
   }
 
-  render(props?: Record<string, any>) {
-    return Fragment(props);
+  render(props?: any): any {
+    return Fragment(props)!;
   }
 }
 
 class PureComponent extends Component {
-  isReactComponent = {};
-  isPureReactComponent = {};
-
   shouldComponentUpdate(newProps: Record<string, any>, newState: Record<string, any>) {
     return newProps !== this.props && newState !== this.state;
   }
@@ -162,7 +154,6 @@ class PureComponent extends Component {
 
 export {
   hook,
-  compat,
   // __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED,
   // act as unstable_act,
   Children,
