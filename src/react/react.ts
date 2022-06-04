@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import { Fragment, h, jsx, jsxs } from '../jsx-runtime';
 import { batch, startTransition } from '../million/scheduler';
 import { VNode } from '../million/types';
@@ -16,15 +17,6 @@ import {
   useTransition,
 } from './hooks';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-let rerender: Function;
-
-// eslint-disable-next-line @typescript-eslint/ban-types
-const compat = (fn: Function) => {
-  rerender = fn;
-  hook(fn)();
-};
-
 const cloneElement = (vnode: VNode) => {
   if (typeof vnode === 'string') return vnode;
   return h(vnode.tag, vnode.props, ...(vnode.children ?? []));
@@ -38,7 +30,6 @@ const isValidElement = (vnode: VNode) => {
   return false;
 };
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 const memo = (component: Function) => () => {
   return (props: Record<string, any>) => {
     return thunk(component as any, Object.values(props));
@@ -68,11 +59,9 @@ const Children = {
   toArray: toChildArray,
 };
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 const lazy = (loader: () => Promise<Function>) => {
-  // eslint-disable-next-line @typescript-eslint/ban-types
   let promise: Promise<Function>;
-  // eslint-disable-next-line @typescript-eslint/ban-types
+
   let component: Function;
   let err: Error;
   return (props: Record<string, any>) => {
@@ -106,7 +95,7 @@ class Component {
   context: any;
   queueRender: (_callback: () => any) => void;
   state: Record<string, any>;
-  isReactComponent = {};
+  rerender?: Function;
 
   constructor(props: Record<string, any>, context: any) {
     this.props = props;
@@ -147,18 +136,17 @@ class Component {
     if (callback) callback(this.state, this.props);
     this.state = newState;
 
-    this.queueRender(() => rerender(this.props));
+    this.queueRender(() => {
+      if (this.rerender) this.rerender();
+    });
   }
 
-  render(props?: Record<string, any>) {
-    return Fragment(props);
+  render(props?: any): any {
+    return Fragment(props)!;
   }
 }
 
 class PureComponent extends Component {
-  isReactComponent = {};
-  isPureReactComponent = {};
-
   shouldComponentUpdate(newProps: Record<string, any>, newState: Record<string, any>) {
     return newProps !== this.props && newState !== this.state;
   }
@@ -166,7 +154,6 @@ class PureComponent extends Component {
 
 export {
   hook,
-  compat,
   // __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED,
   // act as unstable_act,
   Children,

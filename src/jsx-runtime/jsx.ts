@@ -3,7 +3,7 @@ import { h } from './h';
 import type { FC, RawVNode } from './types';
 
 const jsx = (tag: string | FC, props?: VProps, key?: string | null): VNode => {
-  if (typeof tag === 'function') return tag(props, key);
+  if (typeof tag === 'function') tag(props, key);
   let children: RawVNode[] = [];
   if (props) {
     if (props.children) {

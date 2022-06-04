@@ -1,8 +1,9 @@
-import { DOMNode, OLD_VNODE_FIELD, VNode, VProps, Flags } from '../million/types';
-import { html } from '../html';
 import { h } from '../jsx-runtime/h';
+import { DOMNode, Flags, OLD_VNODE_FIELD, VNode, VProps } from '../million/types';
 
-export const fromStringToVNode = (htmlString: string): VNode | VNode[] => html([htmlString]);
+export const fromStringToVNode = (htmlString: string): VNode => {
+  return fromDomNodeToVNode(fromStringToDomNode(htmlString))!;
+};
 
 export const fromDomNodeToVNode = (el: DOMNode): VNode | undefined => {
   if (el[OLD_VNODE_FIELD]) return el[OLD_VNODE_FIELD];
