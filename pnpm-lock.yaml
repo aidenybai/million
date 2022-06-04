@@ -42,7 +42,7 @@ specifiers:
   virtual-dom: ^2.1.1
   vite: ^2.9.9
   vitest: ^0.13.1
-  zx: ^6.2.1
+  zx: ^6.2.2
 
 devDependencies:
   '@commitlint/cli': 17.0.2
@@ -86,7 +86,7 @@ devDependencies:
   virtual-dom: 2.1.1
   vite: 2.9.9
   vitest: 0.13.1_uch2mngobjgp7yei2dbv2ofnou
-  zx: 6.2.1
+  zx: 6.2.2
 
 packages:
 
@@ -2988,7 +2988,7 @@ packages:
     dependencies:
       fast-glob: 3.2.11
       fs-extra: 10.1.0
-      zx: 6.2.1
+      zx: 6.2.2
     dev: true
 
   /function-bind/1.1.1:
@@ -6425,8 +6425,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /zx/6.2.1:
-    resolution: {integrity: sha512-GMm0/fCGbeHGCudS19o8IPoW7AKH55lKoDa1snsh3iAcUVsg1pCs7V9d070SCLr2QqMG8nmIxgpIlyCTFZPWAg==}
+  /zx/6.2.2:
+    resolution: {integrity: sha512-u1hcv130nrRPX0Zr6TIr8W+8tT0i2yjWP8Pp9m/byZR6z0QcyxO7ik/o0qSI01c5LuFKQdfBIlPvtu8F8FrJLQ==}
     engines: {node: '>= 16.0.0'}
     hasBin: true
     dependencies:

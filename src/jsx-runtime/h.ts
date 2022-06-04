@@ -1,8 +1,8 @@
 import { className, kebab, m, style, svg } from '../million/m';
 import { Delta, Flags, VElementFlags, VNode, VProps } from '../million/types';
+import { createClass, createComponent } from '../react/compat';
 import { Fragment } from './jsx';
 import { RawVNode } from './types';
-import { createComponent } from '../react/compat';
 
 export const normalize = (rawVNode: RawVNode): VNode | VNode[] | undefined => {
   if (Array.isArray(rawVNode)) {
@@ -25,8 +25,8 @@ export const normalize = (rawVNode: RawVNode): VNode | VNode[] | undefined => {
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const h = (tag: string | Function, props?: VProps, ...children: RawVNode[]) => {
   if (tag === Fragment) return children;
-  if (typeof tag === 'object' && (tag as any).prototype.isReactComponent) {
-    return new (tag as any)(props).render();
+  if ((tag as any).prototype?.render) {
+    return createClass(tag as any, props);
   }
   if (typeof tag === 'function') {
     return createComponent(tag, props, props?.key);
