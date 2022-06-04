@@ -1,5 +1,4 @@
 import { patch } from '../million/render';
-import { batch, startTransition } from '../million/scheduler';
 import { VNode, VProps } from '../million/types';
 import { hook } from './hooks';
 import { Component } from './react';
@@ -8,19 +7,13 @@ import { Component } from './react';
 export const createComponent = (fn: Function, props?: VProps, key?: string | null) => {
   let prevRef: { current: any };
   let prevVNode: VNode | undefined;
-  const queuePatch = batch();
   const component = hook(() => {
     const newVNode = fn(props, key);
 
     const ref = prevRef ?? { current: undefined };
-    // currently double renders
-    queuePatch(() => {
-      if (ref && ref?.current) {
-        startTransition(() => {
-          patch(ref.current, newVNode, prevVNode);
-        });
-      }
-    });
+    if (ref && ref?.current) {
+      patch(ref.current, newVNode, prevVNode);
+    }
     newVNode.ref = ref;
     prevRef = ref;
     prevVNode = newVNode;
@@ -33,18 +26,13 @@ export const createClass = (ClassComponent: typeof Component, props?: VProps) =>
   let prevRef: { current: any };
   let prevVNode: VNode | undefined;
   const componentObject = new ClassComponent(props as Record<string, any>, null);
-  const queuePatch = batch();
   const rerender = () => {
     const newVNode = componentObject.render(props) as VNode | undefined;
 
     const ref = prevRef ?? { current: undefined };
-    queuePatch(() => {
-      if (ref && ref?.current) {
-        startTransition(() => {
-          patch(ref.current, newVNode, prevVNode);
-        });
-      }
-    });
+    if (ref && ref?.current) {
+      patch(ref.current, newVNode, prevVNode);
+    }
 
     if (newVNode && typeof newVNode === 'object') newVNode.ref = ref;
     prevRef = ref;
