@@ -2,6 +2,7 @@ import { className, kebab, m, style, svg } from '../million/m';
 import { Delta, Flags, VElementFlags, VNode, VProps } from '../million/types';
 import { Fragment } from './jsx';
 import { RawVNode } from './types';
+import { createComponent } from '../react/compat';
 
 export const normalize = (rawVNode: RawVNode): VNode | VNode[] | undefined => {
   if (Array.isArray(rawVNode)) {
@@ -27,7 +28,9 @@ export const h = (tag: string | Function, props?: VProps, ...children: RawVNode[
   if (typeof tag === 'object' && (tag as any).prototype.isReactComponent) {
     return new (tag as any)(props).render();
   }
-  if (typeof tag === 'function') return tag(props, props?.key);
+  if (typeof tag === 'function') {
+    return tag(props, props?.key);
+  }
 
   let flag: VElementFlags = Flags.ELEMENT_NO_CHILDREN;
   let delta: Delta[] | undefined;

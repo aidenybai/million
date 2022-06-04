@@ -13,13 +13,15 @@ const createRoot = (root: HTMLElement) => {
   // eslint-disable-next-line @typescript-eslint/ban-types
   const renderer = (renderFn: Function, patchFn: Function) => {
     return (vnode: VNode | VNode[]) => {
-      if (Array.isArray(vnode)) {
-        const rootVNode = fromDomNodeToVNode(root) as VElement;
-        patchFn(root, h(rootVNode.tag, rootVNode.props, ...vnode));
-        requestAnimationFrame(() => (root[DOM_REF_FIELD] = root.firstChild));
-      } else {
-        renderFn(root, vnode);
-      }
+      startTransition(() => {
+        if (Array.isArray(vnode)) {
+          const rootVNode = fromDomNodeToVNode(root) as VElement;
+          patchFn(root, h(rootVNode.tag, rootVNode.props, ...vnode));
+          requestAnimationFrame(() => (root[DOM_REF_FIELD] = root.firstChild));
+        } else {
+          renderFn(root, vnode);
+        }
+      });
     };
   };
   return {

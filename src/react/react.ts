@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import { Fragment, h, jsx, jsxs } from '../jsx-runtime';
 import { batch, startTransition } from '../million/scheduler';
 import { VNode } from '../million/types';
@@ -16,10 +17,8 @@ import {
   useTransition,
 } from './hooks';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 let rerender: Function;
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 const compat = (fn: Function) => {
   rerender = fn;
   hook(fn)();
@@ -38,7 +37,6 @@ const isValidElement = (vnode: VNode) => {
   return false;
 };
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 const memo = (component: Function) => () => {
   return (props: Record<string, any>) => {
     return thunk(component as any, Object.values(props));
@@ -68,11 +66,9 @@ const Children = {
   toArray: toChildArray,
 };
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 const lazy = (loader: () => Promise<Function>) => {
-  // eslint-disable-next-line @typescript-eslint/ban-types
   let promise: Promise<Function>;
-  // eslint-disable-next-line @typescript-eslint/ban-types
+
   let component: Function;
   let err: Error;
   return (props: Record<string, any>) => {
