@@ -1,16 +1,15 @@
 import { parse, print, visit } from 'recast';
 import { compile } from './compile';
-
-const JSX_FILTER = /\.(jsx|tsx)$/;
-const jsxFactory = '__MILLION_JSX';
-const jsxFragment = '__MILLION_JSX_FRAGMENT';
+import { jsxCompat, jsxFactory, jsxFactoryRaw, jsxFragment, JSX_FILTER } from './constants';
+import dedent from './dedent';
 
 export const million = (options?: { importSource?: string; react?: boolean }): any[] => [
   {
     name: 'vite:million-config',
     enforce: 'pre',
     config() {
-      const alias = `${options?.importSource ?? 'million'}/react`;
+      const importSource = options?.importSource ?? 'million';
+      const alias = `${importSource}/react`;
       const resolve =
         options?.react === true
           ? {
@@ -27,9 +26,11 @@ export const million = (options?: { importSource?: string; react?: boolean }): a
         esbuild: {
           jsxFactory,
           jsxFragment,
-          jsxInject: `import { h as ${jsxFactory}, Fragment as ${jsxFragment} } from '${`${
-            options?.importSource ?? 'million'
-          }/jsx-runtime`}';`,
+          jsxInject: dedent`
+            import { h as ${jsxFactoryRaw}, Fragment as ${jsxFragment} } from '${importSource}/jsx-runtime';
+            import { compat as ${jsxCompat} } from '${importSource}/react';
+            const ${jsxFactory} = ${jsxCompat}(${jsxFactoryRaw});
+          `,
         },
         resolve,
       };
@@ -43,7 +44,7 @@ export const million = (options?: { importSource?: string; react?: boolean }): a
       const ast = parse(code);
       const astNodes: any[] = [];
 
-      if (!code.includes(`${jsxFragment}(`)) {
+      if (!code.includes(`${jsxFactory}(`)) {
         visit(ast, {
           visitCallExpression(path) {
             if (path.value.callee.name === jsxFactory) {

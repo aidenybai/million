@@ -1,13 +1,14 @@
 import { types } from 'recast';
 import { h } from '../jsx-runtime';
 import { RawVNode } from '../jsx-runtime/types';
+import { jsxFactory } from './constants';
 import {
   CallExpression,
   Expression,
   Identifier,
   Literal,
   ObjectExpression,
-  Property,
+  Property
 } from './types';
 
 const { literal, property, objectExpression, arrayExpression } = types.builders;
@@ -60,7 +61,7 @@ export const fromASTNodeToVNode = (astNode: CallExpression): RawVNode | CallExpr
 
   for (const child of astChildren) {
     if (child.type === 'CallExpression') {
-      if ((child.callee as Identifier).name === '__MILLION_JSX') {
+      if ((child.callee as Identifier).name === jsxFactory) {
         vnodeChildren.push(fromASTNodeToVNode(child) as RawVNode);
       } else return astNode;
     } else if (

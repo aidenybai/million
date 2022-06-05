@@ -1,6 +1,5 @@
 import { className, kebab, m, style, svg } from '../million/m';
 import { Delta, Flags, VElementFlags, VNode, VProps } from '../million/types';
-import { createClass, createComponent } from '../react/compat';
 import { Fragment } from './jsx';
 import { RawVNode } from './types';
 
@@ -23,13 +22,13 @@ export const normalize = (rawVNode: RawVNode): VNode | VNode[] | undefined => {
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export const h = (tag: string | Function, props?: VProps, ...children: RawVNode[]) => {
+export function h(this: any, tag: string | Function, props?: VProps, ...children: RawVNode[]) {
   if (tag === Fragment) return children;
   if ((tag as any).prototype?.render) {
-    return createClass(tag as any, props);
+    return this?.handleClass ? this.handleClass(tag as any, props) : (tag as any).render();
   }
   if (typeof tag === 'function') {
-    return createComponent(tag, props, props?.key);
+    return this?.handleFunction ? this.handleFunction(tag, props) : tag(props);
   }
 
   let flag: VElementFlags = Flags.ELEMENT_NO_CHILDREN;
@@ -102,4 +101,4 @@ export const h = (tag: string | Function, props?: VProps, ...children: RawVNode[
 
   const vnode = m(tag, props, normalizedChildren, flag, delta);
   return tag === 'svg' ? svg(vnode) : vnode;
-};
+}

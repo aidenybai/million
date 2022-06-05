@@ -1,8 +1,9 @@
 import { h } from '../jsx-runtime/h';
 import { DOMNode, Flags, OLD_VNODE_FIELD, VNode, VProps } from '../million/types';
+import {html} from '../html'
 
-export const fromStringToVNode = (htmlString: string): VNode => {
-  return fromDomNodeToVNode(fromStringToDomNode(htmlString))!;
+export const fromStringToVNode = (htmlString: string): VNode | VNode[] => {
+  return html([htmlString]);
 };
 
 export const fromDomNodeToVNode = (el: DOMNode): VNode | undefined => {

@@ -10,7 +10,9 @@ export default defineConfig({
       src,
     },
   },
-  plugins: [million({ importSource: src, react: true })],
+  plugins: [
+    million({ importSource: src, react: true })
+  ],
   test: {
     watch: false,
     environment: 'jsdom',

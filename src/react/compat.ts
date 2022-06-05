@@ -42,3 +42,8 @@ export const createClass = (ClassComponent: typeof Component, props?: VProps) =>
   componentObject.rerender = rerender;
   return rerender();
 };
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+export const compat = <T>(jsxFactoryRaw: Function): T => {
+  return jsxFactoryRaw.bind({ handleFunction: createComponent, handleClass: createClass });
+};
