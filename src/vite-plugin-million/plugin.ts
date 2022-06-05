@@ -9,28 +9,32 @@ export const million = (options?: { importSource?: string; react?: boolean }): a
     enforce: 'pre',
     config() {
       const importSource = options?.importSource ?? 'million';
+      const isReact = options?.react === true;
       const alias = `${importSource}/react`;
-      const resolve =
-        options?.react === true
-          ? {
-              alias: {
-                react: alias,
-                'react-dom/client': alias,
-                'react-dom/server': alias,
-                'react-dom': alias,
-              },
-            }
-          : {};
+      const resolve = isReact
+        ? {
+            alias: {
+              react: alias,
+              'react-dom/client': alias,
+              'react-dom/server': alias,
+              'react-dom': alias,
+            },
+          }
+        : {};
 
       return {
         esbuild: {
           jsxFactory,
           jsxFragment,
-          jsxInject: dedent`
-            import { h as ${jsxFactoryRaw}, Fragment as ${jsxFragment} } from '${importSource}/jsx-runtime';
-            import { compat as ${jsxCompat} } from '${importSource}/react';
-            const ${jsxFactory} = ${jsxCompat}(${jsxFactoryRaw});
-          `,
+          jsxInject: isReact
+            ? dedent`
+                import { h as ${jsxFactoryRaw}, Fragment as ${jsxFragment} } from '${importSource}/jsx-runtime';
+                import { compat as ${jsxCompat} } from '${importSource}/react';
+                const ${jsxFactory} = ${jsxCompat}(${jsxFactoryRaw});
+              `
+            : dedent`
+                import { h as ${jsxFactory}, Fragment as ${jsxFragment} } from '${importSource}/jsx-runtime';
+              `,
         },
         resolve,
       };
