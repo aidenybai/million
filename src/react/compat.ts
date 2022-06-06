@@ -25,7 +25,7 @@ export const createComponent = (fn: Function, props?: VProps, key?: string | nul
 export const createClass = (ClassComponent: typeof Component, props?: VProps) => {
   let prevRef: { current: any };
   let prevVNode: VNode | undefined;
-  const componentObject = new ClassComponent(props as Record<string, any>, null);
+  const componentObject = new ClassComponent(props as VProps, null);
   const rerender = () => {
     const newVNode = componentObject.render(props) as VNode | undefined;
 
