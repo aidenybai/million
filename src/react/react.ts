@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { Fragment, h, jsx, jsxs } from '../jsx-runtime';
 import { batch, startTransition } from '../million/scheduler';
-import { VNode } from '../million/types';
+import { VNode, VProps } from '../million/types';
 import { thunk } from '../million/m';
 import {
   hook,
@@ -16,14 +16,17 @@ import {
   useState,
   useTransition,
 } from './hooks';
+import { compat } from './compat';
 
 const cloneElement = (vnode: VNode) => {
   if (typeof vnode === 'string') return vnode;
   return h(vnode.tag, vnode.props, ...(vnode.children ?? []));
 };
 
+const createElement = compat(h);
+
 const isValidElement = (vnode: VNode) => {
-  if (vnode) {
+  if (vnode && vnode !== null && vnode.constructor === undefined) {
     if (typeof vnode === 'string') return true;
     if (vnode.tag) return true;
   }
@@ -31,7 +34,7 @@ const isValidElement = (vnode: VNode) => {
 };
 
 const memo = (component: Function) => () => {
-  return (props: Record<string, any>) => {
+  return (props: VProps) => {
     return thunk(component as any, Object.values(props));
   };
 };
@@ -64,7 +67,7 @@ const lazy = (loader: () => Promise<Function>) => {
 
   let component: Function;
   let err: Error;
-  return (props: Record<string, any>) => {
+  return (props: VProps) => {
     if (!promise) {
       promise = loader();
       promise.then(
@@ -78,11 +81,23 @@ const lazy = (loader: () => Promise<Function>) => {
   };
 };
 
+const createRef = () => {
+  return { current: null };
+};
+
+const forwardRef = (fn: Function) => {
+  return function Forwarded(props: VProps) {
+    const clone = { ...props };
+    delete clone.ref;
+    return fn(clone, props.ref || null);
+  };
+};
+
 const Suspense = (props: { fallback: VNode; children: VNode[] }) => {
   return props.children;
 };
 
-const SuspenseList = (props: Record<string, any>) => {
+const SuspenseList = (props: VProps) => {
   return props.children;
 };
 
@@ -91,13 +106,13 @@ const StrictMode = (props: { children: VNode[] }) => {
 };
 
 class Component {
-  props: Record<string, any>;
+  props: VProps;
   context: any;
   queueRender: (_callback: () => any) => void;
-  state: Record<string, any>;
+  state: VProps;
   rerender?: Function;
 
-  constructor(props: Record<string, any>, context: any) {
+  constructor(props: VProps, context: any) {
     this.props = props;
     this.context = context;
     this.state = {};
@@ -120,14 +135,11 @@ class Component {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  shouldComponentUpdate(_newProps: Record<string, any>, _newState: Record<string, any>) {
+  shouldComponentUpdate(_newProps: VProps, _newState: VProps) {
     return true;
   }
 
-  setState(
-    update: Record<string, any>,
-    callback?: (state: Record<string, any>, props: Record<string, any>) => Record<string, any>,
-  ) {
+  setState(update: VProps, callback?: (state: VProps, props: VProps) => VProps) {
     const newState = {
       ...this.state,
       ...(typeof update === 'function' ? update(this.state, this.props) : update),
@@ -147,7 +159,7 @@ class Component {
 }
 
 class PureComponent extends Component {
-  shouldComponentUpdate(newProps: Record<string, any>, newState: Record<string, any>) {
+  shouldComponentUpdate(newProps: VProps, newState: VProps) {
     return newProps !== this.props && newState !== this.state;
   }
 }
@@ -167,17 +179,17 @@ export {
   SuspenseList as unstable_SuspenseList,
   cloneElement,
   createContext,
-  h as createElement,
+  createElement,
   // createMutableSource,
   // createMutableSource as unstable_createMutableSource,
-  // createRef,
+  createRef,
   // createServerContext,
-  // forwardRef,
+  forwardRef,
   isValidElement,
   lazy,
   memo,
   startTransition,
-  startTransition as unstable_startTransition, // TODO: Remove once call sights updated to startTransition
+  startTransition as unstable_startTransition,
   // unstable_Cache,
   // unstable_DebugTracingMode,
   // unstable_LegacyHidden,
