@@ -13,7 +13,7 @@ specifiers:
   '@typescript-eslint/parser': ^5.27.0
   '@vitejs/plugin-legacy': ^1.8.2
   '@vitejs/plugin-react': ^1.3.2
-  '@vitest/ui': ^0.14.0
+  '@vitest/ui': ^0.14.1
   benchmark: ^2.1.4
   c8: ^7.11.3
   canvas-confetti: ^1.5.1
@@ -44,7 +44,7 @@ specifiers:
   unbuild: ^0.7.4
   virtual-dom: ^2.1.1
   vite: ^2.9.9
-  vitest: ^0.14.0
+  vitest: ^0.14.1
   zx: ^6.2.3
 
 dependencies:
@@ -64,7 +64,7 @@ devDependencies:
   '@typescript-eslint/parser': 5.27.0_ud6rd4xtew5bv4yhvkvu24pzm4
   '@vitejs/plugin-legacy': 1.8.2_vite@2.9.9
   '@vitejs/plugin-react': 1.3.2
-  '@vitest/ui': 0.14.0
+  '@vitest/ui': 0.14.1
   benchmark: 2.1.4
   c8: 7.11.3
   canvas-confetti: 1.5.1
@@ -93,7 +93,7 @@ devDependencies:
   unbuild: 0.7.4
   virtual-dom: 2.1.1
   vite: 2.9.9
-  vitest: 0.14.0_splk2h3obr6ayciod2iu5snqe4
+  vitest: 0.14.1_uggjv5qz7n4fghv2yupl3pfvgm
   zx: 6.2.3
 
 packages:
@@ -1211,8 +1211,8 @@ packages:
       - supports-color
     dev: true
 
-  /@vitest/ui/0.14.0:
-    resolution: {integrity: sha512-YJW8NxRm1zKuoCik8+khqyaLvydNqCLqd6AwxaJ47anCFWrYmMRul5uClHlmZuggRni8Gl0N/QcRgsMVjQwIvQ==}
+  /@vitest/ui/0.14.1:
+    resolution: {integrity: sha512-rWhltzClVxTT9ktnS9DBQUe3RdRweP+XF1LspK5i3e+P66gn3rc2LChol3EYPYHJghL2Xsm91lvQO1pgE4vgHA==}
     dependencies:
       sirv: 2.0.2
     dev: true
@@ -6297,8 +6297,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vitest/0.14.0_splk2h3obr6ayciod2iu5snqe4:
-    resolution: {integrity: sha512-3Ns7c6TindS6OmweY4dU7sWT7g/YJBenwsMdUMEO/oS81bzoCEaA58vlg/9U1WRjrNFwQYsuyISehAvCKwoMZQ==}
+  /vitest/0.14.1_uggjv5qz7n4fghv2yupl3pfvgm:
+    resolution: {integrity: sha512-2UUm6jYgkwh7Y3VKSRR8OuaNCm+iA5LPDnal7jyITN39maZK9L+JVxqjtQ39PSFo5Fl3/BgaJvER6GGHX9JLxg==}
     engines: {node: '>=v14.16.0'}
     hasBin: true
     peerDependencies:
@@ -6318,7 +6318,7 @@ packages:
     dependencies:
       '@types/chai': 4.3.1
       '@types/chai-subset': 1.3.3
-      '@vitest/ui': 0.14.0
+      '@vitest/ui': 0.14.1
       c8: 7.11.3
       chai: 4.3.6
       debug: 4.3.4
