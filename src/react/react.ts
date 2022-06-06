@@ -64,9 +64,9 @@ const Children = {
 
 const lazy = (loader: () => Promise<Function>) => {
   let promise: Promise<Function>;
-
   let component: Function;
   let err: Error;
+
   return (props: VProps) => {
     if (!promise) {
       promise = loader();
