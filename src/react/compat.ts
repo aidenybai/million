@@ -7,10 +7,13 @@ import { Component } from './react';
 export const createComponent = (fn: Function, props?: VProps, key?: string | null) => {
   let prevRef: { current: any };
   let prevVNode: VNode | undefined;
+
   const component = hook(() => {
     const newVNode = fn(props, key);
-
     const ref = prevRef ?? { current: undefined };
+
+    // Handle nested components
+    if (!prevRef && newVNode.ref) return newVNode;
     if (ref && ref?.current) {
       patch(ref.current, newVNode, prevVNode);
     }

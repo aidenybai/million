@@ -30,10 +30,10 @@ export const million = (options?: { importSource?: string; react?: boolean }): a
             ? dedent`
                 import { h as ${jsxFactoryRaw}, Fragment as ${jsxFragment} } from '${importSource}/jsx-runtime';
                 import { compat as ${jsxCompat} } from '${importSource}/react';
-                const ${jsxFactory} = ${jsxCompat}(${jsxFactoryRaw});
+                const ${jsxFactory} = ${jsxCompat}(${jsxFactoryRaw});\n
               `
             : dedent`
-                import { h as ${jsxFactory}, Fragment as ${jsxFragment} } from '${importSource}/jsx-runtime';
+                import { h as ${jsxFactory}, Fragment as ${jsxFragment} } from '${importSource}/jsx-runtime';\n
               `,
         },
         resolve,

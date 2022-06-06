@@ -11,7 +11,7 @@ export default defineConfig({
     },
   },
   plugins: [
-    million({ importSource: src, react: false })
+    million({ importSource: src, react: true })
   ],
   test: {
     watch: false,
