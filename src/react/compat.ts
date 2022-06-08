@@ -1,3 +1,4 @@
+import { h } from '../jsx-runtime/h';
 import { patch } from '../million/render';
 import { VNode, VProps } from '../million/types';
 import { hook } from './hooks';
@@ -9,7 +10,8 @@ export const createComponent = (fn: Function, props?: VProps, key?: string | nul
   let prevVNode: VNode | undefined;
 
   const component = hook(() => {
-    const newVNode = fn(props, key);
+    const ret = fn(props, key);
+    const newVNode = Array.isArray(ret) ? h('_', { key }, ...ret) : ret;
     const ref = prevRef ?? { current: undefined };
 
     // Handle nested components
@@ -30,7 +32,8 @@ export const createClass = (ClassComponent: typeof Component, props?: VProps) =>
   let prevVNode: VNode | undefined;
   const componentObject = new ClassComponent(props as VProps, null);
   const rerender = () => {
-    const newVNode = componentObject.render(props) as VNode | undefined;
+    const ret = componentObject.render(props) as VNode | undefined;
+    const newVNode = Array.isArray(ret) ? h('_', {}, ...ret) : ret;
 
     const ref = prevRef ?? { current: undefined };
     if (ref && ref?.current) {
