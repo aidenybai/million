@@ -39,7 +39,7 @@ While alternative libraries like [Preact](https://preactjs.com/) reduce bundle s
 
 Think of it as if [React](https://preactjs.com/)'s API and [Svelte](https://svelte.dev/)'s compiler had a baby. [A baby with _**super speed! 👶**_](https://millionjs.org/benchmarks)
 
-### [**📚 Learn Million in 10 minutes! →**](https://millionjs.org/docs/start-here)
+### [**📚 Learn Million in 3 minutes! →**](https://millionjs.org/docs/start-here)
 
 ## Why Million?
 
