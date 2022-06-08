@@ -8,6 +8,7 @@ import { Component } from './react';
 export const createComponent = (fn: Function, props?: VProps, key?: string | null) => {
   let prevRef: { current: any };
   let prevVNode: VNode | undefined;
+  let prevKey: string | undefined;
 
   const component = hook(() => {
     const ret = fn(props, key);
@@ -17,10 +18,17 @@ export const createComponent = (fn: Function, props?: VProps, key?: string | nul
     // Handle nested components
     if (!prevRef && newVNode.ref) return newVNode;
     if (ref && ref?.current) {
-      patch(ref.current, newVNode, prevVNode);
+      if (prevKey && newVNode.key) {
+        if (prevKey === newVNode.key) patch(ref.current, newVNode, prevVNode);
+      } else {
+        patch(ref.current, newVNode, prevVNode);
+      }
     }
-    newVNode.ref = ref;
-    prevRef = ref;
+    if (!newVNode.ref) {
+      newVNode.ref = ref;
+      prevRef = ref;
+    }
+    prevKey = newVNode.key;
     prevVNode = newVNode;
     return newVNode;
   })();

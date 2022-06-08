@@ -7,7 +7,12 @@ export const normalize = (rawVNode: RawVNode): VNode | VNode[] | undefined => {
   if (Array.isArray(rawVNode)) {
     const normalizedChildren: VNode[] = [];
     for (let i = 0; i < rawVNode.length; i++) {
-      normalizedChildren.push(normalize(rawVNode[i]) as VNode);
+      const ret = normalize(rawVNode[i]) as VNode;
+      if (Array.isArray(ret)) {
+        normalizedChildren.push(...ret);
+      } else {
+        normalizedChildren.push(ret);
+      }
     }
     return normalizedChildren;
   } else if (
