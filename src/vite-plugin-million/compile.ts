@@ -9,7 +9,7 @@ import {
   Identifier,
   Literal,
   ObjectExpression,
-  Property
+  Property,
 } from './types';
 
 const { literal, property, objectExpression, arrayExpression } = types.builders;
