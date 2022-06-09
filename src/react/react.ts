@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { Fragment, h, jsx, jsxs } from '../jsx-runtime';
-import { batch, startTransition, thunk, VNode, VProps } from '../million';
+import { Fragment, h, jsx, jsxs, FC } from '../jsx-runtime';
+import { batch, startTransition, thunk, VElement, VNode, VProps } from '../million';
 import { compat } from './compat';
 import {
   createContext,
@@ -38,7 +38,7 @@ const memo = (component: Function) => () => {
 };
 
 const toChildArray = (children: VNode[]): VNode[] => {
-  return h('_', {}, ...children).children;
+  return (h('_', {}, ...children) as VElement).children!;
 };
 
 const mapFn = (children: VNode[], fn: (this: VNode) => VNode) => {
@@ -60,9 +60,9 @@ const Children = {
   toArray: toChildArray,
 };
 
-const lazy = (loader: () => Promise<Function>) => {
-  let promise: Promise<Function>;
-  let component: Function;
+const lazy = (loader: () => Promise<FC>) => {
+  let promise: Promise<FC>;
+  let component: FC;
   let err: Error;
 
   return (props: VProps) => {

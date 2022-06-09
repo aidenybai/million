@@ -11,7 +11,7 @@ export const createComponent = (fn: Function, props?: VProps, key?: string | nul
 
   const component = hook(() => {
     const ret = fn(props, key);
-    const newVNode = Array.isArray(ret) ? h('_', { key }, ...ret) : ret;
+    const newVNode = Array.isArray(ret) ? h('_', key ? { key } : {}, ...ret) : ret;
     const ref = prevRef ?? { current: undefined };
 
     // Handle nested components
@@ -40,7 +40,7 @@ export const createClass = (ClassComponent: typeof Component, props?: VProps) =>
   const componentObject = new ClassComponent(props as VProps, null);
   const rerender = () => {
     const ret = componentObject.render(props) as VNode | undefined;
-    const newVNode = Array.isArray(ret) ? h('_', {}, ...ret) : ret;
+    const newVNode = (Array.isArray(ret) ? h('_', {}, ...ret) : ret) as VNode;
 
     const ref = prevRef ?? { current: undefined };
     if (ref && ref?.current) {

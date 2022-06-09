@@ -1,9 +1,9 @@
 import { className, kebab, m, style, svg } from '../million/m';
 import { Delta, Flags, VElementFlags, VNode, VProps } from '../million/types';
 import { Fragment } from './jsx';
-import { RawVNode } from './types';
+import { FC, RawVNode } from './types';
 
-export const normalize = (rawVNode: RawVNode): VNode | VNode[] | undefined => {
+export const normalize = (rawVNode: RawVNode | RawVNode[]): VNode | VNode[] | undefined => {
   if (Array.isArray(rawVNode)) {
     const normalizedChildren: VNode[] = [];
     for (let i = 0; i < rawVNode.length; i++) {
@@ -27,8 +27,8 @@ export const normalize = (rawVNode: RawVNode): VNode | VNode[] | undefined => {
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export function h(this: any, tag: string | Function, props?: VProps, ...children: RawVNode[]) {
-  if (tag === Fragment) return children;
+export function h(this: any, tag: string | FC, props?: VProps, ...children: RawVNode[]): VNode | VNode[] {
+  if (tag === Fragment) return normalize(children)!;
   if ((tag as any).prototype?.render) {
     return this?.handleClass ? this.handleClass(tag as any, props) : (tag as any).render();
   }

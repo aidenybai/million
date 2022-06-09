@@ -1,9 +1,9 @@
 import type { VNode, VProps } from '../million/types';
 import { h } from './h';
 import type { FC, RawVNode } from './types';
+import { compat } from '../react/compat';
 
-const jsx = (tag: string | FC, props?: VProps, key?: string | null): VNode => {
-  if (typeof tag === 'function') tag(props, key);
+function jsxRaw(this: any, tag: string | FC, props?: VProps, key?: string): VNode | VNode[] {
   let children: RawVNode[] = [];
   if (props) {
     if (props.children) {
@@ -13,8 +13,10 @@ const jsx = (tag: string | FC, props?: VProps, key?: string | null): VNode => {
     if (key) props.key = key;
   }
   return h(tag, props, ...children);
-};
+}
+
+const jsx = compat(jsxRaw);
 
 const Fragment = (props?: VProps): VNode[] | undefined => props?.children as VNode[] | undefined;
 
-export { h, jsx, jsx as jsxs, Fragment };
+export { h, jsx, jsx as jsxs, jsxRaw, Fragment };
