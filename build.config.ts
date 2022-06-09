@@ -25,7 +25,6 @@ export default defineBuildConfig({
       format: 'cjs',
     },
   ],
-  externals: ['tslib'],
   declaration: true,
   clean: true,
   rollup: {
