@@ -128,6 +128,8 @@
     "@types/canvas-confetti": "^1.4.2",
     "@types/lodash": "^4.14.182",
     "@types/node": "^17.0.41",
+    "@types/react": "^18.0.12",
+    "@types/react-dom": "^18.0.5",
     "@types/virtual-dom": "^2.1.1",
     "@typescript-eslint/eslint-plugin": "^5.27.1",
     "@typescript-eslint/parser": "^5.27.1",
@@ -151,6 +153,8 @@
     "np": "^7.6.1",
     "ora": "^6.1.0",
     "prettier": "^2.6.2",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
     "recast": "^0.21.1",
     "simple-git": "^3.7.1",
     "simple-virtual-dom": "^0.1.10",
@@ -164,9 +168,5 @@
     "vite": "^2.9.10",
     "vitest": "^0.14.1",
     "zx": "^6.2.4"
-  },
-  "dependencies": {
-    "react": "^18.1.0",
-    "react-dom": "^18.1.0"
   }
 }
