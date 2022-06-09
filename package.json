@@ -49,9 +49,9 @@
       "types": "./html.d.ts"
     },
     "./react": {
-      "import": "./dist/react.mjs",
-      "require": "./dist/react.cjs",
-      "types": "./react.d.ts"
+      "import": "./dist/react/index.mjs",
+      "require": "./dist/react/index.cjs",
+      "types": "./react/index.d.ts"
     },
     "./morph": {
       "import": "./dist/morph.mjs",
