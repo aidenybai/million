@@ -48,11 +48,6 @@
       "require": "./dist/html.cjs",
       "types": "./html.d.ts"
     },
-    "./react": {
-      "import": "./dist/react/index.mjs",
-      "require": "./dist/react/index.cjs",
-      "types": "./react/index.d.ts"
-    },
     "./morph": {
       "import": "./dist/morph.mjs",
       "require": "./dist/morph.cjs",
@@ -67,6 +62,36 @@
       "import": "./dist/utils.mjs",
       "require": "./dist/utils.cjs",
       "types": "./utils.d.ts"
+    },
+    "./react": {
+      "import": "./dist/react/index.mjs",
+      "require": "./dist/react/index.cjs",
+      "types": "./dist/react/index.d.ts"
+    },
+    "./react/client": {
+      "import": "./dist/react/client.mjs",
+      "require": "./dist/react/client.cjs",
+      "types": "./dist/react/client.d.ts"
+    },
+    "./react/jsx-dev-runtime": {
+      "import": "./dist/react/jsx-dev-runtime.mjs",
+      "require": "./dist/react/jsx-dev-runtime.cjs",
+      "types": "./dist/react/jsx-dev-runtime.d.ts"
+    },
+    "./react/jsx-runtime": {
+      "import": "./dist/react/jsx-runtime.mjs",
+      "require": "./dist/react/jsx-runtime.cjs",
+      "types": "./dist/react/jsx-runtime.d.ts"
+    },
+    "./react/scheduler": {
+      "import": "./dist/react/scheduler.mjs",
+      "require": "./dist/react/scheduler.cjs",
+      "types": "./dist/react/scheduler.d.ts"
+    },
+    "./react/server": {
+      "import": "./dist/react/server.mjs",
+      "require": "./dist/react/server.cjs",
+      "types": "./dist/react/server.d.ts"
     }
   },
   "sideEffects": false,
