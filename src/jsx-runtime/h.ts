@@ -41,7 +41,9 @@ export function h(
       : (tag as any).render();
   }
   if (typeof tag === 'function') {
-    return this?.handleFunction ? this.handleFunction(tag, propsWithChildren) : tag(propsWithChildren);
+    return this?.handleFunction
+      ? this.handleFunction(tag, propsWithChildren)
+      : tag(propsWithChildren);
   }
 
   let flag: VElementFlags = Flags.ELEMENT_NO_CHILDREN;
