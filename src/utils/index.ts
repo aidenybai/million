@@ -1,6 +1,6 @@
+import { html } from '../html';
 import { h } from '../jsx-runtime/h';
 import { DOMNode, Flags, OLD_VNODE_FIELD, VNode, VProps } from '../million/types';
-import { html } from '../html';
 
 export const fromStringToVNode = (htmlString: string): VNode | VNode[] => {
   return html([htmlString]);
@@ -22,7 +22,7 @@ export const fromDomNodeToVNode = (el: DOMNode): VNode | undefined => {
     children[i] = fromDomNodeToVNode(el.childNodes.item(i) as DOMNode);
   }
 
-  const vnode = h(el.tagName.toLowerCase(), props, ...children);
+  const vnode = h(el.tagName.toLowerCase(), props, ...children) as VNode | undefined;
   el[OLD_VNODE_FIELD] = vnode;
   return vnode;
 };

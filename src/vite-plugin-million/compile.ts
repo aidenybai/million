@@ -1,6 +1,7 @@
 import { types } from 'recast';
 import { h } from '../jsx-runtime';
 import { RawVNode } from '../jsx-runtime/types';
+import { VNode } from '../million';
 import { jsxFactory } from './constants';
 import {
   CallExpression,
@@ -8,7 +9,7 @@ import {
   Identifier,
   Literal,
   ObjectExpression,
-  Property,
+  Property
 } from './types';
 
 const { literal, property, objectExpression, arrayExpression } = types.builders;
@@ -76,7 +77,7 @@ export const fromASTNodeToVNode = (astNode: CallExpression): RawVNode | CallExpr
     }
   }
 
-  return h(String((astNode.arguments[0] as Literal).value), vnodeProps, ...vnodeChildren);
+  return h(String((astNode.arguments[0] as Literal).value), vnodeProps, ...vnodeChildren) as VNode;
 };
 
 export const fromVNodeToASTNode = (vnode: RawVNode | CallExpression): Expression => {
