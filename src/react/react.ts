@@ -91,16 +91,16 @@ const forwardRef = (fn: Function) => {
   };
 };
 
-const Suspense = (props: { fallback: VNode; children: VNode[] } | VNode[]) => {
-  return Array.isArray(props) ? props : props.children;
+const Suspense = (props: { fallback: VNode; children: VNode[] }) => {
+  return props?.children;
 };
 
-const SuspenseList = (props: VProps | VNode[]) => {
-  return Array.isArray(props) ? props : props.children;
+const SuspenseList = (props: VProps) => {
+  return props?.children;
 };
 
-const StrictMode = (props: { children: VNode[] } | VNode[]) => {
-  return Array.isArray(props) ? props : props.children;
+const StrictMode = (props: { children: VNode[] }) => {
+  return props?.children;
 };
 
 class Component {

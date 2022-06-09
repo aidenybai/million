@@ -33,12 +33,15 @@ export function h(
   props?: VProps,
   ...children: RawVNode[]
 ): VNode | VNode[] {
+  const propsWithChildren = { ...props, children };
   if (tag === Fragment) return normalize(children)!;
   if ((tag as any).prototype?.render) {
-    return this?.handleClass ? this.handleClass(tag as any, props) : (tag as any).render();
+    return this?.handleClass
+      ? this.handleClass(tag as any, propsWithChildren)
+      : (tag as any).render();
   }
   if (typeof tag === 'function') {
-    return this?.handleFunction ? this.handleFunction(tag, props) : tag(props);
+    return this?.handleFunction ? this.handleFunction(tag, propsWithChildren) : tag(propsWithChildren);
   }
 
   let flag: VElementFlags = Flags.ELEMENT_NO_CHILDREN;
