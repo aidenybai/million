@@ -27,7 +27,12 @@ export const normalize = (rawVNode: RawVNode | RawVNode[]): VNode | VNode[] | un
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export function h(this: any, tag: string | FC, props?: VProps, ...children: RawVNode[]): VNode | VNode[] {
+export function h(
+  this: any,
+  tag: string | FC,
+  props?: VProps,
+  ...children: RawVNode[]
+): VNode | VNode[] {
   if (tag === Fragment) return normalize(children)!;
   if ((tag as any).prototype?.render) {
     return this?.handleClass ? this.handleClass(tag as any, props) : (tag as any).render();
