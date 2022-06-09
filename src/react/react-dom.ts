@@ -42,7 +42,7 @@ const createRoot = (root: HTMLElement) => {
 
 const createPortal = (children: VNode[], el: HTMLElement) => {
   const rootVNode = fromDomNodeToVNode(el) as VElement;
-  patch(el, h(rootVNode.tag, rootVNode.props, ...children));
+  patch(el, h(rootVNode.tag, rootVNode.props, ...children) as VNode);
 };
 
 // https://github.com/facebook/react/blob/main/packages/react-dom/index.modern.fb.js
