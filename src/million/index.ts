@@ -6,5 +6,5 @@ export * from './drivers/useProps';
 export * from './m';
 export * from './render';
 export * from './scheduler';
-export { DeltaTypes, EffectTypes, Flags, OLD_VNODE_FIELD } from './types';
+export { DeltaTypes, EffectTypes, Flags, OLD_VNODE_FIELD, DOM_REF_FIELD } from './types';
 export type { Commit, Delta, DOMNode, Driver, Effect, VElement, VNode, VProps } from './types';

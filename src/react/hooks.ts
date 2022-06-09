@@ -10,7 +10,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import { batch, startTransition, isPending } from '../million/scheduler';
+import { batch, startTransition, isPending } from '../million';
 
 let state = null;
 
