@@ -1,6 +1,5 @@
-import { h } from '../jsx-runtime/h';
-import { patch } from '../million/render';
-import { VNode, VProps } from '../million/types';
+import { h } from '../jsx-runtime';
+import { patch, VNode, VProps } from '../million';
 import { hook } from './hooks';
 import { Component } from './react';
 

@@ -1,12 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { Fragment, h, jsx, jsxs } from '../jsx-runtime';
-import { batch, startTransition } from '../million/scheduler';
-import { VNode, VProps } from '../million/types';
-import { thunk } from '../million/m';
+import { batch, startTransition, thunk, VNode, VProps } from '../million';
+import { compat } from './compat';
 import {
-  hook,
-  createContext,
-  useCallback,
+  createContext, hook, useCallback,
   useContext,
   useEffect,
   useLayoutEffect,
@@ -14,9 +11,8 @@ import {
   useReducer,
   useRef,
   useState,
-  useTransition,
+  useTransition
 } from './hooks';
-import { compat } from './compat';
 
 const cloneElement = (vnode: VNode) => {
   if (typeof vnode === 'string') return vnode;
