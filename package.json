@@ -64,9 +64,9 @@
       "types": "./utils.d.ts"
     },
     "./react": {
-      "import": "./dist/react/index.mjs",
-      "require": "./dist/react/index.cjs",
-      "types": "./dist/react/index.d.ts"
+      "import": "./dist/react.mjs",
+      "require": "./dist/react.cjs",
+      "types": "./react.d.ts"
     },
     "./react/client": {
       "import": "./dist/react/client.mjs",

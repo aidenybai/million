@@ -23,5 +23,4 @@ for (const pkg of packages) {
 const files = await $`ls -xm -d dist/*`;
 
 info(String(files));
-await $`export-size .`;
 success('Successfully built distribution files.');
