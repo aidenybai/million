@@ -1,9 +1,10 @@
 import { h } from '../jsx-runtime';
 import {
+  DOMNode,
   DOM_REF_FIELD,
   hydrate,
   patch,
-  render,
+  render as $render,
   startTransition,
   VElement,
   VNode,
@@ -15,7 +16,7 @@ const hydrateRoot = (vnode: VNode, root: HTMLElement): HTMLElement => {
   return root;
 };
 
-const createRoot = (root: HTMLElement) => {
+const createRoot = (root: DOMNode) => {
   // eslint-disable-next-line @typescript-eslint/ban-types
   const renderer = (renderFn: Function, patchFn: Function) => {
     return (vnode: VNode | VNode[]) => {
@@ -30,14 +31,27 @@ const createRoot = (root: HTMLElement) => {
       });
     };
   };
+
   return {
-    render: renderer(render, patch),
+    render: renderer($render, patch),
     hydrate: renderer(hydrate, patch),
     unmount: () => {
       root.textContent = '';
       root[DOM_REF_FIELD] = undefined;
     },
   };
+};
+
+const render = (vnode: VNode | VNode[], root: DOMNode) => {
+  startTransition(() => {
+    if (Array.isArray(vnode)) {
+      const rootVNode = fromDomNodeToVNode(root) as VElement;
+      patch(root, h(rootVNode.tag, rootVNode.props, ...vnode) as VNode);
+      requestAnimationFrame(() => (root[DOM_REF_FIELD] = root.firstChild));
+    } else {
+      $render(root, vnode);
+    }
+  });
 };
 
 const createPortal = (children: VNode[], el: HTMLElement) => {
@@ -47,6 +61,7 @@ const createPortal = (children: VNode[], el: HTMLElement) => {
 
 // https://github.com/facebook/react/blob/main/packages/react-dom/index.modern.fb.js
 export {
+  render,
   createPortal,
   createRoot,
   hydrateRoot,
