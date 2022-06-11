@@ -39,7 +39,7 @@ While alternative libraries like [Preact](https://preactjs.com/) reduce bundle s
 
 Think of it as if [React](https://preactjs.com/)'s API and [Svelte](https://svelte.dev/)'s compiler had a baby. [A baby with _**super speed! 👶**_](https://millionjs.org/benchmarks)
 
-### [**📚 Learn Million in 3 minutes! →**](https://millionjs.org/docs/start-here)
+### [**📚 Learn Million in 1 minute! →**](https://millionjs.org/docs/start-here)
 
 ## Why Million?
 
@@ -65,7 +65,7 @@ Think of it as if [React](https://preactjs.com/)'s API and [Svelte](https://svel
       </td>
       <td>
         <ul>
-          <li><a href="https://github.com/aidenybai/million-react-compat">Write React with a fast Virtual DOM </a></li>
+          <li><a href="https://github.com/aidenybai/million-react">Write React with a fast Virtual DOM </a></li>
           <li><a href="https://millionjs.org/docs/api/basics/render">Efficiently updating nodes</a></li>
           <li><a href="https://github.com/aidenybai/hacky">Creating UI libraries</a></li>
           <li><a href="https://millionjs.org/docs/api/extra/router">Turning MPAs into SPAs</a></li>
@@ -76,7 +76,7 @@ Think of it as if [React](https://preactjs.com/)'s API and [Svelte](https://svel
   </tbody>
 </table>
 
-> 🚧 Million now supports [experimental React compatibility](https://github.com/aidenybai/million-react-compat).
+> 🚧 Million now supports [experimental React compatibility](https://github.com/aidenybai/million-react).
 
 ## Installing Million
 
