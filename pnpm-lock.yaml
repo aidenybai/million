@@ -7,7 +7,7 @@ specifiers:
   '@types/benchmark': ^2.1.1
   '@types/canvas-confetti': ^1.4.2
   '@types/lodash': ^4.14.182
-  '@types/node': ^17.0.41
+  '@types/node': ^17.0.42
   '@types/react': ^18.0.12
   '@types/react-dom': ^18.0.5
   '@types/virtual-dom': ^2.1.1
@@ -15,7 +15,7 @@ specifiers:
   '@typescript-eslint/parser': ^5.27.1
   '@vitejs/plugin-legacy': ^1.8.2
   '@vitejs/plugin-react': ^1.3.2
-  '@vitest/ui': ^0.14.1
+  '@vitest/ui': ^0.14.2
   benchmark: ^2.1.4
   c8: ^7.11.3
   canvas-confetti: ^1.5.1
@@ -45,8 +45,8 @@ specifiers:
   typescript: ^4.7.3
   unbuild: ^0.7.4
   virtual-dom: ^2.1.1
-  vite: ^2.9.10
-  vitest: ^0.14.1
+  vite: ^2.9.12
+  vitest: ^0.14.2
   zx: ^6.2.4
 
 devDependencies:
@@ -56,15 +56,15 @@ devDependencies:
   '@types/benchmark': 2.1.1
   '@types/canvas-confetti': 1.4.2
   '@types/lodash': 4.14.182
-  '@types/node': 17.0.41
+  '@types/node': 17.0.42
   '@types/react': 18.0.12
   '@types/react-dom': 18.0.5
   '@types/virtual-dom': 2.1.1
   '@typescript-eslint/eslint-plugin': 5.27.1_aq7uryhocdbvbqum33pitcm3y4
   '@typescript-eslint/parser': 5.27.1_ud6rd4xtew5bv4yhvkvu24pzm4
-  '@vitejs/plugin-legacy': 1.8.2_vite@2.9.10
+  '@vitejs/plugin-legacy': 1.8.2_vite@2.9.12
   '@vitejs/plugin-react': 1.3.2
-  '@vitest/ui': 0.14.1
+  '@vitest/ui': 0.14.2
   benchmark: 2.1.4
   c8: 7.11.3
   canvas-confetti: 1.5.1
@@ -94,8 +94,8 @@ devDependencies:
   typescript: 4.7.3
   unbuild: 0.7.4
   virtual-dom: 2.1.1
-  vite: 2.9.10
-  vitest: 0.14.1_uggjv5qz7n4fghv2yupl3pfvgm
+  vite: 2.9.12
+  vitest: 0.14.2_ncv73oaa4k6gci2dicqdxa5u7i
   zx: 6.2.4
 
 packages:
@@ -511,10 +511,10 @@ packages:
       '@commitlint/execute-rule': 17.0.0
       '@commitlint/resolve-extends': 17.0.0
       '@commitlint/types': 17.0.0
-      '@types/node': 17.0.41
+      '@types/node': 17.0.42
       chalk: 4.1.2
       cosmiconfig: 7.0.1
-      cosmiconfig-typescript-loader: 2.0.0_f5eqjuxkorpjvs4z7mviievvou
+      cosmiconfig-typescript-loader: 2.0.0_wpmar7q2se7jlmxe5wggegnl2m
       lodash: 4.17.21
       resolve-from: 5.0.0
       typescript: 4.7.3
@@ -972,7 +972,7 @@ packages:
     dependencies:
       '@types/http-cache-semantics': 4.0.1
       '@types/keyv': 3.1.3
-      '@types/node': 17.0.41
+      '@types/node': 17.0.42
       '@types/responselike': 1.0.0
     dev: true
 
@@ -1001,7 +1001,7 @@ packages:
   /@types/fs-extra/9.0.13:
     resolution: {integrity: sha512-nEnwB++1u5lVDM2UI4c1+5R+FYaKfaAzS4OococimjVm3nQw3TuzH5UNsocrcTBbhnerblyHj4A49qXbIiZdpA==}
     dependencies:
-      '@types/node': 17.0.41
+      '@types/node': 17.0.42
     dev: true
 
   /@types/http-cache-semantics/4.0.1:
@@ -1019,7 +1019,7 @@ packages:
   /@types/keyv/3.1.3:
     resolution: {integrity: sha512-FXCJgyyN3ivVgRoml4h94G/p3kY+u/B86La+QptcqJaWtBWtmc6TtkNfS40n9bIvyLteHh7zXOtgbobORKPbDg==}
     dependencies:
-      '@types/node': 17.0.41
+      '@types/node': 17.0.42
     dev: true
 
   /@types/lodash/4.14.182:
@@ -1030,8 +1030,8 @@ packages:
     resolution: {integrity: sha512-jhuKLIRrhvCPLqwPcx6INqmKeiA5EWrsCOPhrlFSrbrmU4ZMPjj5Ul/oLCMDO98XRUIwVm78xICz4EPCektzeQ==}
     dev: true
 
-  /@types/node/17.0.41:
-    resolution: {integrity: sha512-xA6drNNeqb5YyV5fO3OAEsnXLfO7uF0whiOfPTz5AeDo8KeZFmODKnvwPymMNO8qE/an8pVY/O50tig2SQCrGw==}
+  /@types/node/17.0.42:
+    resolution: {integrity: sha512-Q5BPGyGKcvQgAMbsr7qEGN/kIPN6zZecYYABeTDBizOsau+2NMdSVTar9UQw21A2+JyA2KRNDYaYrPB0Rpk2oQ==}
     dev: true
 
   /@types/normalize-package-data/2.4.1:
@@ -1067,13 +1067,13 @@ packages:
   /@types/resolve/1.17.1:
     resolution: {integrity: sha512-yy7HuzQhj0dhGpD8RLXSZWEkLsV9ibvxvi6EiJ3bkqLAO1RGo0WbkWQiwpRlSFymTJRz0d3k5LM3kkx8ArDbLw==}
     dependencies:
-      '@types/node': 17.0.41
+      '@types/node': 17.0.42
     dev: true
 
   /@types/responselike/1.0.0:
     resolution: {integrity: sha512-85Y2BjiufFzaMIlvJDvTTB8Fxl2xfLo4HgmHzVBz08w4wDePCTjYw66PdrolO0kzli3yam/YCgRufyo1DdQVTA==}
     dependencies:
-      '@types/node': 17.0.41
+      '@types/node': 17.0.42
     dev: true
 
   /@types/scheduler/0.16.2:
@@ -1214,7 +1214,7 @@ packages:
       eslint-visitor-keys: 3.3.0
     dev: true
 
-  /@vitejs/plugin-legacy/1.8.2_vite@2.9.10:
+  /@vitejs/plugin-legacy/1.8.2_vite@2.9.12:
     resolution: {integrity: sha512-NCOKU+pU+cxLMR9P9RTolEuOK+h+zYBXlknj+zGcKSj/NXBZYgA1GAH1FnO4zijoWRiTaiOm2ha9LQrELE7XHg==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
@@ -1225,7 +1225,7 @@ packages:
       magic-string: 0.26.2
       regenerator-runtime: 0.13.9
       systemjs: 6.12.1
-      vite: 2.9.10
+      vite: 2.9.12
     dev: true
 
   /@vitejs/plugin-react/1.3.2:
@@ -1244,8 +1244,8 @@ packages:
       - supports-color
     dev: true
 
-  /@vitest/ui/0.14.1:
-    resolution: {integrity: sha512-rWhltzClVxTT9ktnS9DBQUe3RdRweP+XF1LspK5i3e+P66gn3rc2LChol3EYPYHJghL2Xsm91lvQO1pgE4vgHA==}
+  /@vitest/ui/0.14.2:
+    resolution: {integrity: sha512-yV2paiv0/Obymx+9KV+KjM/FAbYF+PbnQiO2RFnZqDCgYwkkNmO1ZNNIetBeOzuNoi1BT1iPSKwtvL0PwCesDQ==}
     dependencies:
       sirv: 2.0.2
     dev: true
@@ -2002,16 +2002,16 @@ packages:
     requiresBuild: true
     dev: true
 
-  /cosmiconfig-typescript-loader/2.0.0_f5eqjuxkorpjvs4z7mviievvou:
+  /cosmiconfig-typescript-loader/2.0.0_wpmar7q2se7jlmxe5wggegnl2m:
     resolution: {integrity: sha512-2NlGul/E3vTQEANqPziqkA01vfiuUU8vT0jZAuUIjEW8u3eCcnCQWLggapCjhbF76s7KQF0fM0kXSKmzaDaG1g==}
     engines: {node: '>=12', npm: '>=6'}
     peerDependencies:
       '@types/node': '*'
       typescript: '>=3'
     dependencies:
-      '@types/node': 17.0.41
+      '@types/node': 17.0.42
       cosmiconfig: 7.0.1
-      ts-node: 10.7.0_f5eqjuxkorpjvs4z7mviievvou
+      ts-node: 10.7.0_wpmar7q2se7jlmxe5wggegnl2m
       typescript: 4.7.3
     transitivePeerDependencies:
       - '@swc/core'
@@ -6061,7 +6061,7 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /ts-node/10.7.0_f5eqjuxkorpjvs4z7mviievvou:
+  /ts-node/10.7.0_wpmar7q2se7jlmxe5wggegnl2m:
     resolution: {integrity: sha512-TbIGS4xgJoX2i3do417KSaep1uRAW/Lu+WAL2doDHC0D6ummjirVOXU5/7aiZotbQ5p1Zp9tP7U6cYhA0O7M8A==}
     hasBin: true
     peerDependencies:
@@ -6080,7 +6080,7 @@ packages:
       '@tsconfig/node12': 1.0.9
       '@tsconfig/node14': 1.0.1
       '@tsconfig/node16': 1.0.2
-      '@types/node': 17.0.41
+      '@types/node': 17.0.42
       acorn: 8.7.1
       acorn-walk: 8.2.0
       arg: 4.1.3
@@ -6343,8 +6343,8 @@ packages:
       x-is-string: 0.1.0
     dev: true
 
-  /vite/2.9.10:
-    resolution: {integrity: sha512-TwZRuSMYjpTurLqXspct+HZE7ONiW9d+wSWgvADGxhDPPyoIcNywY+RX4ng+QpK30DCa1l/oZgi2PLZDibhzbQ==}
+  /vite/2.9.12:
+    resolution: {integrity: sha512-suxC36dQo9Rq1qMB2qiRorNJtJAdxguu5TMvBHOc/F370KvqAe9t48vYp+/TbPKRNrMh/J55tOUmkuIqstZaew==}
     engines: {node: '>=12.2.0'}
     hasBin: true
     peerDependencies:
@@ -6367,8 +6367,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vitest/0.14.1_uggjv5qz7n4fghv2yupl3pfvgm:
-    resolution: {integrity: sha512-2UUm6jYgkwh7Y3VKSRR8OuaNCm+iA5LPDnal7jyITN39maZK9L+JVxqjtQ39PSFo5Fl3/BgaJvER6GGHX9JLxg==}
+  /vitest/0.14.2_ncv73oaa4k6gci2dicqdxa5u7i:
+    resolution: {integrity: sha512-vXQUl8OUCqHmxKWscMGL+6Xl1pBJmYHZ8N85iNpLGrirAC2vhspu7b73ShRcLonmZT44BYZW+LBAVvn0L4jyVA==}
     engines: {node: '>=v14.16.0'}
     hasBin: true
     peerDependencies:
@@ -6388,7 +6388,7 @@ packages:
     dependencies:
       '@types/chai': 4.3.1
       '@types/chai-subset': 1.3.3
-      '@vitest/ui': 0.14.1
+      '@vitest/ui': 0.14.2
       c8: 7.11.3
       chai: 4.3.6
       debug: 4.3.4
@@ -6396,7 +6396,7 @@ packages:
       local-pkg: 0.4.1
       tinypool: 0.1.3
       tinyspy: 0.3.2
-      vite: 2.9.10
+      vite: 2.9.12
     transitivePeerDependencies:
       - less
       - sass
@@ -6634,7 +6634,7 @@ packages:
     dependencies:
       '@types/fs-extra': 9.0.13
       '@types/minimist': 1.2.2
-      '@types/node': 17.0.41
+      '@types/node': 17.0.42
       '@types/ps-tree': 1.1.2
       '@types/which': 2.0.1
       chalk: 5.0.1
