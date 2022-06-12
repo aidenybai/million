@@ -48,7 +48,7 @@ export const million = (options?: { importSource?: string; react?: boolean }): a
       const ast = parse(code);
       const astNodes: any[] = [];
 
-      if (!code.includes(`${jsxFactory}(`)) {
+      if (code.includes(`${jsxFactory}(`)) {
         visit(ast, {
           visitCallExpression(path) {
             if (path.value.callee.name === jsxFactory) {
