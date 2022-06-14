@@ -4,7 +4,7 @@ import { info, success } from './helpers.mjs';
 
 await $`rm -rf dist/*`;
 await $`unbuild`;
-await $`esbuild src/jsx-runtime/index.ts --minify --bundle --outfile=dist/code-size-measurement.js`;
+await $`esbuild src/react/react.ts --legal-comments=none --minify --outfile=dist/code-size-measurement.js`;
 
 const packages = [
   'jsx-runtime',
