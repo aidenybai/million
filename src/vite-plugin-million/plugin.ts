@@ -1,42 +1,45 @@
 import { parse, print, visit } from 'recast';
 import { compile } from './compile';
-import { jsxCompat, jsxFactory, jsxFactoryRaw, jsxFragment, JSX_FILTER } from './constants';
-import dedent from './dedent';
+import { jsxCompat, jsxFactory, jsxFragment, jsxFactoryRaw, JSX_FILTER } from './constants';
 
 export const million = (options?: { importSource?: string; react?: boolean }): any[] => [
   {
-    name: 'vite:million-config',
+    name: 'vite:million-jsx',
     enforce: 'pre',
     config() {
       const importSource = options?.importSource ?? 'million';
       const isReact = options?.react === true;
-      const alias = `${importSource}/react`;
-      const resolve = isReact
+      const aliasId = `${importSource}/react`;
+      const resolveAliases = isReact
         ? {
             alias: {
-              react: alias,
-              'react-dom/client': alias,
-              'react-dom/server': alias,
-              'react-dom': alias,
+              react: aliasId,
+              'react-dom/client': aliasId,
+              'react-dom/server': aliasId,
+              'react-dom': aliasId,
             },
           }
         : {};
+
+      const importJSX = `import { h as ${
+        isReact ? jsxFactoryRaw : jsxFactory
+      }, Fragment as ${jsxFragment} } from '${importSource}/jsx-runtime';\n`;
 
       return {
         esbuild: {
           jsxFactory,
           jsxFragment,
           jsxInject: isReact
-            ? dedent`
-                import { h as ${jsxFactoryRaw}, Fragment as ${jsxFragment} } from '${importSource}/jsx-runtime';
-                import { compat as ${jsxCompat} } from '${importSource}/react';
-                const ${jsxFactory} = ${jsxCompat}(${jsxFactoryRaw});\n
-              `
-            : dedent`
-                import { h as ${jsxFactory}, Fragment as ${jsxFragment} } from '${importSource}/jsx-runtime';\n
-              `,
+            ? `${importJSX}import { compat as ${jsxCompat} } from '${importSource}/react'; \nlet ${jsxFactory} = ${jsxCompat}(${jsxFactoryRaw});\n`
+            : importJSX,
         },
-        resolve,
+        optimizeDeps: {
+          include: ['million', 'million/jsx-runtime'],
+        },
+        resolve: {
+          ...resolveAliases,
+          dedupe: ['million'],
+        },
       };
     },
   },
@@ -45,10 +48,10 @@ export const million = (options?: { importSource?: string; react?: boolean }): a
     async transform(code: string, id: string) {
       if (id.includes('node_modules') || !JSX_FILTER.test(id)) return;
 
-      const ast = parse(code);
-      const astNodes: any[] = [];
-
       if (code.includes(`${jsxFactory}(`)) {
+        const ast = parse(code);
+        const astNodes: any[] = [];
+
         visit(ast, {
           visitCallExpression(path) {
             if (path.value.callee.name === jsxFactory) {
@@ -61,11 +64,13 @@ export const million = (options?: { importSource?: string; react?: boolean }): a
         for (let i = 0; i < astNodes.length; i++) {
           astNodes[i].replace(compile(astNodes[i].value));
         }
+
+        const result = print(ast);
+
+        return { code: result.code, map: result.map };
+      } else {
+        return { code};
       }
-
-      const result = print(ast);
-
-      return { code: result.code, map: result.map };
     },
   },
 ];

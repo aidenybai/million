@@ -1,6 +1,5 @@
 export const JSX_FILTER = /\.(jsx|tsx)$/;
-export const JSX_PREFIX = 'MILLION_JSX';
-export const jsxFactory = `__${JSX_PREFIX}_H__`;
-export const jsxFactoryRaw = `__${JSX_PREFIX}_H_RAW__`;
-export const jsxFragment = `__${JSX_PREFIX}_FRAGMENT__`;
-export const jsxCompat = `__${JSX_PREFIX}_COMPAT__`;
+export const jsxFactory = `_h`;
+export const jsxFactoryRaw = `__h`;
+export const jsxFragment = `_Fragment`;
+export const jsxCompat = `_compat`;
