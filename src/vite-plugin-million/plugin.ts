@@ -69,7 +69,7 @@ export const million = (options?: { importSource?: string; react?: boolean }): a
 
         return { code: result.code, map: result.map };
       } else {
-        return { code};
+        return { code };
       }
     },
   },
