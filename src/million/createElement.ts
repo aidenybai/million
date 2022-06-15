@@ -32,7 +32,11 @@ export const createElement = (vnode?: VNode | null, attachField = true): DOMNode
         } else if (propName.charCodeAt(5) === COLON_CHAR) {
           el.setAttributeNS(XLINK_NS, propName, String(propValue));
         }
-      } else if (el[propName] !== undefined && !(el instanceof SVGElement)) {
+      } else if (
+        el[propName] !== undefined &&
+        el[propName] !== null &&
+        !(el instanceof SVGElement)
+      ) {
         el[propName] = propValue;
       } else {
         el.setAttribute(propName, String(propValue));
@@ -50,6 +54,7 @@ export const createElement = (vnode?: VNode | null, attachField = true): DOMNode
     }
   }
 
+  // if (vnode.hook?.create) vnode.hook.create(el, vnode);
   if (vnode.ref) vnode.ref.current = el;
   if (attachField) el[OLD_VNODE_FIELD] = vnode;
 

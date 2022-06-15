@@ -1,6 +1,6 @@
 import { fromDomNodeToVNode } from '../../utils';
 import { createElement } from '../createElement';
-import { effect } from '../effect';
+import { effect, hook } from '../utils';
 import {
   Commit,
   DOMNode,
@@ -26,6 +26,7 @@ export const useNode = (drivers: any[]): any => {
     // resolved VNode -> stored VNode -> generated VNode
     oldVNode = oldVNode ?? el[OLD_VNODE_FIELD] ?? fromDomNodeToVNode(el);
     const queueEffect = effect(el, effects);
+    const invokeHook = hook(el, newVNode, oldVNode);
 
     const finish = (element: DOMNode): ReturnType<Driver> => {
       return {
@@ -37,20 +38,20 @@ export const useNode = (drivers: any[]): any => {
     };
 
     if (newVNode === undefined || newVNode === null) {
+      if (!invokeHook('remove', oldVNode)) return finish(el);
       queueEffect(EffectTypes.REMOVE, () => el.remove());
       return finish(el);
     } else {
       const hasString = typeof oldVNode === 'string' || typeof newVNode === 'string';
 
       if (hasString && oldVNode !== newVNode) {
+        if (!invokeHook('create', newVNode) || !invokeHook('remove', oldVNode)) return finish(el);
         const newEl = createElement(newVNode, false);
         queueEffect(EffectTypes.REPLACE, () => el.replaceWith(newEl));
         return finish(newEl);
       }
       if (!hasString && typeof oldVNode === 'object' && typeof newVNode === 'object') {
-        if (newVNode.hook) {
-          if (!newVNode.hook(el, newVNode, oldVNode)) return finish(el);
-        }
+        if (!invokeHook('diff', newVNode)) return finish(el);
         if (newVNode.flag === Flags.ELEMENT_IGNORE || oldVNode.flag === Flags.ELEMENT_IGNORE) {
           return finish(el);
         }
@@ -71,6 +72,7 @@ export const useNode = (drivers: any[]): any => {
           oldVNode.key !== newVNode?.key
         ) {
           if (oldVNode.tag !== newVNode.tag) {
+            if (!invokeHook('create', newVNode) || !invokeHook('remove', oldVNode)) return finish(el);
             const newEl = createElement(newVNode, false);
             queueEffect(EffectTypes.REPLACE, () => el.replaceWith(newEl));
             return finish(newEl);
