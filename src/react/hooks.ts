@@ -218,6 +218,7 @@ export const useDeferredValue = (value: any) => {
   return value;
 };
 
+// useSyncExternalStore
 export const useSyncExternalStore = (subscribe, getSnapshot) => {
   const state = useState(getSnapshot());
   useEffect(() => {
@@ -227,6 +228,7 @@ export const useSyncExternalStore = (subscribe, getSnapshot) => {
   return state;
 };
 
+// useImperativeHandle
 export const useImperativeHandle = (ref, create) => {
   if (ref?.current) {
     const object = create();
