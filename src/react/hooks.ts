@@ -14,6 +14,23 @@ import { batch, startTransition, isPending } from '../million';
 
 let state = null;
 
+export const createId = (size = 6) =>
+  crypto.getRandomValues(new Uint8Array(size)).reduce((id, byte) => {
+    byte &= 63;
+    if (byte < 36) {
+      // `0-9a-z`
+      id += byte.toString(36);
+    } else if (byte < 62) {
+      // `A-Z`
+      id += (byte - 26).toString(36).toUpperCase();
+    } else if (byte > 62) {
+      id += '-';
+    } else {
+      id += '_';
+    }
+    return id;
+  }, '');
+
 export const umap = (_) => ({
   get: (key) => _.get(key),
   set: (key, value) => (_.set(key, value), value),
@@ -201,6 +218,11 @@ export const useRef = (value) => {
 // useTransition
 export const useTransition = () => {
   return [isPending, startTransition];
+};
+
+// useId
+export const useId = () => {
+  return useState(createId())[0];
 };
 
 function different(value, i) {

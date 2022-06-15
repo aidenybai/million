@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { Fragment, h, jsx, jsxs, FC } from '../jsx-runtime';
+import { FC, Fragment, h, jsx, jsxs } from '../jsx-runtime';
 import { batch, startTransition, thunk, VElement, VNode, VProps } from '../million';
 import { compat } from './compat';
 import {
@@ -8,6 +8,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useId,
   useLayoutEffect,
   useMemo,
   useReducer,
@@ -196,7 +197,7 @@ export {
   // unstable_getCacheSignal,
   // unstable_getCacheForType,
   // unstable_useCacheRefresh,
-  // useId,
+  useId,
   useCallback,
   useContext,
   // useDebugValue,
