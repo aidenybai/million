@@ -2,7 +2,7 @@ import { createElement } from './createElement';
 import { useChildren } from './drivers/useChildren';
 import { useNode } from './drivers/useNode';
 import { useProps } from './drivers/useProps';
-import { effect } from './effect';
+import { effect } from './utils';
 import { startTransition } from './scheduler';
 import {
   DOMNode,
