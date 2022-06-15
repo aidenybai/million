@@ -208,6 +208,32 @@ export const useId = () => {
   return useState(crypto.randomUUID())[0];
 };
 
+// useDebugValue
+export const useDebugValue = (value: any) => {
+  console.log(value);
+};
+
+// useDeferredValue
+export const useDeferredValue = (value: any) => {
+  return value;
+};
+
+export const useSyncExternalStore = (subscribe, getSnapshot) => {
+  const state = useState(getSnapshot());
+  useEffect(() => {
+    subscribe(state);
+  });
+  subscribe(state);
+  return state;
+};
+
+export const useImperativeHandle = (ref, create) => {
+  if (ref?.current) {
+    const object = create();
+    ref.current = { ...ref.current, ...object };
+  }
+};
+
 function different(value, i) {
   return value !== this[i];
 }
