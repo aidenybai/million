@@ -72,7 +72,8 @@ export const useNode = (drivers: any[]): any => {
           oldVNode.key !== newVNode?.key
         ) {
           if (oldVNode.tag !== newVNode.tag) {
-            if (!invokeHook('create', newVNode) || !invokeHook('remove', oldVNode)) return finish(el);
+            if (!invokeHook('create', newVNode) || !invokeHook('remove', oldVNode))
+              return finish(el);
             const newEl = createElement(newVNode, false);
             queueEffect(EffectTypes.REPLACE, () => el.replaceWith(newEl));
             return finish(newEl);

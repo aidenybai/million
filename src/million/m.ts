@@ -8,7 +8,7 @@ import {
   VElement,
   VElementFlags,
   VNode,
-  VProps
+  VProps,
 } from './types';
 
 /**

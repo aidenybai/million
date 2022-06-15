@@ -10,7 +10,7 @@ import {
   Flags,
   NODE_OBJECT_POOL_FIELD,
   VElement,
-  VNode
+  VNode,
 } from '../types';
 import { effect, hook } from '../utils';
 
