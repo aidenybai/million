@@ -1,5 +1,7 @@
-![Dark Mode Logo](https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/banner.svg#gh-dark-mode-only)
-![Light Mode Logo](https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/banner-light.svg#gh-light-mode-only)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/banner.svg">
+  <img src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/banner-light.svg">
+</picture>
 
 <div align="center">
   <a href="https://github.com/aidenybai/million/actions/workflows/ci.yml" target="_blank"><img src="https://img.shields.io/github/workflow/status/aidenybai/million/CI?style=flat&colorA=000000&colorB=000000" alt="CI" /></a>
@@ -90,8 +92,8 @@ npm install million
 
 This repo is a "mono-repo" with modules. Million ships as one NPM package, but has first class modules for more complex, but important extensions. Each module has its own folder in the `/src` directory.
 
-| Module                                                                                        | Description                                                                                                                                                                                   |
-| --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Module                                                                                          | Description                                                                                                                                                                                   |
+| ----------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`million`](https://github.com/aidenybai/million/tree/main/src/million)                         | The main Virtual DOM with all of Million's core.                                                                                                                                              |
 | [`react`](https://github.com/aidenybai/million/tree/main/src/react)                             | A module that gives React compatability for Million.                                                                                                                                          |
 | [`router`](https://github.com/aidenybai/million/tree/main/src/router)                           | A module that enables SPA routing for MPAs.                                                                                                                                                   |
