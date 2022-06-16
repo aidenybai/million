@@ -33,12 +33,12 @@ export const createElement = (vnode?: VNode | null, attachField = true): DOMNode
           el.setAttributeNS(XLINK_NS, propName, String(propValue));
         }
       } else if (
-          el[propName] !== undefined && 
-          !(el instanceof SVGElement) &&
-          propName !== "list" &&
-          propName !== "form" &&
-          propName in el
-        ) {
+        el[propName] !== undefined &&
+        !(el instanceof SVGElement) &&
+        propName !== 'list' &&
+        propName !== 'form' &&
+        propName in el
+      ) {
         el[propName] = propValue;
       } else {
         el.setAttribute(propName, String(propValue));

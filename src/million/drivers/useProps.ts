@@ -1,4 +1,3 @@
-import { effect } from '../effect';
 import {
   COLON_CHAR,
   Commit,
@@ -9,7 +8,9 @@ import {
   XLINK_NS,
   XML_NS,
   X_CHAR,
+  HookTypes,
 } from '../types';
+import { effect, hook } from '../utils';
 
 export const updateProp = (
   el: HTMLElement | SVGElement,
@@ -17,8 +18,10 @@ export const updateProp = (
   oldPropValue: unknown,
   newPropValue: unknown,
   effects: Effect[],
+  invokeHook: ReturnType<typeof hook>,
 ): void => {
   if (oldPropValue === newPropValue) return;
+  if (!invokeHook(HookTypes.UPDATE)) return;
   const queueEffect = effect(el, effects);
   if (propName.startsWith('on')) {
     const eventPropName = propName.slice(2).toLowerCase();
@@ -28,11 +31,21 @@ export const updateProp = (
     });
   } else if (propName.charCodeAt(0) === X_CHAR) {
     if (propName.charCodeAt(3) === COLON_CHAR) {
-      el.setAttributeNS(XML_NS, propName, String(newPropValue));
+      queueEffect(EffectTypes.SET_PROP, () => {
+        el.setAttributeNS(XML_NS, propName, String(newPropValue));
+      });
     } else if (propName.charCodeAt(5) === COLON_CHAR) {
-      el.setAttributeNS(XLINK_NS, propName, String(newPropValue));
+      queueEffect(EffectTypes.SET_PROP, () => {
+        el.setAttributeNS(XLINK_NS, propName, String(newPropValue));
+      });
     }
-  } else if (el[propName] !== undefined && !(el instanceof SVGElement)) {
+  } else if (
+    el[propName] !== undefined &&
+    !(el instanceof SVGElement) &&
+    propName !== 'list' &&
+    propName !== 'form' &&
+    propName in el
+  ) {
     if (newPropValue) {
       queueEffect(EffectTypes.SET_PROP, () => (el[propName] = newPropValue));
     } else {
@@ -63,6 +76,7 @@ export const useProps =
   ): ReturnType<Driver> => {
     const oldProps = oldVNode?.props;
     const newProps = newVNode?.props;
+    const invokeHook = hook(el, newVNode, oldVNode);
     const data = {
       el,
       newVNode,
@@ -73,11 +87,11 @@ export const useProps =
       // Zero props optimization
       if (oldProps === undefined || newProps === null) {
         for (const propName in newProps) {
-          updateProp(el, propName, undefined, newProps[propName], effects);
+          updateProp(el, propName, undefined, newProps[propName], effects, invokeHook);
         }
       } else if (newProps === undefined || newProps === null) {
         for (const propName in oldProps) {
-          updateProp(el, propName, oldProps[propName], undefined, effects);
+          updateProp(el, propName, oldProps[propName], undefined, effects, invokeHook);
         }
       } else {
         let matches = 0;
@@ -89,6 +103,7 @@ export const useProps =
             // Keep track the number of matches with newProps
             Reflect.has(newProps, propName) ? (matches++, newProps![propName]) : undefined,
             effects,
+            invokeHook,
           );
         }
 
@@ -97,7 +112,7 @@ export const useProps =
         for (let i = 0; matches < keys.length && i < keys.length; ++i) {
           const propName = keys[i];
           if (!Reflect.has(oldProps, propName)) {
-            updateProp(el, propName, undefined, newProps![propName], effects);
+            updateProp(el, propName, undefined, newProps![propName], effects, invokeHook);
             ++matches;
           }
         }

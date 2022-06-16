@@ -44,6 +44,15 @@ export interface Effect {
   flush: () => void;
 }
 
+export enum HookTypes {
+  CREATE = 'create',
+  REMOVE = 'remove',
+  UPDATE = 'update',
+  DIFF = 'diff',
+}
+
+export type Hooks = Record<HookTypes, Hook>;
+
 export interface VElement extends V {
   flag: VElementFlags;
   tag: string;
@@ -51,7 +60,7 @@ export interface VElement extends V {
   children?: VNode[];
   key?: string;
   delta?: Delta[];
-  hook?: Hook;
+  hook?: Hooks;
 }
 
 export interface Thunk extends V {
@@ -61,7 +70,7 @@ export interface Thunk extends V {
   children?: VNode[];
   key?: string;
   delta?: Delta[];
-  hook?: Hook;
+  hook?: Hooks;
   args: any[];
 }
 

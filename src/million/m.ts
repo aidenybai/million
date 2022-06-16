@@ -3,7 +3,7 @@ import {
   DeltaTypes,
   DOMNode,
   Flags,
-  Hook,
+  Hooks,
   Thunk,
   VElement,
   VElementFlags,
@@ -80,7 +80,7 @@ export const m = (
   children?: VNode[],
   flag: VElementFlags = Flags.ELEMENT,
   delta?: Delta[],
-  hook: Hook = () => true,
+  hook?: Hooks,
 ): VElement => {
   let key = undefined;
   let ref = undefined;
@@ -110,7 +110,8 @@ export const thunk = (fn: (...args: any[]) => VNode, args: any[]): VNode => {
   if (typeof vnode === 'object') {
     vnode.flag = Flags.ELEMENT_THUNK;
     vnode.args = args;
-    vnode.hook = (_el?: DOMNode, newVNode?: VNode, oldVNode?: VNode): boolean => {
+    if (!vnode.hook) vnode.hook = {};
+    vnode.hook.diff = (_el?: DOMNode, newVNode?: VNode, oldVNode?: VNode): boolean => {
       if (
         typeof newVNode === 'object' &&
         typeof oldVNode === 'object' &&
