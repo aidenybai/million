@@ -51,7 +51,9 @@ export enum HookTypes {
   DIFF = 'diff',
 }
 
-export type Hooks = Record<HookTypes, Hook>;
+export type Hooks = {
+  [key in HookTypes]?: Hook;
+};
 
 export interface VElement extends V {
   flag: VElementFlags;
