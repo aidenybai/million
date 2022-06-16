@@ -1,6 +1,11 @@
 const workQueue: (() => void)[] = [];
 let pending = false;
 
+if (typeof window !== 'undefined') {
+  // @ts-expect-error polyfill for requestIdleCallback
+  window.requestIdleCallback ||= (callback: () => void) => callback();
+}
+
 export const isPending = () => pending;
 
 export const startTransition = (work: () => void): void => {

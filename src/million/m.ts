@@ -105,6 +105,24 @@ export const m = (
   return velement.tag.toLowerCase() === 'svg' ? svg(velement) : velement;
 };
 
+export const mergeHooks = (hooksArray: Hooks[]): Hooks => {
+  const mergedHooks: Hooks = {};
+  for (let i = 0; i < hooksArray.length; i++) {
+    for (const hook in hooksArray[i]) {
+      const oldHook = mergedHooks[hook];
+      if (oldHook) {
+        mergedHooks[hook] = () => {
+          oldHook();
+          hooksArray[i][hook]();
+        };
+      } else {
+        mergedHooks[hook] = hooksArray[i][hook];
+      }
+    }
+  }
+  return mergedHooks;
+};
+
 export const thunk = (fn: (...args: any[]) => VNode, args: any[]): VNode => {
   const vnode = fn(...args) as Thunk;
   if (typeof vnode === 'object') {

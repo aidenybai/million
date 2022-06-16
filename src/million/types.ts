@@ -52,7 +52,7 @@ export enum HookTypes {
 }
 
 export type Hooks = {
-  [key in HookTypes]?: Hook;
+  [key in HookTypes]?: Hook | Hook[];
 };
 
 export interface VElement extends V {
