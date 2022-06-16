@@ -44,12 +44,14 @@ export interface Effect {
   flush: () => void;
 }
 
-export interface Hooks {
-  create?: Hook;
-  update?: Hook;
-  remove?: Hook;
-  diff?: Hook;
+export enum HookTypes {
+  CREATE = 'create',
+  REMOVE = 'remove',
+  UPDATE = 'update',
+  DIFF = 'diff',
 }
+
+export type Hooks = Record<HookTypes, Hook>;
 
 export interface VElement extends V {
   flag: VElementFlags;

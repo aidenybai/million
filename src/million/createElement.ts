@@ -34,8 +34,10 @@ export const createElement = (vnode?: VNode | null, attachField = true): DOMNode
         }
       } else if (
         el[propName] !== undefined &&
-        el[propName] !== null &&
-        !(el instanceof SVGElement)
+        !(el instanceof SVGElement) &&
+        propName !== 'list' &&
+        propName !== 'form' &&
+        propName in el
       ) {
         el[propName] = propValue;
       } else {
@@ -54,7 +56,6 @@ export const createElement = (vnode?: VNode | null, attachField = true): DOMNode
     }
   }
 
-  // if (vnode.hook?.create) vnode.hook.create(el, vnode);
   if (vnode.ref) vnode.ref.current = el;
   if (attachField) el[OLD_VNODE_FIELD] = vnode;
 
