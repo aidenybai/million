@@ -1,5 +1,5 @@
 import { className, kebab, m, style, svg } from '../million/m';
-import { Delta, Flags, VElementFlags, VNode, VProps } from '../million/types';
+import { Delta, Flags, Hooks, VElementFlags, VNode, VProps } from '../million/types';
 import { Fragment } from './jsx';
 import { FC, RawVNode } from './types';
 
@@ -48,12 +48,20 @@ export function h(
 
   let flag: VElementFlags = Flags.ELEMENT_NO_CHILDREN;
   let delta: Delta[] | undefined;
+  let hook: Hooks | undefined;
   const normalizedChildren: VNode[] = [];
   if (props) {
     const rawDelta = props.delta as Delta[];
     if (rawDelta && rawDelta.length) {
       delta = rawDelta;
       props.delta = undefined;
+    }
+  }
+  if (props) {
+    const rawHook = props.hook as Hooks;
+    if (rawHook) {
+      hook = rawHook;
+      props.hook = undefined;
     }
   }
   if (children) {
@@ -114,6 +122,6 @@ export function h(
     }
   }
 
-  const vnode = m(tag, props, normalizedChildren, flag, delta);
+  const vnode = m(tag, props, normalizedChildren, flag, delta, hook);
   return tag === 'svg' ? svg(vnode) : vnode;
 }
