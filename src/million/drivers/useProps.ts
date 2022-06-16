@@ -8,6 +8,7 @@ import {
   XLINK_NS,
   XML_NS,
   X_CHAR,
+  HookTypes,
 } from '../types';
 import { effect, hook } from '../utils';
 
@@ -20,7 +21,7 @@ export const updateProp = (
   invokeHook: ReturnType<typeof hook>,
 ): void => {
   if (oldPropValue === newPropValue) return;
-  if (!invokeHook('update')) return;
+  if (!invokeHook(HookTypes.UPDATE)) return;
   const queueEffect = effect(el, effects);
   if (propName.startsWith('on')) {
     const eventPropName = propName.slice(2).toLowerCase();
@@ -38,7 +39,13 @@ export const updateProp = (
         el.setAttributeNS(XLINK_NS, propName, String(newPropValue));
       });
     }
-  } else if (el[propName] !== undefined && el[propName] !== null && !(el instanceof SVGElement)) {
+  } else if (
+    el[propName] !== undefined &&
+    !(el instanceof SVGElement) &&
+    propName !== 'list' &&
+    propName !== 'form' &&
+    propName in el
+  ) {
     if (newPropValue) {
       queueEffect(EffectTypes.SET_PROP, () => (el[propName] = newPropValue));
     } else {

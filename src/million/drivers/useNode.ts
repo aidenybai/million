@@ -1,6 +1,5 @@
 import { fromDomNodeToVNode } from '../../utils';
 import { createElement } from '../createElement';
-import { effect, hook } from '../utils';
 import {
   Commit,
   DOMNode,
@@ -8,9 +7,11 @@ import {
   Effect,
   EffectTypes,
   Flags,
+  HookTypes,
   OLD_VNODE_FIELD,
   VNode,
 } from '../types';
+import { effect, hook } from '../utils';
 
 /**
  * Diffs a single DOM node and modifies the DOM node based on the necessary changes
@@ -38,20 +39,20 @@ export const useNode = (drivers: any[]): any => {
     };
 
     if (newVNode === undefined || newVNode === null) {
-      if (!invokeHook('remove', oldVNode)) return finish(el);
+      if (!invokeHook(HookTypes.REMOVE, oldVNode)) return finish(el);
       queueEffect(EffectTypes.REMOVE, () => el.remove());
       return finish(el);
     } else {
       const hasString = typeof oldVNode === 'string' || typeof newVNode === 'string';
 
       if (hasString && oldVNode !== newVNode) {
-        if (!invokeHook('create', newVNode) || !invokeHook('remove', oldVNode)) return finish(el);
+        if (!invokeHook(HookTypes.UPDATE, newVNode)) return finish(el);
         const newEl = createElement(newVNode, false);
         queueEffect(EffectTypes.REPLACE, () => el.replaceWith(newEl));
         return finish(newEl);
       }
       if (!hasString && typeof oldVNode === 'object' && typeof newVNode === 'object') {
-        if (!invokeHook('diff', newVNode)) return finish(el);
+        if (!invokeHook(HookTypes.DIFF, newVNode)) return finish(el);
         if (newVNode.flag === Flags.ELEMENT_IGNORE || oldVNode.flag === Flags.ELEMENT_IGNORE) {
           return finish(el);
         }
@@ -72,8 +73,7 @@ export const useNode = (drivers: any[]): any => {
           oldVNode.key !== newVNode?.key
         ) {
           if (oldVNode.tag !== newVNode.tag) {
-            if (!invokeHook('create', newVNode) || !invokeHook('remove', oldVNode))
-              return finish(el);
+            if (!invokeHook(HookTypes.UPDATE, newVNode)) return finish(el);
             const newEl = createElement(newVNode, false);
             queueEffect(EffectTypes.REPLACE, () => el.replaceWith(newEl));
             return finish(newEl);
