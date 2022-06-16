@@ -8,7 +8,7 @@ specifiers:
   '@types/canvas-confetti': ^1.4.2
   '@types/lodash': ^4.14.182
   '@types/node': ^18.0.0
-  '@types/react': ^18.0.12
+  '@types/react': ^18.0.13
   '@types/react-dom': ^18.0.5
   '@types/virtual-dom': ^2.1.1
   '@typescript-eslint/eslint-plugin': ^5.28.0
@@ -57,7 +57,7 @@ devDependencies:
   '@types/canvas-confetti': 1.4.2
   '@types/lodash': 4.14.182
   '@types/node': 18.0.0
-  '@types/react': 18.0.12
+  '@types/react': 18.0.13
   '@types/react-dom': 18.0.5
   '@types/virtual-dom': 2.1.1
   '@typescript-eslint/eslint-plugin': 5.28.0_7yumg2qjgbp7maccqlfhx2vudu
@@ -1057,11 +1057,11 @@ packages:
   /@types/react-dom/18.0.5:
     resolution: {integrity: sha512-OWPWTUrY/NIrjsAPkAk1wW9LZeIjSvkXRhclsFO8CZcZGCOg2G0YZy4ft+rOyYxy8B7ui5iZzi9OkDebZ7/QSA==}
     dependencies:
-      '@types/react': 18.0.12
+      '@types/react': 18.0.13
     dev: true
 
-  /@types/react/18.0.12:
-    resolution: {integrity: sha512-duF1OTASSBQtcigUvhuiTB1Ya3OvSy+xORCiEf20H0P0lzx+/KeVsA99U5UjLXSbyo1DRJDlLKqTeM1ngosqtg==}
+  /@types/react/18.0.13:
+    resolution: {integrity: sha512-psqptIYQxGUFuGYwP3KCFVtPTkMpIcrqFmtKblWEUQhLuYLpHBwJkXhjp6eHfDM5IbyskY4x7qQpLedEsPkHlA==}
     dependencies:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.2

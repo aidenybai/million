@@ -1,4 +1,4 @@
-import { className, kebab, m, style, svg } from '../million/m';
+import { className, kebab, m, mergeHooks, style, svg } from '../million/m';
 import { Delta, Flags, Hooks, VElementFlags, VNode, VProps } from '../million/types';
 import { Fragment } from './jsx';
 import { FC, RawVNode } from './types';
@@ -60,7 +60,8 @@ export function h(
   if (props) {
     const rawHook = props.hook as Hooks;
     if (rawHook) {
-      hook = rawHook;
+      if (Array.isArray(rawHook)) hook = mergeHooks(rawHook);
+      else hook = rawHook;
       props.hook = undefined;
     }
   }

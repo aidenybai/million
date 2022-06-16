@@ -128,7 +128,7 @@
     "@types/canvas-confetti": "^1.4.2",
     "@types/lodash": "^4.14.182",
     "@types/node": "^18.0.0",
-    "@types/react": "^18.0.12",
+    "@types/react": "^18.0.13",
     "@types/react-dom": "^18.0.5",
     "@types/virtual-dom": "^2.1.1",
     "@typescript-eslint/eslint-plugin": "^5.28.0",
