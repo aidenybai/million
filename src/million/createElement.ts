@@ -1,5 +1,4 @@
 import {
-  COLON_CHAR,
   DOMNode,
   Flags,
   OLD_VNODE_FIELD,
