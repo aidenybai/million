@@ -1,12 +1,4 @@
-import {
-  DOMNode,
-  Flags,
-  OLD_VNODE_FIELD,
-  VNode,
-  XLINK_NS,
-  XML_NS,
-  X_CHAR,
-} from './types';
+import { DOMNode, Flags, OLD_VNODE_FIELD, VNode, XLINK_NS, XML_NS, X_CHAR } from './types';
 
 /**
  * Creates an Element from a VNode
