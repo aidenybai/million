@@ -35,9 +35,8 @@ export const createElement = (vnode?: VNode | null, attachField = true): DOMNode
         }
       } else if (
         el[propName] !== undefined &&
+        el[propName] !== null &&
         !(el instanceof SVGElement) &&
-        propName !== 'list' &&
-        propName !== 'form' &&
         propName in el
       ) {
         el[propName] = propValue;
