@@ -41,9 +41,8 @@ export const updateProp = (
     }
   } else if (
     el[propName] !== undefined &&
+    el[propName] !== null &&
     !(el instanceof SVGElement) &&
-    propName !== 'list' &&
-    propName !== 'form' &&
     propName in el
   ) {
     if (newPropValue) {
