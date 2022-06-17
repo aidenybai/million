@@ -19,6 +19,7 @@ export const createElement = (vnode?: VNode | null, attachField = true): DOMNode
   const el = vnode.props?.ns
     ? (document.createElementNS(vnode.props?.ns as string, vnode.tag) as SVGElement)
     : (document.createElement(vnode.tag) as HTMLElement);
+  if (vnode.props?.ns) delete vnode.props.ns;
 
   if (vnode.props) {
     for (const propName in vnode.props) {
@@ -27,10 +28,10 @@ export const createElement = (vnode?: VNode | null, attachField = true): DOMNode
         const eventPropName = propName.slice(2).toLowerCase();
         el.addEventListener(eventPropName, propValue as EventListener);
       } else if (propName.charCodeAt(0) === X_CHAR) {
-        if (propName.charCodeAt(3) === COLON_CHAR) {
+        if (propName.startsWith('xmlns')) {
           el.setAttributeNS(XML_NS, propName, String(propValue));
-        } else if (propName.charCodeAt(5) === COLON_CHAR) {
-          el.setAttributeNS(XLINK_NS, propName, String(propValue));
+        } else if (propName.startsWith('xlink')) {
+          el.setAttributeNS(XLINK_NS, 'href', String(propValue));
         }
       } else if (
         el[propName] !== undefined &&

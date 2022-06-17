@@ -1,5 +1,4 @@
 import {
-  COLON_CHAR,
   Commit,
   Driver,
   Effect,
@@ -30,13 +29,13 @@ export const updateProp = (
       el.addEventListener(eventPropName, newPropValue as EventListener);
     });
   } else if (propName.charCodeAt(0) === X_CHAR) {
-    if (propName.charCodeAt(3) === COLON_CHAR) {
+    if (propName.startsWith('xmlns')) {
       queueEffect(EffectTypes.SET_PROP, () => {
         el.setAttributeNS(XML_NS, propName, String(newPropValue));
       });
-    } else if (propName.charCodeAt(5) === COLON_CHAR) {
+    } else if (propName.startsWith('xlink')) {
       queueEffect(EffectTypes.SET_PROP, () => {
-        el.setAttributeNS(XLINK_NS, propName, String(newPropValue));
+        el.setAttributeNS(XLINK_NS, 'href', String(newPropValue));
       });
     }
   } else if (
