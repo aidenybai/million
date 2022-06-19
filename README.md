@@ -14,7 +14,7 @@
     <tbody>
       <tr>
         <td>
-          <a href="https://www.youtube.com/watch?v=KgnSM9NbV2s">🎦 Trailer Video</a>
+          <a href="https://www.youtube.com/watch?v=KgnSM9NbV2s">🎦 Watch Video</a>
         </td>
         <td>
           <a href="https://millionjs.org">📚 Read the docs</a>
