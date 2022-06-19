@@ -58,4 +58,12 @@ describe.concurrent('createElement', () => {
     const el = document.createComment('');
     expectEqualNode(createElement(null), el);
   });
+
+  it('should not set prop value with null and undefined', () => {
+    const el = document.createElement('div');
+    el.id = '0';
+    el.setAttribute('bar', 'false');
+    el.appendChild(document.createTextNode('foo'));
+    expectEqualNode(createElement(m('div', { id: 0, children: undefined, foo: null, bar: false }, ['foo'])), el);
+  });
 });
