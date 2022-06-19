@@ -24,15 +24,17 @@ export const createElement = (vnode?: VNode | null, attachField = true): DOMNode
         } else if (propName.startsWith('xlink')) {
           el.setAttributeNS(XLINK_NS, 'href', String(propValue));
         }
-      } else if (
-        el[propName] !== undefined &&
-        el[propName] !== null &&
-        !(el instanceof SVGElement) &&
-        propName in el
-      ) {
-        el[propName] = propValue;
-      } else {
-        el.setAttribute(propName, String(propValue));
+      } else if (propValue !== undefined && propValue !== null) {
+        if (
+          el[propName] !== undefined &&
+          el[propName] !== null &&
+          !(el instanceof SVGElement) &&
+          propName in el
+        ) {
+          el[propName] = propValue;
+        } else {
+          el.setAttribute(propName, String(propValue));
+        }
       }
     }
   }
