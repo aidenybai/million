@@ -22,5 +22,3 @@ if (!(await exists('dev'))) {
   await write('./dev/style.css', style_css);
   info("Couldn't find an the `dev` directory, creating one for you...\n");
 }
-
-await $`vite`;
