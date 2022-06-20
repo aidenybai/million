@@ -77,7 +77,7 @@ export const million = (options?: {
           return { code };
         }
       } catch (_err) {
-        console.error(_err);
+        console.error(`Error during compilation! Set \`skipOptimize\` to true to fix this problem.`);
         return { code };
       }
     },

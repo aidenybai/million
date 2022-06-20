@@ -8,7 +8,7 @@
   "unpkg": "dist/million.mjs",
   "types": "dist/million.d.ts",
   "scripts": {
-    "dev": "zx scripts/dev.mjs",
+    "dev": "zx scripts/dev.mjs && vite",
     "build": "zx scripts/build.mjs",
     "lint": "eslint src/**",
     "cleanup": "prettier --write src",
