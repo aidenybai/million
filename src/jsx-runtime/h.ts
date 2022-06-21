@@ -1,4 +1,4 @@
-import { className, kebab, m, mergeHooks, style, svg } from '../million/m';
+import { className, kebab, m, mergeHooks, style } from '../million/m';
 import { Delta, Flags, Hooks, VElementFlags, VNode, VProps } from '../million/types';
 import { Fragment } from './jsx';
 import { FC, RawVNode } from './types';
