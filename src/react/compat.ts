@@ -3,6 +3,8 @@ import { patch, VNode, VProps } from '../million';
 import { hook } from './hooks';
 import { Component } from './react';
 
+const rootFragmentStyle = { style: 'display: contents' };
+
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const createComponent = (fn: Function, props?: VProps, key?: string | null) => {
   let prevRef: { current: any };
@@ -11,7 +13,9 @@ export const createComponent = (fn: Function, props?: VProps, key?: string | nul
 
   const component = hook(() => {
     const ret = fn(props, key);
-    const newVNode = Array.isArray(ret) ? h('_', key ? { key } : {}, ...ret) : ret;
+    const newVNode = Array.isArray(ret)
+      ? h('_', key ? { key, ...rootFragmentStyle } : rootFragmentStyle, ...ret)
+      : ret;
     if (ret.ref) prevRef = ret.ref;
     const ref = prevRef ?? { current: undefined };
 
@@ -41,7 +45,7 @@ export const createClass = (ClassComponent: typeof Component, props?: VProps) =>
   const componentObject = new ClassComponent(props as VProps, null);
   const rerender = () => {
     const ret = componentObject.render(props) as any;
-    const newVNode = Array.isArray(ret) ? h('_', {}, ...ret) : ret;
+    const newVNode = Array.isArray(ret) ? h('_', rootFragmentStyle, ...ret) : ret;
 
     if (ret.ref) prevRef = ret.ref;
     const ref = prevRef ?? { current: undefined };

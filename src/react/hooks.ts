@@ -100,7 +100,7 @@ const invoke = ({ hook, args }) => {
 };
 
 export const createContext = (value) => {
-  const context = { value, Provider: provide };
+  const context = { value, Provider: provide, Consumer: (callback) => callback(value) };
   hooks.set(context, []);
   return context;
 };
