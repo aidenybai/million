@@ -3,8 +3,8 @@ import { write } from 'fsxx';
 import { info, success } from './helpers.mjs';
 
 await $`rm -rf dist/*`;
-await $`esbuild src/react/react.ts --legal-comments=none --minify --outfile=dist/code-size-measurement.js`;
 await $`unbuild`;
+await $`esbuild src/react/react.ts --legal-comments=none --minify --outfile=dist/code-size-measurement.js`;
 
 const packages = [
   'jsx-runtime',
