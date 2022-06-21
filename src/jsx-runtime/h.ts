@@ -123,6 +123,5 @@ export function h(
     }
   }
 
-  const vnode = m(tag, props, normalizedChildren, flag, delta, hook);
-  return tag === 'svg' ? svg(vnode) : vnode;
+  return m(tag, props, normalizedChildren, flag, delta, hook);
 }
