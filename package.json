@@ -156,7 +156,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "recast": "^0.21.1",
-    "simple-git": "^3.8.0",
+    "simple-git": "^3.9.0",
     "simple-virtual-dom": "^0.1.10",
     "snabbdom": "^3.5.0",
     "source-map": "^0.7.4",
