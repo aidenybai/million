@@ -36,7 +36,7 @@ specifiers:
   react: ^18.2.0
   react-dom: ^18.2.0
   recast: ^0.21.1
-  simple-git: ^3.8.0
+  simple-git: ^3.9.0
   simple-virtual-dom: ^0.1.10
   snabbdom: ^3.5.0
   source-map: ^0.7.4
@@ -85,7 +85,7 @@ devDependencies:
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   recast: 0.21.1
-  simple-git: 3.8.0
+  simple-git: 3.9.0
   simple-virtual-dom: 0.1.10
   snabbdom: 3.5.0
   source-map: 0.7.4
@@ -5611,8 +5611,8 @@ packages:
     resolution: {integrity: sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ==}
     dev: true
 
-  /simple-git/3.8.0:
-    resolution: {integrity: sha512-nbR1PufcbvCaW90CiAXC1mM7OnEqLzjSOnySnq7Sd2kcVG6GxSa+DhxhFmCgxLv4kWCKmZagkCZSjfNAQTZwaw==}
+  /simple-git/3.9.0:
+    resolution: {integrity: sha512-twG3rcFMYASct3mJcCP8KBtmtN7V2s6cdO5IXVAe/ffIu6TjdkdVnatR+PGmcirKXiK5y28eIdCVF0i3UQypfQ==}
     dependencies:
       '@kwsites/file-exists': 1.1.1
       '@kwsites/promise-deferred': 1.1.1
