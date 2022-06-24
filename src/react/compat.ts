@@ -3,7 +3,7 @@ import { patch, VNode, VProps } from '../million';
 import { hook } from './hooks';
 import { Component } from './react';
 
-const rootFragmentStyle = { style: 'display: contents' };
+const rootFragmentStyle = { style: 'display: contents;' };
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const createComponent = (fn: Function, props?: VProps, key?: string | null) => {
