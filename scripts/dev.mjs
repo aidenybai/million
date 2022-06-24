@@ -2,7 +2,7 @@ import { $ } from 'zx';
 import { write, exists } from 'fsxx';
 import { info } from './helpers.mjs';
 
-const index_html = `<!DOCTYPE html><html><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="stylesheet" href="./style.css"><script type="module" src="./script.tsx"></script></head><body></body></html>`;
+const index_html = `<!DOCTYPE html><html><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="stylesheet" href="./style.css"><script type="module" src="./script.tsx"></script></head><body><div id="root"></div></body></html>`;
 const script_tsx = ``;
 const style_css = `body { font-size: 2em; display: flex; justify-content: center; align-items: start; padding-top: 2em; font-family: Arial; }`;
 
