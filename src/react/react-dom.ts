@@ -19,7 +19,8 @@ const hydrateRoot = (vnode: VNode, root: HTMLElement): HTMLElement => {
 const createRoot = (root: DOMNode) => {
   // eslint-disable-next-line @typescript-eslint/ban-types
   const renderer = (renderFn: Function, patchFn: Function) => {
-    return (vnode: VNode | VNode[]) => {
+    return (vnode?: VNode | VNode[] | null) => {
+      if (!vnode) return;
       startTransition(() => {
         if (Array.isArray(vnode)) {
           const rootVNode = fromDomNodeToVNode(root) as VElement;
