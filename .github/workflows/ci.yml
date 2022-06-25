@@ -30,11 +30,6 @@ jobs:
       - run: pnpm lint
       - run: pnpm test
       - run: pnpm build
-      - name: Prettify code
-        uses: creyD/prettier_action@v4.2
-        with:
-          prettier_options: --write src
-          only_changed: True
       - name: Coveralls Parallel
         uses: coverallsapp/github-action@master
         with:
