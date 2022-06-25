@@ -1,4 +1,4 @@
-import { DOMNode, Effect, EffectTypes, Hook, VNode } from './types';
+import { DOMNode, Effect, EffectTypes, Hook, VNode, VElement } from './types';
 
 export const effect = (el: DOMNode, effects: Effect[]) => {
   return (type: EffectTypes, flush: () => void) => {
@@ -15,4 +15,12 @@ export const hook = (el: DOMNode, newVNode?: VNode, oldVNode?: VNode) => {
     }
     return true;
   };
+};
+
+export const cleanVnodeChildren = (vNode?: VNode) => {
+  if ((vNode as VElement)?.children?.length) {
+    (vNode as VElement).children = (vNode as VElement).children!.filter(v => v !== null && v !== undefined);
+  }
+
+  return vNode;
 };
