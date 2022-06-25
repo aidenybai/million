@@ -19,7 +19,9 @@ export const hook = (el: DOMNode, newVNode?: VNode, oldVNode?: VNode) => {
 
 export const cleanVnodeChildren = (vNode?: VNode) => {
   if ((vNode as VElement)?.children?.length) {
-    (vNode as VElement).children = (vNode as VElement).children!.filter(v => v !== null && v !== undefined);
+    (vNode as VElement).children = (vNode as VElement).children!.filter(
+      (v) => v !== null && v !== undefined,
+    );
   }
 
   return vNode;
