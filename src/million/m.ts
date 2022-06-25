@@ -94,6 +94,10 @@ export const m = (
     ref = props.ref as { current: any };
     delete props.ref;
   }
+  if (props?.children) {
+    children = props.children;
+    delete props.children;
+  }
   const velement: VElement = {
     tag,
     props,
