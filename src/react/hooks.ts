@@ -100,7 +100,9 @@ const invoke = ({ hook, args }) => {
 };
 
 export const createContext = (value) => {
-  const context = { value, Provider: provide, Consumer: (callback) => callback(value) };
+  const context = { value };
+  context.Provider = Provider.bind(context);
+  context.Consumer = Consumer.bind(context);
   hooks.set(context, []);
   return context;
 };
@@ -113,11 +115,17 @@ export const useContext = (context) => {
   return context.value;
 };
 
-function provide(value) {
+function Consumer({ children }) {
+  return children[0](this.value);
+}
+
+function Provider({ children, value }) {
   if (this.value !== value) {
     this.value = value;
-    hooks.get(this).forEach(invoke);
+    const context = hooks.get(this);
+    invoke(context[context.length - 1]);
   }
+  return children;
 }
 
 function update({ hook }) {

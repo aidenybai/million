@@ -2,7 +2,7 @@ import { createElement } from './createElement';
 import { useChildren } from './drivers/useChildren';
 import { useNode } from './drivers/useNode';
 import { useProps } from './drivers/useProps';
-import { effect, cleanVnodeChildren } from './utils';
+import { effect, normalizeVNodeChildren } from './utils';
 import { startTransition } from './scheduler';
 import {
   DOMNode,
@@ -30,8 +30,8 @@ export const patch = (
   hook: Hook = () => true,
   effects: Effect[] = [],
 ): DOMNode => {
-  newVNode = cleanVnodeChildren(newVNode);
-  oldVNode = cleanVnodeChildren(oldVNode);
+  newVNode = normalizeVNodeChildren(newVNode);
+  oldVNode = normalizeVNodeChildren(oldVNode);
   const queueEffect = effect(el, effects);
   const commit = (work: () => void, data: ReturnType<Driver>) => {
     if (hook(data.el, data.newVNode, data.oldVNode)) work();
