@@ -16,16 +16,3 @@ export const hook = (el: DOMNode, newVNode?: VNode, oldVNode?: VNode) => {
     return true;
   };
 };
-
-export const normalizeVNodeChildren = (vnode?: VNode) => {
-  if (
-    typeof vnode === 'object' &&
-    vnode?.children &&
-    vnode.children.length &&
-    vnode.flag === Flags.ELEMENT
-  ) {
-    vnode.children = vnode.children.filter((vchild) => vchild !== null && vchild !== undefined);
-  }
-
-  return vnode;
-};

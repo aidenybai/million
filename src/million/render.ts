@@ -2,7 +2,6 @@ import { createElement } from './createElement';
 import { useChildren } from './drivers/useChildren';
 import { useNode } from './drivers/useNode';
 import { useProps } from './drivers/useProps';
-import { effect, normalizeVNodeChildren } from './utils';
 import { startTransition } from './scheduler';
 import {
   DOMNode,
@@ -14,6 +13,7 @@ import {
   OLD_VNODE_FIELD,
   VNode,
 } from './types';
+import { effect } from './utils';
 
 /**
  * Diffs two VNodes
@@ -30,8 +30,6 @@ export const patch = (
   hook: Hook = () => true,
   effects: Effect[] = [],
 ): DOMNode => {
-  newVNode = normalizeVNodeChildren(newVNode);
-  oldVNode = normalizeVNodeChildren(oldVNode);
   const queueEffect = effect(el, effects);
   const commit = (work: () => void, data: ReturnType<Driver>) => {
     if (hook(data.el, data.newVNode, data.oldVNode)) work();
