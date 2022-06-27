@@ -1,4 +1,4 @@
-import { DOMNode, Effect, EffectTypes, Flags, Hook, VNode } from './types';
+import { DOMNode, Effect, EffectTypes, Hook, HookTypes, VNode } from './types';
 
 export const effect = (el: DOMNode, effects: Effect[]) => {
   return (type: EffectTypes, flush: () => void) => {
@@ -7,7 +7,7 @@ export const effect = (el: DOMNode, effects: Effect[]) => {
 };
 
 export const hook = (el: DOMNode, newVNode?: VNode, oldVNode?: VNode) => {
-  return (hookName: 'create' | 'update' | 'remove' | 'diff', vnode?: VNode) => {
+  return (hookName: HookTypes, vnode?: VNode) => {
     if (!vnode) vnode = newVNode;
     if (typeof vnode === 'object' && vnode?.hook && vnode.hook[hookName]) {
       if ((vnode.hook[hookName] as Hook)(el, newVNode, oldVNode)) return true;
