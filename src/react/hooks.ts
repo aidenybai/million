@@ -12,7 +12,13 @@
 
 import { batch, startTransition, isPending } from '../million';
 
-let state = null;
+let state = {
+  args: null,
+  stack: [],
+  i: 0,
+  length: 0,
+  after: [],
+};
 
 export const umap = (_) => ({
   get: (key) => _.get(key),
@@ -123,7 +129,9 @@ function Provider({ children, value }) {
   if (this.value !== value) {
     this.value = value;
     const context = hooks.get(this);
-    invoke(context[context.length - 1]);
+    if (context.length) {
+      invoke(context[context.length - 1]);
+    }
   }
   return children;
 }

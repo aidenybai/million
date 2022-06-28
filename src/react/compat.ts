@@ -40,10 +40,10 @@ export const createComponent = (fn: Function, props?: VProps, key?: string | nul
   return component;
 };
 
-export const createClass = (ClassComponent: typeof Component, props?: VProps) => {
+export const createClass = (klass: typeof Component, props?: VProps) => {
   let prevRef: { current: any };
   let prevVNode: VNode | undefined;
-  const componentObject = new ClassComponent(props as VProps, null);
+  const componentObject = new klass(props as VProps, null);
   const rerender = () => {
     const ret = componentObject.render(props) as any;
     if (!ret) return ret;
