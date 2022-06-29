@@ -7,7 +7,6 @@ import { createProgressBar, startTrickle, stopTrickle } from './progress';
 import { Route } from './types';
 import { getURL, normalizeRelativeURLs } from './utils';
 
-const FIVE_MINUTES = 300000;
 const parser = new DOMParser();
 const routeMap = new Map<string, Route>();
 const controllerMap = new Map<
