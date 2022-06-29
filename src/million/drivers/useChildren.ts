@@ -53,7 +53,7 @@ export const useChildren =
     const newVNodeChildren: VNode[] | undefined = newVNode.children;
     const delta: Delta[] | undefined = newVNode.delta;
     const diff = (el: DOMNode, newVNode: VNode, oldVNode?: VNode) =>
-      driver!(el, newVNode, oldVNode, commit, effects).effects!;
+      el ? driver!(el, newVNode, oldVNode, commit, effects).effects! : effects;
 
     // Deltas are a way for the compile-time to optimize runtime operations
     // by providing a set of predefined operations. This is useful for cases

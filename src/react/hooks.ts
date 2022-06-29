@@ -51,7 +51,7 @@ export const hook = (fn) => {
 export const contextual = (fn) => {
   let check = true;
   let context = null;
-  const augmented = augmentor(function () {
+  const augmented = hook(function () {
     return fn.apply(context, arguments);
   });
   return function hook() {

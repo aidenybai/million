@@ -45,7 +45,7 @@ specifiers:
   typescript: ^4.7.4
   unbuild: ^0.7.4
   virtual-dom: ^2.1.1
-  vite: 3.0.0-beta.5
+  vite: 2.9.13
   vitest: ^0.16.0
   wouter: 2.8.0-alpha.2
   zx: ^7.0.3
@@ -62,7 +62,7 @@ devDependencies:
   '@types/virtual-dom': 2.1.1
   '@typescript-eslint/eslint-plugin': 5.30.0_5mtqsiui4sk53pmkx7i7ue45wm
   '@typescript-eslint/parser': 5.30.0_b5e7v2qnwxfo6hmiq56u52mz3e
-  '@vitejs/plugin-legacy': 1.8.2_vite@3.0.0-beta.5
+  '@vitejs/plugin-legacy': 1.8.2_vite@2.9.13
   '@vitejs/plugin-react': 1.3.2
   '@vitest/ui': 0.16.0
   benchmark: 2.1.4
@@ -95,7 +95,7 @@ devDependencies:
   typescript: 4.7.4
   unbuild: 0.7.4
   virtual-dom: 2.1.1
-  vite: 3.0.0-beta.5
+  vite: 2.9.13
   vitest: 0.16.0_dcowuwleuujrodfztzblsok4y4
   wouter: 2.8.0-alpha.2_react@18.2.0
   zx: 7.0.3
@@ -1045,7 +1045,7 @@ packages:
       eslint-visitor-keys: 3.3.0
     dev: true
 
-  /@vitejs/plugin-legacy/1.8.2_vite@3.0.0-beta.5:
+  /@vitejs/plugin-legacy/1.8.2_vite@2.9.13:
     resolution: {integrity: sha512-NCOKU+pU+cxLMR9P9RTolEuOK+h+zYBXlknj+zGcKSj/NXBZYgA1GAH1FnO4zijoWRiTaiOm2ha9LQrELE7XHg==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
@@ -1056,7 +1056,7 @@ packages:
       magic-string: 0.26.2
       regenerator-runtime: 0.13.9
       systemjs: 6.12.1
-      vite: 3.0.0-beta.5
+      vite: 2.9.13
     dev: true
 
   /@vitejs/plugin-react/1.3.2:
@@ -5990,8 +5990,8 @@ packages:
       x-is-string: 0.1.0
     dev: true
 
-  /vite/2.9.12:
-    resolution: {integrity: sha512-suxC36dQo9Rq1qMB2qiRorNJtJAdxguu5TMvBHOc/F370KvqAe9t48vYp+/TbPKRNrMh/J55tOUmkuIqstZaew==}
+  /vite/2.9.13:
+    resolution: {integrity: sha512-AsOBAaT0AD7Mhe8DuK+/kE4aWYFMx/i0ZNi98hJclxb4e0OhQcZYUrvLjIaQ8e59Ui7txcvKMiJC1yftqpQoDw==}
     engines: {node: '>=12.2.0'}
     hasBin: true
     peerDependencies:
@@ -6004,33 +6004,6 @@ packages:
       sass:
         optional: true
       stylus:
-        optional: true
-    dependencies:
-      esbuild: 0.14.47
-      postcss: 8.4.14
-      resolve: 1.22.1
-      rollup: 2.75.7
-    optionalDependencies:
-      fsevents: 2.3.2
-    dev: true
-
-  /vite/3.0.0-beta.5:
-    resolution: {integrity: sha512-SfesZuCME4fEmLy4hgsJAg55HRiTgDhH3oPM44XePrdKP5FqYvDkzpSWl6ldDOJYTskKWafGyyuYfXoxodv40Q==}
-    engines: {node: '>=14.18.0'}
-    hasBin: true
-    peerDependencies:
-      less: '*'
-      sass: '*'
-      stylus: '*'
-      terser: ^5.4.0
-    peerDependenciesMeta:
-      less:
-        optional: true
-      sass:
-        optional: true
-      stylus:
-        optional: true
-      terser:
         optional: true
     dependencies:
       esbuild: 0.14.47
@@ -6071,7 +6044,7 @@ packages:
       local-pkg: 0.4.1
       tinypool: 0.2.1
       tinyspy: 0.3.3
-      vite: 2.9.12
+      vite: 2.9.13
     transitivePeerDependencies:
       - less
       - sass

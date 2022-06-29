@@ -64,7 +64,7 @@ export const render = (
 };
 
 export const hydrate = (el: HTMLElement, vnode: VNode, intersect = true): void => {
-  const update = () => patch(el, vnode);
+  const update = () => el && patch(el, vnode);
   if (intersect) {
     const io = new IntersectionObserver((entries) => {
       for (let i = 0; i < entries.length; i++) {
