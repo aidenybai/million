@@ -2,7 +2,6 @@ import { createElement } from './createElement';
 import { useChildren } from './drivers/useChildren';
 import { useNode } from './drivers/useNode';
 import { useProps } from './drivers/useProps';
-import { effect } from './utils';
 import { startTransition } from './scheduler';
 import {
   DOMNode,
@@ -14,6 +13,7 @@ import {
   OLD_VNODE_FIELD,
   VNode,
 } from './types';
+import { effect } from './utils';
 
 /**
  * Diffs two VNodes

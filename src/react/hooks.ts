@@ -12,7 +12,13 @@
 
 import { batch, startTransition, isPending } from '../million';
 
-let state = null;
+let state = {
+  args: null,
+  stack: [],
+  i: 0,
+  length: 0,
+  after: [],
+};
 
 export const umap = (_) => ({
   get: (key) => _.get(key),
@@ -100,7 +106,9 @@ const invoke = ({ hook, args }) => {
 };
 
 export const createContext = (value) => {
-  const context = { value, Provider: provide, Consumer: (callback) => callback(value) };
+  const context = { value };
+  context.Provider = Provider.bind(context);
+  context.Consumer = Consumer.bind(context);
   hooks.set(context, []);
   return context;
 };
@@ -113,11 +121,19 @@ export const useContext = (context) => {
   return context.value;
 };
 
-function provide(value) {
+function Consumer({ children }) {
+  return children[0](this.value);
+}
+
+function Provider({ children, value }) {
   if (this.value !== value) {
     this.value = value;
-    hooks.get(this).forEach(invoke);
+    const context = hooks.get(this);
+    if (context.length) {
+      invoke(context[context.length - 1]);
+    }
   }
+  return children;
 }
 
 function update({ hook }) {
