@@ -37,9 +37,6 @@ export const million = (options?: {
             ? `${importJSX}import { compat as ${jsxCompat} } from '${importSource}/react'; \nlet ${jsxFactory} = ${jsxCompat}(${jsxFactoryRaw});\n`
             : importJSX,
         },
-        optimizeDeps: {
-          include: ['million', 'million/jsx-runtime'],
-        },
         resolve: {
           ...resolveAliases,
           dedupe: ['million'],
