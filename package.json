@@ -134,7 +134,7 @@
     "c8": "^7.11.3",
     "canvas-confetti": "^1.5.1",
     "chart.js": "^3.8.0",
-    "esbuild": "^0.14.47",
+    "esbuild": "^0.14.48",
     "eslint": "^8.18.0",
     "eslint-config-prettier": "^8.5.0",
     "export-size": "^0.5.2",
@@ -163,6 +163,6 @@
     "vite": "2.9.13",
     "vitest": "^0.16.0",
     "wouter": "2.8.0-alpha.2",
-    "zx": "^7.0.3"
+    "zx": "^7.0.4"
   }
 }

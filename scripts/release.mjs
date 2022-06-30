@@ -19,6 +19,8 @@ try {
   fail('build', 'pnpm build');
 }
 current.stop();
+await sleep(1000);
+
 success('Built distribution bundles.');
 
 success('Please run `pnpm bump` to publish');
