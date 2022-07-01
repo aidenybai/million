@@ -78,7 +78,7 @@ Think of it as if [React](https://preactjs.com/)'s API and [Svelte](https://svel
   </tbody>
 </table>
 
-> 🚧 Million now supports [experimental React compatibility](https://github.com/aidenybai/million-react).
+> **Note**: Million now supports [experimental React compatibility](https://github.com/aidenybai/million-react).
 
 ## Installing Million
 

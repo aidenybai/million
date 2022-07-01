@@ -48,7 +48,7 @@ specifiers:
   vite: 2.9.13
   vitest: ^0.16.0
   wouter: 2.8.0-alpha.2
-  zx: ^7.0.4
+  zx: ^7.0.5
 
 devDependencies:
   '@nanostores/react': 0.2.0_3iuy2wepgz3w53kxsavf2p7rzm
@@ -98,7 +98,7 @@ devDependencies:
   vite: 2.9.13
   vitest: 0.16.0_dcowuwleuujrodfztzblsok4y4
   wouter: 2.8.0-alpha.2_react@18.2.0
-  zx: 7.0.4
+  zx: 7.0.5
 
 packages:
 
@@ -6299,8 +6299,8 @@ packages:
       yaml: 2.1.1
     dev: true
 
-  /zx/7.0.4:
-    resolution: {integrity: sha512-Z0uybYYLtL8ODx9ZOU88EKi6OLZ9ZTDRXX5igtcAsePUIseOWdACSaMxPjzgp0hqWkx0sZz/Lxs8bBSAHOsnNA==}
+  /zx/7.0.5:
+    resolution: {integrity: sha512-0gra6urz4XwOc5bDxQo5LqGENoiD0UIMU9oSaInaYe4u9fi8kLr/s2FbXrnCD2SLEAHTfdANjgYlSlhh+80tWw==}
     engines: {node: '>= 16.0.0'}
     hasBin: true
     dependencies:
