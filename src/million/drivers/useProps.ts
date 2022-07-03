@@ -41,6 +41,7 @@ export const updateProp = (
   } else if (
     el[propName] !== undefined &&
     el[propName] !== null &&
+    !Reflect.has(el.style, propName) &&
     !(el instanceof SVGElement) &&
     propName in el
   ) {
