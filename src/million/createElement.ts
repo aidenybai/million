@@ -28,6 +28,7 @@ export const createElement = (vnode?: VNode | null, attachField = true): DOMNode
         if (
           el[propName] !== undefined &&
           el[propName] !== null &&
+          !Reflect.has(el.style, propName) &&
           !(el instanceof SVGElement) &&
           propName in el
         ) {
