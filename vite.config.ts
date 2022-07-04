@@ -5,6 +5,9 @@ import { million } from './src/vite-plugin-million';
 const src = resolve(__dirname, './src');
 
 export default defineConfig({
+  server: {
+    open: '/dev/index.html'
+  },
   resolve: {
     alias: {
       src,
