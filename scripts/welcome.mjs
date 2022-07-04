@@ -37,7 +37,7 @@ $`pnpm dev`;
 
 await fs.writeFile(
   path.join(__dirname, '../dev/script.tsx'),
-  `import { createRoot, useState } from 'src/react';
+  `import { createRoot, useState } from 'src/react'; // You can import anything under src/ here (ex. 'src/million')
 
 function App() {
   const [count, setCount] = useState(0);
