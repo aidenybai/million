@@ -21,3 +21,18 @@
 - If you are using [VSCode](https://code.visualstudio.com/), install all recommended workspace extensions.
 - Make sure you are up to date by doing `git pull` here and there.
 - Submit a [pull request](https://github.com/aidenybai/million/pulls)!
+
+## Scripts:
+
+Listed is a series of scripts and their descriptions that can be run with `pnpm`.
+
+- `dev`: Spins up a dev environment with Vite
+- `build`: Builds distribution files under `/dist`
+- `lint`: Lint all files in the project with `eslint`
+- `cleanup`: Formats TypeScript files under `/src` with Prettier.
+- `test`: Runs unit tests via `vitest`
+- `bench`: Opens a local benchmark testing environment with Vite.
+- `release`: Builds and prepares distributions for release.
+- `bump`: Publishes a new release to NPM.
+- `welcome`: Runs the dev environemtn onboarding CLI "RPG"
+- `prepare`: Installs Git hooks into your local clone of the repository.
