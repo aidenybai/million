@@ -1,6 +1,7 @@
 import ora from 'ora';
 
 const SPACER = ' '.repeat(20);
+let i = 0;
 
 export const load = (message) => {
   const loader = ora({
@@ -26,7 +27,8 @@ export const fail = async (message, fix) => {
 
 export const sleep = (time) => new Promise((resolve) => setTimeout(resolve, time));
 
-export const say = (message) => console.log(`${chalk.bold(chalk.magenta('→'))} ${message}`);
+export const say = (message) =>
+  console.log(`${chalk.gray(`[${i++}]`)} ${chalk.bold(chalk.magenta('→'))} ${message}`);
 
 export const typing = (message) => {
   const loader = ora({

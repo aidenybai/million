@@ -6,11 +6,11 @@
 
 1. Fork this repository and clone it to your local machine
 2. Make sure you have `pnpm` installed. If you don't, run `npm install -g pnpm`
-3. Install all packages with the `pnpm` command in the project root.
+3. Install all packages with the `pnpm install` command.
 4. Run `pnpm welcome` to get onboarded.
 5. Read the [wiki](https://github.com/aidenybai/million/wiki) to understand the internals.
 
-## Required Steps
+## Required Steps:
 
 - Write tests for all of your code and ignore any lines that do not need to be tested.
 - Do not commit your `package-lock.json` or `yarn.lock` files from NPM

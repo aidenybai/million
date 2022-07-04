@@ -1,5 +1,5 @@
-import { $, question } from 'zx';
-import { sleep, say, typing } from './helpers.mjs';
+import { $ } from 'zx';
+import { say, sleep, typing } from './helpers.mjs';
 $.verbose = false;
 
 let current;
@@ -13,26 +13,51 @@ const send = async (message, time) => {
 
 await send(
   `Hi there! I'm ${chalk.magenta('Mil the Lion')}! Welcome to the Million codebase!`,
-  2000,
+  1000,
 );
-await send(`Before we get started, make sure you have ${chalk.gray('`pnpm`')} installed.`, 3000);
+
 await send(
-  `You can install ${chalk.gray('`pnpm`')} by running ${chalk.gray('`npm i -g pnpm`')}.`,
+  `${chalk.bold('Note:')} Make sure you've read over ${chalk.gray(
+    '`.github/CONTRIBUTING.md`',
+  )} && ${chalk.gray('`.github/CODE_OF_CONDUCT.md`')}.`,
   3000,
 );
-const hasPnpmInstalled =
-  (await question(`${chalk.magenta('→')} Do you have pnpm? ${chalk.gray('(yes/no)')} `)) === 'yes';
-if (!hasPnpmInstalled) throw new Error('Please install `pnpm`');
-await send(`Ok! Let me install the necessary packages for you.`, 3000);
-await $`pnpm i`;
+
 await send(
-  `Packages installed! Please read ${chalk.gray('`.github/CONTRIBUTING.md`')} && ${chalk.gray(
-    '`.github/CODE_OF_CONDUCT.md`',
-  )} to get started!`,
-  3000,
+  `First, let's spin up our first dev environment! To do so, you'll need to run ${chalk.gray(
+    '`pnpm dev`',
+  )}. Since this is your first time, I'll run it for you:`,
+  7000,
 );
+
+console.log();
+await send(chalk.bold(chalk.gray('$ pnpm dev')), 3000);
+console.log();
+$`pnpm dev`;
+
+await fs.writeFile(
+  path.join(__dirname, '../dev/script.tsx'),
+  `import { createRoot, useState } from 'src/react';
+
+function App() {
+  const [count, setCount] = useState(0);
+
+  return <button onClick={() => setCount(count + 1)}>{count}</button>;
+}
+
+createRoot(document.getElementById).render(<App />);`,
+);
+
 await send(
-  `${chalk.bold('Tip:')} You can spin up a dev environment by running ${chalk.gray('`pnpm dev`')}!`,
-  3000,
+  `A new tab should have opened! Try editing ${chalk.gray(
+    '`dev/script.tsx`',
+  )} to make changes. In this file you can write any valid React code and it'll work out of the box!`,
+  5000,
 );
-await send(`Alright! I'll see ya around!`, 3000);
+
+await send(
+  `Now you're ready to rock and roll! If you have any questions, make an issue or discussion on the GitHub repo.`,
+  5000,
+);
+
+await send(`See ya later!`, 2000);
