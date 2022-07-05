@@ -22,7 +22,7 @@ export const fail = async (message, fix) => {
   console.log(
     `${chalk.bold(chalk.red('✘ fail    '))}- Failed during ${message}. Run ${fix}.${SPACER}`,
   );
-  await $`exit 0`;
+  await $`exit 1`;
 };
 
 export const sleep = (time) => new Promise((resolve) => setTimeout(resolve, time));
