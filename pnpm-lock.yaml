@@ -8,7 +8,7 @@ specifiers:
   '@types/lodash': ^4.14.182
   '@types/node': ^18.0.1
   '@types/react': ^18.0.14
-  '@types/react-dom': ^18.0.5
+  '@types/react-dom': ^18.0.6
   '@types/virtual-dom': ^2.1.1
   '@typescript-eslint/eslint-plugin': ^5.30.5
   '@typescript-eslint/parser': ^5.30.5
@@ -58,7 +58,7 @@ devDependencies:
   '@types/lodash': 4.14.182
   '@types/node': 18.0.1
   '@types/react': 18.0.14
-  '@types/react-dom': 18.0.5
+  '@types/react-dom': 18.0.6
   '@types/virtual-dom': 2.1.1
   '@typescript-eslint/eslint-plugin': 5.30.5_6zdoc3rn4mpiddqwhppni2mnnm
   '@typescript-eslint/parser': 5.30.5_4x5o4skxv6sl53vpwefgt23khm
@@ -881,8 +881,8 @@ packages:
     resolution: {integrity: sha512-ZREFYlpUmPQJ0esjxoG1fMvB2HNaD3z+mjqdSosZvd3RalncI9NEur73P8ZJz4YQdL64CmV1w0RuqoRUlhQRBw==}
     dev: true
 
-  /@types/react-dom/18.0.5:
-    resolution: {integrity: sha512-OWPWTUrY/NIrjsAPkAk1wW9LZeIjSvkXRhclsFO8CZcZGCOg2G0YZy4ft+rOyYxy8B7ui5iZzi9OkDebZ7/QSA==}
+  /@types/react-dom/18.0.6:
+    resolution: {integrity: sha512-/5OFZgfIPSwy+YuIBP/FgJnQnsxhZhjjrnxudMddeblOouIodEQ75X14Rr4wGSG/bknL+Omy9iWlLo1u/9GzAA==}
     dependencies:
       '@types/react': 18.0.14
     dev: true
