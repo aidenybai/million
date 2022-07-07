@@ -15,15 +15,21 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - run: curl https://bun.sh/install | bash
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.0.2
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile, --strict-peer-dependencies]
+            - args: [--global, gulp, prettier, typescript]
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: bun install
-      - run: bun run lint
-      - run: bun run test
-      - run: bun run build
+      - run: pnpm i
+      - run: pnpm lint
+      - run: pnpm test
+      - run: pnpm build
       - name: Coveralls Parallel
         uses: coverallsapp/github-action@master
         with:
