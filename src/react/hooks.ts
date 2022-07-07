@@ -10,6 +10,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
+import { VNode } from 'million';
 import { batch, startTransition, isPending } from '../million';
 
 let state = {
@@ -18,6 +19,7 @@ let state = {
   i: 0,
   length: 0,
   after: [],
+  hook: () => {},
 };
 
 export const umap = (_) => ({
@@ -105,7 +107,14 @@ const invoke = ({ hook, args }) => {
   hook.apply(null, args);
 };
 
-export const createContext = (value) => {
+export const createContext = (
+  value,
+  // eslint-disable-next-line @typescript-eslint/ban-types
+): {
+  value: any;
+  Provider: ({ value }) => any;
+  Consumer: () => any;
+} => {
   const context = { value };
   context.Provider = Provider.bind(context);
   context.Consumer = Consumer.bind(context);
@@ -122,6 +131,10 @@ export const useContext = (context) => {
 };
 
 function Consumer({ children }) {
+  const { hook, args } = state;
+  const stack = hooks.get(this);
+  const info = { hook, args };
+  if (!stack.some(update, info)) stack.push(info);
   return children[0](this.value);
 }
 
@@ -130,9 +143,10 @@ function Provider({ children, value }) {
     this.value = value;
     const context = hooks.get(this);
     if (context.length) {
-      invoke(context[context.length - 1]);
+      context.forEach(invoke);
     }
   }
+  console.log(value, children[0].children[1].children[0]);
   return children;
 }
 
