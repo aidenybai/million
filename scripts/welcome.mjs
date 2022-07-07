@@ -45,7 +45,7 @@ function App() {
   return <button onClick={() => setCount(count + 1)}>{count}</button>;
 }
 
-createRoot(document.getElementById('root')!).render(<App />);`,
+createRoot(document.getElementById<HTMLElement>('root')).render(<App />);`,
 );
 
 await send(
