@@ -19,10 +19,10 @@ function success {
 info "Updating packages..."
 
 taze -w major
-pnpm i
+bun install
 
 git stage package.json
-git stage pnpm-lock.yaml
+git stage bun.lockb
 
 info "Checking for errors..."
 
