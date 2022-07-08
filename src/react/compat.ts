@@ -1,5 +1,5 @@
 import { h } from '../jsx-runtime';
-import { patch, VNode, VProps } from '../million';
+import { DOMNode, patch, VNode, VProps } from '../million';
 import { hook } from './hooks';
 import { Component } from './react';
 
@@ -7,29 +7,40 @@ const rootFragmentStyle = { style: 'display: contents;' };
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const createComponent = (fn: Function, props?: VProps, key?: string | null) => {
-  let prevRef: { current: any };
+  let prevRef: { current: any } & Record<string, any>;
   let prevVNode: VNode | undefined;
   let prevKey: string | undefined;
 
   const component = hook(() => {
     const ret = fn(props, key);
-    if (!ret) return ret;
+    if (!ret || typeof ret === 'string') return ret;
     const newVNode = Array.isArray(ret)
       ? h('_', key ? { key, ...rootFragmentStyle } : rootFragmentStyle, ...ret)
       : ret;
-    if (ret.ref) prevRef = ret.ref;
-    const ref = prevRef ?? { current: undefined };
 
-    // Handle nested components
-    if (!prevRef && newVNode.ref) return newVNode;
+    const ref = prevRef ?? { current: undefined, props };
+
     if (ref && ref?.current) {
+      const patchHook = (_el?: DOMNode, newVNode?: VNode, oldVNode?: VNode): boolean => {
+        if (
+          typeof newVNode === 'object' &&
+          typeof oldVNode === 'object' &&
+          newVNode.ref?.props &&
+          oldVNode.ref?.props
+        ) {
+          return JSON.stringify(newVNode.ref?.props) !== JSON.stringify(oldVNode.ref?.props);
+        }
+        return true;
+      };
+
       if (prevKey && newVNode.key) {
-        if (prevKey === newVNode.key) patch(ref.current, newVNode, prevVNode);
+        if (prevKey === newVNode.key) patch(ref.current, newVNode, prevVNode, patchHook);
       } else {
-        patch(ref.current, newVNode, prevVNode);
+        patch(ref.current, newVNode, prevVNode, patchHook);
       }
     }
     if (!newVNode.ref) {
+      ref.props = props;
       newVNode.ref = ref;
       prevRef = ref;
     }

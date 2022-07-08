@@ -10,7 +10,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import { VNode } from 'million';
 import { batch, startTransition, isPending } from '../million';
 
 let state = {
@@ -47,24 +46,6 @@ export const hook = (fn) => {
       state = prev;
       for (let i = 0, { length } = after; i < length; i++) after[i]();
     }
-  };
-};
-
-export const contextual = (fn) => {
-  let check = true;
-  let context = null;
-  const augmented = hook(function () {
-    return fn.apply(context, arguments);
-  });
-  return function hook() {
-    const result = augmented.apply((context = this), arguments);
-    // perform hasEffect check only once
-    if (check) {
-      check = !check;
-      // and copy same Array if any FX was used
-      if (hasEffect(augmented)) effects.set(hook, effects.get(augmented));
-    }
-    return result;
   };
 };
 
@@ -146,7 +127,6 @@ function Provider({ children, value }) {
       context.forEach(invoke);
     }
   }
-  console.log(value, children[0].children[1].children[0]);
   return children;
 }
 
