@@ -79,7 +79,7 @@ export interface V {
   flag: Flags;
   ref?: {
     current: any;
-  };
+  } & Record<string, any>;
 }
 
 export enum Flags {
