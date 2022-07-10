@@ -32,7 +32,7 @@ export const patch = (
     () => (data.el[OLD_VNODE_FIELD] = newVNode),
   );
   for (let i = 0; i < effects.length; i++) {
-    requestAnimationFrame(effects[i].flush);
+    requestAnimationFrame(effects[i]!.flush);
   }
   return data.el;
 };
@@ -66,7 +66,7 @@ export const hydrate = (
   if (intersect) {
     const io = new IntersectionObserver((entries) => {
       for (let i = 0; i < entries.length; i++) {
-        if (entries[i].isIntersecting) {
+        if (entries[i]!.isIntersecting) {
           startTransition(update);
           io.disconnect();
           break;

@@ -23,7 +23,9 @@ const createRoot = (root: DOMNode) => {
         if (Array.isArray(vnode)) {
           const rootVNode = fromDomNodeToVNode(root) as VElement;
           patchFn(root, h(rootVNode.tag, rootVNode.props, ...vnode));
-          requestAnimationFrame(() => (root[DOM_REF_FIELD] = root.firstChild));
+          requestAnimationFrame(
+            () => (root[DOM_REF_FIELD] = root.firstChild as DOMNode),
+          );
         } else {
           renderFn(root, vnode);
         }
@@ -46,7 +48,9 @@ const render = (vnode: VNode | VNode[], root: DOMNode) => {
     if (Array.isArray(vnode)) {
       const rootVNode = fromDomNodeToVNode(root) as VElement;
       patch(root, h(rootVNode.tag, rootVNode.props, ...vnode) as VNode);
-      requestAnimationFrame(() => (root[DOM_REF_FIELD] = root.firstChild));
+      requestAnimationFrame(
+        () => (root[DOM_REF_FIELD] = root.firstChild as DOMNode),
+      );
     } else {
       $render(root, vnode);
     }

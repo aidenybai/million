@@ -6,13 +6,15 @@ export const normalizeRelativeURLs = (
   el: Element | Document,
   base: string | URL,
 ) => {
-  const hrefs = el.querySelectorAll('[href^="./"], [href^="../"]');
-  const srcs = el.querySelectorAll('[src^="./"], [src^="../"]');
+  const hrefs = el.querySelectorAll<HTMLAnchorElement>(
+    '[href^="./"], [href^="../"]',
+  );
+  const srcs = el.querySelectorAll<HTMLElement>('[src^="./"], [src^="../"]');
   for (let i = 0; i < hrefs.length; i++) {
-    setAttribute(hrefs[i], 'href', base);
+    setAttribute(hrefs[i]!, 'href', base);
   }
   for (let i = 0; i < srcs.length; i++) {
-    setAttribute(srcs[i], 'src', base);
+    setAttribute(srcs[i]!, 'src', base);
   }
 };
 

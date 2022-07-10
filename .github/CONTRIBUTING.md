@@ -30,6 +30,7 @@ Listed is a series of scripts and their descriptions that can be run with `pnpm 
 - `cleanup`: Formats TypeScript files under `/src` with Prettier.
 - `test`: Runs unit tests via `vitest`
 - `bench`: Opens a local benchmark testing environment with Vite.
+- `typecheck`: Uses TypeScript to typecheck files under `/src`
 - `release`: Builds and prepares distributions for release.
 - `bump`: Publishes a new release to NPM.
 - `welcome`: Runs the dev environemtn onboarding CLI "RPG"
