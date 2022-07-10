@@ -1,14 +1,15 @@
-import {
+import { DeltaTypes, Flags } from './types';
+import type {
   Delta,
-  DeltaTypes,
   DOMNode,
-  Flags,
   Hooks,
+  HookTypes,
   Thunk,
   VElement,
   VElementFlags,
   VNode,
   VProps,
+  Hook,
 } from './types';
 
 /**
@@ -24,7 +25,11 @@ export const svg = (vnode: VElement): VElement => {
 /**
  * Attaches ns props to an arbitrary element
  */
-export const ns = (tag: string, props: VProps, children?: VNode[]): void => {
+export const ns = (
+  tag: string,
+  props: VProps,
+  children?: VNode[] | null,
+): void => {
   if (props.className) {
     props.class = props.className;
     props.className = undefined;
@@ -58,9 +63,12 @@ export const style = (styleObject: Record<string, string>): string =>
 /**
  * Converts key names from camelCase to kebab-case
  */
-export const kebab = (camelCaseObject: Record<string, unknown>): Record<string, unknown> => {
-  const kebabCaseObject = {};
+export const kebab = (
+  camelCaseObject: Record<string, unknown>,
+): Record<string, unknown> => {
+  const kebabCaseObject: Record<string, unknown> = {};
   for (const key in camelCaseObject) {
+    // eslint-disable-next-line prefer-named-capture-group
     kebabCaseObject[key.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()] =
       camelCaseObject[key];
   }
@@ -78,26 +86,17 @@ export const Deltas = {
  */
 export const m = (
   tag: string,
-  props?: VProps,
-  children?: VNode[],
+  props?: VProps | null,
+  children: VNode[] | null | undefined = props?.children,
   flag: VElementFlags = Flags.ELEMENT,
   delta?: Delta[],
   hook?: Hooks,
 ): VElement => {
-  let key = undefined;
-  let ref = undefined;
-  if (props?.key) {
-    key = props.key as string | undefined;
-    delete props.key;
-  }
-  if (props?.ref) {
-    ref = props.ref as { current: any };
-    delete props.ref;
-  }
-  if (props?.children) {
-    children = props.children;
-    delete props.children;
-  }
+  const key = props?.key as string | undefined;
+  const ref = props?.ref as { current: any };
+  if (props?.key) delete props.key;
+  if (props?.ref) delete props.ref;
+  if (props?.children) delete props.children;
   const velement: VElement = {
     tag,
     props,
@@ -114,15 +113,23 @@ export const m = (
 export const mergeHooks = (hooksArray: Hooks[]): Hooks => {
   const mergedHooks: Hooks = {};
   for (let i = 0; i < hooksArray.length; i++) {
-    for (const hook in hooksArray[i]) {
-      const oldHook = mergedHooks[hook];
+    const hooksKeys = Object.keys(hooksArray[i]!);
+    for (let j = 0; j < hooksKeys.length; j++) {
+      const hook = hooksKeys[j] as HookTypes;
+      const oldHook = mergedHooks[hook] as Hook | undefined;
       if (oldHook) {
-        mergedHooks[hook] = () => {
-          oldHook();
-          hooksArray[i][hook]();
+        mergedHooks[hook] = (
+          el?: DOMNode,
+          newVNode?: VNode,
+          oldVNode?: VNode,
+        ): boolean => {
+          const newHook = hooksArray[i]![hook] as Hook;
+          return (
+            oldHook(el, newVNode, oldVNode) && newHook(el, newVNode, oldVNode)
+          );
         };
       } else {
-        mergedHooks[hook] = hooksArray[i][hook];
+        mergedHooks[hook] = hooksArray[i]![hook];
       }
     }
   }
@@ -135,7 +142,11 @@ export const thunk = (fn: (...args: any[]) => VNode, args: any[]): VNode => {
     vnode.flag = Flags.ELEMENT_THUNK;
     vnode.args = args;
     if (!vnode.hook) vnode.hook = {};
-    vnode.hook.diff = (_el?: DOMNode, newVNode?: VNode, oldVNode?: VNode): boolean => {
+    vnode.hook.diff = (
+      _el?: DOMNode,
+      newVNode?: VNode,
+      oldVNode?: VNode,
+    ): boolean => {
       if (
         typeof newVNode === 'object' &&
         typeof oldVNode === 'object' &&

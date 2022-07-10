@@ -1,6 +1,12 @@
 import { parse, print, visit } from 'recast';
 import { compile } from './compile';
-import { jsxCompat, jsxFactory, jsxFragment, jsxFactoryRaw, JSX_FILTER } from './constants';
+import {
+  jsxCompat,
+  jsxFactory,
+  jsxFragment,
+  jsxFactoryRaw,
+  JSX_FILTER,
+} from './constants';
 
 export const million = (options?: {
   importSource?: string;
@@ -46,7 +52,7 @@ export const million = (options?: {
   },
   {
     name: 'vite:million-static-vnode',
-    async transform(code: string, id: string) {
+    transform(code: string, id: string) {
       if (id.includes('node_modules') || !JSX_FILTER.test(id)) return;
 
       try {
@@ -70,10 +76,10 @@ export const million = (options?: {
           const result = print(ast);
 
           return { code: result.code, map: result.map };
-        } else {
-          return { code };
         }
+        return { code };
       } catch (_err) {
+        // eslint-disable-next-line no-console
         console.error(
           `Error during compilation! Set \`skipOptimize\` to true to fix this problem.`,
         );

@@ -21,7 +21,9 @@ export const flushQueue = (
 ): void => {
   pending = true;
   while (
-    !(navigator as any)?.scheduling?.isInputPending({ includeContinuous: true }) &&
+    !(navigator as any)?.scheduling?.isInputPending({
+      includeContinuous: true,
+    }) &&
     deadline.timeRemaining() > 0 &&
     workQueue.length > 0
   ) {
@@ -32,7 +34,9 @@ export const flushQueue = (
   else pending = false;
 };
 
-export const batch = (limit?: number): ((_callback: () => any) => (flush: boolean) => boolean) => {
+export const batch = (
+  limit?: number,
+): ((_callback: () => any) => (flush: boolean) => boolean) => {
   let force: number;
   let timer: number;
   let callback: () => any;
@@ -45,7 +49,7 @@ export const batch = (limit?: number): ((_callback: () => any) => (flush: boolea
     timer = 0;
   };
   const stop = (flush: boolean) => {
-    const didStop = !!timer;
+    const didStop = Boolean(timer);
     if (didStop) {
       cancelAnimationFrame(timer);
       if (flush) invoke();

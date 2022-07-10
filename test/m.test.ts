@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { className, Deltas, kebab, m, ns, style, svg } from '../src/million/m';
-import { DeltaTypes, Flags, VElement, VNode } from '../src/million/types';
+import { DeltaTypes, Flags } from '../src/million/types';
+import type { VElement, VNode } from '../src/million/types';
 
 export const expectEqualVNode = (vnode1: VNode, vnode2: VNode) => {
   expect(JSON.stringify(vnode1)).toEqual(JSON.stringify(vnode2));
@@ -71,7 +72,10 @@ describe.concurrent('m', () => {
     expectEqualVNode(
       m('div', undefined, [
         'foo',
-        m('div', undefined, ['bar', m('div', undefined, ['baz', m('div', undefined, ['boo'])])]),
+        m('div', undefined, [
+          'bar',
+          m('div', undefined, ['baz', m('div', undefined, ['boo'])]),
+        ]),
       ]),
       {
         tag: 'div',
@@ -104,7 +108,9 @@ describe.concurrent('m', () => {
 
   it('should create a tag with className from class object', () => {
     expectEqualVNode(
-      m('div', { className: className({ class1: true, class2: false, class3: true }) }),
+      m('div', {
+        className: className({ class1: true, class2: false, class3: true }),
+      }),
       {
         tag: 'div',
         props: {
@@ -118,25 +124,30 @@ describe.concurrent('m', () => {
   });
 
   it('should create a tag with style object', () => {
-    expectEqualVNode(m('div', { style: style({ color: 'tomato', margin: '1rem' }) }), {
-      tag: 'div',
-      props: {
-        style: 'color:tomato;margin:1rem',
+    expectEqualVNode(
+      m('div', { style: style({ color: 'tomato', margin: '1rem' }) }),
+      {
+        tag: 'div',
+        props: {
+          style: 'color:tomato;margin:1rem',
+        },
+        children: undefined,
+        key: undefined,
+        flag: Flags.ELEMENT,
       },
-      children: undefined,
-      key: undefined,
-      flag: Flags.ELEMENT,
-    });
+    );
   });
 
   it('should create className from class object', () => {
-    expect(className({ class1: true, class2: false, class3: true })).toEqual('class1 class3');
+    expect(className({ class1: true, class2: false, class3: true })).toEqual(
+      'class1 class3',
+    );
   });
 
   it('should create style from class object', () => {
-    expect(style({ color: 'black', 'font-weight': 'bold', background: 'white' })).toEqual(
-      'color:black;font-weight:bold;background:white',
-    );
+    expect(
+      style({ color: 'black', 'font-weight': 'bold', background: 'white' }),
+    ).toEqual('color:black;font-weight:bold;background:white');
   });
 
   it('should attach ns to props with children with props', () => {
@@ -239,8 +250,12 @@ describe.concurrent('m', () => {
   });
 
   it('should convert camelCase to kebab-case', () => {
-    expect(kebab({ fooBarBaz: 'fooBarBaz' })).toEqual({ 'foo-bar-baz': 'fooBarBaz' });
-    expect(kebab({ helloWorld: 'helloWorld' })).toEqual({ 'hello-world': 'helloWorld' });
+    expect(kebab({ fooBarBaz: 'fooBarBaz' })).toEqual({
+      'foo-bar-baz': 'fooBarBaz',
+    });
+    expect(kebab({ helloWorld: 'helloWorld' })).toEqual({
+      'hello-world': 'helloWorld',
+    });
     expect(kebab({ iHaveNumbers1: 'iHaveNumbers1' })).toEqual({
       'i-have-numbers1': 'iHaveNumbers1',
     });

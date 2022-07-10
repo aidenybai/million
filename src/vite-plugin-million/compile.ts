@@ -1,9 +1,7 @@
 import { types } from 'recast';
 import { h } from '../jsx-runtime';
-import { RawVNode } from '../jsx-runtime/types';
-import { VNode } from '../million';
 import { jsxFactory } from './constants';
-import {
+import type {
   CallExpression,
   Expression,
   Identifier,
@@ -11,6 +9,8 @@ import {
   ObjectExpression,
   Property,
 } from './types';
+import type { RawVNode } from '../jsx-runtime/types';
+import type { VNode } from '../million';
 
 const { literal, property, objectExpression, arrayExpression } = types.builders;
 
@@ -27,8 +27,10 @@ export const compile = (astNode: CallExpression) => {
   return fromVNodeToASTNode(fromASTNodeToVNode(astNode));
 };
 
-export const fromASTNodeToVNode = (astNode: CallExpression): RawVNode | CallExpression => {
-  if (astNode.arguments[0].type !== 'Literal') {
+export const fromASTNodeToVNode = (
+  astNode: CallExpression,
+): RawVNode | CallExpression => {
+  if (astNode.arguments[0]?.type !== 'Literal') {
     return astNode;
   }
 
@@ -36,13 +38,13 @@ export const fromASTNodeToVNode = (astNode: CallExpression): RawVNode | CallExpr
   const astProps = astNode.arguments[1] as ObjectExpression;
   const astChildren = args.slice(2);
   const vnodeChildren: RawVNode[] = [];
-  const vnodeProps = {};
+  const vnodeProps: any = {};
 
-  for (let i = 0; i < astProps.properties?.length; i++) {
+  for (let i = 0; i < astProps.properties.length; i++) {
     const astProp = astProps.properties[i] as Property;
     const astPropKey = astProp.key as Identifier;
     if (astProp.value.type === 'ObjectExpression') {
-      const vnodeObject = {};
+      const vnodeObject: any = {};
       const astObject = astProp.value.properties;
       for (let j = 0; j < astObject.length; j++) {
         const astObjectProp = astObject[j] as Property;
@@ -67,6 +69,7 @@ export const fromASTNodeToVNode = (astNode: CallExpression): RawVNode | CallExpr
       } else return astNode;
     } else if (
       child.type === 'Literal' &&
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       child.value !== undefined &&
       child.value !== null &&
       child.value !== false
@@ -77,11 +80,20 @@ export const fromASTNodeToVNode = (astNode: CallExpression): RawVNode | CallExpr
     }
   }
 
-  return h(String((astNode.arguments[0] as Literal).value), vnodeProps, ...vnodeChildren) as VNode;
+  return h(
+    String(astNode.arguments[0].value),
+    vnodeProps,
+    ...vnodeChildren,
+  ) as VNode;
 };
 
-export const fromVNodeToASTNode = (vnode: RawVNode | CallExpression): Expression => {
-  if ((vnode as unknown as Literal)?.value || (vnode as unknown as Expression)?.type)
+export const fromVNodeToASTNode = (
+  vnode: RawVNode | CallExpression,
+): Expression => {
+  if (
+    (vnode as unknown as Literal).value ||
+    (vnode as unknown as Expression).type
+  )
     return vnode as Expression;
   if (typeof vnode === 'object') {
     const velement = vnode as Exclude<RawVNode, string | number | boolean>;
@@ -91,23 +103,28 @@ export const fromVNodeToASTNode = (vnode: RawVNode | CallExpression): Expression
         .map(([name, value]) => {
           return typeof value === 'function'
             ? value()
-            : property('init', literal(name), literal(value as string | number | boolean));
+            : property(
+                'init',
+                literal(name),
+                literal(value as string | number | boolean),
+              );
         }),
     );
 
     const astChildren = arrayExpression(
-      (velement?.children || []).map((child: RawVNode): Literal | CallExpression => {
-        if (typeof child === 'string') {
-          return literal(child);
-        } else {
+      (velement?.children || []).map(
+        (child: RawVNode): Literal | CallExpression => {
+          if (typeof child === 'string') {
+            return literal(child);
+          }
           return fromVNodeToASTNode(child) as Literal | CallExpression;
-        }
-      }),
+        },
+      ),
     );
 
     const astVNode = [
-      property('init', literal('tag'), literal(velement!.tag)),
-      property('init', literal('flag'), literal(velement!.flag)),
+      property('init', literal('tag'), literal(String(velement?.tag))),
+      property('init', literal('flag'), literal(Number(velement?.flag))),
     ];
     if (velement?.props && Object.keys(velement.props).length > 0) {
       astVNode.push(property('init', literal('props'), astProps));
@@ -116,10 +133,11 @@ export const fromVNodeToASTNode = (vnode: RawVNode | CallExpression): Expression
       astVNode.push(property('init', literal('children'), astChildren));
     }
     if (velement?.key) {
-      astVNode.push(property('init', literal('key'), literal(String(velement.key))));
+      astVNode.push(
+        property('init', literal('key'), literal(String(velement.key))),
+      );
     }
     return objectExpression(astVNode);
-  } else {
-    return literal(vnode ?? null);
   }
+  return literal(vnode ?? null);
 };

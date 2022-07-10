@@ -1,9 +1,18 @@
 import { className, kebab, m, mergeHooks, style } from '../million/m';
-import { Delta, Flags, Hooks, VElementFlags, VNode, VProps } from '../million/types';
+import { Flags } from '../million/types';
 import { Fragment } from './jsx';
-import { FC, RawVNode } from './types';
+import type {
+  Delta,
+  Hooks,
+  VElementFlags,
+  VNode,
+  VProps,
+} from '../million/types';
+import type { FC, RawVNode } from './types';
 
-export const normalize = (rawVNode: RawVNode | RawVNode[]): VNode | VNode[] | undefined => {
+export const normalize = (
+  rawVNode: RawVNode | RawVNode[],
+): VNode | VNode[] | undefined => {
   if (Array.isArray(rawVNode)) {
     const normalizedChildren: VNode[] = [];
     for (let i = 0; i < rawVNode.length; i++) {
@@ -21,20 +30,18 @@ export const normalize = (rawVNode: RawVNode | RawVNode[]): VNode | VNode[] | un
     typeof rawVNode === 'boolean'
   ) {
     return String(rawVNode);
-  } else {
-    return rawVNode as VNode;
   }
+  return rawVNode as VNode;
 };
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 export function h(
   this: any,
   tag: string | FC,
-  props?: VProps,
+  props?: VProps | null,
   ...children: RawVNode[]
 ): VNode | VNode[] {
   const propsWithChildren = { ...props, children };
-  if (tag === Fragment) return normalize(children)!;
+  if (tag === Fragment) return normalize(children) || [];
   if ((tag as any).prototype?.render) {
     return this?.handleClass
       ? this.handleClass(tag as any, propsWithChildren)
@@ -51,21 +58,21 @@ export function h(
   let hook: Hooks | undefined;
   const normalizedChildren: VNode[] = [];
   if (props) {
-    const rawDelta = props.delta as Delta[];
-    if (rawDelta && rawDelta.length) {
+    const rawDelta = props.delta as Delta[] | undefined;
+    if (rawDelta?.length) {
       delta = rawDelta;
       props.delta = undefined;
     }
   }
   if (props) {
-    const rawHook = props.hook as Hooks;
+    const rawHook = props.hook as Hooks | undefined;
     if (rawHook) {
       if (Array.isArray(rawHook)) hook = mergeHooks(rawHook);
       else hook = rawHook;
       props.hook = undefined;
     }
   }
-  if (children) {
+  if (children.length) {
     const keysInChildren = new Set();
     let hasVElementChildren = false;
     flag = Flags.ELEMENT;
@@ -91,7 +98,10 @@ export function h(
             normalizedChildren.push(subChildren[i]);
             if (typeof subChildren[i] === 'object') {
               hasVElementChildren = true;
-              if (typeof subChildren[i].key === 'string' && subChildren[i].key !== '') {
+              if (
+                typeof subChildren[i].key === 'string' &&
+                subChildren[i].key !== ''
+              ) {
                 keysInChildren.add(subChildren[i].key);
               }
             }
@@ -116,7 +126,9 @@ export function h(
     }
     if (typeof props.style === 'object') {
       const rawStyle = props.style as Record<string, string>;
-      const normalizedStyle = Object.keys(rawStyle).some((key) => /[-A-Z]/gim.test(key))
+      const normalizedStyle = Object.keys(rawStyle).some((key) =>
+        /[-A-Z]/gim.test(key),
+      )
         ? kebab(rawStyle)
         : rawStyle;
       props.style = style(normalizedStyle as Record<string, string>);

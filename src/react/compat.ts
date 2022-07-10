@@ -1,12 +1,20 @@
+/* eslint-disable new-cap */
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
+/* eslint-disable @typescript-eslint/ban-types */
+
 import { h } from '../jsx-runtime';
-import { DOMNode, patch, VNode, VProps } from '../million';
+import { patch } from '../million';
 import { hook } from './hooks';
-import { Component } from './react';
+import type { Component } from './react';
+import type { DOMNode, VNode, VProps } from '../million';
 
 const rootFragmentStyle = { style: 'display: contents;' };
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export const createComponent = (fn: Function, props?: VProps, key?: string | null) => {
+export const createComponent = (
+  fn: Function,
+  props?: VProps,
+  key?: string | null,
+) => {
   let prevRef: { current: any } & Record<string, any>;
   let prevVNode: VNode | undefined;
   let prevKey: string | undefined;
@@ -20,21 +28,29 @@ export const createComponent = (fn: Function, props?: VProps, key?: string | nul
 
     const ref = prevRef ?? { current: undefined, props };
 
-    if (ref && ref?.current) {
-      const patchHook = (_el?: DOMNode, newVNode?: VNode, oldVNode?: VNode): boolean => {
+    if (ref?.current) {
+      const patchHook = (
+        _el?: DOMNode,
+        newVNode?: VNode,
+        oldVNode?: VNode,
+      ): boolean => {
         if (
           typeof newVNode === 'object' &&
           typeof oldVNode === 'object' &&
           newVNode.ref?.props &&
           oldVNode.ref?.props
         ) {
-          return JSON.stringify(newVNode.ref?.props) !== JSON.stringify(oldVNode.ref?.props);
+          return (
+            JSON.stringify(newVNode.ref?.props) !==
+            JSON.stringify(oldVNode.ref?.props)
+          );
         }
         return true;
       };
 
       if (prevKey && newVNode.key) {
-        if (prevKey === newVNode.key) patch(ref.current, newVNode, prevVNode, patchHook);
+        if (prevKey === newVNode.key)
+          patch(ref.current, newVNode, prevVNode, patchHook);
       } else {
         patch(ref.current, newVNode, prevVNode, patchHook);
       }
@@ -54,15 +70,17 @@ export const createComponent = (fn: Function, props?: VProps, key?: string | nul
 export const createClass = (klass: typeof Component, props?: VProps) => {
   let prevRef: { current: any };
   let prevVNode: VNode | undefined;
-  const componentObject = new klass(props as VProps, null);
+  const componentObject = new klass(props as VProps);
   const rerender = () => {
     const ret = componentObject.render(props) as any;
     if (!ret) return ret;
-    const newVNode = Array.isArray(ret) ? h('_', rootFragmentStyle, ...ret) : ret;
+    const newVNode = Array.isArray(ret)
+      ? h('_', rootFragmentStyle, ...ret)
+      : ret;
 
     if (ret.ref) prevRef = ret.ref;
     const ref = prevRef ?? { current: undefined };
-    if (ref && ref?.current) {
+    if (ref?.current) {
       patch(ref.current, newVNode, prevVNode);
     }
 
@@ -75,7 +93,9 @@ export const createClass = (klass: typeof Component, props?: VProps) => {
   return rerender();
 };
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 export const compat = <T>(jsxFactoryRaw: Function): T => {
-  return jsxFactoryRaw.bind({ handleFunction: createComponent, handleClass: createClass });
+  return jsxFactoryRaw.bind({
+    handleFunction: createComponent,
+    handleClass: createClass,
+  });
 };

@@ -1,15 +1,6 @@
-import {
-  Commit,
-  Driver,
-  Effect,
-  EffectTypes,
-  VElement,
-  XLINK_NS,
-  XML_NS,
-  X_CHAR,
-  HookTypes,
-} from '../types';
+import { EffectTypes, HookTypes, XLINK_NS, XML_NS, X_CHAR } from '../types';
 import { effect, hook } from '../utils';
+import type { Commit, Driver, Effect, VElement } from '../types';
 
 export const updateProp = (
   el: HTMLElement | SVGElement,
@@ -57,7 +48,9 @@ export const updateProp = (
   } else if (!newPropValue) {
     queueEffect(EffectTypes.REMOVE_PROP, () => el.removeAttribute(propName));
   } else {
-    queueEffect(EffectTypes.SET_PROP, () => el.setAttribute(propName, String(newPropValue)));
+    queueEffect(EffectTypes.SET_PROP, () =>
+      el.setAttribute(propName, String(newPropValue)),
+    );
   }
 };
 
@@ -74,7 +67,7 @@ export const useProps =
     effects: Effect[] = [],
   ): ReturnType<Driver> => {
     const oldProps = oldVNode?.props;
-    const newProps = newVNode?.props;
+    const newProps = newVNode.props;
     const invokeHook = hook(el, newVNode, oldVNode);
     const data = {
       el,
@@ -82,36 +75,59 @@ export const useProps =
       oldVNode,
       effects,
     };
-    if (oldProps !== newProps) {
+    if ((oldProps || newProps) && oldProps !== newProps) {
       // Zero props optimization
-      if (oldProps === undefined || newProps === null) {
+      if (oldProps === undefined || oldProps === null) {
         for (const propName in newProps) {
-          updateProp(el, propName, undefined, newProps[propName], effects, invokeHook);
+          updateProp(
+            el,
+            propName,
+            undefined,
+            newProps[propName],
+            effects,
+            invokeHook,
+          );
         }
       } else if (newProps === undefined || newProps === null) {
         for (const propName in oldProps) {
-          updateProp(el, propName, oldProps[propName], undefined, effects, invokeHook);
+          updateProp(
+            el,
+            propName,
+            oldProps[propName],
+            undefined,
+            effects,
+            invokeHook,
+          );
         }
       } else {
         let matches = 0;
-        for (const propName in oldProps!) {
+        for (const propName in oldProps) {
           updateProp(
             el,
             propName,
             oldProps[propName],
             // Keep track the number of matches with newProps
-            Reflect.has(newProps, propName) ? (matches++, newProps![propName]) : undefined,
+            Reflect.has(newProps, propName)
+              ? (matches++, newProps[propName])
+              : undefined,
             effects,
             invokeHook,
           );
         }
 
-        const keys = Object.keys(newProps!);
+        const keys = Object.keys(newProps);
         // Limit to number of matches to reduce the number of iterations
         for (let i = 0; matches < keys.length && i < keys.length; ++i) {
-          const propName = keys[i];
+          const propName = keys[i] as string;
           if (!Reflect.has(oldProps, propName)) {
-            updateProp(el, propName, undefined, newProps![propName], effects, invokeHook);
+            updateProp(
+              el,
+              propName,
+              undefined,
+              newProps[propName],
+              effects,
+              invokeHook,
+            );
             ++matches;
           }
         }
