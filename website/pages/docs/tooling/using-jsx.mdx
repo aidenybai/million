@@ -1,0 +1,118 @@
+---
+title: Using JSX
+---
+
+import Callout from 'nextra-theme-docs/callout';
+
+# Using JSX
+
+The following declaration style:
+
+```jsx
+const HelloWorld = <p>Hello World</p>;
+```
+
+is called JSX, and it is a syntax extension to JavaScript. Much like React, you can use JSX with Million to describe what the UI should look like. JSX may remind you of a template language, but it comes with the full power of JavaScript.
+
+JSX produces Million VNodes. Below, you can find how to integrate JSX in your own project.
+
+## Vite
+
+Vite is the best way to use JSX in your project. You can use JSX in your project by adding `million/vite-plugin-million` plugin to your Vite config.
+
+`index.jsx`
+
+```jsx
+const HelloWorld = <p>Hello World</p>;
+```
+
+`vite.config.js`
+
+```js
+import { defineConfig } from 'vite';
+import { million } from 'million/vite-plugin-million';
+
+export default defineConfig({
+  plugins: [million()],
+});
+```
+
+## Babel
+
+Alternatively, you can manually configure your JSX transform using [`@babel/plugin-transform-react-jsx`](https://babeljs.io/docs/en/babel-plugin-transform-react-jsx/).There are two main ways to transform your data, so choose the one that fits your project best.
+
+### Automatic runtime _(recommended)_
+
+Million.js provides an automatic JSX transform option through under `million/jsx-runtime`. Babel, by default, uses classic runtime, so you will need to explicitly state that you want automatic runtime. Additionally, you will need to specify an import source. It is not necessary to explicity import `million/jsx-runtime` with the automatic runtime.
+
+`index.jsx`
+
+```jsx
+const HelloWorld = <p>Hello World</p>;
+```
+
+`.babelrc`
+
+```json
+{
+  "plugins": [
+    [
+      "@babel/plugin-transform-react-jsx",
+      {
+        "runtime": "automatic",
+        "importSource": "million"
+      }
+    ]
+  ]
+}
+```
+
+### Classic runtime
+
+If the automatic runtime does not work for you, or you want more fine-grained control, you should use the classic runtime. You'll need to define the `pragma` and `pragmaFrag` fields with the imports from the `million/jsx-runtime`, as shown below.
+
+<Callout type="warning" emoji="⚠️">
+  This is often more cumbersome, as you'll need to import `million/jsx-runtime`
+  at every file you use JSX (if you use an IDE it may appear as an unused
+  variable).
+</Callout>
+
+`index.jsx`
+
+```jsx
+import { h, Fragment } from 'million/jsx-runtime'; // This is required
+
+const HelloWorld = <p>Hello World</p>;
+```
+
+`.babelrc`
+
+```json
+{
+  "plugins": [
+    [
+      "@babel/plugin-transform-react-jsx",
+      {
+        "runtime": "classic",
+        "pragma": "h",
+        "pragmaFrag": "Fragment"
+      }
+    ]
+  ]
+}
+```
+
+## Using TypeScript
+
+Ensure that you include the following in your `tsconfig.json` to get TypeScript intellisense for JSX:
+
+`tsconfig.json`
+
+```json
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "million"
+  }
+}
+```

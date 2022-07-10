@@ -1,0 +1,33 @@
+---
+title: Research
+---
+
+import LiteYouTubeEmbed from 'react-lite-youtube-embed';
+import Link from 'next/link';
+
+<h1 style={{ textAlign: 'left' }}>Million.js</h1>
+
+> A **Fast, Compiler-Augmented Virtual DOM** for Performant JavaScript UI Libraries
+
+<br />
+
+| 🔗                                                                                                                                                                                       | Description                              |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| 💽 [**GitHub**](https://github.com/aidenybai/million)                                                                                                                                    | View source code                         |
+| 📝 [**Paper**](https://arxiv.org/abs/2202.08409v1)                                                                                                                                       | Read more about the research             |
+| 🚧 [**Presentation**](https://www.youtube.com/watch?v=Q4wabNKS5Gw) | Brief glance at research                 |
+| 🌇 [**Video**](https://youtu.be/rSVg-IT0PYg)                                                                                                                                             | Live research presentation               |
+| 💡 [**Manifesto**](https://aidenybai.com/thoughts/virtual-dom)                                                                                                                           | Past, present, and future of Virtual DOM |
+| 🌐 [**Website**](https://million.js.org/)                                                                                                                                                | Read documentation                       |
+
+## Why?
+
+My name is [Aiden Bai](https://aidenybai.com) and I'm really interested in [HCI research](https://en.wikipedia.org/wiki/Human%E2%80%93computer_interaction), particularly within user interface (UI) and web development. At the time of writing this, I'm a student at [Camas High School](https://camas.wednet.edu/schools/chs/).
+
+In July 2021, Million.js began as an experiment with Virtual DOM because I was curious with how UI libraries worked. I was frustrated with the lack of a modern, fast, and modular Virtual DOM library for JavaScript. Virtual DOM had been around for almost a decade, yet many Virtual DOM libraries [still struggle with render speed](https://krausest.github.io/js-framework-benchmark/current.html) compared to newer methods of rendering.
+
+Today, Million.js is the first effort to bring Virtual DOM into the future after [hundreds of hours of experimenting](https://github.com/aidenybai/million/graphs/commit-activity). Traditional Virtual DOM libraries have yet to leverage new technological paradigms in the new age of **compiled** [Transitional UI Libraries](https://www.youtube.com/watch?v=860d8usGC0o). Million.js leverages the compiler to create predefined paths, instead of executing all the work in the browser. Because of of this, Million.js sports <Link href="/benchmarks">exceptional rendering speeds</Link>, as is used [in many open source projects](https://github.com/aidenybai/million#acknowledgments).
+
+## Abstract
+
+The need for developing and delivering interactive web applications has grown rapidly. Thus, Million.js was created to allow for the creation of compiler-augmented JavaScript UI libraries that are extensible, performant, and lightweight. This was accomplished by designing a computationally efficient diffing algorithm that relies on a compiler, and then measuring the performance with a series of relevant and exhaustive benchmarks. Additionally, built-in mechanisms are implemented to allow for imperative optimizations, allowing the compiler to directly skip runtime diffing. When compared to the most popular methods of Virtual DOM rendering, these findings showed that Million.js had superior performance, with 133% to 300% more operations per second than other Virtual DOM libraries.

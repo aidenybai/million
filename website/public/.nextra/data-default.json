@@ -1,0 +1,58 @@
+{
+  "/": { "title": "Home", "data": { "": "" } },
+  "/docs/start-here": {
+    "title": "Getting Started",
+    "data": {
+      "": "",
+      "installation#Installation": "Inside your project directory, run the following command:\nnpm install million\nOr with yarn:\nyarn add million",
+      "quick-start#Quick Start": "For a normal JavaScript project, you'll first need to import Million's basic functions:\nimport { m, render } from 'million';\n\nIf you want to use a templating language like JSX,\nread more here about using JSX\nwith Million\nThen, you can start building your app (e.g. Counter app):\nimport { m, render } from 'million';\n\nlet seconds = 0;\n\nsetInterval(() => {\nrender(document.body, m('p', undefined, [`Time elapsed: ${seconds}`]));\nseconds++;\n}, 1000);\n\n\nrender() function has a standard interface that is used in many Virtual DOM libraries. First argument is a DOM node that will be used as the parent DOM reference, and the second one is a Virtual DOM to render.m() function will instantiate a \"Virtual DOM\" node for an element."
+    }
+  },
+  "/docs/guide": {
+    "title": "Guide",
+    "data": {
+      "": "This page is still in construction. For now, please refer to the API\nreference."
+    }
+  },
+  "/docs/api/basics/m": {
+    "title": "m()",
+    "data": {
+      "": "Syntax: m(tag, props?, children?, flag?, delta?)\nExample: m('div', { id: 'app' }, ['Hello World'])It is recommended that you use m to create a VNode. It accepts a tag as a string, an optional props object, an optional array of children, and an optional flag.\nimport { m } from 'million';\n\nconst vnode = m('div', { id: 'app' }, ['Hello World']);\n\n{\ntag: 'div',\nprops: {\nid: 'app'\n},\nchildren: ['Hello World'],\n}\nThe tagName is stored under the tag, attributes and properties are stored under props, and the children are stored under children.",
+      "optimization-via-keys#Optimization via keys": "Most of the time, the diffing and patching process is fast enough, but when dealing with a large amount of children, it is best to provide runtime hints through keys. You can attach a key under props. When patched, it will only diff props and children if the key is changed. For more advanced runtime diffing using keys, check out Flags.ONLY_KEYED_CHILDREN.\nimport { m } from 'million';\n\nconst vnode = m('div', { key: 'foo' }, ['Hello World']);\n\n{\ntag: 'div',\nprops: {},\nchildren: ['Hello World'],\nkey: 'foo',\n}",
+      "classname-and-style-props-helpers#className and style props helpers": "The className and style props need to be preprocessed using the className and style functions to convert objects to strings. The class object syntax allows for you to toggle classes based on a boolean value. The style object syntax allows you to set styles in a clean format.\nimport { m, className, style } from 'million';\n\nconst vnode = m(\n'div',\n{\nclassName: className({ class1: true, class2: false, class3: 1 + 1 === 2 }),\nstyle: style({ color: 'black', 'font-weight': 'bold' }),\n},\n['Hello World'],\n);\n\n{\ntag: 'div',\nprops: {\nclassName: 'class1 class3',\nstyle: 'color:black;font-weight:bold'\n},\nchildren: ['Hello World'],\n}",
+      "kebab-props-helper#kebab props helper": "Generally, the values of className and style props are objects in kebab-case. However, if you want to use camelCase for the keys of these props, you can use the kebab function to convert the keys from camelCase to kebab-case.\nimport { m, style, kebab } from 'million';\n\nconst vnode = style(kebab({ color: 'black', fontWeight: 'bold' }));\n\n{\ntag: 'div',\nprops: {\nstyle: 'color:black;font-weight:bold'\n},\nchildren: ['Hello World'],\n}",
+      "svg-support#SVG support": "SVGs are handled by default, but sometimes you need to attach SVG namespaces. SVGs are processed using the svg function to add ns props to the element and all of the children of that element.\nimport { m, svg } from 'million';\n\nconst vnode = svg(m('svg'));\n\n{\ntag: 'svg',\nprops: {\nns: 'http://www.w3.org/2000/svg'\n},\n}",
+      "tovnode-ssr-helper#toVNode SSR helper": "The toVNode function converts an HTMLElement or Text or HTML string to a VNode. This is generally used to rehydrate HTML from SSR.\nimport { m, toVNode, patch } from 'million';\n\n// HTML string\nconst vnode1 = toVNode('<div>Hello World</div>'); // holds <div>Hello World</div> in VNode form\n\n// HTMLElement\nconst el = document.createElement('div');\nel.textContent = 'Hello World';\nconst vnode2 = toVNode(el); // holds <div>Hello World</div> in VNode form\n\n<div id=\"app\">Hello World</div>"
+    }
+  },
+  "/docs/api/advanced/delta": {
+    "title": "Delta",
+    "data": {
+      "": "Syntax: Delta.OPERATION(index)\nExample: Delta.CREATE(0)Deltas are a way for the compile-time to optimize runtime operations by providing a set of predefined operations. This is useful for cases where you are performing consistent, predictable operations at a high interval, low payload situation.There are three types of delta operations: Delta.INSERT, Delta.UPDATE, and Delta.DELETE. You can provide a specified index to select the position of the VNode's children to be inserted, updated, or deleted.\nDelta.INSERT is used to add children at a selected index.\nSyntax: Delta.CREATE(index)\nExample: IDelta.NSERT(0)\nDelta.UPDATE is used to replace children at a selected index.\nSyntax: Delta.UPDATE(index)\nExample: Delta.UPDATE(0)\nDelta.DELETE is used to remove children at a selected index.\nSyntax: Delta.REMOVE(index)\nExample: Delta.REMOVE(0)\n\nYou can load these operations into a delta, or an array. You can pass them inside the m function.\nimport { m, Delta } from 'million';\n\nconst vnode = m('div', undefined, ['Hello World'], undefined, [\nDelta.CREATE(0),\nDelta.UPDATE(0),\n]);\n\n{\ntag: 'div',\nchildren: ['Hello World'],\ndelta: [\n[0 /* DeltaTypes.INSERT */, 0],\n[1 /* DeltaTypes.UPDATE */, 0],\n]\n}"
+    }
+  },
+  "/docs/tooling/ssg-ssr": {
+    "title": "SSG/SSR",
+    "data": {
+      "": "",
+      "server-side-generation-ssg#Server-Side Generation (SSG)": "Million.js is intended to be the Virtual DOM runtime for your application. It's primarily designed to be augmented by a compiler which can produce optimizations and code generation for Million.js. However, Million doesn't provide a compiler by default, as static analysis and code generation are difficult to pull off well without knowledge of the library (state, components, etc.).However, Million does provide example implementations for virtual node h functions to raw objects with vite-plugin-million.If you are considering writing a compiler for your Million library, consider taking a look at the implemenation of vite-plugin-million. Additionally, you should look into recast and ast-types, both great options for JavaScript AST traversal for static analysis.",
+      "server-side-rendering-ssr#Server-Side Rendering (SSR)": "Million.js is a great choice if you want to implement Hot Module Replacement (HMR) for your framework. An example implementation of HMR replacement can be seen here:\nimport { toVNode, render } from 'million';\n\nconst update = (html) => {\nrender(document.body, toVNode(html));\n};"
+    }
+  },
+  "/docs/tooling/using-jsx": {
+    "title": "Using JSX",
+    "data": {
+      "": "The following declaration style:\nconst HelloWorld = <p>Hello World</p>;\nis called JSX, and it is a syntax extension to JavaScript. Much like React, you can use JSX with Million to describe what the UI should look like. JSX may remind you of a template language, but it comes with the full power of JavaScript.JSX produces Million VNodes. Below, you can find how to integrate JSX in your own project.",
+      "babel#Babel": "We recommend using the\nbabel-preset-million preset with Babel for\nJSX transforms. Babel can easily be used with other bundlers like Webpack, Parcel, or Rollup, or\nstandalone.\nAlternatively, you can manually configure your JSX transform using @babel/plugin-transform-react-jsx.There are two main ways to transform your data, so choose the one that fits your project best.",
+      "automatic-runtime-recommended#Automatic runtime (recommended)": "Million.js provides an automatic JSX transform option through under million/jsx-runtime. Babel, by default, uses classic runtime, so you will need to explicitly state that you want automatic runtime. Additionally, you will need to specify an import source. It is not necessary to explicity import million/jsx-runtime with the automatic runtime.index.jsx\nconst HelloWorld = <p>Hello World</p>;\n.babelrc\n{\n\"plugins\": [\n[\n\"@babel/plugin-transform-react-jsx\",\n{\n\"runtime\": \"automatic\",\n\"importSource\": \"million\"\n}\n]\n]\n}",
+      "classic-runtime#Classic runtime": "If the automatic runtime does not work for you, or you want more fine-grained control, you should use the classic runtime. You'll need to define the pragma and pragmaFrag fields with the imports from the million/jsx-runtime, as shown below.\nThis is often more cumbersome, as you'll need to import million/jsx-runtime at every file you\nuse JSX (if you use an IDE it may appear as an unused variable).\nindex.jsx\nimport { h, Fragment } from 'million/jsx-runtime'; // This is required\n\nconst HelloWorld = <p>Hello World</p>;\n.babelrc\n{\n\"plugins\": [\n[\n\"@babel/plugin-transform-react-jsx\",\n{\n\"runtime\": \"classic\",\n\"pragma\": \"h\",\n\"pragmaFrag\": \"Fragment\"\n}\n]\n]\n}",
+      "vite#Vite": "Bundlers that depend on esbuild, such as Vite, do not support or plan to implement jsx-runtime at the moment. To \"emulate\" the automatic runtime of Babel, Vite provides the jsxInject field, which automatically injects the import statement.\nEsbuild has a slightly different syntax than vite, and you should refer to the\ndocs for more information.\nindex.jsx\nconst HelloWorld = <p>Hello World</p>;\nvite.config.js\nimport { defineConfig } from 'vite';\n\nexport default defineConfig({\nesbuild: {\njsxFactory: 'h',\njsxFragment: 'Fragment',\njsxInject: `import { h, Fragment } from 'million/jsx-runtime'`,\n},\n});"
+    }
+  },
+  "/docs/api/basics/render": {
+    "title": "render()",
+    "data": {
+      "": "Syntax: render(parentElement, newVNode?, prevVNode?)\nExample: render(document.body, m('div'))The render function is a combonation of the patch() and createElement() functions. It takes a parent element and a vnode and returns a DOM node, and renders the vnode into the DOM.\nIf you're seeking more fine grained modification and customization, check out\nthe patch() function.\nHere's an example Counter app using render():\nimport { m, render } from 'million';\n\nlet seconds = 0;\n\nsetInterval(() => {\nrender(document.body, m('p', undefined, [`Time elapsed: ${seconds}`]));\nseconds++;\n}, 1000);\n\n\nrender() function has a standard interface that is used in many Virtual DOM libraries. First argument is a DOM node that will be used as the parent DOM reference, and the second one is a Virtual DOM to render.m() function will instantiate a \"Virtual DOM\" node for an element."
+    }
+  }
+}

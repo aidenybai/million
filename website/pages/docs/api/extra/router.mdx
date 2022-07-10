@@ -1,0 +1,66 @@
+---
+title: router()
+---
+
+# `router()`
+
+**Syntax:** `router(rootSelector, routes)`\
+**Example:** `router()`
+
+There are two uses for the `router()` function:
+
+### 1. Turning a Multi Page Application (MPA) into a Single Page Application (SPA)
+
+The `router()` function initiates SPA like routing functionality for an MPA. This removes the necessity for page navigations and makes the application more responsive, while keeping multiple HTML files. Imagine [Turbo Drive](https://turbo.hotwired.dev/reference/drive), but powered by Million, and significantly more simpler.
+
+```js
+import { router } from 'million/router';
+
+router();
+
+// to only swap the body:
+router('body');
+```
+
+### 2. Creating client side routes for a SPA
+
+`router` also accepts a `routes` parameter, which skips fetching if you have predefined virtual nodes. For example:
+
+```js
+import { _, m } from 'million';
+import { router, createRoute } from 'million/router';
+
+router()
+  .setRoute(
+    '/',
+    createRoute(
+      m('div', _, ['You are at /', m('a', { href: '/foo' }, ['Go to /foo'])]),
+    ),
+  )
+  .setRoute(
+    '/foo',
+    createRoute(
+      m('div', _, ['You are at /foo', m('a', { href: '/' }, ['Go to /'])]),
+    ),
+  );
+```
+
+## `apply()` and `million:navigate` event
+
+You can use a global event handler to listen on the `million:navigate` event.
+
+```js
+window.addEventListener('million:navigate', (event) => {
+  console.log(`Navigating to ${event.detail.url}`);
+});
+```
+
+If you have client side scripts that run DOM modifications upon load, you can use the `apply()` function.
+
+```js
+import { apply } from 'million/router';
+
+apply((doc) => {
+  doc.title += ' - reloaded';
+});
+```

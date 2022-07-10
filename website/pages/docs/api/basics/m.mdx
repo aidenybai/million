@@ -1,0 +1,198 @@
+---
+title: m()
+---
+
+import VNodeViz from '../../../../components/examples/VNodeViz';
+
+# `m()`
+
+**Syntax:** `m(tag, props?, children?, flag?, delta?, hook?)`\
+**Example:** `m('div', { id: 'app' }, ['Hello World'])`
+
+It is recommended that you use `m` to create a VNode. It accepts a tag as a string, an optional props object, an optional array of children, and an optional flag.
+
+```js
+import { m } from 'million';
+
+const vnode = m('div', { id: 'app' }, ['Hello World']);
+```
+
+```js
+{
+  tag: 'div',
+  props: {
+    id: 'app'
+  },
+  children: ['Hello World'],
+}
+```
+
+The `tagName` is stored under the `tag`, `attributes` and properties are stored under `props`, and the children are stored under `children`.
+
+## REPL
+
+You can enter HTML and it will automatically convert to a VNode if you are confused on how the raw data representation looks.
+
+<VNodeViz />
+
+## Optimization via keys
+
+Most of the time, the diffing and patching process is fast enough, but when dealing with a large amount of children, it is best to provide runtime hints through keys. You can attach a `key` under props. When patched, it will only diff props and children if the `key` is changed. For more advanced runtime diffing using keys, check out [`Flags.ELEMENT_KEYED_CHILDREN`](/docs/api/advanced/flags#flagsonly_keyed_children).
+
+```js
+import { m } from 'million';
+
+const vnode = m('div', { key: 'foo' }, ['Hello World']);
+```
+
+```js {5}
+{
+  tag: 'div',
+  props: {},
+  children: ['Hello World'],
+  key: 'foo',
+}
+```
+
+## `className` and `style` props helpers
+
+The `className` and `style` props need to be preprocessed using the `className` and `style` functions to convert objects to strings. The class object syntax allows for you to toggle classes based on a boolean value. The style object syntax allows you to set styles in a clean format.
+
+```js
+import { m, className, style } from 'million';
+
+const vnode = m(
+  'div',
+  {
+    className: className({ class1: true, class2: false, class3: 1 + 1 === 2 }),
+    style: style({ color: 'black', 'font-weight': 'bold' }),
+  },
+  ['Hello World'],
+);
+```
+
+```js {4,5}
+{
+  tag: 'div',
+  props: {
+    className: 'class1 class3',
+    style: 'color:black;font-weight:bold'
+  },
+  children: ['Hello World'],
+}
+```
+
+## `kebab` props helper
+
+Generally, the values of `className` and `style` props are objects in kebab-case. However, if you want to use camelCase for the keys of these props, you can use the `kebab` function to convert the keys from camelCase to kebab-case.
+
+```js
+import { m, style, kebab } from 'million';
+
+const vnode = style(kebab({ color: 'black', fontWeight: 'bold' }));
+```
+
+```js {4}
+{
+  tag: 'div',
+  props: {
+    style: 'color:black;font-weight:bold'
+  },
+  children: ['Hello World'],
+}
+```
+
+## SVG support
+
+SVGs are handled by default, but sometimes you need to attach SVG namespaces. SVGs are processed using the `svg` function to add `ns` props to the element and all of the children of that element.
+
+```js
+import { m, svg } from 'million';
+
+const vnode = svg(m('svg'));
+```
+
+```js {4}
+{
+  tag: 'svg',
+  props: {
+    ns: 'http://www.w3.org/2000/svg'
+  },
+}
+```
+
+## Lifecycle `hook` properties
+
+The lifecycle `hook` properties allows you to "hook in" to the diffing and patching process. There are four hooks: `'create'`, `'update'`, `'remove'`, and one `'diff'` control flow hook. Every hook, if defined, must return a boolean, which will determine whether the code runs of not (`true` runs, `false` doesn't run).
+
+```js
+import { _, m } from 'million';
+
+const vnode = m(
+  'div',
+  _ /* props */,
+  _ /* children */,
+  _ /* flag */,
+  _ /* delta */,
+  {
+    create: (el, newVNode, oldVNode) => {
+      console.log('create was called!', el);
+      return true;
+    },
+    update: (el, newVNode, oldVNode) => {
+      console.log('update was called!', el);
+      return true;
+    },
+    remove: (el, newVNode, oldVNode) => {
+      console.log('remove was called!', el);
+      return true;
+    },
+    diff: (el, newVNode, oldVNode) => {
+      console.log('diff was called!', el);
+      return true;
+    },
+  },
+);
+```
+
+If you have multiple hooks, you can merge them easily with the `mergeHooks` function:
+
+```js
+import { mergeHooks } from 'million';
+
+const firstHook = {
+  create: () => {
+    console.log(1);
+    return true;
+  },
+};
+
+const secondHook = {
+  create: () => {
+    console.log(2);
+    return true;
+  },
+  update: () => {
+    console.log('Hello World!');
+    return true;
+  },
+};
+
+const finalBossHook = mergeHooks([firstHook, secondHook]);
+```
+
+As a result, `finalBossHook` becomes:
+
+```js
+const finalBossHook = {
+  create: () => {
+    console.log(1); // From firstHook
+    console.log(2); // From secondHook
+    return true;
+  },
+  update: () => {
+    console.log('Hello World!'); // from secondHook
+    return true;
+  },
+};
+```

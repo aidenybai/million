@@ -1,0 +1,37 @@
+---
+title: render()
+---
+
+import Callout from 'nextra-theme-docs/callout';
+import Counter from '../../../../components/examples/Counter';
+
+# `render()`
+
+**Syntax:** `render(parentElement, newVNode?, prevVNode?, hook?)`\
+**Example:** `render(document.body, m('div'))`
+
+The `render` function is a combonation of the `patch()` and `createElement()` functions. It takes a parent element and a vnode and returns a DOM node, and renders the vnode into the DOM.
+
+<Callout>
+  If you're seeking more granular modification and customization, check out the
+  [`patch()`](/docs/api/advanced/patch) function.
+</Callout>
+
+Here's an example Counter app using `render()`:
+
+```js
+import { _, m, render } from 'million';
+
+let seconds = 0;
+
+setInterval(() => {
+  render(document.body, m('p', _, [`Time elapsed: ${seconds}`]));
+  seconds++;
+}, 1000);
+```
+
+<Counter />
+
+`render()` function has a standard interface that is used in many Virtual DOM libraries. First argument is a DOM node that will be used as the parent DOM reference, and the second one is a Virtual DOM to render.
+
+`m()` function will instantiate a "Virtual DOM" node for an element.

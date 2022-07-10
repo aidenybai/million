@@ -1,0 +1,53 @@
+---
+title: Shared Utilities
+---
+
+# Shared Utilities
+
+## `fromDomNodeToVNode()`
+
+**Syntax:** `fromDomNodeToVNode(node)`\
+**Example:** `fromDomNodeToVNode(document.createElement('div'))`
+
+The `fromDomNodeToVNode` function creates a VNode from DOM node. It accepts a DOM node.
+
+```js
+import { render } from 'million';
+import { fromDomNodeToVNode } from 'million/utils';
+
+fromDomNodeToVNode(document.createElement('div'));
+```
+
+```js
+{
+  tag: 'div';
+}
+```
+
+## `fromStringToDomNode()`
+
+**Syntax:** `fromStringToDomNode(html)`\
+**Example:** `fromStringToDomNode('<div>Hello World</div>')`
+
+The `fromStringToDomNode` function creates an DOM node from an HTML string using `DOMParser`. It accepts a HTML string.
+
+```js
+import { render } from 'million';
+import { fromStringToDomNode } from 'million/utils';
+
+fromStringToDomNode('<div>Hello World</div>').innerHTML; // -> <div>Hello World</div>
+```
+
+## `fromVNodeToString()`
+
+**Syntax:** `fromVNodeToString(vnode)`\
+**Example:** `fromVNodeToString({ tag: 'div' })`
+
+The `fromVNodeToString` function creates an HTML string from an VNode. It accepts a VNode.
+
+```js
+import { m, _, render } from 'million';
+import { fromVNodeToString } from 'million/utils';
+
+fromStringToDomNode(m('div', _, ['Hello World'])) // -> <div>Hello World</div>
+```

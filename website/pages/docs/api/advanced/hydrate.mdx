@@ -1,0 +1,22 @@
+---
+title: hydrate()
+---
+
+# `hydrate()`
+
+**Syntax:** `hydrate(el, vnode, intersect?)`\
+**Example:** `hydrate(el, vnode)`
+
+The `hydrate` function takes prerendered HTML and patches it with event listeners and necessary content. It accepts an element, a virtual node to model the element, and an optional intersect parameter.
+
+There are two ways to hydrate: `intersect` and `idle`. The `intersect` method is invoked by default, and hydrates the DOM node when it is visible. The `idle` method only hydrates the DOM node when the main thread is free.
+
+```js
+import { _, m, hydrate } from 'million';
+
+// Assume body looks like: <body><button>Say hello!</button></body>
+hydrate(
+  document.body,
+  m('button', { onClick: () => alert('Hello World!') }, ['Say hello!']),
+);
+```

@@ -1,0 +1,26 @@
+---
+title: startTransition()
+---
+
+# `startTransition()`
+
+**Syntax:** `startTransition(callback)`\
+**Example:** `startTransition(() => patch(el, m('div')))`
+
+The `startTransition` function is used as a deferred commit function to prevent main thread blocking.
+
+Scheduling is generally used to induce incremental rendering, or the ability to split rendering work into chunks and spread it out over multiple frames. Generally, you want to use it in conjunction with non-important rendering calls.
+
+```js
+import { m, patch, startTransition, createElement } from 'million';
+
+const vnode0 = m('div');
+const el = createElement(vnode0);
+
+document.body.appendChild(el);
+const vnode1 = m('div', { id: 'app' }, ['Hello World']);
+
+startTransition(() => {
+  patch(el, vnode1);
+});
+```

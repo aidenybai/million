@@ -9,3 +9,4 @@ coverage
 .pnpm-debug.log
 *.tgz
 /*.d.ts
+.next
