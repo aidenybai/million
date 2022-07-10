@@ -1,4 +1,4 @@
-import { types } from 'recast';
+import type { types } from 'recast';
 
 export type Identifier = types.namedTypes.Identifier;
 export type Literal = types.namedTypes.Literal;

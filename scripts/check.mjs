@@ -1,5 +1,5 @@
 import { $ } from 'zx';
 
-$`bun run cleanup`;
-$`bun run lint`;
-$`bun run test`;
+$`pnpm run cleanup`;
+$`pnpm run lint`;
+$`pnpm run test`;

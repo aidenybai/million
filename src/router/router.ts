@@ -1,24 +1,24 @@
-import { createElement } from '../million/createElement';
+import { createElement } from '../million/create-element';
 import { patch } from '../million/render';
 import { batch } from '../million/scheduler';
-import { VElement } from '../million/types';
 import { morph } from '../morph/morph';
 import { createProgressBar, startTrickle, stopTrickle } from './progress';
-import { Route } from './types';
 import { getURL, normalizeRelativeURLs } from './utils';
+import type { Route } from './types';
+import type { VElement } from '../million/types';
 
 const parser = new DOMParser();
 const routeMap = new Map<string, Route>();
 const controllerMap = new Map<
   string,
-  { controller: AbortController; pendingContent: Promise<string | void> }
+  { controller: AbortController; pendingContent: Promise<string> }
 >();
 const PROGRESS_BAR_COLOR = getComputedStyle(document.body).getPropertyValue(
   '--million-progress-bar-color',
 );
 const progressBar = createProgressBar(PROGRESS_BAR_COLOR || '#0076ff');
 let lastUrl: URL | undefined;
-let applyFunction: ((doc: Document, url: URL) => any) | undefined;
+let applyFunction: ((doc: Document, url: URL) => void) | undefined;
 
 export const queueNavigation = batch();
 export const queuePrefetch = batch();
@@ -29,16 +29,19 @@ export const setRoute = (path: string, route: Route) => {
 
 export const getRoute = (path: string) => routeMap.get(path);
 
-export const createRoute = (vnode: VElement, hook: (url: URL) => boolean = () => true) => ({
+export const createRoute = (
+  vnode: VElement,
+  hook: (url: URL) => boolean = () => true,
+) => ({
   vnode,
   hook,
 });
 
 export const getEl = (el: HTMLElement, selector?: string): HTMLElement => {
-  return selector ? el.querySelector<HTMLElement>(selector)! : el;
+  return selector ? el.querySelector<HTMLElement>(selector) ?? el : el;
 };
 
-export const apply = (fn: (doc: Document, url: URL) => any) => {
+export const apply = (fn: (doc: Document, url: URL) => void) => {
   applyFunction = fn;
 };
 
@@ -49,13 +52,17 @@ export const parseContent = (content: string, url: URL): Document => {
   return html;
 };
 
-export const request = async (url: URL | string, options?: RequestInit): Promise<string | void> => {
+export const request = async (
+  url: URL | string,
+  options?: RequestInit,
+): Promise<string> => {
   return fetch(String(url), options)
     .then((res) => res.text())
-    .catch((err) => {
+    .catch((err: Error) => {
       if (err.name !== 'AbortError') {
         window.location.assign(url);
       }
+      return err.name;
     });
 };
 
@@ -123,11 +130,15 @@ export const navigate = async (
     }
   }
 
-  const navigateEvent = new CustomEvent('million:navigate', { detail: { url } });
+  const navigateEvent = new CustomEvent('million:navigate', {
+    detail: { url },
+  });
 
   requestAnimationFrame(() => {
     if (window.location.hash) {
-      const anchor = document.querySelector<HTMLElement>(`[href="${window.location.hash}"]`);
+      const anchor = document.querySelector<HTMLElement>(
+        `[href="${window.location.hash}"]`,
+      );
       if (anchor) anchor.scrollIntoView();
     } else {
       window.scrollTo({ top: scroll });
@@ -137,13 +148,19 @@ export const navigate = async (
   });
 };
 
-export const router = (selector?: string, routes: Record<string, Route> = {}): (() => void) => {
+export const router = (
+  selector?: string,
+  routes: Record<string, Route> = {},
+): (() => void) => {
   for (const path in routes) {
     setRoute(path, routes[path]);
   }
 
   if (!routeMap.has(window.location.pathname)) {
-    const html = parseContent(document.documentElement.outerHTML, new URL(window.location.href));
+    const html = parseContent(
+      document.documentElement.outerHTML,
+      new URL(window.location.href),
+    );
     if (applyFunction) applyFunction(html, new URL(window.location.href));
     setRoute(window.location.pathname, { html });
   }
@@ -152,7 +169,7 @@ export const router = (selector?: string, routes: Record<string, Route> = {}): (
     const url = getURL(event);
     if (!url) return;
     const route = routeMap.get(url.pathname);
-    if (route && route.hook && !route.hook(url, route)) return;
+    if (!route?.hook?.(url, route)) return;
     event.preventDefault();
     try {
       queueNavigation(() => navigate(url, selector));
@@ -161,22 +178,22 @@ export const router = (selector?: string, routes: Record<string, Route> = {}): (
     }
   };
 
-  const mouseoverHandler = async (event: Event) => {
+  const mouseoverHandler = (event: Event) => {
     const url = getURL(event);
     if (!url) return;
     if (routeMap.has(url.pathname)) return;
-    const route = routeMap.get(url.pathname)!;
-    if (route && route.hook && !route.hook(url, route)) return;
+    const route = routeMap.get(url.pathname);
+    if (!route?.hook?.(url, route)) return;
     event.preventDefault();
     queuePrefetch(() => prefetch(url));
   };
 
-  const submitHandler = async (event: Event) => {
+  const submitHandler = (event: Event) => {
     const el = event.target as HTMLFormElement;
     const url = new URL(el.action);
     if (!el.action || !(el instanceof HTMLFormElement)) return;
     const route = routeMap.get(el.action);
-    if (route && route.hook && !route.hook(url, route)) return;
+    if (!route?.hook?.(url, route)) return;
 
     event.stopPropagation();
     event.preventDefault();
@@ -188,12 +205,12 @@ export const router = (selector?: string, routes: Record<string, Route> = {}): (
     });
 
     queueNavigation(() => {
-      navigate(url, selector, {
+      void navigate(url, selector, {
         method: el.method,
         redirect: 'follow',
         body:
           !el.method || el.method.toLowerCase() === 'get'
-            ? `?${new URLSearchParams(body)}`
+            ? `?${new URLSearchParams(body).toString()}`
             : JSON.stringify(body),
       });
     });
@@ -208,11 +225,11 @@ export const router = (selector?: string, routes: Record<string, Route> = {}): (
     }
 
     const route = routeMap.get(url.pathname);
-    if (route && route.hook && !route.hook(url, route)) return;
+    if (!route?.hook?.(url, route)) return;
 
     try {
       queueNavigation(() => {
-        navigate(url, selector, {}, true);
+        void navigate(url, selector, {}, true);
       });
     } catch (_err) {
       window.location.reload();

@@ -1,4 +1,4 @@
-import { VElement } from '../million/types';
+import type { VElement } from '../million/types';
 
 export interface Route {
   vnode?: VElement;

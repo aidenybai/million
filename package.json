@@ -115,6 +115,7 @@
     "url": "https://github.com/aidenybai/million/issues"
   },
   "homepage": "https://github.com/aidenybai/million",
+  "prettier": "@vercel/style-guide/prettier",
   "devDependencies": {
     "@nanostores/react": "^0.2.0",
     "@picocss/pico": "^1.5.3",
@@ -127,9 +128,10 @@
     "@types/virtual-dom": "^2.1.1",
     "@typescript-eslint/eslint-plugin": "^5.30.5",
     "@typescript-eslint/parser": "^5.30.5",
+    "@vercel/style-guide": "^3.0.0",
     "@vitejs/plugin-legacy": "^1.8.2",
     "@vitejs/plugin-react": "^1.3.2",
-    "@vitest/ui": "^0.17.1",
+    "@vitest/ui": "^0.18.0",
     "benchmark": "^2.1.4",
     "c8": "^7.11.3",
     "canvas-confetti": "^1.5.1",
@@ -160,8 +162,8 @@
     "typescript": "^4.7.4",
     "unbuild": "^0.7.4",
     "virtual-dom": "^2.1.1",
-    "vite": "2.9.13",
-    "vitest": "^0.17.1",
+    "vite": "2.9.14",
+    "vitest": "^0.18.0",
     "wouter": "2.8.0-alpha.2",
     "zx": "^7.0.7"
   }

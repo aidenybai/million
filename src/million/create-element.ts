@@ -1,15 +1,22 @@
-import { DOMNode, Flags, OLD_VNODE_FIELD, VNode, XLINK_NS, XML_NS, X_CHAR } from './types';
+import { Flags, OLD_VNODE_FIELD, XLINK_NS, XML_NS, X_CHAR } from './types';
+import type { DOMNode, VNode } from './types';
 
 /**
  * Creates an Element from a VNode
  */
-export const createElement = (vnode?: VNode | null, attachField = true): DOMNode => {
+export const createElement = (
+  vnode?: VNode | null,
+  attachField = true,
+): DOMNode => {
   if (vnode === undefined || vnode === null) return document.createComment('');
   if (typeof vnode === 'string') return document.createTextNode(vnode);
 
   const el = vnode.props?.ns
-    ? (document.createElementNS(vnode.props?.ns as string, vnode.tag) as SVGElement)
-    : (document.createElement(vnode.tag) as HTMLElement);
+    ? (document.createElementNS(
+        vnode.props.ns as string,
+        vnode.tag,
+      ) as SVGElement)
+    : document.createElement(vnode.tag);
   if (vnode.props?.ns) delete vnode.props.ns;
 
   if (vnode.props) {
@@ -42,7 +49,9 @@ export const createElement = (vnode?: VNode | null, attachField = true): DOMNode
 
   if (vnode.children) {
     if (vnode.flag === Flags.ELEMENT_TEXT_CHILDREN) {
-      el.textContent = Array.isArray(vnode.children) ? vnode.children?.join('') : vnode.children;
+      el.textContent = Array.isArray(vnode.children)
+        ? vnode.children.join('')
+        : vnode.children;
     } else {
       for (let i = 0; i < vnode.children.length; ++i) {
         el.appendChild(createElement(vnode.children[i], false));

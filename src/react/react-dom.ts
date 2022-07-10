@@ -1,15 +1,13 @@
 import { h } from '../jsx-runtime';
 import {
-  DOMNode,
   DOM_REF_FIELD,
   hydrate,
   patch,
   render as $render,
   startTransition,
-  VElement,
-  VNode,
 } from '../million';
 import { fromDomNodeToVNode } from '../utils';
+import type { DOMNode, VElement, VNode } from '../million';
 
 const hydrateRoot = (vnode: VNode, root: HTMLElement): HTMLElement => {
   hydrate(root, vnode);

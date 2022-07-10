@@ -1,19 +1,21 @@
-import { createElement } from '../createElement';
+import { createElement } from '../create-element';
 import {
-  Commit,
-  Delta,
   DeltaTypes,
-  DOMNode,
-  Driver,
-  Effect,
   EffectTypes,
   Flags,
   HookTypes,
   NODE_OBJECT_POOL_FIELD,
+} from '../types';
+import { effect, hook } from '../utils';
+import type {
+  Commit,
+  Delta,
+  DOMNode,
+  Driver,
+  Effect,
   VElement,
   VNode,
 } from '../types';
-import { effect, hook } from '../utils';
 
 /**
  * Diffs two VNode children and modifies the DOM node based on the necessary changes
@@ -43,17 +45,24 @@ export const useChildren =
       const data = getData(element);
       for (let i = 0; i < drivers.length; ++i) {
         commit(() => {
-          (drivers[i] as Driver)(el, newVNode, oldVNode, commit, effects, driver);
+          (drivers[i] as Driver)(
+            el,
+            newVNode,
+            oldVNode,
+            commit,
+            effects,
+            driver,
+          );
         }, data);
       }
       return data;
     };
 
-    const oldVNodeChildren: VNode[] = oldVNode?.children ?? [];
-    const newVNodeChildren: VNode[] | undefined = newVNode.children;
+    const oldVNodeChildren: VNode[] = oldVNode?.children || [];
+    const newVNodeChildren: VNode[] | null | undefined = newVNode.children;
     const delta: Delta[] | undefined = newVNode.delta;
     const diff = (el: DOMNode, newVNode: VNode, oldVNode?: VNode) =>
-      el ? driver!(el, newVNode, oldVNode, commit, effects).effects! : effects;
+      driver!(el, newVNode, oldVNode, commit, effects).effects ?? effects;
 
     // Deltas are a way for the compile-time to optimize runtime operations
     // by providing a set of predefined operations. This is useful for cases
@@ -76,12 +85,17 @@ export const useChildren =
           const newVNodeChild = newVNodeChildren![deltaPosition];
           if (!invokeHook(HookTypes.UPDATE, newVNodeChild)) return finish(el);
           commit(() => {
-            effects = diff(child, newVNodeChild, oldVNodeChildren[deltaPosition]);
+            effects = diff(
+              child,
+              newVNodeChild,
+              oldVNodeChildren[deltaPosition],
+            );
           }, getData(child));
         }
 
         if (deltaType === DeltaTypes.REMOVE) {
-          if (!invokeHook(HookTypes.REMOVE, oldVNodeChildren![deltaPosition])) return finish(el);
+          if (!invokeHook(HookTypes.REMOVE, oldVNodeChildren[deltaPosition]))
+            return finish(el);
           queueEffect(EffectTypes.REMOVE, () => el.removeChild(child));
         }
       }
@@ -92,13 +106,13 @@ export const useChildren =
     // Generally, you should use a compiler to generate these flags, but
     // hand-writing them is also possible
     if (!newVNodeChildren || newVNode.flag === Flags.ELEMENT_NO_CHILDREN) {
-      if (!oldVNodeChildren || !invokeHook(HookTypes.UPDATE, oldVNode)) return finish(el);
+      if (!invokeHook(HookTypes.UPDATE, oldVNode)) return finish(el);
 
       queueEffect(EffectTypes.REMOVE, () => (el.textContent = ''));
       return finish(el);
     }
 
-    if (!oldVNodeChildren || oldVNodeChildren?.length === 0) {
+    if (oldVNodeChildren.length === 0) {
       for (let i = 0; i < newVNodeChildren.length; ++i) {
         if (!invokeHook(HookTypes.CREATE, newVNodeChildren[i])) continue;
         queueEffect(EffectTypes.CREATE, () =>
@@ -263,7 +277,8 @@ export const useChildren =
      *  }
      */
     if (newVNode.flag === Flags.ELEMENT_KEYED_CHILDREN) {
-      if (!el[NODE_OBJECT_POOL_FIELD]) el[NODE_OBJECT_POOL_FIELD] = new Map<string, DOMNode>();
+      if (!el[NODE_OBJECT_POOL_FIELD])
+        el[NODE_OBJECT_POOL_FIELD] = new Map<string, DOMNode>();
 
       let oldHead = 0;
       let newHead = 0;
@@ -297,7 +312,9 @@ export const useChildren =
           const node = el.childNodes.item(oldTail--);
           const head = newHead++;
           if (!invokeHook(HookTypes.UPDATE, newHeadVNode)) return finish(el);
-          queueEffect(EffectTypes.CREATE, () => el.insertBefore(node, el.childNodes.item(head)));
+          queueEffect(EffectTypes.CREATE, () =>
+            el.insertBefore(node, el.childNodes.item(head)),
+          );
         } else break;
       }
 
@@ -330,7 +347,10 @@ export const useChildren =
         const oldKeyMap = new Map<string, number>();
 
         for (; oldHead <= oldTail; ) {
-          oldKeyMap.set((oldVNodeChildren[oldHead] as VElement).key!, oldHead++);
+          oldKeyMap.set(
+            (oldVNodeChildren[oldHead] as VElement).key!,
+            oldHead++,
+          );
         }
 
         while (newHead <= newTail) {
@@ -341,12 +361,17 @@ export const useChildren =
           if (oldIndex !== undefined) {
             // [9] Reordering continuous nodes
             const node = el.childNodes.item(oldIndex);
-            if (!invokeHook(HookTypes.UPDATE, newVNodeChildren[head])) return finish(el);
-            queueEffect(EffectTypes.CREATE, () => el.insertBefore(node, el.childNodes.item(head)));
+            if (!invokeHook(HookTypes.UPDATE, newVNodeChildren[head]))
+              return finish(el);
+            queueEffect(EffectTypes.CREATE, () =>
+              el.insertBefore(node, el.childNodes.item(head)),
+            );
             oldKeyMap.delete(newVNodeChild.key!);
           } else {
             // [10] Create new nodes
-            const cachedNode = el[NODE_OBJECT_POOL_FIELD].get(newVNodeChild.key);
+            const cachedNode = el[NODE_OBJECT_POOL_FIELD].get(
+              newVNodeChild.key,
+            );
             if (!invokeHook(HookTypes.CREATE, newVNodeChild)) return finish(el);
             queueEffect(EffectTypes.CREATE, () =>
               el.insertBefore(
@@ -361,7 +386,8 @@ export const useChildren =
         for (const [oldVNodeKey, oldVNodeValue] of oldKeyMap) {
           const node = el.childNodes.item(oldVNodeValue);
           el[NODE_OBJECT_POOL_FIELD].set(oldVNodeKey, node);
-          if (!invokeHook(HookTypes.REMOVE, oldVNodeChildren[oldVNodeValue])) return finish(el);
+          if (!invokeHook(HookTypes.REMOVE, oldVNodeChildren[oldVNodeValue]))
+            return finish(el);
           queueEffect(EffectTypes.REMOVE, () => el.removeChild(node));
         }
       }
@@ -374,48 +400,60 @@ export const useChildren =
       const oldString = Array.isArray(oldVNode?.children)
         ? oldVNode?.children.join('')
         : oldVNode?.children;
-      const newString = Array.isArray(newVNode?.children)
-        ? newVNode?.children.join('')
-        : newVNode?.children;
+      const newString = Array.isArray(newVNode.children)
+        ? newVNode.children.join('')
+        : newVNode.children;
       if (oldString !== newString) {
         queueEffect(EffectTypes.REPLACE, () => (el.textContent = newString!));
       }
       return finish(el);
     }
 
-    if (oldVNodeChildren && newVNodeChildren) {
-      const commonLength = Math.min(oldVNodeChildren.length, newVNodeChildren.length);
+    const commonLength = Math.min(
+      oldVNodeChildren.length,
+      newVNodeChildren.length,
+    );
 
-      // Interates backwards, so in case a childNode is destroyed, it will not shift the nodes
-      // and break accessing by index
-      for (let i = commonLength - 1; i >= 0; --i) {
-        if (!invokeHook(HookTypes.UPDATE, newVNodeChildren[i])) return finish(el);
-        commit(() => {
-          effects = diff(
-            el.childNodes.item(i) as DOMNode,
-            newVNodeChildren[i],
-            oldVNodeChildren[i],
-          );
-        }, getData(el));
-      }
+    // Interates backwards, so in case a childNode is destroyed, it will not shift the nodes
+    // and break accessing by index
+    for (let i = commonLength - 1; i >= 0; --i) {
+      if (!invokeHook(HookTypes.UPDATE, newVNodeChildren[i])) return finish(el);
+      commit(() => {
+        effects = diff(
+          el.childNodes.item(i) as DOMNode,
+          newVNodeChildren[i],
+          oldVNodeChildren[i],
+        );
+      }, getData(el));
+    }
 
-      if (newVNodeChildren.length > oldVNodeChildren.length) {
-        for (let i = commonLength; i < newVNodeChildren.length; ++i) {
-          if (!invokeHook(HookTypes.CREATE, newVNodeChildren[i])) return finish(el);
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (newVNodeChildren) {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (oldVNodeChildren) {
+        if (newVNodeChildren.length > oldVNodeChildren.length) {
+          for (let i = commonLength; i < newVNodeChildren.length; ++i) {
+            if (!invokeHook(HookTypes.CREATE, newVNodeChildren[i]))
+              return finish(el);
+            const node = createElement(newVNodeChildren[i], false);
+            queueEffect(EffectTypes.CREATE, () => el.appendChild(node));
+          }
+        } else if (newVNodeChildren.length < oldVNodeChildren.length) {
+          for (let i = oldVNodeChildren.length - 1; i >= commonLength; --i) {
+            if (!invokeHook(HookTypes.REMOVE, oldVNodeChildren[i]))
+              return finish(el);
+            queueEffect(EffectTypes.REMOVE, () =>
+              el.removeChild(el.childNodes.item(i)),
+            );
+          }
+        }
+      } else {
+        for (let i = 0; i < newVNodeChildren.length; ++i) {
+          if (!invokeHook(HookTypes.CREATE, newVNodeChildren[i]))
+            return finish(el);
           const node = createElement(newVNodeChildren[i], false);
           queueEffect(EffectTypes.CREATE, () => el.appendChild(node));
         }
-      } else if (newVNodeChildren.length < oldVNodeChildren.length) {
-        for (let i = oldVNodeChildren.length - 1; i >= commonLength; --i) {
-          if (!invokeHook(HookTypes.REMOVE, oldVNodeChildren[i])) return finish(el);
-          queueEffect(EffectTypes.REMOVE, () => el.removeChild(el.childNodes.item(i)));
-        }
-      }
-    } else if (newVNodeChildren) {
-      for (let i = 0; i < newVNodeChildren.length; ++i) {
-        if (!invokeHook(HookTypes.CREATE, newVNodeChildren[i])) return finish(el);
-        const node = createElement(newVNodeChildren[i], false);
-        queueEffect(EffectTypes.CREATE, () => el.appendChild(node));
       }
     }
 

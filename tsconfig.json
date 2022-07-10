@@ -1,4 +1,5 @@
 {
+  "extends": "@vercel/style-guide/typescript",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
@@ -12,18 +13,7 @@
     "outDir": "dist",
     "moduleResolution": "node",
     "module": "esnext",
-    "target": "esnext",
-    "suppressImplicitAnyIndexErrors": true,
-    "allowSyntheticDefaultImports": true,
-    "noFallthroughCasesInSwitch": true,
-    "experimentalDecorators": true,
-    "downlevelIteration": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "esModuleInterop": true,
-    "noUnusedLocals": true,
-    "declaration": true,
-    "strict": true
+    "target": "esnext"
   },
   "include": ["./**/*.ts", "./**/*.tsx"],
   "exclude": ["node_modules", "dist"]
