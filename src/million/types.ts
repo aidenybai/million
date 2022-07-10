@@ -16,7 +16,10 @@ export const XML_NS = 'http://www.w3.org/2000/xmlns/';
 export const X_CHAR = 120;
 
 export type VProps = Record<string, any>;
-export type DOMNode = HTMLElement | SVGElement | Text | Comment;
+export type DOMNode = (HTMLElement | SVGElement | Text | Comment) & {
+  [OLD_VNODE_FIELD]?: VNode;
+  [DOM_REF_FIELD]?: DOMNode;
+};
 export type VNode = VElement | Thunk | string;
 export type Delta = [DeltaTypes, number];
 export type Hook = (

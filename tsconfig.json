@@ -9,11 +9,11 @@
     "jsx": "react-jsx",
     "jsxImportSource": "src",
     "lib": ["dom", "esnext"],
-    "declarationDir": "dist",
     "outDir": "dist",
     "moduleResolution": "node",
     "module": "esnext",
-    "target": "esnext"
+    "target": "esnext",
+    "noImplicitAny": false
   },
   "include": ["./**/*.ts", "./**/*.tsx"],
   "exclude": ["node_modules", "dist"]

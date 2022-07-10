@@ -3,11 +3,13 @@ import type {
   Delta,
   DOMNode,
   Hooks,
+  HookTypes,
   Thunk,
   VElement,
   VElementFlags,
   VNode,
   VProps,
+  Hook,
 } from './types';
 
 /**
@@ -64,7 +66,7 @@ export const style = (styleObject: Record<string, string>): string =>
 export const kebab = (
   camelCaseObject: Record<string, unknown>,
 ): Record<string, unknown> => {
-  const kebabCaseObject = {};
+  const kebabCaseObject: Record<string, unknown> = {};
   for (const key in camelCaseObject) {
     // eslint-disable-next-line prefer-named-capture-group
     kebabCaseObject[key.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()] =
@@ -111,15 +113,23 @@ export const m = (
 export const mergeHooks = (hooksArray: Hooks[]): Hooks => {
   const mergedHooks: Hooks = {};
   for (let i = 0; i < hooksArray.length; i++) {
-    for (const hook in hooksArray[i]) {
-      const oldHook = mergedHooks[hook];
+    const hooksKeys = Object.keys(hooksArray[i]!);
+    for (let j = 0; j < hooksKeys.length; j++) {
+      const hook = hooksKeys[j] as HookTypes;
+      const oldHook = mergedHooks[hook] as Hook | undefined;
       if (oldHook) {
-        mergedHooks[hook] = () => {
-          oldHook();
-          hooksArray[i][hook]();
+        mergedHooks[hook] = (
+          el?: DOMNode,
+          newVNode?: VNode,
+          oldVNode?: VNode,
+        ): boolean => {
+          const newHook = hooksArray[i]![hook] as Hook;
+          return (
+            oldHook(el, newVNode, oldVNode) && newHook(el, newVNode, oldVNode)
+          );
         };
       } else {
-        mergedHooks[hook] = hooksArray[i][hook];
+        mergedHooks[hook] = hooksArray[i]![hook];
       }
     }
   }

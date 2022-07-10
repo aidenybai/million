@@ -118,7 +118,7 @@ export const useProps =
         const keys = Object.keys(newProps);
         // Limit to number of matches to reduce the number of iterations
         for (let i = 0; matches < keys.length && i < keys.length; ++i) {
-          const propName = keys[i];
+          const propName = keys[i] as string;
           if (!Reflect.has(oldProps, propName)) {
             updateProp(
               el,

@@ -151,7 +151,6 @@ const createEffect = (asy) => (effect, guards?) => {
       info.values = guards;
       if (asy) stop(asy);
       const { clean } = info;
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (clean) {
         info.clean = null;
         clean();

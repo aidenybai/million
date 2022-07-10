@@ -70,7 +70,7 @@ export const useChildren =
     // interval, low payload situation.
     if (delta) {
       for (let i = 0; i < delta.length; ++i) {
-        const [deltaType, deltaPosition] = delta[i];
+        const [deltaType, deltaPosition] = delta[i]!;
         const child = el.childNodes.item(deltaPosition) as DOMNode;
 
         if (deltaType === DeltaTypes.CREATE) {
@@ -82,7 +82,7 @@ export const useChildren =
         }
 
         if (deltaType === DeltaTypes.UPDATE) {
-          const newVNodeChild = newVNodeChildren![deltaPosition];
+          const newVNodeChild = newVNodeChildren![deltaPosition]!;
           if (!invokeHook(HookTypes.UPDATE, newVNodeChild)) return finish(el);
           commit(() => {
             effects = diff(
@@ -421,7 +421,7 @@ export const useChildren =
       commit(() => {
         effects = diff(
           el.childNodes.item(i) as DOMNode,
-          newVNodeChildren[i],
+          newVNodeChildren[i]!,
           oldVNodeChildren[i],
         );
       }, getData(el));

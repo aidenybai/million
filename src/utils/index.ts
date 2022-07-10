@@ -16,7 +16,7 @@ export const fromDomNodeToVNode = (el: DOMNode): VNode | undefined => {
   // We know children length, so we created a fixed array
   const children = new Array(el.children.length).fill(0);
   for (let i = 0; i < el.attributes.length; i++) {
-    const { nodeName, nodeValue } = el.attributes[i];
+    const { nodeName, nodeValue } = el.attributes[i]!;
     props[nodeName] = nodeValue;
   }
   for (let i = 0; i < el.childNodes.length; i++) {

@@ -30,7 +30,7 @@ export const compile = (astNode: CallExpression) => {
 export const fromASTNodeToVNode = (
   astNode: CallExpression,
 ): RawVNode | CallExpression => {
-  if (astNode.arguments[0].type !== 'Literal') {
+  if (astNode.arguments[0]?.type !== 'Literal') {
     return astNode;
   }
 
@@ -38,13 +38,13 @@ export const fromASTNodeToVNode = (
   const astProps = astNode.arguments[1] as ObjectExpression;
   const astChildren = args.slice(2);
   const vnodeChildren: RawVNode[] = [];
-  const vnodeProps = {};
+  const vnodeProps: any = {};
 
   for (let i = 0; i < astProps.properties.length; i++) {
     const astProp = astProps.properties[i] as Property;
     const astPropKey = astProp.key as Identifier;
     if (astProp.value.type === 'ObjectExpression') {
-      const vnodeObject = {};
+      const vnodeObject: any = {};
       const astObject = astProp.value.properties;
       for (let j = 0; j < astObject.length; j++) {
         const astObjectProp = astObject[j] as Property;

@@ -153,7 +153,7 @@ export const router = (
   routes: Record<string, Route> = {},
 ): (() => void) => {
   for (const path in routes) {
-    setRoute(path, routes[path]);
+    setRoute(path, routes[path]!);
   }
 
   if (!routeMap.has(window.location.pathname)) {
@@ -199,9 +199,9 @@ export const router = (
     event.preventDefault();
 
     const formData = new FormData(el);
-    const body = {};
+    const body: Record<string, string> = {};
     formData.forEach((value, key) => {
-      body[key] = value;
+      body[key] = String(value);
     });
 
     queueNavigation(() => {
