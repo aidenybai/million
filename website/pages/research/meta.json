@@ -1,0 +1,13 @@
+{
+  "index": {
+    "title": "Research",
+    "type": "page",
+    "theme": {
+      "sidebar": false,
+      "toc": true,
+      "footer": true,
+      "breadcrumb": false,
+      "typesetting": "article"
+    }
+  }
+}

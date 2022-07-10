@@ -1,0 +1,38 @@
+---
+title: HTML Helpers
+---
+
+# HTML Helpers
+
+## `html` tagged templates
+
+The `html` function creates a VNode from an HTML string, and makes it easier to write views without hyperscript or JSX. It accepts a tagged HTML string, meaning you can do interoplation like JSX with the [`${expression}` syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals).
+
+```js
+import { render } from 'million';
+import { html } from 'million/html';
+
+render(document.body, html`<div>Hello World</div>`);
+```
+
+## Tag factories
+
+You can import tag functions to write shorthands for elements. It is a great middle ground if you want that hyperscript style of development but also want to write less code.
+
+```js
+import { render } from 'million';
+import { div } from 'million/html';
+
+render(document.body, div(['Hello World']));
+```
+
+You can also construct your own reusable custom element factories if you want:
+
+```js
+import { render } from 'million';
+import { factory } from 'million/html';
+
+const CUSTOM = factory('CUSTOM');
+
+render(document.body, CUSTOM(['Hello World']));
+```

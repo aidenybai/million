@@ -1,0 +1,23 @@
+---
+title: thunk()
+---
+
+# `thunk()`
+
+**Syntax:** `thunk(fn, args)`\
+**Example:** `thunk((bg) => m('div', { background: bg }), ['red'])`
+
+It is recommended that you use `thunk` to memoize virtual nodes and avoid patching. It accepts data as a object, a resolver that returns a VNode, and an optional element reference.
+
+You can use `thunk` just like a virtual node:
+
+```js
+import { _, m, thunk, render } from 'million';
+
+render(
+  document.body,
+  m('div', { id: 'app' }, [
+    thunk((message) => m('div', _, [message]), ['Hello World']),
+  ]),
+);
+```

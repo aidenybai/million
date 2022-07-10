@@ -1,0 +1,134 @@
+---
+title: patch()
+---
+
+# `patch()`
+
+**Syntax:** `patch(element, newVNode?, prevVNode?, hook = (el?, newVNode?, oldVNode?) => boolean, effects = [])`\
+**Example:** `patch(el, m('div'), m('div', undefined, ['Hello World']))`
+
+The `patch` function updates the DOM content by determing pinpoint changes through diffing a new VNode with an old VNode. It accepts a HTMLElement or Text, a new VNode, and an optional previous VNode. It also returns the resulting HTMLElement or Text.
+
+You can leverage [Flags](/docs/api/advanced/flags) and [Delta](/docs/api/advanced/delta) to improve the performance of patch calls by reducing the need to diff children by improving time complexity.
+
+```js
+import { m, patch, createElement } from 'million';
+
+const vnode0 = m('div');
+const el = createElement(vnode0);
+
+document.body.appendChild(el);
+const vnode1 = m('div', { id: 'app' }, ['Hello World']);
+
+patch(el, vnode1);
+// document.body.innerHTML = '' -> '<div id="app">Hello World</div>'
+
+const vnode2 = m('div', { id: 'app' }, ['Goodbye World']);
+
+patch(el, vnode2);
+// document.body.innerHTML = '<div id="app">Hello World</div>' -> '<div id="app">Goodbye World</div>'
+```
+
+## Hook & effects
+
+Sometimes, we want to do apply our own functionality across the entire VNode tree, yet we want to keep the API usage very simple. There are two areas where you can do this:
+
+- **VNode-by-VNode diffing:** You can pass a callback into the `hook` parameter (see `patch`) syntax to deal with each VNode (excluding special diffing). You can construct a `commit` callback like this:
+
+  ```js
+  patch(
+    el,
+    newVNode,
+    oldVNode,
+    (el, newVNode, oldVNode) => {
+      console.log('Currently diffing:', el);
+      return true;
+    },
+    [],
+  );
+  ```
+
+  You can return `true` to indicate that the VNode should be committed, or `false` to indicate that the VNode should be skipped.
+
+- **Operation-by-Operation patching:** Once diffing is completed, you can deal with effects, or DOM operations. Normally, effects are batched all at once, but if you want to modify this, you can check out [custom patch functions](#custom-patch-functions). If you want to add your own custom effects, you can pass callbacks into the `effects` parameter like this:
+
+  ```js
+  patch(el, newVNode, oldVNode, () => true, [
+    () => console.log('Hello World!'),
+  ]);
+  ```
+
+## Custom patch functions
+
+You can use drivers to create your own custom patch functions. The `useNode()` driver accepts an array of drivers, which runs after the sweeping modifications of an element is patched and more pinpoint modifications may be necessary.
+
+**Driver Syntax:** `useNode([useChildren(), useProps(), useDriver([useAnotherDriver()])])`\
+**`Driver` Signature:** `(el, newVNode, oldVNode, commit, effects, driver) => { ...; return { el, newVNode, oldVNode, commit, effects, driver } }`
+
+If you use a IDE like [VSCode](https://code.visualstudio.com/), you can look into the implementations of how to create a `Driver` and create your own drivers.
+
+```js
+import { m, useNode, useChildren, useProps, createElement } from 'million';
+
+const diff = useNode([useChildren(), useProps()]);
+
+const customPatch = (el, newVNode, oldVNode, commit, effects = []) => {
+  const data = diff(el, newVNode, oldVNode, commit, effects);
+  for (let i = 0; i < effects.length; i++) {
+    // Effect -> { type, flush() }
+    effects[i].flush();
+  }
+  return data.el;
+};
+
+const vnode0 = m('div');
+const el = createElement(vnode0);
+
+document.body.appendChild(el);
+const vnode1 = m('div', { id: 'app' }, ['Hello World']);
+
+customPatch(el, vnode1);
+```
+
+## Writing your own drivers
+
+Below is an implementation of a rudimentary virtual DOM with reference-based diffing of an existing `el`.
+
+```js
+import { createElement, EffectTypes } from 'million';
+
+const useNodeReplace =
+  (drivers = []) =>
+  (el, newVNode, oldVNode, commit, effects = [], driver) => {
+    /**
+     * `drivers` can add another optional layer of composibility, you can run the drivers
+     * by passing the same `drivers[i](el, newVNode, oldVNode, commit, effects, driver)`, or a manipulated
+     * version downstream `drivers[i](el.childNodes[j], newVNode.children[j], undefined, commit, effects, driver)`.
+     * The great thing about sub-drivers is you can run them anywhere you want inside the driver!
+     */
+    const data = {
+      el,
+      newVNode,
+      oldVNode,
+      effects,
+      commit,
+      driver,
+    };
+
+    commit(() => {
+      if (!newVNode) {
+        effects.push({
+          type: EffectTypes.REMOVE,
+          flush: () => el.remove(),
+        });
+      } else if (oldVNode !== newVNode) {
+        effects.push({
+          type: EffectTypes.REPLACE,
+          flush: () => el.replaceWith(createElement(newVNode)),
+        });
+      }
+    }, data);
+
+    return data;
+  };
+```

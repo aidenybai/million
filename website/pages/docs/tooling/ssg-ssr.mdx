@@ -1,0 +1,28 @@
+---
+title: SSG/SSR
+---
+
+# SSG/SSR
+
+## Server-Side Rendering (SSR)
+
+Million.js is a great choice if you want to implement Hot Module Replacement (HMR) for your framework. An example implementation of HMR refresh can be seen here:
+
+```js
+import { morph } from 'million/morph';
+
+morph(
+  `<body>
+    Hello World!
+  </body>`,
+  document.body,
+);
+```
+
+## Server-Side Generation (SSG)
+
+Million.js is intended to be the Virtual DOM runtime for your application. It's primarily designed to be augmented by a compiler which can produce optimizations and code generation for Million.js. However, Million doesn't provide a compiler by default, as static analysis and code generation are difficult to pull off well without knowledge of the library (state, components, etc.).
+
+However, Million does provide example implementations for virtual node `h` functions to raw objects with [`vite-plugin-million`](https://github.com/aidenybai/million/tree/v1.7.0/packages/vite-plugin-million).
+
+If you are considering writing a compiler for your Million library, consider taking a look at the implemenation of [`vite-plugin-million`](https://github.com/aidenybai/million/tree/v1.7.0/packages/vite-plugin-million). Additionally, you should look into [recast](https://github.com/benjamn/recast) and [ast-types](https://github.com/benjamn/ast-types), both great options for JavaScript AST traversal for static analysis. The reference for the AST can be found with the [ESPrisma documentation](https://docs.esprima.org/en/latest/)

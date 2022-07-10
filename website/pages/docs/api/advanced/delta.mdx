@@ -1,0 +1,46 @@
+---
+title: Deltas
+---
+
+# `Deltas`
+
+**Syntax:** `Deltas.OPERATION(index)`\
+**Example:** `Deltas.CREATE(0)`
+
+Deltas are a way for the compile-time to optimize runtime operations by providing a set of predefined operations. This is useful for cases where you are performing consistent, predictable operations at a high interval, low payload situation.
+
+There are three types of delta operations: `Deltas.INSERT`, `Deltas.UPDATE`, and `Deltas.DELETE`. You can provide a specified index to select the position of the VNode's children to be inserted, updated, or deleted.
+
+- `Deltas.INSERT` is used to add children at a selected index.\
+  **Syntax:** `Deltas.CREATE(index)`\
+  **Example:** `Deltas.CREATE(0)`
+
+- `Deltas.UPDATE` is used to replace children at a selected index.\
+  **Syntax:** `Deltas.UPDATE(index)`\
+  **Example:** `Deltas.UPDATE(0)`
+
+- `Deltas.DELETE` is used to remove children at a selected index.\
+  **Syntax:** `Deltas.REMOVE(index)`\
+  **Example:** `Deltas.REMOVE(0)`
+
+You can load these operations into a delta, or an array. You can pass them inside the `m` function.
+
+```js
+import { _, m, Deltas } from 'million';
+
+const vnode = m('div', _, ['Hello World'], _, [
+  Deltas.CREATE(0),
+  Deltas.UPDATE(0),
+]);
+```
+
+```js {5,6}
+{
+  tag: 'div',
+  children: ['Hello World'],
+  delta: [
+    [0 /* DeltaTypes.INSERT */, 0],
+    [1 /* DeltaTypes.UPDATE */, 0],
+  ]
+}
+```
