@@ -1,6 +1,6 @@
-import { h } from '../../src/jsx-runtime/h';
-import { RawVNode } from '../../src/jsx-runtime/types';
-import { VNode, VProps } from '../../src/million/types';
+import { h } from '../jsx-runtime/h';
+import type { RawVNode } from '../jsx-runtime/types';
+import type { VNode, VProps } from '../million/types';
 
 export const factory = (tagName: string) => {
   function vnode(props: VProps): VNode;
@@ -9,9 +9,8 @@ export const factory = (tagName: string) => {
   function vnode(param1?: any, param2?: any): VNode {
     if (Array.isArray(param1)) {
       return h(tagName, param2, ...param1) as VNode;
-    } else {
-      return h(tagName, param1, ...(param2 ?? [])) as VNode;
     }
+    return h(tagName, param1, ...(param2 ?? [])) as VNode;
   }
   return vnode;
 };

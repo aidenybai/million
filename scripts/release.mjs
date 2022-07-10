@@ -16,11 +16,11 @@ current = load('Building distribution bundles...');
 try {
   await $`zx scripts/build.mjs`;
 } catch (_err) {
-  fail('build', 'bun run build');
+  fail('build', 'pnpm run build');
 }
 current.stop();
 await sleep(1000);
 
 success('Built distribution bundles.');
 
-success('Please run `bun run bump` to publish');
+success('Please run `pnpm run bump` to publish');

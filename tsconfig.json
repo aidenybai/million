@@ -1,4 +1,5 @@
 {
+  "extends": "@vercel/style-guide/typescript",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
@@ -8,22 +9,11 @@
     "jsx": "react-jsx",
     "jsxImportSource": "src",
     "lib": ["dom", "esnext"],
-    "declarationDir": "dist",
     "outDir": "dist",
     "moduleResolution": "node",
     "module": "esnext",
     "target": "esnext",
-    "suppressImplicitAnyIndexErrors": true,
-    "allowSyntheticDefaultImports": true,
-    "noFallthroughCasesInSwitch": true,
-    "experimentalDecorators": true,
-    "downlevelIteration": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "esModuleInterop": true,
-    "noUnusedLocals": true,
-    "declaration": true,
-    "strict": true
+    "noImplicitAny": false
   },
   "include": ["./**/*.ts", "./**/*.tsx"],
   "exclude": ["node_modules", "dist"]
