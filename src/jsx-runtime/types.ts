@@ -6,6 +6,7 @@ export type RawVNode = VNode | number | boolean | undefined | null;
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace JSX {
   export type Element = VNode;
+  // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
   export interface IntrinsicElements {
     [el: string]: VProps;
   }

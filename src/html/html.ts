@@ -1,6 +1,8 @@
 /*! (c) Jason Miller - Apache */
 // Copied from https://github.com/developit/htm
 
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
+/* eslint-disable no-bitwise */
 /* eslint-disable prefer-rest-params */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
@@ -104,7 +106,9 @@ export const evaluate = (h, built, fields, args) => {
     const type = built[i++];
 
     // Set `built[0]`'s appropriate bits if this element depends on a dynamic value.
-    const value = built[i] ? ((built[0] |= type ? 1 : 2), fields[built[i++]]) : built[++i];
+    const value = built[i]
+      ? ((built[0] |= type ? 1 : 2), fields[built[i++]])
+      : built[++i];
 
     if (type === TAG_SET) {
       args[0] = value;
@@ -113,7 +117,7 @@ export const evaluate = (h, built, fields, args) => {
     } else if (type === PROP_SET) {
       (args[1] = args[1] || {})[built[++i]] = value;
     } else if (type === PROP_APPEND) {
-      args[1][built[++i]] += value + '';
+      args[1][built[++i]] += String(value);
     } else if (type) {
       // type === CHILD_RECURSE
       // Set the operation list (including the staticness bits) as
@@ -150,7 +154,10 @@ export const build = function (statics) {
   let char, propName;
 
   const commit = (field) => {
-    if (mode === MODE_TEXT && (field || (buffer = buffer.replace(/^\s*\n\s*|\s*\n\s*$/g, '')))) {
+    if (
+      mode === MODE_TEXT &&
+      (field || (buffer = buffer.replace(/^\s*\n\s*|\s*\n\s*$/g, '')))
+    ) {
       current.push(CHILD_APPEND, field, buffer);
     } else if (mode === MODE_TAGNAME && (field || buffer)) {
       current.push(TAG_SET, field, buffer);
@@ -218,7 +225,10 @@ export const build = function (statics) {
         mode = MODE_PROP_SET;
         propName = buffer;
         buffer = '';
-      } else if (char === '/' && (mode < MODE_PROP_SET || statics[i][j + 1] === '>')) {
+      } else if (
+        char === '/' &&
+        (mode < MODE_PROP_SET || statics[i][j + 1] === '>')
+      ) {
         commit();
         if (mode === MODE_TAGNAME) {
           current = current[0];
@@ -226,7 +236,12 @@ export const build = function (statics) {
         mode = current;
         (current = current[0]).push(CHILD_RECURSE, 0, mode);
         mode = MODE_SLASH;
-      } else if (char === ' ' || char === '\t' || char === '\n' || char === '\r') {
+      } else if (
+        char === ' ' ||
+        char === '\t' ||
+        char === '\n' ||
+        char === '\r'
+      ) {
         // <a disabled>
         commit();
         mode = MODE_WHITESPACE;

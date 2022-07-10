@@ -3,3 +3,4 @@ dist/
 benchmarks/
 node_modules/
 scripts/
+/*.ts

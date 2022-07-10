@@ -25,15 +25,15 @@ await send(
 
 await send(
   `First, let's spin up our first dev environment! To do so, you'll need to run ${chalk.gray(
-    '`bun run dev`',
+    '`pnpm run`',
   )}. Since this is your first time, I'll run it for you:`,
   7000,
 );
 
 console.log();
-await send(chalk.bold(chalk.gray('$ bun run dev')), 3000);
+await send(chalk.bold(chalk.gray('$ pnpm run dev')), 3000);
 console.log();
-$`bun run dev`;
+$`pnpm run dev`;
 
 await fs.writeFile(
   path.join(__dirname, '../dev/script.tsx'),

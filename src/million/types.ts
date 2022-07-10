@@ -19,7 +19,11 @@ export type VProps = Record<string, any>;
 export type DOMNode = HTMLElement | SVGElement | Text | Comment;
 export type VNode = VElement | Thunk | string;
 export type Delta = [DeltaTypes, number];
-export type Hook = (el?: DOMNode, newVNode?: VNode, oldVNode?: VNode) => boolean;
+export type Hook = (
+  el?: DOMNode,
+  newVNode?: VNode,
+  oldVNode?: VNode,
+) => boolean;
 export type Commit = (work: () => void, data: ReturnType<Driver>) => void;
 export type Driver = (
   el: DOMNode,
@@ -57,8 +61,8 @@ export type Hooks = {
 export interface VElement extends V {
   flag: VElementFlags;
   tag: string;
-  props?: VProps;
-  children?: VNode[];
+  props?: VProps | null;
+  children?: VNode[] | null;
   key?: string;
   delta?: Delta[];
   hook?: Hooks;

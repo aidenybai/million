@@ -1,5 +1,5 @@
-import { DOMNode, VNode } from '../million/types';
 import { fromDomNodeToVNode, fromStringToDomNode } from '../utils';
+import type { DOMNode, VNode } from '../million/types';
 
 const cache = new Map<DOMNode | string, VNode>();
 
@@ -13,9 +13,10 @@ export const memo = (node: DOMNode | string): VNode | undefined => {
 
   if (cache.has(key)) {
     return cache.get(key);
-  } else {
-    const vnode = fromDomNodeToVNode(typeof node === 'string' ? fromStringToDomNode(node) : node);
-    cache.set(key, vnode!);
-    return vnode;
   }
+  const vnode = fromDomNodeToVNode(
+    typeof node === 'string' ? fromStringToDomNode(node) : node,
+  );
+  cache.set(key, vnode!);
+  return vnode;
 };

@@ -7,6 +7,5 @@ dev
 coverage
 .DS_Store
 .pnpm-debug.log
-pnpm-lock.yaml
 *.tgz
 /*.d.ts

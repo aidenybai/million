@@ -3,8 +3,10 @@
 // - https://github.com/WebReflection/augmentor/blob/master/esm/index.js
 // - https://github.com/WebReflection/umap/blob/master/esm/index.js
 
+/* eslint-disable no-console */
+/* eslint-disable eqeqeq */
+/* eslint-disable no-sequences */
 /* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable @typescript-eslint/no-this-alias */
 /* eslint-disable prefer-rest-params */
 /* eslint-disable prefer-spread */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -80,7 +82,8 @@ export const useReducer = (reducer, value, init?, options?) => {
 };
 
 // useState
-export const useState = (value, options?) => useReducer(getValue, value, void 0, options);
+export const useState = (value, options?) =>
+  useReducer(getValue, value, void 0, options);
 
 // useContext
 const hooks = new WeakMap();
@@ -90,7 +93,6 @@ const invoke = ({ hook, args }) => {
 
 export const createContext = (
   value,
-  // eslint-disable-next-line @typescript-eslint/ban-types
 ): {
   value: any;
   Provider: ({ value }) => any;
@@ -149,6 +151,7 @@ const createEffect = (asy) => (effect, guards?) => {
       info.values = guards;
       if (asy) stop(asy);
       const { clean } = info;
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (clean) {
         info.clean = null;
         clean();
@@ -194,7 +197,8 @@ export const useMemo = (memo, guards?) => {
   const i = state.i++;
   const { stack, length } = state;
   if (i === length) state.length = stack.push({ $: memo(), _: guards });
-  else if (!guards || guards.some(different, stack[i]._)) stack[i] = { $: memo(), _: guards };
+  else if (!guards || guards.some(different, stack[i]._))
+    stack[i] = { $: memo(), _: guards };
   return stack[i].$;
 };
 

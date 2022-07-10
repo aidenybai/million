@@ -1,6 +1,8 @@
+/* eslint-disable camelcase */
 /* eslint-disable @typescript-eslint/ban-types */
-import { FC, Fragment, h, jsx, jsxs } from '../jsx-runtime';
-import { batch, startTransition, thunk, VElement, VNode, VProps } from '../million';
+
+import { Fragment, h, jsx, jsxs } from '../jsx-runtime';
+import { batch, startTransition, thunk } from '../million';
 import { compat } from './compat';
 import {
   createContext,
@@ -20,6 +22,8 @@ import {
   useSyncExternalStore,
   useTransition,
 } from './hooks';
+import type { VElement, VNode, VProps } from '../million';
+import type { FC } from '../jsx-runtime';
 
 const cloneElement = (vnode: VNode) => {
   if (typeof vnode === 'string') return vnode;
@@ -28,17 +32,17 @@ const cloneElement = (vnode: VNode) => {
 
 const createElement = compat(h);
 
-const isValidElement = (vnode: VNode) => {
-  if (vnode && vnode !== null && vnode.constructor === undefined) {
+const isValidElement = (vnode?: VNode | null) => {
+  if (vnode) {
     if (typeof vnode === 'string') return true;
     if (vnode.tag) return true;
   }
   return false;
 };
 
-const memo = (component: Function) => () => {
+const memo = (component: (...args: unknown[]) => VNode) => () => {
   return (props: VProps) => {
-    return thunk(component as any, Object.values(props));
+    return thunk(component, Object.values(props));
   };
 };
 
@@ -46,15 +50,15 @@ const toChildArray = (children: VNode[]): VNode[] => {
   return (h('_', {}, ...children) as VElement).children!;
 };
 
-const mapFn = (children: VNode[], fn: (this: VNode) => VNode) => {
-  if (children == null) return null;
+const mapFn = (children: VNode[] | null, fn: (this: VNode) => VNode) => {
+  if (children === null) return null;
   return toChildArray(toChildArray(children).map(fn));
 };
 
 const Children = {
   map: mapFn,
   forEach: mapFn,
-  count(children: VNode[]) {
+  count(children: VNode[] | null) {
     return children ? toChildArray(children).length : 0;
   },
   only(children: VNode[]) {
@@ -66,16 +70,16 @@ const Children = {
 };
 
 const lazy = (loader: () => Promise<FC>) => {
-  let promise: Promise<FC>;
-  let component: FC;
-  let err: Error;
+  let promise: Promise<FC> | undefined;
+  let component: FC | undefined;
+  let err: Error | undefined;
 
   return (props: VProps) => {
     if (!promise) {
       promise = loader();
       promise.then(
         (exports: any) => (component = exports.default || exports),
-        (e) => (err = e),
+        (e: Error) => (err = e),
       );
     }
     if (err) throw err;
@@ -97,25 +101,25 @@ const forwardRef = (fn: Function) => {
 };
 
 const Suspense = (props: { fallback: VNode; children: VNode[] }) => {
-  return props?.children;
+  return props.children;
 };
 
-const SuspenseList = (props: VProps) => {
-  return props?.children;
+const SuspenseList = (props: { fallback: VNode; children: VNode[] }) => {
+  return props.children;
 };
 
 const StrictMode = (props: { children: VNode[] }) => {
-  return props?.children;
+  return props.children;
 };
 
 class Component {
   props: VProps;
-  context: any;
+  context: ReturnType<typeof createContext> | undefined;
   queueRender: (_callback: () => any) => void;
   state: VProps;
   rerender?: Function;
 
-  constructor(props: VProps, context: any) {
+  constructor(props: VProps, context?: ReturnType<typeof createContext>) {
     this.props = props;
     this.context = context;
     this.state = {};
@@ -137,15 +141,19 @@ class Component {
     return true;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   shouldComponentUpdate(_newProps: VProps, _newState: VProps) {
     return true;
   }
 
-  setState(update: VProps, callback?: (state: VProps, props: VProps) => VProps) {
+  setState(
+    update: VProps | Function,
+    callback?: (state: VProps, props: VProps) => VProps,
+  ) {
     const newState = {
       ...this.state,
-      ...(typeof update === 'function' ? update(this.state, this.props) : update),
+      ...(typeof update === 'function'
+        ? (update(this.state, this.props) as VProps)
+        : update),
     };
     if (!this.shouldComponentUpdate(this.props, newState)) return;
     if (callback) callback(this.state, this.props);
@@ -156,8 +164,8 @@ class Component {
     });
   }
 
-  render(props?: any): any {
-    return Fragment(props)!;
+  render(props?: VProps): VNode[] | undefined {
+    return Fragment(props);
   }
 }
 

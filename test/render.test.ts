@@ -1,8 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
-import { createElement } from '../src/million/createElement';
+import { createElement } from '../src/million/create-element';
 import { Deltas, m } from '../src/million/m';
 import { patch, render } from '../src/million/render';
-import { Flags, DOMNode } from '../src/million/types';
+import { Flags } from '../src/million/types';
+import type { DOMNode } from '../src/million/types';
 
 export const expectEqualNode = (el1: DOMNode, el2: DOMNode) => {
   expect(el1.isEqualNode(el2)).toBeTruthy();
@@ -22,9 +23,15 @@ describe.concurrent('render', () => {
   it('should render element correctly', () => {
     const root = document.createElement('div');
     render(root, m('div', {}, ['foo']));
-    expectEqualNode(<DOMNode>root.firstChild, createElement(m('div', {}, ['foo'])));
+    expectEqualNode(
+      root.firstChild as DOMNode,
+      createElement(m('div', {}, ['foo'])),
+    );
     render(root, m('div', {}, ['bar']));
-    expectEqualNode(<DOMNode>root.firstChild, createElement(m('div', {}, ['bar'])));
+    expectEqualNode(
+      root.firstChild as DOMNode,
+      createElement(m('div', {}, ['bar'])),
+    );
   });
 
   it('should patch element with text as children', () => {
@@ -33,14 +40,21 @@ describe.concurrent('render', () => {
     patch(el, m('div', { id: 'el' }, ['bar']));
     expectEqualNode(el, createElement(m('div', { id: 'el' }, ['bar'])));
     patch(el, m('div', { id: 'el', className: 'foo' }, ['baz']));
-    expectEqualNode(el, createElement(m('div', { id: 'el', className: 'foo' }, ['baz'])));
+    expectEqualNode(
+      el,
+      createElement(m('div', { id: 'el', className: 'foo' }, ['baz'])),
+    );
   });
 
   it('should patch attributes', () => {
     const el = createElement(m('div', { id: 'el' }, ['foo']));
 
     patch(el, m('div', { 'data-test': 'foo' }, ['bar']));
-    expectEqualNode(el, createElement(m('div', { 'data-test': 'foo' }, ['bar'])));
+
+    expectEqualNode(
+      el,
+      createElement(m('div', { 'data-test': 'foo' }, ['bar'])),
+    );
   });
 
   it('should patch text', () => {
@@ -73,7 +87,8 @@ describe.concurrent('render', () => {
   it('should execute CREATE deltas', () => {
     const el = document.createElement('div');
     const children: string[] = [];
-    const createVNode = () => m('div', undefined, [...children], undefined, [Deltas.CREATE(0)]);
+    const createVNode = () =>
+      m('div', undefined, [...children], undefined, [Deltas.CREATE(0)]);
 
     const prevVNode1 = createVNode();
     children.unshift('foo');
@@ -95,7 +110,8 @@ describe.concurrent('render', () => {
     const el = document.createElement('div');
     el.textContent = 'foo';
     const children: string[] = ['foo'];
-    const createVNode = () => m('div', undefined, [...children], undefined, [Deltas.UPDATE(0)]);
+    const createVNode = () =>
+      m('div', undefined, [...children], undefined, [Deltas.UPDATE(0)]);
 
     const prevVNode1 = createVNode();
     children[0] = 'bar';
@@ -111,7 +127,8 @@ describe.concurrent('render', () => {
   it('should execute CREATE deltas', () => {
     const el = document.createElement('div');
     const children: string[] = [];
-    const createVNode = () => m('div', undefined, [...children], undefined, [Deltas.CREATE(0)]);
+    const createVNode = () =>
+      m('div', undefined, [...children], undefined, [Deltas.CREATE(0)]);
 
     const prevVNode1 = createVNode();
     children.unshift('bar');
@@ -130,7 +147,8 @@ describe.concurrent('render', () => {
     el.appendChild(document.createTextNode('bar'));
     el.appendChild(document.createTextNode('baz'));
     const children: string[] = ['foo', 'bar', 'baz'];
-    const createVNode = () => m('div', undefined, [...children], undefined, [Deltas.REMOVE(0)]);
+    const createVNode = () =>
+      m('div', undefined, [...children], undefined, [Deltas.REMOVE(0)]);
 
     const prevVNode1 = createVNode();
     children.splice(0, 1);
@@ -169,7 +187,11 @@ describe.concurrent('render', () => {
       list1.map((item) => m('li', { key: item }, [item])),
       Flags.ELEMENT_KEYED_CHILDREN,
     );
-    patch(el, newVNode1, m('ul', undefined, undefined, Flags.ELEMENT_NO_CHILDREN));
+    patch(
+      el,
+      newVNode1,
+      m('ul', undefined, undefined, Flags.ELEMENT_NO_CHILDREN),
+    );
     expectEqualNode(el, createElement(newVNode1));
 
     const list2 = ['foo', 'baz', 'bar', 'foo1', 'bar1', 'baz1'];
@@ -237,15 +259,15 @@ describe.concurrent('render', () => {
     const el1 = createElement(m('div'));
     const el2 = patch(el1, m('div', { id: 'app' }));
 
-    expect((<HTMLElement>el2).id).toEqual('app');
-    expectEqualNode(<HTMLElement>el2, el1);
+    expect((el2 as HTMLElement).id).toEqual('app');
+    expectEqualNode(el2 as HTMLElement, el1);
   });
 
   it('should skip node based on hook', () => {
     const el1 = createElement(m('div'));
     const el2 = patch(el1, m('div', { id: 'app' }), undefined, () => false);
 
-    expect((<HTMLElement>el2).id).toEqual('');
+    expect((el2 as HTMLElement).id).toEqual('');
   });
 
   it('should hard replace if different tag', () => {
