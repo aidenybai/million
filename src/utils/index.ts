@@ -4,7 +4,11 @@ import { OLD_VNODE_FIELD } from '../million/types';
 import type { DOMNode, VNode, VProps } from '../million/types';
 
 export const fromStringToVNode = (htmlString: string): VNode | VNode[] => {
-  return html([htmlString]);
+  try {
+    return html([htmlString]);
+  } catch (_err) {
+    return fromDomNodeToVNode(fromStringToDomNode(htmlString));
+  }
 };
 
 export const fromDomNodeToVNode = (el: DOMNode): VNode | undefined => {
