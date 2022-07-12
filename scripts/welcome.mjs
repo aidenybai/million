@@ -12,7 +12,9 @@ const send = async (message, time) => {
 };
 
 await send(
-  `Hi there! I'm ${chalk.magenta('Mil the Lion')}! Welcome to the Million codebase!`,
+  `Hi there! I'm ${chalk.magenta(
+    'Mil the Lion',
+  )}! Welcome to the Million codebase!`,
   1000,
 );
 
@@ -37,7 +39,7 @@ $`pnpm run dev`;
 
 await fs.writeFile(
   path.join(__dirname, '../dev/script.tsx'),
-  `import { createRoot, useState } from 'src/react'; // You can import anything under src/ here (ex. 'src/million')
+  `import { createRoot, useState } from 'packages/react'; // You can import anything under packages/ here (ex. 'packages/million')
 
 function App() {
   const [count, setCount] = useState(0);

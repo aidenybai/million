@@ -10,3 +10,4 @@ coverage
 *.tgz
 /*.d.ts
 .next
+.turbo

@@ -1,12 +1,10 @@
 {
-  "name": "docs",
-  "version": "1.0.0",
-  "main": "index.js",
-  "author": "Aiden Bai",
-  "license": "MIT",
+  "private": true,
   "scripts": {
     "dev": "next",
-    "build": "next build"
+    "build": "next build",
+    "lint": "eslint pages/**",
+    "cleanup": "prettier --write pages"
   },
   "dependencies": {
     "next": "^12.0.9",
@@ -18,7 +16,6 @@
     "@mdx-js/react": "^1.6.22",
     "autoprefixer": "^10.4.2",
     "copy-to-clipboard": "^3.3.1",
-    "million": "^1.10.0",
     "nextra": "2.0.0-alpha.56",
     "nextra-theme-docs": "2.0.0-alpha.59",
     "postcss": "^8.4.5",

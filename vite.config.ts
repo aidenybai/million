@@ -1,19 +1,19 @@
 import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
-import { million } from './src/vite-plugin-million';
+import { million } from './packages/vite-plugin-million';
 
-const src = resolve(__dirname, './src');
+const packages = resolve(__dirname, './packages');
 
 export default defineConfig({
   server: {
-    open: '/dev/index.html'
+    open: '/dev/index.html',
   },
   resolve: {
     alias: {
-      src,
+      packages,
     },
   },
-  plugins: [million({ importSource: src, react: true })],
+  plugins: [million({ importSource: packages, react: true })],
   test: {
     watch: false,
     environment: 'jsdom',

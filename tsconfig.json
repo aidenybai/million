@@ -3,11 +3,11 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "src/*": ["src/*"],
-      "million/*": ["src/*"]
+      "packages/*": ["packages/*"],
+      "million/*": ["packages/*"]
     },
     "jsx": "react-jsx",
-    "jsxImportSource": "src",
+    "jsxImportSource": "packages",
     "lib": ["dom", "esnext"],
     "outDir": "dist",
     "moduleResolution": "node",
@@ -16,5 +16,5 @@
     "noImplicitAny": false
   },
   "include": ["./**/*.ts", "./**/*.tsx"],
-  "exclude": ["node_modules", "dist"]
+  "exclude": ["node_modules", "dist", "dev"]
 }
