@@ -73,6 +73,7 @@ export const treeify = (built, fields) => {
         props.push(value);
         currentProps = null;
       } else if (type === PROP_SET) {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (!currentProps) {
           currentProps = Object.create(null);
           props.push(currentProps);
