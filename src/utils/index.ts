@@ -7,7 +7,7 @@ export const fromStringToVNode = (htmlString: string): VNode | VNode[] => {
   try {
     return html([htmlString]);
   } catch (_err) {
-    return fromDomNodeToVNode(fromStringToDomNode(htmlString));
+    return fromDomNodeToVNode(fromStringToDomNode(htmlString))!;
   }
 };
 
