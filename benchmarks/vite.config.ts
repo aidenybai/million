@@ -2,17 +2,18 @@ import { defineConfig } from 'vite';
 import { resolve } from 'path';
 import legacy from '@vitejs/plugin-legacy';
 
+const packages = resolve(__dirname, '../packages');
+
 export default defineConfig({
-  root: 'benchmarks',
   resolve: {
     alias: {
-      src: resolve(__dirname, '../src'),
+      packages,
     },
   },
   esbuild: {
     jsxFactory: 'h',
     jsxFragment: 'Fragment',
-    jsxInject: `import { h, Fragment } from 'src/jsx-runtime';`,
+    jsxInject: `import { h, Fragment } from 'packages/jsx-runtime';`,
   },
   plugins: [
     legacy({

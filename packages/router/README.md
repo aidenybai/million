@@ -1,6 +1,6 @@
 # `million/router`
 
-Adds a SPA router for [Million](https://github.com/aidenybai/million), adapted from [`micromorph/spa`](https://github.com/natemoo-re/micromorph/blob/main/src/spa.ts).
+Adds a SPA router for [Million](https://github.com/aidenybai/million), adapted from [`micromorph/spa`](https://github.com/natemoo-re/micromorph/blob/main/packages/spa.ts).
 
 ## License
 

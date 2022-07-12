@@ -5,9 +5,9 @@ import { info, success } from './helpers.mjs';
 await $`rm -rf dist/*`;
 await $`unbuild`;
 await $`mkdir dist/measurement`
-await $`esbuild src/react/react.ts --legal-comments=none --minify --outfile=dist/measurement/normal.js`;
-await $`esbuild src/react/react.ts --bundle --legal-comments=none --minify --outfile=dist/measurement/react.js`;
-await $`esbuild src/million/index.ts --bundle --legal-comments=none --minify --outfile=dist/measurement/million.js`;
+await $`esbuild packages/react/react.ts --legal-comments=none --minify --outfile=dist/measurement/normal.js`;
+await $`esbuild packages/react/react.ts --bundle --legal-comments=none --minify --outfile=dist/measurement/react.js`;
+await $`esbuild packages/million/index.ts --bundle --legal-comments=none --minify --outfile=dist/measurement/million.js`;
 
 const packages = [
   'jsx-runtime',

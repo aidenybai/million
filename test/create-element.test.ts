@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { createElement } from '../src/million/create-element';
-import { m } from '../src/million/m';
-import { OLD_VNODE_FIELD } from '../src/million/types';
-import type { DOMNode } from '../src/million/types';
+import { createElement } from '../packages/million/create-element';
+import { m } from '../packages/million/m';
+import { OLD_VNODE_FIELD } from '../packages/million/types';
+import type { DOMNode } from '../packages/million/types';
 
 export const expectEqualNode = (el1: DOMNode, el2: DOMNode) => {
   expect(el1.isEqualNode(el2)).toBeTruthy();

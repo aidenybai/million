@@ -1,0 +1,7 @@
+{
+  "private": true,
+  "scripts": {
+    "lint": "eslint .",
+    "cleanup": "prettier --write ."
+  }
+}

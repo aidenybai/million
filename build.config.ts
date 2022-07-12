@@ -2,23 +2,23 @@ import { defineBuildConfig } from 'unbuild';
 
 export default defineBuildConfig({
   entries: [
-    './src/million',
-    './src/jsx-runtime',
-    './src/utils',
-    './src/router',
-    './src/html',
-    './src/morph',
-    './src/vite-plugin-million',
-    './src/react',
+    './packages/million',
+    './packages/jsx-runtime',
+    './packages/utils',
+    './packages/router',
+    './packages/html',
+    './packages/morph',
+    './packages/vite-plugin-million',
+    './packages/react',
     {
-      input: './src/react/exports',
+      input: './packages/react/exports',
       builder: 'mkdist',
       outDir: './dist/react',
       ext: 'mjs',
       format: 'esm',
     },
     {
-      input: './src/react/exports',
+      input: './packages/react/exports',
       builder: 'mkdist',
       outDir: './dist/react',
       ext: 'cjs',

@@ -5,7 +5,7 @@
 // @ts-nocheck
 
 import * as hundred from 'hundred';
-import { createElement } from 'src/million';
+import { createElement } from 'packages/million';
 import * as simple_virtual_dom from 'simple-virtual-dom';
 import * as snabbdom from 'snabbdom';
 import * as virtual_dom from 'virtual-dom';
