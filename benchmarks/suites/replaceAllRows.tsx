@@ -20,7 +20,8 @@ import { buildData, patch } from '../data';
 
 const shuffleArray = (array: unknown[]) => {
   for (
-    let i = array.length - 1 - Math.floor(Math.random() * (data.length / 3 + 1));
+    let i =
+      array.length - 1 - Math.floor(Math.random() * (data.length / 3 + 1));
     i > Math.floor(Math.random() * (data.length / 3 + 1));
     i--
   ) {
@@ -62,7 +63,10 @@ const suite = Suite('replace all rows (updating all 1,000 rows)', {
     simple_virtual_dom.patch(el(), patches);
   },
   'virtual-dom': () => {
-    const patches = virtual_dom.diff(virtualDomAdapter(oldVNode), virtualDomAdapter(vnode));
+    const patches = virtual_dom.diff(
+      virtualDomAdapter(oldVNode),
+      virtualDomAdapter(vnode),
+    );
     virtual_dom.patch(el(), patches);
   },
   snabbdom: () => {

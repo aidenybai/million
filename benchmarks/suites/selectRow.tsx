@@ -49,7 +49,10 @@ const suite = Suite('select row (highlighting a selected row)', {
     simple_virtual_dom.patch(el(), patches);
   },
   'virtual-dom': () => {
-    const patches = virtual_dom.diff(virtualDomAdapter(oldVNode), virtualDomAdapter(vnode));
+    const patches = virtual_dom.diff(
+      virtualDomAdapter(oldVNode),
+      virtualDomAdapter(vnode),
+    );
     virtual_dom.patch(el(), patches);
   },
   snabbdom: () => {
@@ -63,7 +66,8 @@ const suite = Suite('select row (highlighting a selected row)', {
     const element = el();
     let html = '';
     data.forEach(({ id, label }, i) => {
-      if (row === i) html += `<tr style="background: red;"><td>${id}</td><td>${label}</td></tr>`;
+      if (row === i)
+        html += `<tr style="background: red;"><td>${id}</td><td>${label}</td></tr>`;
       else html += `<tr><td>${String(id)}</td><td>${label}</td></tr>`;
     });
     element.innerHTML = html;

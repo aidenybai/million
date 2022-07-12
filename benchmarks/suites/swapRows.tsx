@@ -63,7 +63,10 @@ const suite = Suite('swap rows (swap 2 rows for table with 1,000 rows)', {
     simple_virtual_dom.patch(el(), patches);
   },
   'virtual-dom': () => {
-    const patches = virtual_dom.diff(virtualDomAdapter(oldVNode), virtualDomAdapter(vnode));
+    const patches = virtual_dom.diff(
+      virtualDomAdapter(oldVNode),
+      virtualDomAdapter(vnode),
+    );
     virtual_dom.patch(el(), patches);
   },
   snabbdom: () => {
