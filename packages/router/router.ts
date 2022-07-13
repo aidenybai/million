@@ -75,10 +75,8 @@ export const prefetchDOM = (selector?: string) => {
       const url = getURL({ target: el } as unknown as Event);
       if (!url) return;
       if (routeMap.has(url.pathname)) return;
-      queuePrefetch(() => {
-        startTransition(() => {
-          void prefetch(url);
-        });
+      startTransition(() => {
+        void prefetch(url);
       });
     }
   });
