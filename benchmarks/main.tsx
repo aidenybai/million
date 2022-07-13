@@ -15,7 +15,11 @@ import replaceAllRows from './suites/replaceAllRows';
 import selectRow from './suites/selectRow';
 import swapRows from './suites/swapRows';
 
-if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+if (
+  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent,
+  )
+) {
   alert(
     'Please note that these benchmarks will be degraded and inaccurate on mobile. Usage is experimental on mobile devices and is not guaranteed to be functional or stable, proceed with caution.',
   );
@@ -104,7 +108,11 @@ const vnode = () => {
                       <button
                         role="button"
                         data-target="modal"
-                        onClick={() => document.getElementById('modal').removeAttribute('open')}
+                        onClick={() =>
+                          document
+                            .getElementById('modal')
+                            .removeAttribute('open')
+                        }
                       >
                         Understood
                       </button>
@@ -113,7 +121,9 @@ const vnode = () => {
                 );
                 disabled = name;
                 log(`Running: ${suite.name} - ${new Date().toLocaleString()}`);
-                chart.data.datasets[0].backgroundColor = new Array(7).fill('rgba(0, 0, 0, 0.2)');
+                chart.data.datasets[0].backgroundColor = new Array(7).fill(
+                  'rgba(0, 0, 0, 0.2)',
+                );
                 chart.update();
                 suite.run({ async: true });
                 patch(el, vnode());
@@ -145,7 +155,9 @@ const log = (message) => {
   if (message.name) cumulative[message.name] += Math.round(message.hz);
   patch(el, vnode());
   console.log(String(message));
-  const sortedKeys = Object.keys(cumulative).sort((a, b) => cumulative[b] - cumulative[a]);
+  const sortedKeys = Object.keys(cumulative).sort(
+    (a, b) => cumulative[b] - cumulative[a],
+  );
   const sortedValues = sortedKeys.map((key) => cumulative[key]);
   chart.data.labels = sortedKeys;
   chart.data.datasets[0].data = sortedValues;

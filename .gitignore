@@ -11,3 +11,4 @@ coverage
 /*.d.ts
 .next
 .turbo
+.eslintcache

@@ -2,9 +2,7 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint suites/**",
-    "cleanup": "prettier --write suites"
+    "build": "vite build"
   },
   "devDependencies": {
     "@picocss/pico": "^1.5.3",

@@ -10,8 +10,9 @@
   "scripts": {
     "dev": "zx scripts/dev.mjs && vite",
     "build": "zx scripts/build.mjs",
-    "lint": "turbo run lint",
-    "cleanup": "turbo run cleanup",
+    "cleanup": "prettier --write ./**/*.{ts,tsx}",
+    "lint": "eslint ./packages --ext .ts --cache",
+    "lint:fix": "pnpm lint --fix",
     "test": "vitest --coverage",
     "typecheck": "tsc --noEmit",
     "release": "zx scripts/release.mjs",

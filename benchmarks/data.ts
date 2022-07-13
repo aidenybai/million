@@ -67,9 +67,9 @@ export const buildData = (count: number) => {
   for (let i = 0; i < count; ++i) {
     data[i] = {
       id: id++,
-      label: `${adjectives[random(adjectives.length)]} ${colors[random(colors.length)]} ${
-        nouns[random(nouns.length)]
-      }`,
+      label: `${adjectives[random(adjectives.length)]} ${
+        colors[random(colors.length)]
+      } ${nouns[random(nouns.length)]}`,
     };
   }
   return data;
