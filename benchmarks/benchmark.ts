@@ -29,19 +29,29 @@ export const Suite = (name: string, tests: Record<string, Function>) => {
 export const snabbdomAdapter = (vnode: VNode): any => {
   if (typeof vnode === 'string') return vnode;
   // @ts-ignore
-  return _.clone(snabbdom.h(vnode.tag, null, vnode.children.map(snabbdomAdapter)));
+  return _.clone(
+    snabbdom.h(vnode.tag, null, vnode.children.map(snabbdomAdapter)),
+  );
 };
 
 export const virtualDomAdapter = (vnode: VNode): any => {
   if (typeof vnode === 'string') return new virtual_dom_VText(vnode);
   // @ts-ignore
-  return _.clone(new virtual_dom_VNode(vnode.tag, {}, vnode.children.map(virtualDomAdapter)));
+  return _.clone(
+    new virtual_dom_VNode(vnode.tag, {}, vnode.children.map(virtualDomAdapter)),
+  );
 };
 
 export const simpleVirtualDomAdapter = (vnode: VNode): any => {
   if (typeof vnode === 'string') return vnode;
   // @ts-ignore
-  return _.clone(simple_virtual_dom.el(vnode.tag, {}, vnode.children.map(simpleVirtualDomAdapter)));
+  return _.clone(
+    simple_virtual_dom.el(
+      vnode.tag,
+      {},
+      vnode.children.map(simpleVirtualDomAdapter),
+    ),
+  );
 };
 
 export const hundredAdapter = (vnode: VNode): any => {

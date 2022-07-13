@@ -1,6 +1,6 @@
 **/*.js
+/*.ts
 dist/
 benchmarks/
 node_modules/
 scripts/
-/*.ts

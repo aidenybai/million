@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { className, Deltas, kebab, m, ns, style, svg } from '../packages/million/m';
+import {
+  className,
+  Deltas,
+  kebab,
+  m,
+  ns,
+  style,
+  svg,
+} from '../packages/million/m';
 import { DeltaTypes, Flags } from '../packages/million/types';
 import type { VElement, VNode } from '../packages/million/types';
 
