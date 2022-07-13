@@ -3,4 +3,9 @@ const withNextra = require('nextra')({
   themeConfig: './theme.config.js',
   unstable_contentDump: true,
 });
-module.exports = withNextra();
+module.exports = {
+  ...withNextra(),
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+};
