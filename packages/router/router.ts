@@ -182,8 +182,6 @@ export const router = (
     const url = getURL(event);
     if (!url) return;
     if (routeMap.has(url.pathname)) return;
-    const route = routeMap.get(url.pathname);
-    if (!route?.hook?.(url, route)) return;
     event.preventDefault();
     queuePrefetch(() => prefetch(url));
   };
@@ -240,6 +238,15 @@ export const router = (
   window.addEventListener('mouseover', mouseoverHandler);
   window.addEventListener('submit', submitHandler);
   window.addEventListener('popstate', popstateHandler);
+
+  document
+    .querySelectorAll<HTMLAnchorElement>('a')
+    .forEach((el: HTMLAnchorElement) => {
+      const url = getURL({ target: el } as unknown as Event);
+      if (!url) return;
+      if (routeMap.has(url.pathname)) return;
+      queuePrefetch(() => prefetch(url));
+    });
 
   return () => {
     window.removeEventListener('click', clickHandler);
