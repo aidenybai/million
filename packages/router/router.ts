@@ -1,6 +1,6 @@
 import { createElement } from '../million/create-element';
 import { patch } from '../million/render';
-import { batch } from '../million/scheduler';
+import { batch, startTransition } from '../million/scheduler';
 import { morph } from '../morph/morph';
 import { createProgressBar, startTrickle, stopTrickle } from './progress';
 import { getURL, normalizeRelativeURLs } from './utils';
@@ -64,6 +64,24 @@ export const request = async (
       }
       return err.name;
     });
+};
+
+export const prefetchDOM = (selector?: string) => {
+  startTransition(() => {
+    const root = getEl(document.body, selector);
+    for (const el of Array.from(
+      root.querySelectorAll<HTMLAnchorElement>('a'),
+    )) {
+      const url = getURL({ target: el } as unknown as Event);
+      if (!url) return;
+      if (routeMap.has(url.pathname)) return;
+      queuePrefetch(() => {
+        startTransition(() => {
+          void prefetch(url);
+        });
+      });
+    }
+  });
 };
 
 export const navigate = async (
@@ -144,7 +162,10 @@ export const navigate = async (
       window.scrollTo({ top: scroll });
     }
     window.dispatchEvent(navigateEvent);
-    if (!goBack) stopTrickle(progressBar);
+    if (!goBack) {
+      stopTrickle(progressBar);
+      prefetchDOM(selector);
+    }
   });
 };
 
@@ -169,7 +190,7 @@ export const router = (
     const url = getURL(event);
     if (!url) return;
     const route = routeMap.get(url.pathname);
-    if (!route?.hook?.(url, route)) return;
+    if (route?.hook?.(url, route) === false) return;
     event.preventDefault();
     try {
       queueNavigation(() => navigate(url, selector));
@@ -191,7 +212,7 @@ export const router = (
     const url = new URL(el.action);
     if (!el.action || !(el instanceof HTMLFormElement)) return;
     const route = routeMap.get(el.action);
-    if (!route?.hook?.(url, route)) return;
+    if (route?.hook?.(url, route) === false) return;
 
     event.stopPropagation();
     event.preventDefault();
@@ -223,7 +244,7 @@ export const router = (
     }
 
     const route = routeMap.get(url.pathname);
-    if (!route?.hook?.(url, route)) return;
+    if (route?.hook?.(url, route) === false) return;
 
     try {
       queueNavigation(() => {
@@ -234,19 +255,12 @@ export const router = (
     }
   };
 
+  prefetchDOM(selector);
+
   window.addEventListener('click', clickHandler);
   window.addEventListener('mouseover', mouseoverHandler);
   window.addEventListener('submit', submitHandler);
   window.addEventListener('popstate', popstateHandler);
-
-  document
-    .querySelectorAll<HTMLAnchorElement>('a')
-    .forEach((el: HTMLAnchorElement) => {
-      const url = getURL({ target: el } as unknown as Event);
-      if (!url) return;
-      if (routeMap.has(url.pathname)) return;
-      queuePrefetch(() => prefetch(url));
-    });
 
   return () => {
     window.removeEventListener('click', clickHandler);
