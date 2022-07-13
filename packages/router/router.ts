@@ -68,7 +68,7 @@ export const request = async (
 
 export const prefetchDOM = (selector?: string) => {
   startTransition(() => {
-    const root = getEl(document.body, selector);
+    const root = getEl(document.documentElement, selector);
     for (const el of Array.from(
       root.querySelectorAll<HTMLAnchorElement>('a'),
     )) {
