@@ -18,7 +18,6 @@ importers:
       fsxx: ^0.1.0
       husky: ^8.0.1
       jsdom: ^20.0.0
-      million: '*'
       np: ^7.6.2
       ora: ^6.1.2
       prettier: ^2.7.1
@@ -49,7 +48,6 @@ importers:
       fsxx: 0.1.0
       husky: 8.0.1
       jsdom: 20.0.0
-      million: 'link:'
       np: 7.6.2
       ora: 6.1.2
       prettier: 2.7.1
@@ -130,6 +128,7 @@ importers:
       '@mdx-js/react': ^1.6.22
       autoprefixer: ^10.4.2
       copy-to-clipboard: ^3.3.1
+      million: '*'
       next: ^12.0.9
       nextra: 2.0.0-alpha.56
       nextra-theme-docs: 2.0.0-alpha.59
@@ -151,6 +150,7 @@ importers:
       '@mdx-js/react': 1.6.22_react@17.0.2
       autoprefixer: 10.4.7_postcss@8.4.14
       copy-to-clipboard: 3.3.1
+      million: link:..
       nextra: 2.0.0-alpha.56_react@17.0.2
       nextra-theme-docs: 2.0.0-alpha.59_6s32wxz5ps7aqzzuo7qur6i26m
       postcss: 8.4.14
