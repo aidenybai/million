@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
 import { fromStringToVNode } from 'million/utils';
+import { useEffect, useRef, useState } from 'react';
 import Wrapper from './Wrapper';
 
 export default function VNodeViz() {
