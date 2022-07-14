@@ -142,6 +142,7 @@ importers:
       string-similarity: ^4.0.4
       tailwindcss: ^3.0.15
     dependencies:
+      million: link:..
       next: 12.2.2_sfoxds7t5ydpegc3knd667wn6m
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
@@ -150,7 +151,6 @@ importers:
       '@mdx-js/react': 1.6.22_react@17.0.2
       autoprefixer: 10.4.7_postcss@8.4.14
       copy-to-clipboard: 3.3.1
-      million: link:..
       nextra: 2.0.0-alpha.56_react@17.0.2
       nextra-theme-docs: 2.0.0-alpha.59_6s32wxz5ps7aqzzuo7qur6i26m
       postcss: 8.4.14

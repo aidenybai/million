@@ -5,6 +5,7 @@
     "build": "next build"
   },
   "dependencies": {
+    "million": "*",
     "next": "^12.0.9",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
@@ -14,7 +15,6 @@
     "@mdx-js/react": "^1.6.22",
     "autoprefixer": "^10.4.2",
     "copy-to-clipboard": "^3.3.1",
-    "million": "*",
     "nextra": "2.0.0-alpha.56",
     "nextra-theme-docs": "2.0.0-alpha.59",
     "postcss": "^8.4.5",
