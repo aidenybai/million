@@ -124,23 +124,23 @@ importers:
 
   website:
     specifiers:
-      '@heroicons/react': ^1.0.5
+      '@heroicons/react': ^1.0.6
       '@mdx-js/react': ^1.6.22
-      autoprefixer: ^10.4.2
+      autoprefixer: ^10.4.7
       copy-to-clipboard: ^3.3.1
       million: ^1.11.7
-      next: ^12.0.9
+      next: ^12.2.2
       nextra: 2.0.0-alpha.56
       nextra-theme-docs: 2.0.0-alpha.59
-      postcss: ^8.4.5
+      postcss: ^8.4.14
       react: ^17.0.2
       react-dom: ^17.0.2
-      react-hot-toast: ^2.2.0
-      react-lite-youtube-embed: ^2.1.3
-      react-modal-video: ^1.2.8
+      react-hot-toast: ^2.3.0
+      react-lite-youtube-embed: ^2.2.2
+      react-modal-video: ^1.2.9
       shiki: ^0.10.1
       string-similarity: ^4.0.4
-      tailwindcss: ^3.0.15
+      tailwindcss: ^3.1.6
     dependencies:
       million: 1.11.7
       next: 12.2.2_sfoxds7t5ydpegc3knd667wn6m

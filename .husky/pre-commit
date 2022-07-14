@@ -18,7 +18,7 @@ function success {
 
 info "Updating packages..."
 
-taze -r
+taze -r -w
 pnpm install
 
 git stage package.json
