@@ -18,7 +18,7 @@ importers:
       fsxx: ^0.1.0
       husky: ^8.0.1
       jsdom: ^20.0.0
-      million: file:./packages
+      million: file:./dist
       np: ^7.6.2
       ora: ^6.1.2
       prettier: ^2.7.1
@@ -49,7 +49,7 @@ importers:
       fsxx: 0.1.0
       husky: 8.0.1
       jsdom: 20.0.0
-      million: file:packages
+      million: file:dist
       np: 7.6.2
       ora: 6.1.2
       prettier: 2.7.1
@@ -9303,8 +9303,8 @@ packages:
       yaml: 2.1.1
     dev: true
 
-  file:packages:
-    resolution: {directory: packages, type: directory}
-    name: packages
+  file:dist:
+    resolution: {directory: dist, type: directory}
+    name: dist
     version: 0.0.0
     dev: true
