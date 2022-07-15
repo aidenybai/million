@@ -26,7 +26,7 @@ export const createComponent = (
       ? h('_', key ? { key, ...rootFragmentStyle } : rootFragmentStyle, ...ret)
       : ret;
 
-    const ref = prevRef ?? { current: undefined, props };
+    const ref = prevRef ?? { current: null, props, ...newVNode.ref };
 
     if (ref?.current) {
       const patchHook = (
