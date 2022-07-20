@@ -40,7 +40,8 @@ export const fromASTNodeToVNode = (
   const vnodeChildren: RawVNode[] = [];
   const vnodeProps: any = {};
 
-  for (let i = 0; i < astProps.properties.length; i++) {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  for (let i = 0; i < astProps.properties?.length; i++) {
     const astProp = astProps.properties[i] as Property;
     const astPropKey = astProp.key as Identifier;
     if (astProp.value.type === 'ObjectExpression') {
@@ -123,8 +124,8 @@ export const fromVNodeToASTNode = (
     );
 
     const astVNode = [
-      property('init', literal('tag'), literal(String(velement?.tag))),
-      property('init', literal('flag'), literal(Number(velement?.flag))),
+      property('init', literal('tag'), literal(velement?.tag as string)),
+      property('init', literal('flag'), literal(velement?.flag as number)),
     ];
     if (velement?.props && Object.keys(velement.props).length > 0) {
       astVNode.push(property('init', literal('props'), astProps));

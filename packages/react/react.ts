@@ -2,10 +2,11 @@
 /* eslint-disable @typescript-eslint/ban-types */
 
 import { Fragment, h, jsx, jsxs } from '../jsx-runtime';
-import { batch, startTransition, thunk } from '../million';
+import { batch, startTransition } from '../million';
 import { compat } from './compat';
 import {
   createContext,
+  createSignal,
   hook,
   useCallback,
   useContext,
@@ -22,8 +23,8 @@ import {
   useSyncExternalStore,
   useTransition,
 } from './hooks';
-import type { VElement, VNode, VProps } from '../million';
 import type { FC } from '../jsx-runtime';
+import type { VElement, VNode, VProps } from '../million';
 
 const cloneElement = (vnode: VNode) => {
   if (typeof vnode === 'string') return vnode;
@@ -42,7 +43,7 @@ const isValidElement = (vnode?: VNode | null) => {
 
 const memo = (component: (...args: unknown[]) => VNode) => () => {
   return (props: VProps) => {
-    return thunk(component, Object.values(props));
+    return component(Object.values(props));
   };
 };
 
@@ -220,6 +221,7 @@ export {
   useEffect as useInsertionEffect,
   useLayoutEffect,
   useMemo,
+  createSignal,
   useSyncExternalStore as useMutableSource,
   useSyncExternalStore as unstable_useMutableSource,
   useReducer,

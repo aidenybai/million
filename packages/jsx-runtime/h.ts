@@ -1,13 +1,7 @@
 import { className, kebab, m, mergeHooks, style } from '../million/m';
 import { Flags } from '../million/types';
 import { Fragment } from './jsx';
-import type {
-  Delta,
-  Hooks,
-  VElementFlags,
-  VNode,
-  VProps,
-} from '../million/types';
+import type { Delta, Hooks, VNode, VProps } from '../million/types';
 import type { FC, RawVNode } from './types';
 
 export const normalize = (
@@ -53,7 +47,7 @@ export function h(
       : tag(propsWithChildren);
   }
 
-  let flag: VElementFlags = Flags.ELEMENT_NO_CHILDREN;
+  let flag: Flags = Flags.ELEMENT_NO_CHILDREN;
   let delta: Delta[] | undefined;
   let hook: Hooks | undefined;
   const normalizedChildren: VNode[] = [];
