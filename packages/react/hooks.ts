@@ -13,6 +13,7 @@
 // @ts-nocheck
 
 import { batch, Deltas, startTransition, isPending } from '../million';
+import type { DeltaTypes } from '../million';
 
 let state = {
   args: null,
@@ -254,8 +255,26 @@ function different(value, i) {
 }
 
 // useDelta
-export const createSignal = (array: any[]) => {
-  if (!Array.isArray(array)) throw new Error('createSignal currently only supports arrays');
+export const useDelta = () => {
+  const delta: DeltaTypes[] & {
+    create: ReturnType<typeof deltaFunction>;
+    update: ReturnType<typeof deltaFunction>;
+    delete: ReturnType<typeof deltaFunction>;
+  } = [];
+
+  const deltaFunction = (type: string) => (index: number) => {
+    delta.push(Deltas[type](index));
+  };
+
+  delta.create = deltaFunction('CREATE');
+  delta.update = deltaFunction('UPDATE');
+  delta.delete = deltaFunction('DELETE');
+
+  return delta;
+};
+
+// useDeltaList
+export const useDeltaList = (array: any[]) => {
   let length: number = array.length;
   const [proxy] = useState(() => {
     array.delta = () => {
