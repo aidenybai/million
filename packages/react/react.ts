@@ -6,7 +6,8 @@ import { batch, startTransition } from '../million';
 import { compat } from './compat';
 import {
   createContext,
-  createSignal,
+  useDelta,
+  useDeltaList,
   hook,
   useCallback,
   useContext,
@@ -221,7 +222,8 @@ export {
   useEffect as useInsertionEffect,
   useLayoutEffect,
   useMemo,
-  createSignal,
+  useDelta,
+  useDeltaList,
   useSyncExternalStore as useMutableSource,
   useSyncExternalStore as unstable_useMutableSource,
   useReducer,
