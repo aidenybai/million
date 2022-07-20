@@ -4,9 +4,7 @@ import type {
   DOMNode,
   Hooks,
   HookTypes,
-  Thunk,
   VElement,
-  VElementFlags,
   VNode,
   VProps,
   Hook,
@@ -88,7 +86,7 @@ export const m = (
   tag: string,
   props?: VProps | null,
   children: VNode[] | null | undefined = props?.children,
-  flag: VElementFlags = Flags.ELEMENT,
+  flag: Flags = Flags.ELEMENT,
   delta?: Delta[],
   hook?: Hooks,
 ): VElement => {
@@ -134,35 +132,4 @@ export const mergeHooks = (hooksArray: Hooks[]): Hooks => {
     }
   }
   return mergedHooks;
-};
-
-export const thunk = (fn: (...args: any[]) => VNode, args: any[]): VNode => {
-  const vnode = fn(...args) as Thunk;
-  if (typeof vnode === 'object') {
-    vnode.flag = Flags.ELEMENT_THUNK;
-    vnode.args = args;
-    if (!vnode.hook) vnode.hook = {};
-    vnode.hook.diff = (
-      _el?: DOMNode,
-      newVNode?: VNode,
-      oldVNode?: VNode,
-    ): boolean => {
-      if (
-        typeof newVNode === 'object' &&
-        typeof oldVNode === 'object' &&
-        newVNode.flag === Flags.ELEMENT_THUNK &&
-        oldVNode.flag === Flags.ELEMENT_THUNK
-      ) {
-        if (oldVNode.args.length === newVNode.args.length) {
-          let shouldPatch = false;
-          for (let i = 0; i < newVNode.args.length; i++) {
-            if (oldVNode.args[i] !== newVNode.args[i]) shouldPatch = true;
-          }
-          return shouldPatch;
-        }
-      }
-      return true;
-    };
-  }
-  return vnode;
 };

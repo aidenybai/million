@@ -20,7 +20,7 @@ export type DOMNode = (HTMLElement | SVGElement | Text | Comment) & {
   [OLD_VNODE_FIELD]?: VNode;
   [DOM_REF_FIELD]?: DOMNode;
 };
-export type VNode = VElement | Thunk | string;
+export type VNode = VElement | string;
 export type Delta = [DeltaTypes, number];
 export type Hook = (
   el?: DOMNode,
@@ -61,25 +61,17 @@ export type Hooks = {
   [key in HookTypes]?: Hook | Hook[];
 };
 
-export interface VElement extends V {
-  flag: VElementFlags;
+export interface VElement {
+  flag: Flags;
   tag: string;
   props?: VProps | null;
   children?: VNode[] | null;
   key?: string;
   delta?: Delta[];
   hook?: Hooks;
-}
-
-export interface Thunk extends V {
-  flag: Flags.ELEMENT_THUNK;
-  tag: string;
-  props?: VProps;
-  children?: VNode[];
-  key?: string;
-  delta?: Delta[];
-  hook?: Hooks;
-  args: any[];
+  ref?: {
+    current: any;
+  } & Record<string, any>;
 }
 
 export interface V {
@@ -97,17 +89,7 @@ export enum Flags {
   ELEMENT_NO_CHILDREN,
   ELEMENT_TEXT_CHILDREN,
   ELEMENT_KEYED_CHILDREN,
-  ELEMENT_THUNK,
 }
-
-export type VElementFlags =
-  | Flags.ELEMENT
-  | Flags.ELEMENT_FORCE_UPDATE
-  | Flags.ELEMENT_IGNORE
-  | Flags.ELEMENT_KEYED_CHILDREN
-  | Flags.ELEMENT_NO_CHILDREN
-  | Flags.ELEMENT_SKIP_DRIVERS
-  | Flags.ELEMENT_TEXT_CHILDREN;
 
 export enum EffectTypes {
   CREATE,

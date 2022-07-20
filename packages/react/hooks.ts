@@ -12,7 +12,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import { batch, startTransition, isPending } from '../million';
+import { batch, Deltas, startTransition, isPending } from '../million';
 
 let state = {
   args: null,
@@ -82,7 +82,7 @@ export const useReducer = (reducer, value, init?, options?) => {
 };
 
 // useState
-export const useState = (value, options?) =>
+export const useState = (value?, options?) =>
   useReducer(getValue, value, void 0, options);
 
 // useContext
@@ -252,3 +252,48 @@ export const useImperativeHandle = (ref, create) => {
 function different(value, i) {
   return value !== this[i];
 }
+
+// useDelta
+export const createSignal = (array: any[]) => {
+  if (!Array.isArray(array)) throw new Error('createSignal currently only supports arrays');
+  let length: number = array.length;
+  const [proxy] = useState(() => {
+    array.delta = () => {
+      const delta = array._delta;
+      array._delta = [];
+      return delta;
+    };
+    array._delta = [];
+    return new Proxy(array, {
+      get(target, prop, receiver) {
+        return Reflect.get(target, prop, receiver);
+      },
+      set(target, prop, value, receiver) {
+        Reflect.set(target, prop, value, receiver);
+        if (!isNaN(prop)) {
+          target._delta.push(
+            target.length > length
+              ? Deltas.CREATE(Number(prop))
+              : Deltas.UPDATE(Number(prop)),
+          );
+        }
+        length = target.length;
+        return true;
+      },
+      deleteProperty(target, prop) {
+        delete target[prop];
+        length = target.length;
+        if (!isNaN(prop)) {
+          target._delta.push(Deltas.REMOVE(Number(prop)));
+        }
+        return true;
+      },
+    });
+  });
+  const [, updateState] = useState();
+  const forceUpdate = useCallback(() => updateState({}), []);
+
+  proxy.update = forceUpdate;
+
+  return proxy;
+};

@@ -71,18 +71,21 @@ export const useChildren =
     if (delta) {
       for (let i = 0; i < delta.length; ++i) {
         const [deltaType, deltaPosition] = delta[i]!;
-        const child = el.childNodes.item(deltaPosition) as DOMNode;
 
         if (deltaType === DeltaTypes.CREATE) {
           const newVNodeChild = newVNodeChildren![deltaPosition];
           if (!invokeHook(HookTypes.CREATE, newVNodeChild)) return finish(el);
           queueEffect(EffectTypes.CREATE, () =>
-            el.insertBefore(createElement(newVNodeChild, false), child),
+            el.insertBefore(
+              createElement(newVNodeChild, false),
+              el.childNodes.item(deltaPosition),
+            ),
           );
         }
 
         if (deltaType === DeltaTypes.UPDATE) {
           const newVNodeChild = newVNodeChildren![deltaPosition]!;
+          const child = el.childNodes.item(deltaPosition) as DOMNode;
           if (!invokeHook(HookTypes.UPDATE, newVNodeChild)) return finish(el);
           commit(() => {
             effects = diff(
@@ -96,7 +99,9 @@ export const useChildren =
         if (deltaType === DeltaTypes.REMOVE) {
           if (!invokeHook(HookTypes.REMOVE, oldVNodeChildren[deltaPosition]))
             return finish(el);
-          queueEffect(EffectTypes.REMOVE, () => el.removeChild(child));
+          queueEffect(EffectTypes.REMOVE, () =>
+            el.removeChild(el.childNodes.item(deltaPosition)),
+          );
         }
       }
       return finish(el);
