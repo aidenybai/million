@@ -276,6 +276,10 @@ export const useDelta = () => {
 // useDeltaList
 export const useDeltaList = (array: any[]) => {
   let length: number = array.length;
+
+  const [, updateState] = useState();
+  const forceUpdate = useCallback(() => updateState({}), []);
+
   const [proxy] = useState(() => {
     array.delta = () => {
       const delta = array._delta;
@@ -295,6 +299,7 @@ export const useDeltaList = (array: any[]) => {
               ? Deltas.CREATE(Number(prop))
               : Deltas.UPDATE(Number(prop)),
           );
+          forceUpdate();
         }
         length = target.length;
         return true;
@@ -304,15 +309,12 @@ export const useDeltaList = (array: any[]) => {
         length = target.length;
         if (!isNaN(prop)) {
           target._delta.push(Deltas.REMOVE(Number(prop)));
+          forceUpdate();
         }
         return true;
       },
     });
   });
-  const [, updateState] = useState();
-  const forceUpdate = useCallback(() => updateState({}), []);
 
-  proxy.update = forceUpdate;
-
-  return proxy;
+  return [proxy, proxy.delta()];
 };

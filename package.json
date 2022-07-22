@@ -141,7 +141,7 @@
     "source-map": "^0.7.4",
     "taze": "^0.7.6",
     "tslib": "^2.4.0",
-    "turbo": "^1.3.3",
+    "turbo": "^1.3.4",
     "typescript": "^4.7.4",
     "unbuild": "^0.7.6",
     "use-atom": "^0.8.0",
