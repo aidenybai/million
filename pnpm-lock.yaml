@@ -10,13 +10,13 @@ importers:
       '@typescript-eslint/parser': ^5.30.7
       '@vercel/style-guide': ^3.0.0
       '@vitest/ui': ^0.18.1
+      bumpp: ^8.2.1
       c8: ^7.12.0
       esbuild: ^0.14.49
       eslint: ^8.20.0
       eslint-config-prettier: ^8.5.0
       export-size: ^0.5.2
       fsxx: ^0.1.0
-      hookrouter: ^1.2.5
       husky: ^8.0.1
       jsdom: ^20.0.0
       np: ^7.6.2
@@ -30,7 +30,6 @@ importers:
       turbo: ^1.3.4
       typescript: ^4.7.4
       unbuild: ^0.7.6
-      use-atom: ^0.8.0
       vite: 3.0.0
       vitest: ^0.18.1
       wouter: 2.8.0-alpha.2
@@ -42,13 +41,13 @@ importers:
       '@typescript-eslint/parser': 5.30.7_he2ccbldppg44uulnyq4rwocfa
       '@vercel/style-guide': 3.0.0_r2fvqfuoeydpw3g73cntftn3ju
       '@vitest/ui': 0.18.1
+      bumpp: 8.2.1
       c8: 7.12.0
       esbuild: 0.14.49
       eslint: 8.20.0
       eslint-config-prettier: 8.5.0_eslint@8.20.0
       export-size: 0.5.2
       fsxx: 0.1.0
-      hookrouter: 1.2.5
       husky: 8.0.1
       jsdom: 20.0.0
       np: 7.6.2
@@ -62,7 +61,6 @@ importers:
       turbo: 1.3.4
       typescript: 4.7.4
       unbuild: 0.7.6
-      use-atom: 0.8.0
       vite: 3.0.0
       vitest: 0.18.1_wdnzb2oadfvbcizribzdowrari
       wouter: 2.8.0-alpha.2
@@ -522,6 +520,16 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.0
       '@jridgewell/sourcemap-codec': 1.4.14
+    dev: true
+
+  /@jsdevtools/ez-spawn/3.0.4:
+    resolution: {integrity: sha512-f5DRIOZf7wxogefH03RjMPMdBF7ADTWUMoOs9kaJo06EfwF+aFhMZMDZxHg/Xe12hptN9xoZjGso2fdjapBRIA==}
+    engines: {node: '>=10'}
+    dependencies:
+      call-me-maybe: 1.0.1
+      cross-spawn: 7.0.3
+      string-argv: 0.3.1
+      type-detect: 4.0.8
     dev: true
 
   /@kwsites/file-exists/1.1.1:
@@ -2008,6 +2016,19 @@ packages:
       semver: 7.3.7
     dev: true
 
+  /bumpp/8.2.1:
+    resolution: {integrity: sha512-4tHKsWC2mqHQvdjZ4AXgVhS2xMsz8qQ4zYt87vGRXW5tqAjrYa/UJqy7s/dGYI2OIe9ghBdiFhKpyKEX9SXffg==}
+    engines: {node: '>=10'}
+    hasBin: true
+    dependencies:
+      '@jsdevtools/ez-spawn': 3.0.4
+      cac: 6.7.12
+      fast-glob: 3.2.11
+      kleur: 4.1.5
+      prompts: 2.4.2
+      semver: 7.3.7
+    dev: true
+
   /c8/7.12.0:
     resolution: {integrity: sha512-CtgQrHOkyxr5koX1wEUmN/5cfDa2ckbHRA4Gy5LAL0zaCFtVWJS5++n+w4/sr2GWGerBxgTjpKeDclk/Qk6W/A==}
     engines: {node: '>=10.12.0'}
@@ -2025,6 +2046,11 @@ packages:
       v8-to-istanbul: 9.0.1
       yargs: 16.2.0
       yargs-parser: 20.2.9
+    dev: true
+
+  /cac/6.7.12:
+    resolution: {integrity: sha512-rM7E2ygtMkJqD9c7WnFU6fruFcN3xe4FM5yUmgxhZzIKJk4uHl9U/fhwdajGFQbQuv43FAUo1Fe8gX/oIKDeSA==}
+    engines: {node: '>=8'}
     dev: true
 
   /cacache/16.1.1:
@@ -2092,6 +2118,10 @@ packages:
     dependencies:
       function-bind: 1.1.1
       get-intrinsic: 1.1.2
+    dev: true
+
+  /call-me-maybe/1.0.1:
+    resolution: {integrity: sha512-wCyFsDQkKPwwF8BDwOiWNx/9K45L/hvggQiDbve+viMNMQnWhrlYIuBk09offfwCRtCO9P6XwUttufzU11WCVw==}
     dev: true
 
   /callsites/3.1.0:
@@ -4366,12 +4396,6 @@ packages:
 
   /hookable/5.1.1:
     resolution: {integrity: sha512-7qam9XBFb+DijNBthaL1k/7lHU2TEMZkWSyuqmU3sCQze1wFm5w9AlEx30PD7a+QVAjOy6Ec2goFwe1YVyk2uA==}
-    dev: true
-
-  /hookrouter/1.2.5:
-    resolution: {integrity: sha512-9OLve2u+JZDCOgPnxJu5dvg/mU1w2ZWWlSOFxCKcGQKRSH1MXI8tMwEgm64mQfjZLET/7yFRTUrZ4hUYoK0ezw==}
-    peerDependencies:
-      react: ^16.8.0
     dev: true
 
   /hosted-git-info/2.8.9:
@@ -7954,6 +7978,11 @@ packages:
     resolution: {integrity: sha512-rT00SPnTVyRsaSz5zgSPma/aHSOic5U1prhYdRy5HS2kTZviFpmDgzilbtsJsxiroqACmayynDN/9VzIbX5DOw==}
     dependencies:
       duplexer: 0.1.2
+    dev: true
+
+  /string-argv/0.3.1:
+    resolution: {integrity: sha512-a1uQGz7IyVy9YwhqjZIZu1c8JO8dNIe20xBmSS6qu9kv++k3JGzCVmprbNN5Kn+BgzD5E7YYwg1CcjuJMRNsvg==}
+    engines: {node: '>=0.6.19'}
     dev: true
 
   /string-similarity/4.0.4:
