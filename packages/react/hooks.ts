@@ -279,14 +279,16 @@ export const useDeltaList = (array: any[]) => {
 
   const [, updateState] = useState();
   const forceUpdate = useCallback(() => updateState({}), []);
+  const delta = useDelta();
 
-  const [proxy] = useState(() => {
+  const queueRender = useMemo(() => batch(), []);
+  const proxy = useMemo(() => {
     array.delta = () => {
-      const delta = array._delta;
+      const ret = array._delta;
       array._delta = [];
-      return delta;
+      return ret;
     };
-    array._delta = [];
+    array._delta = delta;
     return new Proxy(array, {
       get(target, prop, receiver) {
         return Reflect.get(target, prop, receiver);
@@ -299,7 +301,7 @@ export const useDeltaList = (array: any[]) => {
               ? Deltas.CREATE(Number(prop))
               : Deltas.UPDATE(Number(prop)),
           );
-          forceUpdate();
+          queueRender(forceUpdate);
         }
         length = target.length;
         return true;
@@ -309,12 +311,12 @@ export const useDeltaList = (array: any[]) => {
         length = target.length;
         if (!isNaN(prop)) {
           target._delta.push(Deltas.REMOVE(Number(prop)));
-          forceUpdate();
+          queueRender(forceUpdate);
         }
         return true;
       },
     });
-  });
+  }, []);
 
   return [proxy, proxy.delta()];
 };
