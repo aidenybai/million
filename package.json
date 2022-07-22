@@ -16,7 +16,7 @@
     "test": "vitest --coverage",
     "typecheck": "tsc --noEmit",
     "release": "zx scripts/release.mjs",
-    "bump": "bumpp && zx scripts/citation.mjs",
+    "bump": "bumpp && zx scripts/citation.mjs && pnpm publish",
     "welcome": "zx scripts/welcome.mjs",
     "prepare": "husky install"
   },
