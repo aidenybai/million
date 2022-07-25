@@ -60,7 +60,7 @@ const hookdate = (hook, ctx, args) => {
 const defaults = { async: false, always: false };
 const getValue = (value, f) => (typeof f == 'function' ? f(value) : f);
 
-export const useReducer = (reducer, value, init?, options?) => {
+export const useReducer = <T>(reducer, value, init?, options?) => {
   const i = state.i++;
   const { hook, args, stack, length } = state;
   if (i === length) state.length = stack.push({});
@@ -71,7 +71,7 @@ export const useReducer = (reducer, value, init?, options?) => {
     const { async: asy, always } = (fn ? options : init) || options || defaults;
     ref.$ = fn ? init(value) : getValue(void 0, value);
     ref._ = asy ? updates.get(hook) || updates.set(hook, batch()) : hookdate;
-    ref.f = (value) => {
+    ref.f = (value: T) => {
       const $value = reducer(ref.$, value);
       if (always || ref.$ !== $value) {
         ref.$ = $value;
@@ -79,11 +79,11 @@ export const useReducer = (reducer, value, init?, options?) => {
       }
     };
   }
-  return [ref.$, ref.f];
+  return [ref.$ as T, ref.f];
 };
 
 // useState
-export const useState = (value?, options?) =>
+export const useState = <T>(value?: T, options?) =>
   useReducer(getValue, value, void 0, options);
 
 // useContext
@@ -205,7 +205,7 @@ export const useMemo = (memo, guards?) => {
 export const useCallback = (fn, guards?) => useMemo(() => fn, guards);
 
 // useRef
-export const useRef = (value) => {
+export const useRef = (value?) => {
   const i = state.i++;
   const { stack, length } = state;
   if (i === length) state.length = stack.push({ current: value });
@@ -273,8 +273,8 @@ export const useDelta = () => {
   return delta;
 };
 
-// useDeltaList
-export const useDeltaList = (array: any[]) => {
+// useList
+export const useList = (array: any[]) => {
   let length: number = array.length;
 
   const [, updateState] = useState();

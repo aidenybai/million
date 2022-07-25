@@ -5,7 +5,7 @@ importers:
   .:
     specifiers:
       '@babel/core': ^7.18.9
-      '@types/node': ^18.0.6
+      '@types/node': ^18.6.1
       '@typescript-eslint/eslint-plugin': ^5.30.7
       '@typescript-eslint/parser': ^5.30.7
       '@vercel/style-guide': ^3.0.0
@@ -36,7 +36,7 @@ importers:
       zx: ^7.0.7
     devDependencies:
       '@babel/core': 7.18.9
-      '@types/node': 18.0.6
+      '@types/node': 18.6.1
       '@typescript-eslint/eslint-plugin': 5.30.7_6wltbjakwuqm7awqswigmiuhd4
       '@typescript-eslint/parser': 5.30.7_he2ccbldppg44uulnyq4rwocfa
       '@vercel/style-guide': 3.0.0_r2fvqfuoeydpw3g73cntftn3ju
@@ -72,12 +72,12 @@ importers:
       '@types/benchmark': ^2.1.1
       '@types/canvas-confetti': ^1.4.3
       '@types/lodash': ^4.14.182
-      '@types/node': ^18.0.6
+      '@types/node': ^18.6.1
       '@types/virtual-dom': ^2.1.1
       '@vitejs/plugin-legacy': ^2.0.0
       benchmark: ^2.1.4
       canvas-confetti: ^1.5.1
-      chart.js: ^3.8.0
+      chart.js: ^3.8.2
       hundred: ^0.1.0
       lodash: ^4.17.21
       simple-virtual-dom: ^0.1.10
@@ -88,12 +88,12 @@ importers:
       '@types/benchmark': 2.1.1
       '@types/canvas-confetti': 1.4.3
       '@types/lodash': 4.14.182
-      '@types/node': 18.0.6
+      '@types/node': 18.6.1
       '@types/virtual-dom': 2.1.1
       '@vitejs/plugin-legacy': 2.0.0
       benchmark: 2.1.4
       canvas-confetti: 1.5.1
-      chart.js: 3.8.0
+      chart.js: 3.8.2
       hundred: 0.1.0
       lodash: 4.17.21
       simple-virtual-dom: 0.1.10
@@ -145,7 +145,7 @@ importers:
       react: ^17.0.2
       react-dom: ^17.0.2
       react-hot-toast: ^2.3.0
-      react-lite-youtube-embed: ^2.2.2
+      react-lite-youtube-embed: ^2.3.0
       react-modal-video: ^1.2.9
       shiki: ^0.10.1
       string-similarity: ^4.0.4
@@ -164,7 +164,7 @@ importers:
       nextra-theme-docs: 2.0.0-beta.8_lomk7fwgwcwgv5os6tnu5kl3ge
       postcss: 8.4.14
       react-hot-toast: 2.3.0_sfoxds7t5ydpegc3knd667wn6m
-      react-lite-youtube-embed: 2.2.2_sfoxds7t5ydpegc3knd667wn6m
+      react-lite-youtube-embed: 2.3.0_sfoxds7t5ydpegc3knd667wn6m
       react-modal-video: 1.2.9_sfoxds7t5ydpegc3knd667wn6m
       shiki: 0.10.1
       string-similarity: 4.0.4
@@ -1105,7 +1105,7 @@ packages:
     dependencies:
       '@types/http-cache-semantics': 4.0.1
       '@types/keyv': 3.1.4
-      '@types/node': 18.0.6
+      '@types/node': 18.6.1
       '@types/responselike': 1.0.0
     dev: true
 
@@ -1150,7 +1150,7 @@ packages:
   /@types/fs-extra/9.0.13:
     resolution: {integrity: sha512-nEnwB++1u5lVDM2UI4c1+5R+FYaKfaAzS4OococimjVm3nQw3TuzH5UNsocrcTBbhnerblyHj4A49qXbIiZdpA==}
     dependencies:
-      '@types/node': 18.0.6
+      '@types/node': 18.6.1
     dev: true
 
   /@types/hast/2.3.4:
@@ -1182,7 +1182,7 @@ packages:
   /@types/keyv/3.1.4:
     resolution: {integrity: sha512-BQ5aZNSCpj7D6K2ksrRCTmKRLEpnPvWDiLPfoGyhZ++8YtiK9d/3DBKPJgry359X/P1PfruyYwvnvwFjuEiEIg==}
     dependencies:
-      '@types/node': 18.0.6
+      '@types/node': 18.6.1
     dev: true
 
   /@types/lodash/4.14.182:
@@ -1215,8 +1215,8 @@ packages:
     resolution: {integrity: sha512-w+tIMs3rq2afQdsPJlODhoUEKzFP1ayaoyl1CcnwtIlsVe7K7bA1NGm4s3PraqTLlXnbIN84zuBlxBWo1u9BLw==}
     dev: true
 
-  /@types/node/18.0.6:
-    resolution: {integrity: sha512-/xUq6H2aQm261exT6iZTMifUySEt4GR5KX8eYyY+C4MSNPqSh9oNIP7tz2GLKTlFaiBbgZNxffoR3CVRG+cljw==}
+  /@types/node/18.6.1:
+    resolution: {integrity: sha512-z+2vB6yDt1fNwKOeGbckpmirO+VBDuQqecXkgeIqDlaOtmKn6hPR/viQ8cxCfqLU4fTlvM3+YjM367TukWdxpg==}
     dev: true
 
   /@types/normalize-package-data/2.4.1:
@@ -1246,13 +1246,13 @@ packages:
   /@types/resolve/1.17.1:
     resolution: {integrity: sha512-yy7HuzQhj0dhGpD8RLXSZWEkLsV9ibvxvi6EiJ3bkqLAO1RGo0WbkWQiwpRlSFymTJRz0d3k5LM3kkx8ArDbLw==}
     dependencies:
-      '@types/node': 18.0.6
+      '@types/node': 18.6.1
     dev: true
 
   /@types/responselike/1.0.0:
     resolution: {integrity: sha512-85Y2BjiufFzaMIlvJDvTTB8Fxl2xfLo4HgmHzVBz08w4wDePCTjYw66PdrolO0kzli3yam/YCgRufyo1DdQVTA==}
     dependencies:
-      '@types/node': 18.0.6
+      '@types/node': 18.6.1
     dev: true
 
   /@types/scheduler/0.16.2:
@@ -2243,8 +2243,8 @@ packages:
     resolution: {integrity: sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA==}
     dev: true
 
-  /chart.js/3.8.0:
-    resolution: {integrity: sha512-cr8xhrXjLIXVLOBZPkBZVF6NDeiVIrPLHcMhnON7UufudL+CNeRrD+wpYanswlm8NpudMdrt3CHoLMQMxJhHRg==}
+  /chart.js/3.8.2:
+    resolution: {integrity: sha512-7rqSlHWMUKFyBDOJvmFGW2lxULtcwaPLegDjX/Nu5j6QybY+GCiQkEY+6cqHw62S5tcwXMD8Y+H5OBGoR7d+ZQ==}
     dev: true
 
   /check-error/1.0.2:
@@ -7322,8 +7322,8 @@ packages:
     resolution: {integrity: sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==}
     dev: true
 
-  /react-lite-youtube-embed/2.2.2_sfoxds7t5ydpegc3knd667wn6m:
-    resolution: {integrity: sha512-1NqbNDcunRcB/9G9upXM59jyLdEUXy3Xk/XJ+JdIdT04qNTj5Xi8enR1BzMdowLsrDv8yW5qge2ob3gb22Qfnw==}
+  /react-lite-youtube-embed/2.3.0_sfoxds7t5ydpegc3knd667wn6m:
+    resolution: {integrity: sha512-IRYbS2fMYjY1QNgemS6e3BvhwXQeP5nhOri6AOmmt2UW+0ptGiqhtWzgkPOKoCCuKkZ31c+E4vm2n19e8wtAsA==}
     peerDependencies:
       react: '>=16.0.8'
       react-dom: '>=16.0.8'
@@ -9003,7 +9003,7 @@ packages:
     dependencies:
       '@types/chai': 4.3.1
       '@types/chai-subset': 1.3.3
-      '@types/node': 18.0.6
+      '@types/node': 18.6.1
       '@vitest/ui': 0.18.1
       c8: 7.12.0
       chai: 4.3.6
