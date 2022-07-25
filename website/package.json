@@ -19,7 +19,7 @@
     "nextra-theme-docs": "2.0.0-beta.8",
     "postcss": "^8.4.14",
     "react-hot-toast": "^2.3.0",
-    "react-lite-youtube-embed": "^2.2.2",
+    "react-lite-youtube-embed": "^2.3.0",
     "react-modal-video": "^1.2.9",
     "shiki": "^0.10.1",
     "string-similarity": "^4.0.4",
