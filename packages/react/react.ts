@@ -7,7 +7,7 @@ import { compat } from './compat';
 import {
   createContext,
   useDelta,
-  useDeltaList,
+  useList,
   hook,
   useCallback,
   useContext,
@@ -223,7 +223,7 @@ export {
   useLayoutEffect,
   useMemo,
   useDelta,
-  useDeltaList,
+  useList,
   useSyncExternalStore as useMutableSource,
   useSyncExternalStore as unstable_useMutableSource,
   useReducer,
