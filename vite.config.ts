@@ -15,7 +15,6 @@ export default defineConfig({
   },
   plugins: [million({ importSource: packages, react: true })],
   test: {
-    watch: false,
     environment: 'jsdom',
     coverage: {
       reporter: ['lcov'],
