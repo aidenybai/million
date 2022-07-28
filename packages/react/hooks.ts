@@ -205,7 +205,7 @@ export const useMemo = (memo, guards?) => {
 export const useCallback = (fn, guards?) => useMemo(() => fn, guards);
 
 // useRef
-export const useRef = (value?) => {
+export const useRef = (value?): any => {
   const i = state.i++;
   const { stack, length } = state;
   if (i === length) state.length = stack.push({ current: value });
