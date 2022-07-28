@@ -1,0 +1,44 @@
+---
+title: useList()
+---
+
+import Link from 'next/link';
+
+# `useDelta()`
+
+**Syntax:** `const delta = useDelta()`\
+**Example:** `delta.remove(0)`
+
+The `useDelta()` hook provides an interface to create imperative operations and bypass Virtual DOM diffing with <Link href="/docs/api/advanced/delta">Delta</Link>. There are three methods: `create(index)`, `update(index)` and `remove(index)`.
+
+> If you're looking into automatic delta generation, check out <Link href="/docs/react/use-list">useList</Link>
+
+```js
+import { createRoot, useDelta, useState, useEffect } from 'million/react';
+
+function App() {
+  const delta = useDelta();
+  const [list, setList] = useState([]);
+
+  delta.create(list.length - 1);
+
+  return (
+    <>
+      <button
+        onClick={() => {
+          setList([...list, list.length + 1]);
+        }}
+      >
+        Add
+      </button>
+      <ul delta={delta}>
+        {list.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    </>
+  );
+}
+
+createRoot(document.body).render(<App />);
+```
