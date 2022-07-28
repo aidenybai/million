@@ -38,7 +38,7 @@ function App() {
 createRoot(document.body).render(<App />);
 ```
 
-`useList` leverages a highly reactive data structure called a <Link href="/docs/api/advanced/delta">Delta</Link> to update the Virtual DOM. This makes it possible to update the DOM without having to go through traditional Virtual DOM diffing.
+`useList` leverages a highly reactive data structure and exports <Link href="/docs/api/advanced/delta">Delta</Link> to update the Virtual DOM. This makes it possible to update the DOM without having to go through traditional Virtual DOM diffing.
 
 Below is a comparison chart of the insane performance `useList` (through Delta) has, making it as fast as [Solid.js](https://solidjs.com) and [Svelte](https://svelte.dev)!
 
