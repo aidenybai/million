@@ -135,7 +135,7 @@ importers:
       '@mdx-js/react': ^1.6.22
       autoprefixer: ^10.4.7
       copy-to-clipboard: ^3.3.1
-      million: ^1.12.0
+      million: 1.11.7
       next: ^12.2.3
       nextra: 2.0.0-beta.8
       nextra-theme-docs: 2.0.0-beta.8
@@ -149,7 +149,7 @@ importers:
       string-similarity: ^4.0.4
       tailwindcss: ^3.1.6
     dependencies:
-      million: link:..
+      million: 1.11.7
       next: 12.2.3_sfoxds7t5ydpegc3knd667wn6m
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
@@ -6019,6 +6019,10 @@ packages:
       braces: 3.0.2
       picomatch: 2.3.1
     dev: true
+
+  /million/1.11.7:
+    resolution: {integrity: sha512-SQNSr1KqS4E++nJy14berr9b0T65//nBmpCGkvdboGLxJBlAPiAudI1Z4LoY+66SgPgasdFvGyXLJqAKpdJBGA==}
+    dev: false
 
   /mime-db/1.52.0:
     resolution: {integrity: sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg==}
