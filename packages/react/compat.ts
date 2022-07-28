@@ -10,6 +10,19 @@ import type { DOMNode, VNode, VProps } from '../million';
 
 const rootFragmentStyle = { style: 'display: contents;' };
 
+export const getCircularReplacer = () => {
+  const seen = new WeakSet();
+  return (_key, value) => {
+    if (typeof value === 'object' && value !== null) {
+      if (seen.has(value)) {
+        return;
+      }
+      seen.add(value);
+    }
+    return value;
+  };
+};
+
 export const createComponent = (
   fn: Function,
   props?: VProps,
@@ -19,6 +32,11 @@ export const createComponent = (
   let prevVNode: VNode | undefined;
   let prevKey: string | undefined;
 
+  if (props?.ref) {
+    prevRef = props.ref;
+    props.ref = undefined;
+  }
+
   const component = hook(() => {
     const ret = fn(props, key);
     if (!ret || typeof ret === 'string') return ret;
@@ -26,7 +44,7 @@ export const createComponent = (
       ? h('_', key ? { key, ...rootFragmentStyle } : rootFragmentStyle, ...ret)
       : ret;
 
-    const ref = prevRef ?? { current: null, props, ...newVNode.ref };
+    const ref = prevRef ?? { current: null, props };
 
     if (ref?.current) {
       const patchHook = (
@@ -35,15 +53,12 @@ export const createComponent = (
         oldVNode?: VNode,
       ): boolean => {
         if (
-          typeof newVNode === 'object' &&
           typeof oldVNode === 'object' &&
-          newVNode.ref?.props &&
-          oldVNode.ref?.props
+          typeof newVNode === 'object' &&
+          oldVNode.ref?.props &&
+          newVNode.ref?.props
         ) {
-          return (
-            JSON.stringify(newVNode.ref?.props) !==
-            JSON.stringify(oldVNode.ref?.props)
-          );
+          return newVNode.ref?.props === oldVNode.ref?.props;
         }
         return true;
       };
@@ -56,7 +71,7 @@ export const createComponent = (
       }
     }
     if (!newVNode.ref) {
-      ref.props = props;
+      ref.props = JSON.stringify(props, getCircularReplacer);
       newVNode.ref = ref;
       prevRef = ref;
     }

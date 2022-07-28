@@ -4,3 +4,4 @@ dist/
 benchmarks/
 node_modules/
 scripts/
+dev/
