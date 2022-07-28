@@ -5,7 +5,7 @@
     "build": "next build"
   },
   "dependencies": {
-    "million": "^1.12.0",
+    "million": "1.11.7",
     "next": "^12.2.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
