@@ -99,39 +99,38 @@ export const createContext = (
   Provider: ({ value }) => any;
   Consumer: () => any;
 } => {
-  const context = { value };
-  context.Provider = Provider.bind(context);
-  context.Consumer = Consumer.bind(context);
-  hooks.set(context, []);
-  return context;
+  const newContext = { value };
+  newContext.Provider = ({ children, value }) => {
+    if (newContext.value !== value) {
+      newContext.value = value;
+      const context = hooks.get(newContext);
+      if (context?.length) {
+        context.forEach(invoke);
+      }
+    }
+    return children;
+  };
+  newContext.Consumer = ({ children }) => {
+    const { hook, args } = state;
+    const stack = hooks.get(newContext);
+    const info = { hook, args };
+    if (!stack.some(update, info)) stack.push(info);
+    return children[0](newContext.value);
+  };
+  hooks.set(newContext, []);
+  return newContext;
 };
 
 export const useContext = (context) => {
   const { hook, args } = state;
   const stack = hooks.get(context);
   const info = { hook, args };
-  if (!stack.some(update, info)) stack.push(info);
+  if (!stack.some(update, info)) {
+    stack.push(info);
+  }
+  console.log(context.value)
   return context.value;
 };
-
-function Consumer({ children }) {
-  const { hook, args } = state;
-  const stack = hooks.get(this);
-  const info = { hook, args };
-  if (!stack.some(update, info)) stack.push(info);
-  return children[0](this.value);
-}
-
-function Provider({ children, value }) {
-  if (this.value !== value) {
-    this.value = value;
-    const context = hooks.get(this);
-    if (context.length) {
-      context.forEach(invoke);
-    }
-  }
-  return children;
-}
 
 function update({ hook }) {
   return hook === this.hook;
