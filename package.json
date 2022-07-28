@@ -126,7 +126,7 @@
     "@vercel/style-guide": "^3.0.0",
     "bumpp": "^8.2.1",
     "c8": "^7.12.0",
-    "esbuild": "^0.14.50",
+    "esbuild": "^0.14.51",
     "eslint": "^8.20.0",
     "eslint-config-prettier": "^8.5.0",
     "export-size": "^0.5.2",
