@@ -14,9 +14,7 @@ export const getCircularReplacer = () => {
   const seen = new WeakSet();
   return (_key, value) => {
     if (typeof value === 'object' && value !== null) {
-      if (seen.has(value)) {
-        return;
-      }
+      if (seen.has(value)) return;
       seen.add(value);
     }
     return value;
@@ -70,6 +68,7 @@ export const createComponent = (
         patch(ref.current, newVNode, prevVNode, patchHook);
       }
     }
+
     if (!newVNode.ref) {
       ref.props = JSON.stringify(props, getCircularReplacer);
       newVNode.ref = ref;
