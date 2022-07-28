@@ -103,7 +103,7 @@ export default function Page() {
             into the future.
           </span>{' '}
         </h1>
-        <p className="max-w-lg mx-auto mt-6 text-2xl leading-tight text-center text-gray-400 sm:max-w-3xl sm:text-3xl md:text-3xl lg:text-3xl">
+        <p className="max-w-lg mx-auto mt-6 text-xl leading-tight text-center text-gray-400 sm:max-w-2xl sm:text-2xl md:text-2xl lg:text-2xl">
           Million is a lightweight <code className="bg-gray-100 border-gray-200 dark:bg-gray-900 dark:border-gray-800 border shadow-sm rounded-lg p-1">&lt;1kb</code> Virtual DOM. It's{' '}
           <a href="https://millionjs.org/benchmarks">
             <em>
@@ -147,7 +147,7 @@ export default function Page() {
 
       <div className="bg-white dark:bg-dark border-t-[0.2rem] border-gray-100 dark:border-gray-900 border-solid px-4 py-16 sm:px-6 sm:pt-20 sm:pb-24 lg:pt-24">
         <div className="mx-auto lg:max-w-7xl">
-          <p className="text-5xl font-bold tracking-tight lg:text-6xl xl:text-7xl lg:text-center dark:text-white text-center">
+          <p className="text-4xl font-bold tracking-tight lg:text-5xl xl:text-6xl lg:text-center dark:text-white text-center">
             Why Million?
           </p>
           <p className="mx-auto mt-4 text-xl text-gray-500 lg:max-w-3xl lg:text-xl text-center">
