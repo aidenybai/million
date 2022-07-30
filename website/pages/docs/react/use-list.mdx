@@ -45,4 +45,23 @@ Below is a comparison chart of the insane performance `useList` (through Delta) 
 <br />
 <br />
 
-<img src="/comparison.png" alt="Comparison chart of useList performance" />
+<img src="/sidebyside.png" alt="Comparison chart of useList performance" />
+
+React uses the Virtual DOM, and it can get **REALLY** slow when there's a lot of children, even with keyed nodes. The reason why is React isn't actually aware of the state during rendering, leading to a lot of unnecessary work.
+
+> TL;DR: The bottleneck is diffing.
+
+<br />
+<br />
+
+<img src="/diff-example.jpeg" alt="How React diffing works" />
+
+Million now supports a new Delta rendering, which is a new reactive primitive! It uses a [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) to capture changes to the state and calculate the necessary DOM manipulations.
+
+This way, we bypass diffing altogether, removing the bottleneck:
+
+<br />
+
+<img src="/skip-example.png" alt="Diff bypass example" />
+
+[More on the twitter thread...](https://twitter.com/aidenybai/status/1553280656213360640)
