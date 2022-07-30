@@ -32,7 +32,7 @@ export const patch = (
     () => (data.el[OLD_VNODE_FIELD] = newVNode),
   );
   for (let i = 0; i < effects.length; i++) {
-    requestAnimationFrame(effects[i]!.flush);
+    effects[i]!.flush();
   }
   return data.el;
 };
