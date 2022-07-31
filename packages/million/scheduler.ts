@@ -60,11 +60,7 @@ export const batch = (
   return (_callback: () => any) => {
     callback = _callback;
     if (!timer) {
-      timer = requestAnimationFrame(() => {
-        force = limit || Infinity;
-        timer = 0;
-        callback();
-      });
+      timer = requestAnimationFrame(invoke);
     }
     if (--force < 0) stop(true);
     return stop;
