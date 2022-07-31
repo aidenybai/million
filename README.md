@@ -92,8 +92,8 @@ npm install million
 
 This repo is a "mono-repo" with modules. Million ships as one NPM package, but has first class modules for more complex, but important extensions. Each module has its own folder in the `/packages` directory.
 
-| Module                                                                                          | Description                                                                                                                                                                                   |
-| ----------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Module                                                                                               | Description                                                                                                                                                                                   |
+| ---------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`million`](https://github.com/aidenybai/million/tree/main/packages/million)                         | The main Virtual DOM with all of Million's core.                                                                                                                                              |
 | [`react`](https://github.com/aidenybai/million/tree/main/packages/react)                             | A module that gives React compatability for Million.                                                                                                                                          |
 | [`router`](https://github.com/aidenybai/million/tree/main/packages/router)                           | A module that enables SPA routing for MPAs.                                                                                                                                                   |
@@ -127,6 +127,9 @@ Million is being used at companies like [Wyze](https://wyze.com) and open source
 
 <table>
   <tr>
+    <td>
+      <a href="https://www.theatrejs.com/?utm_source=millionjs&utm_campaign=oss" target="_blank"><img height="44" src="https://www.theatrejs.com/images/top-section/logo.svg" alt="Theatre.js"></a>
+    </td>
     <td>
       <a href="https://vercel.com/?utm_source=millionjs&utm_campaign=oss" target="_blank"><img height="44" src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/vercel-logo.svg" alt="Vercel"></a>
     </td>
