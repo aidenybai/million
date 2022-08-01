@@ -37,19 +37,6 @@ await send(chalk.bold(chalk.gray('$ pnpm run dev')), 3000);
 console.log();
 $`pnpm run dev`;
 
-await fs.writeFile(
-  path.join(__dirname, '../dev/script.tsx'),
-  `import { createRoot, useState } from 'packages/react'; // You can import anything under packages/ here (ex. 'packages/million')
-
-function App() {
-  const [count, setCount] = useState(0);
-
-  return <button onClick={() => setCount(count + 1)}>{count}</button>;
-}
-
-createRoot(document.getElementById('root')!).render(<App />);`,
-);
-
 await send(
   `A new tab should have opened! Try editing ${chalk.gray(
     '`dev/script.tsx`',
