@@ -73,7 +73,7 @@ export default {
         className="font-medium text-current no-underline"
         title="Go to the Million GitHub"
       >
-        Leave a 🌟 on Github →
+        Leave a 🌟 on GitHub →
       </a>
     );
   },
