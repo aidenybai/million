@@ -20,7 +20,7 @@
     "postcss": "^8.4.14",
     "react-hot-toast": "^2.3.0",
     "react-lite-youtube-embed": "^2.3.1",
-    "react-modal-video": "^1.2.9",
+    "react-modal-video": "^1.2.10",
     "shiki": "^0.10.1",
     "string-similarity": "^4.0.4",
     "tailwindcss": "^3.1.7"
