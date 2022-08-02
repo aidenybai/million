@@ -15,6 +15,7 @@ import {
   snabbdomAdapter,
   Suite,
   virtualDomAdapter,
+  millionAdapter,
 } from '../benchmark';
 import { buildData, patch } from '../data';
 
@@ -34,7 +35,7 @@ const vnode = (
 
 const suite = Suite('create many rows (creating 10,000 rows)', {
   million: () => {
-    patch(el(), vnode);
+    patch(el(), millionAdapter(vnode), millionAdapter(oldVNode));
   },
   hundred: () => {
     hundred.patch(el(), hundredAdapter(vnode), hundredAdapter(oldVNode));

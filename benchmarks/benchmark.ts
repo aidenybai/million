@@ -26,11 +26,17 @@ export const Suite = (name: string, tests: Record<string, Function>) => {
   return suite;
 };
 
+export const millionAdapter = (vnode: VNode): any => {
+  if (typeof vnode === 'string') return vnode;
+  // @ts-ignore
+  return _.clone(vnode);
+};
+
 export const snabbdomAdapter = (vnode: VNode): any => {
   if (typeof vnode === 'string') return vnode;
   // @ts-ignore
   return _.clone(
-    snabbdom.h(vnode.tag, null, vnode.children.map(snabbdomAdapter)),
+    snabbdom.h(vnode.tag, null, vnode.children?.map(snabbdomAdapter)),
   );
 };
 
@@ -38,7 +44,11 @@ export const virtualDomAdapter = (vnode: VNode): any => {
   if (typeof vnode === 'string') return new virtual_dom_VText(vnode);
   // @ts-ignore
   return _.clone(
-    new virtual_dom_VNode(vnode.tag, {}, vnode.children.map(virtualDomAdapter)),
+    new virtual_dom_VNode(
+      vnode.tag,
+      {},
+      vnode.children?.map(virtualDomAdapter) || [],
+    ),
   );
 };
 
@@ -49,7 +59,7 @@ export const simpleVirtualDomAdapter = (vnode: VNode): any => {
     simple_virtual_dom.el(
       vnode.tag,
       {},
-      vnode.children.map(simpleVirtualDomAdapter),
+      vnode.children?.map(simpleVirtualDomAdapter),
     ),
   );
 };
