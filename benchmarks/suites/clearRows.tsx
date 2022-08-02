@@ -14,6 +14,7 @@ import {
   simpleVirtualDomAdapter,
   snabbdomAdapter,
   Suite,
+  millionAdapter,
   virtualDomAdapter,
 } from '../benchmark';
 import { buildData, patch } from '../data';
@@ -34,7 +35,7 @@ const vnode = <table></table>;
 
 const suite = Suite('clear rows (clearing a table with 1,000 rows)', {
   million: () => {
-    patch(el(), vnode);
+    patch(el(), millionAdapter(vnode), millionAdapter(oldVNode));
   },
   hundred: () => {
     hundred.patch(el(), hundredAdapter(vnode), hundredAdapter(oldVNode));

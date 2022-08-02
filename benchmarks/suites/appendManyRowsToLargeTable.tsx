@@ -14,6 +14,7 @@ import {
   simpleVirtualDomAdapter,
   snabbdomAdapter,
   Suite,
+  millionAdapter,
   virtualDomAdapter,
 } from '../benchmark';
 import { buildData, patch } from '../data';
@@ -38,7 +39,7 @@ const suite = Suite(
   'append many rows to large table (appending 1,000 to a table of 10,000 rows)',
   {
     million: () => {
-      patch(el(), vnode);
+      patch(el(), millionAdapter(vnode), millionAdapter(oldVNode));
     },
     hundred: () => {
       hundred.patch(el(), hundredAdapter(vnode), hundredAdapter(oldVNode));
