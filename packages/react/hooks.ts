@@ -306,6 +306,11 @@ export const useList = (array: any[]) => {
             }
 
             splice.apply(target, args);
+
+            const diff = args.length - deleteCount;
+            target.length += diff;
+            length += diff;
+
             queueRender(forceUpdate);
           };
         }
