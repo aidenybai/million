@@ -11,7 +11,7 @@ const parser = new DOMParser();
 const routeMap = new Map<string, Route>();
 const controllerMap = new Map<
   string,
-  { controller: AbortController; pendingContent: Promise<string> }
+  { controller: AbortController; pendingContent: Promise<string | Blob> }
 >();
 const PROGRESS_BAR_COLOR = getComputedStyle(document.body).getPropertyValue(
   '--million-progress-bar-color',
@@ -55,9 +55,17 @@ export const parseContent = (content: string, url: URL): Document => {
 export const request = async (
   url: URL | string,
   options?: RequestInit,
-): Promise<string> => {
+): Promise<string | Blob> => {
   return fetch(String(url), options)
-    .then((res) => res.text())
+    .then(async (res) => {
+      const contentType = res.headers.get('Content-Type')
+
+      if (contentType === 'text/html') {
+        return res.text()
+      }
+
+      return res.blob()
+    })
     .catch((err: Error) => {
       if (err.name !== 'AbortError') {
         window.location.assign(url);
@@ -127,22 +135,28 @@ export const navigate = async (
       } catch (_err) {
         currentEl.replaceWith(newEl);
       }
+    } else if (route.external) {
+      window.location.href = url.href;
     }
   } else {
     const content = await (pendingContent ?? request(url, opts));
     if (!content) return;
 
-    const html = parseContent(content, url);
+    if (typeof content === 'string') {
+      const html = parseContent(content, url);
 
-    setRoute(url.pathname, { html });
+      setRoute(url.pathname, { html });
 
-    if (selector) document.title = html.title;
+      if (selector) document.title = html.title;
 
-    const newEl = getEl(html.documentElement, selector);
-    try {
-      morph(newEl, currentEl);
-    } catch (_err) {
-      currentEl.replaceWith(newEl);
+      const newEl = getEl(html.documentElement, selector);
+      try {
+        morph(newEl, currentEl);
+      } catch (_err) {
+        currentEl.replaceWith(newEl);
+      }
+    } else {
+      window.location.href = url.href
     }
   }
 
@@ -282,8 +296,10 @@ export const prefetch = async (path: string | URL) => {
 
   const content = await pendingContent;
   controllerMap.delete(url.pathname);
-  if (content) {
+  if (typeof content === 'string') {
     const html = parseContent(content, url);
     setRoute(url.pathname, { html });
+  } else {
+    setRoute(url.pathname, { external: true })
   }
 };
