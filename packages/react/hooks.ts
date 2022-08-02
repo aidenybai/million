@@ -290,26 +290,20 @@ export const useList = (array: any[]) => {
     return new Proxy(array, {
       get(target, prop, receiver) {
         if (prop === 'splice') {
-          const splice = target[prop];
-
-          return (...args) => {
-            const start = args.shift();
-            const deleteCount = args.length
-              ? args.shift()
-              : target.length - start;
-
+          return (
+            start: number,
+            deleteCount: number = target.length - start,
+            ...items: any[]
+          ) => {
             for (let i = 0; i < deleteCount; i++) {
               target._delta.push(Deltas.REMOVE(start));
             }
-            for (let i = 0; i < args.length; i++) {
-              target._delta.push(Deltas.CREATE(start));
+            for (let i = 0; i < items.length; i++) {
+              target._delta.push(Deltas.CREATE(start + i));
             }
 
-            splice.apply(target, args);
-
-            const diff = args.length - deleteCount;
-            target.length += diff;
-            length += diff;
+            target.splice(start, deleteCount, ...items);
+            target.length += items.length - deleteCount;
 
             queueRender(forceUpdate);
           };
