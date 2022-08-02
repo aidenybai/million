@@ -60,11 +60,7 @@ export const request = async (
     .then(async (res) => {
       const contentType = res.headers.get('Content-Type')
 
-      if (contentType === 'text/html') {
-        return res.text()
-      }
-
-      return res.blob()
+      return contentType === 'text/html' ? res.text() : res.blob()
     })
     .catch((err: Error) => {
       if (err.name !== 'AbortError') {
