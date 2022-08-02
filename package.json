@@ -119,7 +119,7 @@
   "homepage": "https://github.com/aidenybai/million",
   "prettier": "@vercel/style-guide/prettier",
   "devDependencies": {
-    "@babel/core": "^7.18.9",
+    "@babel/core": "^7.18.10",
     "@types/node": "^18.6.3",
     "@typescript-eslint/eslint-plugin": "^5.32.0",
     "@typescript-eslint/parser": "^5.32.0",
@@ -141,12 +141,12 @@
     "source-map": "^0.7.4",
     "taze": "^0.7.6",
     "tslib": "^2.4.0",
-    "turbo": "^1.4.0",
+    "turbo": "^1.4.2",
     "typescript": "^4.7.4",
     "unbuild": "^0.7.6",
     "vite": "3.0.0",
     "vitest": "^0.19.1",
     "wouter": "2.8.0-alpha.2",
-    "zx": "^7.0.7"
+    "zx": "^7.0.8"
   }
 }

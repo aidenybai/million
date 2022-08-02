@@ -128,7 +128,6 @@ export const useContext = (context) => {
   if (!stack.some(update, info)) {
     stack.push(info);
   }
-  console.log(context.value)
   return context.value;
 };
 
@@ -290,6 +289,26 @@ export const useList = (array: any[]) => {
     array._delta = delta;
     return new Proxy(array, {
       get(target, prop, receiver) {
+        if (prop === 'splice') {
+          const splice = target[prop];
+
+          return (...args) => {
+            const start = args.shift();
+            const deleteCount = args.length
+              ? args.shift()
+              : target.length - start;
+
+            for (let i = 0; i < deleteCount; i++) {
+              target._delta.push(Deltas.REMOVE(start));
+            }
+            for (let i = 0; i < args.length; i++) {
+              target._delta.push(Deltas.CREATE(start));
+            }
+
+            splice.apply(target, args);
+            queueRender(forceUpdate);
+          };
+        }
         return Reflect.get(target, prop, receiver);
       },
       set(target, prop, value, receiver) {
@@ -306,7 +325,7 @@ export const useList = (array: any[]) => {
         return true;
       },
       deleteProperty(target, prop) {
-        delete target[prop];
+        Reflect.deleteProperty(target, prop);
         length = target.length;
         if (!isNaN(prop)) {
           target._delta.push(Deltas.REMOVE(Number(prop)));
