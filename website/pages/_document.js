@@ -10,7 +10,7 @@ class MyDocument extends Document {
     const meta = {
       title: 'Million',
       description: `🦁 <1kb compiler-augmented virtual DOM. It's fast!`,
-      image: '/icon.svg',
+      image: 'https://millionjs.org/icon.png',
     };
 
     return (
