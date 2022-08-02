@@ -144,7 +144,7 @@ importers:
       react-dom: ^17.0.2
       react-hot-toast: ^2.3.0
       react-lite-youtube-embed: ^2.3.1
-      react-modal-video: ^1.2.9
+      react-modal-video: ^1.2.10
       shiki: ^0.10.1
       string-similarity: ^4.0.4
       tailwindcss: ^3.1.7
@@ -163,7 +163,7 @@ importers:
       postcss: 8.4.14
       react-hot-toast: 2.3.0_sfoxds7t5ydpegc3knd667wn6m
       react-lite-youtube-embed: 2.3.1_sfoxds7t5ydpegc3knd667wn6m
-      react-modal-video: 1.2.9_sfoxds7t5ydpegc3knd667wn6m
+      react-modal-video: 1.2.10_sfoxds7t5ydpegc3knd667wn6m
       shiki: 0.10.1
       string-similarity: 4.0.4
       tailwindcss: 3.1.7
@@ -7457,8 +7457,8 @@ packages:
       react-dom: 17.0.2_react@17.0.2
     dev: true
 
-  /react-modal-video/1.2.9_sfoxds7t5ydpegc3knd667wn6m:
-    resolution: {integrity: sha512-hRjmRzTKEtEFWTG0STvc+JUHscryGQMQq/y8ghbk5f/e8Wptuy3GlPNT8xqOGpXjyCzVtOB8sy7t0h5HdzMu8g==}
+  /react-modal-video/1.2.10_sfoxds7t5ydpegc3knd667wn6m:
+    resolution: {integrity: sha512-NIg7B3wbYTHKv28SgW+hoOeMsEcQrMSEjDBL89rXEL9x3yLDhhCkU4vq6uVwBJ3tUK1YeOQyWFn2jy8zK2KMrw==}
     peerDependencies:
       react: ^16.2.0 || ^17.0.0
       react-dom: ^16.2.0 || ^17.0.0
