@@ -9,7 +9,7 @@ import Link from 'next/link';
 **Syntax:** `const [list, delta] = useList(initialListValue)`\
 **Example:** `const [list, delta] = useList([1, 2, 3])`
 
-The `useList()` hook is an optimized version of the `useState()` hook, but exclusvely for arrays. Instead of returning `state` and `setState`, it returns `list` and `delta`. `list` is a mutable value that you can update like a variable, and `delta` is a payload that you can pass into virtual nodes.
+The `useList()` hook is an optimized version of the `useState()` hook, but exclusively for arrays. Instead of returning `state` and `setState`, it returns `list` and `delta`. `list` is a mutable value that you can update like a variable, and `delta` is a payload that you can pass into virtual nodes.
 
 ```js {4,10,15}
 import { createRoot, useList } from 'million/react';
