@@ -91,6 +91,7 @@ export const createClass = (klass: typeof Component, props?: VProps) => {
       ret = componentObject.render(props) as any;
     } catch (e) {
       componentObject.componentDidCatch(e)
+      throw e
     }
     if (!ret) return ret;
     const newVNode = Array.isArray(ret)
