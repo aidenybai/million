@@ -3,7 +3,7 @@ import Vercel from './components/Vercel';
 export default {
   projectLink: 'https://github.com/aidenybai/million',
   projectChatLink: 'https://discord.gg/X9yFbcV2rF',
-  docsRepositoryBase: 'https://github.com/aidenybai/docs',
+  docsRepositoryBase: 'https://github.com/aidenybai/million',
   titleSuffix: ' – Million',
   feedbackLink: () => {
     return 'Question? Give us feedback →';
@@ -164,12 +164,16 @@ export default {
       </>
     );
   },
-  footerEditLink: () => {
-    return 'Edit this page on GitHub →';
-  },
   tocExtraContent: () => {
     return (
-      <a className="text-xs font-medium no-underline block text-gray-500 mb-2 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100" target="_blank" rel="noreferrer" href="https://github.com/aidenybai/million-react-compat">Become a sponsor 💝 →</a>
+      <a
+        className="text-xs font-medium no-underline block text-gray-500 mb-2 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+        target="_blank"
+        rel="noreferrer"
+        href="https://github.com/aidenybai/million-react-compat"
+      >
+        Become a sponsor 💝 →
+      </a>
     );
   },
 };
