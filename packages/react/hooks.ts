@@ -301,11 +301,11 @@ export const useList = (array: any[]) => {
             for (let i = 0; i < items.length; i++) {
               target._delta.push(Deltas.CREATE(start + i));
             }
-
-            target.splice(start, deleteCount, ...items);
-            target.length += items.length - deleteCount;
-
+            const ret = target.splice(start, deleteCount, ...items);
+            const newTargetLen = target.length + items.length - deleteCount;
+            if (newTargetLen >= 0) target.length = newTargetLen;
             queueRender(forceUpdate);
+            return ret
           };
         }
         return Reflect.get(target, prop, receiver);
