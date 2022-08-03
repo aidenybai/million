@@ -14,7 +14,7 @@
     "@vitejs/plugin-legacy": "^2.0.0",
     "benchmark": "^2.1.4",
     "canvas-confetti": "^1.5.1",
-    "chart.js": "^3.8.2",
+    "chart.js": "^3.9.0",
     "hundred": "^0.1.0",
     "lodash": "^4.17.21",
     "simple-virtual-dom": "^0.1.10",
