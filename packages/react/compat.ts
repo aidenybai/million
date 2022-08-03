@@ -86,7 +86,12 @@ export const createClass = (klass: typeof Component, props?: VProps) => {
   let prevVNode: VNode | undefined;
   const componentObject = new klass(props as VProps);
   const rerender = () => {
-    const ret = componentObject.render(props) as any;
+    let ret;
+    try {
+      ret = componentObject.render(props) as any;
+    } catch (e) {
+      componentObject.componentDidCatch(e)
+    }
     if (!ret) return ret;
     const newVNode = Array.isArray(ret)
       ? h('_', rootFragmentStyle, ...ret)
