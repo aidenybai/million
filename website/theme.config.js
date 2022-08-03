@@ -3,7 +3,8 @@ import Vercel from './components/Vercel';
 export default {
   projectLink: 'https://github.com/aidenybai/million',
   projectChatLink: 'https://discord.gg/X9yFbcV2rF',
-  docsRepositoryBase: 'https://github.com/aidenybai/million',
+  docsRepositoryBase:
+    'https://github.com/aidenybai/million/blob/main/website/pages',
   titleSuffix: ' – Million',
   feedbackLink: () => {
     return 'Question? Give us feedback →';
@@ -163,6 +164,9 @@ export default {
         </span>
       </>
     );
+  },
+  footerEditLink: () => {
+    return 'Edit this page on GitHub →';
   },
   tocExtraContent: () => {
     return (
