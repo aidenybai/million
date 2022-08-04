@@ -6,9 +6,23 @@ import { h } from '../jsx-runtime';
 import { patch } from '../million';
 import { hook } from './hooks';
 import type { Component } from './react';
-import type { DOMNode, VNode, VProps } from '../million';
+import type { DOMNode, VNode, VProps , VElement } from '../million';
 
 const rootFragmentStyle = { style: 'display: contents;' };
+
+const catchError = (vnodeLike: { _component?: Component, _parent?: VElement } | string | undefined, e: unknown) => {
+  let currentVNode = vnodeLike;
+
+  while (typeof currentVNode === 'object' && !currentVNode._component) {
+    currentVNode = currentVNode._parent;
+  }
+
+  if (typeof currentVNode === 'object')  {
+    currentVNode._component?.componentDidCatch(e)
+  }
+
+  throw e
+}
 
 export const getCircularReplacer = () => {
   const seen = new WeakSet();
@@ -77,19 +91,7 @@ export const createComponent = (
     prevKey = newVNode.key;
     prevVNode = newVNode;
     return newVNode;
-  }, (e) => {
-    let node = prevVNode;
-
-    while (typeof node === 'object' && !node?._component) {
-      node = node._parent;
-    }
-
-    if (typeof node === 'object')  {
-      node._component?.componentDidCatch(e)
-    }
-
-    throw e
-  })();
+  }, (e) => catchError(prevVNode, e))();
   return component;
 };
 
@@ -98,13 +100,11 @@ export const createClass = (klass: typeof Component, props?: VProps) => {
   let prevVNode: VNode | undefined;
   const componentObject = new klass(props as VProps);
   const rerender = () => {
-    // currentComponent = componentObject
     let ret;
     try {
       ret = componentObject.render(props) as any;
     } catch (e) {
-      componentObject.componentDidCatch(e)
-      throw e
+      catchError({ _component: componentObject }, e);
     }
     if (!ret) return ret;
     ret._component = componentObject;
