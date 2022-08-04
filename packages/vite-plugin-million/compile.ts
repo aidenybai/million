@@ -43,7 +43,7 @@ export const fromASTNodeToVNode = (
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   for (let i = 0; i < astProps.properties?.length; i++) {
     const astProp = astProps.properties[i] as Property;
-    const astPropKey = astProp.key as types.namedTypes.Identifier | types.namedTypes.Literal;
+    const astPropKey = astProp.key as Identifier | Literal;
 
     if (astProp.value.type === 'ObjectExpression') {
       const vnodeObject: any = {};
