@@ -302,11 +302,7 @@ export const useList = (array: any[]) => {
               target._delta.push(Deltas.CREATE(start + i));
             }
             const ret = target.splice(start, deleteCount, ...items);
-            const newTargetLen = target.length + items.length - deleteCount;
-            if (newTargetLen >= 0) {
-              target.length = newTargetLen;
-              length = newTargetLen;
-            }
+            length = target.length;
             queueRender(forceUpdate);
             return ret
           };
