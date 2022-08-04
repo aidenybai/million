@@ -43,7 +43,8 @@ export const fromASTNodeToVNode = (
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   for (let i = 0; i < astProps.properties?.length; i++) {
     const astProp = astProps.properties[i] as Property;
-    const astPropKey = astProp.key as Identifier;
+    const astPropKey = astProp.key as types.namedTypes.Identifier | types.namedTypes.Literal;
+
     if (astProp.value.type === 'ObjectExpression') {
       const vnodeObject: any = {};
       const astObject = astProp.value.properties;
@@ -53,11 +54,16 @@ export const fromASTNodeToVNode = (
           astObjectProp.value as Literal
         ).value;
       }
-      vnodeProps[astPropKey.name] = vnodeObject;
+      if (astPropKey.type === "Literal") vnodeProps[String(astPropKey.value)] = vnodeObject;
+      if (astPropKey.type === "Identifier") vnodeProps[astPropKey.name] = vnodeObject;
+
     } else if (astProp.value.type.includes('Function')) {
-      vnodeProps[astPropKey.name] = () => astProp;
+      if (astPropKey.type === "Literal") vnodeProps[String(astPropKey.value)] = () => astProp;
+      if (astPropKey.type === "Identifier") vnodeProps[astPropKey.name] = () => astProp;
+
     } else if (astProp.value.type === 'Literal') {
-      vnodeProps[astPropKey.name] = astProp.value.value;
+      if (astPropKey.type === "Literal") vnodeProps[String(astPropKey.value)] = astProp.value.value;
+      if (astPropKey.type === "Identifier") vnodeProps[astPropKey.name] = astProp.value.value;
     } else {
       return astNode;
     }
@@ -105,10 +111,10 @@ export const fromVNodeToASTNode = (
           return typeof value === 'function'
             ? value()
             : property(
-                'init',
-                literal(name),
-                literal(value as string | number | boolean),
-              );
+              'init',
+              literal(name),
+              literal(value as string | number | boolean),
+            );
         }),
     );
 
