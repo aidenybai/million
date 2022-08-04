@@ -21,7 +21,7 @@ importers:
       np: ^7.6.2
       ora: ^6.1.2
       prettier: ^2.7.1
-      recast: ^0.21.1
+      recast: ^0.21.2
       simple-git: ^3.11.0
       source-map: ^0.7.4
       taze: ^0.7.6
@@ -51,7 +51,7 @@ importers:
       np: 7.6.2
       ora: 6.1.2
       prettier: 2.7.1
-      recast: 0.21.1
+      recast: 0.21.2
       simple-git: 3.11.0
       source-map: 0.7.4
       taze: 0.7.6
@@ -75,7 +75,7 @@ importers:
       '@vitejs/plugin-legacy': ^2.0.0
       benchmark: ^2.1.4
       canvas-confetti: ^1.5.1
-      chart.js: ^3.9.0
+      chart.js: ^3.9.1
       hundred: ^0.1.0
       lodash: ^4.17.21
       simple-virtual-dom: ^0.1.10
@@ -91,7 +91,7 @@ importers:
       '@vitejs/plugin-legacy': 2.0.0
       benchmark: 2.1.4
       canvas-confetti: 1.5.1
-      chart.js: 3.9.0
+      chart.js: 3.9.1
       hundred: 0.1.0
       lodash: 4.17.21
       simple-virtual-dom: 0.1.10
@@ -2355,8 +2355,8 @@ packages:
     resolution: {integrity: sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA==}
     dev: true
 
-  /chart.js/3.9.0:
-    resolution: {integrity: sha512-SHOC6eCTe3dXe6owLHnO56xTLBbVeMHskkAlgPPVkd6xa0mv3EPhH5azRLg1cucYFsp4UloH/4NjSG0oOIFJtw==}
+  /chart.js/3.9.1:
+    resolution: {integrity: sha512-Ro2JbLmvg83gXF5F4sniaQ+lTbSv18E+TIf2cOeiH1Iqd2PGFOtem+DUufMZsCJwFE7ywPOpfXFBwRTGq7dh6w==}
     dev: true
 
   /check-error/1.0.2:
@@ -7549,8 +7549,8 @@ packages:
       picomatch: 2.3.1
     dev: true
 
-  /recast/0.21.1:
-    resolution: {integrity: sha512-PF61BHLaOGF5oIKTpSrDM6Qfy2d7DIx5qblgqG+wjqHuFH97OgAqBYFIJwEuHTrM6pQGT17IJ8D0C/jVu/0tig==}
+  /recast/0.21.2:
+    resolution: {integrity: sha512-jUR1+NtaBQdKDqBJ+qxwMm5zR8aLSNh268EfgAbY+EP4wcNEWb6hZFhFeYjaYanwgDahx5t47CH8db7X2NfKdQ==}
     engines: {node: '>= 4'}
     dependencies:
       ast-types: 0.15.2

@@ -22,6 +22,7 @@ let state = {
   length: 0,
   after: [],
   hook: () => {},
+  catchError: () => {},
 };
 
 export const umap = (_) => ({
@@ -30,7 +31,7 @@ export const umap = (_) => ({
 });
 
 // main exports
-export const hook = (fn) => {
+export const hook = (fn, catchError) => {
   const stack = [];
   return function hook() {
     const prev = state;
@@ -42,6 +43,7 @@ export const hook = (fn) => {
       i: 0,
       length: stack.length,
       after,
+      catchError,
     };
     try {
       return fn.apply(null, arguments);
@@ -142,7 +144,7 @@ const stop = () => {};
 
 const createEffect = (asy) => (effect, guards?) => {
   const i = state.i++;
-  const { hook, after, stack, length } = state;
+  const { hook, after, stack, length, catchError } = state;
   if (i < length) {
     const info = stack[i];
     const { update, values, stop } = info;
@@ -155,7 +157,11 @@ const createEffect = (asy) => (effect, guards?) => {
         clean();
       }
       const invoke = () => {
-        info.clean = effect();
+        try {
+          info.clean = effect();
+        } catch (e) {
+          catchError(e)
+        }
       };
       if (asy) update(invoke);
       else after.push(invoke);
@@ -166,7 +172,11 @@ const createEffect = (asy) => (effect, guards?) => {
     state.length = stack.push(info);
     (fx.get(hook) || fx.set(hook, [])).push(info);
     const invoke = () => {
-      info.clean = effect();
+      try {
+        info.clean = effect();
+      } catch (e) {
+        catchError(e)
+      }
     };
     if (asy) info.stop = update(invoke);
     else after.push(invoke);

@@ -77,6 +77,18 @@ export const createComponent = (
     prevKey = newVNode.key;
     prevVNode = newVNode;
     return newVNode;
+  }, (e) => {
+    let node = prevVNode;
+
+    while (typeof node === 'object' && !node?._component) {
+      node = node._parent;
+    }
+
+    if (typeof node === 'object')  {
+      node._component?.componentDidCatch(e)
+    }
+
+    throw e
   })();
   return component;
 };
@@ -86,6 +98,7 @@ export const createClass = (klass: typeof Component, props?: VProps) => {
   let prevVNode: VNode | undefined;
   const componentObject = new klass(props as VProps);
   const rerender = () => {
+    // currentComponent = componentObject
     let ret;
     try {
       ret = componentObject.render(props) as any;
@@ -94,6 +107,7 @@ export const createClass = (klass: typeof Component, props?: VProps) => {
       throw e
     }
     if (!ret) return ret;
+    ret._component = componentObject;
     const newVNode = Array.isArray(ret)
       ? h('_', rootFragmentStyle, ...ret)
       : ret;
