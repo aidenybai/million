@@ -21,7 +21,7 @@ let state = {
   i: 0,
   length: 0,
   after: [],
-  hook: () => {},
+  hook: () => { },
 };
 
 export const umap = (_) => ({
@@ -138,7 +138,7 @@ function update({ hook }) {
 // dropEffect, hasEffect, useEffect, useLayoutEffect
 const effects = new WeakMap();
 const fx = umap(effects);
-const stop = () => {};
+const stop = () => { };
 
 const createEffect = (asy) => (effect, guards?) => {
   const i = state.i++;
@@ -303,7 +303,10 @@ export const useList = (array: any[]) => {
             }
             const ret = target.splice(start, deleteCount, ...items);
             const newTargetLen = target.length + items.length - deleteCount;
-            if (newTargetLen >= 0) target.length = newTargetLen;
+            if (newTargetLen >= 0) {
+              target.length = newTargetLen;
+              length = newTargetLen;
+            }
             queueRender(forceUpdate);
             return ret
           };
