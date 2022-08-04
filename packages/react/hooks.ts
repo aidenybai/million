@@ -21,7 +21,7 @@ let state = {
   i: 0,
   length: 0,
   after: [],
-  hook: () => {},
+  hook: () => { },
 };
 
 export const umap = (_) => ({
@@ -138,7 +138,7 @@ function update({ hook }) {
 // dropEffect, hasEffect, useEffect, useLayoutEffect
 const effects = new WeakMap();
 const fx = umap(effects);
-const stop = () => {};
+const stop = () => { };
 
 const createEffect = (asy) => (effect, guards?) => {
   const i = state.i++;
@@ -301,11 +301,10 @@ export const useList = (array: any[]) => {
             for (let i = 0; i < items.length; i++) {
               target._delta.push(Deltas.CREATE(start + i));
             }
-
-            target.splice(start, deleteCount, ...items);
-            target.length += items.length - deleteCount;
-
+            const ret = target.splice(start, deleteCount, ...items);
+            length = target.length;
             queueRender(forceUpdate);
+            return ret
           };
         }
         return Reflect.get(target, prop, receiver);
