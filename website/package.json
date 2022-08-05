@@ -6,7 +6,7 @@
   },
   "dependencies": {
     "million": "1.11.7",
-    "next": "^12.2.3",
+    "next": "^12.2.4",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   },
@@ -15,14 +15,14 @@
     "@mdx-js/react": "^1.6.22",
     "autoprefixer": "^10.4.8",
     "copy-to-clipboard": "^3.3.2",
-    "nextra": "2.0.0-beta.8",
-    "nextra-theme-docs": "2.0.0-beta.8",
+    "nextra": "2.0.0-beta.13",
+    "nextra-theme-docs": "2.0.0-beta.13",
     "postcss": "^8.4.14",
     "react-hot-toast": "^2.3.0",
     "react-lite-youtube-embed": "^2.3.1",
     "react-modal-video": "^1.2.10",
     "shiki": "^0.10.1",
     "string-similarity": "^4.0.4",
-    "tailwindcss": "^3.1.7"
+    "tailwindcss": "^3.1.8"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "million",
-  "version": "1.12.3-beta.3",
+  "version": "1.12.3-beta.7",
   "description": "<1kb compiler-augmented virtual DOM. It's fast!",
   "main": "dist/million.mjs",
   "module": "dist/million.mjs",
@@ -120,7 +120,7 @@
   "prettier": "@vercel/style-guide/prettier",
   "devDependencies": {
     "@babel/core": "^7.18.10",
-    "@types/node": "^18.6.3",
+    "@types/node": "^18.6.4",
     "@typescript-eslint/eslint-plugin": "^5.32.0",
     "@typescript-eslint/parser": "^5.32.0",
     "@vercel/style-guide": "^3.0.0",

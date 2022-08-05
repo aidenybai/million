@@ -13,12 +13,12 @@ import type { VElement, VNode } from '../packages/million/types';
 
 const stripParent = (vnode: VNode) => {
   if (typeof vnode === 'object') {
-    delete vnode._parent
+    delete vnode._parent;
     vnode.children = vnode.children?.map(stripParent);
   }
 
   return vnode;
-}
+};
 
 export const expectEqualVNode = (vnode1: VNode, vnode2: VNode) => {
   stripParent(vnode1);
