@@ -24,14 +24,15 @@
 
 Listed is a series of scripts and their descriptions that can be run with `pnpm run`.
 
-- `dev`: Spins up a dev environment with Vite
-- `build`: Builds distribution files under `/dist`
-- `lint`: Lint all files in the project with `eslint`
-- `cleanup`: Formats TypeScript files under `/packages` with Prettier.
-- `test`: Runs unit tests via `vitest`
-- `bench`: Opens a local benchmark testing environment with Vite.
-- `typecheck`: Uses TypeScript to typecheck files under `/packages`
+- `dev`: Spins up a dev environment with Vite.
+- `build`: Builds distribution files under `/dist`.
+- `cleanup`: Formats all TypeScript files with Prettier.
+- `lint`: Lint all files in the project with `eslint`.
+- `lint:fix`: Lint all files in the project with `eslint` and fix any violations.
+- `test`: Runs unit tests via `vitest`.
+- `test:dev`: Runs unit tests via `vitest` in watch mode.
+- `typecheck`: Uses TypeScript to typecheck all files.
 - `release`: Builds and prepares distributions for release.
 - `bump`: Publishes a new release to NPM.
-- `welcome`: Runs the dev environemtn onboarding CLI "RPG"
+- `welcome`: Runs the dev environment onboarding CLI "RPG".
 - `prepare`: Installs Git hooks into your local clone of the repository.
