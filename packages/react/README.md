@@ -1,6 +1,6 @@
 # `million/react`
 
-Adds basic [React](https://github.com/facebook/react) compatability to Million.
+Adds basic [React](https://github.com/facebook/react) compatibility to Million.
 
 ## License
 
