@@ -24,6 +24,14 @@ const catchError = (vnodeLike: { _component?: Component, _parent?: VElement } | 
   throw e
 }
 
+const addParentToChildren = (velement: VElement) => {
+  velement.children?.forEach(child => {
+    if (typeof child === 'object') {
+      child._parent = velement
+    }
+  })
+}
+
 export const getCircularReplacer = () => {
   const seen = new WeakSet();
   return (_key, value) => {
@@ -52,6 +60,7 @@ export const createComponent = (
   const component = hook(() => {
     const ret = fn(props, key);
     if (!ret || typeof ret === 'string') return ret;
+    addParentToChildren(ret)
     const newVNode = Array.isArray(ret)
       ? h('_', key ? { key, ...rootFragmentStyle } : rootFragmentStyle, ...ret)
       : ret;
@@ -107,6 +116,7 @@ export const createClass = (klass: typeof Component, props?: VProps) => {
       catchError({ _component: componentObject }, e);
     }
     if (!ret) return ret;
+    addParentToChildren(ret)
     ret._component = componentObject;
     const newVNode = Array.isArray(ret)
       ? h('_', rootFragmentStyle, ...ret)

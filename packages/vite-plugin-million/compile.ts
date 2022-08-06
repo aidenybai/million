@@ -132,8 +132,6 @@ export const fromVNodeToASTNode = (
     const astVNode = [
       property('init', literal('tag'), literal(velement?.tag as string)),
       property('init', literal('flag'), literal(velement?.flag as number)),
-      // @ts-expect-error TODO
-      property('init', literal('_parent'), literal(velement?._parent)),
     ];
     if (velement?.props && Object.keys(velement.props).length > 0) {
       astVNode.push(property('init', literal('props'), astProps));

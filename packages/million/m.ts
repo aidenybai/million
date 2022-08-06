@@ -105,13 +105,6 @@ export const m = (
     hook,
     ref,
   };
-
-  velement.children?.forEach(child => {
-    if (typeof child === 'object') {
-      child._parent = velement
-    }
-  })
-
   return velement.tag.toLowerCase() === 'svg' ? svg(velement) : velement;
 };
 
