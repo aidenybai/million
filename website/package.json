@@ -23,6 +23,6 @@
     "react-modal-video": "^1.2.10",
     "shiki": "^0.10.1",
     "string-similarity": "^4.0.4",
-    "tailwindcss": "^3.1.7"
+    "tailwindcss": "^3.1.8"
   }
 }
