@@ -22,6 +22,9 @@ export const patch = (
   hook: Hook = () => true,
   effects: Effect[] = [],
 ): DOMNode => {
+  if (typeof newVNode === 'object' && typeof oldVNode === 'object') {
+    newVNode._parent = oldVNode._parent;
+  }
   const queueEffect = effect(el, effects);
   const commit = (work: () => void, data: ReturnType<Driver>) => {
     if (hook(data.el, data.newVNode, data.oldVNode)) work();

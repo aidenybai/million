@@ -6,9 +6,31 @@ import { h } from '../jsx-runtime';
 import { patch } from '../million';
 import { hook } from './hooks';
 import type { Component } from './react';
-import type { DOMNode, VNode, VProps } from '../million';
+import type { DOMNode, VNode, VProps , VElement } from '../million';
 
 const rootFragmentStyle = { style: 'display: contents;' };
+
+const catchError = (vnodeLike: { _component?: Component, _parent?: VElement } | string | undefined, e: unknown) => {
+  let currentVNode = vnodeLike;
+
+  while (typeof currentVNode === 'object' && !currentVNode._component) {
+    currentVNode = currentVNode._parent;
+  }
+
+  if (typeof currentVNode === 'object')  {
+    currentVNode._component?.componentDidCatch(e)
+  }
+
+  throw e
+}
+
+const addParentToChildren = (velement: VElement) => {
+  velement.children?.forEach(child => {
+    if (typeof child === 'object') {
+      child._parent = velement
+    }
+  })
+}
 
 export const getCircularReplacer = () => {
   const seen = new WeakSet();
@@ -38,6 +60,7 @@ export const createComponent = (
   const component = hook(() => {
     const ret = fn(props, key);
     if (!ret || typeof ret === 'string') return ret;
+    addParentToChildren(ret)
     const newVNode = Array.isArray(ret)
       ? h('_', key ? { key, ...rootFragmentStyle } : rootFragmentStyle, ...ret)
       : ret;
@@ -77,7 +100,7 @@ export const createComponent = (
     prevKey = newVNode.key;
     prevVNode = newVNode;
     return newVNode;
-  })();
+  }, (e) => catchError(prevVNode, e))();
   return component;
 };
 
@@ -86,8 +109,15 @@ export const createClass = (klass: typeof Component, props?: VProps) => {
   let prevVNode: VNode | undefined;
   const componentObject = new klass(props as VProps);
   const rerender = () => {
-    const ret = componentObject.render(props) as any;
+    let ret;
+    try {
+      ret = componentObject.render(props) as any;
+    } catch (e) {
+      catchError({ _component: componentObject }, e);
+    }
     if (!ret) return ret;
+    addParentToChildren(ret)
+    ret._component = componentObject;
     const newVNode = Array.isArray(ret)
       ? h('_', rootFragmentStyle, ...ret)
       : ret;
