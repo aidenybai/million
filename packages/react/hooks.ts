@@ -21,7 +21,7 @@ let state = {
   i: 0,
   length: 0,
   after: [],
-  hook: () => { },
+  hook: () => {},
 };
 
 export const umap = (_) => ({
@@ -138,7 +138,7 @@ function update({ hook }) {
 // dropEffect, hasEffect, useEffect, useLayoutEffect
 const effects = new WeakMap();
 const fx = umap(effects);
-const stop = () => { };
+const stop = () => {};
 
 const createEffect = (asy) => (effect, guards?) => {
   const i = state.i++;
@@ -232,11 +232,14 @@ export const useDeferredValue = (value: any) => {
 
 // useSyncExternalStore
 export const useSyncExternalStore = (subscribe, getSnapshot) => {
-  const state = useState(getSnapshot());
+  const [, updateState] = useState();
+  const forceUpdate = useCallback(() => updateState({}), []);
+  const [subscriber, setSubscriber] = useState(() => subscribe(forceUpdate));
+
   useEffect(() => {
-    subscribe(state);
-  });
-  subscribe(state);
+    if (subscriber) subscriber();
+    setSubscriber(subscribe(forceUpdate));
+  }, [getSnapshot()]);
   return state;
 };
 
@@ -304,7 +307,7 @@ export const useList = (array: any[]) => {
             const ret = target.splice(start, deleteCount, ...items);
             length = target.length;
             queueRender(forceUpdate);
-            return ret
+            return ret;
           };
         }
         return Reflect.get(target, prop, receiver);
