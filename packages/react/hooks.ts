@@ -237,7 +237,7 @@ export const useSyncExternalStore = (subscribe, getSnapshot) => {
   const [subscriber, setSubscriber] = useState(() => subscribe(forceUpdate));
 
   useEffect(() => {
-    if (subscriber) subscriber();
+    subscriber?.();
     setSubscriber(subscribe(forceUpdate));
   }, [getSnapshot()]);
   return state;
