@@ -147,6 +147,10 @@ class Component {
     return true;
   }
 
+  componentDidCatch(_e: unknown) {
+    void 0;
+  }
+
   setState(
     update: VProps | Function,
     callback?: (state: VProps, props: VProps) => VProps,

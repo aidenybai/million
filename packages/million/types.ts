@@ -1,3 +1,5 @@
+import type { Component } from '../react';
+
 /**
  * Field on parent DOM node that stores the root DOM node reference
  */
@@ -72,6 +74,8 @@ export interface VElement {
   ref?: {
     current: any;
   } & Record<string, any>;
+  _parent?: VElement
+  _component?: Component
 }
 
 export interface V {
