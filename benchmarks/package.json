@@ -11,7 +11,7 @@
     "@types/lodash": "^4.14.182",
     "@types/node": "^18.7.1",
     "@types/virtual-dom": "^2.1.1",
-    "@vitejs/plugin-legacy": "^2.0.0",
+    "@vitejs/plugin-legacy": "^2.0.1",
     "benchmark": "^2.1.4",
     "canvas-confetti": "^1.5.1",
     "chart.js": "^3.9.1",
