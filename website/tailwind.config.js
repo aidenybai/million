@@ -19,8 +19,8 @@ module.exports = {
       keyframes: {
         'gradient-x': {
           '0%, 100%': {
-            'background-size': '100% 100%',
-            'background-position': 'bottom',
+            'background-size': '300% 300%',
+            'background-position': 'top',
           },
           '50%': {
             'background-size': '200% 200%',
@@ -54,6 +54,7 @@ module.exports = {
         color2: '#A96FDC',
         night1: '#1f1738',
         night2: '#6128a4',
+        blackish: '#0f162a',
       },
       screens: {
         sm: '640px',
