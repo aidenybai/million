@@ -134,13 +134,15 @@ importers:
       '@heroicons/react': ^1.0.6
       '@mdx-js/react': ^1.6.22
       autoprefixer: ^10.4.8
+      chart.js: ^3.9.1
       copy-to-clipboard: ^3.3.2
       million: 1.11.7
       next: ^12.2.4
-      nextra: 2.0.0-beta.13
-      nextra-theme-docs: 2.0.0-beta.13
+      nextra: 2.0.0-beta.17
+      nextra-theme-docs: 2.0.0-beta.17
       postcss: ^8.4.16
       react: ^17.0.2
+      react-chartjs-2: ^4.3.1
       react-dom: ^17.0.2
       react-hot-toast: ^2.3.0
       react-lite-youtube-embed: ^2.3.1
@@ -150,9 +152,11 @@ importers:
       string-similarity: ^4.0.4
       tailwindcss: ^3.1.8
     dependencies:
+      chart.js: 3.9.1
       million: 1.11.7
       next: 12.2.4_sfoxds7t5ydpegc3knd667wn6m
       react: 17.0.2
+      react-chartjs-2: 4.3.1_5vgmout2ofjcau3vzj5upbaj34
       react-dom: 17.0.2_react@17.0.2
       react-tilt: 0.1.4_sfoxds7t5ydpegc3knd667wn6m
     devDependencies:
@@ -160,8 +164,8 @@ importers:
       '@mdx-js/react': 1.6.22_react@17.0.2
       autoprefixer: 10.4.8_postcss@8.4.16
       copy-to-clipboard: 3.3.2
-      nextra: 2.0.0-beta.13_4u6zbjx6dbt7fttn6k4hvqzi7a
-      nextra-theme-docs: 2.0.0-beta.13_4u6zbjx6dbt7fttn6k4hvqzi7a
+      nextra: 2.0.0-beta.17_4u6zbjx6dbt7fttn6k4hvqzi7a
+      nextra-theme-docs: 2.0.0-beta.17_4u6zbjx6dbt7fttn6k4hvqzi7a
       postcss: 8.4.16
       react-hot-toast: 2.3.0_sfoxds7t5ydpegc3knd667wn6m
       react-lite-youtube-embed: 2.3.1_sfoxds7t5ydpegc3knd667wn6m
@@ -2304,7 +2308,6 @@ packages:
 
   /chart.js/3.9.1:
     resolution: {integrity: sha512-Ro2JbLmvg83gXF5F4sniaQ+lTbSv18E+TIf2cOeiH1Iqd2PGFOtem+DUufMZsCJwFE7ywPOpfXFBwRTGq7dh6w==}
-    dev: true
 
   /check-error/1.0.2:
     resolution: {integrity: sha512-BrgHpW9NURQgzoNyjfq0Wu6VFO6D7IZEmJNdtgNqpzGG8RuNFHt2jQxWlAs4HMe119chBnv+34syEZtc6IhLtA==}
@@ -2336,10 +2339,6 @@ packages:
 
   /ci-info/3.3.2:
     resolution: {integrity: sha512-xmDt/QIAdeZ9+nfdPsaBCpMvHNLFiLdjj59qjqn+6iPe6YmHGQ35sBnQ8uslRBXFmXkiZQOJRjvQeoGppoTjjg==}
-    dev: true
-
-  /classnames/2.3.1:
-    resolution: {integrity: sha512-OlQdbZ7gLfGarSqxesMesDa5uz7KFbID8Kpq/SxIoNGDqY8lSYs0D+hhtBXhcdB3rcbXArFr7vlHheLk1voeNA==}
     dev: true
 
   /clean-regexp/1.0.0:
@@ -2443,6 +2442,11 @@ packages:
   /clone/1.0.4:
     resolution: {integrity: sha512-JQHZ2QMW6l3aH/j6xCqQThY/9OH4D/9ls34cgkUBiEeocRTU04tHfKPBsUK1PqZCUQM7GiA0IIXJSuXHI64Kbg==}
     engines: {node: '>=0.8'}
+    dev: true
+
+  /clsx/1.2.1:
+    resolution: {integrity: sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==}
+    engines: {node: '>=6'}
     dev: true
 
   /code-point-at/1.1.0:
@@ -6383,8 +6387,8 @@ packages:
       - '@babel/core'
       - babel-plugin-macros
 
-  /nextra-theme-docs/2.0.0-beta.13_4u6zbjx6dbt7fttn6k4hvqzi7a:
-    resolution: {integrity: sha512-rnOE6RK0/31Of6QSXxxJWNIDdozXJj3KLfiHVbQ0JPrpyjgI0fY39H/3BRKFW8IdvLh/TBX9S79gtTdsQ/f0lA==}
+  /nextra-theme-docs/2.0.0-beta.17_4u6zbjx6dbt7fttn6k4hvqzi7a:
+    resolution: {integrity: sha512-N+b3OTpXKJ/AwwPq0RBjNLSUSAnFB1TOlMIEjQG+rxtANlBpkCe4+65d9fIIAtL6Kw2/+3GNeM6R4PijStMJag==}
     peerDependencies:
       next: '>=9.5.3'
       react: '>=16.13.1'
@@ -6393,7 +6397,7 @@ packages:
       '@headlessui/react': 1.6.6_sfoxds7t5ydpegc3knd667wn6m
       '@mdx-js/react': 2.1.2_react@17.0.2
       '@reach/skip-nav': 0.17.0_sfoxds7t5ydpegc3knd667wn6m
-      classnames: 2.3.1
+      clsx: 1.2.1
       flexsearch: 0.7.21
       focus-visible: 5.2.0
       github-slugger: 1.4.0
@@ -6405,11 +6409,11 @@ packages:
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       scroll-into-view-if-needed: 2.2.29
-      title: 3.4.4
+      title: 3.5.2
     dev: true
 
-  /nextra/2.0.0-beta.13_4u6zbjx6dbt7fttn6k4hvqzi7a:
-    resolution: {integrity: sha512-cLrkM2LmZB7mb/vsC4wII3mycYXmgGRAP7uQ+bpMYoLOKOgmTHbV/VP3lkGMpNEK3onB/jTyW62t9Dt/ZHXU2A==}
+  /nextra/2.0.0-beta.17_4u6zbjx6dbt7fttn6k4hvqzi7a:
+    resolution: {integrity: sha512-V/FIjroXeh1C9QuGJIUo5g+82GyQAjnLGX97AEJfXaf5Vy61wmZ8rWXm8D0KUTGvGp4ILUuzzFuNe/f+C/l1zw==}
     peerDependencies:
       next: '>=9.5.3'
       react: '>=16.13.1'
@@ -7384,6 +7388,16 @@ packages:
       minimist: 1.2.6
       strip-json-comments: 2.0.1
     dev: true
+
+  /react-chartjs-2/4.3.1_5vgmout2ofjcau3vzj5upbaj34:
+    resolution: {integrity: sha512-5i3mjP6tU7QSn0jvb8I4hudTzHJqS8l00ORJnVwI2sYu0ihpj83Lv2YzfxunfxTZkscKvZu2F2w9LkwNBhj6xA==}
+    peerDependencies:
+      chart.js: ^3.5.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      chart.js: 3.9.1
+      react: 17.0.2
+    dev: false
 
   /react-dom/17.0.2_react@17.0.2:
     resolution: {integrity: sha512-s4h96KtLDUQlsENhMn1ar8t2bEa+q/YAtj8pPPdIjPDGBDIVNsrD9aXNWqspUe6AzKCIG0C1HZZLqLV7qpOBGA==}
@@ -8430,8 +8444,8 @@ packages:
     engines: {node: '>=14.0.0'}
     dev: true
 
-  /title/3.4.4:
-    resolution: {integrity: sha512-ViLJMyg5TFwWQ7Aqrs3e0IPINA99++cOLzQFIuBw6rKPhn8Cz7J7sdsag0BQPCf4ip7bHY1/docykbQe2R4N6Q==}
+  /title/3.5.2:
+    resolution: {integrity: sha512-PD9x2repsKvhDr/aE8mz9JlcyGKbTPOhIRraioVi9gc8AZEVok875UPFnWHFs97ddIomPC/oThpENPx3HhV5kg==}
     hasBin: true
     dependencies:
       arg: 1.0.0

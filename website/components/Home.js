@@ -12,8 +12,59 @@ import { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import Container from './Container';
-import Image from 'next/image';
 import Tilt from 'react-tilt';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Bar } from 'react-chartjs-2';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+);
+
+export const options = {
+  indexAxis: 'y',
+  elements: {
+    bar: {
+      borderWidth: 2,
+    },
+  },
+  responsive: true,
+  plugins: {
+    legend: {
+      display: false,
+    },
+    title: {
+      display: true,
+      text: 'Scripting Time (lower is better)',
+    },
+  },
+};
+
+const labels = ['Vanilla', 'Million', 'React'];
+
+export const data = {
+  labels,
+  datasets: [
+    {
+      label: 'Scripting time (ms)',
+      data: [111, 182, 4014],
+      borderColor: ['#ead61c', '#e497ea', '#53bcda'],
+      backgroundColor: ['#ead61c', '#f8a4ff', '#61dafb'],
+    },
+  ],
+};
 
 const ModalVideo = dynamic(() => import('react-modal-video'), { ssr: false });
 
@@ -96,50 +147,56 @@ export default function Page() {
         videoId="KgnSM9NbV2s"
         onClose={() => setOpen(false)}
       />
-      <div className="px-8 pt-20 pb-20 sm:px-6 sm:pt-24 lg:px-8 text-white bg-gradient-to-b from-blackish to-color2 animate-gradient-x bg-repeat lg:flex lg:justify-content lg:gap-4">
-        <div className="mx-auto max-w-xl">
-          <h1 className="text-5xl font-extrabold tracking-tighter leading-[1.1] sm:text-5xl lg:text-6xl xl:text-7xl">
-            Virtual DOM into the future.
-          </h1>
-          <p className="max-w-lg mt-6 text-2xl leading-tight text-gray-300 sm:max-w-2xl sm:text-2xl md:text-2xl lg:text-2xl">
-            Million is a lightweight{' '}
-            <code className="bg-blackish border-gray-800 border shadow-sm rounded-lg p-1">
-              &lt;1kb
-            </code>{' '}
-            Virtual DOM. It's fast!
-          </p>
-          <div className="max-w-xl mt-5 lg:flex lg:mt-8">
-            <div className="rounded-md">
-              <button
-                onClick={() => setOpen(true)}
-                className="flex items-center justify-center w-full px-6 py-3 text-md text-white no-underline border border-transparent rounded-md bg-blackish md:py-3 md:text-lg md:px-10 md:leading-6 font-bold hover:bg-black"
-              >
-                <PlayIcon className="w-5" />
-                Watch Video
-              </button>
-            </div>
-            <div className="relative mt-3 rounded-md lg:mt-0 lg:ml-3">
-              <Link href="/docs/start-here">
-                <a className="flex items-center justify-center w-full px-6 py-3 text-md font-medium text-black no-underline bg-gray-200 hover:bg-gray-300 border border-transparent rounded-md md:py-3 md:text-lg md:px-10 md:leading-6">
-                  Get started →
-                </a>
-              </Link>
+      <div className="px-8 pt-20 pb-24 sm:px-6 sm:pt-24 lg:px-8 text-white bg-gradient-to-b from-blackish to-color2 animate-gradient-x bg-repeat flex justify-content">
+        <div className="lg:max-w-7xl lg:flex lg:justify-content lg:gap-4 mx-auto">
+          <div className="mx-auto max-w-xl">
+            <h1 className="text-5xl font-extrabold tracking-tighter leading-[1.1] sm:text-5xl lg:text-6xl xl:text-7xl">
+              Virtual DOM into the future.
+            </h1>
+            <p className="max-w-lg mt-6 text-2xl leading-tight text-gray-300 sm:max-w-2xl sm:text-2xl md:text-2xl lg:text-2xl">
+              Million is a lightweight{' '}
+              <code className="bg-blackish border-gray-800 border shadow-sm rounded-lg p-1">
+                &lt;1kb
+              </code>{' '}
+              Virtual DOM. It's fast!
+            </p>
+            <div className="max-w-xl mt-5 lg:flex lg:mt-8">
+              <div className="rounded-md">
+                <button
+                  onClick={() => setOpen(true)}
+                  className="flex items-center justify-center w-full px-6 py-3 text-md text-white no-underline border border-transparent rounded-md bg-blackish md:py-3 md:text-lg md:px-10 md:leading-6 font-bold hover:bg-black"
+                >
+                  <PlayIcon className="w-5" />
+                  Watch Video
+                </button>
+              </div>
+              <div className="relative mt-3 rounded-md lg:mt-0 lg:ml-3">
+                <Link href="/docs/start-here">
+                  <a className="flex items-center justify-center w-full px-6 py-3 text-md font-medium text-black no-underline bg-gray-200 hover:bg-gray-300 border border-transparent rounded-md md:py-3 md:text-lg md:px-10 md:leading-6">
+                    Get started →
+                  </a>
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="mx-auto max-w-xl lg:mt-0 mt-10">
-          <Tilt
-            className="Tilt pb-0 mb-0 mt-0"
-            options={{ max: 15, scale: 1, speed: 100 }}
-          >
-            <img src="/graph.svg" width="100%" />
-          </Tilt>
-          <p className="text-sm text-gray-400">
-            Source:{' '}
-            <Link href="/benchmarks">
-              millionjs.org/benchmarks
-            </Link>
-          </p>
+          <div className="mx-auto max-w-xl lg:mt-0 mt-10">
+            <Tilt
+              className="Tilt pb-0 mb-0 mt-0"
+              options={{ max: 15, scale: 1, speed: 100 }}
+            >
+              <div className="w-full">
+                <div class="bg-white p-4 shadow-lg shadow-slate-200 rounded-lg w-auto">
+                  <Bar className="w-96" options={options} data={data} />
+                </div>
+              </div>
+            </Tilt>
+            <p className="text-sm text-gray-400">
+              Source:{' '}
+              <a href="https://twitter.com/aidenybai/status/1553280656213360640">
+                Tweet @aidenybai
+              </a>
+            </p>
+          </div>
         </div>
       </div>
 
