@@ -21,7 +21,7 @@ let state = {
   i: 0,
   length: 0,
   after: [],
-  hook: () => { },
+  hook: () => {},
   catchError: () => {},
 };
 
@@ -140,7 +140,7 @@ function update({ hook }) {
 // dropEffect, hasEffect, useEffect, useLayoutEffect
 const effects = new WeakMap();
 const fx = umap(effects);
-const stop = () => { };
+const stop = () => {};
 
 const createEffect = (asy) => (effect, guards?) => {
   const i = state.i++;
@@ -160,7 +160,7 @@ const createEffect = (asy) => (effect, guards?) => {
         try {
           info.clean = effect();
         } catch (e) {
-          catchError(e)
+          catchError(e);
         }
       };
       if (asy) update(invoke);
@@ -175,7 +175,7 @@ const createEffect = (asy) => (effect, guards?) => {
       try {
         info.clean = effect();
       } catch (e) {
-        catchError(e)
+        catchError(e);
       }
     };
     if (asy) info.stop = update(invoke);
@@ -240,15 +240,30 @@ export const useDeferredValue = (value: any) => {
   return value;
 };
 
+export const useInsertionEffect = useLayoutEffect;
+
 // useSyncExternalStore
+// This implementation is grokked straight from Preact (ref: https://github.com/preactjs/preact/blob/6b92b1fab41599e6da4f96d65b07fdbe0b6ff2fc/compat/src/index.js#L136-L154)
+// (c) 2015-present Jason Miller
 export const useSyncExternalStore = (subscribe, getSnapshot) => {
-  const state = useState(getSnapshot());
+  const [state, setState] = useState(getSnapshot);
+
+  const value = getSnapshot();
+
+  useLayoutEffect(() => {
+    if (value !== state) {
+      setState(() => value);
+    }
+  }, [subscribe, value, getSnapshot]);
+
   useEffect(() => {
-    subscribe(state);
-  });
-  subscribe(state);
+    return subscribe(() => {
+      setState(() => getSnapshot());
+    });
+  }, [subscribe, getSnapshot]);
+
   return state;
-};
+}
 
 // useImperativeHandle
 export const useImperativeHandle = (ref, create) => {
@@ -314,7 +329,7 @@ export const useList = (array: any[]) => {
             const ret = target.splice(start, deleteCount, ...items);
             length = target.length;
             queueRender(forceUpdate);
-            return ret
+            return ret;
           };
         }
         return Reflect.get(target, prop, receiver);
