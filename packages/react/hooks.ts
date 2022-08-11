@@ -243,6 +243,8 @@ export const useDeferredValue = (value: any) => {
 export const useInsertionEffect = useLayoutEffect;
 
 // useSyncExternalStore
+// This implementation is grokked straight from Preact (ref: https://github.com/preactjs/preact/blob/6b92b1fab41599e6da4f96d65b07fdbe0b6ff2fc/compat/src/index.js#L136-L154)
+// (c) 2015-present Jason Miller
 export const useSyncExternalStore = (subscribe, getSnapshot) => {
   const [state, setState] = useState(getSnapshot);
 
