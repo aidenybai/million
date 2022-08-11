@@ -145,6 +145,7 @@ importers:
       react-hot-toast: ^2.3.0
       react-lite-youtube-embed: ^2.3.1
       react-modal-video: ^1.2.10
+      react-tilt: ^0.1.4
       shiki: ^0.10.1
       string-similarity: ^4.0.4
       tailwindcss: ^3.1.8
@@ -153,6 +154,7 @@ importers:
       next: 12.2.4_sfoxds7t5ydpegc3knd667wn6m
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
+      react-tilt: 0.1.4_sfoxds7t5ydpegc3knd667wn6m
     devDependencies:
       '@heroicons/react': 1.0.6_react@17.0.2
       '@mdx-js/react': 1.6.22_react@17.0.2
@@ -7430,6 +7432,16 @@ packages:
       react-dom: 17.0.2_react@17.0.2
       react-transition-group: 2.9.0_sfoxds7t5ydpegc3knd667wn6m
     dev: true
+
+  /react-tilt/0.1.4_sfoxds7t5ydpegc3knd667wn6m:
+    resolution: {integrity: sha512-bVeRumg+RIn6QN8S92UmubGqX/BG6/QeQISBeAcrS/70dpo/jVj+sjikIawDl5wTuPdubFH8zH0EMulWIctsnw==}
+    peerDependencies:
+      react: ^15.0.0 || ^16.0.0-beta || ^16.0.0
+      react-dom: ^15.0.0 || ^16.0.0-beta || ^16.0.0
+    dependencies:
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+    dev: false
 
   /react-transition-group/2.9.0_sfoxds7t5ydpegc3knd667wn6m:
     resolution: {integrity: sha512-+HzNTCHpeQyl4MJ/bdE0u6XRMe9+XG/+aL4mCxVN4DnPBQ0/5bfHWPDuOZUzYdMj94daZaZdCCc1Dzt9R/xSSg==}
