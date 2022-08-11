@@ -72,7 +72,7 @@ importers:
       '@types/lodash': ^4.14.182
       '@types/node': ^18.7.1
       '@types/virtual-dom': ^2.1.1
-      '@vitejs/plugin-legacy': ^2.0.0
+      '@vitejs/plugin-legacy': ^2.0.1
       benchmark: ^2.1.4
       canvas-confetti: ^1.5.1
       chart.js: ^3.9.1
@@ -88,7 +88,7 @@ importers:
       '@types/lodash': 4.14.182
       '@types/node': 18.7.1
       '@types/virtual-dom': 2.1.1
-      '@vitejs/plugin-legacy': 2.0.0
+      '@vitejs/plugin-legacy': 2.0.1
       benchmark: 2.1.4
       canvas-confetti: 1.5.1
       chart.js: 3.9.1
@@ -386,6 +386,11 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.13.9
+    dev: true
+
+  /@babel/standalone/7.18.12:
+    resolution: {integrity: sha512-wDh3K5IUJiSMAY0MLYBFoCaj2RCZwvDz5BHn2uHat9KOsGWEVDFgFQFIOO+81Js2phFKNppLC45iOCsZVfJniw==}
+    engines: {node: '>=6.9.0'}
     dev: true
 
   /@babel/standalone/7.18.9:
@@ -1616,15 +1621,15 @@ packages:
       - typescript
     dev: true
 
-  /@vitejs/plugin-legacy/2.0.0:
-    resolution: {integrity: sha512-cuc45C4BQo2VlOsHZML4fc3MPfSjOEFeezHxr+WWlOOmi+muy1rz2snnFiePtyjVc1CYGTsnxk13cXpzQvMZaw==}
-    engines: {node: '>=14.18.0'}
+  /@vitejs/plugin-legacy/2.0.1:
+    resolution: {integrity: sha512-kKC56rfsXwebApzyuZqdQlGmqTyH1ugy0l0rY58gx5OXzq4/t5/DCqGUoz53Db51OqfjRqsHfqmvq9or6w9k/Q==}
+    engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
       terser: ^5.4.0
       vite: ^3.0.0
     dependencies:
-      '@babel/standalone': 7.18.9
-      core-js: 3.24.0
+      '@babel/standalone': 7.18.12
+      core-js: 3.24.1
       magic-string: 0.26.2
       regenerator-runtime: 0.13.9
       systemjs: 6.12.1
@@ -2543,8 +2548,8 @@ packages:
     requiresBuild: true
     dev: true
 
-  /core-js/3.24.0:
-    resolution: {integrity: sha512-IeOyT8A6iK37Ep4kZDD423mpi6JfPRoPUdQwEWYiGolvn4o6j2diaRzNfDfpTdu3a5qMbrGUzKUpYpRY8jXCkQ==}
+  /core-js/3.24.1:
+    resolution: {integrity: sha512-0QTBSYSUZ6Gq21utGzkfITDylE8jWC9Ne1D2MrhvlsZBI1x39OdDIVbzSqtgMndIy6BlHxBXpMGqzZmnztg2rg==}
     requiresBuild: true
     dev: true
 
