@@ -179,15 +179,13 @@ export default function Page() {
               </div>
             </div>
           </div>
-          <div className="mx-auto max-w-xl lg:mt-0 mt-10">
+          <div className="mx-auto max-w-xl lg:mt-0 mt-10 hidden md:block">
             <Tilt
               className="Tilt pb-0 mb-0 mt-0"
               options={{ max: 15, scale: 1, speed: 100 }}
             >
-              <div className="w-full">
-                <div class="bg-white p-4 shadow-lg shadow-slate-200 rounded-lg w-auto">
-                  <Bar className="w-96" options={options} data={data} />
-                </div>
+              <div class="bg-white p-4 shadow-lg shadow-slate-200 rounded-lg w-auto">
+                <Bar className="w-96" options={options} data={data} />
               </div>
             </Tilt>
             <p className="text-sm text-gray-400">
