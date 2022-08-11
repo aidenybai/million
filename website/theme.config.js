@@ -1,5 +1,6 @@
 import Vercel from './components/Vercel';
 
+// eslint-disable-next-line import/no-default-export
 export default {
   projectLink: 'https://github.com/aidenybai/million',
   projectChatLink: 'https://discord.gg/X9yFbcV2rF',
@@ -62,8 +63,6 @@ export default {
   },
   footerEditOnGitHubLink: true, // will link to the docs repo
   floatTOC: true,
-  unstable_stork: false,
-  unstable_flexsearch: true,
   bannerKey: 'mil',
   banner: function Banner() {
     return (
