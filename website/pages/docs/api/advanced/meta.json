@@ -5,6 +5,5 @@
   "flags": "Flags",
   "delta": "Deltas",
   "startTransition": "startTransition()",
-  "batch": "batch()",
-  "thunk": "thunk()"
+  "batch": "batch()"
 }
