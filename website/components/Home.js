@@ -7,22 +7,23 @@ import {
   PaperAirplaneIcon,
   PlayIcon,
 } from '@heroicons/react/outline';
-import dynamic from 'next/dynamic';
-import { useState } from 'react';
-import Head from 'next/head';
-import Link from 'next/link';
-import Container from './Container';
-import Tilt from 'react-tilt';
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
   BarElement,
+  CategoryScale,
+  Chart as ChartJS,
+  Legend,
+  LinearScale,
   Title,
   Tooltip,
-  Legend,
 } from 'chart.js';
+import dynamic from 'next/dynamic';
+import Head from 'next/head';
+import Link from 'next/link';
+import { useEffect, useRef, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
+import toast, { Toaster } from 'react-hot-toast';
+import Tilt from 'react-tilt';
+import Container from './Container';
 
 ChartJS.register(
   CategoryScale,
@@ -50,20 +51,6 @@ export const options = {
       text: 'Scripting Time (lower is better)',
     },
   },
-};
-
-const labels = ['Vanilla', 'Million', 'React'];
-
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: 'Scripting time (ms)',
-      data: [111, 182, 4014],
-      borderColor: ['#ead61c', '#e497ea', '#53bcda'],
-      backgroundColor: ['#ead61c', '#f8a4ff', '#61dafb'],
-    },
-  ],
 };
 
 const ModalVideo = dynamic(() => import('react-modal-video'), { ssr: false });
@@ -133,8 +120,100 @@ const features = [
   },
 ];
 
+function useInterval(callback, delay) {
+  const savedCallback = useRef();
+
+  // Remember the latest callback.
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  // Set up the interval.
+  useEffect(() => {
+    function tick() {
+      savedCallback.current();
+    }
+    if (delay !== null) {
+      let id = setInterval(tick, delay);
+      return () => clearInterval(id);
+    }
+  }, [delay]);
+}
+
 export default function Page() {
   const [isOpen, setOpen] = useState(false);
+  const [count, setCount] = useState(0);
+  const [millionToast, setMillionToast] = useState(true);
+  const [reactToast, setReactToast] = useState(true);
+
+  const millionMs = 362;
+  const reactMs = 4014;
+
+  const millionLoaded = count > millionMs;
+  const reactLoaded = count > reactMs;
+
+  const data = [
+    millionLoaded ? millionMs : count,
+    reactLoaded ? reactMs : count,
+  ];
+
+  const millionColor = {
+    borderColor: '#e497ea',
+    backgroundColor: '#f8a4ff',
+  };
+
+  const reactColor = {
+    borderColor: '#53bcda',
+    backgroundColor: '#61dafb',
+  };
+
+  const loadingColor = {
+    borderColor: 'rgb(201, 203, 207)',
+    backgroundColor: 'rgb(201, 203, 207, 0.2)',
+  };
+
+  const borderColor = [
+    millionLoaded ? millionColor.borderColor : loadingColor.borderColor,
+    reactLoaded ? reactColor.borderColor : loadingColor.borderColor,
+  ];
+
+  const backgroundColor = [
+    millionLoaded ? millionColor.backgroundColor : loadingColor.backgroundColor,
+    reactLoaded ? reactColor.backgroundColor : loadingColor.backgroundColor,
+  ];
+
+  useInterval(
+    () => {
+      setCount(count + 250);
+    },
+    reactLoaded && millionLoaded ? null : 250,
+  );
+
+  if (millionLoaded && millionToast) {
+    setMillionToast(false);
+    toast(`Million loaded in ${millionMs}ms`, {
+      icon: '✅',
+      style: {
+        borderRadius: '10px',
+        background: millionColor.backgroundColor,
+        color: '#000',
+        fontWeight: 'bold',
+      },
+    });
+  }
+
+  if (reactLoaded && reactToast) {
+    setReactToast(false);
+    toast(`React loaded in ${reactMs}ms`, {
+      icon: '⚠️',
+      style: {
+        borderRadius: '10px',
+        background: reactColor.backgroundColor,
+        color: '#000',
+        fontWeight: 'bold',
+      },
+    });
+  }
 
   return (
     <>
@@ -185,13 +264,27 @@ export default function Page() {
               options={{ max: 15, scale: 1, speed: 100 }}
             >
               <div class="bg-white p-4 shadow-lg shadow-slate-200 rounded-lg w-auto">
-                <Bar className="w-96" options={options} data={data} />
+                <Bar
+                  className="w-96"
+                  options={options}
+                  data={{
+                    labels: ['Million', 'React'],
+                    datasets: [
+                      {
+                        label: 'Scripting time (ms)',
+                        data,
+                        borderColor,
+                        backgroundColor,
+                      },
+                    ],
+                  }}
+                />
               </div>
             </Tilt>
             <p className="text-sm text-gray-400">
               Source:{' '}
               <a href="https://twitter.com/aidenybai/status/1553280656213360640">
-                Tweet @aidenybai
+                "Million.js is 11x faster than React!" @aidenybai
               </a>
             </p>
           </div>
@@ -200,7 +293,7 @@ export default function Page() {
 
       <div className="bg-white dark:bg-dark border-t-[0.2rem] border-gray-150 dark:border-gray-900 border-solid px-4 py-16 sm:px-6 sm:pt-20 sm:pb-24 lg:pt-24">
         <div className="mx-auto lg:max-w-7xl">
-          <p className="text-4xl font-bold tracking-tight lg:text-5xl xl:text-6xl lg:text-center dark:text-white text-center">
+          <p className="text-3xl font-bold tracking-tight lg:text-4xl xl:text-5xl lg:text-center dark:text-white text-center">
             Why Million?
           </p>
           <p className="mx-auto mt-4 text-xl text-gray-500 lg:max-w-3xl lg:text-xl text-center">
@@ -244,6 +337,7 @@ export default function Page() {
           </div>
         </Container>
       </div>
+      <Toaster position="bottom-right" />
     </>
   );
 }
