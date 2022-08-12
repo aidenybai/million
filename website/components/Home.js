@@ -228,8 +228,8 @@ export default function Page() {
         videoId="KgnSM9NbV2s"
         onClose={() => setOpen(false)}
       />
-      <div className="px-8 pt-20 pb-24 sm:px-6 sm:pt-24 lg:px-8 text-white bg-gradient-to-b from-blackish to-color2 animate-gradient-x bg-repeat flex justify-content">
-        <div className="lg:max-w-7xl lg:flex lg:justify-content lg:gap-4 mx-auto">
+      <div className="px-8 pt-32 pb-32 sm:px-6 lg:px-8 text-white bg-gradient-to-b from-blackish to-color2 animate-gradient-x bg-repeat flex justify-content">
+        <div className="lg:max-w-7xl lg:flex lg:justify-content lg:gap-x-4 mx-auto">
           <div className="mx-auto max-w-xl">
             <h1 className="text-5xl font-extrabold tracking-tighter leading-[1.1] sm:text-5xl lg:text-6xl xl:text-7xl">
               Virtual DOM into the future.
@@ -239,7 +239,7 @@ export default function Page() {
               <code className="bg-blackish border-gray-800 border shadow-sm rounded-lg p-1">
                 &lt;1kb
               </code>{' '}
-              Virtual DOM. It's fast!
+              Virtual DOM and is a drop-in replacement for React!
             </p>
             <div className="max-w-xl mt-5 lg:flex lg:mt-8">
               <div className="rounded-md">
@@ -263,11 +263,11 @@ export default function Page() {
           <div className="mx-auto max-w-xl lg:mt-0 mt-10 hidden md:block">
             <Tilt
               className="Tilt pb-0 mb-0 mt-0"
-              options={{ max: 15, scale: 1, speed: 100 }}
+              options={{ max: 15, scale: 1.05 }}
             >
               <div class="bg-white p-4 shadow-lg shadow-slate-200 rounded-lg w-auto">
                 <Bar
-                  className="w-96"
+                  className="w-[30rem]"
                   options={options}
                   data={{
                     labels: ['Million', 'React'],
@@ -283,9 +283,12 @@ export default function Page() {
                 />
               </div>
             </Tilt>
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-gray-400 text-center w-full">
               Source:{' '}
-              <a href="https://twitter.com/aidenybai/status/1553280656213360640">
+              <a
+                className="text-gray-200"
+                href="https://twitter.com/aidenybai/status/1553280656213360640"
+              >
                 "React now performs 11x faster with million.js.org!" @aidenybai
               </a>
             </p>
@@ -293,14 +296,14 @@ export default function Page() {
         </div>
       </div>
 
-      <div className="bg-white dark:bg-dark border-t-[0.2rem] border-gray-150 dark:border-gray-900 border-solid px-4 py-16 sm:px-6 sm:pt-20 sm:pb-24 lg:pt-24">
+      {/* <div className="bg-white dark:bg-dark border-t-[0.2rem] border-gray-150 dark:border-gray-900 border-solid px-4 py-16 sm:px-6 sm:pt-20 sm:pb-24 lg:pt-24">
         <div className="mx-auto lg:max-w-7xl">
-          <p className="text-3xl font-bold tracking-tight lg:text-4xl xl:text-5xl lg:text-center dark:text-white text-center">
+          <p className="text-2xl font-bold tracking-tight lg:text-3xl xl:text-4xl lg:text-center dark:text-white text-center">
             Why Million?
           </p>
-          <p className="mx-auto mt-4 text-xl text-gray-500 lg:max-w-3xl lg:text-xl text-center">
-            Million is designed to be <b>modern and easy</b> to use while being{' '}
-            <b>lean and insanely performant</b>.
+          <p className="mx-auto mt-4 text-xl text-gray-400 lg:max-w-3xl lg:text-xl text-center">
+            Million is designed to be modern and easy to use while being lean
+            and insanely performant.
           </p>
           <div className="grid grid-cols-1 mt-12 gap-x-6 gap-y-12 sm:grid-cols-2 lg:mt-16 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-12">
             {features.map((feature) => (
@@ -338,7 +341,7 @@ export default function Page() {
             </div>
           </div>
         </Container>
-      </div>
+      </div> */}
       <Toaster position="bottom-right" />
     </>
   );
