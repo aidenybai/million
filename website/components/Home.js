@@ -146,8 +146,8 @@ export default function Page() {
   const [millionToast, setMillionToast] = useState(true);
   const [reactToast, setReactToast] = useState(true);
 
-  const millionMs = 362;
-  const reactMs = 4014;
+  const millionMs = 0.36;
+  const reactMs = 4.01;
 
   const isMillionFinished = count > millionMs;
   const isReactFinished = count > reactMs;
@@ -186,14 +186,14 @@ export default function Page() {
 
   useInterval(
     () => {
-      setCount(count + 250);
+      setCount(count + 0.25);
     },
     isReactFinished && isMillionFinished ? null : 250,
   );
 
   if (isMillionFinished && millionToast) {
     setMillionToast(false);
-    toast(`Million finished in ${millionMs}ms`, {
+    toast(`Million finished in ${millionMs}s`, {
       icon: '✅',
       style: {
         borderRadius: '10px',
@@ -206,7 +206,7 @@ export default function Page() {
 
   if (isReactFinished && reactToast) {
     setReactToast(false);
-    toast(`React finished in ${reactMs}ms`, {
+    toast(`React finished in ${reactMs}s`, {
       icon: '⚠️',
       style: {
         borderRadius: '10px',
@@ -273,7 +273,7 @@ export default function Page() {
                     labels: ['Million', 'React'],
                     datasets: [
                       {
-                        label: 'Scripting time (ms)',
+                        label: 'Scripting time (seconds)',
                         data,
                         borderColor,
                         backgroundColor,
@@ -286,7 +286,7 @@ export default function Page() {
             <p className="text-sm text-gray-400">
               Source:{' '}
               <a href="https://twitter.com/aidenybai/status/1553280656213360640">
-                "Million.js is 11x faster than React!" @aidenybai
+                "React now performs 11x faster with million.js.org!" @aidenybai
               </a>
             </p>
           </div>
