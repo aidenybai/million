@@ -1,7 +1,10 @@
+<a href="https://millionjs.org">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/banner.svg">
   <img src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/banner-light.svg">
 </picture>
+
+</a>
 
 <div align="center">
   <a href="https://github.com/aidenybai/million/actions/workflows/ci.yml" target="_blank"><img src="https://img.shields.io/github/workflow/status/aidenybai/million/CI?style=flat&colorA=000000&colorB=000000" alt="CI" /></a>
