@@ -48,7 +48,7 @@ export const options = {
     },
     title: {
       display: true,
-      text: 'Scripting Time (lower is better)',
+      text: 'Add 5000 nodes consecutively (lower is better)',
     },
   },
 };
@@ -149,12 +149,12 @@ export default function Page() {
   const millionMs = 362;
   const reactMs = 4014;
 
-  const millionLoaded = count > millionMs;
-  const reactLoaded = count > reactMs;
+  const isMillionFinished = count > millionMs;
+  const isReactFinished = count > reactMs;
 
   const data = [
-    millionLoaded ? millionMs : count,
-    reactLoaded ? reactMs : count,
+    isMillionFinished ? millionMs : count,
+    isReactFinished ? reactMs : count,
   ];
 
   const millionColor = {
@@ -173,25 +173,27 @@ export default function Page() {
   };
 
   const borderColor = [
-    millionLoaded ? millionColor.borderColor : loadingColor.borderColor,
-    reactLoaded ? reactColor.borderColor : loadingColor.borderColor,
+    isMillionFinished ? millionColor.borderColor : loadingColor.borderColor,
+    isReactFinished ? reactColor.borderColor : loadingColor.borderColor,
   ];
 
   const backgroundColor = [
-    millionLoaded ? millionColor.backgroundColor : loadingColor.backgroundColor,
-    reactLoaded ? reactColor.backgroundColor : loadingColor.backgroundColor,
+    isMillionFinished
+      ? millionColor.backgroundColor
+      : loadingColor.backgroundColor,
+    isReactFinished ? reactColor.backgroundColor : loadingColor.backgroundColor,
   ];
 
   useInterval(
     () => {
       setCount(count + 250);
     },
-    reactLoaded && millionLoaded ? null : 250,
+    isReactFinished && isMillionFinished ? null : 250,
   );
 
-  if (millionLoaded && millionToast) {
+  if (isMillionFinished && millionToast) {
     setMillionToast(false);
-    toast(`Million loaded in ${millionMs}ms`, {
+    toast(`Million finished in ${millionMs}ms`, {
       icon: '✅',
       style: {
         borderRadius: '10px',
@@ -202,9 +204,9 @@ export default function Page() {
     });
   }
 
-  if (reactLoaded && reactToast) {
+  if (isReactFinished && reactToast) {
     setReactToast(false);
-    toast(`React loaded in ${reactMs}ms`, {
+    toast(`React finished in ${reactMs}ms`, {
       icon: '⚠️',
       style: {
         borderRadius: '10px',
