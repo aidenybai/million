@@ -61,6 +61,32 @@ export default {
       </>
     );
   },
+  head() {
+    const meta = {
+      title: 'Million',
+      description: `🦁 <1kb compiler-augmented virtual DOM. It's fast!`,
+      image: 'https://millionjs.org/icon.png',
+    };
+    return (
+      <>
+        {/* Favicons, meta */}
+        <link rel="apple-touch-icon" href={meta.image} />
+        <link rel="icon" type="image/png" href={meta.image} />
+        <link rel="mask-icon" href={meta.image} color="#000000" />
+        <meta name="robots" content="follow, index" />
+        <meta name="description" content={meta.description} />
+        <meta property="og:site_name" content={meta.title} />
+        <meta property="og:description" content={meta.description} />
+        <meta property="og:title" content={meta.title} />
+        <meta property="og:image" content={meta.image} />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content={meta.title} />
+        <meta name="twitter:description" content={meta.description} />
+        <meta name="twitter:image" content={meta.image} />
+        <link rel="icon" type="image/png" href={meta.image} />
+      </>
+    );
+  },
   footerEditOnGitHubLink: true, // will link to the docs repo
   floatTOC: true,
   bannerKey: 'mil',
