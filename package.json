@@ -120,7 +120,7 @@
   "prettier": "@vercel/style-guide/prettier",
   "devDependencies": {
     "@babel/core": "^7.18.10",
-    "@types/node": "^18.7.1",
+    "@types/node": "^18.7.2",
     "@typescript-eslint/eslint-plugin": "^5.33.0",
     "@typescript-eslint/parser": "^5.33.0",
     "@vercel/style-guide": "^3.0.0",

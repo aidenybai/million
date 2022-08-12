@@ -265,7 +265,7 @@ export default function Page() {
               className="Tilt pb-0 mb-0 mt-0"
               options={{ max: 15, scale: 1.05 }}
             >
-              <div class="bg-white p-4 shadow-lg shadow-slate-200 rounded-lg w-auto">
+              <div className="bg-white p-4 shadow-lg shadow-slate-200 rounded-lg w-auto">
                 <Bar
                   className="w-[30rem]"
                   options={options}

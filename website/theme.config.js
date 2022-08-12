@@ -14,6 +14,9 @@ export default {
   nextLinks: true,
   prevLinks: true,
   search: true,
+  unstable_flexsearch: {
+    codeblocks: true,
+  },
   darkMode: true,
   footerText: () => {
     return (
@@ -116,8 +119,8 @@ export default {
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
+            fillRule="evenodd"
+            clipRule="evenodd"
             d="M54.4296 140.455C62.4806 128.643 78.8647 120.556 97.7671 120.556C116.669 120.556 133.054 128.643 141.105 140.455C133.054 152.267 116.669 160.354 97.7671 160.354C78.8647 160.354 62.4806 152.267 54.4296 140.455Z"
             fill="url(#paint0_linear_208_71)"
           />
@@ -142,8 +145,8 @@ export default {
               y2="160.354"
               gradientUnits="userSpaceOnUse"
             >
-              <stop stop-color="#6E4FED" />
-              <stop offset="0.692708" stop-color="#A96FDC" />
+              <stop stopColor="#6E4FED" />
+              <stop offset="0.692708" stopColor="#A96FDC" />
             </linearGradient>
             <linearGradient
               id="paint1_linear_208_71"
@@ -153,9 +156,9 @@ export default {
               y2="115.031"
               gradientUnits="userSpaceOnUse"
             >
-              <stop offset="0.265625" stop-color="#ED9CA2" />
-              <stop offset="0.9999" stop-color="#A96FDC" />
-              <stop offset="1" stop-color="#A96FDC" />
+              <stop offset="0.265625" stopColor="#ED9CA2" />
+              <stop offset="0.9999" stopColor="#A96FDC" />
+              <stop offset="1" stopColor="#A96FDC" />
             </linearGradient>
             <linearGradient
               id="paint2_linear_208_71"
@@ -165,9 +168,9 @@ export default {
               y2="115.031"
               gradientUnits="userSpaceOnUse"
             >
-              <stop offset="0.265625" stop-color="#ED9CA2" />
-              <stop offset="0.9999" stop-color="#A96FDC" />
-              <stop offset="1" stop-color="#A96FDC" />
+              <stop offset="0.265625" stopColor="#ED9CA2" />
+              <stop offset="0.9999" stopColor="#A96FDC" />
+              <stop offset="1" stopColor="#A96FDC" />
             </linearGradient>
             <linearGradient
               id="paint3_linear_208_71"
@@ -177,9 +180,9 @@ export default {
               y2="115.031"
               gradientUnits="userSpaceOnUse"
             >
-              <stop offset="0.265625" stop-color="#ED9CA2" />
-              <stop offset="0.9999" stop-color="#A96FDC" />
-              <stop offset="1" stop-color="#A96FDC" />
+              <stop offset="0.265625" stopColor="#ED9CA2" />
+              <stop offset="0.9999" stopColor="#A96FDC" />
+              <stop offset="1" stopColor="#A96FDC" />
             </linearGradient>
           </defs>
         </svg>
