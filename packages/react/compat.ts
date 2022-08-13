@@ -25,11 +25,15 @@ const catchError = (vnodeLike: { _component?: Component, _parent?: VElement } | 
 }
 
 const addParentToChildren = (velement: VElement) => {
-  // velement.children?.forEach(child => {
-  //   if (child && typeof child === 'object') {
-  //     child._parent = velement
-  //   }
-  // })
+  if (Array.isArray(velement.children)) {
+    velement.children?.forEach(child => {
+      // if child is null, `typeof child === "object"` still
+      // returns true so we have to check if child is defined
+      if (child && typeof child === 'object') {
+        child._parent = velement
+      }
+    })
+  }
 }
 
 export const getCircularReplacer = () => {
