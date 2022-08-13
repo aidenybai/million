@@ -27,9 +27,9 @@ import {
 import type { FC } from '../jsx-runtime';
 import type { VElement, VNode, VProps } from '../million';
 
-const cloneElement = (vnode: VNode) => {
+const cloneElement = (vnode: VNode, props?: VProps) => {
   if (typeof vnode === 'string') return vnode;
-  return h(vnode.tag, vnode.props, ...(vnode.children ?? []));
+  return h(vnode.tag, { ...vnode.props, ...props }, ...(vnode.children ?? []));
 };
 
 const createElement = compat(h);
