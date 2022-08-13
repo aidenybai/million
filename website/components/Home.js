@@ -25,6 +25,35 @@ import toast, { Toaster } from 'react-hot-toast';
 import Tilt from 'react-tilt';
 import Container from './Container';
 
+// Returns a single rgb color interpolation between given rgb color
+// based on the factor given; via https://codepen.io/njmcode/pen/axoyD?editors=0010
+function interpolateColor(color1, color2, factor) {
+  if (arguments.length < 3) {
+    factor = 0.5;
+  }
+  const result = color1.slice();
+  for (let i = 0; i < 3; i++) {
+    result[i] = Math.round(result[i] + factor * (color2[i] - color1[i]));
+  }
+  return result;
+}
+// My function to interpolate between two colors completely, returning an array
+function interpolateColors(color1, color2, steps) {
+  const stepFactor = 1 / (steps - 1);
+  const interpolatedColorArray = [];
+
+  color1 = color1.match(/\d+/g).map(Number);
+  color2 = color2.match(/\d+/g).map(Number);
+
+  for (let i = 0; i < steps; i++) {
+    interpolatedColorArray.push(
+      interpolateColor(color1, color2, stepFactor * i),
+    );
+  }
+
+  return interpolatedColorArray;
+}
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -146,6 +175,7 @@ export default function Page() {
   const [millionToast, setMillionToast] = useState(true);
   const [reactToast, setReactToast] = useState(true);
 
+  // TODO: refactor code and move into separate component
   const millionMs = 0.36;
   const reactMs = 4.01;
 
@@ -158,37 +188,52 @@ export default function Page() {
   ];
 
   const millionColor = {
-    borderColor: '#e497ea',
-    backgroundColor: '#f8a4ff',
+    borderColor: 'rgb(228, 151, 234)',
+    backgroundColor: 'rgb(248, 164, 255)',
   };
 
   const reactColor = {
-    borderColor: '#53bcda',
-    backgroundColor: '#61dafb',
+    borderColor: 'rgb(83, 188, 218)',
+    backgroundColor: 'rgb(97, 218, 251)',
   };
 
   const loadingColor = {
     borderColor: 'rgb(201, 203, 207)',
-    backgroundColor: 'rgb(201, 203, 207, 0.2)',
+    backgroundColor: 'rgb(201, 203, 207)',
   };
 
+  const reactColorRange = interpolateColors(
+    loadingColor.backgroundColor,
+    reactColor.borderColor,
+    17,
+  );
+
+  const millionColorRange = interpolateColors(
+    loadingColor.backgroundColor,
+    millionColor.backgroundColor,
+    2,
+  );
+
+  const millionColorRgb = millionColorRange[count * 4];
+  const reactColorRgb = reactColorRange[count * 4];
+
   const borderColor = [
-    isMillionFinished ? millionColor.borderColor : loadingColor.borderColor,
-    isReactFinished ? reactColor.borderColor : loadingColor.borderColor,
+    isMillionFinished ? millionColor.borderColor : `rgb(${millionColorRgb})`,
+    isReactFinished ? reactColor.borderColor : `rgb(${reactColorRgb})`,
   ];
 
   const backgroundColor = [
     isMillionFinished
       ? millionColor.backgroundColor
-      : loadingColor.backgroundColor,
-    isReactFinished ? reactColor.backgroundColor : loadingColor.backgroundColor,
+      : `rgba(${millionColorRgb}, 0.2)`,
+    isReactFinished ? reactColor.backgroundColor : `rgba(${reactColorRgb}, 0.2)`,
   ];
 
   useInterval(
     () => {
       setCount(count + 0.25);
     },
-    isReactFinished && isMillionFinished ? null : 250,
+    isReactFinished && isMillionFinished ? null : 300,
   );
 
   if (isMillionFinished && millionToast) {
@@ -215,6 +260,17 @@ export default function Page() {
         fontWeight: 'bold',
       },
     });
+    setTimeout(() => {
+      toast(`Million finished 11x faster`, {
+        icon: '✅',
+        style: {
+          borderRadius: '10px',
+          background: millionColor.backgroundColor,
+          color: '#000',
+          fontWeight: 'bold',
+        },
+      });
+    }, 2500)
   }
 
   return (
