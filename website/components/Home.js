@@ -170,15 +170,19 @@ function useInterval(callback, delay) {
 }
 
 export default function Page() {
-  const isMobile =
+  const [isOpen, setOpen] = useState(false);
+  const [count, setCount] = useState(0);
+  const [millionToast, setMillionToast] = useState(true);
+  const [reactToast, setReactToast] = useState(true);
+
+  useEffect(() => {
+    const isMobile =
     /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
       navigator.userAgent,
     );
-
-  const [isOpen, setOpen] = useState(false);
-  const [count, setCount] = useState(0);
-  const [millionToast, setMillionToast] = useState(!isMobile);
-  const [reactToast, setReactToast] = useState(!isMobile);
+    setReactToast(!isMobile);
+    setMillionToast(!isMobile);
+  }, [])
 
   // TODO: refactor code and move into separate component
   const millionMs = 0.36;
