@@ -25,6 +25,11 @@ import toast, { Toaster } from 'react-hot-toast';
 import Tilt from 'react-tilt';
 import Container from './Container';
 
+const isMobile =
+  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent,
+  );
+
 // Returns a single rgb color interpolation between given rgb color
 // based on the factor given; via https://codepen.io/njmcode/pen/axoyD?editors=0010
 function interpolateColor(color1, color2, factor) {
@@ -172,8 +177,8 @@ function useInterval(callback, delay) {
 export default function Page() {
   const [isOpen, setOpen] = useState(false);
   const [count, setCount] = useState(0);
-  const [millionToast, setMillionToast] = useState(true);
-  const [reactToast, setReactToast] = useState(true);
+  const [millionToast, setMillionToast] = useState(!isMobile);
+  const [reactToast, setReactToast] = useState(!isMobile);
 
   // TODO: refactor code and move into separate component
   const millionMs = 0.36;
@@ -226,7 +231,9 @@ export default function Page() {
     isMillionFinished
       ? millionColor.backgroundColor
       : `rgba(${millionColorRgb}, 0.2)`,
-    isReactFinished ? reactColor.backgroundColor : `rgba(${reactColorRgb}, 0.2)`,
+    isReactFinished
+      ? reactColor.backgroundColor
+      : `rgba(${reactColorRgb}, 0.2)`,
   ];
 
   useInterval(
@@ -270,7 +277,7 @@ export default function Page() {
           fontWeight: 'bold',
         },
       });
-    }, 2500)
+    }, 2500);
   }
 
   return (
