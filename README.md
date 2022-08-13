@@ -32,7 +32,7 @@
 
 ## What is Million?
 
-Million drop-in replacement for [React](https://reactjs.org) with a lightweight (`<1kb`) Virtual DOM. It's [_**really fast**_](https://millionjs.org/benchmarks) and makes it easy to create user interfaces.
+Million is a drop-in replacement for [React](https://reactjs.org) with a lightweight (`<1kb`) Virtual DOM. It's [_**really fast**_](https://millionjs.org/benchmarks) and makes it easy to create user interfaces.
 
 > Oh man... Another [`/virtual dom|javascript/gim`](https://regexr.com/6mr5f) library? I'm fine with [React](https://reactjs.org) already, why should I bother switching?
 

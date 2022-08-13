@@ -235,7 +235,7 @@ export default function Page() {
               Virtual DOM into the future.
             </h1>
             <p className="max-w-lg mt-6 text-2xl leading-tight text-gray-300 sm:max-w-2xl sm:text-2xl md:text-2xl lg:text-2xl">
-              Million drop-in replacement for React with a lightweight{' '}
+              Million is a drop-in replacement for React with a lightweight{' '}
               <code className="bg-blackish border-gray-800 border shadow-sm rounded-lg p-1">
                 &lt;1kb
               </code>{' '}
