@@ -67,7 +67,7 @@ export interface VElement {
   flag: Flags;
   tag: string;
   props?: VProps | null;
-  children?: VNode[] | null;
+  children?: VNode | VNode[] | null;
   key?: string;
   delta?: Delta[];
   hook?: Hooks;
