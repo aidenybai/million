@@ -34,7 +34,7 @@ export function h(
   props?: VProps | null,
   ...children: RawVNode[]
 ): VNode | VNode[] {
-  const propsWithChildren = { ...props, children: children.length === 1 ? children[0] : children };
+  const propsWithChildren = { ...props, children };
   if (tag === Fragment) return normalize(children) || [];
   if ((tag as any).prototype?.render) {
     return this?.handleClass
