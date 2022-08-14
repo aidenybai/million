@@ -27,14 +27,20 @@ import {
 import type { FC } from '../jsx-runtime';
 import type { VElement, VNode, VProps } from '../million';
 
-const cloneElement = (vnode: VNode, props?: VProps) => {
+const isSingleVNode = (vnode: VNode | VNode[] | null | undefined): vnode is VNode[] => {
+  return (Array.isArray(vnode) && vnode.length === 1 && isValidElement(vnode[0]))
+}
+
+const cloneElement = (vnode: VNode | [VElement], config?: VProps) => {
   if (typeof vnode === 'string') return vnode;
-  return h(vnode.tag, { ...vnode.props, ...props }, ...(vnode.children ?? []));
+  const { tag, props, children } = isSingleVNode(vnode) ? vnode[0] : vnode;
+  return h(tag, { ...props, ...config }, ...(children ?? []));
 };
 
 const createElement = compat(h);
 
-const isValidElement = (vnode?: VNode | null) => {
+const isValidElement = (vnode?: VNode | VNode[] | null) => {
+  if (isSingleVNode(vnode)) return true;
   if (vnode) {
     if (typeof vnode === 'string') return true;
     if (vnode.tag) return true;
