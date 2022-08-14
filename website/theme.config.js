@@ -67,7 +67,7 @@ export default {
   head() {
     const meta = {
       title: 'Million',
-      description: `🦁 <1kb compiler-augmented virtual DOM. It's fast!`,
+      description: `Virtual DOM into the future! 🔟🔼6️⃣`,
       image: 'https://millionjs.org/icon.png',
     };
     return (
