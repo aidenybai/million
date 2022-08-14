@@ -127,7 +127,7 @@
     "bumpp": "^8.2.1",
     "c8": "^7.12.0",
     "esbuild": "^0.14.54",
-    "eslint": "^8.21.0",
+    "eslint": "^8.22.0",
     "eslint-config-prettier": "^8.5.0",
     "export-size": "^0.5.2",
     "fsxx": "^0.1.0",
