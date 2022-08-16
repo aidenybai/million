@@ -1,5 +1,8 @@
+/* eslint-disable camelcase */
+
 import { h } from '../jsx-runtime';
 import {
+  batch,
   DOM_REF_FIELD,
   hydrate,
   patch,
@@ -62,6 +65,8 @@ const createPortal = (children: VNode[], el: HTMLElement) => {
   patch(el, h(rootVNode.tag, rootVNode.props, ...children) as VNode);
 };
 
+const unstable_batchedUpdates = batch();
+
 // https://github.com/facebook/react/blob/main/packages/react-dom/index.modern.fb.js
 export {
   render,
@@ -69,8 +74,8 @@ export {
   createRoot,
   hydrateRoot,
   startTransition as flushSync,
+  unstable_batchedUpdates,
   // __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED,
-  // unstable_batchedUpdates,
   // unstable_createEventHandle,
   // unstable_flushControlled,
   // unstable_isNewReconciler,
