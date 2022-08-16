@@ -1,3 +1,13 @@
+حزم / رد فعل / كومبونيت
+    إذا  ( typeof  child  ===  'object' )  {
+    // إذا كان الطفل فارغًا ، فسيظل `typeof child ===" object "`
+    // يعود صحيحًا ، لذا يتعين علينا التحقق مما إذا كان الطفل محددًا
+    if  ( child  &&  typeof  child  ===  'object' )  {
+حزم / رد فعل / كومبونيت
+    إذا  ( typeof  child  ===  'object' )  {
+    // إذا كان الطفل فارغًا ، فسيظل `typeof child ===" object "`
+    // يعود صحيحًا ، لذا يتعين علينا التحقق مما إذا كان الطفل محددًا
+    if  ( child  &&  typeof  child  ===  'object' )  {
 name: CI
 
 on:
