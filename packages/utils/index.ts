@@ -43,6 +43,33 @@ export const fromStringToDomNode = (htmlString: string): DOMNode => {
   return el;
 };
 
+// Taken from Preact https://github.com/preactjs/preact-render-to-string/blob/38036d695af960c656302846e5064f61f9a7ea1f/src/util.js#L58
+const JS_TO_CSS = {};
+const CSS_REGEX = /[A-Z]/g;
+const IS_NON_DIMENSIONAL =
+  /acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|^--/i;
+
+export const styleObjectToCss = (styleObject: Record<string, any>) => {
+  let str = '';
+  for (const prop in styleObject) {
+    const value = styleObject[prop];
+    if (value !== null && value !== '') {
+      if (str) str += ' ';
+      str += prop.startsWith('-')
+        ? prop
+        : JS_TO_CSS[prop] ||
+          (JS_TO_CSS[prop] = prop.replace(CSS_REGEX, '-$1').toLowerCase());
+
+      if (typeof value === 'number' && !IS_NON_DIMENSIONAL.test(prop)) {
+        str = `${str}: ${value}px;`;
+      } else {
+        str = `${str}: ${String(value)};`;
+      }
+    }
+  }
+  return str || undefined;
+};
+
 export const fromVNodeToString = (vnode?: VNode): string => {
   if (typeof vnode === 'string') return vnode;
   if (vnode === undefined) return '<!-- -->';
@@ -50,11 +77,23 @@ export const fromVNodeToString = (vnode?: VNode): string => {
   let attributes = '';
   let children = '';
 
-  for (const prop in vnode.props) {
+  for (let prop in vnode.props) {
     // Event listeners are attached AFTER the JavaScript is loaded on the page
-    if (!prop.toLowerCase().startsWith('on')) {
-      attributes += ` ${prop}="${String(vnode.props[prop])}"`;
+    if (
+      prop === 'key' ||
+      prop === 'ref' ||
+      prop === 'children' ||
+      prop.startsWith('on')
+    ) {
+      continue;
     }
+
+    let propValue = vnode.props[prop];
+
+    if (prop === 'className') prop = 'class';
+    if (prop === 'for') prop = 'htmlFor';
+    if (prop === 'style') propValue = styleObjectToCss(propValue);
+    attributes += ` ${prop}="${String(propValue)}"`;
   }
 
   if (htmlVoidElements.includes(vnode.tag)) {

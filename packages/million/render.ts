@@ -64,7 +64,7 @@ export const hydrate = (
   el: HTMLElement,
   vnode: VNode,
   intersect = true,
-): void => {
+): HTMLElement => {
   const update = () => patch(el, vnode);
   if (intersect) {
     const io = new IntersectionObserver((entries) => {
@@ -80,4 +80,5 @@ export const hydrate = (
   } else {
     startTransition(update);
   }
+  return el;
 };
