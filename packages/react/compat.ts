@@ -6,33 +6,40 @@ import { h } from '../jsx-runtime';
 import { patch } from '../million';
 import { hook } from './hooks';
 import type { Component } from './react';
-import type { DOMNode, VNode, VProps , VElement } from '../million';
+import type { DOMNode, VNode, VProps, VElement } from '../million';
 
 const rootFragmentStyle = { style: 'display: contents;' };
+export const MILLION_COMPONENT_FLAG = '__m_component';
 
-const catchError = (vnodeLike: { _component?: Component, _parent?: VElement } | string | undefined, e: unknown) => {
+const catchError = (
+  vnodeLike:
+    | { _component?: Component; _parent?: VElement }
+    | string
+    | undefined,
+  err: unknown,
+) => {
   let currentVNode = vnodeLike;
 
   while (typeof currentVNode === 'object' && !currentVNode._component) {
     currentVNode = currentVNode._parent;
   }
 
-  if (typeof currentVNode === 'object')  {
-    currentVNode._component?.componentDidCatch(e)
+  if (typeof currentVNode === 'object') {
+    currentVNode._component?.componentDidCatch(err);
   }
 
-  throw e
-}
+  throw err;
+};
 
 const addParentToChildren = (velement: VElement) => {
-  velement.children?.forEach(child => {
+  velement.children?.forEach((child) => {
     // if child is null, `typeof child === "object"` still
     // returns true so we have to check if child is defined
     if (child && typeof child === 'object') {
-      child._parent = velement
+      child._parent = velement;
     }
-  })
-}
+  });
+};
 
 export const getCircularReplacer = () => {
   const seen = new WeakSet();
@@ -54,55 +61,64 @@ export const createComponent = (
   let prevVNode: VNode | undefined;
   let prevKey: string | undefined;
 
+  fn[MILLION_COMPONENT_FLAG] = true;
+
   if (props?.ref) {
     prevRef = props.ref;
     props.ref = undefined;
   }
 
-  const component = hook(() => {
-    const ret = fn(props, key);
-    if (!ret || typeof ret === 'string') return ret;
-    addParentToChildren(ret)
-    const newVNode = Array.isArray(ret)
-      ? h('_', key ? { key, ...rootFragmentStyle } : rootFragmentStyle, ...ret)
-      : ret;
+  const component = hook(
+    () => {
+      const ret = fn(props, key);
+      if (!ret || typeof ret === 'string') return ret;
+      addParentToChildren(ret);
+      const newVNode = Array.isArray(ret)
+        ? h(
+            '_',
+            key ? { key, ...rootFragmentStyle } : rootFragmentStyle,
+            ...ret,
+          )
+        : ret;
 
-    const ref = prevRef ?? { current: null, props };
+      const ref = prevRef ?? { current: null, props };
 
-    if (ref?.current) {
-      const patchHook = (
-        _el?: DOMNode,
-        newVNode?: VNode,
-        oldVNode?: VNode,
-      ): boolean => {
-        if (
-          typeof oldVNode === 'object' &&
-          typeof newVNode === 'object' &&
-          oldVNode.ref?.props &&
-          newVNode.ref?.props
-        ) {
-          return newVNode.ref?.props === oldVNode.ref?.props;
-        }
-        return true;
-      };
+      if (ref?.current) {
+        const patchHook = (
+          _el?: DOMNode,
+          newVNode?: VNode,
+          oldVNode?: VNode,
+        ): boolean => {
+          if (
+            typeof oldVNode === 'object' &&
+            typeof newVNode === 'object' &&
+            oldVNode.ref?.props &&
+            newVNode.ref?.props
+          ) {
+            return newVNode.ref?.props === oldVNode.ref?.props;
+          }
+          return true;
+        };
 
-      if (prevKey && newVNode.key) {
-        if (prevKey === newVNode.key)
+        if (prevKey && newVNode.key) {
+          if (prevKey === newVNode.key)
+            patch(ref.current, newVNode, prevVNode, patchHook);
+        } else {
           patch(ref.current, newVNode, prevVNode, patchHook);
-      } else {
-        patch(ref.current, newVNode, prevVNode, patchHook);
+        }
       }
-    }
 
-    if (!newVNode.ref) {
-      ref.props = JSON.stringify(props, getCircularReplacer);
-      newVNode.ref = ref;
-      prevRef = ref;
-    }
-    prevKey = newVNode.key;
-    prevVNode = newVNode;
-    return newVNode;
-  }, (e) => catchError(prevVNode, e))();
+      if (!newVNode.ref) {
+        ref.props = JSON.stringify(props, getCircularReplacer);
+        newVNode.ref = ref;
+        prevRef = ref;
+      }
+      prevKey = newVNode.key;
+      prevVNode = newVNode;
+      return newVNode;
+    },
+    (e) => catchError(prevVNode, e),
+  )();
   return component;
 };
 
@@ -118,7 +134,7 @@ export const createClass = (klass: typeof Component, props?: VProps) => {
       catchError({ _component: componentObject }, e);
     }
     if (!ret) return ret;
-    addParentToChildren(ret)
+    addParentToChildren(ret);
     ret._component = componentObject;
     const newVNode = Array.isArray(ret)
       ? h('_', rootFragmentStyle, ...ret)
