@@ -9,7 +9,7 @@ import type { Component } from './react';
 import type { DOMNode, VNode, VProps, VElement } from '../million';
 
 const rootFragmentStyle = { style: 'display: contents;' };
-export const MILLION_COMPONENT_FLAG = '__m_component';
+export const COMPONENT_FIELD = '__m_component';
 
 const catchError = (
   vnodeLike:
@@ -60,8 +60,6 @@ export const createComponent = (
   let prevRef: { current: any } & Record<string, any>;
   let prevVNode: VNode | undefined;
   let prevKey: string | undefined;
-
-  fn[MILLION_COMPONENT_FLAG] = true;
 
   if (props?.ref) {
     prevRef = props.ref;
@@ -159,5 +157,6 @@ export const compat = <T>(jsxFactoryRaw: Function): T => {
   return jsxFactoryRaw.bind({
     handleFunction: createComponent,
     handleClass: createClass,
+    field: COMPONENT_FIELD,
   });
 };

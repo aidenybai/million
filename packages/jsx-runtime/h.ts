@@ -37,11 +37,13 @@ export function h(
   const propsWithChildren = { ...props, children };
   if (tag === Fragment) return normalize(children) || [];
   if ((tag as any).prototype?.render) {
+    tag[this.field] = true;
     return this?.handleClass
       ? this.handleClass(tag as any, propsWithChildren)
       : (tag as any).render();
   }
   if (typeof tag === 'function') {
+    tag[this.field] = true;
     return this?.handleFunction
       ? this.handleFunction(tag, propsWithChildren)
       : tag(propsWithChildren);
