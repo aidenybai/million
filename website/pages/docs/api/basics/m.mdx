@@ -123,7 +123,7 @@ const vnode = svg(m('svg'));
 
 ## Lifecycle `hook` properties
 
-The lifecycle `hook` properties allows you to "hook in" to the diffing and patching process. There are four hooks: `'create'`, `'update'`, `'remove'`, and one `'diff'` control flow hook. Every hook, if defined, must return a boolean, which will determine whether the code runs of not (`true` runs, `false` doesn't run).
+The lifecycle `hook` properties allows you to "hook in" to the diffing and patching process. There are four hooks: `'create'`, `'update'`, `'remove'`, and one `'diff'` control flow hook. Every hook, if defined, must return a boolean, which will determine whether the code runs or not (`true` runs, `false` doesn't run).
 
 ```js
 import { _, m } from 'million';
