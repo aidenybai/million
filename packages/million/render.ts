@@ -2,7 +2,6 @@ import { createElement } from './create-element';
 import { useChildren } from './drivers/use-children';
 import { useNode } from './drivers/use-node';
 import { useProps } from './drivers/use-props';
-import { startTransition } from './scheduler';
 import { DOM_REF_FIELD, EffectTypes, OLD_VNODE_FIELD } from './types';
 import { effect } from './utils';
 import type { DOMNode, Driver, Effect, Hook, VNode } from './types';
@@ -61,24 +60,9 @@ export const render = (
 };
 
 export const hydrate = (
-  el: HTMLElement,
-  vnode: VNode,
-  intersect = true,
-): HTMLElement => {
-  const update = () => patch(el, vnode);
-  if (intersect) {
-    const io = new IntersectionObserver((entries) => {
-      for (let i = 0; i < entries.length; i++) {
-        if (entries[i]!.isIntersecting) {
-          startTransition(update);
-          io.disconnect();
-          break;
-        }
-      }
-    });
-    io.observe(el);
-  } else {
-    startTransition(update);
-  }
-  return el;
+  parentEl: DOMNode,
+  newVNode?: VNode,
+  oldVNode?: VNode,
+): DOMNode => {
+  return render(parentEl, newVNode, oldVNode);
 };
