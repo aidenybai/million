@@ -19,6 +19,7 @@
     "release": "zx scripts/release.mjs",
     "bump": "bumpp && zx scripts/citation.mjs && pnpm publish",
     "welcome": "zx scripts/welcome.mjs",
+    "ci-failed-and-i-dont-know-why": "pnpm i && git add . && git commit -m 'chore: update lockfile' && git push",
     "prepare": "husky install"
   },
   "repository": {
@@ -119,10 +120,10 @@
   "homepage": "https://github.com/aidenybai/million",
   "prettier": "@vercel/style-guide/prettier",
   "devDependencies": {
-    "@babel/core": "^7.18.10",
-    "@types/node": "^18.7.6",
-    "@typescript-eslint/eslint-plugin": "^5.33.1",
-    "@typescript-eslint/parser": "^5.33.1",
+    "@babel/core": "^7.18.13",
+    "@types/node": "^18.7.11",
+    "@typescript-eslint/eslint-plugin": "^5.34.0",
+    "@typescript-eslint/parser": "^5.34.0",
     "@vercel/style-guide": "^3.0.0",
     "bumpp": "^8.2.1",
     "c8": "^7.12.0",
@@ -137,7 +138,7 @@
     "ora": "^6.1.2",
     "prettier": "^2.7.1",
     "recast": "^0.21.2",
-    "simple-git": "^3.12.0",
+    "simple-git": "^3.13.0",
     "source-map": "^0.7.4",
     "taze": "^0.7.6",
     "tslib": "^2.4.0",
