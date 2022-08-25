@@ -48,11 +48,13 @@ const isValidElement = (vnode?: VNode | VNode[] | null) => {
   return false;
 };
 
-const memo = (component: (...args: unknown[]) => VNode) => () => {
+const memo = (
+  component: (...args: unknown[]) => VNode
+) => {
   return (props: VProps) => {
     return component(Object.values(props));
   };
-};
+}
 
 const toChildArray = (children: VNode[]): VNode[] => {
   return (h('_', {}, ...children) as VElement).children!;
