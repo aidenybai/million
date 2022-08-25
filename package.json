@@ -19,6 +19,7 @@
     "release": "zx scripts/release.mjs",
     "bump": "bumpp && zx scripts/citation.mjs && pnpm publish",
     "welcome": "zx scripts/welcome.mjs",
+    "ci-failed-and-i-dont-know-why": "pnpm i && git add . && git commit -m 'chore: update lockfile' && git push",
     "prepare": "husky install"
   },
   "repository": {
