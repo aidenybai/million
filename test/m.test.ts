@@ -31,7 +31,7 @@ describe.concurrent('m', () => {
   it('should create vnode with tag and one string child', () => {
     expectEqualVNode(m('div', undefined, ['foo']), {
       tag: 'div',
-      children: ['foo'],
+      children: 'foo',
       flag: Flags.ELEMENT,
     });
   });
@@ -47,12 +47,10 @@ describe.concurrent('m', () => {
   it('should create vnode with tag and one vnode child', () => {
     expectEqualVNode(m('div', undefined, [m('div')]), {
       tag: 'div',
-      children: [
-        {
-          tag: 'div',
-          flag: Flags.ELEMENT,
-        },
-      ],
+      children: {
+        tag: 'div',
+        flag: Flags.ELEMENT,
+      },
       flag: Flags.ELEMENT,
     });
   });
@@ -99,7 +97,7 @@ describe.concurrent('m', () => {
                   'baz',
                   {
                     tag: 'div',
-                    children: ['boo'],
+                    children: 'boo',
                     flag: Flags.ELEMENT,
                   },
                 ],
