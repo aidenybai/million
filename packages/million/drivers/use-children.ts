@@ -410,10 +410,10 @@ export const useChildren =
       if (!invokeHook(HookTypes.UPDATE, newVNode)) return finish(el);
       const oldString = Array.isArray(oldVNode?.children)
         ? oldVNode?.children.join('')
-        : oldVNode?.children;
+        : oldVNode?.children as string;
       const newString = Array.isArray(newVNode.children)
         ? newVNode.children.join('')
-        : newVNode.children;
+        : newVNode.children as string;
       if (oldString !== newString) {
         queueEffect(EffectTypes.REPLACE, () => (el.textContent = newString!));
       }
