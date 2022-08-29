@@ -51,10 +51,16 @@ export const createElement = (
     if (vnode.flag === Flags.ELEMENT_TEXT_CHILDREN) {
       el.textContent = Array.isArray(vnode.children)
         ? vnode.children.join('')
-        : vnode.children;
+        : vnode.children as string;
     } else {
-      for (let i = 0; i < vnode.children.length; ++i) {
-        el.appendChild(createElement(vnode.children[i], false));
+      const createChildren = (children: VNode) => {
+        el.appendChild(createElement(children, false));
+      }
+
+      if (Array.isArray(vnode.children)) {
+        vnode.children.forEach(createChildren);
+      } else {
+        createChildren(vnode.children);
       }
     }
   }

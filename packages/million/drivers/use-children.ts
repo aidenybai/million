@@ -58,8 +58,14 @@ export const useChildren =
       return data;
     };
 
-    const oldVNodeChildren: VNode[] = oldVNode?.children || [];
-    const newVNodeChildren: VNode[] | null | undefined = newVNode.children;
+    const getVNodeChildren = (children: VNode | VNode[] | null | undefined): VNode[] => {
+      if (Array.isArray(children)) return children
+      if (children) return [children]
+      return []
+    }
+
+    const oldVNodeChildren: VNode[] = getVNodeChildren(oldVNode?.children)
+    const newVNodeChildren: VNode[] | null | undefined = getVNodeChildren(newVNode.children)
     const delta: Delta[] | undefined = newVNode.delta;
     const diff = (el: DOMNode, newVNode: VNode, oldVNode?: VNode) =>
       driver!(el, newVNode, oldVNode, commit, effects).effects ?? effects;
@@ -73,7 +79,7 @@ export const useChildren =
         const [deltaType, deltaPosition] = delta[i]!;
 
         if (deltaType === DeltaTypes.CREATE) {
-          const newVNodeChild = newVNodeChildren![deltaPosition];
+          const newVNodeChild = newVNodeChildren[deltaPosition];
           if (!invokeHook(HookTypes.CREATE, newVNodeChild)) return finish(el);
           queueEffect(EffectTypes.CREATE, () =>
             el.insertBefore(
@@ -84,7 +90,7 @@ export const useChildren =
         }
 
         if (deltaType === DeltaTypes.UPDATE) {
-          const newVNodeChild = newVNodeChildren![deltaPosition]!;
+          const newVNodeChild = newVNodeChildren[deltaPosition]!;
           const child = el.childNodes.item(deltaPosition) as DOMNode;
           if (!invokeHook(HookTypes.UPDATE, newVNodeChild)) return finish(el);
           commit(() => {

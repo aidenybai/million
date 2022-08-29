@@ -100,8 +100,10 @@ export const fromVNodeToString = (vnode?: VNode): string => {
     return `<${vnode.tag}${attributes} />`;
   }
 
-  for (const child of vnode.children || []) {
-    children += fromVNodeToString(child);
+  if (Array.isArray(vnode.children)) {
+    children = vnode.children.map(fromVNodeToString).join('');
+  } else if (vnode.children) {
+    children = fromVNodeToString(vnode.children);
   }
 
   return `<${vnode.tag}${attributes}>${children}</${vnode.tag}>`;
