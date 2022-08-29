@@ -32,13 +32,19 @@ const catchError = (
 };
 
 const addParentToChildren = (velement: VElement) => {
-  velement.children?.forEach((child) => {
+  const setParent = (child: VNode) => {
     // if child is null, `typeof child === "object"` still
     // returns true so we have to check if child is defined
     if (child && typeof child === 'object') {
       child._parent = velement;
     }
-  });
+  }
+
+  if (Array.isArray(velement.children)) {
+    velement.children?.forEach(setParent)
+  } else if (velement.children) {
+    setParent(velement.children);
+  }
 };
 
 export const getCircularReplacer = () => {

@@ -6,3 +6,4 @@ export type CallExpression = types.namedTypes.CallExpression;
 export type ObjectExpression = types.namedTypes.ObjectExpression;
 export type Property = types.namedTypes.Property;
 export type Expression = types.namedTypes.Expression;
+export type ArrayExpression = types.namedTypes.ArrayExpression;

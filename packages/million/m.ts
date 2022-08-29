@@ -26,7 +26,7 @@ export const svg = (vnode: VElement): VElement => {
 export const ns = (
   tag: string,
   props: VProps,
-  children?: VNode[] | null,
+  children?: VNode | VNode[] | null,
 ): void => {
   if (props.className) {
     props.class = props.className;
@@ -34,10 +34,18 @@ export const ns = (
   }
   props.ns = 'http://www.w3.org/2000/svg';
   if (children && tag !== 'foreignObject') {
-    for (const child of children) {
+    const addNs = (child: VNode) => {
       if (typeof child !== 'string' && child.props) {
         ns(child.tag, child.props, child.children);
       }
+    }
+
+    if (Array.isArray(children)) {
+      for (const child of children) {
+        addNs(child)
+      }
+    } else if (children) {
+      addNs(children);
     }
   }
 };
@@ -98,7 +106,7 @@ export const m = (
   const velement: VElement = {
     tag,
     props,
-    children,
+    children: children?.length === 1 ? children[0] : children,
     key,
     flag,
     delta,

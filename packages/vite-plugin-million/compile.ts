@@ -2,6 +2,7 @@ import { types } from 'recast';
 import { h } from '../jsx-runtime';
 import { jsxFactory } from './constants';
 import type {
+  ArrayExpression,
   CallExpression,
   Expression,
   Identifier,
@@ -118,17 +119,6 @@ export const fromVNodeToASTNode = (
         }),
     );
 
-    const astChildren = arrayExpression(
-      (velement?.children || []).map(
-        (child: RawVNode): Literal | CallExpression => {
-          if (typeof child === 'string') {
-            return literal(child);
-          }
-          return fromVNodeToASTNode(child) as Literal | CallExpression;
-        },
-      ),
-    );
-
     const astVNode = [
       property('init', literal('tag'), literal(velement?.tag as string)),
       property('init', literal('flag'), literal(velement?.flag as number)),
@@ -136,7 +126,22 @@ export const fromVNodeToASTNode = (
     if (velement?.props && Object.keys(velement.props).length > 0) {
       astVNode.push(property('init', literal('props'), astProps));
     }
-    if (velement?.children && velement.children.length > 0) {
+    if (velement?.children && (!Array.isArray(velement.children) || velement.children.length > 0)) {
+      const transformChildren = (child: RawVNode): Literal | CallExpression => {
+        if (typeof child === 'string') {
+          return literal(child);
+        }
+        return fromVNodeToASTNode(child) as Literal | CallExpression;
+      }
+
+      let astChildren: Literal | CallExpression | ArrayExpression;
+
+      if (Array.isArray(velement.children)) {
+        astChildren = arrayExpression(velement.children.map(transformChildren));
+      } else {
+        astChildren = transformChildren(velement.children);
+      }
+
       astVNode.push(property('init', literal('children'), astChildren));
     }
     if (velement?.key) {

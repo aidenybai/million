@@ -27,20 +27,15 @@ import {
 import type { FC } from '../jsx-runtime';
 import type { VElement, VNode, VProps } from '../million';
 
-const isSingleVNode = (vnode: VNode | VNode[] | null | undefined): vnode is VNode[] => {
-  return (Array.isArray(vnode) && vnode.length === 1 && isValidElement(vnode[0]))
-}
-
-const cloneElement = (vnode: VNode | [VElement], config?: VProps) => {
+const cloneElement = (vnode: VNode, config?: VProps) => {
   if (typeof vnode === 'string') return vnode;
-  const { tag, props, children } = isSingleVNode(vnode) ? vnode[0] : vnode;
-  return h(tag, { ...props, ...config }, ...(children ?? []));
+  const { tag, props, children } = vnode;
+  return h(tag, { ...props, ...config }, ...(Array.isArray(children) ? children : [children]));
 };
 
 const createElement = compat(h);
 
-const isValidElement = (vnode?: VNode | VNode[] | null) => {
-  if (isSingleVNode(vnode)) return true;
+const isValidElement = (vnode?: VNode | null) => {
   if (vnode) {
     if (typeof vnode === 'string') return true;
     if (vnode.tag) return true;
@@ -57,7 +52,9 @@ const memo = (
 }
 
 const toChildArray = (children: VNode[]): VNode[] => {
-  return (h('_', {}, ...children) as VElement).children!;
+  const childArray = (h('_', {}, ...children) as VElement).children!;
+
+  return Array.isArray(childArray) ? childArray : [childArray];
 };
 
 const mapFn = (children: VNode[] | null, fn: (this: VNode) => VNode) => {
