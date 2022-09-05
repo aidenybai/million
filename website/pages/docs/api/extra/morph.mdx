@@ -12,11 +12,13 @@ The `morph` function updates the DOM content by determining pinpoint changes thr
 ```js
 import { m, patch, createElement } from 'million';
 
-const node1 = document.createElement('div');
-const node2 = document.createElement('div');
-node2.textContent = 'Hello World';
+const refNode = document.createElement('div');
+const newNode = document.createElement('div');
+newNode.textContent = 'Hello World';
 
-morph(node2, node1); // <div></div> -> <div>Hello World</div>
+document.body.appendChild(refNode);
 
-morph('<div>Goodbye World</div>', node2); // <div>Hello World</div> -> <div>Goodbye World</div>
+morph(newNode, refNode); // <div></div> -> <div>Hello World</div>
+
+morph('<div>Goodbye World</div>', refNode); // <div>Hello World</div> -> <div>Goodbye World</div>
 ```
