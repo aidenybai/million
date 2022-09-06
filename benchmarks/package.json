@@ -6,10 +6,10 @@
   },
   "devDependencies": {
     "@picocss/pico": "^1.5.3",
-    "@types/benchmark": "^2.1.1",
+    "@types/benchmark": "^2.1.2",
     "@types/canvas-confetti": "^1.4.3",
     "@types/lodash": "^4.14.184",
-    "@types/node": "^18.7.11",
+    "@types/node": "^18.7.15",
     "@types/virtual-dom": "^2.1.1",
     "@vitejs/plugin-legacy": "^2.0.1",
     "benchmark": "^2.1.4",
