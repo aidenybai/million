@@ -18,7 +18,7 @@ Please note that Benchmark results are unstable. To have more stable results:
 >
 > The intention of these benchmarks are not to convince you that Million is faster that all libraries, but rather bring perspective on the results of a specific method of testing DOM manipulation implementations when compared to each other.
 >
-> Implementation may differ, as the goal of the benchmarks is to acheive the same function <u>for the end user</u>.
+> Implementation may differ, as the goal of the benchmarks is to achieve the same function <u>for the end user</u>.
 >
 > | Method               | `text-interop`           | `list-render`          | `conditional-render`      |
 > | -------------------- | ------------------------ | ---------------------- | ------------------------- |
