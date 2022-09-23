@@ -37,9 +37,9 @@ export const fromDomNodeToVNode = (el: DOMNode): VNode | undefined => {
 export const fromStringToDomNode = (htmlString: string): DOMNode => {
   const doc = new DOMParser().parseFromString(
     `<t>${htmlString.trim()}</t>`,
-    'text/xml',
+    'text/html',
   );
-  const el = doc.firstChild!.firstChild! as DOMNode;
+  const el = doc.body.firstChild!.firstChild! as DOMNode;
   return el;
 };
 

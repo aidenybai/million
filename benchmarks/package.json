@@ -5,13 +5,13 @@
     "build": "vite build"
   },
   "devDependencies": {
-    "@picocss/pico": "^1.5.3",
+    "@picocss/pico": "^1.5.5",
     "@types/benchmark": "^2.1.2",
     "@types/canvas-confetti": "^1.4.3",
-    "@types/lodash": "^4.14.184",
-    "@types/node": "^18.7.15",
+    "@types/lodash": "^4.14.185",
+    "@types/node": "^18.7.18",
     "@types/virtual-dom": "^2.1.1",
-    "@vitejs/plugin-legacy": "^2.0.1",
+    "@vitejs/plugin-legacy": "^2.2.0",
     "benchmark": "^2.1.4",
     "canvas-confetti": "^1.5.1",
     "chart.js": "^3.9.1",
