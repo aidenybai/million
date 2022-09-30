@@ -8,7 +8,7 @@
     "@picocss/pico": "^1.5.5",
     "@types/benchmark": "^2.1.2",
     "@types/canvas-confetti": "^1.4.3",
-    "@types/lodash": "^4.14.185",
+    "@types/lodash": "^4.14.186",
     "@types/node": "^18.7.23",
     "@types/virtual-dom": "^2.1.1",
     "@vitejs/plugin-legacy": "^2.2.0",
