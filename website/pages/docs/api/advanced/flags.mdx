@@ -38,21 +38,21 @@ const vnode = m('div', _, ['Please ignore me'], Flags.ELEMENT_IGNORE);
 }
 ```
 
-## `Flags.ELEMENT_SKIP_DIFF`
+## `Flags.ELEMENT_FORCE_UPDATE`
 
 If you need to add group functionality, using this flag allows you to skip diffing entirely and hard replace a VNode.
 
 ```js
 import { _, m, Flags } from 'million';
 
-const vnode = m('div', _, ['Please hard replace me'], Flags.ELEMENT_SKIP_DIFF);
+const vnode = m('div', _, ['Please hard replace me'], Flags.ELEMENT_FORCE_UPDATE);
 ```
 
 ```js {4}
 {
   tag: 'div',
   children: ['Please hard replace me'],
-  flag: /* Flags.ELEMENT_SKIP_DIFF */,
+  flag: /* Flags.ELEMENT_FORCE_UPDATE */,
 }
 ```
 
