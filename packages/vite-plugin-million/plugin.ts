@@ -1,4 +1,5 @@
 import { parse, print, visit } from 'recast';
+import { parse as espreeParse } from 'espree';
 import { compile } from './compile';
 import {
   jsxCompat,
@@ -57,7 +58,14 @@ export const million = (options?: {
 
       try {
         if (code.includes(`${jsxFactory}(`) && !options?.skipOptimize) {
-          const ast = parse(code);
+          const ast = parse(code, {
+            parser(source: string, options?: any) {
+              return espreeParse(source, {
+                ...options,
+                ecmaVersion: 'latest'
+              });
+            }
+          });
           const astNodes: any[] = [];
 
           visit(ast, {
