@@ -3,6 +3,6 @@
   "main": "./index.ts",
   "module": "./index.ts",
   "dependencies": {
-    "espree": "^9.4.0"
+    "espree": "^9.4.1"
   }
 }
