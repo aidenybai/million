@@ -25,6 +25,7 @@ export default defineBuildConfig({
       format: 'cjs',
     },
   ],
+  externals: ['espree'],
   declaration: true,
   clean: true,
   rollup: {

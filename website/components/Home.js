@@ -314,7 +314,7 @@ export default function Page() {
                   onClick={() => setOpen(true)}
                   className="flex items-center justify-center w-full px-6 py-3 text-md text-white no-underline border border-transparent rounded-md bg-blackish md:py-3 md:text-lg md:px-10 md:leading-6 font-bold hover:bg-black"
                 >
-                  <PlayIcon className="w-5" />
+                  <PlayIcon className="w-5" />{' '}
                   Watch Video
                 </button>
               </div>
