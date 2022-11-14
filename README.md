@@ -132,13 +132,16 @@ Million is being used at companies like [Wyze](https://wyze.com) and open source
 <table>
   <tr>
     <td>
-      <a href="https://www.theatrejs.com/?utm_source=millionjs&utm_campaign=oss" target="_blank"><img height="44" src="https://www.theatrejs.com/images/top-section/logo.svg" alt="Theatre.js"></a>
+      <a href="https://dimension.dev/?utm_source=millionjs&utm_campaign=oss" target="_blank"><img height="44" src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/dimension-logo.svg" alt="Dimension"></a>
     </td>
     <td>
-      <a href="https://vercel.com/?utm_source=millionjs&utm_campaign=oss" target="_blank"><img height="44" src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/vercel-logo.svg" alt="Vercel"></a>
+      <a href="https://www.theatrejs.com/?utm_source=millionjs&utm_campaign=oss" target="_blank"><img height="44" src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/theatre-js-logo.svg" alt="Theatre.js"></a>
     </td>
     <td>
       <a href="https://deta.sh/?utm_source=millionjs&utm_campaign=oss" target="_blank"><img height="44" src="https://www.deta.sh/dist/images/deta_logo.svg" alt="Deta"></a>
+    </td>
+    <td>
+      <a href="https://vercel.com/?utm_source=millionjs&utm_campaign=oss" target="_blank"><img height="44" src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/vercel-logo.svg" alt="Vercel"></a>
     </td>
   </tr>
 </table>
