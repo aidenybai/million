@@ -122,8 +122,8 @@
   "devDependencies": {
     "@babel/core": "^7.20.2",
     "@types/node": "^18.11.9",
-    "@typescript-eslint/eslint-plugin": "^5.43.0",
-    "@typescript-eslint/parser": "^5.43.0",
+    "@typescript-eslint/eslint-plugin": "^5.44.0",
+    "@typescript-eslint/parser": "^5.44.0",
     "@vercel/style-guide": "^3.0.0",
     "bumpp": "^8.2.1",
     "c8": "^7.12.0",

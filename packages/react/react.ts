@@ -51,11 +51,13 @@ const isValidElement = (vnode?: VNode | VNode[] | null) => {
 };
 
 const memo = (component: (...args: unknown[]) => VNode) => {
-  const cache = new Map();
+  let prevProps;
+  let prevRet;
   return (props: VProps) => {
-    if (!cache.has(props)) return cache.get(props);
+    if (prevProps === props) return prevRet;
     const ret = component(props);
-    cache.set(props, ret);
+    prevProps = props;
+    prevRet = ret;
     return ret;
   };
 };
