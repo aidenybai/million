@@ -27,9 +27,11 @@ import {
 import type { FC } from '../jsx-runtime';
 import type { VElement, VNode, VProps } from '../million';
 
-const isSingleVNode = (vnode: VNode | VNode[] | null | undefined): vnode is VNode[] => {
-  return (Array.isArray(vnode) && vnode.length === 1 && isValidElement(vnode[0]))
-}
+const isSingleVNode = (
+  vnode: VNode | VNode[] | null | undefined,
+): vnode is VNode[] => {
+  return Array.isArray(vnode) && vnode.length === 1 && isValidElement(vnode[0]);
+};
 
 const cloneElement = (vnode: VNode | [VElement], config?: VProps) => {
   if (typeof vnode === 'string') return vnode;
@@ -48,13 +50,15 @@ const isValidElement = (vnode?: VNode | VNode[] | null) => {
   return false;
 };
 
-const memo = (
-  component: (...args: unknown[]) => VNode
-) => {
+const memo = (component: (...args: unknown[]) => VNode) => {
+  const cache = new Map();
   return (props: VProps) => {
-    return component(Object.values(props));
+    if (!cache.has(props)) return cache.get(props);
+    const ret = component(props);
+    cache.set(props, ret);
+    return ret;
   };
-}
+};
 
 const toChildArray = (children: VNode[]): VNode[] => {
   return (h('_', {}, ...children) as VElement).children!;
