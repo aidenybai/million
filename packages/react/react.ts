@@ -50,11 +50,19 @@ const isValidElement = (vnode?: VNode | VNode[] | null) => {
   return false;
 };
 
+// taken from preact/compat
+// https://github.com/preactjs/preact/blob/4a37c998833dafa42bcdb5250128d76ee3307414/compat/src/util.js#L19
+const arePropsDifferent = (a: VProps, b: VProps) => {
+  for (const i in a) if (!(i in b)) return true;
+  for (const i in b) if (a[i] !== b[i]) return true;
+  return false;
+};
+
 const memo = (component: (...args: unknown[]) => VNode) => {
   let prevProps;
   let prevRet;
   return (props: VProps) => {
-    if (prevProps === props) return prevRet;
+    if (!arePropsDifferent(props, prevProps)) return prevRet;
     const ret = component(props);
     prevProps = props;
     prevRet = ret;
