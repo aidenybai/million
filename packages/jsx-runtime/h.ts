@@ -84,6 +84,16 @@ export function h(
         children[i] !== false &&
         children[i] !== ''
       ) {
+        if (
+          typeof children[i] === 'string' &&
+          typeof normalizedChildren[normalizedChildren.length - 1] === 'string'
+        ) {
+          // eslint-disable-next-line @typescript-eslint/no-base-to-string
+          normalizedChildren[normalizedChildren.length - 1] += children[
+            i
+          ] as string;
+          continue;
+        }
         const unwrappedChild = normalize(children[i]) as VNode;
         const subChildren = Array.isArray(unwrappedChild)
           ? ((childrenLength += unwrappedChild.length), unwrappedChild)

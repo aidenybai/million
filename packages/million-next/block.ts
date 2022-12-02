@@ -7,12 +7,10 @@ class Hole {
   constructor(hole: string) {
     this.hole = hole;
   }
+  toString() {
+    throw new Error(`props.${this.hole} cannot be interpolated.`);
+  }
 }
-
-// eslint-disable-next-line func-names
-Hole.prototype.toString = function () {
-  throw new Error(`props.${this.hole} cannot be interpolated.`);
-};
 
 const holeProxy = new Proxy(
   {},
@@ -62,6 +60,7 @@ export const renderToTemplate = (
 
   if (IS_VOID_ELEMENT.test(vnode.tag)) return `<${vnode.tag}${props} />`;
 
+  let realIndex = 0;
   for (let i = 0, j = vnode.children?.length || 0; i < j; ++i) {
     const child = vnode.children?.[i];
     if (child instanceof Hole) {
@@ -71,7 +70,8 @@ export const renderToTemplate = (
         index: i,
       });
     } else {
-      children += renderToTemplate(child, edits, [...path, i]);
+      children += renderToTemplate(child, edits, [...path, realIndex]);
+      realIndex++;
     }
   }
 
@@ -85,7 +85,8 @@ export const block = (fn: (props?: Props) => VElement) => {
   const edits: Edit[] = [];
 
   const template = document.createElement('template');
-  template.innerHTML = renderToTemplate(vnode, edits, []);
+  const content = renderToTemplate(vnode, edits, []);
+  template.innerHTML = content;
 
   return (props: Props = {}) => {
     const root = template.content.cloneNode(true) as DocumentFragment;
@@ -94,7 +95,7 @@ export const block = (fn: (props?: Props) => VElement) => {
       const current = edits[i]!;
       let el = root.firstChild as HTMLElement;
       for (let k = 0, l = current.path.length; k < l; ++k) {
-        el = el.childNodes[current.path[k]!] as HTMLElement;
+        el = el.childNodes.item(current.path[k]!) as HTMLElement;
       }
       for (let k = 0, l = current.edits.length; k < l; ++k) {
         const edit = current.edits[k]!;
@@ -104,10 +105,8 @@ export const block = (fn: (props?: Props) => VElement) => {
           setAttribute(el, edit.name, value);
         }
         if (edit.type === 'insert') {
-          el.insertBefore(
-            document.createTextNode(String(value)),
-            el.childNodes[edit.index] as HTMLElement,
-          );
+          const refNode = el.childNodes.item(edit.index) as HTMLElement;
+          el.insertBefore(document.createTextNode(String(value)), refNode);
         }
       }
     }
