@@ -125,6 +125,7 @@
     "@typescript-eslint/eslint-plugin": "^5.45.0",
     "@typescript-eslint/parser": "^5.45.0",
     "@vercel/style-guide": "^3.0.0",
+    "benchmark": "^2.1.4",
     "bumpp": "^8.2.1",
     "c8": "^7.12.0",
     "esbuild": "^0.14.54",

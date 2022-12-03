@@ -9,6 +9,7 @@ importers:
       '@typescript-eslint/eslint-plugin': ^5.45.0
       '@typescript-eslint/parser': ^5.45.0
       '@vercel/style-guide': ^3.0.0
+      benchmark: ^2.1.4
       bumpp: ^8.2.1
       c8: ^7.12.0
       esbuild: ^0.14.54
@@ -39,6 +40,7 @@ importers:
       '@typescript-eslint/eslint-plugin': 5.45.0_czs5uoqkd3podpy6vgtsxfc7au
       '@typescript-eslint/parser': 5.45.0_hsf322ms6xhhd4b5ne6lb74y4a
       '@vercel/style-guide': 3.0.0_pwvey7qshjrz62lg5sspyem7za
+      benchmark: 2.1.4
       bumpp: 8.2.1
       c8: 7.12.0
       esbuild: 0.14.54

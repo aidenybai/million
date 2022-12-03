@@ -1,5 +1,6 @@
 import { IS_VOID_ELEMENT } from './constants';
 import { setAttribute } from './dom';
+import { EditType } from './types';
 import type { Edit, Props, VElement, VNode } from './types';
 
 class Hole {
@@ -46,7 +47,7 @@ export const renderToTemplate = (
 
     if (value instanceof Hole) {
       current.edits.push({
-        type: 'attribute',
+        type: EditType.Attribute,
         hole: value.hole,
         name,
       });
@@ -60,18 +61,16 @@ export const renderToTemplate = (
 
   if (IS_VOID_ELEMENT.test(vnode.tag)) return `<${vnode.tag}${props} />`;
 
-  let realIndex = 0;
-  for (let i = 0, j = vnode.children?.length || 0; i < j; ++i) {
+  for (let i = 0, j = vnode.children?.length || 0, k = 0; i < j; ++i) {
     const child = vnode.children?.[i];
     if (child instanceof Hole) {
       current.edits.push({
-        type: 'insert',
+        type: EditType.Child,
         hole: child.hole,
         index: i,
       });
     } else {
-      children += renderToTemplate(child, edits, [...path, realIndex]);
-      realIndex++;
+      children += renderToTemplate(child, edits, [...path, k++]);
     }
   }
 
@@ -88,25 +87,42 @@ export const block = (fn: (props?: Props) => VElement) => {
   const content = renderToTemplate(vnode, edits, []);
   template.innerHTML = content;
 
-  return (props: Props = {}) => {
+  return (props: Props = {}): HTMLElement => {
     const root = template.content.cloneNode(true) as DocumentFragment;
 
     for (let i = 0, j = edits.length; i < j; ++i) {
       const current = edits[i]!;
-      let el = root.firstChild as HTMLElement;
-      for (let k = 0, l = current.path.length; k < l; ++k) {
-        el = el.childNodes.item(current.path[k]!) as HTMLElement;
+      let el = current.el ?? (root.firstChild as HTMLElement);
+      if (!current.el) {
+        for (let k = 0, l = current.path.length; k < l; ++k) {
+          el = el.childNodes.item(current.path[k]!) as HTMLElement;
+        }
+        current.el = el;
       }
       for (let k = 0, l = current.edits.length; k < l; ++k) {
         const edit = current.edits[k]!;
         const value = props[edit.hole];
-
-        if (edit.type === 'attribute') {
-          setAttribute(el, edit.name, value);
-        }
-        if (edit.type === 'insert') {
-          const refNode = el.childNodes.item(edit.index) as HTMLElement;
-          el.insertBefore(document.createTextNode(String(value)), refNode);
+        if (edit.lastValue !== value) {
+          if (edit.type === EditType.Attribute) {
+            setAttribute(el, edit.name, value);
+          }
+          if (edit.type === EditType.Child) {
+            const node = document.createTextNode(String(value));
+            if (el.hasChildNodes()) {
+              el.insertBefore(
+                node,
+                edit.index < el.childNodes.length
+                  ? el.childNodes.item(edit.index)
+                  : el.lastChild,
+              );
+            } else {
+              el.appendChild(node);
+            }
+          }
+          edit.lastEl = el;
+          edit.lastValue = value;
+        } else {
+          return edit.lastEl?.cloneNode(true) as HTMLElement;
         }
       }
     }

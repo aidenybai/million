@@ -30,19 +30,29 @@ export const enum DeltaTypes {
   REMOVE,
 }
 
-export interface EditAttribute {
-  type: 'attribute';
-  name: string;
-  hole: string;
+export const enum EditType {
+  Attribute,
+  Child,
 }
 
-export interface EditInsert {
-  type: 'insert';
+export interface EditAttribute {
+  type: EditType.Attribute;
+  name: string;
+  hole: string;
+  lastValue?: any;
+  lastEl?: HTMLElement;
+}
+
+export interface EditChild {
+  type: EditType.Child;
   index: number;
   hole: string;
+  lastValue?: any;
+  lastEl?: HTMLElement;
 }
 
 export interface Edit {
   path: number[];
-  edits: (EditAttribute | EditInsert)[];
+  edits: (EditAttribute | EditChild)[];
+  el?: HTMLElement;
 }
