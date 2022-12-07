@@ -9,6 +9,7 @@ class Hole {
     this.hole = hole;
   }
   toString() {
+    // {prop} is okay, but {prop + 'foo'}, {prop + 123}, etc. is not
     throw new Error(`props.${this.hole} cannot be interpolated.`);
   }
 }
@@ -16,6 +17,8 @@ class Hole {
 const holeProxy = new Proxy(
   {},
   {
+    // A universal getter will return a Hole instance if props[any] is accessed
+    // Allows code to identify holes in virtual nodes
     get(_, prop: string) {
       return new Hole(prop);
     },
@@ -87,22 +90,62 @@ export const block = (fn: (props?: Props) => VElement) => {
   const content = renderToTemplate(vnode, edits, []);
   template.innerHTML = content;
 
-  return (props: Props = {}): HTMLElement => {
-    const root = template.content.cloneNode(true) as DocumentFragment;
+  class Block {
+    el?: HTMLElement;
+    props?: Props;
+    patch(props?: Props | null): HTMLElement {
+      const root = this.el as HTMLElement;
+      if (!props) return root;
+      for (let i = 0, j = edits.length; i < j; ++i) {
+        const current = edits[i]!;
+        const el = current.el ?? root;
+        for (let k = 0, l = current.edits.length; k < l; ++k) {
+          const edit = current.edits[k]!;
+          const value = props[edit.hole];
+          if (value === this.props?.[edit.hole]) continue;
+          if (edit.type === EditType.Attribute) {
+            setAttribute(el, edit.name, value);
+          }
+          if (edit.type === EditType.Child) {
+            if (el.childNodes.length === 1) {
+              el.textContent = String(value);
+              continue;
+            }
+            const node = document.createTextNode(String(value));
+            const child =
+              edit.index < el.childNodes.length
+                ? el.childNodes.item(edit.index)
+                : el.lastChild;
 
-    for (let i = 0, j = edits.length; i < j; ++i) {
-      const current = edits[i]!;
-      let el = current.el ?? (root.firstChild as HTMLElement);
-      if (!current.el) {
-        for (let k = 0, l = current.path.length; k < l; ++k) {
-          el = el.childNodes.item(current.path[k]!) as HTMLElement;
+            el.replaceChild(node, child as ChildNode);
+          }
         }
-        current.el = el;
       }
-      for (let k = 0, l = current.edits.length; k < l; ++k) {
-        const edit = current.edits[k]!;
-        const value = props[edit.hole];
-        if (edit.lastValue !== value) {
+
+      return root;
+    }
+    remove() {
+      this.el?.remove();
+    }
+    mount(props?: Props | null): HTMLElement {
+      const clone = template.content.cloneNode(true) as DocumentFragment;
+      const root = clone.firstChild as HTMLElement;
+      if (!props) return root;
+      this.props = props;
+      this.el = root;
+
+      for (let i = 0, j = edits.length; i < j; ++i) {
+        const current = edits[i]!;
+        let el = current.el ?? root;
+        if (!current.el) {
+          for (let k = 0, l = current.path.length; k < l; ++k) {
+            el = el.childNodes.item(current.path[k]!) as HTMLElement;
+          }
+          current.el = el;
+        }
+        for (let k = 0, l = current.edits.length; k < l; ++k) {
+          const edit = current.edits[k]!;
+          const value = props[edit.hole];
           if (edit.type === EditType.Attribute) {
             setAttribute(el, edit.name, value);
           }
@@ -119,14 +162,12 @@ export const block = (fn: (props?: Props) => VElement) => {
               el.appendChild(node);
             }
           }
-          edit.lastEl = el;
-          edit.lastValue = value;
-        } else {
-          return edit.lastEl?.cloneNode(true) as HTMLElement;
         }
       }
-    }
 
-    return root.firstChild as HTMLElement;
-  };
+      return root;
+    }
+  }
+
+  return new Block();
 };

@@ -39,16 +39,12 @@ export interface EditAttribute {
   type: EditType.Attribute;
   name: string;
   hole: string;
-  lastValue?: any;
-  lastEl?: HTMLElement;
 }
 
 export interface EditChild {
   type: EditType.Child;
   index: number;
   hole: string;
-  lastValue?: any;
-  lastEl?: HTMLElement;
 }
 
 export interface Edit {
