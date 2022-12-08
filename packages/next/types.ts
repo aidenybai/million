@@ -6,6 +6,7 @@ export type VNode = string | VElement;
 export class Block {
   el?: HTMLElement;
   props?: Props | null;
+  key?: string;
   edits: Edit[] = [];
   patch(_block: Block) {}
   mount(_parent?: HTMLElement, _refNode: Node | null = null) {}

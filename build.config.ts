@@ -3,6 +3,7 @@ import { defineBuildConfig } from 'unbuild';
 export default defineBuildConfig({
   entries: [
     './packages/million',
+    './packages/next',
     './packages/jsx-runtime',
     './packages/utils',
     './packages/router',

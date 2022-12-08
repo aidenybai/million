@@ -14,6 +14,7 @@ const packages = [
   'router',
   'html',
   'react',
+  'next',
   'morph',
   'vite-plugin-million',
   'utils',

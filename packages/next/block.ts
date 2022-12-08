@@ -1,3 +1,4 @@
+import { createElement, patch as patchVNode } from '../million';
 import { IS_VOID_ELEMENT } from './constants';
 import { cloneNode, insertBefore, setAttribute } from './dom';
 import { Block, EditType } from './types';
@@ -112,6 +113,7 @@ export const createBlock = (fn: (props?: Props) => VElement) => {
       super();
       this.props = props;
       this.edits = edits;
+      this.key = vnode.key;
     }
     patch(_block: B): HTMLElement {
       return this.el!;
@@ -123,6 +125,13 @@ export const createBlock = (fn: (props?: Props) => VElement) => {
       if (parent) insertBefore.call(parent, root, refNode);
 
       return root;
+    }
+    move(block: B | null = null, refNode: Node | null = null) {
+      insertBefore.call(
+        this.el!.parentElement,
+        this.el!,
+        block ? block.el! : refNode,
+      );
     }
     remove() {
       this.el?.remove();
@@ -155,6 +164,10 @@ export const createBlock = (fn: (props?: Props) => VElement) => {
               value.mount(el, el.childNodes.item(edit.index));
               continue;
             }
+            if (typeof value === 'object' && value.tag) {
+              const node = createElement(value);
+              insertBefore.call(el, node, el.childNodes.item(edit.index));
+            }
             const node = document.createTextNode(String(value));
             if (el.hasChildNodes()) {
               el.insertBefore(
@@ -177,6 +190,7 @@ export const createBlock = (fn: (props?: Props) => VElement) => {
     };
 
     B.prototype.patch = function patch(block: B): HTMLElement {
+      if (this.key && block.key === this.key) return this.el!;
       const root = this.el as HTMLElement;
       if (!block.props) return root;
       for (let i = 0, j = edits.length; i < j; ++i) {
@@ -195,6 +209,11 @@ export const createBlock = (fn: (props?: Props) => VElement) => {
               const thisEdit = this.edits[i]?.edits[k] as EditChild;
               const thisBlock = this.props?.[thisEdit.hole];
               thisBlock.patch(value);
+              continue;
+            }
+
+            if (typeof value === 'object' && value.tag) {
+              patchVNode(el.childNodes.item(edit.index) as HTMLElement, value);
               continue;
             }
             if (el.childNodes.length === 1) {
@@ -217,4 +236,9 @@ export const createBlock = (fn: (props?: Props) => VElement) => {
   }
 
   return (props?: Props | null) => new B(props);
+};
+
+export const patchBlock = (oldBlock: Block, newBlock: Block) => {
+  if (!oldBlock.el) oldBlock.mount();
+  oldBlock.patch(newBlock);
 };

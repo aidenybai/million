@@ -9,7 +9,7 @@
     "@types/benchmark": "^2.1.2",
     "@types/canvas-confetti": "^1.6.0",
     "@types/lodash": "^4.14.191",
-    "@types/node": "^18.11.10",
+    "@types/node": "^18.11.11",
     "@types/virtual-dom": "^2.1.1",
     "@vitejs/plugin-legacy": "^2.3.1",
     "benchmark": "^2.1.4",
