@@ -1,6 +1,17 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 export type Props = Record<string, any>;
 
 export type VNode = string | VElement;
+
+export class Block {
+  el?: HTMLElement;
+  props?: Props | null;
+  edits: Edit[] = [];
+  patch(_block: Block) {}
+  mount(_parent?: HTMLElement, _refNode: Node | null = null) {}
+  remove() {}
+  toString() {}
+}
 
 export interface VElement {
   flag: Flags;
@@ -33,6 +44,7 @@ export const enum DeltaTypes {
 export const enum EditType {
   Attribute,
   Child,
+  Block,
 }
 
 export interface EditAttribute {
@@ -47,8 +59,14 @@ export interface EditChild {
   hole: string;
 }
 
+export interface EditBlock {
+  type: EditType.Block;
+  block: Block;
+  index: number;
+}
+
 export interface Edit {
   path: number[];
-  edits: (EditAttribute | EditChild)[];
+  edits: (EditAttribute | EditChild | EditBlock)[];
   el?: HTMLElement;
 }

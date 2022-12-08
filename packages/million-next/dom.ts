@@ -1,3 +1,9 @@
+/* eslint-disable @typescript-eslint/unbound-method */
+
+export const nodeProto = Node.prototype;
+export const insertBefore = nodeProto.insertBefore;
+export const cloneNode = nodeProto.cloneNode;
+
 export const setAttribute = (
   el: HTMLElement,
   name: string,

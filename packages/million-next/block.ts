@@ -1,7 +1,7 @@
 import { IS_VOID_ELEMENT } from './constants';
-import { setAttribute } from './dom';
-import { EditType } from './types';
-import type { Edit, Props, VElement, VNode } from './types';
+import { cloneNode, insertBefore, setAttribute } from './dom';
+import { Block, EditType } from './types';
+import type { Edit, EditChild, Props, VElement, VNode } from './types';
 
 class Hole {
   hole: string;
@@ -72,6 +72,12 @@ export const renderToTemplate = (
         hole: child.hole,
         index: i,
       });
+    } else if (child instanceof Block) {
+      current.edits.push({
+        type: EditType.Block,
+        block: child,
+        index: i,
+      });
     } else {
       children += renderToTemplate(child, edits, [...path, k++]);
     }
@@ -82,7 +88,7 @@ export const renderToTemplate = (
   return `<${vnode.tag}${props}>${children}</${vnode.tag}>`;
 };
 
-export const block = (fn: (props?: Props) => VElement) => {
+export const createBlock = (fn: (props?: Props) => VElement) => {
   const vnode = fn(holeProxy);
   const edits: Edit[] = [];
 
@@ -90,23 +96,107 @@ export const block = (fn: (props?: Props) => VElement) => {
   const content = renderToTemplate(vnode, edits, []);
   template.innerHTML = content;
 
-  class Block {
-    el?: HTMLElement;
-    props?: Props;
-    patch(props?: Props | null): HTMLElement {
-      const root = this.el as HTMLElement;
-      if (!props) return root;
+  const getCurrentElement = (current: Edit, root: HTMLElement): HTMLElement => {
+    let el = current.el ?? root;
+    if (!current.el) {
+      for (let k = 0, l = current.path.length; k < l; ++k) {
+        el = el.childNodes.item(current.path[k]!) as HTMLElement;
+      }
+      current.el = el;
+    }
+    return el;
+  };
+
+  class B extends Block {
+    constructor(props?: Props | null) {
+      super();
+      this.props = props;
+      this.edits = edits;
+    }
+    patch(_block: B): HTMLElement {
+      return this.el!;
+    }
+    mount(parent?: HTMLElement, refNode: Node | null = null): HTMLElement {
+      const clone = cloneNode.call(template.content, true) as DocumentFragment;
+      const root = clone.firstChild as HTMLElement;
+      this.el = root;
+      if (parent) insertBefore.call(parent, root, refNode);
+
+      return root;
+    }
+    remove() {
+      this.el?.remove();
+    }
+    toString() {
+      return this.el?.outerHTML;
+    }
+  }
+
+  if (edits.length) {
+    B.prototype.mount = function mount(
+      parent?: HTMLElement,
+      refNode: Node | null = null,
+    ): HTMLElement {
+      const clone = cloneNode.call(template.content, true) as DocumentFragment;
+      const root = clone.firstChild as HTMLElement;
+
       for (let i = 0, j = edits.length; i < j; ++i) {
         const current = edits[i]!;
-        const el = current.el ?? root;
+        const el = getCurrentElement(current, root);
         for (let k = 0, l = current.edits.length; k < l; ++k) {
           const edit = current.edits[k]!;
-          const value = props[edit.hole];
+          if (edit.type === EditType.Block) continue;
+          const value = this.props![edit.hole];
+          if (edit.type === EditType.Attribute) {
+            setAttribute(el, edit.name, value);
+          }
+          if (edit.type === EditType.Child) {
+            if (value instanceof Block) {
+              value.mount(el, el.childNodes.item(edit.index));
+              continue;
+            }
+            const node = document.createTextNode(String(value));
+            if (el.hasChildNodes()) {
+              el.insertBefore(
+                node,
+                edit.index < el.childNodes.length
+                  ? el.childNodes.item(edit.index)
+                  : el.lastChild,
+              );
+            } else {
+              el.appendChild(node);
+            }
+          }
+        }
+      }
+
+      this.el = root;
+      if (parent) insertBefore.call(parent, root, refNode);
+
+      return root;
+    };
+
+    B.prototype.patch = function patch(block: B): HTMLElement {
+      const root = this.el as HTMLElement;
+      if (!block.props) return root;
+      for (let i = 0, j = edits.length; i < j; ++i) {
+        const current = edits[i]!;
+        const el = getCurrentElement(current, root);
+        for (let k = 0, l = current.edits.length; k < l; ++k) {
+          const edit = current.edits[k]!;
+          if (edit.type === EditType.Block) continue;
+          const value = block.props[edit.hole];
           if (value === this.props?.[edit.hole]) continue;
           if (edit.type === EditType.Attribute) {
             setAttribute(el, edit.name, value);
           }
           if (edit.type === EditType.Child) {
+            if (value instanceof Block) {
+              const thisEdit = this.edits[i]?.edits[k] as EditChild;
+              const thisBlock = this.props?.[thisEdit.hole];
+              thisBlock.patch(value);
+              continue;
+            }
             if (el.childNodes.length === 1) {
               el.textContent = String(value);
               continue;
@@ -123,51 +213,8 @@ export const block = (fn: (props?: Props) => VElement) => {
       }
 
       return root;
-    }
-    remove() {
-      this.el?.remove();
-    }
-    mount(props?: Props | null): HTMLElement {
-      const clone = template.content.cloneNode(true) as DocumentFragment;
-      const root = clone.firstChild as HTMLElement;
-      if (!props) return root;
-      this.props = props;
-      this.el = root;
-
-      for (let i = 0, j = edits.length; i < j; ++i) {
-        const current = edits[i]!;
-        let el = current.el ?? root;
-        if (!current.el) {
-          for (let k = 0, l = current.path.length; k < l; ++k) {
-            el = el.childNodes.item(current.path[k]!) as HTMLElement;
-          }
-          current.el = el;
-        }
-        for (let k = 0, l = current.edits.length; k < l; ++k) {
-          const edit = current.edits[k]!;
-          const value = props[edit.hole];
-          if (edit.type === EditType.Attribute) {
-            setAttribute(el, edit.name, value);
-          }
-          if (edit.type === EditType.Child) {
-            const node = document.createTextNode(String(value));
-            if (el.hasChildNodes()) {
-              el.insertBefore(
-                node,
-                edit.index < el.childNodes.length
-                  ? el.childNodes.item(edit.index)
-                  : el.lastChild,
-              );
-            } else {
-              el.appendChild(node);
-            }
-          }
-        }
-      }
-
-      return root;
-    }
+    };
   }
 
-  return new Block();
+  return (props?: Props | null) => new B(props);
 };

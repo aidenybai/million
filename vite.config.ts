@@ -13,7 +13,7 @@ export default defineConfig({
       packages,
     },
   },
-  plugins: [million({ importSource: packages, react: true })],
+  plugins: [million({ importSource: packages, react: true, skipOptimize: true })],
   test: {
     environment: 'jsdom',
     coverage: {
