@@ -7,7 +7,7 @@
   "dependencies": {
     "chart.js": "^3.9.1",
     "million": "1.11.7",
-    "next": "^12.3.3",
+    "next": "^12.3.4",
     "react": "^17.0.2",
     "react-chartjs-2": "^4.3.1",
     "react-dom": "^17.0.2",
@@ -20,7 +20,7 @@
     "copy-to-clipboard": "^3.3.3",
     "nextra": "2.0.0-beta.17",
     "nextra-theme-docs": "2.0.0-beta.17",
-    "postcss": "^8.4.19",
+    "postcss": "^8.4.20",
     "react-hot-toast": "^2.4.0",
     "react-lite-youtube-embed": "^2.3.52",
     "react-modal-video": "^1.2.10",
