@@ -19,7 +19,7 @@ function jsxRaw(
     props.children = undefined;
     if (key) props.key = key;
   }
-  return h(tag, props, ...children);
+  return h.call(this, tag, props, ...children);
 }
 
 const jsx = compat(jsxRaw);
