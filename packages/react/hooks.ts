@@ -3,6 +3,7 @@
 // - https://github.com/WebReflection/augmentor/blob/master/esm/index.js
 // - https://github.com/WebReflection/umap/blob/master/esm/index.js
 
+/* eslint-disable no-self-compare */
 /* eslint-disable no-console */
 /* eslint-disable eqeqeq */
 /* eslint-disable no-sequences */
@@ -243,26 +244,37 @@ export const useDeferredValue = (value: any) => {
 export const useInsertionEffect = useLayoutEffect;
 
 // useSyncExternalStore
-// This implementation is grokked straight from Preact (ref: https://github.com/preactjs/preact/blob/6b92b1fab41599e6da4f96d65b07fdbe0b6ff2fc/compat/src/index.js#L136-L154)
+// This implementation is grokked straight from Preact (ref: https://github.com/preactjs/preact/blob/528a7760c1cdec7515d514c71875860528e6dc12/compat/src/index.js#L142-L171)
 // (c) 2015-present Jason Miller
 export const useSyncExternalStore = (subscribe, getSnapshot) => {
-  const [state, setState] = useState(getSnapshot);
-
   const value = getSnapshot();
 
-  useLayoutEffect(() => {
-    if (value !== state) {
-      setState(() => value);
-    }
-  }, [subscribe, value, getSnapshot]);
+	const [{ instance }, forceUpdate] = useState({
+		instance: { value, getSnapshot }
+	});
 
-  useEffect(() => {
-    return subscribe(() => {
-      setState(() => getSnapshot());
-    });
-  }, [subscribe, getSnapshot]);
+	useLayoutEffect(() => {
+		instance.value = value;
+		instance.getSnapshot = getSnapshot;
 
-  return state;
+		if (!is(value, getSnapshot())) {
+			forceUpdate({ instance });
+		}
+	}, [subscribe, value, getSnapshot]);
+
+	useEffect(() => {
+		if (!is(instance.value, instance.getSnapshot())) {
+			forceUpdate({ instance });
+		}
+
+		return subscribe(() => {
+			if (!is(instance.value, instance.getSnapshot())) {
+				forceUpdate({ instance });
+			}
+		});
+	}, [subscribe]);
+
+	return value;
 }
 
 // useImperativeHandle
@@ -275,6 +287,10 @@ export const useImperativeHandle = (ref, create) => {
 
 function different(value, i) {
   return value !== this[i];
+}
+
+function is(x, y) {
+	return (x === y && (x !== 0 || 1 / x === 1 / y)) || (x !== x && y !== y);
 }
 
 // useDelta
