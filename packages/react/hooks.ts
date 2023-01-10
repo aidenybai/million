@@ -245,10 +245,23 @@ export const useInsertionEffect = useLayoutEffect;
 
 // useSyncExternalStore
 // This implementation is grokked straight from Preact (ref: https://github.com/preactjs/preact/blob/528a7760c1cdec7515d514c71875860528e6dc12/compat/src/index.js#L142-L171)
+// which is in turn ported from React's shim (ref: https://github.com/facebook/react/blob/main/packages/use-sync-external-store/src/useSyncExternalStoreShimClient.js)
 // (c) 2015-present Jason Miller
+//
+// Disclaimer: This shim breaks many of the rules of React, and only works
+// because updates are always synchronous. Million.js doesn't have concurrent
+// rendering (Both preact and Million.js performs synchronous rendering just
+// like React pre-18), and it is the only reason why react's shim also works for
+// Million.js (and preact).
 export const useSyncExternalStore = (subscribe, getSnapshot) => {
+  // Read the current snapshot from the store on every render. This breaks the
+  // normal rules of React, and only works because store updates are
+  // always synchronous.
   const value = getSnapshot();
 
+  // Because updates are synchronous, we force a re-render whenever the
+  // subscribed state changes by updating an some arbitrary useState hook. Then,
+  // during render, we call getSnapshot to read the current value.
 	const [{ instance }, forceUpdate] = useState({
 		instance: { value, getSnapshot }
 	});
