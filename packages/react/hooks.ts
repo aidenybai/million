@@ -3,6 +3,7 @@
 // - https://github.com/WebReflection/augmentor/blob/master/esm/index.js
 // - https://github.com/WebReflection/umap/blob/master/esm/index.js
 
+/* eslint-disable no-self-compare */
 /* eslint-disable no-console */
 /* eslint-disable eqeqeq */
 /* eslint-disable no-sequences */
@@ -243,26 +244,50 @@ export const useDeferredValue = (value: any) => {
 export const useInsertionEffect = useLayoutEffect;
 
 // useSyncExternalStore
-// This implementation is grokked straight from Preact (ref: https://github.com/preactjs/preact/blob/6b92b1fab41599e6da4f96d65b07fdbe0b6ff2fc/compat/src/index.js#L136-L154)
+// This implementation is grokked straight from Preact (ref: https://github.com/preactjs/preact/blob/528a7760c1cdec7515d514c71875860528e6dc12/compat/src/index.js#L142-L171)
+// which is in turn ported from React's shim (ref: https://github.com/facebook/react/blob/main/packages/use-sync-external-store/src/useSyncExternalStoreShimClient.js)
 // (c) 2015-present Jason Miller
+//
+// Disclaimer: This shim breaks many of the rules of React, and only works
+// because updates are always synchronous. Million.js doesn't have concurrent
+// rendering (Both preact and Million.js performs synchronous rendering just
+// like React pre-18), and it is the only reason why react's shim also works for
+// Million.js (and preact).
 export const useSyncExternalStore = (subscribe, getSnapshot) => {
-  const [state, setState] = useState(getSnapshot);
-
+  // Read the current snapshot from the store on every render. This breaks the
+  // normal rules of React, and only works because store updates are
+  // always synchronous.
   const value = getSnapshot();
 
-  useLayoutEffect(() => {
-    if (value !== state) {
-      setState(() => value);
-    }
-  }, [subscribe, value, getSnapshot]);
+  // Because updates are synchronous, we force a re-render whenever the
+  // subscribed state changes by updating an some arbitrary useState hook. Then,
+  // during render, we call getSnapshot to read the current value.
+	const [{ instance }, forceUpdate] = useState({
+		instance: { value, getSnapshot }
+	});
 
-  useEffect(() => {
-    return subscribe(() => {
-      setState(() => getSnapshot());
-    });
-  }, [subscribe, getSnapshot]);
+	useLayoutEffect(() => {
+		instance.value = value;
+		instance.getSnapshot = getSnapshot;
 
-  return state;
+		if (!is(value, getSnapshot())) {
+			forceUpdate({ instance });
+		}
+	}, [subscribe, value, getSnapshot]);
+
+	useEffect(() => {
+		if (!is(instance.value, instance.getSnapshot())) {
+			forceUpdate({ instance });
+		}
+
+		return subscribe(() => {
+			if (!is(instance.value, instance.getSnapshot())) {
+				forceUpdate({ instance });
+			}
+		});
+	}, [subscribe]);
+
+	return value;
 }
 
 // useImperativeHandle
@@ -275,6 +300,10 @@ export const useImperativeHandle = (ref, create) => {
 
 function different(value, i) {
   return value !== this[i];
+}
+
+function is(x, y) {
+	return (x === y && (x !== 0 || 1 / x === 1 / y)) || (x !== x && y !== y);
 }
 
 // useDelta
