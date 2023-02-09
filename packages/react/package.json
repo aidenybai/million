@@ -2,9 +2,5 @@
   "private": true,
   "main": "./index.ts",
   "module": "./index.ts",
-  "devDependencies": {
-    "fast-array-diff": "^1.0.1",
-    "s-js": "^0.4.9",
-    "use-atom": "^0.8.0"
-  }
+  "devDependencies": {}
 }

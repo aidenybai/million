@@ -1,3 +1,5 @@
+import type { Hole } from "./block";
+
 /* eslint-disable @typescript-eslint/no-empty-function */
 export type Props = Record<string, any>;
 
@@ -5,13 +7,19 @@ export type VNode = string | VElement;
 
 export class Block {
   el?: HTMLElement;
+  _parent?: HTMLElement | null;
   props?: Props | null;
   key?: string;
-  edits: Edit[] = [];
+  edits?: Edit[];
+  cache?: Map<number, HTMLElement>;
   patch(_block: Block) {}
   mount(_parent?: HTMLElement, _refNode: Node | null = null) {}
+  move(_block: Block | null = null, _refNode: Node | null = null) {}
   remove() {}
   toString() {}
+  get parent(): HTMLElement | null | undefined {
+    return this._parent;
+  }
 }
 
 export interface VElement {
@@ -44,20 +52,24 @@ export const enum DeltaTypes {
 
 export const enum EditType {
   Attribute,
-  Child,
   Block,
+  Child,
+  Event,
+  Text,
 }
 
 export interface EditAttribute {
   type: EditType.Attribute;
   name: string;
-  hole: string;
+  hole: Hole;
+  static?: boolean;
 }
 
 export interface EditChild {
   type: EditType.Child;
   index: number;
-  hole: string;
+  hole: Hole;
+  static?: boolean;
 }
 
 export interface EditBlock {
@@ -66,8 +78,23 @@ export interface EditBlock {
   index: number;
 }
 
+export interface EditEvent {
+  type: EditType.Event;
+  name: string;
+  listener: EventListener;
+  patch?: (newValue: EventListener) => void;
+  hole?: Hole;
+  static?: boolean;
+}
+
+export interface EditText {
+  type: EditType.Text;
+  value: string;
+  index: number;
+}
+
 export interface Edit {
   path: number[];
-  edits: (EditAttribute | EditChild | EditBlock)[];
-  el?: HTMLElement;
+  edits: (EditAttribute | EditChild | EditBlock | EditEvent)[];
+  inits: (EditEvent | EditText)[];
 }

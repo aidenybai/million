@@ -1,3 +1,4 @@
+import { Hole } from '../next/block';
 import { className, kebab, m, mergeHooks, style } from '../million/m';
 import { Flags } from '../million/types';
 import { Fragment } from './jsx';
@@ -127,7 +128,10 @@ export function h(
       flag = props.flag;
       props.flag = undefined;
     }
-    if (typeof props.className === 'object') {
+    if (
+      typeof props.className === 'object' &&
+      !(props.className instanceof Hole)
+    ) {
       props.className = className(props.className as Record<string, boolean>);
     }
     if (typeof props.style === 'object') {
