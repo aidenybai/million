@@ -1,4 +1,3 @@
-import { createElement, patch as patchVNode } from '../million';
 import { IS_VOID_ELEMENT } from './constants';
 import {
   setTextContent$,
@@ -6,6 +5,7 @@ import {
   cloneNode$,
   insertBefore$,
   setAttribute,
+  replaceChild$,
   createEventListener,
   remove$,
   insertText,
@@ -16,7 +16,7 @@ import type { Edit, EditChild, Props, VElement } from './types';
 export class Hole {
   key: string;
   once = false;
-  wire?: (value: any) => any;
+  wire?: (props: Props) => any;
   constructor(key: string) {
     this.key = key;
   }
@@ -33,13 +33,25 @@ const HOLE_PROXY = new Proxy(
   },
 );
 
-export const once = (hole: Hole) => {
+export const $once = (hole: Hole) => {
   hole.once = true;
 };
 
-export const wire = (value: (v: any) => any) => {
+export const $wire = (
+  value: (props: Props) => any,
+  keyOrHole?: string | Hole,
+) => {
+  const cache = new Map();
   const hole = new Hole('');
-  hole.wire = value;
+  const isMemo = keyOrHole !== undefined;
+  const isHole = keyOrHole instanceof Hole;
+  hole.wire = (props: Props) => {
+    const key = isHole ? props[keyOrHole.key] : keyOrHole;
+    if (isMemo && cache.has(key)) return cache.get(key);
+    const ret = value(props);
+    if (isMemo) cache.set(key, ret);
+    return ret;
+  };
   return hole;
 };
 
@@ -69,11 +81,22 @@ export const compileTemplate = (
 
     // eslint-disable-next-line @typescript-eslint/prefer-string-starts-ends-with
     if (name[0] === 'o' && name[1] === 'n') {
-      current[value instanceof Hole ? 'edits' : 'inits'].push({
+      const isValueHole = value instanceof Hole;
+      current.edits.push({
         type: EditType.Event,
         listener: value,
-        hole: value,
-        name,
+        hole: isValueHole ? value : undefined,
+        mount(el: HTMLElement, newValue?: any) {
+          const event = createEventListener(
+            el,
+            name,
+            isValueHole ? newValue : value,
+          );
+          event.mount();
+          if (isValueHole) {
+            this.patch = event.patch;
+          }
+        },
       });
       continue;
     }
@@ -82,7 +105,12 @@ export const compileTemplate = (
       current.edits.push({
         type: EditType.Attribute,
         hole: value,
-        name,
+        mount(el: HTMLElement, newValue: any) {
+          setAttribute(el, name, newValue);
+        },
+        patch(el: HTMLElement, newValue: any) {
+          setAttribute(el, name, newValue);
+        },
       });
       continue;
     }
@@ -104,7 +132,15 @@ export const compileTemplate = (
       current.edits.push({
         type: EditType.Child,
         hole: child,
-        index: i,
+        mount(el: HTMLElement, value: any) {
+          insertText(el, value, i);
+        },
+        patch(el: HTMLElement, value: any) {
+          const newNode = document.createTextNode(String(value));
+          const oldNode = childNodes$.call(el)[i] as HTMLElement;
+
+          replaceChild$.call(el, newNode, oldNode);
+        },
       });
       continue;
     }
@@ -112,8 +148,12 @@ export const compileTemplate = (
     if (child instanceof Block) {
       current.edits.push({
         type: EditType.Block,
-        block: child,
-        index: i,
+        mount(el: HTMLElement) {
+          child.mount(el, childNodes$.call(el)[i]);
+        },
+        patch(block: Block) {
+          child.patch(block);
+        },
       });
       continue;
     }
@@ -122,8 +162,9 @@ export const compileTemplate = (
       if (canMergeString) {
         current.inits.push({
           type: EditType.Text,
-          index: i,
-          value: child,
+          mount(el: HTMLElement) {
+            insertText(el, child, i);
+          },
         });
         continue;
       }
@@ -137,7 +178,9 @@ export const compileTemplate = (
     children += compileTemplate(child, edits, [...path, k++]);
   }
 
-  if (current.edits.length) edits.push(current);
+  if (current.inits.length || current.edits.length) {
+    edits.push(current);
+  }
 
   return `<${vnode.tag}${props}>${children}</${vnode.tag}>`;
 };
@@ -168,7 +211,6 @@ export const createBlock = (
   };
 
   class ElementBlock extends Block {
-    edits: Edit[];
     constructor(props?: Props | null, key?: string | null) {
       super();
       this.props = props;
@@ -207,15 +249,7 @@ export const createBlock = (
     const el = getCurrentElement(current, firstChild);
     for (let k = 0, l = current.inits.length; k < l; ++k) {
       const init = current.inits[k]!;
-      if (init.type === EditType.Text) {
-        insertText(el, init.value, init.index);
-        continue;
-      }
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      if (init.type === EditType.Event) {
-        createEventListener(el, init.name, init.listener).mount();
-        continue;
-      }
+      init.mount(el);
     }
   }
 
@@ -226,47 +260,25 @@ export const createBlock = (
     ): HTMLElement {
       const root = cloneNode$.call(firstChild, true) as HTMLElement;
 
-      // TODO: flatten to array
-      // have a this.accumulator and push [hole, updateFunction()] to it instead of searching edits each time.
       for (let i = 0, j = edits.length; i < j; ++i) {
         const current = edits[i]!;
         const el = getCurrentElement(current, root, this.cache, i);
         for (let k = 0, l = current.edits.length; k < l; ++k) {
           const edit = current.edits[k]!;
-          if (edit.type === EditType.Block) {
-            edit.block.mount(el, childNodes$.call(el)[edit.index]);
-            continue;
-          }
-          const value = edit.hole
-            ? edit.hole.wire?.(this.props) ?? this.props![edit.hole.key]
-            : undefined;
-          if (edit.type === EditType.Event) {
-            const event = createEventListener(
-              el,
-              edit.name,
-              value ?? edit.listener,
-            );
-            event.mount();
-            edit.patch = event.patch;
-            continue;
-          }
-          if (edit.type === EditType.Attribute) {
-            setAttribute(el, edit.name, value);
-            continue;
-          }
+          const value =
+            'hole' in edit && edit.hole
+              ? edit.hole.wire?.(this.props) ?? this.props![edit.hole.key]
+              : undefined;
 
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-          if (edit.type === EditType.Child) {
-            if (value instanceof Block) {
-              value.mount(el, childNodes$.call(el)[edit.index]);
-              continue;
-            }
-            if (typeof value === 'object' && value.tag) {
-              const node = createElement(value);
-              insertBefore$.call(el, node, childNodes$.call(el)[edit.index]!);
-            }
-            insertText(el, value, edit.index);
+          if (edit.type === EditType.Child && value instanceof Block) {
+            value.mount(el);
+            continue;
           }
+          if (edit.type === EditType.Event) {
+            edit.mount(el, value ?? edit.listener);
+            continue;
+          }
+          edit.mount(el, value);
         }
       }
 
@@ -276,13 +288,13 @@ export const createBlock = (
       return root;
     };
 
-    // TODO: flatten to array
-    // use this.accumulator and push [hole, updateFunction()] to it instead of searching edits each time.
     ElementBlock.prototype.patch = function patch(
       block: ElementBlock,
     ): HTMLElement {
       const root = this.el as HTMLElement;
       if (!block.props) return root;
+      const props = this.props;
+      this.props = block.props;
 
       for (let i = 0, j = edits.length; i < j; ++i) {
         const current = edits[i]!;
@@ -290,46 +302,27 @@ export const createBlock = (
         for (let k = 0, l = current.edits.length; k < l; ++k) {
           const edit = current.edits[k]!;
           if (edit.type === EditType.Block) {
-            edit.block.patch(block.edits[i]![k].block);
+            edit.patch(block.edits[i]![k].block);
             continue;
           }
-          const value = edit.hole
-            ? edit.hole.wire?.(this.props) ?? this.props![edit.hole.key]
-            : undefined;
+          if (!('hole' in edit) || !edit.hole) continue;
+          const oldValue = edit.hole.wire?.(props) ?? props[edit.hole.key];
+          const newValue =
+            edit.hole.wire?.(block.props) ?? block.props[edit.hole.key];
 
-          if (
-            edit.hole &&
-            (value === this.props?.[edit.hole.key] || edit.hole.once)
-          )
-            continue;
+          if (edit.hole && (newValue === oldValue || edit.hole.once)) continue;
+
           if (edit.type === EditType.Event) {
-            edit.patch?.(value);
+            edit.patch?.(newValue);
             continue;
           }
-          if (edit.type === EditType.Attribute) {
-            setAttribute(el, edit.name, value);
+          if (edit.type === EditType.Child && oldValue instanceof Block) {
+            const firstEdit = block.edits[i]?.edits[k] as EditChild;
+            const thisSubBlock = block.props[firstEdit.hole.key];
+            oldValue.patch(thisSubBlock);
+            continue;
           }
-          if (edit.type === EditType.Child) {
-            if (value instanceof Block) {
-              const firstEdit = this.edits[i]?.edits[k] as EditChild;
-              const thisSubBlock = this.props?.[firstEdit.hole.key];
-              thisSubBlock.patch(value);
-
-              continue;
-            }
-
-            if (typeof value === 'object' && value.tag) {
-              patchVNode(
-                childNodes$.call(el)[edit.index] as HTMLElement,
-                value,
-              );
-              continue;
-            }
-            const node = document.createTextNode(String(value));
-            const child = childNodes$.call(el)[edit.index]!;
-
-            el.replaceChild(node, child);
-          }
+          edit.patch(el, newValue);
         }
       }
 
@@ -338,15 +331,11 @@ export const createBlock = (
   }
 
   return (props?: Props | null, key?: string | null) => {
-    return new ElementBlock(props, key);
+    return new ElementBlock(props, key ?? props.key);
   };
 };
 
-export const patchBlock = (oldBlock: Block, newBlock: Block) => {
-  oldBlock.patch(newBlock);
-};
-
-export const fragmentBlock = (blocks: Block[]) => {
+export const fragment = (blocks: Block[]) => {
   class FragmentBlock extends Block {
     children: Block[];
     constructor() {

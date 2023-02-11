@@ -1,4 +1,4 @@
-import type { Hole } from "./block";
+import type { Hole } from './block';
 
 /* eslint-disable @typescript-eslint/no-empty-function */
 export type Props = Record<string, any>;
@@ -58,39 +58,37 @@ export const enum EditType {
   Text,
 }
 
-export interface EditAttribute {
+export interface BaseEdit {
+  type: EditType;
+  mount(el: HTMLElement, value?: any): void;
+}
+
+export interface EditAttribute extends BaseEdit {
   type: EditType.Attribute;
-  name: string;
   hole: Hole;
-  static?: boolean;
+  patch(el: HTMLElement, value: any): void;
 }
 
-export interface EditChild {
+export interface EditChild extends BaseEdit {
   type: EditType.Child;
-  index: number;
   hole: Hole;
-  static?: boolean;
+  patch(el: HTMLElement, value: any): void;
 }
 
-export interface EditBlock {
+export interface EditBlock extends BaseEdit {
   type: EditType.Block;
-  block: Block;
-  index: number;
+  patch(block: Block): void;
 }
 
-export interface EditEvent {
+export interface EditEvent extends BaseEdit {
   type: EditType.Event;
-  name: string;
   listener: EventListener;
-  patch?: (newValue: EventListener) => void;
   hole?: Hole;
-  static?: boolean;
+  patch?(newValue: EventListener): void;
 }
 
-export interface EditText {
+export interface EditText extends BaseEdit {
   type: EditType.Text;
-  value: string;
-  index: number;
 }
 
 export interface Edit {

@@ -7,6 +7,7 @@ export const insertBefore$ = node$.insertBefore;
 export const hasChildNodes$ = node$.hasChildNodes;
 export const cloneNode$ = node$.cloneNode;
 export const appendChild$ = node$.appendChild;
+export const replaceChild$ = node$.replaceChild;
 export const removeChild$ = node$.removeChild;
 export const remove$ = element$.remove;
 export const addEventListener$ = node$.addEventListener;

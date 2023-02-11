@@ -1,1 +1,1 @@
-export { createBlock, patchBlock, fragmentBlock, once, wire } from './block';
+export { createBlock, patchBlock, fragment as fragmentBlock, once, wire } from './block';
