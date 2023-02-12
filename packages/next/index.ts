@@ -1,1 +1,3 @@
-export { createBlock, patchBlock, fragment as fragmentBlock, once, wire } from './block';
+export { createBlock } from './block';
+export { createFragment } from './fragment';
+export { $once, $wire } from './$';

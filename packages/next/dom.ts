@@ -1,6 +1,15 @@
 /* eslint-disable @typescript-eslint/prefer-string-starts-ends-with */
 /* eslint-disable @typescript-eslint/unbound-method */
 
+import {
+  IS_NON_DIMENSIONAL,
+  EVENT_LISTENERS_PROP,
+  XLINK_NS,
+  XML_NS,
+  X_CHAR,
+} from './constants';
+import { Edit } from './types';
+
 export const node$ = Node.prototype;
 export const element$ = Element.prototype;
 export const insertBefore$ = node$.insertBefore;
@@ -21,13 +30,6 @@ export const setTextContent$ = Object.getOwnPropertyDescriptor(
 )!.set!;
 export const childNodes$ = Object.getOwnPropertyDescriptor(node$, 'childNodes')!
   .get!;
-
-export const EVENT_LISTENERS_PROP = '__listeners';
-export const IS_NON_DIMENSIONAL =
-  /acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i;
-export const XLINK_NS = 'http://www.w3.org/1999/xlink';
-export const XML_NS = 'http://www.w3.org/2000/xmlns/';
-export const X_CHAR = 120;
 
 let listenerPointer = 0;
 export const createEventListener = (
@@ -136,4 +138,18 @@ export const setAttribute = (
   } else {
     removeAttribute$.call(el, name);
   }
+};
+
+export const getCurrentElement = (
+  current: Edit,
+  root: HTMLElement,
+  cache?: Map<number, HTMLElement>,
+  slot?: number,
+): HTMLElement => {
+  if (cache && slot && cache.has(slot)) return cache.get(slot)!;
+  for (let k = 0, l = current.path.length; k < l; ++k) {
+    root = childNodes$.call(root)[current.path[k]!] as HTMLElement;
+  }
+  if (cache && slot) cache.set(slot, root);
+  return root;
 };

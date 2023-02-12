@@ -1,16 +1,24 @@
-import type { Hole } from './block';
-
 /* eslint-disable @typescript-eslint/no-empty-function */
 export type Props = Record<string, any>;
 
 export type VNode = string | VElement;
 
+export class Hole {
+  key: string;
+  once = false;
+  wire?: (props: Props) => any;
+  constructor(key: string) {
+    this.key = key;
+  }
+}
+
 export class Block {
+  root: HTMLElement;
+  edits: Edit[];
   el?: HTMLElement;
   _parent?: HTMLElement | null;
   props?: Props | null;
   key?: string;
-  edits?: Edit[];
   cache?: Map<number, HTMLElement>;
   patch(_block: Block) {}
   mount(_parent?: HTMLElement, _refNode: Node | null = null) {}
