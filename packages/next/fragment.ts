@@ -1,5 +1,6 @@
 import { setTextContent$ } from './dom';
 import { Block } from './types';
+import { mount$, patch$, move$, remove$ } from './block';
 
 class FragmentBlock extends Block {
   children: Block[];
@@ -25,13 +26,6 @@ class FragmentBlock extends Block {
       fragment.mount(parent);
       return;
     }
-
-    const {
-      mount: mount$,
-      patch: patch$,
-      move: move$,
-      remove: remove$,
-    } = oldChildren[0] || newChildren[0];
 
     let oldHead = 0;
     let newHead = 0;
@@ -128,9 +122,7 @@ class FragmentBlock extends Block {
     }
   }
   mount(parent: HTMLElement, refNode: Node | null = null) {
-    let mount$;
     for (let i = 0, j = this.children.length; i < j; ++i) {
-      if (!mount$) mount$ = this.children[i]!.mount;
       const block = this.children[i]!;
       mount$.call(block, parent, refNode);
     }

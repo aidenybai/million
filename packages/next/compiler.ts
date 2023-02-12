@@ -1,6 +1,12 @@
 import { IS_VOID_ELEMENT } from './constants';
-import { childNodes$, createEventListener, insertText, replaceChild$, setAttribute } from './dom';
-import { Block, Edit, EditType, Hole, VElement } from './types';
+import {
+  childNodes$,
+  createEventListener,
+  insertText,
+  replaceChild$,
+  setAttribute,
+} from './dom';
+import { Block, Edit, EditType, EditEvent, Hole, VElement } from './types';
 
 export const compileTemplate = (
   vnode: VElement,
@@ -30,18 +36,7 @@ export const compileTemplate = (
         type: EditType.Event,
         listener: value,
         hole: isValueHole ? value : undefined,
-        mount(el: HTMLElement, newValue?: any) {
-          // Event listeners can be hole or function
-          const event = createEventListener(
-            el,
-            name,
-            isValueHole ? newValue : value,
-          );
-          event.mount();
-          if (isValueHole) {
-            this.patch = event.patch;
-          }
-        },
+        name,
       });
       continue;
     }
@@ -50,12 +45,7 @@ export const compileTemplate = (
       current.edits.push({
         type: EditType.Attribute,
         hole: value,
-        mount(el: HTMLElement, newValue: any) {
-          setAttribute(el, name, newValue);
-        },
-        patch(el: HTMLElement, newValue: any) {
-          setAttribute(el, name, newValue);
-        },
+        name,
       });
       continue;
     }
@@ -77,15 +67,7 @@ export const compileTemplate = (
       current.edits.push({
         type: EditType.Child,
         hole: child,
-        mount(el: HTMLElement, value: any) {
-          insertText(el, value, i);
-        },
-        patch(el: HTMLElement, value: any) {
-          const newNode = document.createTextNode(String(value));
-          const oldNode = childNodes$.call(el)[i] as HTMLElement;
-
-          replaceChild$.call(el, newNode, oldNode);
-        },
+        index: i,
       });
       continue;
     }
@@ -93,12 +75,8 @@ export const compileTemplate = (
     if (child instanceof Block) {
       current.edits.push({
         type: EditType.Block,
-        mount(el: HTMLElement) {
-          child.mount(el, childNodes$.call(el)[i]);
-        },
-        patch(block: Block) {
-          child.patch(block);
-        },
+        block: child,
+        index: i,
       });
       continue;
     }
@@ -107,9 +85,8 @@ export const compileTemplate = (
       if (canMergeString) {
         current.inits.push({
           type: EditType.Text,
-          mount(el: HTMLElement) {
-            insertText(el, child, i);
-          },
+          index: i,
+          value: child,
         });
         continue;
       }

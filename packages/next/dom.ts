@@ -69,14 +69,19 @@ export const insertText = (
   el: HTMLElement,
   value: any,
   index: number,
-): void => {
-  const node = document.createTextNode(String(value));
+): Text => {
+  const node = document.createTextNode(value);
   if (hasChildNodes$.call(el) && index < el.childNodes.length) {
     const child = el.childNodes.item(index);
     insertBefore$.call(el, node, child);
   } else {
     appendChild$.call(el, node);
   }
+  return node;
+};
+
+export const setText = (el: HTMLElement, value: string, index: number) => {
+  setTextContent$.call(childNodes$.call(el)[index], value);
 };
 
 export const setAttribute = (

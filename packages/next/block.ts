@@ -1,5 +1,15 @@
 import { compileTemplate } from './compiler';
-import { cloneNode$, getCurrentElement, insertBefore$, remove$ } from './dom';
+import {
+  childNodes$,
+  cloneNode$,
+  createEventListener,
+  getCurrentElement,
+  insertBefore$,
+  insertText,
+  setAttribute,
+  setText,
+  remove$ as removeElement$,
+} from './dom';
 import type { Edit, EditChild, Props, VElement } from './types';
 import { Block, EditType, Hole } from './types';
 
@@ -17,6 +27,53 @@ class ElementBlock extends Block {
     this.cache = new Map<number, HTMLElement>();
     this.key = key;
   }
+  mount(parent?: HTMLElement, refNode: Node | null = null): HTMLElement {
+    const root = cloneNode$.call(this.root, true) as HTMLElement;
+
+    for (let i = 0, j = this.edits.length; i < j; ++i) {
+      const current = this.edits[i]!;
+      const el = getCurrentElement(current, root, this.cache, i);
+      for (let k = 0, l = current.edits.length; k < l; ++k) {
+        const edit = current.edits[k]!;
+        const hasHole = 'hole' in edit && edit.hole;
+        const value = hasHole
+          ? edit.hole.wire?.(this.props) ?? this.props![edit.hole.key]
+          : undefined;
+
+        if (edit.type === EditType.Block) {
+          edit.block.mount(el, childNodes$.call(el)[edit.index]);
+        }
+        if (edit.type === EditType.Child) {
+          if (value instanceof Block) {
+            value.mount(el);
+            continue;
+          }
+
+          insertText(el, String(value), edit.index);
+        }
+        if (edit.type === EditType.Event) {
+          const event = createEventListener(
+            el,
+            edit.name,
+            hasHole ? value : edit.listener,
+          );
+          event.mount();
+          if (hasHole) {
+            edit.patch = event.patch;
+          }
+          continue;
+        }
+        if (edit.type === EditType.Attribute) {
+          setAttribute(el, edit.name, value);
+        }
+      }
+    }
+
+    this.el = root;
+    if (parent) insertBefore$.call(parent, root, refNode);
+
+    return root;
+  }
   patch(block: ElementBlock): HTMLElement {
     const root = this.el as HTMLElement;
     if (!block.props) return root;
@@ -29,7 +86,7 @@ class ElementBlock extends Block {
       for (let k = 0, l = current.edits.length; k < l; ++k) {
         const edit = current.edits[k]!;
         if (edit.type === EditType.Block) {
-          edit.patch(block.edits[i]![k].block);
+          edit.block.patch(block.edits[i]![k].block);
           continue;
         }
         if (!('hole' in edit) || !edit.hole) continue;
@@ -43,45 +100,20 @@ class ElementBlock extends Block {
           edit.patch?.(newValue);
           continue;
         }
-        if (edit.type === EditType.Child && oldValue instanceof Block) {
-          const firstEdit = block.edits[i]?.edits[k] as EditChild;
-          const thisSubBlock = block.props[firstEdit.hole.key];
-          oldValue.patch(thisSubBlock);
-          continue;
+        if (edit.type === EditType.Attribute) {
+          setAttribute(el, edit.name, newValue);
         }
-        edit.patch(el, newValue);
+        if (edit.type === EditType.Child) {
+          if (oldValue instanceof Block) {
+            const firstEdit = block.edits[i]?.edits[k] as EditChild;
+            const thisSubBlock = block.props[firstEdit.hole.key];
+            oldValue.patch(thisSubBlock);
+            continue;
+          }
+          setText(el, String(newValue), edit.index);
+        }
       }
     }
-
-    return root;
-  }
-  mount(parent?: HTMLElement, refNode: Node | null = null): HTMLElement {
-    const root = cloneNode$.call(this.root, true) as HTMLElement;
-
-    for (let i = 0, j = this.edits.length; i < j; ++i) {
-      const current = this.edits[i]!;
-      const el = getCurrentElement(current, root, this.cache, i);
-      for (let k = 0, l = current.edits.length; k < l; ++k) {
-        const edit = current.edits[k]!;
-        const value =
-          'hole' in edit && edit.hole
-            ? edit.hole.wire?.(this.props) ?? this.props![edit.hole.key]
-            : undefined;
-
-        if (edit.type === EditType.Child && value instanceof Block) {
-          value.mount(el);
-          continue;
-        }
-        if (edit.type === EditType.Event) {
-          edit.mount(el, value ?? edit.listener);
-          continue;
-        }
-        edit.mount(el, value);
-      }
-    }
-
-    this.el = root;
-    if (parent) insertBefore$.call(parent, root, refNode);
 
     return root;
   }
@@ -89,7 +121,7 @@ class ElementBlock extends Block {
     insertBefore$.call(this.parent, this.el!, block ? block.el! : refNode);
   }
   remove() {
-    remove$.call(this.el);
+    removeElement$.call(this.el);
   }
   toString() {
     return this.el?.outerHTML;
@@ -130,7 +162,9 @@ export const createBlock = (
     const el = getCurrentElement(current, root);
     for (let k = 0, l = current.inits.length; k < l; ++k) {
       const init = current.inits[k]!;
-      init.mount(el);
+      if (init.type === EditType.Text) {
+        insertText(el, init.value, init.index);
+      }
     }
   }
 
@@ -138,3 +172,8 @@ export const createBlock = (
     return new ElementBlock(root, edits, props, key ?? props.key);
   };
 };
+
+export const mount$ = ElementBlock.prototype.mount;
+export const patch$ = ElementBlock.prototype.patch;
+export const move$ = ElementBlock.prototype.move;
+export const remove$ = ElementBlock.prototype.remove;

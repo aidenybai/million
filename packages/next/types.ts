@@ -66,41 +66,42 @@ export const enum EditType {
   Text,
 }
 
-export interface BaseEdit {
-  type: EditType;
-  mount(el: HTMLElement, value?: any): void;
-}
-
-export interface EditAttribute extends BaseEdit {
+export interface EditAttribute {
   type: EditType.Attribute;
   hole: Hole;
-  patch(el: HTMLElement, value: any): void;
+  name: string;
 }
 
-export interface EditChild extends BaseEdit {
+export interface EditChild {
   type: EditType.Child;
   hole: Hole;
-  patch(el: HTMLElement, value: any): void;
+  index: number;
 }
 
-export interface EditBlock extends BaseEdit {
+export interface EditBlock {
   type: EditType.Block;
-  patch(block: Block): void;
+  block: Block;
+  index: number;
 }
 
-export interface EditEvent extends BaseEdit {
+export interface EditEvent {
   type: EditType.Event;
   listener: EventListener;
   hole?: Hole;
+  name: string;
   patch?(newValue: EventListener): void;
 }
 
-export interface EditText extends BaseEdit {
+export interface EditText {
   type: EditType.Text;
+  index: number;
+  value: any;
+  edit?: Edit;
 }
 
 export interface Edit {
   path: number[];
   edits: (EditAttribute | EditChild | EditBlock | EditEvent)[];
   inits: (EditEvent | EditText)[];
+  el?: Text;
 }
