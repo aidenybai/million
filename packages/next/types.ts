@@ -13,8 +13,8 @@ export class Hole {
 }
 
 export class Block {
-  root: HTMLElement;
-  edits: Edit[];
+  root?: HTMLElement;
+  edits?: Edit[];
   el?: HTMLElement;
   _parent?: HTMLElement | null;
   props?: Props | null;
@@ -89,19 +89,17 @@ export interface EditEvent {
   listener: EventListener;
   hole?: Hole;
   name: string;
-  patch?(newValue: EventListener): void;
+  patch?: (newValue: EventListener) => void;
 }
 
 export interface EditText {
   type: EditType.Text;
   index: number;
   value: any;
-  edit?: Edit;
 }
 
 export interface Edit {
   path: number[];
   edits: (EditAttribute | EditChild | EditBlock | EditEvent)[];
   inits: (EditEvent | EditText)[];
-  el?: Text;
 }

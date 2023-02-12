@@ -147,6 +147,6 @@ class FragmentBlock extends Block {
   }
 }
 
-export const createFragment = (blocks: Block[]) => {
+export const createFragment = (blocks: Block[], dummy?: boolean) => {
   return new FragmentBlock(blocks);
 };

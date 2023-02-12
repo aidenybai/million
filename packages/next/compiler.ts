@@ -1,12 +1,6 @@
 import { IS_VOID_ELEMENT } from './constants';
-import {
-  childNodes$,
-  createEventListener,
-  insertText,
-  replaceChild$,
-  setAttribute,
-} from './dom';
-import { Block, Edit, EditType, EditEvent, Hole, VElement } from './types';
+import { Block, EditType, Hole } from './types';
+import type { Edit, VElement } from './types';
 
 export const compileTemplate = (
   vnode: VElement,

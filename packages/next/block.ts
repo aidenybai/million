@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/unbound-method */
 import { compileTemplate } from './compiler';
 import {
   childNodes$,
@@ -10,15 +11,24 @@ import {
   setText,
   remove$ as removeElement$,
 } from './dom';
-import type { Edit, EditChild, Props, VElement } from './types';
 import { Block, EditType, Hole } from './types';
+import type { Edit, EditChild, Props, VElement } from './types';
+
+const shallowDiff = (a: Props, b: Props) => {
+  for (const i in a) {
+    if (a[i] !== b[i]) return true;
+  }
+  return false;
+};
 
 class ElementBlock extends Block {
+  root: HTMLElement;
+  edits: Edit[];
   constructor(
     root: HTMLElement,
     edits: Edit[],
     props?: Props | null,
-    key?: string | null,
+    key?: string,
   ) {
     super();
     this.root = root;
@@ -32,12 +42,13 @@ class ElementBlock extends Block {
 
     for (let i = 0, j = this.edits.length; i < j; ++i) {
       const current = this.edits[i]!;
+      // THIS IS THE BOTTLENECK V
       const el = getCurrentElement(current, root, this.cache, i);
       for (let k = 0, l = current.edits.length; k < l; ++k) {
         const edit = current.edits[k]!;
         const hasHole = 'hole' in edit && edit.hole;
         const value = hasHole
-          ? edit.hole.wire?.(this.props) ?? this.props![edit.hole.key]
+          ? edit.hole!.wire?.(this.props!) ?? this.props![edit.hole!.key]
           : undefined;
 
         if (edit.type === EditType.Block) {
@@ -74,10 +85,11 @@ class ElementBlock extends Block {
 
     return root;
   }
-  patch(block: ElementBlock): HTMLElement {
+  patch(block: Block): HTMLElement {
     const root = this.el as HTMLElement;
     if (!block.props) return root;
-    const props = this.props;
+    const props = this.props!;
+    if (!shallowDiff(props, block.props)) return root;
     this.props = block.props;
 
     for (let i = 0, j = this.edits.length; i < j; ++i) {
@@ -86,7 +98,7 @@ class ElementBlock extends Block {
       for (let k = 0, l = current.edits.length; k < l; ++k) {
         const edit = current.edits[k]!;
         if (edit.type === EditType.Block) {
-          edit.block.patch(block.edits[i]![k].block);
+          edit.block.patch(block.edits?.[i]![k].block);
           continue;
         }
         if (!('hole' in edit) || !edit.hole) continue;
@@ -94,7 +106,7 @@ class ElementBlock extends Block {
         const newValue =
           edit.hole.wire?.(block.props) ?? block.props[edit.hole.key];
 
-        if (edit.hole && (newValue === oldValue || edit.hole.once)) continue;
+        if (newValue === oldValue || edit.hole.once) continue;
 
         if (edit.type === EditType.Event) {
           edit.patch?.(newValue);
@@ -105,7 +117,7 @@ class ElementBlock extends Block {
         }
         if (edit.type === EditType.Child) {
           if (oldValue instanceof Block) {
-            const firstEdit = block.edits[i]?.edits[k] as EditChild;
+            const firstEdit = block.edits?.[i]?.edits[k] as EditChild;
             const thisSubBlock = block.props[firstEdit.hole.key];
             oldValue.patch(thisSubBlock);
             continue;
@@ -117,7 +129,7 @@ class ElementBlock extends Block {
 
     return root;
   }
-  move(block: ElementBlock | null = null, refNode: Node | null = null) {
+  move(block: Block | null = null, refNode: Node | null = null) {
     insertBefore$.call(this.parent, this.el!, block ? block.el! : refNode);
   }
   remove() {
@@ -168,8 +180,9 @@ export const createBlock = (
     }
   }
 
-  return (props?: Props | null, key?: string | null) => {
-    return new ElementBlock(root, edits, props, key ?? props.key);
+  return (props?: Props | null, key?: string) => {
+    key = key ?? props!.key;
+    return new ElementBlock(root, edits, props, key);
   };
 };
 
