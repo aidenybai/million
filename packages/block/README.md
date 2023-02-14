@@ -1,3 +1,6 @@
+> **Warning**:
+> This is a work in progress. The API is not stable and may change at any time.
+
 # `million/block`
 
 A low-level primitive for building compiled virtual DOM-based interactions.
@@ -8,10 +11,14 @@ A low-level primitive for building compiled virtual DOM-based interactions.
 
 ## Example Usage
 
+Inside the `/dev` folder, put the following code in `index.js`:
+
 ```js
-import { createBlock, fragment } from 'million/block';
+import { createBlock, fragment } from 'packages/block';
 
 const block = createBlock((props) => {
+  // Any prop within props isn't the actual value, it's a "Hole"
+  // always interpolate into the JSX.
   return (
     <div>
       <h1>{props.title}</h1>
@@ -35,3 +42,7 @@ root.patch(
   }),
 );
 ```
+
+## Acknowledgements
+
+This library is heavily inspired by [Voby](https://github.com/vobyjs/voby), [Blockdom](https://github.com/ged-odoo/blockdom), [ivi](https://github.com/localvoid/ivi), and [Preact](https://github.com/preactjs/preact), with many elements and concepts borrowed from each.
