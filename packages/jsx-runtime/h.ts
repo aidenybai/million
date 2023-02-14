@@ -1,4 +1,4 @@
-import { Hole } from '../next/block';
+import { Hole } from '../block';
 import { className, kebab, m, mergeHooks, style } from '../million/m';
 import { Flags } from '../million/types';
 import { Fragment } from './jsx';

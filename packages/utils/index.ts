@@ -1,14 +1,9 @@
-import { html } from '../html';
 import { h } from '../jsx-runtime/h';
 import { OLD_VNODE_FIELD } from '../million/types';
 import type { DOMNode, VNode, VProps } from '../million/types';
 
 export const fromStringToVNode = (htmlString: string): VNode | VNode[] => {
-  try {
-    return html([htmlString]);
-  } catch (_err) {
-    return fromDomNodeToVNode(fromStringToDomNode(htmlString))!;
-  }
+  return fromDomNodeToVNode(fromStringToDomNode(htmlString))!;
 };
 
 export const fromDomNodeToVNode = (el: DOMNode): VNode | undefined => {

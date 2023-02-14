@@ -96,22 +96,13 @@ importers:
       snabbdom: 3.5.1
       virtual-dom: 2.1.1
 
-  packages/html:
-    specifiers: {}
-
   packages/jsx-runtime:
     specifiers: {}
 
   packages/million:
     specifiers: {}
 
-  packages/morph:
-    specifiers: {}
-
   packages/react:
-    specifiers: {}
-
-  packages/router:
     specifiers: {}
 
   packages/utils:

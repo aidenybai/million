@@ -94,6 +94,7 @@ export class Block extends AbstractBlock {
             value.mount(el);
             continue;
           }
+          // insertText() on mount, setText() on patch
           insertText(el, String(value), edit.index);
         }
         if (edit.type === EditType.Event) {
