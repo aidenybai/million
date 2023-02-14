@@ -3,12 +3,9 @@ import { defineBuildConfig } from 'unbuild';
 export default defineBuildConfig({
   entries: [
     './packages/million',
-    './packages/next',
+    './packages/block',
     './packages/jsx-runtime',
     './packages/utils',
-    './packages/router',
-    './packages/html',
-    './packages/morph',
     './packages/vite-plugin-million',
     './packages/react',
     {

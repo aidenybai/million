@@ -1,8 +1,10 @@
-import { IS_VOID_ELEMENT } from './constants';
-import { Block, EditType, Hole } from './types';
+import { AbstractBlock, EditType, Hole } from './types';
 import type { Edit, VElement } from './types';
 
-export const compileTemplate = (
+const IS_VOID_ELEMENT =
+  /area|base|basefont|bgsound|br|col|command|embed|frame|hr|image|img|input|isindex|keygen|link|menuitem|meta|nextid|param|source|track|wbr/i;
+
+export const renderToTemplate = (
   vnode: VElement,
   edits: Edit[] = [],
   path: number[] = [],
@@ -66,7 +68,7 @@ export const compileTemplate = (
       continue;
     }
 
-    if (child instanceof Block) {
+    if (child instanceof AbstractBlock) {
       current.edits.push({
         type: EditType.Block,
         block: child,
@@ -91,7 +93,7 @@ export const compileTemplate = (
     }
 
     canMergeString = false;
-    children += compileTemplate(child, edits, [...path, k++]);
+    children += renderToTemplate(child, edits, [...path, k++]);
   }
 
   if (current.inits.length || current.edits.length) {

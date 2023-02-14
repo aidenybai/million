@@ -1,10 +1,14 @@
 import { setTextContent$ } from './dom';
-import { Block } from './types';
+import { AbstractBlock } from './types';
 import { mount$, patch$, move$, remove$ } from './block';
 
-class FragmentBlock extends Block {
-  children: Block[];
-  constructor(blocks: Block[]) {
+export const fragment = (blocks: AbstractBlock[]) => {
+  return new FragmentBlock(blocks);
+};
+
+export class FragmentBlock extends AbstractBlock {
+  children: AbstractBlock[];
+  constructor(blocks: AbstractBlock[]) {
     super();
     this.children = blocks;
   }
@@ -147,7 +151,3 @@ class FragmentBlock extends Block {
     return this._parent;
   }
 }
-
-export const createFragment = (blocks: Block[]) => {
-  return new FragmentBlock(blocks);
-};

@@ -1,15 +1,15 @@
-/* eslint-disable @typescript-eslint/prefer-string-starts-ends-with */
 /* eslint-disable @typescript-eslint/unbound-method */
 
-import {
-  IS_NON_DIMENSIONAL,
-  EVENT_LISTENERS_PROP,
-  XLINK_NS,
-  XML_NS,
-  X_CHAR,
-} from './constants';
-import type { Edit } from './types';
+const EVENT_LISTENERS_POOL = '__listeners';
+const IS_NON_DIMENSIONAL =
+  /acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i;
+const XLINK_NS = 'http://www.w3.org/1999/xlink';
+const XML_NS = 'http://www.w3.org/2000/xmlns/';
+const X_CHAR = 120;
+const EVENTS_REGISTRY = new Map<string, boolean>();
+let listenerPointer = 0;
 
+// Caching prototypes for performance
 export const node$ = Node.prototype;
 export const element$ = Element.prototype;
 export const insertBefore$ = node$.insertBefore;
@@ -31,26 +31,25 @@ export const setTextContent$ = Object.getOwnPropertyDescriptor(
 export const childNodes$ = Object.getOwnPropertyDescriptor(node$, 'childNodes')!
   .get!;
 
-let listenerPointer = 0;
-const registeredEvents: Record<string, boolean> = {};
-
 export const createEventListener = (
   el: HTMLElement,
   name: string,
   value?: EventListener,
 ) => {
   const event = name.toLowerCase().slice(2);
-  if (!registeredEvents[event]) {
+  if (!EVENTS_REGISTRY.has(event)) {
+    // createEventListener uses a synthetic event handler to capture events
+    // https://betterprogramming.pub/whats-the-difference-between-synthetic-react-events-and-javascript-events-ba7dbc742294
     addEventListener$.call(
       document,
       event,
       ({ target }) => {
         let el = target as Node | null;
+        // Bubble up the DOM tree to find all event listeners
         while (el) {
-          if (el[EVENT_LISTENERS_PROP]) {
-            const listeners = el[EVENT_LISTENERS_PROP][event] as
-              | Record<string, any>
-              | undefined;
+          const pool = el[EVENT_LISTENERS_POOL];
+          if (pool) {
+            const listeners = pool[event] as Record<string, any> | undefined;
             if (listeners) {
               const handlers = Object.values(listeners);
               for (let i = 0, j = handlers.length; i < j; ++i) {
@@ -62,17 +61,17 @@ export const createEventListener = (
         }
       },
       {
-        capture: true,
+        capture: false,
       },
     );
-    registeredEvents[event] = true;
+    EVENTS_REGISTRY.set(event, true);
   }
   const pointer = listenerPointer++;
   return (newValue?: EventListener) => {
-    if (!el[EVENT_LISTENERS_PROP]) el[EVENT_LISTENERS_PROP] = {};
-    const listeners = el[EVENT_LISTENERS_PROP];
-    if (!listeners[event]) listeners[event] = {};
-    listeners[event][pointer] = (e: Event) => {
+    if (!el[EVENT_LISTENERS_POOL]) el[EVENT_LISTENERS_POOL] = {};
+    const pool = el[EVENT_LISTENERS_POOL];
+    if (!pool[event]) pool[event] = {};
+    pool[event][pointer] = (e: Event) => {
       (newValue ?? value)?.(e);
     };
   };
@@ -107,7 +106,7 @@ export const setAttribute = (
   if (name === 'style') {
     if (typeof value === 'string') {
       el.style.cssText = value;
-    } else if (name[0] === '-') {
+    } else if (name.startsWith('-')) {
       el.style.setProperty(name, String(value));
     } else if (isValueNully) {
       el.style[name] = '';
@@ -118,6 +117,7 @@ export const setAttribute = (
     }
     return;
   }
+  // Handle SVG namespaced attributes
   if (name.charCodeAt(0) === X_CHAR) {
     // eslint-disable-next-line prefer-named-capture-group
     name = name.replace(/xlink(H|:h)/, 'h').replace(/sName$/, 's');
@@ -156,18 +156,4 @@ export const setAttribute = (
   } else {
     removeAttribute$.call(el, name);
   }
-};
-
-export const getCurrentElement = (
-  current: Edit,
-  root: HTMLElement,
-  cache?: Map<number, HTMLElement>,
-  slot?: number,
-): HTMLElement => {
-  if (cache && slot && cache.has(slot)) return cache.get(slot)!;
-  for (let k = 0, l = current.path.length; k < l; ++k) {
-    root = childNodes$.call(root)[current.path[k]!] as HTMLElement;
-  }
-  if (cache && slot) cache.set(slot, root);
-  return root;
 };

@@ -4,18 +4,15 @@ import { info, success } from './helpers.mjs';
 
 await $`rm -rf dist/*`;
 await $`unbuild`;
-await $`mkdir dist/measurement`
+await $`mkdir dist/measurement`;
 await $`esbuild packages/react/react.ts --legal-comments=none --minify --outfile=dist/measurement/normal.js`;
 await $`esbuild packages/react/react.ts --bundle --legal-comments=none --minify --outfile=dist/measurement/react.js`;
 await $`esbuild packages/million/index.ts --bundle --legal-comments=none --minify --outfile=dist/measurement/million.js`;
 
 const packages = [
   'jsx-runtime',
-  'router',
-  'html',
   'react',
-  'next',
-  'morph',
+  'block',
   'vite-plugin-million',
   'utils',
 ];

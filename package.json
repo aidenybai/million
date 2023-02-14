@@ -36,30 +36,15 @@
       "require": "./dist/million.cjs",
       "types": "./dist/million.d.ts"
     },
-    "./next": {
-      "import": "./dist/next.mjs",
-      "require": "./dist/next.cjs",
-      "types": "./next.d.ts"
+    "./block": {
+      "import": "./dist/block.mjs",
+      "require": "./dist/block.cjs",
+      "types": "./block.d.ts"
     },
     "./jsx-runtime": {
       "import": "./dist/jsx-runtime.mjs",
       "require": "./dist/jsx-runtime.cjs",
       "types": "./jsx-runtime.d.ts"
-    },
-    "./router": {
-      "import": "./dist/router.mjs",
-      "require": "./dist/router.cjs",
-      "types": "./router.d.ts"
-    },
-    "./html": {
-      "import": "./dist/html.mjs",
-      "require": "./dist/html.cjs",
-      "types": "./html.d.ts"
-    },
-    "./morph": {
-      "import": "./dist/morph.mjs",
-      "require": "./dist/morph.cjs",
-      "types": "./morph.d.ts"
     },
     "./vite-plugin-million": {
       "import": "./dist/vite-plugin-million.mjs",
