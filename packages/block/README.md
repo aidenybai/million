@@ -24,13 +24,14 @@ const row = createBlock(({ value }) => {
   return <li>{value}</li>;
 });
 
-const createList = (list) => {
-  return fragment(list.map((value) => row({ value })));
-};
-
-const root = block({ title: 'Hello World', list: createList([]) });
+const root = block({ title: 'Hello World', list: fragment([]) });
 
 root.mount(document.body);
 
-root.patch(block({ foo: 'Goodbye!', list: createList(['foo', 'bar', 'baz']) }));
+root.patch(
+  block({
+    title: 'Goodbye!',
+    list: fragment(['foo', 'bar', 'baz'].map((value) => row({ value }))),
+  }),
+);
 ```
