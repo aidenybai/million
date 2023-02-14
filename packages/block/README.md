@@ -15,14 +15,22 @@ const block = createBlock((props) => {
   return (
     <div>
       <h1>{props.title}</h1>
-      <ul>{fragment(props.list.map((item) => <li key={item}>{item}</li>))}</ul>
+      <ul>{props.list}</ul>
     </div>
   );
 });
 
-const root = block({ title: 'Hello World', list: [] });
+const row = createBlock(({ value }) => {
+  return <li>{value}</li>;
+});
+
+const createList = (list) => {
+  return fragment(list.map((value) => row({ value })));
+};
+
+const root = block({ title: 'Hello World', list: createList([]) });
 
 root.mount(document.body);
 
-root.patch(block({ foo: 'Goodbye!', list: ['foo', 'bar', 'baz'] }));
+root.patch(block({ foo: 'Goodbye!', list: createList(['foo', 'bar', 'baz']) }));
 ```
