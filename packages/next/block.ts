@@ -38,11 +38,11 @@ class ElementBlock extends Block {
     this.key = key;
   }
   mount(parent?: HTMLElement, refNode: Node | null = null): HTMLElement {
+    if (this.el) return this.el;
     const root = cloneNode$.call(this.root, true) as HTMLElement;
 
     for (let i = 0, j = this.edits.length; i < j; ++i) {
       const current = this.edits[i]!;
-      // THIS IS THE BOTTLENECK V
       const el = getCurrentElement(current, root, this.cache, i);
       for (let k = 0, l = current.edits.length; k < l; ++k) {
         const edit = current.edits[k]!;
@@ -59,18 +59,17 @@ class ElementBlock extends Block {
             value.mount(el);
             continue;
           }
-
           insertText(el, String(value), edit.index);
         }
         if (edit.type === EditType.Event) {
-          const event = createEventListener(
+          const patch = createEventListener(
             el,
             edit.name,
             hasHole ? value : edit.listener,
           );
-          event.mount();
+          patch();
           if (hasHole) {
-            edit.patch = event.patch;
+            edit.patch = patch;
           }
           continue;
         }
@@ -166,11 +165,13 @@ export const createBlock = (
 
   const template = document.createElement('template');
   const content = compileTemplate(vnode, edits);
+
   template.innerHTML = content;
   const root = template.content.firstChild as HTMLElement;
 
   for (let i = 0, j = edits.length; i < j; ++i) {
     const current = edits[i]!;
+    if (!current.inits.length) continue;
     const el = getCurrentElement(current, root);
     for (let k = 0, l = current.inits.length; k < l; ++k) {
       const init = current.inits[k]!;
@@ -181,8 +182,7 @@ export const createBlock = (
   }
 
   return (props?: Props | null, key?: string) => {
-    key = key ?? props!.key;
-    return new ElementBlock(root, edits, props, key);
+    return new ElementBlock(root, edits, props, key ?? props!.key);
   };
 };
 

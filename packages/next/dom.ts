@@ -8,7 +8,7 @@ import {
   XML_NS,
   X_CHAR,
 } from './constants';
-import { Edit } from './types';
+import type { Edit } from './types';
 
 export const node$ = Node.prototype;
 export const element$ = Element.prototype;
@@ -32,37 +32,50 @@ export const childNodes$ = Object.getOwnPropertyDescriptor(node$, 'childNodes')!
   .get!;
 
 let listenerPointer = 0;
+const registeredEvents: Record<string, boolean> = {};
+
 export const createEventListener = (
   el: HTMLElement,
   name: string,
   value?: EventListener,
 ) => {
-  const event =
-    name.toLowerCase() in el ? name.toLowerCase().slice(2) : name.slice(2);
-  const key = `${event}${listenerPointer++}`;
-  const listener = (event: Event) => {
-    el[EVENT_LISTENERS_PROP][key]?.(event);
+  const event = name.toLowerCase().slice(2);
+  if (!registeredEvents[event]) {
+    addEventListener$.call(
+      document,
+      event,
+      ({ target }) => {
+        let el = target as Node | null;
+        while (el) {
+          if (el[EVENT_LISTENERS_PROP]) {
+            const listeners = el[EVENT_LISTENERS_PROP][event] as
+              | Record<string, any>
+              | undefined;
+            if (listeners) {
+              const handlers = Object.values(listeners);
+              for (let i = 0, j = handlers.length; i < j; ++i) {
+                handlers[i](event);
+              }
+            }
+          }
+          el = el.parentNode;
+        }
+      },
+      {
+        capture: true,
+      },
+    );
+    registeredEvents[event] = true;
+  }
+  const pointer = listenerPointer++;
+  return (newValue?: EventListener) => {
+    if (!el[EVENT_LISTENERS_PROP]) el[EVENT_LISTENERS_PROP] = {};
+    const listeners = el[EVENT_LISTENERS_PROP];
+    if (!listeners[event]) listeners[event] = {};
+    listeners[event][pointer] = (e: Event) => {
+      (newValue ?? value)?.(e);
+    };
   };
-
-  if (!el[EVENT_LISTENERS_PROP]) el[EVENT_LISTENERS_PROP] = {};
-
-  const mount = () => {
-    el[EVENT_LISTENERS_PROP][key] = value;
-    addEventListener$.call(el, event, listener);
-  };
-
-  const patch = (newValue?: EventListener | null) => {
-    if (!newValue) {
-      delete el[EVENT_LISTENERS_PROP][key];
-      removeEventListener$.call(el, event, listener);
-      return;
-    }
-    if (el[EVENT_LISTENERS_PROP][key] !== newValue) {
-      el[EVENT_LISTENERS_PROP][key] = newValue;
-    }
-  };
-
-  return { mount, patch };
 };
 
 export const insertText = (
@@ -71,9 +84,9 @@ export const insertText = (
   index: number,
 ): Text => {
   const node = document.createTextNode(value);
-  if (hasChildNodes$.call(el) && index < el.childNodes.length) {
-    const child = el.childNodes.item(index);
-    insertBefore$.call(el, node, child);
+  const childNodes = childNodes$.call(el);
+  if (hasChildNodes$.call(el) && index < childNodes.length) {
+    insertBefore$.call(el, node, childNodes[index]);
   } else {
     appendChild$.call(el, node);
   }

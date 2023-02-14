@@ -122,6 +122,7 @@ class FragmentBlock extends Block {
     }
   }
   mount(parent: HTMLElement, refNode: Node | null = null) {
+    if (this._parent) return;
     for (let i = 0, j = this.children.length; i < j; ++i) {
       const block = this.children[i]!;
       mount$.call(block, parent, refNode);
@@ -147,6 +148,6 @@ class FragmentBlock extends Block {
   }
 }
 
-export const createFragment = (blocks: Block[], dummy?: boolean) => {
+export const createFragment = (blocks: Block[]) => {
   return new FragmentBlock(blocks);
 };
