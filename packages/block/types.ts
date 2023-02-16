@@ -10,7 +10,7 @@ export class Hole {
   }
 }
 
-export class AbstractBlock {
+export abstract class AbstractBlock {
   root?: HTMLElement;
   edits?: Edit[];
   el?: HTMLElement;
@@ -18,11 +18,11 @@ export class AbstractBlock {
   props?: Props | null;
   key?: string;
   cache?: Map<number, HTMLElement>;
-  patch(_block: AbstractBlock) {}
-  mount(_parent?: HTMLElement, _refNode: Node | null = null) {}
-  move(_block: AbstractBlock | null = null, _refNode: Node | null = null) {}
-  remove() {}
-  toString() {}
+  abstract patch(block: AbstractBlock): HTMLElement;
+  abstract mount(parent?: HTMLElement, refNode: Node | null): HTMLElement;
+  abstract move(block: AbstractBlock | null = null, refNode: Node | null): void;
+  abstract remove(): void;
+  abstract toString(): string;
   get parent(): HTMLElement | null | undefined {
     return this._parent;
   }
