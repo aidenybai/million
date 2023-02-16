@@ -73,7 +73,6 @@ export class Block extends AbstractBlock {
     props?: Props | null,
     key?: string,
   ) {
-    super();
     this.root = root;
     this.props = props;
     this.edits = edits;
