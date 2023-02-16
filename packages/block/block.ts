@@ -17,24 +17,25 @@ import { renderToTemplate } from './template';
 import { AbstractBlock, EditType, Hole } from './types';
 import type { Edit, EditChild, Props, VElement } from './types';
 
-const holeCache = new Map();
-export const HOLE_PROXY = new Proxy(
-  {},
-  {
-    // A universal getter will return a Hole instance if props[any] is accessed
-    // Allows code to identify holes in virtual nodes ("digs" them out)
-    get(_, prop: string): Hole {
-      if (mapHas$.call(holeCache, prop)) return mapGet$.call(holeCache, prop);
-      const hole = new Hole(prop);
-      mapSet$.call(holeCache, prop, hole);
-      holeCache.set(prop, hole);
-      return hole;
-    },
-  },
-);
-
 export const createBlock = (fn: (props?: Props) => VElement) => {
-  const vnode = fn(HOLE_PROXY);
+  let lastProp: string;
+  let lastHole: Hole;
+  const vnode = fn(
+    new Proxy(
+      {},
+      {
+        // A universal getter will return a Hole instance if props[any] is accessed
+        // Allows code to identify holes in virtual nodes ("digs" them out)
+        get(_, prop: string): Hole {
+          if (prop === lastProp) return lastHole;
+          const hole = new Hole(prop);
+          lastProp = prop;
+          lastHole = hole;
+          return hole;
+        },
+      },
+    ),
+  );
   const edits: Edit[] = [];
 
   // Turns vnode into a string of HTML and creates an array of "edits"
@@ -195,8 +196,9 @@ const getCurrentElement = (
   slot?: number, // edit index
 ): HTMLElement => {
   if (!current.path.length) return root;
-  if (cache && slot !== undefined && mapHas$.call(cache, slot))
+  if (cache && slot !== undefined && mapHas$.call(cache, slot)) {
     return mapGet$.call(cache, slot)!;
+  }
   // path is an array of indices to traverse the DOM tree
   // For example, [0, 1, 2] becomes root.childNodes[0].childNodes[1].childNodes[2]
   // We use path because we don't have the actual DOM nodes until mount()
