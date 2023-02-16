@@ -25,8 +25,7 @@ export const renderToTemplate = (
     if (name === 'className') name = 'class';
     if (name === 'for') name = 'htmlFor';
 
-    // eslint-disable-next-line @typescript-eslint/prefer-string-starts-ends-with
-    if (name[0] === 'o' && name[1] === 'n') {
+    if (name.startsWith('on')) {
       const isValueHole = value instanceof Hole;
       // Make objects monomorphic
       current.edits.push({

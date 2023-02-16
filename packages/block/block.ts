@@ -203,7 +203,7 @@ const getCurrentElement = (
   for (let k = 0, l = current.path.length; k < l; ++k) {
     root = childNodes$.call(root)[current.path[k]!] as HTMLElement;
   }
-  if (cache && slot) mapSet$.call(cache, slot, root);
+  if (cache && slot !== undefined) mapSet$.call(cache, slot, root);
   return root;
 };
 
