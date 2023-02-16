@@ -18,8 +18,8 @@ import { AbstractBlock, EditType, Hole } from './types';
 import type { Edit, EditChild, Props, VElement } from './types';
 
 export const createBlock = (fn: (props?: Props) => VElement) => {
-  let lastProp: string;
-  let lastHole: Hole;
+  let cachedProp: string;
+  let cachedHole: Hole;
   const vnode = fn(
     new Proxy(
       {},
@@ -27,10 +27,10 @@ export const createBlock = (fn: (props?: Props) => VElement) => {
         // A universal getter will return a Hole instance if props[any] is accessed
         // Allows code to identify holes in virtual nodes ("digs" them out)
         get(_, prop: string): Hole {
-          if (prop === lastProp) return lastHole;
+          if (prop === cachedProp) return cachedHole;
           const hole = new Hole(prop);
-          lastProp = prop;
-          lastHole = hole;
+          cachedProp = prop;
+          cachedHole = hole;
           return hole;
         },
       },
@@ -96,16 +96,14 @@ export class Block extends AbstractBlock {
 
         if (edit.type === EditType.Block) {
           edit.block.mount(el, childNodes$.call(el)[edit.index]);
-        }
-        if (edit.type === EditType.Child) {
+        } else if (edit.type === EditType.Child) {
           if (value instanceof AbstractBlock) {
             value.mount(el);
             continue;
           }
           // insertText() on mount, setText() on patch
           insertText(el, String(value), edit.index);
-        }
-        if (edit.type === EditType.Event) {
+        } else if (edit.type === EditType.Event) {
           const patch = createEventListener(
             el,
             edit.name,
@@ -116,8 +114,7 @@ export class Block extends AbstractBlock {
             edit.patch = patch;
           }
           continue;
-        }
-        if (edit.type === EditType.Attribute) {
+        } else {
           setAttribute(el, edit.name, value);
         }
       }
@@ -154,11 +151,7 @@ export class Block extends AbstractBlock {
         if (edit.type === EditType.Event) {
           edit.patch?.(newValue);
           continue;
-        }
-        if (edit.type === EditType.Attribute) {
-          setAttribute(el, edit.name, newValue);
-        }
-        if (edit.type === EditType.Child) {
+        } else if (edit.type === EditType.Child) {
           if (oldValue instanceof AbstractBlock) {
             // Remember! If we find a block inside a child, we need to locate
             // the cooresponding block in the new props and patch it.
@@ -168,6 +161,8 @@ export class Block extends AbstractBlock {
             continue;
           }
           setText(el, String(newValue), edit.index);
+        } else {
+          setAttribute(el, edit.name, newValue);
         }
       }
     }
