@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 
-const EVENT_LISTENERS_POOL = '__listeners';
+const EVENT_LISTENERS_POOL = '__million_listeners';
+const EVENTS_REGISTRY = '__million_events';
 const IS_NON_DIMENSIONAL =
   /acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i;
 const XLINK_NS = 'http://www.w3.org/1999/xlink';
 const XML_NS = 'http://www.w3.org/2000/xmlns/';
 const X_CHAR = 120;
-const EVENTS_REGISTRY = new Map<string, boolean>();
 let listenerPointer = 0;
 
 // Caching prototypes for performance
@@ -28,23 +28,38 @@ export const setTextContent$ = Object.getOwnPropertyDescriptor(
   node$,
   'textContent',
 )!.set!;
+export const innerHTML$ = Object.getOwnPropertyDescriptor(
+  element$,
+  'innerHTML',
+)!.set!;
 export const childNodes$ = Object.getOwnPropertyDescriptor(node$, 'childNodes')!
   .get!;
 
+export const map$ = Map.prototype;
+export const mapSet$ = map$.set;
+export const mapHas$ = map$.has;
+export const mapGet$ = map$.get;
+
+export const set$ = Set.prototype;
+export const setAdd$ = set$.add;
+export const setHas$ = set$.has;
+
+const eventCache = new Map<string, EventListener>();
 export const createEventListener = (
   el: HTMLElement,
   name: string,
   value?: EventListener,
 ) => {
   const event = name.toLowerCase().slice(2);
-  if (!EVENTS_REGISTRY.has(event)) {
+  if (!document[EVENTS_REGISTRY]) document[EVENTS_REGISTRY] = new Set();
+  if (!setHas$.call(document[EVENTS_REGISTRY], event)) {
     // createEventListener uses a synthetic event handler to capture events
     // https://betterprogramming.pub/whats-the-difference-between-synthetic-react-events-and-javascript-events-ba7dbc742294
     addEventListener$.call(
       document,
       event,
-      ({ target }) => {
-        let el = target as Node | null;
+      (nativeEventObject: Event) => {
+        let el = nativeEventObject.target as Node | null;
         // Bubble up the DOM tree to find all event listeners
         while (el) {
           const pool = el[EVENT_LISTENERS_POOL];
@@ -53,7 +68,7 @@ export const createEventListener = (
             if (listeners) {
               const handlers = Object.values(listeners);
               for (let i = 0, j = handlers.length; i < j; ++i) {
-                handlers[i](event);
+                handlers[i](nativeEventObject);
               }
             }
           }
@@ -64,10 +79,11 @@ export const createEventListener = (
         capture: false,
       },
     );
-    EVENTS_REGISTRY.set(event, true);
+    document[EVENTS_REGISTRY].add(event);
   }
   const pointer = listenerPointer++;
-  return (newValue?: EventListener) => {
+  if (mapHas$.call(eventCache, value)) return mapGet$.call(eventCache, value);
+  const patch = (newValue?: EventListener) => {
     if (!el[EVENT_LISTENERS_POOL]) el[EVENT_LISTENERS_POOL] = {};
     const pool = el[EVENT_LISTENERS_POOL];
     if (!pool[event]) pool[event] = {};
@@ -75,6 +91,9 @@ export const createEventListener = (
       (newValue ?? value)?.(e);
     };
   };
+  patch(value);
+  mapSet$.call(eventCache, value, patch);
+  return patch;
 };
 
 export const insertText = (

@@ -28,20 +28,31 @@ export const renderToTemplate = (
     // eslint-disable-next-line @typescript-eslint/prefer-string-starts-ends-with
     if (name[0] === 'o' && name[1] === 'n') {
       const isValueHole = value instanceof Hole;
+      // Make objects monomorphic
       current.edits.push({
         type: EditType.Event,
-        listener: value,
-        hole: isValueHole ? value : undefined,
+        listener: isValueHole ? value.key : value,
         name,
+        hole: isValueHole ? value.key : undefined,
+        value: undefined,
+        index: undefined,
+        patch: undefined,
+        block: undefined,
       });
+
       continue;
     }
 
     if (value instanceof Hole) {
       current.edits.push({
         type: EditType.Attribute,
-        hole: value,
+        hole: value.key,
         name,
+        listener: undefined,
+        value: undefined,
+        index: undefined,
+        patch: undefined,
+        block: undefined,
       });
       continue;
     }
@@ -62,8 +73,13 @@ export const renderToTemplate = (
     if (child instanceof Hole) {
       current.edits.push({
         type: EditType.Child,
-        hole: child,
+        hole: child.key,
         index: i,
+        name: undefined,
+        listener: undefined,
+        value: undefined,
+        patch: undefined,
+        block: undefined,
       });
       continue;
     }
@@ -73,6 +89,11 @@ export const renderToTemplate = (
         type: EditType.Block,
         block: child,
         index: i,
+        hole: undefined,
+        name: undefined,
+        listener: undefined,
+        value: undefined,
+        patch: undefined,
       });
       continue;
     }
@@ -80,7 +101,6 @@ export const renderToTemplate = (
     if (typeof child === 'string') {
       if (canMergeString) {
         current.inits.push({
-          type: EditType.Text,
           index: i,
           value: child,
         });

@@ -5,36 +5,43 @@ import {
   createEventListener,
   insertBefore$,
   insertText,
+  innerHTML$,
   remove$ as removeElement$,
   setAttribute,
   setText,
+  mapGet$,
+  mapHas$,
+  mapSet$,
 } from './dom';
 import { renderToTemplate } from './template';
 import { AbstractBlock, EditType, Hole } from './types';
 import type { Edit, EditChild, Props, VElement } from './types';
 
-export const createBlock = (fn: (props?: Props) => VElement) => {
-  const holeCache = new Map();
-  const holeProxy = new Proxy(
-    {},
-    {
-      // A universal getter will return a Hole instance if props[any] is accessed
-      // Allows code to identify holes in virtual nodes ("digs" them out)
-      get(_, prop: string) {
-        if (holeCache.has(prop)) return holeCache.get(prop);
-        const hole = new Hole(prop);
-        holeCache.set(prop, hole);
-        return hole;
-      },
+const holeCache = new Map();
+export const HOLE_PROXY = new Proxy(
+  {},
+  {
+    // A universal getter will return a Hole instance if props[any] is accessed
+    // Allows code to identify holes in virtual nodes ("digs" them out)
+    get(_, prop: string): Hole {
+      if (mapHas$.call(holeCache, prop)) return mapGet$.call(holeCache, prop);
+      const hole = new Hole(prop);
+      mapSet$.call(holeCache, prop, hole);
+      holeCache.set(prop, hole);
+      return hole;
     },
-  );
-  const vnode = fn(holeProxy);
+  },
+);
+
+export const createBlock = (fn: (props?: Props) => VElement) => {
+  const vnode = fn(HOLE_PROXY);
   const edits: Edit[] = [];
 
-  const template = document.createElement('template');
   // Turns vnode into a string of HTML and creates an array of "edits"
   // Edits are instructions for how to update the DOM given some props
-  template.innerHTML = renderToTemplate(vnode, edits);
+  const content = renderToTemplate(vnode, edits);
+  const template = document.createElement('template');
+  innerHTML$.call(template, content);
   const root = template.content.firstChild as HTMLElement;
 
   // Handles case for positioning text nodes. When text nodes are
@@ -84,7 +91,7 @@ export class Block extends AbstractBlock {
       for (let k = 0, l = current.edits.length; k < l; ++k) {
         const edit = current.edits[k]!;
         const hasHole = 'hole' in edit && edit.hole;
-        const value = hasHole ? this.props![edit.hole!.key] : undefined;
+        const value = hasHole ? this.props![edit.hole!] : undefined;
 
         if (edit.type === EditType.Block) {
           edit.block.mount(el, childNodes$.call(el)[edit.index]);
@@ -104,7 +111,6 @@ export class Block extends AbstractBlock {
             // Events can be either a hole or a function
             hasHole ? value : edit.listener,
           );
-          patch();
           if (hasHole) {
             edit.patch = patch;
           }
@@ -139,8 +145,8 @@ export class Block extends AbstractBlock {
           continue;
         }
         if (!('hole' in edit) || !edit.hole) continue;
-        const oldValue = props[edit.hole.key];
-        const newValue = block.props[edit.hole.key];
+        const oldValue = props[edit.hole];
+        const newValue = block.props[edit.hole];
 
         if (newValue === oldValue) continue;
 
@@ -156,7 +162,7 @@ export class Block extends AbstractBlock {
             // Remember! If we find a block inside a child, we need to locate
             // the cooresponding block in the new props and patch it.
             const firstEdit = block.edits?.[i]?.edits[k] as EditChild;
-            const thisSubBlock = block.props[firstEdit.hole.key];
+            const thisSubBlock = block.props[firstEdit.hole];
             oldValue.patch(thisSubBlock);
             continue;
           }
@@ -188,14 +194,16 @@ const getCurrentElement = (
   cache?: Map<number, HTMLElement>,
   slot?: number, // edit index
 ): HTMLElement => {
-  if (cache && slot && cache.has(slot)) return cache.get(slot)!;
+  if (!current.path.length) return root;
+  if (cache && slot !== undefined && mapHas$.call(cache, slot))
+    return mapGet$.call(cache, slot)!;
   // path is an array of indices to traverse the DOM tree
   // For example, [0, 1, 2] becomes root.childNodes[0].childNodes[1].childNodes[2]
   // We use path because we don't have the actual DOM nodes until mount()
   for (let k = 0, l = current.path.length; k < l; ++k) {
     root = childNodes$.call(root)[current.path[k]!] as HTMLElement;
   }
-  if (cache && slot) cache.set(slot, root);
+  if (cache && slot) mapSet$.call(cache, slot, root);
   return root;
 };
 
