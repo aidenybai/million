@@ -12,7 +12,11 @@ export class FragmentBlock extends AbstractBlock {
     super();
     this.children = blocks;
   }
-  patch(fragment: FragmentBlock) {
+  move() {
+    throw new Error('Cannot move a FragmentBlock');
+  }
+  // @ts-expect-error - override
+  override patch(fragment: FragmentBlock) {
     const oldChildren = this.children;
     const newChildren = fragment.children;
     const oldChildrenLength = oldChildren.length;
@@ -124,14 +128,16 @@ export class FragmentBlock extends AbstractBlock {
         }
       }
     }
+    return this._parent;
   }
-  mount(parent: HTMLElement, refNode: Node | null = null) {
-    if (this._parent) return;
+  mount(parent: HTMLElement, refNode: Node | null = null): HTMLElement {
+    if (this._parent) return this._parent;
     for (let i = 0, j = this.children.length; i < j; ++i) {
       const block = this.children[i]!;
       mount$.call(block, parent, refNode);
     }
     this._parent = parent;
+    return parent;
   }
   remove() {
     const parent = this.parent;

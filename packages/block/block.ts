@@ -73,6 +73,7 @@ export class Block extends AbstractBlock {
     props?: Props | null,
     key?: string,
   ) {
+    super();
     this.root = root;
     this.props = props;
     this.edits = edits;
@@ -129,7 +130,7 @@ export class Block extends AbstractBlock {
     if (!block.props) return root;
     const props = this.props!;
     // If props are the same, no need to patch
-    if (!diffProps(props, block.props)) return root;
+    if (!this.shouldUpdate(props, block.props)) return root;
     this.props = block.props;
 
     for (let i = 0, j = this.edits.length; i < j; ++i) {
@@ -174,8 +175,14 @@ export class Block extends AbstractBlock {
   remove() {
     removeElement$.call(this.el);
   }
+  shouldUpdate(oldProps: Props, newProps: Props): boolean {
+    for (const i in oldProps) {
+      if (oldProps[i] !== newProps[i]) return true;
+    }
+    return false;
+  }
   toString() {
-    return this.el?.outerHTML;
+    return String(this.el?.outerHTML);
   }
   get parent(): HTMLElement | null | undefined {
     if (!this._parent) this._parent = this.el?.parentElement;
@@ -201,13 +208,6 @@ const getCurrentElement = (
   }
   if (cache && slot !== undefined) mapSet$.call(cache, slot, root);
   return root;
-};
-
-const diffProps = (a: Props, b: Props) => {
-  for (const i in a) {
-    if (a[i] !== b[i]) return true;
-  }
-  return false;
 };
 
 export const mount$ = Block.prototype.mount;

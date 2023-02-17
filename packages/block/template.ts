@@ -1,8 +1,32 @@
 import { AbstractBlock, EditType, Hole } from './types';
+import { setHas$ } from './dom';
 import type { Edit, VElement } from './types';
 
-const IS_VOID_ELEMENT =
-  /area|base|basefont|bgsound|br|col|command|embed|frame|hr|image|img|input|isindex|keygen|link|menuitem|meta|nextid|param|source|track|wbr/i;
+const VOID_ELEMENTS = new Set([
+  'area',
+  'base',
+  'basefont',
+  'bgsound',
+  'br',
+  'col',
+  'command',
+  'embed',
+  'frame',
+  'hr',
+  'image',
+  'img',
+  'input',
+  'isindex',
+  'keygen',
+  'link',
+  'menuitem',
+  'meta',
+  'nextid',
+  'param',
+  'source',
+  'track',
+  'wbr',
+]);
 
 export const renderToTemplate = (
   vnode: VElement,
@@ -59,7 +83,7 @@ export const renderToTemplate = (
     if (value) props += ` ${name}="${String(value)}"`;
   }
 
-  if (IS_VOID_ELEMENT.test(vnode.tag)) return `<${vnode.tag}${props} />`;
+  if (setHas$.call(VOID_ELEMENTS, vnode.tag)) return `<${vnode.tag}${props} />`;
 
   // 👎: 'foo' + Block + 'bar' => 'foobaz'.
   //                                      ↕️ Block edit here

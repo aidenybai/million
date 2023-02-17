@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-
 export type { VNode, VElement } from '../million/types';
 export type Props = Record<string, any>;
 
@@ -19,10 +17,11 @@ export abstract class AbstractBlock {
   key?: string;
   cache?: Map<number, HTMLElement>;
   abstract patch(block: AbstractBlock): HTMLElement;
-  abstract mount(parent?: HTMLElement, refNode: Node | null): HTMLElement;
-  abstract move(block: AbstractBlock | null = null, refNode: Node | null): void;
+  abstract mount(parent?: HTMLElement, refNode?: Node | null): HTMLElement;
+  abstract move(block: AbstractBlock | null, refNode: Node | null): void;
   abstract remove(): void;
   abstract toString(): string;
+  shouldUpdate?(oldProps: Props, newProps: Props): boolean;
   get parent(): HTMLElement | null | undefined {
     return this._parent;
   }
