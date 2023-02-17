@@ -111,7 +111,6 @@ export class Block extends AbstractBlock {
           if (hasHole) {
             edit.patch = patch;
           }
-          continue;
         } else {
           setAttribute(el, edit.name, value);
         }
@@ -148,7 +147,6 @@ export class Block extends AbstractBlock {
 
         if (edit.type === EditType.Event) {
           edit.patch?.(newValue);
-          continue;
         } else if (edit.type === EditType.Child) {
           if (oldValue instanceof AbstractBlock) {
             // Remember! If we find a block inside a child, we need to locate

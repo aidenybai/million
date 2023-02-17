@@ -68,9 +68,13 @@ export const createEventListener = (
             const listeners = pool[event] as Record<string, any> | undefined;
             if (listeners) {
               const handlers = Object.values(listeners);
+              let returnFalse = false;
               for (let i = 0, j = handlers.length; i < j; ++i) {
-                handlers[i](nativeEventObject);
+                if (handlers[i](nativeEventObject) === false) {
+                  returnFalse = true;
+                }
               }
+              if (returnFalse) return;
             }
           }
           el = el.parentNode;
@@ -135,19 +139,7 @@ export const setAttribute = (
     } else {
       el.style[name] = `${String(value)}px`;
     }
-    return;
-  } else if (name.charCodeAt(0) === X_CHAR) {
-    // Handle SVG namespaced attributes
-    // eslint-disable-next-line prefer-named-capture-group
-    name = name.replace(/xlink(H|:h)/, 'h').replace(/sName$/, 's');
-    if (name.startsWith('xmlns')) {
-      setAttributeNS$.call(el, XML_NS, name, String(value));
-    } else if (name.startsWith('xlink')) {
-      setAttributeNS$.call(el, XLINK_NS, 'href', String(value));
-    }
-    return;
-  }
-  if (
+  } else if (
     name in el &&
     el[name] !== undefined &&
     el[name] !== null &&
@@ -159,8 +151,16 @@ export const setAttribute = (
     } catch (_err) {
       /**/
     }
-  }
-  if (
+  } else if (name.charCodeAt(0) === X_CHAR) {
+    // Handle SVG namespaced attributes
+    // eslint-disable-next-line prefer-named-capture-group
+    name = name.replace(/xlink(H|:h)/, 'h').replace(/sName$/, 's');
+    if (name.startsWith('xmlns')) {
+      setAttributeNS$.call(el, XML_NS, name, String(value));
+    } else if (name.startsWith('xlink')) {
+      setAttributeNS$.call(el, XLINK_NS, 'href', String(value));
+    }
+  } else if (
     !isValueNully &&
     value !== '' &&
     (value !== false || name.includes('-'))
