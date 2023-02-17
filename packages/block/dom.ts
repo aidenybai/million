@@ -8,6 +8,7 @@ const XLINK_NS = 'http://www.w3.org/1999/xlink';
 const XML_NS = 'http://www.w3.org/2000/xmlns/';
 const X_CHAR = 120;
 let listenerPointer = 0;
+const propsToSkip = new Set(['href', 'list', 'form', 'tabIndex', 'download']);
 
 // Caching prototypes for performance
 export const node$ = Node.prototype;
@@ -135,9 +136,8 @@ export const setAttribute = (
       el.style[name] = `${String(value)}px`;
     }
     return;
-  }
-  // Handle SVG namespaced attributes
-  if (name.charCodeAt(0) === X_CHAR) {
+  } else if (name.charCodeAt(0) === X_CHAR) {
+    // Handle SVG namespaced attributes
     // eslint-disable-next-line prefer-named-capture-group
     name = name.replace(/xlink(H|:h)/, 'h').replace(/sName$/, 's');
     if (name.startsWith('xmlns')) {
@@ -148,17 +148,11 @@ export const setAttribute = (
     return;
   }
   if (
+    name in el &&
     el[name] !== undefined &&
     el[name] !== null &&
-    !Reflect.has(el.style, name) &&
     !(el instanceof SVGElement) &&
-    name !== 'href' &&
-    name !== 'list' &&
-    name !== 'form' &&
-    // cast to `0` instead
-    name !== 'tabIndex' &&
-    name !== 'download' &&
-    name in el
+    setHas$.call(propsToSkip, name)
   ) {
     try {
       el[name] = value;
