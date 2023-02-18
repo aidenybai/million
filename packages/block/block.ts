@@ -194,14 +194,15 @@ const getCurrentElement = (
   cache?: Map<number, HTMLElement>,
   slot?: number, // edit index
 ): HTMLElement => {
-  if (!current.path.length) return root;
+  const pathLength = current.path.length;
+  if (!pathLength) return root;
   if (cache && slot !== undefined && mapHas$.call(cache, slot)) {
     return mapGet$.call(cache, slot)!;
   }
   // path is an array of indices to traverse the DOM tree
   // For example, [0, 1, 2] becomes root.childNodes[0].childNodes[1].childNodes[2]
   // We use path because we don't have the actual DOM nodes until mount()
-  for (let k = 0, l = current.path.length; k < l; ++k) {
+  for (let k = 0; k < pathLength; ++k) {
     root = childNodes$.call(root)[current.path[k]!] as HTMLElement;
   }
   if (cache && slot !== undefined) mapSet$.call(cache, slot, root);
