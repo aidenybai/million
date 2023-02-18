@@ -46,9 +46,10 @@ export const createBlock = (fn: (props?: Props) => VElement) => {
   // Inserts text nodes into the DOM at the correct position.
   for (let i = 0, j = edits.length; i < j; ++i) {
     const current = edits[i]!;
-    if (!current.inits.length) continue;
+    const initsLength = current.inits.length;
+    if (!initsLength) continue;
     const el = getCurrentElement(current, root);
-    for (let k = 0, l = current.inits.length; k < l; ++k) {
+    for (let k = 0; k < initsLength; ++k) {
       const init = current.inits[k]!;
       insertText(el, init.value, init.index);
     }
@@ -66,6 +67,9 @@ export const createBlock = (fn: (props?: Props) => VElement) => {
 export class Block extends AbstractBlock {
   root: HTMLElement;
   edits: Edit[];
+  // Cache for getCurrentElement()
+  cache = new Map<number, HTMLElement>();
+
   constructor(
     root: HTMLElement,
     edits: Edit[],
@@ -77,8 +81,6 @@ export class Block extends AbstractBlock {
     this.root = root;
     this.props = props;
     this.edits = edits;
-    // Cache for getCurrentElement()
-    this.cache = new Map<number, HTMLElement>();
     this.key = key;
     if (shouldUpdate) this.shouldUpdate = shouldUpdate;
   }
@@ -195,14 +197,15 @@ const getCurrentElement = (
   cache?: Map<number, HTMLElement>,
   slot?: number, // edit index
 ): HTMLElement => {
-  if (!current.path.length) return root;
+  const pathLength = current.path.length;
+  if (!pathLength) return root;
   if (cache && slot !== undefined && mapHas$.call(cache, slot)) {
     return mapGet$.call(cache, slot)!;
   }
   // path is an array of indices to traverse the DOM tree
   // For example, [0, 1, 2] becomes root.childNodes[0].childNodes[1].childNodes[2]
   // We use path because we don't have the actual DOM nodes until mount()
-  for (let k = 0, l = current.path.length; k < l; ++k) {
+  for (let k = 0; k < pathLength; ++k) {
     root = childNodes$.call(root)[current.path[k]!] as HTMLElement;
   }
   if (cache && slot !== undefined) mapSet$.call(cache, slot, root);
