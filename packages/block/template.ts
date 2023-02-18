@@ -47,7 +47,7 @@ export const renderToTemplate = (
       continue;
     }
     if (name === 'className') name = 'class';
-    if (name === 'for') name = 'htmlFor';
+    if (name === 'htmlFor') name = 'for';
 
     if (name.startsWith('on')) {
       const isValueHole = value instanceof Hole;

@@ -38,10 +38,7 @@ export const createBlock = (fn: (props?: Props) => VElement) => {
 
   // Turns vnode into a string of HTML and creates an array of "edits"
   // Edits are instructions for how to update the DOM given some props
-  const content = renderToTemplate(vnode, edits);
-  const template = document.createElement('template');
-  innerHTML$.call(template, content);
-  const root = template.content.firstChild as HTMLElement;
+  const root = stringToDOM(renderToTemplate(vnode, edits));
 
   // Handles case for positioning text nodes. When text nodes are
   // put into a template, they can be merged. For example,
@@ -57,8 +54,12 @@ export const createBlock = (fn: (props?: Props) => VElement) => {
     }
   }
 
-  return (props?: Props | null, key?: string) => {
-    return new Block(root, edits, props, key ?? props?.key);
+  return (
+    props?: Props | null,
+    key?: string,
+    shouldUpdate?: (oldProps: Props, newProps: Props) => boolean,
+  ) => {
+    return new Block(root, edits, props, key ?? props?.key, shouldUpdate);
   };
 };
 
@@ -70,6 +71,7 @@ export class Block extends AbstractBlock {
     edits: Edit[],
     props?: Props | null,
     key?: string,
+    shouldUpdate?: (oldProps: Props, newProps: Props) => boolean,
   ) {
     super();
     this.root = root;
@@ -78,6 +80,7 @@ export class Block extends AbstractBlock {
     // Cache for getCurrentElement()
     this.cache = new Map<number, HTMLElement>();
     this.key = key;
+    if (shouldUpdate) this.shouldUpdate = shouldUpdate;
   }
   mount(parent?: HTMLElement, refNode: Node | null = null): HTMLElement {
     if (this.el) return this.el;
@@ -204,6 +207,12 @@ const getCurrentElement = (
   }
   if (cache && slot !== undefined) mapSet$.call(cache, slot, root);
   return root;
+};
+
+export const stringToDOM = (content: string) => {
+  const template = document.createElement('template');
+  innerHTML$.call(template, content);
+  return template.content.firstChild as HTMLElement;
 };
 
 export const mount$ = Block.prototype.mount;

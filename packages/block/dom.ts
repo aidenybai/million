@@ -128,14 +128,14 @@ export const setAttribute = (
   const isValueNully = value === undefined || value === null;
   value = isValueNully ? '' : value;
   if (name === 'style') {
-    if (typeof value === 'string') {
+    if (typeof value !== 'number' || IS_NON_DIMENSIONAL.test(name)) {
+      el.style[name] = value;
+    } else if (typeof value === 'string') {
       el.style.cssText = value;
     } else if (name.startsWith('-')) {
       el.style.setProperty(name, String(value));
     } else if (isValueNully) {
       el.style[name] = '';
-    } else if (typeof value !== 'number' || IS_NON_DIMENSIONAL.test(name)) {
-      el.style[name] = value;
     } else {
       el.style[name] = `${String(value)}px`;
     }

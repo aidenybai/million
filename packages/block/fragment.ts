@@ -145,7 +145,7 @@ export class FragmentBlock extends AbstractBlock {
       setTextContent$.call(parent, '');
     } else {
       for (let i = 0, j = this.children.length; i < j; ++i) {
-        this.children[i]!.remove();
+        remove$.call(this.children[i]);
       }
     }
   }
