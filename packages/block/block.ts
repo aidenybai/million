@@ -65,6 +65,9 @@ export const createBlock = (fn: (props?: Props) => VElement) => {
 export class Block extends AbstractBlock {
   root: HTMLElement;
   edits: Edit[];
+  // Cache for getCurrentElement()
+  cache = new Map<number, HTMLElement>();
+
   constructor(
     root: HTMLElement,
     edits: Edit[],
@@ -75,8 +78,6 @@ export class Block extends AbstractBlock {
     this.root = root;
     this.props = props;
     this.edits = edits;
-    // Cache for getCurrentElement()
-    this.cache = new Map<number, HTMLElement>();
     this.key = key;
   }
   mount(parent?: HTMLElement, refNode: Node | null = null): HTMLElement {
