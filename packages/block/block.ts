@@ -49,9 +49,10 @@ export const createBlock = (fn: (props?: Props) => VElement) => {
   // Inserts text nodes into the DOM at the correct position.
   for (let i = 0, j = edits.length; i < j; ++i) {
     const current = edits[i]!;
-    if (!current.inits.length) continue;
+    const initsLength = current.inits.length;
+    if (!initsLength) continue;
     const el = getCurrentElement(current, root);
-    for (let k = 0, l = current.inits.length; k < l; ++k) {
+    for (let k = 0; k < initsLength; ++k) {
       const init = current.inits[k]!;
       insertText(el, init.value, init.index);
     }
