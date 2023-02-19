@@ -15,6 +15,7 @@ import {
 } from './dom';
 import { renderToTemplate } from './template';
 import { AbstractBlock, EditType, Hole } from './types';
+import { fragmentPatch$ } from './fragment';
 import type { Edit, EditChild, Props, VElement } from './types';
 
 export const createBlock = (fn: (props?: Props) => VElement) => {
@@ -137,11 +138,14 @@ export class Block extends AbstractBlock {
 
     for (let i = 0, j = this.edits.length; i < j; ++i) {
       const current = this.edits[i]!;
-      const el = getCurrentElement(current, root, this.cache, i);
+      let el: HTMLElement | undefined;
       for (let k = 0, l = current.edits.length; k < l; ++k) {
         const edit = current.edits[k]!;
         if (edit.type === EditType.Block) {
-          edit.block.patch(block.edits?.[i]![k].block);
+          const prototype =
+            edit.block instanceof Block ? patch$ : fragmentPatch$;
+          // @ts-expect-error - We know this is a block
+          prototype.call(edit.block, block.edits?.[i]![k].block);
           continue;
         }
         if (!('hole' in edit) || !edit.hole) continue;
@@ -152,13 +156,19 @@ export class Block extends AbstractBlock {
 
         if (edit.type === EditType.Event) {
           edit.patch?.(newValue);
-        } else if (edit.type === EditType.Child) {
+          continue;
+        }
+        if (!el) el = getCurrentElement(current, root, this.cache, i);
+        if (edit.type === EditType.Child) {
           if (oldValue instanceof AbstractBlock) {
             // Remember! If we find a block inside a child, we need to locate
             // the cooresponding block in the new props and patch it.
             const firstEdit = block.edits?.[i]?.edits[k] as EditChild;
             const thisSubBlock = block.props[firstEdit.hole];
-            oldValue.patch(thisSubBlock);
+            const prototype =
+              oldValue instanceof Block ? patch$ : fragmentPatch$;
+            // @ts-expect-error - We know this is a block
+            prototype.call(oldValue, thisSubBlock);
             continue;
           }
           setText(el, String(newValue), edit.index);

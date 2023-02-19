@@ -1,4 +1,5 @@
-import { setTextContent$ } from './dom';
+/* eslint-disable @typescript-eslint/unbound-method */
+import { mapGet$, mapSet$, setTextContent$ } from './dom';
 import { AbstractBlock } from './types';
 import { mount$, patch$, move$, remove$ } from './block';
 
@@ -27,11 +28,11 @@ export class FragmentBlock extends AbstractBlock {
     this.children = newChildren;
 
     if (newChildrenLength === 0) {
-      this.remove();
+      fragmentRemove$.call(this);
       return;
     }
     if (oldChildrenLength === 0) {
-      fragment.mount(parent);
+      fragmentMount$.call(fragment, parent);
       return;
     }
 
@@ -100,10 +101,10 @@ export class FragmentBlock extends AbstractBlock {
       if (!oldKeyMap) {
         oldKeyMap = new Map<string, number>();
         for (let i = oldHead; i <= oldTail; i++) {
-          oldKeyMap.set(oldChildren[i]!.key!, i);
+          mapSet$.call(oldKeyMap, oldChildren[i]!.key!, i);
         }
       }
-      const oldIndex = oldKeyMap.get(newHeadKey);
+      const oldIndex = mapGet$.call(oldKeyMap, newHeadKey);
       if (oldIndex === undefined) {
         mount$.call(newHeadChild, parent, oldHeadChild.el || null);
       } else {
@@ -145,9 +146,10 @@ export class FragmentBlock extends AbstractBlock {
       setTextContent$.call(parent, '');
     } else {
       for (let i = 0, j = this.children.length; i < j; ++i) {
-        remove$.call(this.children[i]);
+        remove$.call(this.children[i]!);
       }
     }
+    this.children = [];
   }
   toString() {
     return this.children.map((block) => block.toString()).join('');
@@ -157,3 +159,7 @@ export class FragmentBlock extends AbstractBlock {
     return this._parent;
   }
 }
+
+export const fragmentMount$ = FragmentBlock.prototype.mount;
+export const fragmentPatch$ = FragmentBlock.prototype.patch;
+export const fragmentRemove$ = FragmentBlock.prototype.remove;
