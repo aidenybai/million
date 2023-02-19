@@ -13,6 +13,7 @@ const propsToSkip = new Set(['href', 'list', 'form', 'tabIndex', 'download']);
 // Caching prototypes for performance
 export const node$ = Node.prototype;
 export const element$ = Element.prototype;
+export const characterData$ = CharacterData.prototype;
 export const insertBefore$ = node$.insertBefore;
 export const hasChildNodes$ = node$.hasChildNodes;
 export const cloneNode$ = node$.cloneNode;
@@ -35,6 +36,10 @@ export const innerHTML$ = Object.getOwnPropertyDescriptor(
 )!.set!;
 export const childNodes$ = Object.getOwnPropertyDescriptor(node$, 'childNodes')!
   .get!;
+export const characterDataSet$ = Object.getOwnPropertyDescriptor(
+  characterData$,
+  'data',
+)!.set!;
 
 export const map$ = Map.prototype;
 export const mapSet$ = map$.set;
@@ -117,7 +122,7 @@ export const insertText = (
 };
 
 export const setText = (el: HTMLElement, value: string, index: number) => {
-  setTextContent$.call(childNodes$.call(el)[index], value);
+  characterDataSet$.call(childNodes$.call(el)[index], value);
 };
 
 export const setAttribute = (

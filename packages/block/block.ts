@@ -137,7 +137,7 @@ export class Block extends AbstractBlock {
 
     for (let i = 0, j = this.edits.length; i < j; ++i) {
       const current = this.edits[i]!;
-      const el = getCurrentElement(current, root, this.cache, i);
+      let el: HTMLElement | undefined;
       for (let k = 0, l = current.edits.length; k < l; ++k) {
         const edit = current.edits[k]!;
         if (edit.type === EditType.Block) {
@@ -152,7 +152,10 @@ export class Block extends AbstractBlock {
 
         if (edit.type === EditType.Event) {
           edit.patch?.(newValue);
-        } else if (edit.type === EditType.Child) {
+          continue;
+        }
+        if (!el) el = getCurrentElement(current, root, this.cache, i);
+        if (edit.type === EditType.Child) {
           if (oldValue instanceof AbstractBlock) {
             // Remember! If we find a block inside a child, we need to locate
             // the cooresponding block in the new props and patch it.
