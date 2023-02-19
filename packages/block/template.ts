@@ -95,7 +95,7 @@ export const renderToTemplate = (
 
     if (child instanceof Hole) {
       current.edits.push({
-        type: EditType.Child,
+        type: 'child',
         hole: child.key,
         index: i,
         name: undefined,
@@ -109,7 +109,7 @@ export const renderToTemplate = (
 
     if (child instanceof AbstractBlock) {
       current.edits.push({
-        type: EditType.Block,
+        type: 'block',
         block: child,
         index: i,
         hole: undefined,
