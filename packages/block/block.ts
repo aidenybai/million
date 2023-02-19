@@ -14,7 +14,7 @@ import {
   mapSet$,
 } from './dom';
 import { renderToTemplate } from './template';
-import { AbstractBlock, EditType, Hole } from './types';
+import { AbstractBlock, Hole } from './types';
 import type { Edit, EditChild, Props, VElement } from './types';
 
 export const createBlock = (fn: (props?: Props) => VElement) => {
@@ -97,16 +97,16 @@ export class Block extends AbstractBlock {
         const hasHole = 'hole' in edit && edit.hole;
         const value = hasHole ? this.props![edit.hole!] : undefined;
 
-        if (edit.type === EditType.Block) {
+        if (edit.type === 'block') {
           edit.block.mount(el, childNodes$.call(el)[edit.index]);
-        } else if (edit.type === EditType.Child) {
+        } else if (edit.type === 'child') {
           if (value instanceof AbstractBlock) {
             value.mount(el);
             continue;
           }
           // insertText() on mount, setText() on patch
           insertText(el, String(value), edit.index);
-        } else if (edit.type === EditType.Event) {
+        } else if (edit.type === 'event') {
           const patch = createEventListener(
             el,
             edit.name,
@@ -140,7 +140,7 @@ export class Block extends AbstractBlock {
       let el: HTMLElement | undefined;
       for (let k = 0, l = current.edits.length; k < l; ++k) {
         const edit = current.edits[k]!;
-        if (edit.type === EditType.Block) {
+        if (edit.type === 'block') {
           edit.block.patch(block.edits?.[i]![k].block);
           continue;
         }
@@ -150,12 +150,12 @@ export class Block extends AbstractBlock {
 
         if (newValue === oldValue) continue;
 
-        if (edit.type === EditType.Event) {
+        if (edit.type === 'event') {
           edit.patch?.(newValue);
           continue;
         }
         if (!el) el = getCurrentElement(current, root, this.cache, i);
-        if (edit.type === EditType.Child) {
+        if (edit.type === 'child') {
           if (oldValue instanceof AbstractBlock) {
             // Remember! If we find a block inside a child, we need to locate
             // the cooresponding block in the new props and patch it.

@@ -1,4 +1,4 @@
-import { AbstractBlock, EditType, Hole } from './types';
+import { AbstractBlock, Hole } from './types';
 import { setHas$ } from './dom';
 import type { Edit, VElement } from './types';
 
@@ -53,7 +53,7 @@ export const renderToTemplate = (
       const isValueHole = value instanceof Hole;
       // Make objects monomorphic
       current.edits.push({
-        type: EditType.Event,
+        type: 'event',
         listener: isValueHole ? value.key : value,
         name,
         hole: isValueHole ? value.key : undefined,
@@ -68,7 +68,7 @@ export const renderToTemplate = (
 
     if (value instanceof Hole) {
       current.edits.push({
-        type: EditType.Attribute,
+        type: 'attribute',
         hole: value.key,
         name,
         listener: undefined,

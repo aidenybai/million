@@ -27,15 +27,8 @@ export abstract class AbstractBlock {
   }
 }
 
-export const enum EditType {
-  Attribute,
-  Block,
-  Child,
-  Event,
-}
-
 export interface EditBase {
-  type: EditType;
+  type: string;
   name?: string;
   value?: string;
   hole?: string;
@@ -46,25 +39,25 @@ export interface EditBase {
 }
 
 export interface EditAttribute extends EditBase {
-  type: EditType.Attribute;
+  type: 'attribute';
   hole: string;
   name: string;
 }
 
 export interface EditChild extends EditBase {
-  type: EditType.Child;
+  type: 'child';
   hole: string;
   index: number;
 }
 
 export interface EditBlock extends EditBase {
-  type: EditType.Block;
+  type: 'block';
   block: AbstractBlock;
   index: number;
 }
 
 export interface EditEvent extends EditBase {
-  type: EditType.Event;
+  type: 'event';
   hole?: string;
   name: string;
   listener: EventListener;
