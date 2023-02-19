@@ -15,7 +15,6 @@ import {
 } from './dom';
 import { renderToTemplate } from './template';
 import { AbstractBlock, EditType, Hole } from './types';
-import { fragmentPatch$ } from './fragment';
 import type { Edit, EditChild, Props, VElement } from './types';
 
 export const createBlock = (fn: (props?: Props) => VElement) => {
@@ -142,10 +141,7 @@ export class Block extends AbstractBlock {
       for (let k = 0, l = current.edits.length; k < l; ++k) {
         const edit = current.edits[k]!;
         if (edit.type === EditType.Block) {
-          const prototype =
-            edit.block instanceof Block ? patch$ : fragmentPatch$;
-          // @ts-expect-error - We know this is a block
-          prototype.call(edit.block, block.edits?.[i]![k].block);
+          edit.block.patch(block.edits?.[i]![k].block);
           continue;
         }
         if (!('hole' in edit) || !edit.hole) continue;
@@ -165,10 +161,7 @@ export class Block extends AbstractBlock {
             // the cooresponding block in the new props and patch it.
             const firstEdit = block.edits?.[i]?.edits[k] as EditChild;
             const thisSubBlock = block.props[firstEdit.hole];
-            const prototype =
-              oldValue instanceof Block ? patch$ : fragmentPatch$;
-            // @ts-expect-error - We know this is a block
-            prototype.call(oldValue, thisSubBlock);
+            oldValue.patch(thisSubBlock);
             continue;
           }
           setText(el, String(newValue), edit.index);
