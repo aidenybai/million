@@ -47,12 +47,7 @@ export const set$ = Set.prototype;
 export const setAdd$ = set$.add;
 export const setHas$ = set$.has;
 
-const eventCache = new Map<string, EventListener>();
-export const linkEvent = (value: EventListener, key: string) => {
-  if (mapHas$.call(eventCache, key)) return mapGet$.call(eventCache, key);
-  mapSet$.call(eventCache, key, value);
-  return value;
-};
+document[EVENTS_REGISTRY] = new Set();
 
 export const createEventListener = (
   el: HTMLElement,
@@ -60,7 +55,6 @@ export const createEventListener = (
   value?: EventListener,
 ) => {
   const event = name.toLowerCase().slice(2);
-  if (!document[EVENTS_REGISTRY]) document[EVENTS_REGISTRY] = new Set();
   if (!setHas$.call(document[EVENTS_REGISTRY], event)) {
     // createEventListener uses a synthetic event handler to capture events
     // https://betterprogramming.pub/whats-the-difference-between-synthetic-react-events-and-javascript-events-ba7dbc742294
@@ -88,13 +82,12 @@ export const createEventListener = (
     document[EVENTS_REGISTRY].add(event);
   }
   const pointer = listenerPointer++;
-  const patch = (newValue?: EventListener) => {
+  const patch = (newValue?: any) => {
     if (!el[EVENT_LISTENERS_POOL]) el[EVENT_LISTENERS_POOL] = {};
     const pool = el[EVENT_LISTENERS_POOL];
     if (!pool[event]) pool[event] = {};
-    pool[event][pointer] = (e: Event) => {
-      (newValue ?? value)?.(e);
-    };
+    if (newValue?.key && newValue.key === pool[event][pointer]?.key) return;
+    pool[event][pointer] = newValue ?? value;
   };
   patch(value);
   return patch;

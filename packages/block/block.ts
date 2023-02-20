@@ -231,6 +231,11 @@ export const stringToDOM = (content: string) => {
   return template.content.firstChild as HTMLElement;
 };
 
+export const withKey = (value: any, key: string) => {
+  value.key = key;
+  return value;
+};
+
 export const mount$ = Block.prototype.mount;
 export const patch$ = Block.prototype.patch;
 export const move$ = Block.prototype.move;
