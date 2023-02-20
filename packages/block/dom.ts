@@ -107,15 +107,7 @@ export const insertText = (
 ): Text => {
   const node = document.createTextNode(value);
   const childNodes = childNodes$.call(el);
-<<<<<<< HEAD
   insertBefore$.call(el, node, childNodes[index]);
-=======
-  if (index < childNodes.length) {
-    insertBefore$.call(el, node, childNodes[index]);
-  } else {
-    appendChild$.call(el, node);
-  }
->>>>>>> 196ab71d15442003a9e9024dfe47a8c17662be22
   return node;
 };
 
