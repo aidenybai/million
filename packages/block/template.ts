@@ -2,6 +2,7 @@ import { AbstractBlock, Hole } from './types';
 import { setHas$ } from './dom';
 import type { Edit, VElement } from './types';
 
+const X_CHAR = 120;
 const VOID_ELEMENTS = new Set([
   'area',
   'base',
@@ -68,7 +69,12 @@ export const renderToTemplate = (
 
     if (value instanceof Hole) {
       current.edits.push({
-        type: 'attribute',
+        type:
+          name === 'style'
+            ? 'style'
+            : name.charCodeAt(0) === X_CHAR
+            ? 'svg'
+            : 'attribute',
         hole: value.key,
         name,
         listener: undefined,
@@ -95,7 +101,7 @@ export const renderToTemplate = (
 
     if (child instanceof Hole) {
       current.edits.push({
-        type: EditType.Child,
+        type: 'child',
         hole: child.key,
         index: i,
         name: undefined,
@@ -109,7 +115,7 @@ export const renderToTemplate = (
 
     if (child instanceof AbstractBlock) {
       current.edits.push({
-        type: EditType.Block,
+        type: 'block',
         block: child,
         index: i,
         hole: undefined,

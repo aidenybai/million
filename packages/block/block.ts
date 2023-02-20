@@ -12,6 +12,8 @@ import {
   mapGet$,
   mapHas$,
   mapSet$,
+  setStyleAttribute,
+  setSvgAttribute,
 } from './dom';
 import { renderToTemplate } from './template';
 import { AbstractBlock, Hole } from './types';
@@ -116,8 +118,12 @@ export class Block extends AbstractBlock {
           if (hasHole) {
             edit.patch = patch;
           }
-        } else {
+        } else if (edit.type === 'attribute') {
           setAttribute(el, edit.name, value);
+        } else if (edit.type === 'style') {
+          setStyleAttribute(el, edit.name, value);
+        } else {
+          setSvgAttribute(el, edit.name, value);
         }
       }
     }
@@ -165,8 +171,12 @@ export class Block extends AbstractBlock {
             continue;
           }
           setText(el, String(newValue), edit.index);
-        } else {
+        } else if (edit.type === 'attribute') {
           setAttribute(el, edit.name, newValue);
+        } else if (edit.type === 'style') {
+          setStyleAttribute(el, edit.name, newValue);
+        } else {
+          setSvgAttribute(el, edit.name, newValue);
         }
       }
     }

@@ -44,6 +44,18 @@ export interface EditAttribute extends EditBase {
   name: string;
 }
 
+export interface EditStyleAttribute extends EditBase {
+  type: 'style';
+  hole: string;
+  name: string;
+}
+
+export interface EditSvgAttribute extends EditBase {
+  type: 'svg';
+  hole: string;
+  name: string;
+}
+
 export interface EditChild extends EditBase {
   type: 'child';
   hole: string;
@@ -66,7 +78,14 @@ export interface EditEvent extends EditBase {
 
 export interface Edit {
   path: number[];
-  edits: (EditAttribute | EditChild | EditBlock | EditEvent)[];
+  edits: (
+    | EditAttribute
+    | EditStyleAttribute
+    | EditSvgAttribute
+    | EditChild
+    | EditBlock
+    | EditEvent
+  )[];
   inits: {
     index: number;
     value: string;
