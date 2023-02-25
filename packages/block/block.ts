@@ -22,7 +22,6 @@ import { AbstractBlock } from './types';
 import type { Edit, EditChild, Props, VElement, Hole } from './types';
 
 export const createBlock = (fn: (props?: Props) => VElement) => {
-  const cache = new Map<string, Hole>();
   const vnode = fn(
     new Proxy(
       {},
@@ -30,10 +29,7 @@ export const createBlock = (fn: (props?: Props) => VElement) => {
         // A universal getter will return a Hole instance if props[any] is accessed
         // Allows code to identify holes in virtual nodes ("digs" them out)
         get(_, key: string): Hole {
-          if (mapHas$.call(cache, key)) return mapGet$.call(cache, key);
-          const hole = { __key: key };
-          mapSet$.call(cache, key, hole);
-          return hole;
+          return { __key: key };
         },
       },
     ),

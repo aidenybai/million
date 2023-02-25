@@ -54,6 +54,7 @@ export const setHas$ = set$.has;
 
 document[EVENTS_REGISTRY] = new Set();
 
+// TODO: this consumes a lot of memory
 export const createEventListener = (
   el: HTMLElement,
   name: string,
