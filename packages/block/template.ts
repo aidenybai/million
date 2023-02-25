@@ -1,6 +1,6 @@
-import { AbstractBlock, Hole } from './types';
+import { AbstractBlock } from './types';
 import { setHas$ } from './dom';
-import type { Edit, VElement } from './types';
+import type { Edit, VElement , Hole } from './types';
 
 const X_CHAR = 120;
 const VOID_ELEMENTS = new Set([
@@ -51,7 +51,7 @@ export const renderToTemplate = (
     if (name === 'htmlFor') name = 'for';
 
     if (name.startsWith('on')) {
-      const isValueHole = value instanceof Hole;
+      const isValueHole = '__key' in value;
       // Make objects monomorphic
       current.edits.push({
         type: 'event',
@@ -67,7 +67,7 @@ export const renderToTemplate = (
       continue;
     }
 
-    if (value instanceof Hole) {
+    if ('key' in value) {
       current.edits.push({
         type:
           name === 'style'
@@ -99,10 +99,10 @@ export const renderToTemplate = (
     const child = vnode.children?.[i];
     if (!child) continue;
 
-    if (child instanceof Hole) {
+    if (typeof child === 'object' && '__key' in child) {
       current.edits.push({
         type: 'child',
-        hole: child.key,
+        hole: (child as Hole).__key,
         index: i,
         name: undefined,
         listener: undefined,

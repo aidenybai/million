@@ -14,10 +14,12 @@ import {
   mapSet$,
   setStyleAttribute,
   setSvgAttribute,
+  firstChild$,
+  nextSibling$,
 } from './dom';
 import { renderToTemplate } from './template';
-import { AbstractBlock, Hole } from './types';
-import type { Edit, EditChild, Props, VElement } from './types';
+import { AbstractBlock } from './types';
+import type { Edit, EditChild, Props, VElement, Hole } from './types';
 
 export const createBlock = (fn: (props?: Props) => VElement) => {
   const cache = new Map<string, Hole>();
@@ -27,10 +29,10 @@ export const createBlock = (fn: (props?: Props) => VElement) => {
       {
         // A universal getter will return a Hole instance if props[any] is accessed
         // Allows code to identify holes in virtual nodes ("digs" them out)
-        get(_, prop: string): Hole {
-          if (mapHas$.call(cache, prop)) return mapGet$.call(cache, prop);
-          const hole = new Hole(prop);
-          mapSet$.call(cache, prop, hole);
+        get(_, key: string): Hole {
+          if (mapHas$.call(cache, key)) return mapGet$.call(cache, key);
+          const hole = { __key: key };
+          mapSet$.call(cache, key, hole);
           return hole;
         },
       },
@@ -154,7 +156,7 @@ export class Block extends AbstractBlock {
         const oldValue = props[edit.hole];
         const newValue = block.props[edit.hole];
 
-        if (newValue === oldValue) continue;
+        if (Object.is(newValue, oldValue)) continue;
 
         if (edit.type === 'event') {
           edit.patch?.(newValue);
@@ -189,11 +191,8 @@ export class Block extends AbstractBlock {
   remove() {
     removeElement$.call(this.el);
   }
-  shouldUpdate(oldProps: Props, newProps: Props): boolean {
-    for (const i in oldProps) {
-      if (oldProps[i] !== newProps[i]) return true;
-    }
-    return false;
+  shouldUpdate(_oldProps: Props, _newProps: Props): boolean {
+    return true;
   }
   toString() {
     return String(this.el?.outerHTML);
@@ -216,10 +215,17 @@ const getCurrentElement = (
     return mapGet$.call(cache, slot)!;
   }
   // path is an array of indices to traverse the DOM tree
-  // For example, [0, 1, 2] becomes root.childNodes[0].childNodes[1].childNodes[2]
+  // For example, [0, 1, 2] becomes:
+  // root.firstChild.firstChild.nextSibling.firstChild.nextSibling.nextSibling
   // We use path because we don't have the actual DOM nodes until mount()
-  for (let k = 0; k < pathLength; ++k) {
-    root = childNodes$.call(root)[current.path[k]!] as HTMLElement;
+  for (let i = 0; i < pathLength; ++i) {
+    const siblings = current.path[i]!;
+    // https://www.measurethat.net/Benchmarks/Show/15652/0/childnodes-vs-children-vs-firstchildnextsibling-vs-firs
+    root = firstChild$.call(root);
+    if (!siblings) continue;
+    for (let j = 0; j < siblings; ++j) {
+      root = nextSibling$.call(root) as HTMLElement;
+    }
   }
   if (cache && slot !== undefined) mapSet$.call(cache, slot, root);
   return root;

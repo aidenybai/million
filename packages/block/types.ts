@@ -1,12 +1,7 @@
 export type { VNode, VElement } from '../million/types';
 export type Props = Record<string, any>;
 
-export class Hole {
-  key: string;
-  constructor(key: string) {
-    this.key = key;
-  }
-}
+export interface Hole { __key: string }
 
 export abstract class AbstractBlock {
   root?: HTMLElement;

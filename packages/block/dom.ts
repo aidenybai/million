@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 
-const EVENT_LISTENERS_POOL = '__million_listeners';
 const EVENTS_REGISTRY = '__million_events';
 const IS_NON_DIMENSIONAL =
   /acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i;
@@ -33,6 +32,12 @@ export const innerHTML$ = Object.getOwnPropertyDescriptor(
 )!.set!;
 export const childNodes$ = Object.getOwnPropertyDescriptor(node$, 'childNodes')!
   .get!;
+export const firstChild$ = Object.getOwnPropertyDescriptor(node$, 'firstChild')!
+  .get!;
+export const nextSibling$ = Object.getOwnPropertyDescriptor(
+  node$,
+  'nextSibling',
+)!.get!;
 export const characterDataSet$ = Object.getOwnPropertyDescriptor(
   characterData$,
   'data',
@@ -55,6 +60,7 @@ export const createEventListener = (
   value?: EventListener,
 ) => {
   const event = name.toLowerCase().slice(2);
+  const key = `__event_${event}`;
   if (!setHas$.call(document[EVENTS_REGISTRY], event)) {
     // createEventListener uses a synthetic event handler to capture events
     // https://betterprogramming.pub/whats-the-difference-between-synthetic-react-events-and-javascript-events-ba7dbc742294
@@ -62,19 +68,16 @@ export const createEventListener = (
       let el = nativeEventObject.target as Node | null;
       // Bubble up the DOM tree to find all event listeners
       while (el) {
-        const pool = el[EVENT_LISTENERS_POOL];
-        if (pool) {
-          const listeners = pool[event] as Record<string, any> | undefined;
-          if (listeners) {
-            const handlers = Object.values(listeners);
-            let returnFalse = false;
-            for (let i = 0, j = handlers.length; i < j; ++i) {
-              if (handlers[i](nativeEventObject) === false) {
-                returnFalse = true;
-              }
+        const listeners = el[key] as Record<string, any> | undefined;
+        if (listeners) {
+          const handlers = Object.values(listeners);
+          let returnFalse = false;
+          for (let i = 0, j = handlers.length; i < j; ++i) {
+            if (handlers[i](nativeEventObject) === false) {
+              returnFalse = true;
             }
-            if (returnFalse) return;
           }
+          if (returnFalse) return;
         }
         el = el.parentNode;
       }
@@ -82,12 +85,11 @@ export const createEventListener = (
     document[EVENTS_REGISTRY].add(event);
   }
   const pointer = listenerPointer++;
-  const patch = (newValue?: any) => {
-    if (!el[EVENT_LISTENERS_POOL]) el[EVENT_LISTENERS_POOL] = {};
-    const pool = el[EVENT_LISTENERS_POOL];
-    if (!pool[event]) pool[event] = {};
-    if (newValue?.key && newValue.key === pool[event][pointer]?.key) return;
-    pool[event][pointer] = newValue ?? value;
+  const patch = (newValue?: EventListener | null) => {
+    if (!el[key]) el[key] = {};
+    if (!newValue) return delete el[key][pointer];
+    if ('key' in newValue && newValue.key === el[key][pointer]?.key) return;
+    el[key][pointer] = newValue;
   };
   patch(value);
   return patch;
