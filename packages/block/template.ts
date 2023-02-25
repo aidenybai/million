@@ -67,7 +67,7 @@ export const renderToTemplate = (
       continue;
     }
 
-    if ('key' in value) {
+    if ('__key' in value) {
       current.edits.push({
         type:
           name === 'style'

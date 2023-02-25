@@ -1,7 +1,6 @@
 import { className, kebab, m, mergeHooks, style } from '../million/m';
 import { Flags } from '../million/types';
 import { Fragment } from './jsx';
-import type { Hole } from '../block';
 import type { Delta, Hooks, VNode, VProps } from '../million/types';
 import type { FC, RawVNode } from './types';
 
