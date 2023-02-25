@@ -1,7 +1,7 @@
-import { Hole } from '../block';
 import { className, kebab, m, mergeHooks, style } from '../million/m';
 import { Flags } from '../million/types';
 import { Fragment } from './jsx';
+import type { Hole } from '../block';
 import type { Delta, Hooks, VNode, VProps } from '../million/types';
 import type { FC, RawVNode } from './types';
 
@@ -128,10 +128,7 @@ export function h(
       flag = props.flag;
       props.flag = undefined;
     }
-    if (
-      typeof props.className === 'object' &&
-      !(props.className instanceof Hole)
-    ) {
+    if (typeof props.className === 'object' && !('__key' in props.className)) {
       props.className = className(props.className as Record<string, boolean>);
     }
     if (typeof props.style === 'object') {
