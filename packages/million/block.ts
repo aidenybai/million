@@ -19,9 +19,12 @@ import {
 } from './dom';
 import { renderToTemplate } from './template';
 import { AbstractBlock } from './types';
-import type { Edit, EditChild, Props, VElement, Hole } from './types';
+import type { Edit, EditChild, Props, VElement, Hole, VNode } from './types';
 
-export const createBlock = (fn: (props?: Props) => VElement) => {
+export const createBlock = (
+  fn: (props?: Props) => VElement,
+  unwrap?: (vnode: any) => VNode,
+) => {
   const vnode = fn(
     new Proxy(
       {},
@@ -38,7 +41,9 @@ export const createBlock = (fn: (props?: Props) => VElement) => {
 
   // Turns vnode into a string of HTML and creates an array of "edits"
   // Edits are instructions for how to update the DOM given some props
-  const root = stringToDOM(renderToTemplate(vnode, edits));
+  const root = stringToDOM(
+    renderToTemplate(unwrap ? unwrap(vnode) : vnode, edits),
+  );
 
   // Handles case for positioning text nodes. When text nodes are
   // put into a template, they can be merged. For example,

@@ -8,83 +8,26 @@
   "unpkg": "dist/million.mjs",
   "types": "dist/million.d.ts",
   "scripts": {
-    "dev": "zx scripts/dev.mjs && vite",
-    "build": "zx scripts/build.mjs",
+    "build": "tsc --noEmit && unbuild",
     "cleanup": "prettier --write ./**/*.{ts,tsx}",
     "lint": "eslint ./packages --ext .ts --cache",
     "lint:fix": "pnpm lint --fix",
     "test": "vitest run --coverage",
     "test:dev": "vitest watch",
-    "typecheck": "tsc --noEmit",
-    "release": "zx scripts/release.mjs",
-    "bump": "bumpp && zx scripts/citation.mjs && pnpm publish",
-    "welcome": "zx scripts/welcome.mjs",
-    "ci-failed-and-i-dont-know-why": "pnpm i && git add . && git commit -m 'chore: update lockfile' && git push",
-    "prepare": "husky install"
+    "bump": "pnpm build && bumpp && pnpm publish"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/aidenybai/million.git"
   },
   "files": [
-    "dist/**/*",
-    "/*.d.ts"
+    "dist/**/*"
   ],
   "exports": {
     ".": {
       "import": "./dist/million.mjs",
       "require": "./dist/million.cjs",
       "types": "./dist/million.d.ts"
-    },
-    "./block": {
-      "import": "./dist/block.mjs",
-      "require": "./dist/block.cjs",
-      "types": "./block.d.ts"
-    },
-    "./jsx-runtime": {
-      "import": "./dist/jsx-runtime.mjs",
-      "require": "./dist/jsx-runtime.cjs",
-      "types": "./jsx-runtime.d.ts"
-    },
-    "./vite-plugin-million": {
-      "import": "./dist/vite-plugin-million.mjs",
-      "require": "./dist/vite-plugin-million.cjs",
-      "types": "./vite-plugin-million.d.ts"
-    },
-    "./utils": {
-      "import": "./dist/utils.mjs",
-      "require": "./dist/utils.cjs",
-      "types": "./utils.d.ts"
-    },
-    "./react": {
-      "import": "./dist/react.mjs",
-      "require": "./dist/react.cjs",
-      "types": "./react.d.ts"
-    },
-    "./react/client": {
-      "import": "./dist/react/client.mjs",
-      "require": "./dist/react/client.cjs",
-      "types": "./dist/react/client.d.ts"
-    },
-    "./react/jsx-dev-runtime": {
-      "import": "./dist/react/jsx-dev-runtime.mjs",
-      "require": "./dist/react/jsx-dev-runtime.cjs",
-      "types": "./dist/react/jsx-dev-runtime.d.ts"
-    },
-    "./react/jsx-runtime": {
-      "import": "./dist/react/jsx-runtime.mjs",
-      "require": "./dist/react/jsx-runtime.cjs",
-      "types": "./dist/react/jsx-runtime.d.ts"
-    },
-    "./react/scheduler": {
-      "import": "./dist/react/scheduler.mjs",
-      "require": "./dist/react/scheduler.cjs",
-      "types": "./dist/react/scheduler.d.ts"
-    },
-    "./react/server": {
-      "import": "./dist/react/server.mjs",
-      "require": "./dist/react/server.cjs",
-      "types": "./dist/react/server.d.ts"
     }
   },
   "sideEffects": false,
@@ -110,33 +53,23 @@
   "homepage": "https://github.com/aidenybai/million",
   "prettier": "@vercel/style-guide/prettier",
   "devDependencies": {
-    "@babel/core": "^7.20.12",
-    "@types/node": "^18.13.0",
-    "@typescript-eslint/eslint-plugin": "^5.51.0",
-    "@typescript-eslint/parser": "^5.51.0",
+    "@babel/core": "^7.21.0",
+    "@types/node": "^18.14.1",
+    "@typescript-eslint/eslint-plugin": "^5.53.0",
+    "@typescript-eslint/parser": "^5.53.0",
     "@vercel/style-guide": "^3.0.0",
-    "benchmark": "^2.1.4",
     "bumpp": "^8.2.1",
-    "c8": "^7.12.0",
+    "c8": "^7.13.0",
     "esbuild": "^0.14.54",
-    "eslint": "^8.33.0",
+    "eslint": "^8.34.0",
     "eslint-config-prettier": "^8.6.0",
-    "export-size": "^0.5.2",
-    "fsxx": "^0.1.0",
-    "husky": "^8.0.3",
-    "jsdom": "^20.0.3",
-    "ora": "^6.1.2",
     "prettier": "^2.8.4",
-    "recast": "^0.21.5",
-    "simple-git": "^3.16.0",
     "source-map": "^0.7.4",
-    "taze": "^0.7.6",
     "tslib": "^2.5.0",
-    "turbo": "^1.7.4",
+    "turbo": "^1.8.2",
     "typescript": "^4.9.5",
     "unbuild": "^0.7.6",
     "vite": "3.0.0",
-    "vitest": "^0.19.1",
-    "zx": "^7.1.1"
+    "vitest": "^0.19.1"
   }
 }

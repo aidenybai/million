@@ -1,264 +1,109 @@
-/* eslint-disable camelcase */
-/* eslint-disable @typescript-eslint/ban-types */
-
-import { Fragment, h, jsx, jsxs } from '../jsx-runtime';
-import { batch, startTransition } from '../million';
-import { compat } from './compat';
 import {
-  createContext,
-  useDelta,
-  useList,
-  hook,
-  useCallback,
-  useContext,
-  useDebugValue,
-  useDeferredValue,
-  useEffect,
-  useId,
-  useImperativeHandle,
-  useLayoutEffect,
-  useMemo,
-  useReducer,
-  useRef,
-  useState,
-  useSyncExternalStore,
-  useTransition,
-} from './hooks';
-import type { FC } from '../jsx-runtime';
-import type { VElement, VNode, VProps } from '../million';
-
-const isSingleVNode = (
-  vnode: VNode | VNode[] | null | undefined,
-): vnode is VNode[] => {
-  return Array.isArray(vnode) && vnode.length === 1 && isValidElement(vnode[0]);
-};
-
-const cloneElement = (vnode: VNode | [VElement], config?: VProps) => {
-  if (typeof vnode === 'string') return vnode;
-  const { tag, props, children } = isSingleVNode(vnode) ? vnode[0] : vnode;
-  return h(tag, { ...props, ...config }, ...(children ?? []));
-};
-
-const createElement = compat(h);
-
-const isValidElement = (vnode?: VNode | VNode[] | null) => {
-  if (isSingleVNode(vnode)) return true;
-  if (vnode) {
-    if (typeof vnode === 'string') return true;
-    if (vnode.tag) return true;
-  }
-  return false;
-};
-
-// taken from preact/compat
-// https://github.com/preactjs/preact/blob/4a37c998833dafa42bcdb5250128d76ee3307414/compat/src/util.js#L19
-const arePropsDifferent = (a: VProps, b: VProps) => {
-  for (const i in a) if (!(i in b)) return true;
-  for (const i in b) if (a[i] !== b[i]) return true;
-  return false;
-};
-
-const memo = (component: (...args: unknown[]) => VNode) => {
-  let prevProps;
-  let prevRet;
-  return (props: VProps) => {
-    if (!arePropsDifferent(props, prevProps)) return prevRet;
-    const ret = component(props);
-    prevProps = props;
-    prevRet = ret;
-    return ret;
-  };
-};
-
-const toChildArray = (children: VNode[]): VNode[] => {
-  return (h('_', {}, ...children) as VElement).children!;
-};
-
-const mapFn = (children: VNode[] | null, fn: (this: VNode) => VNode) => {
-  if (children === null) return null;
-  return toChildArray(toChildArray(children).map(fn));
-};
-
-const Children = {
-  map: mapFn,
-  forEach: mapFn,
-  count(children: VNode[] | null) {
-    return children ? toChildArray(children).length : 0;
-  },
-  only(children: VNode[]) {
-    const normalized = toChildArray(children);
-    if (normalized.length !== 1) throw 'Children.only';
-    return normalized[0];
-  },
-  toArray: toChildArray,
-};
-
-const lazy = (loader: () => Promise<FC>) => {
-  let promise: Promise<FC> | undefined;
-  let component: FC | undefined;
-  let err: Error | undefined;
-
-  return (props: VProps) => {
-    if (!promise) {
-      promise = loader();
-      promise.then(
-        (exports: any) => (component = exports.default || exports),
-        (e: Error) => (err = e),
-      );
-    }
-    if (err) throw err;
-    if (!component) throw promise;
-    return h(component, props);
-  };
-};
-
-const createRef = () => {
-  return { current: null };
-};
-
-const forwardRef = (fn: Function) => {
-  return function Forwarded(props: VProps) {
-    const clone = { ...props };
-    delete clone.ref;
-    return fn(clone, props.ref || null);
-  };
-};
-
-const Suspense = (props: { fallback: VNode; children: VNode[] }) => {
-  return props.children;
-};
-
-const SuspenseList = (props: { fallback: VNode; children: VNode[] }) => {
-  return props.children;
-};
-
-const StrictMode = (props: { children: VNode[] }) => {
-  return props.children;
-};
-
-class Component {
-  props: VProps;
-  context: ReturnType<typeof createContext> | undefined;
-  queueRender: (_callback: () => any) => void;
-  state: VProps;
-  rerender?: Function;
-
-  constructor(props: VProps, context?: ReturnType<typeof createContext>) {
-    this.props = props;
-    this.context = context;
-    this.state = {};
-    this.queueRender = batch();
-  }
-
-  componentDidMount() {
-    // unsupported
-    return false;
-  }
-
-  componentDidUnmount() {
-    // unsupported
-    return false;
-  }
-
-  componentDidUpdate() {
-    // unsupported
-    return true;
-  }
-
-  shouldComponentUpdate(_newProps: VProps, _newState: VProps) {
-    return true;
-  }
-
-  componentDidCatch(_e: unknown) {
-    void 0;
-  }
-
-  setState(
-    update: VProps | Function,
-    callback?: (state: VProps, props: VProps) => VProps,
-  ) {
-    const newState = {
-      ...this.state,
-      ...(typeof update === 'function'
-        ? (update(this.state, this.props) as VProps)
-        : update),
-    };
-    if (!this.shouldComponentUpdate(this.props, newState)) return;
-    if (callback) callback(this.state, this.props);
-    this.state = newState;
-
-    this.queueRender(() => {
-      if (this.rerender) this.rerender();
-    });
-  }
-
-  render(props?: VProps): VNode[] | undefined {
-    return Fragment(props);
-  }
-}
-
-class PureComponent extends Component {
-  shouldComponentUpdate(newProps: VProps, newState: VProps) {
-    return newProps !== this.props && newState !== this.state;
-  }
-}
-
-export {
-  hook,
-  // __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED,
-  // act as unstable_act,
-  Children,
-  Component,
-  Fragment,
-  // Profiler,
-  PureComponent,
-  StrictMode,
-  Suspense,
-  SuspenseList,
-  SuspenseList as unstable_SuspenseList,
-  cloneElement,
-  createContext,
   createElement,
-  // createMutableSource,
-  // createMutableSource as unstable_createMutableSource,
-  createRef,
-  // createServerContext,
-  forwardRef,
-  isValidElement,
-  lazy,
-  memo,
-  startTransition,
-  startTransition as unstable_startTransition,
-  // unstable_Cache,
-  // unstable_DebugTracingMode,
-  // unstable_LegacyHidden,
-  // unstable_Offscreen,
-  // unstable_Scope,
-  // unstable_getCacheSignal,
-  // unstable_getCacheForType,
-  // unstable_useCacheRefresh,
-  useId,
+  Fragment,
   useCallback,
-  useContext,
-  useDebugValue,
-  useDeferredValue,
-  useDeferredValue as unstable_useDeferredValue,
   useEffect,
-  useImperativeHandle,
-  useEffect as useInsertionEffect,
-  useLayoutEffect,
   useMemo,
-  useDelta,
-  useList,
-  useSyncExternalStore as useMutableSource,
-  useSyncExternalStore as unstable_useMutableSource,
-  useReducer,
   useRef,
   useState,
-  useSyncExternalStore,
-  useTransition,
-  useTransition as unstable_useTransition,
-  jsx,
-  jsxs,
-  jsx as jsxDEV,
+} from 'react';
+import { createPortal } from 'react-dom';
+import { createBlock } from '../million';
+import type { AbstractBlock, Props, VNode } from '../million';
+import type {
+  FunctionComponent,
+  FunctionComponentElement,
+  ReactNode,
+} from 'react';
+
+// TODO: add fragment
+export const optimize = (fn: (props: Props) => ReactNode, shouldUpdate) => {
+  let block: ReturnType<typeof createBlock> | null = null;
+  return (rawProps): FunctionComponentElement<{ children?: ReactNode }> => {
+    const ref = useRef<HTMLDivElement>(null);
+    const portal = useRef({});
+    const [main, setMain] = useState<AbstractBlock | null>(null);
+    const wrappedProps = useMemo(() => {
+      const props = {};
+      for (const key in props) {
+        if (isVNode(props[key])) {
+          const factory = portal[key]
+            ? portal[key].containerInfo.parentElement
+            : document.createElement('span');
+          portal[key] = createPortal(props[key], factory);
+          return factory;
+        }
+        delete portal.current[key];
+        props[key] = rawProps[key];
+      }
+      return props;
+    }, []);
+
+    if (block && main) main.patch(block(wrappedProps));
+
+    const effect = useCallback(() => {
+      block = createBlock(fn as any, unwrap);
+      const main = block(wrappedProps, wrappedProps.key, shouldUpdate);
+      if (ref.current) {
+        main.mount(ref.current);
+        setMain(main);
+      }
+      return () => main.remove();
+    }, []);
+
+    return createElement(
+      Fragment,
+      null,
+      createElement('div', { style: { display: 'contents' }, ref }),
+      createElement(Effect, { effect }),
+      Object.values(portal.current),
+    );
+  };
+};
+
+export const unwrap = (vnode: ReactNode): VNode => {
+  if (typeof vnode !== 'object' || vnode === null || !('type' in vnode)) {
+    return vnode as VNode;
+  }
+  if (typeof vnode.type === 'function') {
+    throw new Error('Cannot have components in children');
+  }
+  const props = { ...vnode.props };
+  if (vnode.props?.children) {
+    props.children = flatten<ReactNode>(vnode.props.children).map((child) =>
+      unwrap(child),
+    );
+  }
+  return {
+    type: vnode.type,
+    props,
+  };
+};
+
+export const flatten = <T>(rawChildren: T): T[] => {
+  if (rawChildren === undefined || rawChildren === null) return [];
+  if (!Array.isArray(rawChildren) || (('__key' in rawChildren) as any))
+    return [rawChildren];
+  const flattenedChildren = rawChildren.flat(Infinity);
+  const children: T[] = [];
+  for (let i = 0, l = flattenedChildren.length; i < l; ++i) {
+    children.push(...flatten<T>(flattenedChildren[i] as any));
+  }
+  return children;
+};
+
+const isVNode = (value: unknown) => {
+  if (typeof value === 'object' && value !== null) {
+    if (Array.isArray(value)) {
+      return value.some(isVNode);
+    } else if ('_owner' in value) {
+      return true;
+    }
+  }
+  return false;
+};
+
+const Effect: FunctionComponent<{ effect: () => void }> = ({ effect }) => {
+  useEffect(effect, []);
+  return null;
 };

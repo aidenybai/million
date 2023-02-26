@@ -1,6 +1,6 @@
-import { AbstractBlock } from './types';
 import { setHas$ } from './dom';
-import type { Edit, VElement , Hole } from './types';
+import { AbstractBlock } from './types';
+import type { Edit, VNode } from './types';
 
 const X_CHAR = 120;
 const VOID_ELEMENTS = new Set([
@@ -30,10 +30,20 @@ const VOID_ELEMENTS = new Set([
 ]);
 
 export const renderToTemplate = (
-  vnode: VElement,
+  vnode: VNode,
   edits: Edit[] = [],
   path: number[] = [],
 ): string => {
+  if (typeof vnode === 'string') return vnode;
+  if (
+    typeof vnode === 'number' ||
+    typeof vnode === 'bigint' ||
+    vnode === true
+  ) {
+    return String(vnode);
+  }
+  if (vnode === null || vnode === undefined || vnode === false) return '';
+
   let props = '';
   let children = '';
   const current: Edit = {
@@ -67,7 +77,7 @@ export const renderToTemplate = (
       continue;
     }
 
-    if ('__key' in value) {
+    if (typeof value === 'object' && '__key' in value) {
       current.edits.push({
         type:
           name === 'style'
@@ -75,7 +85,7 @@ export const renderToTemplate = (
             : name.charCodeAt(0) === X_CHAR
             ? 'svg'
             : 'attribute',
-        hole: value.key,
+        hole: value.__key,
         name,
         listener: undefined,
         value: undefined,
@@ -89,20 +99,22 @@ export const renderToTemplate = (
     if (value) props += ` ${name}="${String(value)}"`;
   }
 
-  if (setHas$.call(VOID_ELEMENTS, vnode.tag)) return `<${vnode.tag}${props} />`;
+  if (setHas$.call(VOID_ELEMENTS, vnode.type)) {
+    return `<${vnode.type}${props} />`;
+  }
 
   // 👎: 'foo' + Block + 'bar' => 'foobaz'.
   //                                      ↕️ Block edit here
   // 👍: 'foo' + Block + 'bar'   => 'foo', 'bar'
   let canMergeString = false;
-  for (let i = 0, j = vnode.children?.length || 0, k = 0; i < j; ++i) {
-    const child = vnode.children?.[i];
-    if (!child) continue;
+  for (let i = 0, j = vnode.props.children?.length || 0, k = 0; i < j; ++i) {
+    const child = vnode.props.children?.[i];
+    if (child === null || child === undefined || child === false) continue;
 
     if (typeof child === 'object' && '__key' in child) {
       current.edits.push({
         type: 'child',
-        hole: (child as Hole).__key,
+        hole: child.__key,
         index: i,
         name: undefined,
         listener: undefined,
@@ -127,16 +139,24 @@ export const renderToTemplate = (
       continue;
     }
 
-    if (typeof child === 'string') {
+    if (
+      typeof child === 'string' ||
+      typeof child === 'number' ||
+      typeof child === 'bigint'
+    ) {
+      const value =
+        typeof child === 'number' || typeof child === 'bigint'
+          ? String(child)
+          : child;
       if (canMergeString) {
         current.inits.push({
           index: i,
-          value: child,
+          value,
         });
         continue;
       }
       canMergeString = true;
-      children += child;
+      children += value;
       k++;
       continue;
     }
@@ -149,5 +169,5 @@ export const renderToTemplate = (
     edits.push(current);
   }
 
-  return `<${vnode.tag}${props}>${children}</${vnode.tag}>`;
+  return `<${vnode.type}${props}>${children}</${vnode.type}>`;
 };
