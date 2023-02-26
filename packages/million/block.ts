@@ -212,7 +212,8 @@ const getCurrentElement = (
 ): HTMLElement => {
   const pathLength = current.path.length;
   if (!pathLength) return root;
-  if (cache && slot !== undefined && mapHas$.call(cache, slot)) {
+  const useCache = cache && slot !== undefined;
+  if (useCache && mapHas$.call(cache, slot)) {
     return mapGet$.call(cache, slot)!;
   }
   // path is an array of indices to traverse the DOM tree
@@ -228,7 +229,7 @@ const getCurrentElement = (
       root = nextSibling$.call(root) as HTMLElement;
     }
   }
-  if (cache && slot !== undefined) mapSet$.call(cache, slot, root);
+  if (useCache) mapSet$.call(cache, slot, root);
   return root;
 };
 
