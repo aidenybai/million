@@ -3,11 +3,10 @@ import {
   Fragment,
   useCallback,
   useEffect,
-  useMemo,
   useRef,
   useState,
+  startTransition,
 } from 'react';
-import { createPortal } from 'react-dom';
 import { createBlock } from '../million';
 import type { AbstractBlock, Props, VNode } from '../million';
 import type {
@@ -19,44 +18,34 @@ import type {
 // TODO: add fragment
 export const optimize = (fn: (props: Props) => ReactNode, shouldUpdate) => {
   let block: ReturnType<typeof createBlock> | null = null;
-  return (rawProps: Props): FunctionComponentElement<Props> => {
+  return (props: Props): FunctionComponentElement<Props> => {
     const ref = useRef<HTMLDivElement>(null);
-    const portal = useRef({});
-    const [main, setMain] = useState<AbstractBlock | null>(null);
-    const wrappedProps = useMemo(() => {
-      const props = {};
-      for (const key in rawProps) {
-        if (isVNode(props[key])) {
-          const factory = portal[key]
-            ? portal[key].containerInfo.parentElement
-            : document.createElement('span');
-          portal[key] = createPortal(props[key], factory);
-          return factory;
-        }
-        delete portal.current[key];
-        props[key] = rawProps[key];
-      }
-      return props;
-    }, [rawProps]);
+    const [instance, setInstance] = useState<AbstractBlock | null>(null);
 
-    if (block && main) main.patch(block(wrappedProps));
+    if (block && instance) {
+      startTransition(() => {
+        instance.patch(block!(props));
+      });
+    }
 
     const effect = useCallback(() => {
-      block = createBlock(fn as any, unwrap);
-      const main = block(wrappedProps, wrappedProps.key, shouldUpdate);
+      if (!block) block = createBlock(fn as any, unwrap);
+      const currentInstance = block(props, props.key, shouldUpdate);
       if (ref.current) {
-        main.mount(ref.current);
-        setMain(main);
+        currentInstance.mount(ref.current);
+        setInstance(currentInstance);
       }
-      return () => main.remove();
+      return () => currentInstance.remove();
     }, []);
 
     return createElement(
       Fragment,
       null,
-      createElement('div', { style: { display: 'contents' }, ref }),
+      createElement('div', {
+        style: { display: 'contents' },
+        ref,
+      }),
       createElement(Effect, { effect }),
-      Object.values(portal.current),
     );
   };
 };
@@ -90,17 +79,6 @@ export const flatten = <T>(rawChildren: T): T[] => {
     children.push(...flatten<T>(flattenedChildren[i] as any));
   }
   return children;
-};
-
-const isVNode = (value: unknown) => {
-  if (typeof value === 'object' && value !== null) {
-    if (Array.isArray(value)) {
-      return value.some(isVNode);
-    } else if ('_owner' in value) {
-      return true;
-    }
-  }
-  return false;
 };
 
 const Effect: FunctionComponent<{ effect: () => void }> = ({ effect }) => {
