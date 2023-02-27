@@ -77,26 +77,27 @@ export const renderToTemplate = (
       continue;
     }
 
-    if (typeof value === 'object' && '__key' in value) {
-      current.edits.push({
-        type:
-          name === 'style'
-            ? 'style'
-            : name.charCodeAt(0) === X_CHAR
-            ? 'svg'
-            : 'attribute',
-        hole: value.__key,
-        name,
-        listener: undefined,
-        value: undefined,
-        index: undefined,
-        patch: undefined,
-        block: undefined,
-      });
-      continue;
+    if (value) {
+      if (typeof value === 'object' && '__key' in value) {
+        current.edits.push({
+          type:
+            name === 'style'
+              ? 'style'
+              : name.charCodeAt(0) === X_CHAR
+              ? 'svg'
+              : 'attribute',
+          hole: value.__key,
+          name,
+          listener: undefined,
+          value: undefined,
+          index: undefined,
+          patch: undefined,
+          block: undefined,
+        });
+        continue;
+      }
+      props += ` ${name}="${String(value)}"`;
     }
-
-    if (value) props += ` ${name}="${String(value)}"`;
   }
 
   if (setHas$.call(VOID_ELEMENTS, vnode.type)) {
