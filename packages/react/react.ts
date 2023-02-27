@@ -36,7 +36,9 @@ export const optimize = (
     return createElement(
       Fragment,
       null,
-      patch.current ? null : createElement('div', { ref: marker }),
+      patch.current
+        ? null
+        : createElement('div', { style: { display: 'none' }, ref: marker }),
       createElement(Effect, { effect }),
     );
   };
