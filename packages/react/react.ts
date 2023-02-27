@@ -19,13 +19,13 @@ import type {
 // TODO: add fragment
 export const optimize = (fn: (props: Props) => ReactNode, shouldUpdate) => {
   let block: ReturnType<typeof createBlock> | null = null;
-  return (rawProps): FunctionComponentElement<{ children?: ReactNode }> => {
+  return (rawProps: Props): FunctionComponentElement<Props> => {
     const ref = useRef<HTMLDivElement>(null);
     const portal = useRef({});
     const [main, setMain] = useState<AbstractBlock | null>(null);
     const wrappedProps = useMemo(() => {
       const props = {};
-      for (const key in props) {
+      for (const key in rawProps) {
         if (isVNode(props[key])) {
           const factory = portal[key]
             ? portal[key].containerInfo.parentElement
@@ -37,7 +37,7 @@ export const optimize = (fn: (props: Props) => ReactNode, shouldUpdate) => {
         props[key] = rawProps[key];
       }
       return props;
-    }, []);
+    }, [rawProps]);
 
     if (block && main) main.patch(block(wrappedProps));
 
