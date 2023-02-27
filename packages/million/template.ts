@@ -65,9 +65,9 @@ export const renderToTemplate = (
       // Make objects monomorphic
       current.edits.push({
         type: 'event',
-        listener: isValueHole ? value.key : value,
+        listener: isValueHole ? value.__key : value,
         name,
-        hole: isValueHole ? value.key : undefined,
+        hole: isValueHole ? value.__key : undefined,
         value: undefined,
         index: undefined,
         patch: undefined,
