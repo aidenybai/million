@@ -8,4 +8,5 @@ export default defineBuildConfig({
     emitCJS: true,
     inlineDependencies: false,
   },
+  externals: ['react', 'react-dom'],
 });

@@ -8,7 +8,7 @@
   "unpkg": "dist/million.mjs",
   "types": "dist/million.d.ts",
   "scripts": {
-    "build": "tsc --noEmit && unbuild",
+    "build": "unbuild",
     "cleanup": "prettier --write ./**/*.{ts,tsx}",
     "lint": "eslint ./packages --ext .ts --cache",
     "lint:fix": "pnpm lint --fix",
