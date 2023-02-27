@@ -13,17 +13,19 @@ export const optimize = (
 ) => {
   const block = createBlock(fn as any, unwrap);
   return (props: Props): FunctionComponentElement<Props> => {
-    const container = useRef<HTMLDivElement>(null);
+    const marker = useRef<HTMLDivElement>(null);
     const patch = useRef<((props: Props) => void) | null>(null);
 
-    if (container.current) {
-      patch.current?.(props);
-    }
+    patch.current?.(props);
 
     const effect = useCallback(() => {
       const currentBlock = block(props, props.key, shouldUpdate);
-      if (container.current) {
-        container.current.replaceWith(mount$.call(currentBlock));
+      if (marker.current) {
+        mount$.call(
+          currentBlock,
+          marker.current.parentElement!,
+          marker.current,
+        );
         patch.current = (props: Props) => {
           patch$.call(currentBlock, block(props));
         };
@@ -34,10 +36,7 @@ export const optimize = (
     return createElement(
       Fragment,
       null,
-      // this is a temporary node
-      createElement('div', {
-        ref: container,
-      }),
+      patch.current ? null : createElement('div', { ref: marker }),
       createElement(Effect, { effect }),
     );
   };
