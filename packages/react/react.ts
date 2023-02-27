@@ -1,10 +1,22 @@
-import { createElement, Fragment, useCallback, useEffect, useRef } from 'react';
+import {
+  Component,
+  createElement,
+  forwardRef,
+  Fragment,
+  memo,
+  useCallback,
+  useEffect,
+  useInsertionEffect,
+  useRef,
+} from 'react';
 import { createBlock, remove$, mount$, patch$ } from '../million/block';
+import { replaceWith$ } from '../million/dom';
 import type { Props, VNode } from '../million';
 import type {
   FunctionComponent,
   FunctionComponentElement,
   ReactNode,
+  RefObject,
 } from 'react';
 
 export const optimize = (
@@ -21,11 +33,9 @@ export const optimize = (
     const effect = useCallback(() => {
       const currentBlock = block(props, props.key, shouldUpdate);
       if (marker.current) {
-        mount$.call(
-          currentBlock,
-          marker.current.parentElement!,
-          marker.current,
-        );
+        const el = mount$.call(currentBlock);
+        (marker as any)._cleanup = { marker: marker.current, el };
+        replaceWith$.call(marker.current, el);
         patch.current = (props: Props) => {
           patch$.call(currentBlock, block(props));
         };
@@ -36,12 +46,28 @@ export const optimize = (
     return createElement(
       Fragment,
       null,
-      patch.current
-        ? null
-        : createElement('div', { style: { display: 'none' }, ref: marker }),
+      createElement(Marker, { ref: marker }),
       createElement(Effect, { effect }),
     );
   };
+};
+
+const Marker: FunctionComponent<{ ref: RefObject<HTMLDivElement> }> = memo(
+  forwardRef((_, ref: any) => {
+    useInsertionEffect(() => {
+      return () => {
+        const { el, marker } = ref._cleanup;
+        replaceWith$.call(el, marker);
+      };
+    }, []);
+    return createElement('div', { style: { display: 'none' }, ref });
+  }),
+  (_, newProps) => !newProps,
+);
+
+const Effect: FunctionComponent<{ effect: () => void }> = ({ effect }) => {
+  useEffect(effect, []);
+  return null;
 };
 
 export const unwrap = (vnode: ReactNode): VNode => {
@@ -74,8 +100,6 @@ export const flatten = <T>(rawChildren: T): T[] => {
   }
   return children;
 };
-
-const Effect: FunctionComponent<{ effect: () => void }> = ({ effect }) => {
-  useEffect(effect, []);
-  return null;
-};
+function createPortal(arg0: never[], el: any) {
+  throw new Error('Function not implemented.');
+}

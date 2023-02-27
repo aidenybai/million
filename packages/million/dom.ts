@@ -15,6 +15,7 @@ export const characterData$ = CharacterData.prototype;
 export const insertBefore$ = node$.insertBefore;
 export const cloneNode$ = node$.cloneNode;
 export const replaceChild$ = node$.replaceChild;
+export const replaceWith$ = element$.replaceWith;
 export const removeChild$ = node$.removeChild;
 export const remove$ = element$.remove;
 export const addEventListener$ = node$.addEventListener;
