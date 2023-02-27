@@ -1,49 +1,42 @@
-import {
-  createElement,
-  Fragment,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  startTransition,
-} from 'react';
-import { createBlock } from '../million';
-import type { AbstractBlock, Props, VNode } from '../million';
+import { createElement, Fragment, useCallback, useEffect, useRef } from 'react';
+import { createBlock, remove$, mount$, patch$ } from '../million/block';
+import type { Props, VNode } from '../million';
 import type {
   FunctionComponent,
   FunctionComponentElement,
   ReactNode,
 } from 'react';
 
-// TODO: add fragment
-export const optimize = (fn: (props: Props) => ReactNode, shouldUpdate) => {
-  let block: ReturnType<typeof createBlock> | null = null;
+export const optimize = (
+  fn: (props: Props) => ReactNode,
+  shouldUpdate: (oldProps: Props, newProps: Props) => boolean,
+) => {
+  const block = createBlock(fn as any, unwrap);
   return (props: Props): FunctionComponentElement<Props> => {
-    const ref = useRef<HTMLDivElement>(null);
-    const [instance, setInstance] = useState<AbstractBlock | null>(null);
+    const container = useRef<HTMLDivElement>(null);
+    const patch = useRef<((props: Props) => void) | null>(null);
 
-    if (block && instance) {
-      startTransition(() => {
-        instance.patch(block!(props));
-      });
+    if (container.current) {
+      patch.current?.(props);
     }
 
     const effect = useCallback(() => {
-      if (!block) block = createBlock(fn as any, unwrap);
-      const currentInstance = block(props, props.key, shouldUpdate);
-      if (ref.current) {
-        currentInstance.mount(ref.current);
-        setInstance(currentInstance);
+      const currentBlock = block(props, props.key, shouldUpdate);
+      if (container.current) {
+        container.current.replaceWith(mount$.call(currentBlock));
+        patch.current = (props: Props) => {
+          patch$.call(currentBlock, block(props));
+        };
       }
-      return () => currentInstance.remove();
+      return () => remove$.call(currentBlock);
     }, []);
 
     return createElement(
       Fragment,
       null,
+      // this is a temporary node
       createElement('div', {
-        style: { display: 'contents' },
-        ref,
+        ref: container,
       }),
       createElement(Effect, { effect }),
     );
