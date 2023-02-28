@@ -1,69 +1,78 @@
 import {
-  Component,
   createElement,
-  forwardRef,
   Fragment,
-  memo,
   useCallback,
   useEffect,
-  useInsertionEffect,
+  useMemo,
   useRef,
 } from 'react';
-import { createBlock, remove$, mount$, patch$ } from '../million/block';
-import { replaceWith$ } from '../million/dom';
-import type { Props, VNode } from '../million';
+import { createBlock, mount$, patch$, remove$ } from '../million/block';
 import type {
   FunctionComponent,
   FunctionComponentElement,
   ReactNode,
-  RefObject,
 } from 'react';
+import type { Props, VNode } from '../million';
+
+interface Options {
+  shouldUpdate?: (oldProps: Props, newProps: Props) => boolean;
+  mode: 'raw' | 'island';
+}
 
 export const optimize = (
   fn: (props: Props) => ReactNode,
-  shouldUpdate: (oldProps: Props, newProps: Props) => boolean,
+  options: Options = { mode: 'raw' },
 ) => {
   const block = createBlock(fn as any, unwrap);
   return (props: Props): FunctionComponentElement<Props> => {
-    const marker = useRef<HTMLDivElement>(null);
+    const ref = useRef<HTMLDivElement>(null);
     const patch = useRef<((props: Props) => void) | null>(null);
 
     patch.current?.(props);
 
     const effect = useCallback(() => {
-      const currentBlock = block(props, props.key, shouldUpdate);
-      if (marker.current) {
-        const el = mount$.call(currentBlock);
-        (marker as any)._cleanup = { marker: marker.current, el };
-        replaceWith$.call(marker.current, el);
+      const currentBlock = block(props, props.key, options.shouldUpdate);
+      if (ref.current) {
+        mount$.call(currentBlock, ref.current, null, true);
         patch.current = (props: Props) => {
           patch$.call(currentBlock, block(props));
         };
       }
-      return () => remove$.call(currentBlock);
+      return () => {
+        if (options.mode === 'island') remove$.call(currentBlock);
+      };
+    }, []);
+
+    const marker = useMemo(() => {
+      if (options.mode === 'island') {
+        return createElement('div', { ref, style: { display: 'contents' } });
+      }
+      const vnode = fn(props);
+      if (
+        typeof vnode === 'object' &&
+        vnode !== null &&
+        'type' in vnode &&
+        vnode.props?.children
+      ) {
+        const { type, props, key } = vnode;
+        const newProps = { key, ref };
+        for (const prop in props) {
+          if (prop !== 'children') {
+            newProps[prop] = props[prop];
+          }
+        }
+        return createElement(type, newProps);
+      }
     }, []);
 
     return createElement(
       Fragment,
       null,
-      createElement(Marker, { ref: marker }),
+      marker,
       createElement(Effect, { effect }),
     );
   };
 };
-
-const Marker: FunctionComponent<{ ref: RefObject<HTMLDivElement> }> = memo(
-  forwardRef((_, ref: any) => {
-    useInsertionEffect(() => {
-      return () => {
-        const { el, marker } = ref._cleanup;
-        replaceWith$.call(el, marker);
-      };
-    }, []);
-    return createElement('div', { style: { display: 'none' }, ref });
-  }),
-  (_, newProps) => !newProps,
-);
 
 const Effect: FunctionComponent<{ effect: () => void }> = ({ effect }) => {
   useEffect(effect, []);
@@ -100,6 +109,3 @@ export const flatten = <T>(rawChildren: T): T[] => {
   }
   return children;
 };
-function createPortal(arg0: never[], el: any) {
-  throw new Error('Function not implemented.');
-}

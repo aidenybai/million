@@ -89,7 +89,11 @@ export class Block extends AbstractBlock {
     this.key = key;
     if (shouldUpdate) this.shouldUpdate = shouldUpdate;
   }
-  mount(parent?: HTMLElement, refNode: Node | null = null): HTMLElement {
+  mount(
+    parent?: HTMLElement,
+    refNode: Node | null = null,
+    inPlace = false,
+  ): HTMLElement {
     if (this.el) return this.el;
     // cloneNode(true) uses less memory than recursively creating new nodes
     const root = cloneNode$.call(this.root, true) as HTMLElement;
@@ -131,8 +135,16 @@ export class Block extends AbstractBlock {
       }
     }
 
+    if (parent) {
+      if (inPlace) {
+        while (root.childNodes.length > 0) {
+          parent.appendChild(root.childNodes[0] as Node);
+        }
+        return parent;
+      }
+      insertBefore$.call(parent, root, refNode);
+    }
     this.el = root;
-    if (parent) insertBefore$.call(parent, root, refNode);
 
     return root;
   }
