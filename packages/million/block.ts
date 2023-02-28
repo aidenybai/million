@@ -204,6 +204,7 @@ export class Block extends AbstractBlock {
   }
   remove() {
     removeElement$.call(this.el);
+    this.el = undefined;
   }
   shouldUpdate(_oldProps: Props, _newProps: Props): boolean {
     return true;

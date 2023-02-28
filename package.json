@@ -63,6 +63,7 @@
     "esbuild": "^0.14.54",
     "eslint": "^8.34.0",
     "eslint-config-prettier": "^8.6.0",
+    "jsdom": "^21.1.0",
     "prettier": "^2.8.4",
     "source-map": "^0.7.4",
     "tslib": "^2.5.0",

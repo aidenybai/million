@@ -3,6 +3,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "jsx": "react-jsx",
+    "jsxImportSource": "packages",
     "lib": ["dom", "esnext"],
     "outDir": "dist",
     "moduleResolution": "node",
