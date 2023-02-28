@@ -42,19 +42,6 @@ describe.concurrent('block', () => {
     frag.patch(fragment([]));
     expect(frag.parent?.outerHTML).toEqual('<div></div>');
   });
-  // it('should patch nested blocks', () => {
-  //   const parent = document.createElement('div');
-  //   const block = createBlock(fn);
-  //   const subBlock = createBlock(fn);
-  //   const frag = fragment([
-  //     block({ foo: subBlock({ foo: '1', bar: '2' }), bar: 'bar' }),
-  //   ]);
-  //   frag.mount(parent);
-  //   frag.patch(
-  //     fragment([block({ foo: subBlock({ foo: '2', bar: '1' }), bar: 'bar' })]),
-  //   );
-  //   expect(frag.parent).toEqual(parent);
-  // });
   it('should remove fragment', () => {
     const parent = document.createElement('div');
     const block = createBlock(fn);
