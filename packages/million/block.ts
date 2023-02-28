@@ -137,8 +137,9 @@ export class Block extends AbstractBlock {
 
     if (parent) {
       if (inPlace) {
-        while (root.childNodes.length > 0) {
-          parent.appendChild(root.childNodes[0] as Node);
+        let child: ChildNode | null | undefined;
+        while ((child = root.firstChild)) {
+          parent.appendChild(child);
         }
         return parent;
       }
