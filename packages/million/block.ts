@@ -9,13 +9,13 @@ import {
   remove$ as removeElement$,
   setAttribute,
   setText,
-  mapGet$,
-  mapHas$,
-  mapSet$,
   setStyleAttribute,
   setSvgAttribute,
   firstChild$,
   nextSibling$,
+  weakMapHas$,
+  weakMapGet$,
+  weakMapSet$,
 } from './dom';
 import { renderToTemplate } from './template';
 import { AbstractBlock } from './types';
@@ -73,7 +73,7 @@ export class Block extends AbstractBlock {
   root: HTMLElement;
   edits: Edit[];
   // Cache for getCurrentElement()
-  cache = new Map<number, HTMLElement>();
+  cache = new WeakMap<Edit, HTMLElement>();
 
   constructor(
     root: HTMLElement,
@@ -100,7 +100,7 @@ export class Block extends AbstractBlock {
 
     for (let i = 0, j = this.edits.length; i < j; ++i) {
       const current = this.edits[i]!;
-      const el = getCurrentElement(current, root, this.cache, i);
+      const el = getCurrentElement(current, root, this.cache);
       for (let k = 0, l = current.edits.length; k < l; ++k) {
         const edit = current.edits[k]!;
         const hasHole = 'hole' in edit && edit.hole;
@@ -175,7 +175,7 @@ export class Block extends AbstractBlock {
           edit.patch?.(newValue);
           continue;
         }
-        if (!el) el = getCurrentElement(current, root, this.cache, i);
+        if (!el) el = getCurrentElement(current, root, this.cache);
         if (edit.type === 'child') {
           if (oldValue instanceof AbstractBlock) {
             // Remember! If we find a block inside a child, we need to locate
@@ -219,14 +219,12 @@ export class Block extends AbstractBlock {
 const getCurrentElement = (
   current: Edit,
   root: HTMLElement,
-  cache?: Map<number, HTMLElement>,
-  slot?: number, // edit index
+  cache?: WeakMap<Edit, HTMLElement>,
 ): HTMLElement => {
   const pathLength = current.path.length;
   if (!pathLength) return root;
-  const useCache = cache && slot !== undefined;
-  if (useCache && mapHas$.call(cache, slot)) {
-    return mapGet$.call(cache, slot)!;
+  if (cache && weakMapHas$.call(cache, current)) {
+    return weakMapGet$.call(cache, current)!;
   }
   // path is an array of indices to traverse the DOM tree
   // For example, [0, 1, 2] becomes:
@@ -241,7 +239,7 @@ const getCurrentElement = (
       root = nextSibling$.call(root) as HTMLElement;
     }
   }
-  if (useCache) mapSet$.call(cache, slot, root);
+  if (cache) weakMapSet$.call(cache, current, root);
   return root;
 };
 

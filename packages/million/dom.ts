@@ -49,6 +49,11 @@ export const mapSet$ = map$.set;
 export const mapHas$ = map$.has;
 export const mapGet$ = map$.get;
 
+export const weakMap$ = WeakMap.prototype;
+export const weakMapSet$ = weakMap$.set;
+export const weakMapHas$ = weakMap$.has;
+export const weakMapGet$ = weakMap$.get;
+
 export const set$ = Set.prototype;
 export const setAdd$ = set$.add;
 export const setHas$ = set$.has;

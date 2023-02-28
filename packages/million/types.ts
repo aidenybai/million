@@ -24,7 +24,7 @@ export abstract class AbstractBlock {
   _parent?: HTMLElement | null;
   props?: Props | null;
   key?: string;
-  cache?: Map<number, HTMLElement>;
+  cache?: WeakMap<Edit, HTMLElement>;
   abstract patch(block: AbstractBlock): HTMLElement;
   abstract mount(parent?: HTMLElement, refNode?: Node | null): HTMLElement;
   abstract move(block: AbstractBlock | null, refNode: Node | null): void;
