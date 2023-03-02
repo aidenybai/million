@@ -3,11 +3,46 @@ import Image from 'next/image';
 <img src="/banner.png" />
 
 <br />
-<br />
 
 # Million.js
+
+Million.js is a drop-in performance optimization for [React](https://reactjs.org).
+
+with a lightweight (`<1kb`) Virtual DOM. It's [_**really fast**_](https://millionjs.org/benchmarks) and makes it easy to create user interfaces.
+
+> Oh man... Another [`/virtual dom|javascript/gi`](https://regexr.com/6mr5f) library? I'm fine with [React](https://reactjs.org) already, why should I need it?
+
+```jsx {2,12}
+import { createRoot } from 'react-dom/client';
+import { optimize } from 'million/react';
+
+function App() {
+  return (
+    <div>
+      <h1>Hello World!</h1>
+    </div>
+  );
+}
+
+const OptimizedApp = optimize(App); // yep, that's it!
+
+createRoot(document.getElementById('root')).render(<OptimizedApp />);
+```
+
+Million makes creating user interfaces as easy as [React](https://reactjs.org), but with faster performance and smaller bundle size for the end user. By computing the user interface beforehand with a compiler, Million reduces the overhead of traditional Virtual DOM.
+
+> Okay cool... but why should I use Million if I can just use [Preact](https://preactjs.com/) if I need something a bit more lightweight?
+
+While alternative libraries like [Preact](https://preactjs.com/) reduce bundle sizes by efficient code design, Million takes it a step further by **leveraging compilation** to make a quantum leap in improving bundle size **and** render speed.
+
+Think of it as if [React](https://preactjs.com/)'s API and [Svelte](https://svelte.dev/)'s compiler had a baby. [A baby with _**super speed! 👶🚀**_](https://millionjs.org/benchmarks)
 
 ## Acknowledgements
 
 - [`blockdom`](https://github.com/ged-odoo/blockdom) ([Géry Debongnie](https://github.com/ged-odoo))
+  Thank you to Géry pioneering the concept of "blocks" in the virtual DOM. Many parts of the Million.js codebase either directly or indirectly derive from his work.
+
 - [`voby`](https://github.com/vobyjs/voby) ([Fabio Spampinato](https://github.com/fabiospampinato))
+  The Million.js "template" concept is derived from Voby's `template()` API.
+
+- [`ivi`](https://github.com/localvoid/ivi), [Preact](https://github.com/preactjs/preact), [and more](https://krausest.github.io/js-framework-benchmark/2021/table_chrome_96.0.4664.45.html)

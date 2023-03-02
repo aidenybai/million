@@ -10,15 +10,15 @@ const withNextra = nextra({
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
-  async redirects() {
-    return [
-      {
-        source: '/',
-        destination: '/docs',
-        permanent: false,
-      },
-    ];
-  },
+  // async redirects() {
+  //   return [
+  //     {
+  //       source: '/',
+  //       destination: '/docs',
+  //       permanent: false,
+  //     },
+  //   ];
+  // },
 };
 
 // eslint-disable-next-line import/no-default-export

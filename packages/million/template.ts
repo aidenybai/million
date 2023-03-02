@@ -96,6 +96,14 @@ export const renderToTemplate = (
         });
         continue;
       }
+      if (name === 'style') {
+        let style = '';
+        for (const key in value) {
+          style += `${key}:${String(value[key])};`;
+        }
+        props += ` style="${style}"`;
+        continue;
+      }
       props += ` ${name}="${String(value)}"`;
     }
   }

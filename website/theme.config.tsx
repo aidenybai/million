@@ -171,7 +171,7 @@ const config: DocsThemeConfig = {
         images: [
           {
             url: new URL(
-              'https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/banner.svg',
+              'https://millionjs.org/banner.svg',
               'https://millionjs.org',
             ).toString(),
             width: 1328,
@@ -189,7 +189,10 @@ const config: DocsThemeConfig = {
 
     return { ...shared, titleTemplate: `%s | Million.js` };
   },
-  primaryHue: 280,
+  primaryHue: {
+    light: 270,
+    dark: 204,
+  },
 };
 
 // eslint-disable-next-line import/no-default-export

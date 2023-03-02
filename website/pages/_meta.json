@@ -1,8 +1,11 @@
 {
   "index": {
     "type": "page",
-    "title": "Introduction",
-    "display": "hidden"
+    "title": "Million.js",
+    "display": "hidden",
+    "theme": {
+      "layout": "raw"
+    }
   },
   "docs": {
     "type": "page",

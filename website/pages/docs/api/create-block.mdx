@@ -1,0 +1,45 @@
+# `createBlock()`
+
+**Syntax:** `patch((props) => vnode)`\
+**Example:** `patch((props) => <div>{props.foo}</div>)`
+
+The `createBlock` function instantiates a `Block` (_a stateless "component"_). It accepts a function with a props object parameter and returns a `VNode`.
+
+## Rules of `createBlock()`
+
+Anatomy of a `Hole`
+
+##### 1. `props` is an immutable object with primitive or `Block` values.
+
+```jsx
+someBlock({
+  one: '1', // ✅
+  two: 1 + 1 // ✅
+  three: true // ✅
+  four: Date.now() // ✅
+  five: { imposter: true } // ❌
+  six: new Date() // ❌
+});
+```
+
+##### 2. Values of `props` may not be interpolated with other values.
+
+```jsx
+const block = createBlock((props) => {
+  const { favorite } = props.favorite; // ❌
+  <div className={props.className /* ✅ */}>
+    {props.hello /* ✅ */}
+    {Date.now() /* ✅ */}
+    <button
+      onClick={() => {
+        console.log(props.world); /* ❌ */
+      }}
+    >
+      {props.count + 1 /* ❌ */}
+      {props.foo.toString() /* ❌ */}
+    </button>
+  </div>;
+});
+```
+
+##### 3. `Block` shapes must remain constant.

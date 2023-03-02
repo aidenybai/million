@@ -1,0 +1,6 @@
+{
+  "create-block": "createBlock()",
+  "fragment": "fragment()",
+  "render-to-template": "renderToTemplate()",
+  "string-to-dom": "stringToDOM()"
+}

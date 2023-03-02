@@ -24,16 +24,32 @@ export const optimize = (
   options: Options = { mode: 'raw' },
 ) => {
   const block = createBlock(fn as any, unwrap);
-  return (props: Props): FunctionComponentElement<Props> => {
+  const specialProps: Record<string, ReturnType<typeof createBlock>> = {};
+  const component = (rawProps: Props): FunctionComponentElement<Props> => {
     const ref = useRef<HTMLDivElement>(null);
     const patch = useRef<((props: Props) => void) | null>(null);
+
+    const props = { ...rawProps };
+
+    for (const prop in props) {
+      const vnode = props[prop];
+      if (typeof vnode === 'object' && vnode !== null) {
+        if (!(prop in specialProps)) {
+          const vnodeBlock = createBlock(() => props[prop], unwrap) as any;
+          specialProps[prop] = vnodeBlock;
+        }
+      }
+      if (prop in specialProps) {
+        props[prop] = specialProps[prop]!(vnode.props);
+      }
+    }
 
     patch.current?.(props);
 
     const effect = useCallback(() => {
       const currentBlock = block(props, props.key, options.shouldUpdate);
       if (ref.current) {
-        mount$.call(currentBlock, ref.current, null, true);
+        mount$.call(currentBlock, ref.current, null, options.mode === 'raw');
         patch.current = (props: Props) => {
           patch$.call(currentBlock, block(props));
         };
@@ -72,6 +88,8 @@ export const optimize = (
       createElement(Effect, { effect }),
     );
   };
+  component._block = block;
+  return component;
 };
 
 const Effect: FunctionComponent<{ effect: () => void }> = ({ effect }) => {
@@ -84,7 +102,8 @@ export const unwrap = (vnode: ReactNode): VNode => {
     return vnode as VNode;
   }
   if (typeof vnode.type === 'function') {
-    throw new Error('Cannot have components in children');
+    const type = vnode.type as any;
+    return unwrap(type(vnode.props));
   }
   const props = { ...vnode.props };
   if (vnode.props?.children) {
@@ -93,15 +112,17 @@ export const unwrap = (vnode: ReactNode): VNode => {
     );
   }
   return {
-    type: vnode.type,
+    type: vnode.type, // lets pretend no function go through
     props,
   };
 };
 
 export const flatten = <T>(rawChildren: T): T[] => {
+  console.log(rawChildren === 0);
   if (rawChildren === undefined || rawChildren === null) return [];
-  if (!Array.isArray(rawChildren) || (('__key' in rawChildren) as any))
+  if (!Array.isArray(rawChildren) || (('__key' in rawChildren) as any)) {
     return [rawChildren];
+  }
   const flattenedChildren = rawChildren.flat(Infinity);
   const children: T[] = [];
   for (let i = 0, l = flattenedChildren.length; i < l; ++i) {
