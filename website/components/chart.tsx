@@ -21,12 +21,12 @@ ChartJS.register(
 );
 
 const data = [
-  { framework: 'vanillajs', val: 0.01 },
-  { framework: 'Million.js', val: 0.04 },
-  { framework: 'Solid', val: 0.05 },
-  { framework: 'Inferno', val: 0.09 },
-  { framework: 'Preact', val: 0.39 },
-  { framework: 'React', val: 0.75 },
+  { framework: 'vanillajs', val: 1 },
+  { framework: 'Million.js', val: 0.96 },
+  { framework: 'Solid', val: 0.95 },
+  { framework: 'Inferno', val: 0.91 },
+  { framework: 'Preact', val: 0.61 },
+  { framework: 'React', val: 0.25 },
 ];
 const options = {
   plugins: {
@@ -36,7 +36,7 @@ const options = {
   },
   scales: {
     y: {
-      max: 0.75,
+      max: 1,
       ticks: {
         format: {
           style: 'percent',
@@ -62,6 +62,7 @@ export function Chart() {
     setDarkMode(isDarkMode);
   }, []);
   const color = darkMode ? '#54527b' : '#dcc9e8';
+  const backgroundColor = [color, '#b073d9', color, color, color, color];
   return (
     <div className="p-4 rounded-lg w-auto min-h-[270px]">
       {darkMode !== null && (
@@ -73,7 +74,7 @@ export function Chart() {
               {
                 label: '% slower than vanilla JavaScript',
                 data: data.map((row) => row.val),
-                backgroundColor: [color, '#b073d9', color, color, color, color],
+                backgroundColor,
                 barPercentage: 0.5,
               },
             ],

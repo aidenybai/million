@@ -156,9 +156,6 @@ const config: DocsThemeConfig = {
           type="image/svg+xml"
         />
         <meta name="apple-mobile-web-app-title" content={ogConfig.title} />
-
-        <link rel="preconnect" href="https://rsms.me/" />
-        <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
       </>
     );
   },
@@ -194,8 +191,8 @@ const config: DocsThemeConfig = {
   banner: {
     key: '2.0-release',
     text: (
-      <a href="https://github.com/aidenybai/million" target="_blank">
-        🎉 Million.js 2.0 is released. Read more →
+      <a href="https://github.com/aidenybai/million">
+        ⭐ Million.js 2.0 is released. Leave a star →
       </a>
     ),
   },

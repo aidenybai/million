@@ -38,6 +38,11 @@ html[class~='dark'] #hero {
   background: linear-gradient(#efa0a5, #a788ec);
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  filter: drop-shadow(3px 3px #c0beea8f);
+}
+
+html[class~='dark'] .gradient-text {
+  filter: drop-shadow(3px 3px #54527b);
 }
 
 .sr-only {
