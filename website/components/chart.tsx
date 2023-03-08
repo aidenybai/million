@@ -21,7 +21,7 @@ ChartJS.register(
 );
 
 const data = [
-  { framework: 'vanillajs', val: 1 },
+  { framework: 'JavaScript', val: 1 },
   { framework: 'Million.js', val: 0.96 },
   { framework: 'Solid', val: 0.95 },
   { framework: 'Inferno', val: 0.91 },

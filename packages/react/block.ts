@@ -28,7 +28,7 @@ const sheet = new CSSStyleSheet();
 sheet.replaceSync('million-island, million-fragment { display: contents }');
 document.adoptedStyleSheets = [sheet];
 
-export const island = (
+export const block = (
   fn: (props: Props) => ReactNode,
   options: Options = {},
 ) => {
@@ -53,7 +53,7 @@ export const island = (
     }, []);
 
     const marker = useMemo(() => {
-      return createElement('million-island', { ref });
+      return createElement('million-block', { ref });
     }, []);
 
     const vnode = createElement(
@@ -69,16 +69,6 @@ export const island = (
   (MillionIsland as any).__block = block;
 
   return MillionIsland;
-};
-
-export const Island: FunctionComponent<
-  Props & { children: (props: Props) => ReactNode }
-> = ({ children, ...props }) => {
-  const ref = useRef<ReturnType<typeof island> | null>(null);
-  if (!ref.current) {
-    ref.current = island(children);
-  }
-  return createElement(ref.current, props);
 };
 
 const Effect: FunctionComponent<{ effect: () => void }> = ({ effect }) => {

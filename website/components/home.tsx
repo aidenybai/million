@@ -119,7 +119,7 @@ export function Home() {
             <div className="w-full">
               <p className="font-mono font-bold">JS Framework Benchmark</p>
               <p className="text-xs mt-1 text-gray-400">
-                Geometric mean of all benchmarks (lower is better)
+                Geometric mean of all benchmarks (higher is better)
               </p>
               <Chart />
             </div>

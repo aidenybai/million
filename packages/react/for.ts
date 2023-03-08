@@ -13,8 +13,6 @@ const createChildren = (each: any[], getComponent: any) => {
     const vnode = getComponent(each[i], i);
     if (vnode.type.__block) {
       children[i] = vnode.type.__block(vnode.props);
-    } else {
-      throw new Error('<For /> only supports pre-created islands');
     }
   }
   return children;
