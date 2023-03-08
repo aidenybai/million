@@ -1,9 +1,5 @@
 <a href="https://millionjs.org">
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/banner.svg">
-  <img src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/banner-light.svg">
-</picture>
-
+  <img src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/banner.png" alt="Million Banner" />
 </a>
 
 <div align="center">
