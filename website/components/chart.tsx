@@ -72,7 +72,7 @@ export function Chart() {
             labels: data.map((row) => row.framework),
             datasets: [
               {
-                label: '% slower than vanilla JavaScript',
+                label: '% of vanilla JavaScript',
                 data: data.map((row) => row.val),
                 backgroundColor,
                 barPercentage: 0.5,
