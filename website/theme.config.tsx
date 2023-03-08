@@ -105,23 +105,13 @@ const config: DocsThemeConfig = {
   docsRepositoryBase: 'https://github.com/aidenybai/million',
   footer: {
     text: (
-      <div>
-        <p>
-          MIT {new Date().getFullYear()} ©{' '}
-          <a target="_blank" href="https://aidenybai.com">
-            Aiden Bai
-          </a>
-          .
-        </p>
-        <br />
-        <p className="text-xs">
-          The Million.js homepage remixed and taken from the{' '}
-          <a target="_blank" href="https://bun.sh">
-            Bun
-          </a>{' '}
-          project.
-        </p>
-      </div>
+      <p>
+        MIT {new Date().getFullYear()} ©{' '}
+        <a target="_blank" href="https://aidenybai.com">
+          Aiden Bai
+        </a>
+        .
+      </p>
     ),
   },
   head: () => {

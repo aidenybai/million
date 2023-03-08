@@ -1,7 +1,7 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { describe, expect, it } from 'vitest';
-import { createBlock, fragment } from '../packages/million';
+import { block as createBlock, fragment } from '../packages/million';
 import type { Props, VElement } from '../packages/million';
 
 const fn = (props?: Props): VElement => (

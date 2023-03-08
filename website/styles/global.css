@@ -33,11 +33,6 @@ html[class~='dark'] #hero {
     url(https://grainy-gradients.vercel.app/noise.svg);
 }
 
-.font-mono {
-  font-family: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Monaco,
-    Consolas, 'Liberation Mono', 'Courier New', monospace !important;
-}
-
 .gradient-text {
   font-family: 'Mona Sans Wide';
   background: linear-gradient(#efa0a5, #a788ec);

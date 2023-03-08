@@ -55,13 +55,9 @@ export function Chart() {
     if (isDarkMode) {
       defaults.borderColor = '#545864';
       defaults.color = '#bdbfc7';
-      defaults.font.family =
-        'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace';
     } else {
       defaults.borderColor = '#bdbfc7';
       defaults.color = '#545864';
-      defaults.font.family =
-        'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace';
     }
     setDarkMode(isDarkMode);
   }, []);

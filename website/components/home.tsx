@@ -7,7 +7,7 @@ import { Chart } from './chart';
 export function Home() {
   const [checked, setChecked] = useState<boolean>(false);
   const [count, setCount] = useState<number>(0);
-  const pkgManagers = ['npm', 'yarn', 'pnpm'];
+  const pkgManagers = ['npm', 'pnpm', 'yarn'];
   const command = pkgManagers[count % 3] as string;
   return (
     <>
@@ -19,10 +19,13 @@ export function Home() {
           <div className="flex-1 lg:max-w-[700px] mx-auto">
             <h1 className="mt-0 text-[26pt] font-extrabold leading-none dark:text-gray-50 md:text-[32pt] lg:text-[38pt] xl:text-[40pt]">
               Up to{' '}
-              <span className="gradient-text">
-                <CountUp useEasing end={75} duration={5} />% faster
-                <br />
-              </span>{' '}
+              <span className="gradient-text inline-block">
+                <span className="font-mono">
+                  <CountUp useEasing end={70} duration={5} />
+                </span>
+                % faster*
+              </span>
+              <br />
               React components.
             </h1>
             <div className="h-8"></div>
@@ -48,19 +51,17 @@ export function Home() {
                   </span>
                   <div
                     className="ml-auto"
-                    onClick={
-                      void (async () => {
-                        setChecked(true);
+                    onClick={() => {
+                      setChecked(true);
 
-                        await navigator.clipboard.writeText(
-                          `${command} i million`,
-                        );
+                      void navigator.clipboard.writeText(
+                        `${command} i million`,
+                      );
 
-                        setTimeout(() => {
-                          setChecked(false);
-                        }, 500);
-                      })
-                    }
+                      setTimeout(() => {
+                        setChecked(false);
+                      }, 500);
+                    }}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -99,7 +100,8 @@ export function Home() {
               </div>
               <div className="hidden text-small whitespace-nowrap pt-[3px] text-[0.9rem] text-gray-500 opacity-70 md:flex md:flex-row md:flex-wrap md:justify-between">
                 <p className="text-[0.9rem] text-gray-500 dark:text-gray-300">
-                  Install Size: 3.9 KB
+                  <span className="font-bold">*</span>comparison between virtual
+                  DOM and relative frameworks.
                 </p>
               </div>
             </div>
@@ -109,7 +111,7 @@ export function Home() {
             tiltMaxAngleX={5}
             tiltMaxAngleY={10}
             glareEnable
-            tiltAngleYInitial={10}
+            tiltAngleYInitial={5}
             glareMaxOpacity={0.1}
             className="hidden shadow-lg md:block w-full sm:w-full md:!max-w-[400px] lg:!max-w-[550px] xl:mx-auto !text-md
           bg-[#ffffff] dark:bg-[#282b34] border border-[#e3e7f1] dark:border-[#343842] p-5 rounded-lg text-center"

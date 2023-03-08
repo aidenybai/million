@@ -2,15 +2,6 @@ import { Card, Cards } from 'nextra-theme-docs';
 
 <img src="/banner.png" />
 
-<Cards num={2}>
-  <Card arrow title="Integrate with React.js" href="/install"></Card>
-  <Card
-    arrow
-    title="Learn the Virtual DOM API"
-    href="/docs/blog-theme/start"
-  ></Card>
-</Cards>
-
 <br />
 
 # Million.js
@@ -19,13 +10,19 @@ Million.js is a drop-in performance optimization for [React](https://reactjs.org
 
 > Oh man... Another [`/virtual dom|javascript/gi`](https://regexr.com/6mr5f) library? I'm fine with [React](https://reactjs.org) already, why should I need it?
 
-Million makes creating user interfaces as easy as [React](https://reactjs.org), but with faster performance and smaller bundle size for the end user. By computing the user interface beforehand with a compiler, Million reduces the overhead of traditional Virtual DOM.
+Million makes creating user interfaces as easy (It's just [React](https://reactjs.org)!), but with faster rendering and loading speeds. By using a fine-tuned, optimized virtual DOM, Million.js reduces the overhead of the React Reconciler.
 
-> Okay cool... but why should I use Million if I can just use [Preact](https://preactjs.com/) if I need something a bit more lightweight?
+> Okay cool... but why should I use Million.js if I can just use [Preact](https://preactjs.com/) if I need something a bit more lightweight?
 
-While alternative libraries like [Preact](https://preactjs.com/) reduce bundle sizes by efficient code design, Million takes it a step further by **leveraging compilation** to make a quantum leap in improving bundle size **and** render speed.
+While alternative libraries like [Preact](https://preactjs.com/) reduce bundle sizes via efficient code design, Million.js can be used inside [React](https://reactjs.org) and is much faster than Preact.
 
-Think of it as if [React](https://preactjs.com/)'s API and [Svelte](https://svelte.dev/)'s compiler had a baby. [A baby with _**super speed! 👶🚀**_](https://millionjs.org/benchmarks)
+TL;DR - [React](https://preactjs.com/) components at the speed of raw JavaScript.
+
+<Cards num={3}>
+  <Card arrow title="Quickstart" href="/docs/quickstart"></Card>
+  <Card arrow title="React.js API" href="/docs/react"></Card>
+  <Card arrow title="Virtual DOM API" href="/docs/api"></Card>
+</Cards>
 
 ## Acknowledgements
 
@@ -34,5 +31,7 @@ Think of it as if [React](https://preactjs.com/)'s API and [Svelte](https://svel
 
 - [`voby`](https://github.com/vobyjs/voby) ([Fabio Spampinato](https://github.com/fabiospampinato))
   The Million.js "template" concept is derived from Voby's `template()` API.
+
+- [`bun`](https://bun.sh) for their homepage. The Million.js homepage is a remix of what they have currently.
 
 - [`ivi`](https://github.com/localvoid/ivi), [Preact](https://github.com/preactjs/preact), [and more](https://krausest.github.io/js-framework-benchmark/2021/table_chrome_96.0.4664.45.html)
