@@ -21,7 +21,7 @@ import { renderToTemplate } from './template';
 import { AbstractBlock } from './types';
 import type { Edit, EditChild, Props, VElement, Hole, VNode } from './types';
 
-export const createBlock = (
+export const block = (
   fn: (props?: Props) => VElement,
   unwrap?: (vnode: any) => VNode,
 ) => {
@@ -45,21 +45,6 @@ export const createBlock = (
     renderToTemplate(unwrap ? unwrap(vnode) : vnode, edits),
   );
 
-  // Handles case for positioning text nodes. When text nodes are
-  // put into a template, they can be merged. For example,
-  // ["hello", "world"] becomes "helloworld" in the DOM.
-  // Inserts text nodes into the DOM at the correct position.
-  for (let i = 0, j = edits.length; i < j; ++i) {
-    const current = edits[i]!;
-    const initsLength = current.inits.length;
-    if (!initsLength) continue;
-    const el = getCurrentElement(current, root);
-    for (let k = 0; k < initsLength; ++k) {
-      const init = current.inits[k]!;
-      insertText(el, init.value, init.index);
-    }
-  }
-
   return (
     props?: Props | null,
     key?: string,
@@ -67,6 +52,30 @@ export const createBlock = (
   ) => {
     return new Block(root, edits, props, key ?? props?.key, shouldUpdate);
   };
+};
+
+export const mount = (
+  block: AbstractBlock,
+  parent?: HTMLElement,
+): HTMLElement => {
+  return mount$.call(block, parent);
+};
+
+export const patch = (
+  oldBlock: AbstractBlock,
+  newBlock: AbstractBlock,
+): HTMLElement => {
+  if (!oldBlock.el) mount$.call(oldBlock);
+  if (
+    (oldBlock.key && oldBlock.key === newBlock.key) ||
+    oldBlock.root === newBlock.root
+  ) {
+    return patch$.call(oldBlock, newBlock);
+  }
+  const el = mount$.call(newBlock, oldBlock.parent!, oldBlock.el);
+  remove$.call(oldBlock);
+  oldBlock.key = newBlock.key!;
+  return el;
 };
 
 export class Block extends AbstractBlock {
@@ -89,11 +98,7 @@ export class Block extends AbstractBlock {
     this.key = key;
     if (shouldUpdate) this.shouldUpdate = shouldUpdate;
   }
-  mount(
-    parent?: HTMLElement,
-    refNode: Node | null = null,
-    inPlace = false,
-  ): HTMLElement {
+  mount(parent?: HTMLElement, refNode: Node | null = null): HTMLElement {
     if (this.el) return this.el;
     // cloneNode(true) uses less memory than recursively creating new nodes
     const root = cloneNode$.call(this.root, true) as HTMLElement;
@@ -133,16 +138,20 @@ export class Block extends AbstractBlock {
           setSvgAttribute(el, edit.name, value);
         }
       }
+
+      // Handles case for positioning text nodes. When text nodes are
+      // put into a template, they can be merged. For example,
+      // ["hello", "world"] becomes "helloworld" in the DOM.
+      // Inserts text nodes into the DOM at the correct position.
+      const initsLength = current.inits.length;
+      if (!initsLength) continue;
+      for (let k = 0; k < initsLength; ++k) {
+        const init = current.inits[k]!;
+        insertText(el, init.value, init.index);
+      }
     }
 
     if (parent) {
-      if (inPlace) {
-        let child: ChildNode | null | undefined;
-        while ((child = root.firstChild)) {
-          parent.appendChild(child);
-        }
-        return parent;
-      }
       insertBefore$.call(parent, root, refNode);
     }
     this.el = root;

@@ -1,0 +1,51 @@
+---
+title: Installing Million.js
+description: Learn how to install Million.js for use with your project
+---
+
+import { Callout, Tabs, Tab, Steps, Cards, Card } from 'nextra-theme-docs';
+
+<Cards>
+  <Card>Hello</Card>
+</Cards>
+
+# Start as New Project
+
+<Steps>
+  ### Install Million.js
+
+Inside your project directory, run the following command:
+
+{' '}
+
+<Tabs items={['npm', 'pnpm', 'yarn']} storageKey="selected-pkg-manager">
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash
+  npm install million
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash
+  pnpm install million
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash
+  yarn add million
+  ```
+  </Tab>
+</Tabs>
+If you want to just play around with Million, you can use a Skypack import:
+
+```html
+<script type="module">
+  import { block } from 'https://cdn.skypack.dev/million';
+
+  // your code here
+</script>
+```
+
+</Steps>

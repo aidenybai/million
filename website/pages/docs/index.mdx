@@ -1,10 +1,21 @@
-import Image from 'next/image';
+import { Card, Cards } from 'nextra-theme-docs';
 
-<img src="/banner.png" />
+# Quickstart
 
-<br />
-
-# Million.js
+<Cards num={2}>
+  <Card
+    image
+    arrow
+    title="Start new project"
+    href="/install"
+  ></Card>
+  <Card
+    image
+    arrow
+    title="Integrate into existing App"
+    href="/docs/blog-theme/start"
+  ></Card>
+</Cards>
 
 Million.js is a drop-in performance optimization for [React](https://reactjs.org).
 

@@ -3,15 +3,15 @@ import { mapGet$, mapSet$, setTextContent$ } from './dom';
 import { AbstractBlock } from './types';
 import { mount$, patch$, move$, remove$ } from './block';
 
-export const fragment = (blocks: AbstractBlock[]) => {
-  return new FragmentBlock(blocks);
+export const fragment = (children: AbstractBlock[]) => {
+  return new FragmentBlock(children);
 };
 
 export class FragmentBlock extends AbstractBlock {
   children: AbstractBlock[];
-  constructor(blocks: AbstractBlock[]) {
+  constructor(children: AbstractBlock[]) {
     super();
-    this.children = blocks;
+    this.children = children;
   }
   move() {
     throw new Error('Cannot move a FragmentBlock');
@@ -161,4 +161,5 @@ export class FragmentBlock extends AbstractBlock {
 }
 
 export const fragmentMount$ = FragmentBlock.prototype.mount;
+export const fragmentPatch$ = FragmentBlock.prototype.patch;
 export const fragmentRemove$ = FragmentBlock.prototype.remove;

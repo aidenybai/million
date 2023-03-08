@@ -1,15 +1,5 @@
 import '../styles/global.css';
-import Head from 'next/head';
 
 export default function App({ Component, pageProps }) {
-  return (
-    <>
-      <Head>
-        <link rel="preconnect" href="https://rsms.me/" />
-        <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-      </Head>
-      <Component {...pageProps} />
-    </>
-  );
+  return <Component {...pageProps} />;
 }

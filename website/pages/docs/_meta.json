@@ -1,4 +1,5 @@
 {
-  "index": "Introduction",
+  "index": "Quickstart",
+  "install": "Installation",
   "api": "API"
 }

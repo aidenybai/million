@@ -1,26 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  font-family: 'Inter', sans-serif;
-}
-@supports (font-variation-settings: normal) {
-  :root {
-    font-family: 'Inter var', sans-serif;
-  }
+@font-face {
+  font-family: 'Mona Sans';
+  src: url('/Mona-Sans.woff2') format('woff2'),
+    url('/Mona-Sans.woff') format('woff');
 }
 
-html[class~='dark'] .logo {
-  filter: invert();
+@font-face {
+  font-family: 'Mona Sans Wide';
+  src: url('/Mona-Sans-BoldWide.woff2') format('woff2'),
+    url('/Mona-Sans-BoldWide.woff') format('woff');
 }
 
-.nextra-nav-container {
-  background-image: linear-gradient(to top, rgba(0, 0, 0, 0) 0%, #d6c5ff 100%);
+html,
+body {
+  font-family: 'Mona Sans', -apple-system, BlinkMacSystemFont, avenir next,
+    avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto,
+    arial, sans-serif;
 }
 
-html[class~='dark'] .nextra-nav-container {
-  background-image: linear-gradient(to top, rgba(0, 0, 0, 0) 0%, #bba0ff 100%);
+#hero {
+  background: linear-gradient(to bottom, #fff 50%, #9e88d648 100%),
+    url(https://grainy-gradients.vercel.app/noise.svg);
+}
+
+html[class~='dark'] #hero {
+  background: linear-gradient(to bottom, #111 50%, #2a2044af 100%),
+    url(https://grainy-gradients.vercel.app/noise.svg);
+}
+
+.font-mono {
+  font-family: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Monaco,
+    Consolas, 'Liberation Mono', 'Courier New', monospace !important;
+}
+
+.gradient-text {
+  font-family: 'Mona Sans Wide';
+  background: linear-gradient(#efa0a5, #a788ec);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .sr-only {
@@ -35,18 +57,7 @@ html[class~='dark'] .nextra-nav-container {
   border-width: 0;
 }
 
-body {
-  background: linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(255, 255, 255, 1) 300px
-    ),
-    fixed 0 0 / 20px 20px radial-gradient(#d1d1d1 1px, transparent 0),
-    fixed 10px 10px / 20px 20px radial-gradient(#d1d1d1 1px, transparent 0);
-}
-
-.dark body {
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, #111 300px),
-    fixed 0 0 / 20px 20px radial-gradient(#313131 1px, transparent 0),
-    fixed 10px 10px / 20px 20px radial-gradient(#313131 1px, transparent 0);
+.animate-once {
+  -webkit-animation-iteration-count: 1;
+  animation-iteration-count: 1;
 }

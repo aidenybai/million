@@ -1,15 +1,15 @@
-# `createBlock()`
+# `block()`
 
-**Syntax:** `patch((props) => vnode)`\
-**Example:** `patch((props) => <div>{props.foo}</div>)`
+**Syntax:** `block((props) => vnode)`\
+**Example:** `block((props) => <div>{props.foo}</div>)`
 
-The `createBlock` function instantiates a `Block` (_a stateless "component"_). It accepts a function with a props object parameter and returns a `VNode`.
+The `block` function instantiates a `Block` (_a stateless "component"_). It accepts a function with a props object parameter and returns a `VNode`.
 
-## Rules of `createBlock()`
+## Rules of `block()`
 
 Anatomy of a `Hole`
 
-##### 1. `props` is an immutable object with primitive or `Block` values.
+##### `props` is an immutable object with primitive or `Block` values.
 
 ```jsx
 someBlock({
@@ -22,7 +22,7 @@ someBlock({
 });
 ```
 
-##### 2. Values of `props` may not be interpolated with other values.
+##### Values of `props` may not be interpolated with other values.
 
 ```jsx
 const block = createBlock((props) => {
@@ -41,5 +41,3 @@ const block = createBlock((props) => {
   </div>;
 });
 ```
-
-##### 3. `Block` shapes must remain constant.

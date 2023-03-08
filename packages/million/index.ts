@@ -1,4 +1,4 @@
-export { createBlock, Block, stringToDOM, withKey } from './block';
+export { mount, patch, block, Block, stringToDOM, withKey } from './block';
 export { fragment, FragmentBlock } from './fragment';
 export { renderToTemplate } from './template';
 export { AbstractBlock } from './types';
