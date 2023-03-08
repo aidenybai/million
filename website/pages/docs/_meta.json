@@ -1,5 +1,6 @@
 {
-  "index": "Quickstart",
-  "install": "Installation",
-  "api": "API"
+  "index": "Introduction",
+  "quickstart": "Quickstart",
+  "react": "React",
+  "api": "Virtual DOM"
 }

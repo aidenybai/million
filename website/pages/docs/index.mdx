@@ -1,44 +1,23 @@
 import { Card, Cards } from 'nextra-theme-docs';
 
-# Quickstart
+<img src="/banner.png" />
 
 <Cards num={2}>
+  <Card arrow title="Integrate with React.js" href="/install"></Card>
   <Card
-    image
     arrow
-    title="Start new project"
-    href="/install"
-  ></Card>
-  <Card
-    image
-    arrow
-    title="Integrate into existing App"
+    title="Learn the Virtual DOM API"
     href="/docs/blog-theme/start"
   ></Card>
 </Cards>
 
-Million.js is a drop-in performance optimization for [React](https://reactjs.org).
+<br />
 
-with a lightweight (`<1kb`) Virtual DOM. It's [_**really fast**_](https://millionjs.org/benchmarks) and makes it easy to create user interfaces.
+# Million.js
+
+Million.js is a drop-in performance optimization for [React](https://reactjs.org). It's lightweight (`<4kb`) Virtual DOM and runs [_**really fast**_](https://krausest.github.io/js-framework-benchmark).
 
 > Oh man... Another [`/virtual dom|javascript/gi`](https://regexr.com/6mr5f) library? I'm fine with [React](https://reactjs.org) already, why should I need it?
-
-```jsx {2,12}
-import { createRoot } from 'react-dom/client';
-import { optimize } from 'million/react';
-
-function App() {
-  return (
-    <div>
-      <h1>Hello World!</h1>
-    </div>
-  );
-}
-
-const OptimizedApp = optimize(App); // yep, that's it!
-
-createRoot(document.getElementById('root')).render(<OptimizedApp />);
-```
 
 Million makes creating user interfaces as easy as [React](https://reactjs.org), but with faster performance and smaller bundle size for the end user. By computing the user interface beforehand with a compiler, Million reduces the overhead of traditional Virtual DOM.
 

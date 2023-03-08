@@ -1,17 +1,21 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import CountUp from 'react-countup';
+import Tilt from 'react-parallax-tilt';
 import { Chart } from './chart';
 
 export function Home() {
   const [checked, setChecked] = useState<boolean>(false);
+  const [count, setCount] = useState<number>(0);
+  const pkgManagers = ['npm', 'yarn', 'pnpm'];
+  const command = pkgManagers[count % 3] as string;
   return (
     <>
       <div
         id="hero"
         className="flex w-full flex-row items-center justify-center px-[2rem] md:px-[2rem] xl:px-[7rem] pt-[5rem] pb-[5rem] md:pt-[6rem] md:pb-[8rem]"
       >
-        <main className="!max-w-[1500px] mx-auto my-0 flex w-full flex-col items-center gap-16 md:max-w-screen-sm lg:max-w-[var(--max-width)] lg:flex-row lg:justify-between">
+        <main className="!max-w-[1500px] mx-auto my-0 flex w-full flex-col items-center gap-20 md:max-w-screen-sm lg:max-w-[var(--max-width)] lg:flex-row lg:justify-between">
           <div className="flex-1 lg:max-w-[700px] mx-auto">
             <h1 className="mt-0 text-[26pt] font-extrabold leading-none dark:text-gray-50 md:text-[32pt] lg:text-[38pt] xl:text-[40pt]">
               Up to{' '}
@@ -29,21 +33,34 @@ export function Home() {
             </p>
             <div className="rounded-[5px] mt-8 w-full">
               <div className="flex gap-3">
-                <div className="my-[10px] py-[13px] px-[20px] text-lg font-medium text-white dark:text-black no-underline bg-gray-800 dark:bg-gray-200 hover:bg-gray-700 dark:hover:bg-gray-300 border border-transparent rounded-md shadow">
+                <div className="flex items-center justify-center my-[10px] py-[14px] px-[20px] text-lg font-medium text-white dark:text-black no-underline bg-gray-800 dark:bg-gray-200 hover:bg-gray-700 dark:hover:bg-gray-300 border border-transparent rounded-md shadow">
                   <Link href="/docs">Get Started →</Link>
                 </div>
                 <div className="shadow hidden md:flex gap-2 rounded-lg my-[10px] border-2 border-[#b073d9] py-[12px] px-[20px] bg-[#e9e6f4] dark:bg-[#231f31]">
                   <span className="font-mono text-lg font-medium">
-                    npm install million
+                    <span
+                      onClick={() => setCount(count + 1)}
+                      className="font-bold"
+                    >
+                      {command}
+                    </span>{' '}
+                    install million
                   </span>
                   <div
                     className="ml-auto"
-                    onClick={() => {
-                      setChecked(true);
-                      setTimeout(() => {
-                        setChecked(false);
-                      }, 500);
-                    }}
+                    onClick={
+                      void (async () => {
+                        setChecked(true);
+
+                        await navigator.clipboard.writeText(
+                          `${command} i million`,
+                        );
+
+                        setTimeout(() => {
+                          setChecked(false);
+                        }, 500);
+                      })
+                    }
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -88,7 +105,12 @@ export function Home() {
             </div>
             <div className="h-8 lg:hidden"></div>
           </div>
-          <div
+          <Tilt
+            tiltMaxAngleX={5}
+            tiltMaxAngleY={10}
+            glareEnable
+            tiltAngleYInitial={10}
+            glareMaxOpacity={0.1}
             className="hidden shadow-lg md:block w-full sm:w-full md:!max-w-[400px] lg:!max-w-[550px] xl:mx-auto !text-md
           bg-[#ffffff] dark:bg-[#282b34] border border-[#e3e7f1] dark:border-[#343842] p-5 rounded-lg text-center"
           >
@@ -110,7 +132,7 @@ export function Home() {
                 View the full benchmark
               </a>
             </p>
-          </div>
+          </Tilt>
         </main>
       </div>
     </>

@@ -16,6 +16,7 @@
     "react-chartjs-2": "^5.2.0",
     "react-countup": "^6.4.1",
     "react-dom": "^18.2.0",
+    "react-parallax-tilt": "^1.7.110",
     "tailwindcss": "^3.2.7"
   },
   "devDependencies": {

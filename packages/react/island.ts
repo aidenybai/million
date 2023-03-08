@@ -12,7 +12,7 @@ import {
   patch as patchBlock,
   remove$,
 } from '../million/block';
-import { unwrap } from './preprocess';
+import { unwrap } from './utils';
 import type {
   FunctionComponentElement,
   ReactNode,

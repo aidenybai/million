@@ -1,5 +1,4 @@
 import { createElement, memo, useEffect, useRef } from 'react';
-import { createRoot } from 'react-dom/client';
 import {
   fragmentMount$,
   fragmentPatch$,
