@@ -1,8 +1,3 @@
----
-title: Installing Million.js
-description: Learn how to install Million.js for use with your project
----
-
 import { Callout, Tabs, Tab, Steps, Cards, Card } from 'nextra-theme-docs';
 
 # Quickstart
@@ -35,6 +30,36 @@ Inside your project directory, run the following command:
   </Tab>
 </Tabs>
 
-### Integrate into React
+### Integrate into your project
+
+Here's an example of how to use `block(){:jsx}`, which creates a reusable component, and `<Block />{:jsx}`, which renders a callback returning JSX.
+
+{/* prettier-ignore */}
+```jsx
+import { createRoot } from 'react-dom/client';
+import { block, Block } from 'million/react';
+
+function Hello({ name }) {
+  return <p>Hey there {name}</p>;
+}
+const HelloBlock = block(Hello);
+
+function App() {
+  return <>
+    <Block name="Million">{Hello}</Block>
+    <HelloBlock name="Million" />
+  </>;
+}
+
+createRoot(document.getElementById('root')).render(<App />);
+```
+
+### Profit. 🎉
+
+<Cards num={3}>
+  <Card arrow title="Integrate with React" href="/docs/react/block"></Card>
+  <Card arrow title="Integrate with Next.js" href="/docs/react/next"></Card>
+  <Card arrow title="Use the virtual DOM" href="/docs/api/block"></Card>
+</Cards>
 
 </Steps>

@@ -1,0 +1,17 @@
+---
+title: 'Usage inside Next.js'
+---
+
+import { Callout } from 'nextra-theme-docs';
+
+# Usage inside Next.js
+
+<Callout>`<For />{:jsx}` and `block(){:jsx}` are currently not supported within Next.js.</Callout>
+
+```jsx
+import dynamic from 'next/dynamic';
+const Block = dynamic(() => import('million/react'), { ssr: false });
+
+const App = ({ name }) => <p>Hey there {name}</p>;
+const AppBlock = block(App);
+```

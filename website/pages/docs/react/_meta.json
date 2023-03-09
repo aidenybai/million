@@ -1,4 +1,5 @@
 {
-  "island": "Create optimized components",
-  "for": "Use optimized lists"
+  "block": "Block components",
+  "for": "Block lists",
+  "next": "Usage inside Next.js"
 }

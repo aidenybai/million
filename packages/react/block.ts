@@ -20,20 +20,24 @@ import type {
 } from 'react';
 import type { Props } from '../million';
 
+const IS_SSR_ENVIRONMENT = typeof window === 'undefined';
+
 interface Options {
   shouldUpdate?: (oldProps: Props, newProps: Props) => boolean;
 }
 
-const sheet = new CSSStyleSheet();
-sheet.replaceSync('million-island, million-fragment { display: contents }');
-document.adoptedStyleSheets = [sheet];
+if (!IS_SSR_ENVIRONMENT) {
+  const sheet = new CSSStyleSheet();
+  sheet.replaceSync('million-island, million-fragment { display: contents }');
+  document.adoptedStyleSheets = [sheet];
+}
 
 export const block = (
   fn: (props: Props) => ReactNode,
   options: Options = {},
 ) => {
   const block = createBlock(fn as any, unwrap);
-  const MillionIsland = (props: Props): FunctionComponentElement<Props> => {
+  const MillionBlock = (props: Props): FunctionComponentElement<Props> => {
     const ref = useRef<HTMLElement>(null);
     const patch = useRef<((props: Props) => void) | null>(null);
 
@@ -66,9 +70,19 @@ export const block = (
     return vnode;
   };
 
-  (MillionIsland as any).__block = block;
+  (MillionBlock as any).__block = block;
 
-  return MillionIsland;
+  return MillionBlock;
+};
+
+export const Block: FunctionComponent<
+  Props & { children: (props: Props) => ReactNode }
+> = ({ children, ...props }) => {
+  const ref = useRef<ReturnType<typeof block> | null>(null);
+  if (!ref.current) {
+    ref.current = block(children);
+  }
+  return createElement(ref.current, props);
 };
 
 const Effect: FunctionComponent<{ effect: () => void }> = ({ effect }) => {

@@ -28,7 +28,7 @@
 
 ## What is Million?
 
-Million.js is a drop-in performance optimization for [React](https://reactjs.org). It's lightweight (`<4kb`) Virtual DOM and runs [_**really fast**_](https://krausest.github.io/js-framework-benchmark).
+Million is an extremely fast and lightweight (`<4kb`) virtual DOM that makes [React](https://reactjs.org) up to [_**70% faster**_](https://millionjs.org).
 
 > Oh man... Another [`/virtual dom|javascript/gi`](https://regexr.com/6mr5f) library? I'm fine with [React](https://reactjs.org) already, why should I need it?
 
@@ -38,7 +38,7 @@ Million makes creating user interfaces as easy (It's just [React](https://reactj
 
 While alternative libraries like [Preact](https://preactjs.com/) reduce bundle sizes via efficient code design, Million.js can be used inside [React](https://reactjs.org) and is much faster than Preact.
 
-TL;DR - [React](https://preactjs.com/) components at the speed of raw JavaScript.
+**TL;DR:** Imagine [React](https://preactjs.com/) at the speed of raw JavaScript.
 
 ### [**📚 Learn Million in <5 minutes! →**](https://millionjs.org)
 
@@ -54,10 +54,11 @@ npm install million
 
 This repo is a "mono-repo" with modules. Million ships as one NPM package, but has first class modules for more complex, but important extensions. Each module has its own folder in the `/packages` directory.
 
-| Module                                                                       | Description                                          |
-| ---------------------------------------------------------------------------- | ---------------------------------------------------- |
-| [`million`](https://github.com/aidenybai/million/tree/main/packages/million) | The main Virtual DOM with all of Million's core.     |
-| [`react`](https://github.com/aidenybai/million/tree/main/packages/react)     | A module that gives React compatibility for Million. |
+| Module                                                                               | Description                                          |
+| ------------------------------------------------------------------------------------ | ---------------------------------------------------- |
+| [`million`](https://github.com/aidenybai/million/tree/main/packages/million)         | The main Virtual DOM with all of Million's core.     |
+| [`react`](https://github.com/aidenybai/million/tree/main/packages/react)             | A module that gives React compatibility for Million. |
+| [`jsx-runtime`](https://github.com/aidenybai/million/tree/main/packages/jsx-runtime) | A simple JSX runtime for Million.js core.            |
 
 ## Resources & Contributing Back
 
