@@ -113,7 +113,7 @@ export function Home() {
             glareEnable
             tiltAngleYInitial={5}
             glareMaxOpacity={0.1}
-            className="hidden shadow-lg md:block w-full sm:w-full md:!max-w-[400px] lg:!max-w-[550px] xl:mx-auto !text-md
+            className="hidden shadow-lg md:block w-full lg:!max-w-[400px] xl:!max-w-[550px] xl:mx-auto !text-md
           bg-[#ffffff] dark:bg-[#282b34] border border-[#e3e7f1] dark:border-[#343842] p-5 rounded-lg text-center"
           >
             <div className="w-full">

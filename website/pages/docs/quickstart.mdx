@@ -12,19 +12,19 @@ Inside your project directory, run the following command:
 <Tabs items={['npm', 'pnpm', 'yarn']} storageKey="selected-pkg-manager">
   {/* prettier-ignore */}
   <Tab>
-  ```bash
+  ```bash copy
   npm install million
   ```
   </Tab>
   {/* prettier-ignore */}
   <Tab>
-  ```bash
+  ```bash copy
   pnpm install million
   ```
   </Tab>
   {/* prettier-ignore */}
   <Tab>
-  ```bash
+  ```bash copy
   yarn add million
   ```
   </Tab>
@@ -35,18 +35,24 @@ Inside your project directory, run the following command:
 Here's an example of how to use `block(){:jsx}`, which creates a reusable component, and `<Block />{:jsx}`, which renders a callback returning JSX.
 
 {/* prettier-ignore */}
-```jsx
+```jsx copy filename="App.js" {2,11,16}
 import { createRoot } from 'react-dom/client';
 import { block, Block } from 'million/react';
 
 function Hello({ name }) {
   return <p>Hey there {name}</p>;
 }
+
+// You can create a block either by:
+
+// 1. Creating a reusable block
 const HelloBlock = block(Hello);
 
 function App() {
   return <>
+    {/* 2. Rendering a block inside the JSX */}
     <Block name="Million">{Hello}</Block>
+
     <HelloBlock name="Million" />
   </>;
 }

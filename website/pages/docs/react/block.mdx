@@ -1,5 +1,52 @@
 ---
-title: 'Block components'
+title: 'Block Components'
 ---
 
-# `block(){:jsx}` and `<Block />{:jsx}`
+import { Callout } from 'nextra-theme-docs';
+
+# Block Components
+
+Million.js introduces the concept of a "Block" component. Blocks are a way for components to be rendered using the Million.js virtual DOM.
+
+<Callout>
+  Block components must be **stateless, hook-free, and only accept primitives**
+  as props.
+</Callout>
+
+## `block(){:jsx}`
+
+**Syntax:** `block((props) => vnode){:jsx}`\
+**Example:** `block((props) => <div>{props.foo}</div>){:jsx}`
+
+`block(){:jsx}` must consume a stateless component with props containing primitives only and returns a Block component.
+
+```jsx {2, 8}
+import { createRoot } from 'react-dom/client';
+import { block } from 'million/react';
+
+function Component(props) {
+  return <div>Hello {props.text}</div>;
+}
+
+const ComponentBlock = block(Component);
+
+createRoot(document.getElementById('root')).render(
+  <ComponentBlock text="world" />,
+);
+```
+
+## `<Block />{:jsx}`
+
+**Syntax:** `<Block {...props}>{(props) => vnode}</Block>{:jsx}`\
+**Example:** `<Block text="world">{(props) => <div>Hello {props.text}</div>}</Block>{:jsx}`
+
+`<Block />{:jsx}` must consume a stateless component with props containing primitives only in its children and renders a block.
+
+```jsx {2, 5}
+import { createRoot } from 'react-dom/client';
+import { block } from 'million/react';
+
+createRoot(document.getElementById('root')).render(
+  <Block text="World">{(props) => <div>Hello {props.text}</div>}</Block>,
+);
+```
