@@ -1,0 +1,27 @@
+---
+title: 'fragment()'
+---
+
+# `fragment(){:jsx}`
+
+**Syntax:** `fragment(Block[]){:jsx}`\
+**Example:** `fragment([block, block, block]){:jsx}`
+
+The `fragment` function is used to create a Block list. It's the best way to loop over an array. As the array changes, `fragment(){:jsx}` updates or moves items in the DOM rather than recreating them. Let's look at an example:
+
+```jsx
+import { block, patch, fragment } from 'million';
+
+const oldList = [1, 2, 3];
+const newList = [3, 2, 1];
+const list = block(({ item }) => {
+  return <div>{item}</div>;
+});
+
+// updates list efficiently (only 2 moves instead of 3 updates)
+patch(
+  document.body,
+  fragment(oldList.map((item) => list({ item }))),
+  fragment(newList.map((item) => list({ item }))),
+);
+```

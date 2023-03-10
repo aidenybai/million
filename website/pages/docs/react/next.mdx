@@ -1,0 +1,34 @@
+---
+title: 'Usage Inside Next.js'
+---
+
+import { Callout } from 'nextra-theme-docs';
+
+# Usage Inside Next.js
+
+<Callout>`<For />{:jsx}` and `block(){:jsx}` are currently not supported within Next.js.</Callout>
+
+You can use Million inside Next.js by using the `dynamic` function from `next/dynamic` to load the component without Server-Side Rendering (SSR).
+
+Similarly, you can use the utilities provided for React, with the exception of `<For />{:jsx}` and `block(){:jsx}`.
+
+```jsx copy filename="_app.js" /Block/
+import dynamic from 'next/dynamic';
+// Note that blocks currently cannot be prerendered because it
+// is dynamically imported.
+const Block = dynamic(() => import('million/react'), { ssr: false });
+
+function Hello({ name }) {
+  return <h1>Hey there {name}</h1>;
+}
+
+function App() {
+  return (
+    <>
+      <Block name="Million">{Hello}</Block>
+    </>
+  );
+}
+
+export default App;
+```

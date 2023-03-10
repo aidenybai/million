@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Mona Sans';
+  src: url('/Mona-Sans.woff2') format('woff2'),
+    url('/Mona-Sans.woff') format('woff');
+}
+
+html,
+body {
+  font-family: 'Mona Sans', -apple-system, BlinkMacSystemFont, avenir next,
+    avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto,
+    arial, sans-serif;
+}
+
+#hero {
+  background: linear-gradient(to bottom, #fff 50%, #9e88d648 100%),
+    url(https://grainy-gradients.vercel.app/noise.svg);
+}
+
+html[class~='dark'] #hero {
+  background: linear-gradient(to bottom, #111 50%, #2a2044af 100%),
+    url(https://grainy-gradients.vercel.app/noise.svg);
+}
+
+.gradient-text {
+  background: linear-gradient(#efa0a5, #a788ec);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(3px 3px #c0beea8f);
+}
+
+html[class~='dark'] .gradient-text {
+  filter: drop-shadow(3px 3px #54527b);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.animate-once {
+  -webkit-animation-iteration-count: 1;
+  animation-iteration-count: 1;
+}

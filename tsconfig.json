@@ -2,10 +2,6 @@
   "extends": "@vercel/style-guide/typescript",
   "compilerOptions": {
     "baseUrl": ".",
-    "paths": {
-      "packages/*": ["packages/*"],
-      "million/*": ["packages/*"]
-    },
     "jsx": "react-jsx",
     "jsxImportSource": "packages",
     "lib": ["dom", "esnext"],
