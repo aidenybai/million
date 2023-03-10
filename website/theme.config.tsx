@@ -119,13 +119,15 @@ const config: DocsThemeConfig = {
     const { frontMatter } = useConfig();
     const ogConfig = {
       title: 'Million.js',
-      description: '',
+      description:
+        'Million is an extremely fast and lightweight <4kb virtual DOM that makes React up to 70% faster',
       author: {
         twitter: 'aidenybai',
       },
       favicon: '/favicon.svg',
     };
-
+    const favicon = String(ogConfig.favicon);
+    const description = String(frontMatter.description || ogConfig.description);
     const canonical = new URL(asPath, 'https://millionjs.org').toString();
 
     return (
@@ -133,28 +135,14 @@ const config: DocsThemeConfig = {
         <meta property="og:url" content={canonical} />
         <link rel="canonical" href={canonical} />
 
-        <meta
-          name="description"
-          content={String(frontMatter.description || ogConfig.description)}
-        />
-        <meta
-          property="og:description"
-          content={String(frontMatter.description || ogConfig.description)}
-        />
+        <meta name="description" content={description} />
+        <meta property="og:description" content={description} />
         <meta name="twitter:site" content={`@${ogConfig.author.twitter}`} />
         <meta name="twitter:creator" content={`@${ogConfig.author.twitter}`} />
         <meta name="twitter:card" content="summary_large_image" />
 
-        <link
-          rel="shortcut icon"
-          href={String(ogConfig.favicon)}
-          type="image/svg+xml"
-        />
-        <link
-          rel="apple-touch-icon"
-          href={String(ogConfig.favicon)}
-          type="image/svg+xml"
-        />
+        <link rel="shortcut icon" href={favicon} type="image/svg+xml" />
+        <link rel="apple-touch-icon" href={favicon} type="image/svg+xml" />
         <meta name="apple-mobile-web-app-title" content={ogConfig.title} />
       </>
     );
