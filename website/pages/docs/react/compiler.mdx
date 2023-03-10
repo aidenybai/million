@@ -1,0 +1,66 @@
+---
+title: 'Optimizing Compiler'
+---
+
+import { Callout } from 'nextra-theme-docs';
+
+# Optimizing Compiler
+
+<Callout>
+  This is an experimental feature. It is not recommended to use this in
+  production.
+</Callout>
+
+Million.js has an optimizing compiler that can be used to optimize block initialization. It current supports [Vite](https://vitejs.dev), [Webpack](https://webpack.js.org), [Rollup](https://rollupjs.org), and [ESBuild](https://esbuild.github.io/) through [`unplugin`](https://github.com/unjs/unplugin).
+
+You can import based on needs like so:
+
+```js
+import { vite, webpack, rollup, esbuild } from 'million/compiler';
+```
+
+## Vite
+
+```js
+// vite.config.js
+import * as million from 'million/compiler';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  plugins: [million.vite()],
+});
+```
+
+## Webpack
+
+```js
+// webpack.config.js
+import * as million from 'million/compiler';
+
+export default {
+  plugins: [million.webpack()],
+};
+```
+
+## Rollup
+
+```js
+// rollup.config.js
+import * as million from 'million/compiler';
+
+export default {
+  plugins: [UnpluginFeature.rollup()],
+};
+```
+
+## ESBuild
+
+```js
+// esbuild.config.js
+import { build } from 'esbuild';
+import * as million from 'million/compiler';
+
+build({
+  plugins: [million.esbuild()],
+});
+```

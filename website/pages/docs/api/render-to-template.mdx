@@ -1,0 +1,46 @@
+---
+title: 'renderToTemplate()'
+---
+
+import { Callout } from 'nextra-theme-docs';
+
+<Callout>
+  This function is part of the internal API. Only use if you know what you are
+  doing and are optimizing for performance.
+</Callout>
+
+<br />
+
+# `renderToTemplate(){:jsx}`
+
+**Syntax:** `stringToDOM(vnode, edits){:jsx}`\
+**Example:** `stringToDOM(<div>Hello World</div>, []){:jsx}`
+
+The `renderToTemplate()` function is used to render a virtual DOM node to a string. This is used to create the template for the block and works tangentially with [`stringToDOM(){:jsx}`](/docs/api/string-to-dom).
+
+```jsx
+import { renderToTemplate } from 'million';
+
+const edits = [];
+const template = renderToTemplate(<div>Hello World</div>, edits);
+
+console.log(template); // '<div>Hello World</div>'
+
+console.log(edits); // []
+```
+
+## Holes in templates
+
+You can also pass in Holes to the `renderToTemplate()` function. This will return the template with edits.
+
+```jsx
+import { renderToTemplate } from 'million';
+
+const edits = [];
+const hole = { __key: 'hole' };
+const template = renderToTemplate(<div>Hello {hole}</div>, edits);
+
+console.log(template); // '<div>Hello </div>'
+
+console.log(edits); // [{ type: 'child', index: 0, hole: 'hole' }]
+```

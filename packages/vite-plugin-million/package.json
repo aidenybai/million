@@ -1,8 +1,0 @@
-{
-  "private": true,
-  "main": "./index.ts",
-  "module": "./index.ts",
-  "dependencies": {
-    "espree": "^9.4.1"
-  }
-}

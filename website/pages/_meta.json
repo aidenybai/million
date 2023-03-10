@@ -1,0 +1,20 @@
+{
+  "index": {
+    "type": "page",
+    "title": "Million.js",
+    "display": "hidden",
+    "theme": {
+      "layout": "raw"
+    }
+  },
+  "docs": {
+    "type": "page",
+    "title": "Documentation"
+  },
+  "benchmarks": {
+    "title": "Benchmarks ↗",
+    "type": "page",
+    "href": "https://krausest.github.io/js-framework-benchmark",
+    "newWindow": true
+  }
+}

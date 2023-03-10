@@ -1,0 +1,28 @@
+---
+title: 'stringToDOM()'
+---
+
+import { Callout } from 'nextra-theme-docs';
+
+<Callout>
+  This function is part of the internal API. Only use if you know what you are
+  doing and are optimizing for performance.
+</Callout>
+
+<br />
+
+# `stringToDOM(){:jsx}`
+
+**Syntax:** `stringToDOM(htmlString){:jsx}`\
+**Example:** `stringToDOM('<div>Hello World</div>'){:jsx}`
+
+The `stringToDOM` function takes a string of HTML and returns a DOM object. This is useful for creating DOM elements from strings.
+
+```jsx
+import { stringToDOM } from 'million';
+
+const dom = stringToDOM('<div>Hello World</div>');
+
+dom.innerHTML; // 'Hello World'
+dom.tagName; // 'DIV'
+```

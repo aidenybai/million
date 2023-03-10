@@ -1,0 +1,73 @@
+import { Card, Cards, Callout } from 'nextra-theme-docs';
+
+# What is Million.js?
+
+Million is an extremely fast and lightweight (`<4kb`) virtual DOM that makes [React](https://reactjs.org) up to [_**70% faster**_](https://millionjs.org).
+
+> Oh man... Another [`/virtual dom|javascript/gi{:js}`](https://regexr.com/6mr5f) library? I'm fine with [React](https://reactjs.org) already, why do I need this?
+
+Million makes creating user interfaces as easy (It's just [React](https://reactjs.org)!), but with faster rendering and loading speeds. By using a fine-tuned, optimized virtual DOM, Million.js reduces the overhead of the React Reconciler.
+
+Furthermore, while alternative libraries like [Preact](https://preactjs.com/) reduce bundle sizes via efficient code design, Million.js can be used inside [React](https://reactjs.org) and is much faster than Preact.
+
+<Callout>
+  Imagine [React](https://reactjs.org/) at the speed of raw JavaScript.
+</Callout>
+
+## Get Started
+
+<Cards num={3}>
+  <Card arrow title="Do the quickstart" href="/docs/quickstart"></Card>
+  <Card arrow title="Use Million.js in React" href="/docs/react/block"></Card>
+  <Card arrow title="Use the virtual DOM" href="/docs/api/block"></Card>
+</Cards>
+
+## React vs. Million.js
+
+The following example is a simple counter app that uses React and Million.js. The code is identical, but the performance is different.
+
+<br />
+
+<iframe
+  style={{ width: '100%', height: '35vh' }}
+  src="https://stackblitz.com/edit/react-1km67h?embed=1&file=src/index.js&view=preview&embed=1&hideExplorer=1&hidedevtools=1&devtoolsheight=0"
+></iframe>
+
+## What is a virtual DOM?
+
+A virtual DOM a concept that allows you to create user interfaces declaratively, without having to directly manipulate the DOM. Instead, you create a virtual representation of the DOM, and the virtual DOM library will take care of updating the actual DOM for you.
+
+The virtual DOM is used by many popular libraries, including [React](https://reactjs.org), [Preact](https://preactjs.com/), and [Vue](https://vuejs.org). However, it suffers from [performance overhead](https://svelte.dev/blog/virtual-dom-is-pure-overhead), often making it impractical for highly interactive runtime applications.
+
+## Design Principles
+
+Million.js is designed in order to solve the performance issues of the virtual DOM by accomplishing a balance between being **fast and compact** and **easy to use**.
+
+- **Maximize composability and decouple modules**\
+   Million has a highly decoupled API, with modules for additional features opt-in. This allows you to explicitly define the amount of JavaScript you want to ship, while allowing your Virtual DOM to scale.
+
+  <br />
+
+- **Block-based virtual DOM strategy**\
+   Million uses a block-based virtual DOM (pioneered by Géry Debongnie in [`blockdom`](https://github.com/ged-odoo/blockdom)) that allows for a more efficient reconciliation algorithm. This allows Million.js to be faster than React, while being smaller than Preact. You can view the methodology and findings with `blockdom` [performance notes](https://github.com/ged-odoo/blockdom/blob/main/doc/performance_notes.md).
+
+  <br />
+
+- **Ability to "initialize" virtual DOM blocks**\
+   Million.js allows you to "initialize" and reuse virtual DOM blocks. With blocks that can be used in multiple places, the memory and performance cost of the virtual DOM is reduced.
+
+  <br />
+
+But most importantly—Million.js is a underlying runtime for virtual DOM based frameworks. The long-term goal is to serve as a faithful partner to existing frameworks, allowing them to be faster and more lightweight without opting into a [signals](https://www.solidjs.com/tutorial/introduction_signals#:~:text=Signals%20are%20the%20cornerstone%20of,updates%20anything%20that%20uses%20it.) data solution.
+
+## Acknowledgements
+
+- [`blockdom`](https://github.com/ged-odoo/blockdom) ([Géry Debongnie](https://github.com/ged-odoo))
+  Thank you to Géry pioneering the concept of "blocks" in the virtual DOM. Many parts of the Million.js codebase either directly or indirectly derive from his work.
+
+- [`voby`](https://github.com/vobyjs/voby) ([Fabio Spampinato](https://github.com/fabiospampinato))
+  The Million.js "template" concept is derived from Voby's `template()` API.
+
+- [`bun`](https://bun.sh) for their homepage. The Million.js homepage is a remix of what they have currently.
+
+- [`ivi`](https://github.com/localvoid/ivi), [Preact](https://github.com/preactjs/preact), [and more](https://krausest.github.io/js-framework-benchmark/2021/table_chrome_96.0.4664.45.html)

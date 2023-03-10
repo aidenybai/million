@@ -1,19 +1,10 @@
-import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
-import { million } from './packages/vite-plugin-million';
-
-const packages = resolve(__dirname, './packages');
 
 export default defineConfig({
-  server: {
-    open: '/dev/index.html',
+  esbuild: {
+    jsxFactory: 'h',
+    jsxInject: `import { h } from 'packages/jsx-runtime';`,
   },
-  resolve: {
-    alias: {
-      packages,
-    },
-  },
-  plugins: [million({ importSource: packages, react: true })],
   test: {
     environment: 'jsdom',
     coverage: {

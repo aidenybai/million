@@ -1,5 +1,0 @@
-{
-  "private": true,
-  "main": "./index.ts",
-  "module": "./index.ts"
-}
