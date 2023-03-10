@@ -52,6 +52,8 @@ npm install million
 
 This repo is a "mono-repo" with modules. Million ships as one NPM package, but has first class modules for more complex, but important extensions. Each module has its own folder in the `/packages` directory.
 
+You can also track our progress through our [Roadmap](https://github.com/users/aidenybai/projects/5/views/1?layout=roadmap).
+
 | Module                                                                               | Description                                          |
 | ------------------------------------------------------------------------------------ | ---------------------------------------------------- |
 | [`million`](https://github.com/aidenybai/million/tree/main/packages/million)         | The main Virtual DOM with all of Million's core.     |
