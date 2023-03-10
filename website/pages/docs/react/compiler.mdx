@@ -1,5 +1,6 @@
 ---
 title: 'Optimizing Compiler'
+description: 'Million.js has an optimizing compiler that can be used to optimize block initialization.'
 ---
 
 import { Callout } from 'nextra-theme-docs';
@@ -49,7 +50,7 @@ export default {
 import * as million from 'million/compiler';
 
 export default {
-  plugins: [UnpluginFeature.rollup()],
+  plugins: [million.rollup()],
 };
 ```
 

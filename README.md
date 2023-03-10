@@ -56,8 +56,8 @@ This repo is a "mono-repo" with modules. Million ships as one NPM package, but h
 | ------------------------------------------------------------------------------------ | ---------------------------------------------------- |
 | [`million`](https://github.com/aidenybai/million/tree/main/packages/million)         | The main Virtual DOM with all of Million's core.     |
 | [`react`](https://github.com/aidenybai/million/tree/main/packages/react)             | A module that gives React compatibility for Million. |
-| [`compiler`](https://github.com/aidenybai/million/tree/main/packages/compiler) | An optimizing compiler for Million in React.            |
-| [`jsx-runtime`](https://github.com/aidenybai/million/tree/main/packages/jsx-runtime) | A simple JSX runtime for Million core.            |
+| [`compiler`](https://github.com/aidenybai/million/tree/main/packages/compiler)       | An optimizing compiler for Million in React.         |
+| [`jsx-runtime`](https://github.com/aidenybai/million/tree/main/packages/jsx-runtime) | A simple JSX runtime for Million core.               |
 
 ## Resources & Contributing Back
 
@@ -88,35 +88,6 @@ Million takes heavy inspiration from the following projects:
 - [`ivi`](https://github.com/localvoid/ivi), [Preact](https://github.com/preactjs/preact), [and more](https://krausest.github.io/js-framework-benchmark/2021/table_chrome_96.0.4664.45.html)
 
 Million is being used at companies like [Wyze](https://wyze.com) and [Dimension](https://dimension.dev), as well as open source work like [Quartz](https://github.com/jackyzha0/quartz), [TinyPages](https://github.com/Borrus-sudo/tinypages), [and more](https://github.com/aidenybai/million/network/dependents).
-
-## Sponsors
-
-<table>
-  <tr>
-    <td>
-      <a href="https://dimension.dev/?utm_source=millionjs&utm_campaign=oss" target="_blank"><img height="44" src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/dimension-logo.svg" alt="Dimension"></a>
-    </td>
-    <td>
-      <a href="https://www.theatrejs.com/?utm_source=millionjs&utm_campaign=oss" target="_blank"><img height="44" src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/theatre-js-logo.svg" alt="Theatre.js"></a>
-    </td>
-    <td>
-      <a href="https://deta.sh/?utm_source=millionjs&utm_campaign=oss" target="_blank">
-      <svg style="height: 44px" width="44px" height="44px" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M7.00004 0C10.866 0 14 3.13401 14 7C14 10.866 10.866 14 7.00004 14C3.13401 14 0 10.866 0 7C0 3.13401 3.13401 0 7.00004 0Z" fill="#F73B95"></path>
-        <path d="M7.01678 1.36719C10.1464 1.36719 12.6834 3.90424 12.6834 7.03387C12.6834 10.1635 10.1464 12.7005 7.01678 12.7005C3.88717 12.7005 1.3501 10.1635 1.3501 7.03387C1.3501 3.90424 3.88717 1.36719 7.01678 1.36719Z" fill="#BD399C"></path>
-        <path d="M7.01674 2.86719C9.3179 2.86719 11.1834 4.73263 11.1834 7.03387C11.1834 9.33507 9.3179 11.2005 7.01674 11.2005C4.71554 11.2005 2.8501 9.33507 2.8501 7.03387C2.8501 4.73263 4.71554 2.86719 7.01674 2.86719V2.86719Z" fill="#93388E"></path>
-        <path d="M6.98322 4.13281C8.54798 4.13281 9.81654 5.40133 9.81654 6.96613C9.81654 8.53089 8.54798 9.79945 6.98322 9.79945C5.41846 9.79945 4.1499 8.53089 4.1499 6.96613C4.1499 5.40133 5.41846 4.13281 6.98322 4.13281V4.13281Z" fill="#6030A2"></path>
-      </svg>
-    </a>
-    </td>
-    <td>
-      <a href="https://vercel.com/?utm_source=millionjs&utm_campaign=oss" target="_blank"><img height="44" src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/vercel-logo.svg" alt="Vercel"></a>
-    </td>
-  </tr>
-</table>
-<br />
-
-**Want your logo here? [→ Sponsor Million](https://github.com/sponsors/aidenybai)**
 
 ## License
 
