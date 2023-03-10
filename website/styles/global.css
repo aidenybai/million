@@ -10,12 +10,6 @@
     url('/Mona-Sans.woff') format('woff');
 }
 
-@font-face {
-  font-family: 'Mona Sans Wide';
-  src: url('/Mona-Sans-BoldWide.woff2') format('woff2'),
-    url('/Mona-Sans-BoldWide.woff') format('woff');
-}
-
 html,
 body {
   font-family: 'Mona Sans', -apple-system, BlinkMacSystemFont, avenir next,
@@ -34,7 +28,6 @@ html[class~='dark'] #hero {
 }
 
 .gradient-text {
-  font-family: 'Mona Sans Wide';
   background: linear-gradient(#efa0a5, #a788ec);
   background-clip: text;
   -webkit-text-fill-color: transparent;

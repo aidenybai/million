@@ -34,9 +34,7 @@ Million is an extremely fast and lightweight (`<4kb`) virtual DOM that makes [Re
 
 Million makes creating user interfaces as easy (It's just [React](https://reactjs.org)!), but with faster rendering and loading speeds. By using a fine-tuned, optimized virtual DOM, Million.js reduces the overhead of the React Reconciler.
 
-> Okay cool... but why should I use Million.js if I can just use [Preact](https://preactjs.com/) if I need something a bit more lightweight?
-
-While alternative libraries like [Preact](https://preactjs.com/) reduce bundle sizes via efficient code design, Million.js can be used inside [React](https://reactjs.org) and is much faster than Preact.
+Furthermore, while alternative libraries like [Preact](https://preactjs.com/) reduce bundle sizes via efficient code design, Million.js can be used inside [React](https://reactjs.org) and is much faster than Preact.
 
 **TL;DR:** Imagine [React](https://preactjs.com/) at the speed of raw JavaScript.
 
