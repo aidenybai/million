@@ -1,9 +1,0 @@
-{
-  "createElement": "createElement()",
-  "patch": "patch()",
-  "hydrate": "hydrate()",
-  "flags": "Flags",
-  "delta": "Deltas",
-  "startTransition": "startTransition()",
-  "batch": "batch()"
-}

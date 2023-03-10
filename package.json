@@ -28,6 +28,21 @@
       "import": "./dist/million.mjs",
       "require": "./dist/million.cjs",
       "types": "./dist/million.d.ts"
+    },
+    "./react": {
+      "import": "./dist/react.mjs",
+      "require": "./dist/react.cjs",
+      "types": "./dist/react.d.ts"
+    },
+    "./jsx-runtime": {
+      "import": "./dist/jsx-runtime.mjs",
+      "require": "./dist/jsx-runtime.cjs",
+      "types": "./dist/jsx-runtime.d.ts"
+    },
+    "./compiler": {
+      "import": "./dist/compiler.mjs",
+      "require": "./dist/compiler.cjs",
+      "types": "./dist/compiler.d.ts"
     }
   },
   "sideEffects": false,
