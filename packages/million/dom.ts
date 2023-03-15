@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 
-const EVENTS_REGISTRY = '__million_events';
-const IS_NON_DIMENSIONAL =
-  /acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i;
-const XLINK_NS = 'http://www.w3.org/1999/xlink';
-const XML_NS = 'http://www.w3.org/2000/xmlns/';
-let listenerPointer = 0;
-const propsToSkip = new Set(['href', 'list', 'form', 'tabIndex', 'download']);
+import {
+  EVENTS_REGISTRY,
+  IS_NON_DIMENSIONAL,
+  NON_PROPS,
+  XLINK_NS,
+  XML_NS,
+} from './constants';
 
 // Caching prototypes for performance
 export const node$ = Node.prototype;
@@ -49,16 +49,13 @@ export const mapSet$ = map$.set;
 export const mapHas$ = map$.has;
 export const mapGet$ = map$.get;
 
-export const weakMap$ = WeakMap.prototype;
-export const weakMapSet$ = weakMap$.set;
-export const weakMapHas$ = weakMap$.has;
-export const weakMapGet$ = weakMap$.get;
-
 export const set$ = Set.prototype;
 export const setAdd$ = set$.add;
 export const setHas$ = set$.has;
 
 document[EVENTS_REGISTRY] = new Set();
+
+let listenerPointer = 0;
 
 // TODO: this consumes a lot of memory
 export const createEventListener = (
@@ -67,7 +64,7 @@ export const createEventListener = (
   value?: EventListener,
 ) => {
   const event = name.toLowerCase().slice(2);
-  const key = `__event_${event}`;
+  const key = `$$${event}`;
   if (!setHas$.call(document[EVENTS_REGISTRY], event)) {
     // createEventListener uses a synthetic event handler to capture events
     // https://betterprogramming.pub/whats-the-difference-between-synthetic-react-events-and-javascript-events-ba7dbc742294
@@ -161,7 +158,7 @@ export const setAttribute = (
     el[name] !== undefined &&
     el[name] !== null &&
     !(el instanceof SVGElement) &&
-    setHas$.call(propsToSkip, name)
+    setHas$.call(NON_PROPS, name)
   ) {
     try {
       el[name] = value;

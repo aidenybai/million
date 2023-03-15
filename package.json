@@ -14,7 +14,7 @@
     "lint:fix": "pnpm lint --fix",
     "test": "vitest run --coverage",
     "test:dev": "vitest watch",
-    "bump": "pnpm build && bumpp && pnpm publish"
+    "bump": "pnpm build && publint && bumpp && pnpm publish"
   },
   "repository": {
     "type": "git",
@@ -25,24 +25,24 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/million.d.ts",
       "import": "./dist/million.mjs",
-      "require": "./dist/million.cjs",
-      "types": "./dist/million.d.ts"
+      "require": "./dist/million.cjs"
     },
     "./react": {
+      "types": "./dist/react.d.ts",
       "import": "./dist/react.mjs",
-      "require": "./dist/react.cjs",
-      "types": "./dist/react.d.ts"
+      "require": "./dist/react.cjs"
     },
     "./jsx-runtime": {
+      "types": "./dist/jsx-runtime.d.ts",
       "import": "./dist/jsx-runtime.mjs",
-      "require": "./dist/jsx-runtime.cjs",
-      "types": "./dist/jsx-runtime.d.ts"
+      "require": "./dist/jsx-runtime.cjs"
     },
     "./compiler": {
+      "types": "./dist/compiler.d.ts",
       "import": "./dist/compiler.mjs",
-      "require": "./dist/compiler.cjs",
-      "types": "./dist/compiler.d.ts"
+      "require": "./dist/compiler.cjs"
     }
   },
   "sideEffects": false,
@@ -80,6 +80,7 @@
     "eslint-config-prettier": "^8.6.0",
     "jsdom": "^21.1.0",
     "prettier": "^2.8.4",
+    "publint": "^0.1.10",
     "source-map": "^0.7.4",
     "tslib": "^2.5.0",
     "turbo": "^1.8.2",

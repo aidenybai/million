@@ -24,7 +24,7 @@ export abstract class AbstractBlock {
   _parent?: HTMLElement | null;
   props?: Props | null;
   key?: string;
-  cache?: WeakMap<Edit, HTMLElement>;
+  cache?: Map<number, HTMLElement>;
   abstract patch(block: AbstractBlock): HTMLElement;
   abstract mount(parent?: HTMLElement, refNode?: Node | null): HTMLElement;
   abstract move(block: AbstractBlock | null, refNode: Node | null): void;
@@ -36,67 +36,120 @@ export abstract class AbstractBlock {
   }
 }
 
-export interface EditBase {
-  type: string;
-  name?: string;
-  value?: string;
-  hole?: string;
-  index?: number;
-  listener?: EventListener;
-  patch?: (listener: EventListener) => void;
-  block?: AbstractBlock;
+export const enum Current {
+  PATH,
+  EDITS,
+  INITS,
+}
+export const enum Edits {
+  TYPE,
+  NAME,
+  VALUE,
+  HOLE,
+  INDEX,
+  LISTENER,
+  PATCH,
+  BLOCK,
 }
 
-export interface EditAttribute extends EditBase {
-  type: 'attribute';
-  hole: string;
-  name: string;
-}
+export type EditBase = [
+  /* type */ string,
+  /* name */ string | undefined,
+  /* value */ string | undefined,
+  /* hole */ string | undefined,
+  /* index */ number | undefined,
+  /* listener */ EventListener | undefined,
+  /* patch */ ((listener: EventListener) => void) | undefined,
+  /* block */ AbstractBlock | undefined,
+];
 
-export interface EditStyleAttribute extends EditBase {
-  type: 'style';
-  hole: string;
-  name: string;
-}
+export type EditAttribute = EditBase &
+  [
+    /* type */ 'attribute',
+    /* name */ string,
+    /* value */ undefined,
+    /* hole */ string,
+    /* index */ undefined,
+    /* listener */ undefined,
+    /* patch */ undefined,
+    /* block */ undefined,
+  ];
 
-export interface EditSvgAttribute extends EditBase {
-  type: 'svg';
-  hole: string;
-  name: string;
-}
+export type EditStyleAttribute = EditBase &
+  [
+    /* type */ 'style',
+    /* name */ string,
+    /* value */ undefined,
+    /* hole */ string,
+    /* index */ undefined,
+    /* listener */ undefined,
+    /* patch */ undefined,
+    /* block */ undefined,
+  ];
 
-export interface EditChild extends EditBase {
-  type: 'child';
-  hole: string;
-  index: number;
-}
+export type EditSvgAttribute = EditBase &
+  [
+    /* type */ 'svg',
+    /* name */ string,
+    /* value */ undefined,
+    /* hole */ string,
+    /* index */ undefined,
+    /* listener */ undefined,
+    /* patch */ undefined,
+    /* block */ undefined,
+  ];
 
-export interface EditBlock extends EditBase {
-  type: 'block';
-  block: AbstractBlock;
-  index: number;
-}
+export type EditChild = EditBase &
+  [
+    /* type */ 'child',
+    /* name */ undefined,
+    /* value */ undefined,
+    /* hole */ string,
+    /* index */ number,
+    /* listener */ undefined,
+    /* patch */ undefined,
+    /* block */ undefined,
+  ];
 
-export interface EditEvent extends EditBase {
-  type: 'event';
-  hole?: string;
-  name: string;
-  listener: EventListener;
-  patch?: (listener: EventListener) => void;
-}
+export type EditBlock = EditBase &
+  [
+    /* type */ 'block',
+    /* name */ undefined,
+    /* value */ undefined,
+    /* hole */ undefined,
+    /* index */ number,
+    /* listener */ undefined,
+    /* patch */ undefined,
+    /* block */ AbstractBlock,
+  ];
 
-export interface Edit {
-  path: number[];
-  edits: (
+export type EditEvent = EditBase &
+  [
+    /* type */ 'event',
+    /* name */ string,
+    /* value */ undefined,
+    /* hole */ string | undefined,
+    /* index */ undefined,
+    /* listener */ EventListener,
+    /* patch */ ((listener: EventListener) => void) | undefined,
+    /* block */ undefined,
+  ];
+
+export type Edit = [
+  /* path */ number[],
+  /* edits */ (
     | EditAttribute
     | EditStyleAttribute
     | EditSvgAttribute
     | EditChild
     | EditBlock
     | EditEvent
-  )[];
-  inits: {
-    index: number;
-    value: string;
-  }[];
-}
+  )[],
+  /* inits */ (
+    | {
+        index: number;
+        value: string;
+      }[]
+    | undefined
+  ),
+];

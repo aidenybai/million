@@ -13,17 +13,18 @@ import {
   setSvgAttribute,
   firstChild$,
   nextSibling$,
-  weakMapHas$,
-  weakMapGet$,
-  weakMapSet$,
+  mapSet$,
+  mapHas$,
+  mapGet$,
 } from './dom';
 import { renderToTemplate } from './template';
-import { AbstractBlock } from './types';
+import { AbstractBlock, Current, Edits } from './types';
 import type { Edit, EditChild, Props, VElement, Hole, VNode } from './types';
 
 export const block = (
   fn: (props?: Props) => VElement,
   unwrap?: (vnode: any) => VNode,
+  shouldUpdate?: (oldProps: Props, newProps: Props) => boolean,
 ) => {
   const vnode = fn(
     new Proxy(
@@ -48,9 +49,15 @@ export const block = (
   return (
     props?: Props | null,
     key?: string,
-    shouldUpdate?: (oldProps: Props, newProps: Props) => boolean,
+    shouldUpdateCurrentBlock?: (oldProps: Props, newProps: Props) => boolean,
   ) => {
-    return new Block(root, edits, props, key ?? props?.key, shouldUpdate);
+    return new Block(
+      root,
+      edits,
+      props,
+      key ?? props?.key,
+      shouldUpdateCurrentBlock ?? shouldUpdate,
+    );
   };
 };
 
@@ -82,7 +89,7 @@ export class Block extends AbstractBlock {
   root: HTMLElement;
   edits: Edit[];
   // Cache for getCurrentElement()
-  cache = new WeakMap<Edit, HTMLElement>();
+  cache = new Map<number, HTMLElement>();
 
   constructor(
     root: HTMLElement,
@@ -104,38 +111,44 @@ export class Block extends AbstractBlock {
     const root = cloneNode$.call(this.root, true) as HTMLElement;
 
     for (let i = 0, j = this.edits.length; i < j; ++i) {
-      const current = this.edits[i]!;
-      const el = getCurrentElement(current, root, this.cache);
-      for (let k = 0, l = current.edits.length; k < l; ++k) {
-        const edit = current.edits[k]!;
-        const hasHole = 'hole' in edit && edit.hole;
-        const value = hasHole ? this.props![edit.hole!] : undefined;
+      const [path, edits, inits] = this.edits[i]!;
+      const el = getCurrentElement(path, root, this.cache, i);
+      for (let k = 0, l = edits.length; k < l; ++k) {
+        const edit = edits[k]!;
+        const [type, name, , hole, index, listener, , block] = edit;
+        const holeValue = hole ? this.props![hole] : undefined;
 
-        if (edit.type === 'block') {
-          edit.block.mount(el, childNodes$.call(el)[edit.index]);
-        } else if (edit.type === 'child') {
-          if (value instanceof AbstractBlock) {
-            value.mount(el);
+        if (type === 'block') {
+          block.mount(el, childNodes$.call(el)[index]);
+        } else if (type === 'child') {
+          if (holeValue instanceof AbstractBlock) {
+            holeValue.mount(el);
             continue;
           }
           // insertText() on mount, setText() on patch
-          insertText(el, String(value), edit.index);
-        } else if (edit.type === 'event') {
+          insertText(el, String(holeValue), index);
+        } else if (type === 'event') {
           const patch = createEventListener(
             el,
-            edit.name,
+            name,
             // Events can be either a hole or a function
-            hasHole ? value : edit.listener,
+            hole ? holeValue : listener,
           );
-          if (hasHole) {
-            edit.patch = patch;
+          if (hole) {
+            edit[Edits.PATCH] = patch;
           }
-        } else if (edit.type === 'attribute') {
-          setAttribute(el, edit.name, value);
-        } else if (edit.type === 'style') {
-          setStyleAttribute(el, edit.name, value);
+        } else if (type === 'attribute') {
+          setAttribute(el, name, holeValue);
+        } else if (type === 'style') {
+          if (typeof holeValue === 'string') {
+            setStyleAttribute(el, name, holeValue);
+          } else {
+            for (const style in holeValue) {
+              setStyleAttribute(el, style, holeValue[style]);
+            }
+          }
         } else {
-          setSvgAttribute(el, edit.name, value);
+          setSvgAttribute(el, name, holeValue);
         }
       }
 
@@ -143,10 +156,10 @@ export class Block extends AbstractBlock {
       // put into a template, they can be merged. For example,
       // ["hello", "world"] becomes "helloworld" in the DOM.
       // Inserts text nodes into the DOM at the correct position.
-      const initsLength = current.inits.length;
+      const initsLength = inits?.length;
       if (!initsLength) continue;
       for (let k = 0; k < initsLength; ++k) {
-        const init = current.inits[k]!;
+        const init = inits[k]!;
         insertText(el, init.value, init.index);
       }
     }
@@ -158,50 +171,62 @@ export class Block extends AbstractBlock {
 
     return root;
   }
-  patch(block: AbstractBlock): HTMLElement {
+  patch(newBlock: AbstractBlock): HTMLElement {
     const root = this.el as HTMLElement;
-    if (!block.props) return root;
+    if (!newBlock.props) return root;
     const props = this.props!;
     // If props are the same, no need to patch
-    if (!this.shouldUpdate(props, block.props)) return root;
-    this.props = block.props;
+    if (!this.shouldUpdate(props, newBlock.props)) return root;
+    this.props = newBlock.props;
 
     for (let i = 0, j = this.edits.length; i < j; ++i) {
-      const current = this.edits[i]!;
+      const [path, edits] = this.edits[i]!;
       let el: HTMLElement | undefined;
-      for (let k = 0, l = current.edits.length; k < l; ++k) {
-        const edit = current.edits[k]!;
-        if (edit.type === 'block') {
-          edit.block.patch(block.edits?.[i]![k].block);
+      for (let k = 0, l = edits.length; k < l; ++k) {
+        const edit = edits[k]!;
+        const [type, name, , hole, index, , patch] = edit;
+        if (type === 'block') {
+          const newEdit = newBlock.edits?.[i] as Edit;
+          newBlock.patch(newEdit[Current.EDITS][k]![Edits.BLOCK]!);
           continue;
         }
-        if (!('hole' in edit) || !edit.hole) continue;
-        const oldValue = props[edit.hole];
-        const newValue = block.props[edit.hole];
+        if (!hole) continue;
+        const oldValue = props[hole];
+        const newValue = newBlock.props[hole];
 
         if (Object.is(newValue, oldValue)) continue;
 
-        if (edit.type === 'event') {
-          edit.patch?.(newValue);
+        if (type === 'event') {
+          patch?.(newValue);
           continue;
         }
-        if (!el) el = getCurrentElement(current, root, this.cache);
-        if (edit.type === 'child') {
+        if (!el) el = getCurrentElement(path, root, this.cache, i);
+        if (type === 'child') {
           if (oldValue instanceof AbstractBlock) {
             // Remember! If we find a block inside a child, we need to locate
             // the cooresponding block in the new props and patch it.
-            const firstEdit = block.edits?.[i]?.edits[k] as EditChild;
-            const thisSubBlock = block.props[firstEdit.hole];
-            oldValue.patch(thisSubBlock);
+            const firstEdit = newBlock.edits?.[i]?.[Current.EDITS][
+              k
+            ] as EditChild;
+            const newChildBlock = newBlock.props[firstEdit[Edits.HOLE]];
+            oldValue.patch(newChildBlock);
             continue;
           }
-          setText(el, String(newValue), edit.index);
-        } else if (edit.type === 'attribute') {
-          setAttribute(el, edit.name, newValue);
-        } else if (edit.type === 'style') {
-          setStyleAttribute(el, edit.name, newValue);
+          setText(el, String(newValue), index);
+        } else if (type === 'attribute') {
+          setAttribute(el, name, newValue);
+        } else if (type === 'style') {
+          if (typeof newValue === 'string') {
+            setStyleAttribute(el, name, newValue);
+          } else {
+            for (const style in newValue) {
+              if (newValue[style] !== oldValue[style]) {
+                setStyleAttribute(el, style, newValue[style]);
+              }
+            }
+          }
         } else {
-          setSvgAttribute(el, edit.name, newValue);
+          setSvgAttribute(el, name, newValue);
         }
       }
     }
@@ -228,21 +253,22 @@ export class Block extends AbstractBlock {
 }
 
 const getCurrentElement = (
-  current: Edit,
+  path: number[],
   root: HTMLElement,
-  cache?: WeakMap<Edit, HTMLElement>,
+  cache?: Map<number, HTMLElement>,
+  key?: number,
 ): HTMLElement => {
-  const pathLength = current.path.length;
+  const pathLength = path.length;
   if (!pathLength) return root;
-  if (cache && weakMapHas$.call(cache, current)) {
-    return weakMapGet$.call(cache, current)!;
+  if (cache && key !== undefined && mapHas$.call(cache, path)) {
+    return mapGet$.call(cache, path)!;
   }
   // path is an array of indices to traverse the DOM tree
   // For example, [0, 1, 2] becomes:
   // root.firstChild.firstChild.nextSibling.firstChild.nextSibling.nextSibling
   // We use path because we don't have the actual DOM nodes until mount()
   for (let i = 0; i < pathLength; ++i) {
-    const siblings = current.path[i]!;
+    const siblings = path[i]!;
     // https://www.measurethat.net/Benchmarks/Show/15652/0/childnodes-vs-children-vs-firstchildnextsibling-vs-firs
     root = firstChild$.call(root);
     if (!siblings) continue;
@@ -250,7 +276,7 @@ const getCurrentElement = (
       root = nextSibling$.call(root) as HTMLElement;
     }
   }
-  if (cache) weakMapSet$.call(cache, current, root);
+  if (cache && key !== undefined) mapSet$.call(cache, key, root);
   return root;
 };
 

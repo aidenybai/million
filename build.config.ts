@@ -6,6 +6,11 @@ export default defineBuildConfig({
     './packages/react',
     './packages/jsx-runtime',
     './packages/compiler',
+    // {
+    //   builder: 'mkdist',
+    //   input: './packages/compiler',
+    //   outDir: './dist/compiler',
+    // },
   ],
   declaration: true,
   clean: true,
