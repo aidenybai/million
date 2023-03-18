@@ -1,11 +1,12 @@
-import { handleBlock } from './template';
-import type { PluginObj } from '@babel/core';
+import { declare } from '@babel/helper-plugin-utils';
+import { visitCallExpression } from './visitor';
 
-export const plugin = (): PluginObj => {
+export default declare((api) => {
+  api.assertVersion(7);
   return {
     name: 'million',
     visitor: {
-      CallExpression: handleBlock,
+      CallExpression: visitCallExpression,
     },
   };
-};
+});

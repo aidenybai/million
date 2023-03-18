@@ -1,29 +1,30 @@
 import { createUnplugin } from 'unplugin';
 import { transformAsync } from '@babel/core';
-import { plugin } from './babel';
+import babelPlugin from './babel';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface UserOptions {}
+interface UserOptions {
+  ignoreFiles?: string[];
+}
 
-export const unplugin = createUnplugin((_options: UserOptions) => {
+export const unplugin = createUnplugin((options?: UserOptions) => {
   return {
     enforce: 'pre',
     name: 'million',
     transformInclude(id: string) {
       return /\.[jt]sx$/.test(id);
     },
-    async transform(code: string) {
-      const result = await transformAsync(code, {
-        plugins: ['@babel/plugin-syntax-jsx', plugin],
-      });
+    async transform(code: string, id: string) {
+      if (options?.ignoreFiles?.some((pattern) => id.match(pattern))) {
+        return code;
+      }
+
+      const plugins = ['@babel/plugin-syntax-jsx', babelPlugin];
+
+      const result = await transformAsync(code, { plugins });
       return result?.code;
     },
   };
 });
 
-export const babelPlugin = plugin;
-export const vite = unplugin.vite;
-export const rollup = unplugin.rollup;
-export const webpack = unplugin.webpack;
-export const rspack = unplugin.rspack;
-export const esbuild = unplugin.esbuild;
+export { babelPlugin };
+export default unplugin;

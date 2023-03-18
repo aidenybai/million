@@ -18,7 +18,7 @@ import {
   mapGet$,
 } from './dom';
 import { renderToTemplate } from './template';
-import { AbstractBlock, Current, Edits } from './types';
+import { AbstractBlock, Edits } from './types';
 import type { Edit, EditChild, Props, VElement, Hole, VNode } from './types';
 
 export const block = (
@@ -111,11 +111,13 @@ export class Block extends AbstractBlock {
     const root = cloneNode$.call(this.root, true) as HTMLElement;
 
     for (let i = 0, j = this.edits.length; i < j; ++i) {
-      const [path, edits, inits] = this.edits[i]!;
-      const el = getCurrentElement(path, root, this.cache, i);
-      for (let k = 0, l = edits.length; k < l; ++k) {
-        const edit = edits[k]!;
-        const [type, name, , hole, index, listener, , block] = edit;
+      const current = this.edits[i]!;
+      const el =
+        current.extractEl?.(root) ??
+        getCurrentElement(current.path, root, this.cache, i);
+      for (let k = 0, l = current.edits.length; k < l; ++k) {
+        const edit = current.edits[k]!;
+        const [type, name, _value, hole, index, listener, _patch, block] = edit;
         const holeValue = hole ? this.props![hole] : undefined;
 
         if (type === 'block') {
@@ -156,10 +158,10 @@ export class Block extends AbstractBlock {
       // put into a template, they can be merged. For example,
       // ["hello", "world"] becomes "helloworld" in the DOM.
       // Inserts text nodes into the DOM at the correct position.
-      const initsLength = inits?.length;
+      const initsLength = current.inits.length;
       if (!initsLength) continue;
       for (let k = 0; k < initsLength; ++k) {
-        const init = inits[k]!;
+        const init = current.inits[k]!;
         insertText(el, init.value, init.index);
       }
     }
@@ -180,14 +182,14 @@ export class Block extends AbstractBlock {
     this.props = newBlock.props;
 
     for (let i = 0, j = this.edits.length; i < j; ++i) {
-      const [path, edits] = this.edits[i]!;
+      const current = this.edits[i]!;
       let el: HTMLElement | undefined;
-      for (let k = 0, l = edits.length; k < l; ++k) {
-        const edit = edits[k]!;
+      for (let k = 0, l = current.edits.length; k < l; ++k) {
+        const edit = current.edits[k]!;
         const [type, name, , hole, index, , patch] = edit;
         if (type === 'block') {
           const newEdit = newBlock.edits?.[i] as Edit;
-          newBlock.patch(newEdit[Current.EDITS][k]![Edits.BLOCK]!);
+          newBlock.patch(newEdit.edits[k]![Edits.BLOCK]!);
           continue;
         }
         if (!hole) continue;
@@ -200,14 +202,16 @@ export class Block extends AbstractBlock {
           patch?.(newValue);
           continue;
         }
-        if (!el) el = getCurrentElement(path, root, this.cache, i);
+        if (!el) {
+          el =
+            current.extractEl?.(root) ??
+            getCurrentElement(current.path, root, this.cache, i);
+        }
         if (type === 'child') {
           if (oldValue instanceof AbstractBlock) {
             // Remember! If we find a block inside a child, we need to locate
             // the cooresponding block in the new props and patch it.
-            const firstEdit = newBlock.edits?.[i]?.[Current.EDITS][
-              k
-            ] as EditChild;
+            const firstEdit = newBlock.edits?.[i]?.edits[k] as EditChild;
             const newChildBlock = newBlock.props[firstEdit[Edits.HOLE]];
             oldValue.patch(newChildBlock);
             continue;

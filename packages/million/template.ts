@@ -1,15 +1,6 @@
 import { setHas$ } from './dom';
 import { X_CHAR, VOID_ELEMENTS } from './constants';
-import {
-  AbstractBlock,
-  Current,
-  EditAttribute,
-  EditBlock,
-  EditChild,
-  EditEvent,
-  EditStyleAttribute,
-  EditSvgAttribute,
-} from './types';
+import { AbstractBlock } from './types';
 import type { Edit, VNode } from './types';
 
 export const renderToTemplate = (
@@ -29,11 +20,12 @@ export const renderToTemplate = (
 
   let props = '';
   let children = '';
-  const current: Edit = [
+  const current: Edit = {
     path, // The location of the edit in in the virtual node tree
-    [], // Occur on mount + patch
-    [], // Occur before mount
-  ];
+    edits: [], // Occur on mount + patch
+    inits: [], // Occur before mount
+    extractEl: undefined, // altenative to path
+  };
 
   for (let name in vnode.props) {
     const value = vnode.props[name];
@@ -46,7 +38,7 @@ export const renderToTemplate = (
     if (name.startsWith('on')) {
       const isValueHole = '__key' in value;
       // Make edits monomorphic
-      current[Current.EDITS].push([
+      current.edits.push([
         /* type */ 'event',
         /* name */ name,
         /* value */ undefined,
@@ -63,7 +55,7 @@ export const renderToTemplate = (
     if (value) {
       if (typeof value === 'object' && '__key' in value) {
         if (name === 'style') {
-          current[Current.EDITS].push([
+          current.edits.push([
             /* type */ 'style',
             /* name */ name,
             /* value */ undefined,
@@ -74,7 +66,7 @@ export const renderToTemplate = (
             /* block */ undefined,
           ]);
         } else if (name.charCodeAt(0) === X_CHAR) {
-          current[Current.EDITS].push([
+          current.edits.push([
             /* type */ 'svg',
             /* name */ name,
             /* value */ undefined,
@@ -85,7 +77,7 @@ export const renderToTemplate = (
             /* block */ undefined,
           ]);
         } else {
-          current[Current.EDITS].push([
+          current.edits.push([
             /* type */ 'attribute',
             /* name */ name,
             /* value */ undefined,
@@ -124,7 +116,7 @@ export const renderToTemplate = (
     if (child === null || child === undefined || child === false) continue;
 
     if (typeof child === 'object' && '__key' in child) {
-      current[Current.EDITS].push([
+      current.edits.push([
         /* type */ 'child',
         /* name */ undefined,
         /* value */ undefined,
@@ -138,7 +130,7 @@ export const renderToTemplate = (
     }
 
     if (child instanceof AbstractBlock) {
-      current[Current.EDITS].push([
+      current.edits.push([
         /* type */ 'block',
         /* name */ undefined,
         /* value */ undefined,
@@ -162,7 +154,7 @@ export const renderToTemplate = (
           ? String(child)
           : child;
       if (canMergeString) {
-        current[Current.INITS]?.push({
+        current.inits.push({
           index: i,
           value,
         });
@@ -178,7 +170,7 @@ export const renderToTemplate = (
     children += renderToTemplate(child, edits, [...path, k++]);
   }
 
-  if (current[Current.INITS]?.length || current[Current.EDITS].length) {
+  if (current.inits.length || current.edits.length) {
     edits.push(current);
   }
 

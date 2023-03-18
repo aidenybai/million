@@ -18,13 +18,13 @@ export interface Hole {
 }
 
 export abstract class AbstractBlock {
-  root?: HTMLElement;
-  edits?: Edit[];
-  el?: HTMLElement;
-  _parent?: HTMLElement | null;
-  props?: Props | null;
-  key?: string;
-  cache?: Map<number, HTMLElement>;
+  root?: HTMLElement = undefined;
+  edits?: Edit[] = undefined;
+  el?: HTMLElement = undefined;
+  _parent?: HTMLElement | null = undefined;
+  props?: Props | null = undefined;
+  key?: string = undefined;
+  cache?: Map<number, HTMLElement> = undefined;
   abstract patch(block: AbstractBlock): HTMLElement;
   abstract mount(parent?: HTMLElement, refNode?: Node | null): HTMLElement;
   abstract move(block: AbstractBlock | null, refNode: Node | null): void;
@@ -36,11 +36,6 @@ export abstract class AbstractBlock {
   }
 }
 
-export const enum Current {
-  PATH,
-  EDITS,
-  INITS,
-}
 export const enum Edits {
   TYPE,
   NAME,
@@ -135,21 +130,19 @@ export type EditEvent = EditBase &
     /* block */ undefined,
   ];
 
-export type Edit = [
-  /* path */ number[],
-  /* edits */ (
+export interface Edit {
+  path: number[];
+  edits: (
     | EditAttribute
     | EditStyleAttribute
     | EditSvgAttribute
     | EditChild
     | EditBlock
     | EditEvent
-  )[],
-  /* inits */ (
-    | {
-        index: number;
-        value: string;
-      }[]
-    | undefined
-  ),
-];
+  )[];
+  inits: {
+    index: number;
+    value: string;
+  }[];
+  extractEl?: (el: HTMLElement) => HTMLElement;
+}

@@ -2,6 +2,7 @@ import type {
   ArrowFunctionExpression,
   StringLiteral,
   NumericLiteral,
+  Identifier,
 } from '@babel/types';
 
 export interface AstEditBase {
@@ -10,7 +11,7 @@ export interface AstEditBase {
   value?: StringLiteral;
   hole?: StringLiteral;
   index?: NumericLiteral;
-  listener?: ArrowFunctionExpression;
+  listener?: ArrowFunctionExpression | Identifier;
 }
 
 export interface AstEditAttribute extends AstEditBase {
@@ -46,11 +47,11 @@ export interface AstEditEvent extends AstEditBase {
   type: StringLiteral;
   hole?: StringLiteral;
   name: StringLiteral;
-  listener?: ArrowFunctionExpression;
+  listener?: ArrowFunctionExpression | Identifier;
 }
 
 export interface AstEdit {
-  path: NumericLiteral[];
+  path: number[];
   edits: (
     | AstEditAttribute
     | AstEditStyleAttribute
