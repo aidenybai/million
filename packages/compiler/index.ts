@@ -20,6 +20,10 @@ export const unplugin = createUnplugin((options?: UserOptions) => {
 
       const plugins = ['@babel/plugin-syntax-jsx', babelPlugin];
 
+      if (/\.[t]sx$/.test(id)) {
+        plugins.unshift('@babel/plugin-syntax-typescript');
+      }
+
       const result = await transformAsync(code, { plugins });
       return result?.code;
     },
