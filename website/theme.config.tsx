@@ -159,13 +159,13 @@ const config: DocsThemeConfig = {
         images: [
           {
             url: new URL(
-              'https://millionjs.org/banner.svg',
+              'https://millionjs.org/banner.png',
               'https://millionjs.org',
             ).toString(),
             width: 1328,
             height: 345,
             alt: 'Million.js banner',
-            type: 'image/svg+xml',
+            type: 'image/png',
           },
         ],
       },

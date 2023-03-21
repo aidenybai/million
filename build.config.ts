@@ -11,15 +11,7 @@ export default defineBuildConfig({
   clean: true,
   rollup: {
     emitCJS: true,
-    inlineDependencies: false,
+    inlineDependencies: true,
   },
-  externals: [
-    'react',
-    'react-dom',
-    'unplugin',
-    '@babel/core',
-    '@babel/types',
-    'vite',
-    'esbuild',
-  ],
+  externals: ['react', 'react-dom'],
 });

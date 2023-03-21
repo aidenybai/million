@@ -27,9 +27,20 @@ interface Options {
 }
 
 if (!IS_SSR_ENVIRONMENT) {
-  const sheet = new CSSStyleSheet();
-  sheet.replaceSync('million-island, million-fragment { display: contents }');
-  document.adoptedStyleSheets = [sheet];
+  const css = 'million-island, million-fragment { display: contents }';
+
+  // @ts-expect-error - CSSStyleSheet is not supported on Safari
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (CSSStyleSheet.prototype.replaceSync) {
+    const sheet = new CSSStyleSheet();
+    sheet.replaceSync(css);
+    document.adoptedStyleSheets = [sheet];
+  } else {
+    const style = document.createElement('style');
+    document.head.appendChild(style);
+    style.type = 'text/css';
+    style.appendChild(document.createTextNode(css));
+  }
 }
 
 export const block = (

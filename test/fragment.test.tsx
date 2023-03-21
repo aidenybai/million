@@ -19,7 +19,7 @@ describe.concurrent('block', () => {
     const block = createBlock(fn);
     const frag = fragment([block({ foo: 'foo', bar: 'bar' })]);
     frag.mount(parent);
-    expect(frag.parent).toEqual(parent);
+    expect(frag.parent()).toEqual(parent);
   });
   it('should patch block', () => {
     const parent = document.createElement('div');
@@ -27,7 +27,7 @@ describe.concurrent('block', () => {
     const frag = fragment([block({ foo: 'foo', bar: 'bar' })]);
     frag.mount(parent);
     frag.patch(fragment([block({ foo: 'bar', bar: 'foo' })]));
-    expect(frag.parent?.outerHTML).toEqual(
+    expect(frag.parent()?.outerHTML).toEqual(
       '<div><div><h1>Hello</h1> World<p title="baz" class="foo">bar</p></div></div>',
     );
     frag.patch(
@@ -36,11 +36,11 @@ describe.concurrent('block', () => {
         block({ foo: 'bar', bar: 'foo' }),
       ]),
     );
-    expect(frag.parent?.outerHTML).toEqual(
+    expect(frag.parent()?.outerHTML).toEqual(
       '<div><div><h1>Hello</h1> World<p title="baz" class="foo">bar</p></div><div><h1>Hello</h1> World<p title="baz" class="foo">bar</p></div></div>',
     );
     frag.patch(fragment([]));
-    expect(frag.parent?.outerHTML).toEqual('<div></div>');
+    expect(frag.parent()?.outerHTML).toEqual('<div></div>');
   });
   it('should remove fragment', () => {
     const parent = document.createElement('div');

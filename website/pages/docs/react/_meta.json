@@ -1,6 +1,5 @@
 {
   "block": "Block Components",
   "for": "Block Lists",
-  "next": "Usage Inside Next.js",
-  "compiler": "Optimizing Compiler"
+  "next": "Usage Inside Next.js"
 }

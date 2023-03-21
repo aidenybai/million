@@ -4,5 +4,6 @@
   "patch": "patch()",
   "fragment": "fragment()",
   "render-to-template": "renderToTemplate()",
-  "string-to-dom": "stringToDOM()"
+  "string-to-dom": "stringToDOM()",
+  "compiler": "Optimizing compiler"
 }

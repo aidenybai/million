@@ -22,7 +22,7 @@ export class FragmentBlock extends AbstractBlock {
     const newChildren = fragment.children;
     const oldChildrenLength = oldChildren.length;
     const newChildrenLength = newChildren.length;
-    const parent = this.parent!;
+    const parent = this.parent()!;
     if (this === fragment) return;
     if (newChildrenLength === 0 && oldChildrenLength === 0) return;
     this.children = newChildren;
@@ -141,7 +141,7 @@ export class FragmentBlock extends AbstractBlock {
     return parent;
   }
   remove() {
-    const parent = this.parent;
+    const parent = this.parent();
     if (parent) {
       setTextContent$.call(parent, '');
     } else {
@@ -151,11 +151,14 @@ export class FragmentBlock extends AbstractBlock {
     }
     this.children = [];
   }
+  shouldUpdate(): boolean {
+    return true;
+  }
   toString() {
     return this.children.map((block) => block.toString()).join('');
   }
-  get parent(): HTMLElement | null | undefined {
-    if (!this._parent) this._parent = this.children[0]!.parent;
+  parent(): HTMLElement | null | undefined {
+    if (!this._parent) this._parent = this.children[0]!.parent();
     return this._parent;
   }
 }
