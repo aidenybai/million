@@ -79,7 +79,7 @@ export const patch = (
   ) {
     return patch$.call(oldBlock, newBlock);
   }
-  const el = mount$.call(newBlock, oldBlock.parent!, oldBlock.el);
+  const el = mount$.call(newBlock, oldBlock.parent()!, oldBlock.el);
   remove$.call(oldBlock);
   oldBlock.key = newBlock.key!;
   return el;
@@ -113,11 +113,19 @@ export class Block extends AbstractBlock {
     for (let i = 0, j = this.edits.length; i < j; ++i) {
       const current = this.edits[i]!;
       const el =
-        current.extractEl?.(root) ??
+        current.getRoot?.(root) ??
         getCurrentElement(current.path, root, this.cache, i);
       for (let k = 0, l = current.edits.length; k < l; ++k) {
         const edit = current.edits[k]!;
-        const [type, name, _value, hole, index, listener, _patch, block] = edit;
+        // https://jsbench.me/j2klgojvih/1
+        const {
+          0: type,
+          1: name,
+          3: hole,
+          4: index,
+          5: listener,
+          7: block,
+        } = edit;
         const holeValue = hole ? this.props![hole] : undefined;
 
         if (type === 'block') {
@@ -178,7 +186,7 @@ export class Block extends AbstractBlock {
     if (!newBlock.props) return root;
     const props = this.props!;
     // If props are the same, no need to patch
-    if (!this.shouldUpdate(props, newBlock.props)) return root;
+    if (!shouldUpdate$.call(this, props, newBlock.props)) return root;
     this.props = newBlock.props;
 
     for (let i = 0, j = this.edits.length; i < j; ++i) {
@@ -186,7 +194,7 @@ export class Block extends AbstractBlock {
       let el: HTMLElement | undefined;
       for (let k = 0, l = current.edits.length; k < l; ++k) {
         const edit = current.edits[k]!;
-        const [type, name, , hole, index, , patch] = edit;
+        const { 0: type, 1: name, 3: hole, 4: index, 6: patch } = edit;
         if (type === 'block') {
           const newEdit = newBlock.edits?.[i] as Edit;
           newBlock.patch(newEdit.edits[k]![Edits.BLOCK]!);
@@ -196,7 +204,7 @@ export class Block extends AbstractBlock {
         const oldValue = props[hole];
         const newValue = newBlock.props[hole];
 
-        if (Object.is(newValue, oldValue)) continue;
+        if (newValue === oldValue) continue;
 
         if (type === 'event') {
           patch?.(newValue);
@@ -204,7 +212,7 @@ export class Block extends AbstractBlock {
         }
         if (!el) {
           el =
-            current.extractEl?.(root) ??
+            current.getRoot?.(root) ??
             getCurrentElement(current.path, root, this.cache, i);
         }
         if (type === 'child') {
@@ -250,7 +258,7 @@ export class Block extends AbstractBlock {
   toString() {
     return String(this.el?.outerHTML);
   }
-  get parent(): HTMLElement | null | undefined {
+  parent(): HTMLElement | null | undefined {
     if (!this._parent) this._parent = this.el?.parentElement;
     return this._parent;
   }
@@ -299,3 +307,4 @@ export const mount$ = Block.prototype.mount;
 export const patch$ = Block.prototype.patch;
 export const move$ = Block.prototype.move;
 export const remove$ = Block.prototype.remove;
+export const shouldUpdate$ = Block.prototype.shouldUpdate;

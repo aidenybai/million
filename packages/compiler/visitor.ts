@@ -20,7 +20,7 @@ export const visitCallExpression = (path: NodePath<t.CallExpression>) => {
     }
 
     // eslint-disable-next-line prefer-const
-    let [fn, shouldUpdate] = path.node.arguments;
+    let [fn, _unwrap, shouldUpdate] = path.node.arguments;
     if (!fn) return;
     const [props] = (fn as t.ArrowFunctionExpression).params as (
       | t.ObjectPattern
@@ -37,6 +37,17 @@ export const visitCallExpression = (path: NodePath<t.CallExpression>) => {
         : [];
 
       const template = renderToTemplate(fn.body, edits, [], holes);
+
+      const firstChild = addNamed(
+        path,
+        'firstChild$',
+        importSource.source.value,
+      );
+      const nextSibling = addNamed(
+        path,
+        'nextSibling$',
+        importSource.source.value,
+      );
 
       const editsArray = t.arrayExpression(
         edits.map((edit) => {
@@ -61,30 +72,30 @@ export const visitCallExpression = (path: NodePath<t.CallExpression>) => {
             );
           }
 
-          let root: t.MemberExpression | undefined;
+          let root: t.CallExpression | undefined;
           for (let i = 0, j = edit.path.length; i < j; ++i) {
-            root = t.memberExpression(
-              root ?? t.identifier('el'),
-              t.identifier('firstChild'),
+            root = t.callExpression(
+              t.memberExpression(firstChild, t.identifier('call')),
+              [root ?? t.identifier('el')],
             );
 
             for (let k = 0, l = edit.path[i]!; k < l; ++k) {
-              root = t.memberExpression(root, t.identifier('nextSibling'));
+              root = t.callExpression(
+                t.memberExpression(nextSibling, t.identifier('call')),
+                [root],
+              );
             }
           }
 
           return t.objectExpression([
-            t.objectProperty(
-              t.identifier('path'),
-              root ? t.nullLiteral() : t.arrayExpression([]),
-            ),
+            t.objectProperty(t.identifier('path'), t.arrayExpression([])),
             t.objectProperty(
               t.identifier('edits'),
               t.arrayExpression(properties),
             ),
             t.objectProperty(t.identifier('inits'), t.arrayExpression([])),
             t.objectProperty(
-              t.identifier('extractEl'),
+              t.identifier('getRoot'),
               root
                 ? t.arrowFunctionExpression([t.identifier('el')], root)
                 : t.nullLiteral(),
@@ -102,7 +113,11 @@ export const visitCallExpression = (path: NodePath<t.CallExpression>) => {
         },
       );
 
-      if (!shouldUpdate && props && !t.isIdentifier(props)) {
+      const shouldUpdateExists =
+        (t.isIdentifier(shouldUpdate) && shouldUpdate.name !== 'undefined') ||
+        t.isArrowFunctionExpression(shouldUpdate);
+
+      if (shouldUpdateExists && props && !t.isIdentifier(props)) {
         const { properties } = props;
         shouldUpdate = t.arrowFunctionExpression(
           [t.identifier('oldProps'), t.identifier('newProps')],
@@ -153,9 +168,9 @@ export const visitCallExpression = (path: NodePath<t.CallExpression>) => {
         t.variableDeclarator(editsVariable, editsArray),
         t.variableDeclarator(
           shouldUpdateVariable,
-          t.isArrowFunctionExpression(shouldUpdate)
-            ? shouldUpdate
-            : t.arrowFunctionExpression([], t.booleanLiteral(true)),
+          shouldUpdateExists
+            ? (shouldUpdate as t.Identifier | t.ArrowFunctionExpression)
+            : t.nullLiteral(),
         ),
       ]);
       const BlockClass = addNamed(path, 'Block', importSource.source.value, {
@@ -194,55 +209,3 @@ export const visitCallExpression = (path: NodePath<t.CallExpression>) => {
     }
   }
 };
-
-// export const compileEdit = (current: AstEdit) => {
-//   let el: t.MemberExpression | undefined;
-//   const expressions: t.Expression[] = [];
-//   for (let i = 0, j = current.path.length; i < j; ++i) {
-//     el = t.memberExpression(
-//       el ?? t.identifier('el'),
-//       t.identifier('firstChild'),
-//     );
-
-//     for (let k = 0, l = current.path[i]!; k < l; ++k) {
-//       el = t.memberExpression(el, t.identifier('nextSibling'));
-//     }
-//   }
-
-//   for (let i = 0, j = current.edits.length; i < j; ++i) {
-//     const edit = current.edits[i]!;
-//     const { type, name, value, hole, index, listener } = edit;
-
-//     if (type.value === 'child') {
-//       if (holeValue instanceof AbstractBlock) {
-//         holeValue.mount(el);
-//         continue;
-//       }
-//       // insertText() on mount, setText() on patch
-//       insertText(el, String(holeValue), index);
-//     } else if (type === 'event') {
-//       const patch = createEventListener(
-//         el,
-//         name,
-//         // Events can be either a hole or a function
-//         hole ? holeValue : listener,
-//       );
-//       if (hole) {
-//         edit[Edits.PATCH] = patch;
-//       }
-//     } else if (type === 'attribute') {
-//       expressions.push(t.callExpression(setAttribute, [el, name, holeValue]));
-//       setAttribute(el, name, holeValue);
-//     } else if (type === 'style') {
-//       if (typeof holeValue === 'string') {
-//         setStyleAttribute(el, name, holeValue);
-//       } else {
-//         for (const style in holeValue) {
-//           setStyleAttribute(el, style, holeValue[style]);
-//         }
-//       }
-//     } else {
-//       setSvgAttribute(el, name, holeValue);
-//     }
-//   }
-// };

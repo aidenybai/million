@@ -18,22 +18,20 @@ export interface Hole {
 }
 
 export abstract class AbstractBlock {
-  root?: HTMLElement = undefined;
-  edits?: Edit[] = undefined;
-  el?: HTMLElement = undefined;
-  _parent?: HTMLElement | null = undefined;
-  props?: Props | null = undefined;
-  key?: string = undefined;
-  cache?: Map<number, HTMLElement> = undefined;
+  root?: HTMLElement;
+  edits?: Edit[];
+  el?: HTMLElement;
+  _parent?: HTMLElement | null;
+  props?: Props | null;
+  key?: string;
+  cache?: Map<number, HTMLElement>;
   abstract patch(block: AbstractBlock): HTMLElement;
   abstract mount(parent?: HTMLElement, refNode?: Node | null): HTMLElement;
   abstract move(block: AbstractBlock | null, refNode: Node | null): void;
   abstract remove(): void;
   abstract toString(): string;
-  shouldUpdate?(oldProps: Props, newProps: Props): boolean;
-  get parent(): HTMLElement | null | undefined {
-    return this._parent;
-  }
+  abstract shouldUpdate(oldProps: Props, newProps: Props): boolean;
+  abstract parent(): HTMLElement | null | undefined;
 }
 
 export const enum Edits {
@@ -144,5 +142,5 @@ export interface Edit {
     index: number;
     value: string;
   }[];
-  extractEl?: (el: HTMLElement) => HTMLElement;
+  getRoot?: (el: HTMLElement) => HTMLElement;
 }

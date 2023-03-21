@@ -3,4 +3,4 @@ export { fragment, FragmentBlock } from './fragment';
 export { renderToTemplate } from './template';
 export { AbstractBlock } from './types';
 export type { Props, VNode, VElement } from './types';
-export { setAttribute } from './dom';
+export { firstChild$, nextSibling$ } from './dom';

@@ -24,7 +24,7 @@ export const renderToTemplate = (
     path, // The location of the edit in in the virtual node tree
     edits: [], // Occur on mount + patch
     inits: [], // Occur before mount
-    extractEl: undefined, // altenative to path
+    getRoot: undefined, // altenative to path
   };
 
   for (let name in vnode.props) {
