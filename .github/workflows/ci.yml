@@ -25,7 +25,6 @@ jobs:
       - run: pnpm i
       - run: pnpm lint
       - run: pnpm test
-      - run: pnpm build
       - name: Coveralls Parallel
         uses: coverallsapp/github-action@master
         with:
