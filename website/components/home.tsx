@@ -101,14 +101,13 @@ export function Home() {
               <div className="hidden text-small whitespace-nowrap pt-[3px] text-[0.9rem] text-gray-500 opacity-70 md:flex md:flex-row md:flex-wrap md:justify-between">
                 <p className="text-[0.9rem] text-gray-500 dark:text-gray-300">
                   <span className="font-bold">*</span>comparison between virtual
-                  DOM and relative frameworks. <br />
-                  <span className="font-bold">PR currently pending</span>,{' '}
+                  DOM and relative frameworks. <br />{' '}
                   <a
-                    href="https://github.com/aidenybai/js-framework-benchmark"
+                    href="https://krausest.github.io/js-framework-benchmark/current.html"
                     className="underline"
                     target="_blank"
                   >
-                    view benchmark fork
+                    View latest benchmark
                   </a>
                   .
                 </p>
