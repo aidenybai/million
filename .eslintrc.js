@@ -7,7 +7,6 @@ module.exports = {
   extends: [
     require.resolve('@vercel/style-guide/eslint/node'),
     require.resolve('@vercel/style-guide/eslint/typescript'),
-    require.resolve('@vercel/style-guide/eslint/jsx'),
   ],
   parserOptions: {
     project,
