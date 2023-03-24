@@ -8,6 +8,8 @@
   "dependencies": {
     "autoprefixer": "^10.4.13",
     "chart.js": "^4.2.1",
+    "classnames": "^2.3.2",
+    "markprompt": "^0.1.1",
     "next": "^13.0.6",
     "nextra": "latest",
     "nextra-theme-docs": "latest",
@@ -16,6 +18,7 @@
     "react-chartjs-2": "^5.2.0",
     "react-countup": "^6.4.1",
     "react-dom": "^18.2.0",
+    "react-markdown": "^8.0.6",
     "react-parallax-tilt": "^1.7.110",
     "tailwindcss": "^3.2.7"
   },
