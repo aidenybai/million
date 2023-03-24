@@ -1,14 +1,34 @@
-import { setHas$ } from './dom';
+import {
+  firstChild$,
+  mapGet$,
+  mapHas$,
+  mapSet$,
+  nextSibling$,
+  setHas$,
+} from './dom';
 import { X_CHAR, VOID_ELEMENTS } from './constants';
-import { AbstractBlock } from './types';
-import type { Edit, VNode } from './types';
+import { AbstractBlock, Flags } from './types';
+import type {
+  Edit,
+  VNode,
+  InitChild,
+  InitEvent,
+  EditEvent,
+  EditStyleAttribute,
+  EditSvgAttribute,
+  EditAttribute,
+  EditChild,
+  InitBlock,
+} from './types';
 
 export const renderToTemplate = (
   vnode: VNode,
   edits: Edit[] = [],
   path: number[] = [],
 ): string => {
-  if (typeof vnode === 'string') return vnode;
+  if (typeof vnode === 'string') {
+    return vnode;
+  }
   if (
     typeof vnode === 'number' ||
     typeof vnode === 'bigint' ||
@@ -16,16 +36,31 @@ export const renderToTemplate = (
   ) {
     return String(vnode);
   }
-  if (vnode === null || vnode === undefined || vnode === false) return '';
+  if (vnode === null || vnode === undefined || vnode === false) {
+    return '';
+  }
 
   let props = '';
   let children = '';
+
   const current: Edit = {
-    path, // The location of the edit in in the virtual node tree
-    edits: [], // Occur on mount + patch
-    inits: [], // Occur before mount
-    getRoot: undefined, // altenative to path
+    edits: {},
+    inits: null,
+    getRoot: (
+      root: HTMLElement,
+      cache: Map<number, HTMLElement> | null,
+      key: number | null,
+    ) => {
+      if (cache && key !== null && mapHas$.call(cache, path)) {
+        return mapGet$.call(cache, path)!;
+      }
+      const el = getCurrentElement(path, root);
+      if (cache && key !== null) mapSet$.call(cache, key, el);
+      return el;
+    },
   };
+  const editsPointer: Edit['edits'] = {};
+  let initsPointer = current.inits;
 
   for (let name in vnode.props) {
     const value = vnode.props[name];
@@ -37,69 +72,73 @@ export const renderToTemplate = (
 
     if (name.startsWith('on')) {
       const isValueHole = '__key' in value;
+      const hole = value.__key;
       // Make edits monomorphic
-      current.edits.push([
-        /* type */ 'event',
-        /* name */ name,
-        /* value */ undefined,
-        /* hole */ isValueHole ? value.__key : undefined,
-        /* index */ undefined,
-        /* listener */ isValueHole ? value.__key : value,
-        /* patch */ undefined,
-        /* block */ undefined,
-      ]);
+      if (isValueHole && hole !== undefined && hole !== null) {
+        const next: EditEvent = {
+          type: Flags.EVENT,
+          name,
+          value: null,
+          hole,
+          index: null,
+          listener: null,
+          patch: null,
+          block: null,
+          next: null,
+        };
+        mountNode(current.edits, hole, next);
+        editsPointer[hole] = addNode(editsPointer[hole], next);
+      } else {
+        const next: InitEvent = {
+          type: Flags.EVENT,
+          name,
+          value: null,
+          hole: null,
+          index: null,
+          listener: value,
+          patch: null,
+          block: null,
+          next: null,
+        };
+        mountNode(current, 'inits', next);
+        initsPointer = addNode(initsPointer, next);
+      }
 
       continue;
     }
 
     if (value) {
       if (typeof value === 'object' && '__key' in value) {
-        if (name === 'style') {
-          current.edits.push([
-            /* type */ 'style',
-            /* name */ name,
-            /* value */ undefined,
-            /* hole */ value.__key,
-            /* index */ undefined,
-            /* listener */ undefined,
-            /* patch */ undefined,
-            /* block */ undefined,
-          ]);
-        } else if (name.charCodeAt(0) === X_CHAR) {
-          current.edits.push([
-            /* type */ 'svg',
-            /* name */ name,
-            /* value */ undefined,
-            /* hole */ value.__key,
-            /* index */ undefined,
-            /* listener */ undefined,
-            /* patch */ undefined,
-            /* block */ undefined,
-          ]);
-        } else {
-          current.edits.push([
-            /* type */ 'attribute',
-            /* name */ name,
-            /* value */ undefined,
-            /* hole */ value.__key,
-            /* index */ undefined,
-            /* listener */ undefined,
-            /* patch */ undefined,
-            /* block */ undefined,
-          ]);
-        }
+        const hole = value.__key;
+        const next: EditAttribute | EditStyleAttribute | EditSvgAttribute = {
+          type:
+            name === 'style'
+              ? Flags.STYLE_ATTRIBUTE
+              : name.charCodeAt(0) === X_CHAR
+              ? Flags.SVG_ATTRIBUTE
+              : Flags.ATTRIBUTE,
+          name,
+          value: null,
+          hole,
+          index: null,
+          listener: null,
+          patch: null,
+          block: null,
+          next: null,
+        };
 
-        continue;
-      }
-      if (name === 'style') {
-        let style = '';
-        for (const key in value) {
-          style += `${key}:${String(value[key])};`;
+        mountNode(current.edits, hole, next);
+        editsPointer[hole] = addNode(editsPointer[hole], next);
+      } else {
+        if (name === 'style') {
+          let style = '';
+          for (const key in value) {
+            style += `${key}:${String(value[key])};`;
+          }
+          props += ` style="${style}"`;
         }
-        props += ` style="${style}"`;
-        continue;
+        props += ` ${name}="${String(value)}"`;
       }
-      props += ` ${name}="${String(value)}"`;
     }
   }
 
@@ -116,31 +155,39 @@ export const renderToTemplate = (
     if (child === null || child === undefined || child === false) continue;
 
     if (typeof child === 'object' && '__key' in child) {
-      current.edits.push([
-        /* type */ 'child',
-        /* name */ undefined,
-        /* value */ undefined,
-        /* hole */ child.__key,
-        /* index */ i,
-        /* listener */ undefined,
-        /* patch */ undefined,
-        /* block */ undefined,
-      ]);
+      const hole = child.__key;
+      const next: EditChild = {
+        type: Flags.CHILD,
+        name: null,
+        value: null,
+        hole,
+        index: i,
+        listener: null,
+        patch: null,
+        block: null,
+        next: null,
+      };
+
+      mountNode(current.edits, hole, next);
+      editsPointer[hole] = addNode(editsPointer[hole], next);
       continue;
     }
 
     if (child instanceof AbstractBlock) {
-      current.edits.push([
-        /* type */ 'block',
-        /* name */ undefined,
-        /* value */ undefined,
-        /* hole */ undefined,
-        /* index */ i,
-        /* listener */ undefined,
-        /* patch */ undefined,
-        /* block */ child,
-      ]);
+      const next: InitBlock = {
+        type: Flags.BLOCK,
+        name: null,
+        value: null,
+        hole: null,
+        index: i,
+        listener: null,
+        patch: null,
+        block: child,
+        next: null,
+      };
 
+      mountNode(current, 'inits', next);
+      initsPointer = addNode(initsPointer, next);
       continue;
     }
 
@@ -154,10 +201,18 @@ export const renderToTemplate = (
           ? String(child)
           : child;
       if (canMergeString) {
-        current.inits.push({
-          index: i,
+        const next: InitChild = {
+          type: Flags.CHILD,
+          name: null,
           value,
-        });
+          hole: null,
+          index: i,
+          listener: null,
+          patch: null,
+          block: null,
+          next: null,
+        };
+        initsPointer = addNode(initsPointer, next);
         continue;
       }
       canMergeString = true;
@@ -170,9 +225,47 @@ export const renderToTemplate = (
     children += renderToTemplate(child, edits, [...path, k++]);
   }
 
-  if (current.inits.length || current.edits.length) {
+  if (current.inits || !isObjectEmpty(current.edits)) {
     edits.push(current);
   }
 
   return `<${vnode.type}${props}>${children}</${vnode.type}>`;
+};
+
+const getCurrentElement = (path: number[], root: HTMLElement): HTMLElement => {
+  const pathLength = path.length;
+  if (!pathLength) return root;
+  // path is an array of indices to traverse the DOM tree
+  // For example, [0, 1, 2] becomes:
+  // root.firstChild.firstChild.nextSibling.firstChild.nextSibling.nextSibling
+  // We use path because we don't have the actual DOM nodes until mount()
+  for (let i = 0; i < pathLength; ++i) {
+    const siblings = path[i]!;
+    // https://www.measurethat.net/Benchmarks/Show/15652/0/childnodes-vs-children-vs-firstchildnextsibling-vs-firs
+    root = firstChild$.call(root);
+    if (!siblings) continue;
+    for (let j = 0; j < siblings; ++j) {
+      root = nextSibling$.call(root) as HTMLElement;
+    }
+  }
+  return root;
+};
+
+const isObjectEmpty = (object: Record<string, unknown>) => {
+  // eslint-disable-next-line no-unreachable-loop
+  for (const _ in object) return false;
+  return true;
+};
+
+const mountNode = (root: any, property: string, node: any) => {
+  if (!root[property]) root[property] = node;
+  return node;
+};
+
+const addNode = (pointer: any | null, next: any) => {
+  if (pointer) {
+    pointer.next = next;
+    return next;
+  }
+  return next;
 };

@@ -53,7 +53,7 @@ export const set$ = Set.prototype;
 export const setAdd$ = set$.add;
 export const setHas$ = set$.has;
 
-document[EVENTS_REGISTRY] = new Set();
+document[EVENTS_REGISTRY] = {};
 
 let listenerPointer = 0;
 
@@ -65,7 +65,7 @@ export const createEventListener = (
 ) => {
   const event = name.toLowerCase().slice(2);
   const key = `$$${event}`;
-  if (!setHas$.call(document[EVENTS_REGISTRY], event)) {
+  if (!document[EVENTS_REGISTRY][event]) {
     // createEventListener uses a synthetic event handler to capture events
     // https://betterprogramming.pub/whats-the-difference-between-synthetic-react-events-and-javascript-events-ba7dbc742294
     addEventListener$.call(document, event, (nativeEventObject: Event) => {
@@ -86,7 +86,7 @@ export const createEventListener = (
         el = el.parentNode;
       }
     });
-    document[EVENTS_REGISTRY].add(event);
+    document[EVENTS_REGISTRY][event] = true;
   }
   const pointer = listenerPointer++;
   const patch = (newValue?: EventListener | null) => {
