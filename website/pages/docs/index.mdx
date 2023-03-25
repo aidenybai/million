@@ -3,7 +3,11 @@ title: 'What is Million.js?'
 ---
 
 import { Card, Cards, Callout } from 'nextra-theme-docs';
-import { Markprompt } from 'markprompt';
+import { Suspense } from 'react';
+import dynamic from 'next/dynamic';
+export const Demo = dynamic(() =>
+  import('../../components/demo').then((mod) => mod.Demo),
+);
 
 # What is Million.js?
 
@@ -21,8 +25,6 @@ Furthermore, while alternative libraries like [Preact](https://preactjs.com/) re
 
 ## Get Started
 
-<Markprompt projectKey="wY6PcEDR3IESgu7d5C8Ev0rwfQB2SEID" />
-
 <Cards num={3}>
   <Card arrow title="Do the quickstart" href="/docs/quickstart"></Card>
   <Card arrow title="Use Million.js in React" href="/docs/react/block"></Card>
@@ -35,10 +37,7 @@ The following example is a simple counter app that uses React and Million.js. Th
 
 <br />
 
-<iframe
-  style={{ width: '100%', height: '60vh' }}
-  src="https://stackblitz.com/edit/react-1km67h?embed=1&file=src/index.js&view=preview&embed=1&hideExplorer=1&hidedevtools=1&devtoolsheight=0"
-></iframe>
+<Demo />
 
 ## What is a virtual DOM?
 
