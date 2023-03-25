@@ -6,10 +6,11 @@
     "start": "next start"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.13",
     "autoprefixer": "^10.4.13",
     "chart.js": "^4.2.1",
     "classnames": "^2.3.2",
-    "markprompt": "^0.1.1",
+    "markprompt": "^0.1.5",
     "next": "^13.0.6",
     "nextra": "latest",
     "nextra-theme-docs": "latest",

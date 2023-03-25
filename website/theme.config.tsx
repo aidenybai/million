@@ -1,6 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { type DocsThemeConfig, useConfig } from 'nextra-theme-docs';
+import { ExtraContent } from './components/extra-content';
 
 const config: DocsThemeConfig = {
   logo: () => {
@@ -150,6 +151,10 @@ const config: DocsThemeConfig = {
   },
   sidebar: {
     toggleButton: true,
+  },
+  toc: {
+    float: true,
+    extraContent: ExtraContent,
   },
   useNextSeoProps() {
     const { asPath } = useRouter();
