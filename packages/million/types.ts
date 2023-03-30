@@ -14,133 +14,149 @@ export interface VElement {
 }
 
 export interface Hole {
-  __key: string;
+  $: string;
 }
 
 export abstract class AbstractBlock {
-  root?: HTMLElement;
-  edits?: Edit[];
-  el?: HTMLElement;
-  _parent?: HTMLElement | null;
-  props?: Props | null;
-  key?: string;
-  cache?: Map<number, HTMLElement>;
-  abstract patch(block: AbstractBlock): HTMLElement;
-  abstract mount(parent?: HTMLElement, refNode?: Node | null): HTMLElement;
-  abstract move(block: AbstractBlock | null, refNode: Node | null): void;
-  abstract remove(): void;
-  abstract toString(): string;
-  abstract shouldUpdate(oldProps: Props, newProps: Props): boolean;
-  abstract parent(): HTMLElement | null | undefined;
+  /* root */ r?: HTMLElement;
+  /* edits */ e?: Edit[];
+  /* el */ l?: HTMLElement;
+  /* _parent */ _t?: HTMLElement | null;
+  /* props */ d?: Props | null;
+  /* key */ k?: string;
+  /* cache */ c?: Map<number, HTMLElement>;
+  /* patch */ abstract p(block: AbstractBlock): HTMLElement;
+  /* mount */ abstract m(
+    parent?: HTMLElement,
+    refNode?: Node | null,
+  ): HTMLElement;
+  /* move */ abstract v(
+    block: AbstractBlock | null,
+    refNode: Node | null,
+  ): void;
+  /* remove */ abstract x(): void;
+  /* toString */ abstract s(): string;
+  /* shouldUpdate */ abstract u(oldProps: Props, newProps: Props): boolean;
+  /* parent */ abstract t(): HTMLElement | null | undefined;
 }
 
-export const enum Edits {
-  TYPE,
-  NAME,
-  VALUE,
-  HOLE,
-  INDEX,
-  LISTENER,
-  PATCH,
-  BLOCK,
+export const enum Flags {
+  Child = 1,
+  Attribute = 2,
+  Event = 4,
+  StyleAttribute = 8,
+  SvgAttribute = 16,
+  Block = 32,
 }
 
-export type EditBase = [
-  /* type */ string,
-  /* name */ string | undefined,
-  /* value */ string | undefined,
-  /* hole */ string | undefined,
-  /* index */ number | undefined,
-  /* listener */ EventListener | undefined,
-  /* patch */ ((listener: EventListener) => void) | undefined,
-  /* block */ AbstractBlock | undefined,
-];
+export interface EditBase {
+  /* type */ t: Flags;
+  /* name */ n: string | null;
+  /* value */ v: string | null;
+  /* hole */ h: string | null;
+  /* index */ i: number | null;
+  /* listener */ l: EventListener | null;
+  /* patch */ p: ((listener: EventListener) => void) | null;
+  /* block */ b: AbstractBlock | null;
+}
 
-export type EditAttribute = EditBase &
-  [
-    /* type */ 'attribute',
-    /* name */ string,
-    /* value */ undefined,
-    /* hole */ string,
-    /* index */ undefined,
-    /* listener */ undefined,
-    /* patch */ undefined,
-    /* block */ undefined,
-  ];
+export interface EditAttribute {
+  /* type */ t: Flags.Attribute;
+  /* name */ n: string;
+  /* value */ v: null;
+  /* hole */ h: string;
+  /* index */ i: null;
+  /* listener */ l: null;
+  /* patch */ p: null;
+  /* block */ b: null;
+}
 
-export type EditStyleAttribute = EditBase &
-  [
-    /* type */ 'style',
-    /* name */ string,
-    /* value */ undefined,
-    /* hole */ string,
-    /* index */ undefined,
-    /* listener */ undefined,
-    /* patch */ undefined,
-    /* block */ undefined,
-  ];
+export interface EditStyleAttribute {
+  /* type */ t: Flags.StyleAttribute;
+  /* name */ n: string;
+  /* value */ v: null;
+  /* hole */ h: string;
+  /* index */ i: null;
+  /* listener */ l: null;
+  /* patch */ p: null;
+  /* block */ b: null;
+}
 
-export type EditSvgAttribute = EditBase &
-  [
-    /* type */ 'svg',
-    /* name */ string,
-    /* value */ undefined,
-    /* hole */ string,
-    /* index */ undefined,
-    /* listener */ undefined,
-    /* patch */ undefined,
-    /* block */ undefined,
-  ];
+export interface EditSvgAttribute {
+  /* type */ t: Flags.SvgAttribute;
+  /* name */ n: string;
+  /* value */ v: null;
+  /* hole */ h: string;
+  /* index */ i: null;
+  /* listener */ l: null;
+  /* patch */ p: null;
+  /* block */ b: null;
+}
 
-export type EditChild = EditBase &
-  [
-    /* type */ 'child',
-    /* name */ undefined,
-    /* value */ undefined,
-    /* hole */ string,
-    /* index */ number,
-    /* listener */ undefined,
-    /* patch */ undefined,
-    /* block */ undefined,
-  ];
+export interface EditChild {
+  /* type */ t: Flags.Child;
+  /* name */ n: null;
+  /* value */ v: null;
+  /* hole */ h: string;
+  /* index */ i: number;
+  /* listener */ l: null;
+  /* patch */ p: null;
+  /* block */ b: null;
+}
 
-export type EditBlock = EditBase &
-  [
-    /* type */ 'block',
-    /* name */ undefined,
-    /* value */ undefined,
-    /* hole */ undefined,
-    /* index */ number,
-    /* listener */ undefined,
-    /* patch */ undefined,
-    /* block */ AbstractBlock,
-  ];
+export interface EditEvent {
+  /* type */ t: Flags.Event;
+  /* name */ n: string;
+  /* value */ v: null;
+  /* hole */ h: string;
+  /* index */ i: null;
+  /* listener */ l: null;
+  /* patch */ p: ((listener: EventListener) => void) | null;
+  /* block */ b: null;
+}
 
-export type EditEvent = EditBase &
-  [
-    /* type */ 'event',
-    /* name */ string,
-    /* value */ undefined,
-    /* hole */ string | undefined,
-    /* index */ undefined,
-    /* listener */ EventListener,
-    /* patch */ ((listener: EventListener) => void) | undefined,
-    /* block */ undefined,
-  ];
+export interface InitEvent {
+  /* type */ t: Flags.Event;
+  /* name */ n: string;
+  /* value */ v: null;
+  /* hole */ h: null;
+  /* index */ i: null;
+  /* listener */ l: EventListener;
+  /* patch */ p: null;
+  /* block */ b: null;
+}
+
+export interface InitChild {
+  /* type */ t: Flags.Child;
+  /* name */ n: null;
+  /* value */ v: string;
+  /* hole */ h: null;
+  /* index */ i: number;
+  /* listener */ l: null;
+  /* patch */ p: null;
+  /* block */ b: null;
+}
+
+export interface InitBlock {
+  /* type */ t: Flags.Block;
+  /* name */ n: null;
+  /* value */ v: null;
+  /* hole */ h: null;
+  /* index */ i: number;
+  /* listener */ l: null;
+  /* patch */ p: null;
+  /* block */ b: AbstractBlock;
+}
 
 export interface Edit {
-  path: number[];
-  edits: (
+  /* path */ p: number[] | null;
+  /* edits */ e: (
     | EditAttribute
     | EditStyleAttribute
     | EditSvgAttribute
     | EditChild
-    | EditBlock
     | EditEvent
   )[];
-  inits: {
-    index: number;
-    value: string;
-  }[];
-  getRoot?: (el: HTMLElement) => HTMLElement;
+  /* inits */ i: (InitChild | InitEvent | InitBlock)[] | null;
+  /* root */ r: ((el: HTMLElement) => HTMLElement) | null;
 }

@@ -6,7 +6,7 @@ import type {
 } from '@babel/types';
 
 export interface AstEditBase {
-  type: StringLiteral;
+  type: NumericLiteral;
   name?: StringLiteral;
   value?: StringLiteral;
   hole?: StringLiteral;
@@ -15,39 +15,44 @@ export interface AstEditBase {
 }
 
 export interface AstEditAttribute extends AstEditBase {
-  type: StringLiteral;
+  type: NumericLiteral;
   hole: StringLiteral;
   name: StringLiteral;
 }
 
 export interface AstEditStyleAttribute extends AstEditBase {
-  type: StringLiteral;
+  type: NumericLiteral;
   hole: StringLiteral;
   name: StringLiteral;
 }
 
 export interface AstEditSvgAttribute extends AstEditBase {
-  type: StringLiteral;
+  type: NumericLiteral;
   hole: StringLiteral;
   name: StringLiteral;
 }
 
 export interface AstEditChild extends AstEditBase {
-  type: StringLiteral;
+  type: NumericLiteral;
   hole: StringLiteral;
   index: NumericLiteral;
 }
 
 export interface AstEditBlock extends AstEditBase {
-  type: StringLiteral;
+  type: NumericLiteral;
   index: NumericLiteral;
 }
 
 export interface AstEditEvent extends AstEditBase {
-  type: StringLiteral;
-  hole?: StringLiteral;
+  type: NumericLiteral;
+  hole: StringLiteral;
   name: StringLiteral;
-  listener?: ArrowFunctionExpression | Identifier;
+}
+
+export interface AstInitEvent extends AstEditBase {
+  type: NumericLiteral;
+  name: StringLiteral;
+  listener: ArrowFunctionExpression | Identifier;
 }
 
 export interface AstEdit {
@@ -60,5 +65,5 @@ export interface AstEdit {
     | AstEditBlock
     | AstEditEvent
   )[];
-  inits: [];
+  inits: AstInitEvent[];
 }

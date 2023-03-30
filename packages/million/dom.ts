@@ -12,6 +12,7 @@ import {
 export const node$ = Node.prototype;
 export const element$ = Element.prototype;
 export const characterData$ = CharacterData.prototype;
+export const getOwnPropertyDescriptor$ = Object.getOwnPropertyDescriptor;
 export const insertBefore$ = node$.insertBefore;
 export const cloneNode$ = node$.cloneNode;
 export const replaceChild$ = node$.replaceChild;
@@ -23,23 +24,15 @@ export const removeEventListener$ = node$.removeEventListener;
 export const removeAttribute$ = element$.removeAttribute;
 export const setAttribute$ = element$.setAttribute;
 export const setAttributeNS$ = element$.setAttributeNS;
-export const setTextContent$ = Object.getOwnPropertyDescriptor(
-  node$,
-  'textContent',
-)!.set!;
-export const innerHTML$ = Object.getOwnPropertyDescriptor(
-  element$,
-  'innerHTML',
-)!.set!;
-export const childNodes$ = Object.getOwnPropertyDescriptor(node$, 'childNodes')!
+export const setTextContent$ = getOwnPropertyDescriptor$(node$, 'textContent')!
+  .set!;
+export const innerHTML$ = getOwnPropertyDescriptor$(element$, 'innerHTML')!
+  .set!;
+export const childNodes$ = getOwnPropertyDescriptor$(node$, 'childNodes')!.get!;
+export const firstChild$ = getOwnPropertyDescriptor$(node$, 'firstChild')!.get!;
+export const nextSibling$ = getOwnPropertyDescriptor$(node$, 'nextSibling')!
   .get!;
-export const firstChild$ = Object.getOwnPropertyDescriptor(node$, 'firstChild')!
-  .get!;
-export const nextSibling$ = Object.getOwnPropertyDescriptor(
-  node$,
-  'nextSibling',
-)!.get!;
-export const characterDataSet$ = Object.getOwnPropertyDescriptor(
+export const characterDataSet$ = getOwnPropertyDescriptor$(
   characterData$,
   'data',
 )!.set!;
@@ -63,7 +56,7 @@ export const createEventListener = (
   name: string,
   value?: EventListener,
 ) => {
-  const event = name.toLowerCase().slice(2);
+  const event = name.toLowerCase();
   const key = `$$${event}`;
   if (!setHas$.call(document[EVENTS_REGISTRY], event)) {
     // createEventListener uses a synthetic event handler to capture events

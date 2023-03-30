@@ -6,13 +6,15 @@ import type { NodePath } from '@babel/core';
 import type { AstEdit, AstEditBase } from './types';
 
 export const visitCallExpression = (path: NodePath<t.CallExpression>) => {
+  // TODO: allow aliasing (block as newBlock)
   if (t.isIdentifier(path.node.callee, { name: 'block' })) {
     const blockFunction = path.scope.getBinding(path.node.callee.name);
     if (!blockFunction) return;
     const importSource = blockFunction.path.parent;
+
     if (
       !t.isVariableDeclarator(path.parentPath.node) ||
-      importSource.type !== 'ImportDeclaration' ||
+      !t.isImportDeclaration(importSource) ||
       // Currently uses includes. Fix this because million/react could be included
       !importSource.source.value.includes('million')
     ) {
@@ -51,32 +53,58 @@ export const visitCallExpression = (path: NodePath<t.CallExpression>) => {
 
       const editsArray = t.arrayExpression(
         edits.map((edit) => {
-          const properties: t.ArrayExpression[] = [];
+          const editsProperties: t.ObjectExpression[] = [];
+          const initsProperties: t.ObjectExpression[] = [];
 
           for (let i = 0, j = edit.edits.length; i < j; ++i) {
             const { type, name, hole, listener, value, index } = edit.edits[
               i
             ] as AstEditBase;
 
-            properties.push(
-              t.arrayExpression([
-                type,
-                name ?? t.nullLiteral(),
-                value ?? t.nullLiteral(),
-                hole ?? t.nullLiteral(),
-                index ?? t.nullLiteral(),
-                listener ?? t.nullLiteral(),
-                t.nullLiteral(),
-                t.nullLiteral(),
+            editsProperties.push(
+              t.objectExpression([
+                t.objectProperty(t.identifier('t'), type),
+                t.objectProperty(t.identifier('n'), name ?? t.nullLiteral()),
+                t.objectProperty(t.identifier('v'), value ?? t.nullLiteral()),
+                t.objectProperty(t.identifier('h'), hole ?? t.nullLiteral()),
+                t.objectProperty(t.identifier('i'), index ?? t.nullLiteral()),
+                t.objectProperty(
+                  t.identifier('l'),
+                  listener ?? t.nullLiteral(),
+                ),
+                t.objectProperty(t.identifier('p'), value ?? t.nullLiteral()),
+                t.objectProperty(t.identifier('b'), value ?? t.nullLiteral()),
               ]),
             );
           }
 
-          let root: t.CallExpression | undefined;
+          for (let i = 0, j = edit.inits.length; i < j; ++i) {
+            const { type, name, hole, listener, value, index } = edit.inits[
+              i
+            ] as AstEditBase;
+
+            initsProperties.push(
+              t.objectExpression([
+                t.objectProperty(t.identifier('t'), type),
+                t.objectProperty(t.identifier('n'), name ?? t.nullLiteral()),
+                t.objectProperty(t.identifier('v'), value ?? t.nullLiteral()),
+                t.objectProperty(t.identifier('h'), hole ?? t.nullLiteral()),
+                t.objectProperty(t.identifier('i'), index ?? t.nullLiteral()),
+                t.objectProperty(
+                  t.identifier('l'),
+                  listener ?? t.nullLiteral(),
+                ),
+                t.objectProperty(t.identifier('p'), value ?? t.nullLiteral()),
+                t.objectProperty(t.identifier('b'), value ?? t.nullLiteral()),
+              ]),
+            );
+          }
+
+          let root: t.CallExpression | t.Identifier | undefined;
           for (let i = 0, j = edit.path.length; i < j; ++i) {
             root = t.callExpression(
               t.memberExpression(firstChild, t.identifier('call')),
-              [root ?? t.identifier('el')],
+              [root ?? t.identifier('e')],
             );
 
             for (let k = 0, l = edit.path[i]!; k < l; ++k) {
@@ -88,16 +116,21 @@ export const visitCallExpression = (path: NodePath<t.CallExpression>) => {
           }
 
           return t.objectExpression([
-            t.objectProperty(t.identifier('path'), t.arrayExpression([])),
+            t.objectProperty(t.identifier('p'), t.nullLiteral()),
             t.objectProperty(
-              t.identifier('edits'),
-              t.arrayExpression(properties),
+              t.identifier('e'),
+              t.arrayExpression(editsProperties),
             ),
-            t.objectProperty(t.identifier('inits'), t.arrayExpression([])),
             t.objectProperty(
-              t.identifier('getRoot'),
+              t.identifier('i'),
+              initsProperties.length
+                ? t.arrayExpression(initsProperties)
+                : t.nullLiteral(),
+            ),
+            t.objectProperty(
+              t.identifier('r'),
               root
-                ? t.arrowFunctionExpression([t.identifier('el')], root)
+                ? t.arrowFunctionExpression([t.identifier('e')], root)
                 : t.nullLiteral(),
             ),
           ]);
@@ -117,7 +150,7 @@ export const visitCallExpression = (path: NodePath<t.CallExpression>) => {
         (t.isIdentifier(shouldUpdate) && shouldUpdate.name !== 'undefined') ||
         t.isArrowFunctionExpression(shouldUpdate);
 
-      if (shouldUpdateExists && props && !t.isIdentifier(props)) {
+      if (!shouldUpdateExists && props && !t.isIdentifier(props)) {
         const { properties } = props;
         shouldUpdate = t.arrowFunctionExpression(
           [t.identifier('oldProps'), t.identifier('newProps')],
@@ -169,8 +202,8 @@ export const visitCallExpression = (path: NodePath<t.CallExpression>) => {
         t.variableDeclarator(
           shouldUpdateVariable,
           shouldUpdateExists
-            ? (shouldUpdate as t.Identifier | t.ArrowFunctionExpression)
-            : t.nullLiteral(),
+            ? t.nullLiteral()
+            : (shouldUpdate as t.Identifier | t.ArrowFunctionExpression),
         ),
       ]);
       const BlockClass = addNamed(path, 'Block', importSource.source.value, {

@@ -3,29 +3,49 @@ import { mapGet$, mapSet$, setTextContent$ } from './dom';
 import { AbstractBlock } from './types';
 import { mount$, patch$, move$, remove$ } from './block';
 
-export const fragment = (children: AbstractBlock[]) => {
-  return new FragmentBlock(children);
+export const fragment = (children: AbstractBlock[], hints?: number[]) => {
+  return new FragmentBlock(children, hints);
 };
 
 export class FragmentBlock extends AbstractBlock {
-  children: AbstractBlock[];
-  constructor(children: AbstractBlock[]) {
+  b: AbstractBlock[];
+  h?: number[];
+  constructor(children: AbstractBlock[], hints?: number[]) {
     super();
-    this.children = children;
+    this.b = children;
+    this.h = hints;
   }
-  move() {
-    throw new Error('Cannot move a FragmentBlock');
+  v() {
+    /**/
   }
-  // @ts-expect-error - override
-  override patch(fragment: FragmentBlock) {
-    const oldChildren = this.children;
-    const newChildren = fragment.children;
+  // @ts-expect-error override
+  override p(fragment: FragmentBlock) {
+    const oldChildren = this.b;
+    const newChildren = fragment.b;
     const oldChildrenLength = oldChildren.length;
     const newChildrenLength = newChildren.length;
-    const parent = this.parent()!;
+    const parent = this.t()!;
     if (this === fragment) return;
     if (newChildrenLength === 0 && oldChildrenLength === 0) return;
-    this.children = newChildren;
+    if (fragment.h) {
+      const hints = fragment.h;
+      for (let i = 0, j = hints.length; i < j; ++i) {
+        const hint = hints[i]!;
+        const oldChild: AbstractBlock | undefined = oldChildren[hint];
+        const newChild: AbstractBlock | undefined = newChildren[hint];
+        if (oldChild && newChild) {
+          patch$.call(oldChild, newChild);
+        } else if (oldChild) {
+          remove$.call(oldChild.l);
+        } else if (newChild) {
+          // FIXME: Maybe wrong refNode
+          mount$.call(newChild, parent, newChild.l);
+        }
+      }
+      return;
+    }
+
+    this.b = newChildren;
 
     if (newChildrenLength === 0) {
       fragmentRemove$.call(this);
@@ -58,8 +78,8 @@ export class FragmentBlock extends AbstractBlock {
         continue;
       }
 
-      const oldHeadKey = oldHeadChild.key!;
-      const newHeadKey = newHeadChild.key!;
+      const oldHeadKey = oldHeadChild.k!;
+      const newHeadKey = newHeadChild.k!;
       if (oldHeadKey === newHeadKey) {
         patch$.call(oldHeadChild, newHeadChild);
         newChildren[newHead] = oldHeadChild;
@@ -68,8 +88,8 @@ export class FragmentBlock extends AbstractBlock {
         continue;
       }
 
-      const oldTailKey = oldTailChild.key!;
-      const newTailKey = newTailChild.key!;
+      const oldTailKey = oldTailChild.k!;
+      const newTailKey = newTailChild.k!;
       if (oldTailKey === newTailKey) {
         patch$.call(oldTailChild, newTailChild);
         newChildren[newTail] = oldTailChild;
@@ -82,7 +102,7 @@ export class FragmentBlock extends AbstractBlock {
         patch$.call(oldHeadChild, newTailChild);
         newChildren[newTail] = oldHeadChild;
         const nextChild = newChildren[newTail + 1];
-        move$.call(oldHeadChild, nextChild, nextChild?.el || null);
+        move$.call(oldHeadChild, nextChild, nextChild?.l || null);
         oldHeadChild = oldChildren[++oldHead];
         newTailChild = newChildren[--newTail]!;
         continue;
@@ -92,7 +112,7 @@ export class FragmentBlock extends AbstractBlock {
         patch$.call(oldTailChild, newHeadChild);
         newChildren[newHead] = oldTailChild;
         const nextChild = oldChildren[oldHead];
-        move$.call(oldTailChild, nextChild, nextChild?.el || null);
+        move$.call(oldTailChild, nextChild, nextChild?.l || null);
         oldTailChild = oldChildren[--oldTail];
         newHeadChild = newChildren[++newHead]!;
         continue;
@@ -101,12 +121,12 @@ export class FragmentBlock extends AbstractBlock {
       if (!oldKeyMap) {
         oldKeyMap = new Map<string, number>();
         for (let i = oldHead; i <= oldTail; i++) {
-          mapSet$.call(oldKeyMap, oldChildren[i]!.key!, i);
+          mapSet$.call(oldKeyMap, oldChildren[i]!.k!, i);
         }
       }
       const oldIndex = mapGet$.call(oldKeyMap, newHeadKey);
       if (oldIndex === undefined) {
-        mount$.call(newHeadChild, parent, oldHeadChild.el || null);
+        mount$.call(newHeadChild, parent, oldHeadChild.l || null);
       } else {
         const oldChild = oldChildren[oldIndex]!;
         move$.call(oldChild, oldHeadChild, null);
@@ -121,7 +141,7 @@ export class FragmentBlock extends AbstractBlock {
       if (oldHead > oldTail) {
         const nextChild = newChildren[newTail + 1];
         for (let i = newHead; i <= newTail; i++) {
-          mount$.call(newChildren[i], parent, nextChild ? nextChild.el : null);
+          mount$.call(newChildren[i], parent, nextChild ? nextChild.l : null);
         }
       } else {
         for (let i = oldHead; i <= oldTail; ++i) {
@@ -129,40 +149,40 @@ export class FragmentBlock extends AbstractBlock {
         }
       }
     }
-    return this._parent;
+    return this._t;
   }
-  mount(parent: HTMLElement, refNode: Node | null = null): HTMLElement {
-    if (this._parent) return this._parent;
-    for (let i = 0, j = this.children.length; i < j; ++i) {
-      const block = this.children[i]!;
+  m(parent: HTMLElement, refNode: Node | null = null): HTMLElement {
+    if (this._t) return this._t;
+    for (let i = 0, j = this.b.length; i < j; ++i) {
+      const block = this.b[i]!;
       mount$.call(block, parent, refNode);
     }
-    this._parent = parent;
+    this._t = parent;
     return parent;
   }
-  remove() {
-    const parent = this.parent();
+  x() {
+    const parent = this.t();
     if (parent) {
       setTextContent$.call(parent, '');
     } else {
-      for (let i = 0, j = this.children.length; i < j; ++i) {
-        remove$.call(this.children[i]!);
+      for (let i = 0, j = this.b.length; i < j; ++i) {
+        remove$.call(this.b[i]!);
       }
     }
-    this.children = [];
+    this.b = [];
   }
-  shouldUpdate(): boolean {
+  u(): boolean {
     return true;
   }
-  toString() {
-    return this.children.map((block) => block.toString()).join('');
+  s() {
+    return this.b.map((block) => block.s()).join('');
   }
-  parent(): HTMLElement | null | undefined {
-    if (!this._parent) this._parent = this.children[0]!.parent();
-    return this._parent;
+  t(): HTMLElement | null | undefined {
+    if (!this._t) this._t = this.b[0]!.t();
+    return this._t;
   }
 }
 
-export const fragmentMount$ = FragmentBlock.prototype.mount;
-export const fragmentPatch$ = FragmentBlock.prototype.patch;
-export const fragmentRemove$ = FragmentBlock.prototype.remove;
+export const fragmentMount$ = FragmentBlock.prototype.m;
+export const fragmentPatch$ = FragmentBlock.prototype.p;
+export const fragmentRemove$ = FragmentBlock.prototype.x;
