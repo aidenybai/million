@@ -45,7 +45,10 @@ export function ExtraContent() {
           onClose={() => setIsOpen(false)}
           className="relative z-50 w-full"
         >
-          <div className="fixed inset-0 bg-black/60" aria-hidden="true" />
+          <div
+            className="fixed inset-0 bg-black/25 dark:bg-black/60"
+            aria-hidden="true"
+          />
 
           <div className="w-[90%] h-[90%] md:w-[50%] md:h-[70%] fixed inset-0 flex items-center justify-center p-4 m-auto">
             <Dialog.Panel className="border border-gray-100 dark:border-gray-800 w-full h-full rounded bg-white dark:bg-[#111] p-4">

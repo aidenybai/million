@@ -110,7 +110,7 @@ importers:
       autoprefixer: ^10.4.13
       chart.js: ^4.2.1
       classnames: ^2.3.2
-      markprompt: ^0.1.5
+      markprompt: ^0.1.6
       next: ^13.0.6
       nextra: latest
       nextra-theme-docs: latest
@@ -128,7 +128,7 @@ importers:
       autoprefixer: 10.4.13_postcss@8.4.21
       chart.js: 4.2.1
       classnames: 2.3.2
-      markprompt: 0.1.5_zula6vjvt3wdocc4mwcxqa6nzi
+      markprompt: 0.1.6_zula6vjvt3wdocc4mwcxqa6nzi
       next: 13.2.1_hrdbe576m4w26u2yfpqpvbxyky
       nextra: 2.2.20_qgtcjgzkkjtbiyvnx7d32fl5vu
       nextra-theme-docs: 2.2.20_ybznaopjvuug5aktx32n26wm7y
@@ -4081,8 +4081,8 @@ packages:
     resolution: {integrity: sha512-Z1NL3Tb1M9wH4XESsCDEksWoKTdlUafKc4pt0GRwjUyXaCFZ+dc3g2erqB6zm3szA2IUSi7VnPI+o/9jnxh9hw==}
     dev: false
 
-  /markprompt/0.1.5_zula6vjvt3wdocc4mwcxqa6nzi:
-    resolution: {integrity: sha512-aS9i/KWYmvUTRZp5lAx+2DPRw7Zu9ZOH9ho5RMUTy+BR5mZjqSpIdhZDeoEDN083t9arWgqEQrNSbSuyTIfYaQ==}
+  /markprompt/0.1.6_zula6vjvt3wdocc4mwcxqa6nzi:
+    resolution: {integrity: sha512-nHuLS/EuOOIv7H9KbKolgQOdKdfyOueM1wMrwr96eLXTHsgaEd6NskAx+EwPdLvP1XJ03WLtFKAFBJ/qhWD58A==}
     engines: {node: '>=10'}
     peerDependencies:
       react: ^16 || ^17 || ^18

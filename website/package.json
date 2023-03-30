@@ -10,7 +10,7 @@
     "autoprefixer": "^10.4.13",
     "chart.js": "^4.2.1",
     "classnames": "^2.3.2",
-    "markprompt": "^0.1.5",
+    "markprompt": "^0.1.6",
     "next": "^13.0.6",
     "nextra": "latest",
     "nextra-theme-docs": "latest",
