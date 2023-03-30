@@ -38,7 +38,7 @@ You can also pass in Holes to the `renderToTemplate()` function. This will retur
 import { renderToTemplate } from 'million';
 
 const edits = [];
-const hole = { __key: 'hole' };
+const hole = { $: 'hole' };
 const template = renderToTemplate(<div>Hello {hole}</div>, edits);
 
 console.log(template); // '<div>Hello </div>'

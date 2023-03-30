@@ -32,13 +32,13 @@ The props are filled with `Hole` values. These `Hole` values are replaced with t
 ```jsx
 // Anatomy of a `Hole`
 {
-  __key: 'prop';
+  $: 'prop';
 }
 
 // Example:
 block((props) => {
-  console.log(props.foo); // { __key: 'foo' }
-  console.log(props.foo + ' bar'); // { __key: 'foo' } + ' bar' ❌
+  console.log(props.foo); // { $: 'foo' }
+  console.log(props.foo + ' bar'); // { $: 'foo' } + ' bar' ❌
   return <div>{props.foo}</div>;
 });
 ```

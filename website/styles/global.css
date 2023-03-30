@@ -79,6 +79,16 @@ input[placeholder='Ask me anything...'] {
   font-family: 'Roboto Mono', monospace;
   font-size: 1.1rem;
   line-height: 1.5;
+  background-color: #fff;
+  border-radius: 0.5rem;
+  padding: 0.15rem 0.4rem;
+  border: 1px solid #494749;
+}
+
+html[class~='dark'] input[placeholder='Ask me anything...'] {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 1.1rem;
+  line-height: 1.5;
   background-color: #302e30;
   border-radius: 0.5rem;
   padding: 0.15rem 0.4rem;
