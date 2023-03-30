@@ -20,6 +20,8 @@ import {
 } from './dom';
 import { renderToTemplate } from './template';
 import { AbstractBlock, Flags } from './types';
+import { fragmentMount$, fragmentPatch$ } from './fragment';
+import type { FragmentBlock } from './fragment';
 import type { EditChild, Props, VElement, Hole, VNode, Edit } from './types';
 
 export const block = (
@@ -66,6 +68,9 @@ export const mount = (
   block: AbstractBlock,
   parent?: HTMLElement,
 ): HTMLElement => {
+  if ('b' in block && parent) {
+    return fragmentMount$.call(block, parent);
+  }
   return mount$.call(block, parent);
 };
 
@@ -73,6 +78,10 @@ export const patch = (
   oldBlock: AbstractBlock,
   newBlock: AbstractBlock,
 ): HTMLElement => {
+  if ('b' in oldBlock || 'b' in newBlock) {
+    fragmentPatch$.call(oldBlock, newBlock as FragmentBlock);
+  }
+
   if (!oldBlock.l) mount$.call(oldBlock);
   if ((oldBlock.k && oldBlock.k === newBlock.k) || oldBlock.r === newBlock.r) {
     return patch$.call(oldBlock, newBlock);
