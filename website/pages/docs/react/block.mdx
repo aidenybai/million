@@ -46,7 +46,7 @@ function IllegalComponent(props) {
   const [count, setCount] = useState(0); // ❌ Don't use hooks
   const bad = props.text + " don't do this"; // ❌ don't interpolate props
 
-  return <div>Hello {text}</div>;
+  return <div>Hello {bad}</div>;
 }
 
 const IllegalComponentBlock = block(IllegalComponent);
@@ -66,7 +66,7 @@ createRoot(document.getElementById('root')).render(
 
 ```jsx {2, 5}
 import { createRoot } from 'react-dom/client';
-import { block } from 'million/react';
+import { Block } from 'million/react';
 
 createRoot(document.getElementById('root')).render(
   <Block text="World">{(props) => <div>Hello {props.text}</div>}</Block>,
