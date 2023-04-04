@@ -1,7 +1,7 @@
 import * as t from '@babel/types';
 import { Flags } from '../million/types';
 import { X_CHAR } from '../million/constants';
-import type { AstEdit } from './types';
+import type { IrEdit } from './types';
 
 export const renderToString = (node: t.JSXElement) => {
   const type = node.openingElement.name as t.JSXIdentifier;
@@ -52,12 +52,12 @@ export const renderToString = (node: t.JSXElement) => {
 
 export const renderToTemplate = (
   node: t.JSXElement,
-  edits: AstEdit[],
+  edits: IrEdit[],
   path: number[] = [],
   holes: string[] = [],
 ) => {
   const attributesLength = node.openingElement.attributes.length;
-  const current: AstEdit = {
+  const current: IrEdit = {
     path, // The location of the edit in in the virtual node tree
     edits: [], // Occur on mount + patch
     inits: [], // Occur before mount

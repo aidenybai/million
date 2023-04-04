@@ -22,21 +22,21 @@ describe.concurrent('block', () => {
   it('should mount block', () => {
     const block = createBlock(fn);
     const main = block({ foo: 'foo', bar: 'bar' });
-    main.mount();
-    expect(main.el?.outerHTML).toEqual(
+    main.m();
+    expect(main.l?.outerHTML).toEqual(
       '<div><h1>Hello</h1> World<p title="baz" class="bar">foo</p></div>',
     );
   });
   it('should patch block', () => {
     const block = createBlock(fn);
     const main = block({ foo: 'foo', bar: 'bar' });
-    main.mount();
-    main.patch(block({ foo: 'bar', bar: 'foo' }));
-    expect(main.el?.outerHTML).toEqual(
+    main.m();
+    main.p(block({ foo: 'bar', bar: 'foo' }));
+    expect(main.l?.outerHTML).toEqual(
       '<div><h1>Hello</h1> World<p title="baz" class="foo">bar</p></div>',
     );
-    main.patch(block({ foo: 'bar', bar: 'bar' }));
-    expect(main.el?.outerHTML).toEqual(
+    main.p(block({ foo: 'bar', bar: 'bar' }));
+    expect(main.l?.outerHTML).toEqual(
       '<div><h1>Hello</h1> World<p title="baz" class="bar">bar</p></div>',
     );
   });
@@ -44,17 +44,17 @@ describe.concurrent('block', () => {
     const block = createBlock(fn);
     const subBlock = createBlock(fn);
     const main = block({ foo: subBlock({ foo: '1', bar: '2' }), bar: 'bar' });
-    main.mount();
-    main.patch(block({ foo: subBlock({ foo: '2', bar: '1' }), bar: 'bar' }));
-    expect(main.el?.outerHTML).toEqual(
+    main.m();
+    main.p(block({ foo: subBlock({ foo: '2', bar: '1' }), bar: 'bar' }));
+    expect(main.l?.outerHTML).toEqual(
       '<div><h1>Hello</h1> World<p title="baz" class="bar"><div><h1>Hello</h1> World<p title="baz" class="1">2</p></div></p></div>',
     );
   });
   it('should remove block', () => {
     const block = createBlock(fn);
     const main = block({ foo: 'foo', bar: 'bar' });
-    main.mount();
-    main.remove();
-    expect(main.el).toBeUndefined();
+    main.m();
+    main.x();
+    expect(main.l).toBeUndefined();
   });
 });

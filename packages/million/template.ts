@@ -1,4 +1,3 @@
-import { setHas$ } from './dom';
 import { X_CHAR, VOID_ELEMENTS } from './constants';
 import { AbstractBlock, Flags } from './types';
 import type { Edit, VNode } from './types';
@@ -116,7 +115,7 @@ export const renderToTemplate = (
     }
   }
 
-  if (setHas$.call(VOID_ELEMENTS, vnode.type)) {
+  if (VOID_ELEMENTS.has(vnode.type)) {
     return `<${vnode.type}${props} />`;
   }
 

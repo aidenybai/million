@@ -5,7 +5,7 @@ import type {
   Identifier,
 } from '@babel/types';
 
-export interface AstEditBase {
+export interface IrEditBase {
   type: NumericLiteral;
   name?: StringLiteral;
   value?: StringLiteral;
@@ -14,56 +14,56 @@ export interface AstEditBase {
   listener?: ArrowFunctionExpression | Identifier;
 }
 
-export interface AstEditAttribute extends AstEditBase {
+export interface IrEditAttribute extends IrEditBase {
   type: NumericLiteral;
   hole: StringLiteral;
   name: StringLiteral;
 }
 
-export interface AstEditStyleAttribute extends AstEditBase {
+export interface IrEditStyleAttribute extends IrEditBase {
   type: NumericLiteral;
   hole: StringLiteral;
   name: StringLiteral;
 }
 
-export interface AstEditSvgAttribute extends AstEditBase {
+export interface IrEditSvgAttribute extends IrEditBase {
   type: NumericLiteral;
   hole: StringLiteral;
   name: StringLiteral;
 }
 
-export interface AstEditChild extends AstEditBase {
+export interface IrEditChild extends IrEditBase {
   type: NumericLiteral;
   hole: StringLiteral;
   index: NumericLiteral;
 }
 
-export interface AstEditBlock extends AstEditBase {
+export interface IrEditBlock extends IrEditBase {
   type: NumericLiteral;
   index: NumericLiteral;
 }
 
-export interface AstEditEvent extends AstEditBase {
+export interface IrEditEvent extends IrEditBase {
   type: NumericLiteral;
   hole: StringLiteral;
   name: StringLiteral;
 }
 
-export interface AstInitEvent extends AstEditBase {
+export interface IrInitEvent extends IrEditBase {
   type: NumericLiteral;
   name: StringLiteral;
   listener: ArrowFunctionExpression | Identifier;
 }
 
-export interface AstEdit {
+export interface IrEdit {
   path: number[];
   edits: (
-    | AstEditAttribute
-    | AstEditStyleAttribute
-    | AstEditSvgAttribute
-    | AstEditChild
-    | AstEditBlock
-    | AstEditEvent
+    | IrEditAttribute
+    | IrEditStyleAttribute
+    | IrEditSvgAttribute
+    | IrEditChild
+    | IrEditBlock
+    | IrEditEvent
   )[];
-  inits: AstInitEvent[];
+  inits: IrInitEvent[];
 }

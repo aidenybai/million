@@ -20,7 +20,7 @@ export interface Hole {
 export abstract class AbstractBlock {
   /* root */ r?: HTMLElement;
   /* edits */ e?: Edit[];
-  /* el */ l?: HTMLElement;
+  /* el */ l?: HTMLElement | null;
   /* _parent */ _t?: HTMLElement | null;
   /* props */ d?: Props | null;
   /* key */ k?: string;

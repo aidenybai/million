@@ -14,33 +14,32 @@ import {
   setSvgAttribute,
   firstChild$,
   nextSibling$,
-  mapSet$,
-  mapHas$,
-  mapGet$,
+  template$,
 } from './dom';
 import { renderToTemplate } from './template';
 import { AbstractBlock, Flags } from './types';
 import { fragmentMount$, fragmentPatch$ } from './fragment';
+import { Map$ } from './constants';
 import type { FragmentBlock } from './fragment';
 import type { EditChild, Props, VElement, Hole, VNode, Edit } from './types';
+
+const HOLE_PROXY = new Proxy(
+  {},
+  {
+    // A universal getter will return a Hole instance if props[any] is accessed
+    // Allows code to identify holes in virtual nodes ("digs" them out)
+    get(_, key: string): Hole {
+      return { $: key };
+    },
+  },
+);
 
 export const block = (
   fn: (props?: Props) => VElement,
   unwrap?: (vnode: any) => VNode,
   shouldUpdate?: (oldProps: Props, newProps: Props) => boolean,
 ) => {
-  const vnode = fn(
-    new Proxy(
-      {},
-      {
-        // A universal getter will return a Hole instance if props[any] is accessed
-        // Allows code to identify holes in virtual nodes ("digs" them out)
-        get(_, key: string): Hole {
-          return { $: key };
-        },
-      },
-    ),
-  );
+  const vnode = fn(HOLE_PROXY);
   const edits: Edit[] = [];
 
   // Turns vnode into a string of HTML and creates an array of "edits"
@@ -96,7 +95,7 @@ export class Block extends AbstractBlock {
   r: HTMLElement;
   e: Edit[];
   // Cache for getCurrentElement()
-  c = new Map<number, HTMLElement>();
+  c = new Map$<number, HTMLElement>();
 
   constructor(
     root: HTMLElement,
@@ -243,7 +242,7 @@ export class Block extends AbstractBlock {
   }
   x() {
     removeElement$.call(this.l);
-    this.l = undefined;
+    this.l = null;
   }
   u(_oldProps: Props, _newProps: Props): boolean {
     return true;
@@ -265,8 +264,8 @@ const getCurrentElement = (
 ): HTMLElement => {
   const pathLength = path.length;
   if (!pathLength) return root;
-  if (cache && key !== undefined && mapHas$.call(cache, path)) {
-    return mapGet$.call(cache, path)!;
+  if (cache && key !== undefined && cache.has(key)) {
+    return cache.get(key)!;
   }
   // path is an array of indices to traverse the DOM tree
   // For example, [0, 1, 2] becomes:
@@ -281,14 +280,13 @@ const getCurrentElement = (
       root = nextSibling$.call(root) as HTMLElement;
     }
   }
-  if (cache && key !== undefined) mapSet$.call(cache, key, root);
+  if (cache && key !== undefined) cache.set(key, root);
   return root;
 };
 
 export const stringToDOM = (content: string) => {
-  const template = document.createElement('template');
-  innerHTML$.call(template, content);
-  return template.content.firstChild as HTMLElement;
+  innerHTML$.call(template$, content);
+  return template$.content.firstChild as HTMLElement;
 };
 
 export const withKey = (value: any, key: string) => {
@@ -296,8 +294,10 @@ export const withKey = (value: any, key: string) => {
   return value;
 };
 
-export const mount$ = Block.prototype.m;
-export const patch$ = Block.prototype.p;
-export const move$ = Block.prototype.v;
-export const remove$ = Block.prototype.x;
-export const shouldUpdate$ = Block.prototype.u;
+const block$ = Block.prototype;
+
+export const mount$ = block$.m;
+export const patch$ = block$.p;
+export const move$ = block$.v;
+export const remove$ = block$.x;
+export const shouldUpdate$ = block$.u;

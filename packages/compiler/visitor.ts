@@ -3,7 +3,7 @@ import * as t from '@babel/types';
 import { renderToTemplate, renderToString } from './render';
 import { chainOrLogic } from './utils';
 import type { NodePath } from '@babel/core';
-import type { AstEdit, AstEditBase } from './types';
+import type { IrEdit, IrEditBase } from './types';
 
 export const visitCallExpression = (path: NodePath<t.CallExpression>) => {
   // TODO: allow aliasing (block as newBlock)
@@ -30,7 +30,7 @@ export const visitCallExpression = (path: NodePath<t.CallExpression>) => {
     )[];
 
     if (t.isArrowFunctionExpression(fn) && t.isJSXElement(fn.body)) {
-      const edits: AstEdit[] = [];
+      const edits: IrEdit[] = [];
 
       const holes = t.isObjectPattern(props)
         ? Object.keys(props.properties).map((key) => {
@@ -59,7 +59,7 @@ export const visitCallExpression = (path: NodePath<t.CallExpression>) => {
           for (let i = 0, j = edit.edits.length; i < j; ++i) {
             const { type, name, hole, listener, value, index } = edit.edits[
               i
-            ] as AstEditBase;
+            ] as IrEditBase;
 
             editsProperties.push(
               t.objectExpression([
@@ -81,7 +81,7 @@ export const visitCallExpression = (path: NodePath<t.CallExpression>) => {
           for (let i = 0, j = edit.inits.length; i < j; ++i) {
             const { type, name, hole, listener, value, index } = edit.inits[
               i
-            ] as AstEditBase;
+            ] as IrEditBase;
 
             initsProperties.push(
               t.objectExpression([
