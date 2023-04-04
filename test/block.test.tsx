@@ -55,6 +55,6 @@ describe.concurrent('block', () => {
     const main = block({ foo: 'foo', bar: 'bar' });
     main.m();
     main.x();
-    expect(main.l).toBeUndefined();
+    expect(main.l).toBeNull();
   });
 });
