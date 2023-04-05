@@ -1,3 +1,12 @@
+declare const enum Flags {
+  Child = 1,
+  Attribute = 2,
+  Event = 4,
+  StyleAttribute = 8,
+  SvgAttribute = 16,
+  Block = 32,
+}
+
 export type VNode =
   | VElement
   | string
@@ -38,15 +47,6 @@ export abstract class AbstractBlock {
   /* toString */ abstract s(): string;
   /* shouldUpdate */ abstract u(oldProps: Props, newProps: Props): boolean;
   /* parent */ abstract t(): HTMLElement | null | undefined;
-}
-
-export const enum Flags {
-  Child = 1,
-  Attribute = 2,
-  Event = 4,
-  StyleAttribute = 8,
-  SvgAttribute = 16,
-  Block = 32,
 }
 
 export interface EditBase {

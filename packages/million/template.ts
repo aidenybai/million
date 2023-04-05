@@ -1,5 +1,15 @@
-import { X_CHAR, VOID_ELEMENTS } from './constants';
-import { AbstractBlock, Flags } from './types';
+import {
+  X_CHAR,
+  VOID_ELEMENTS,
+  EventFlag,
+  StyleAttributeFlag,
+  SvgAttributeFlag,
+  AttributeFlag,
+  ChildFlag,
+  BlockFlag,
+} from './constants';
+import { SetHas$ } from './dom';
+import { AbstractBlock } from './types';
 import type { Edit, VNode } from './types';
 
 export const renderToTemplate = (
@@ -39,7 +49,7 @@ export const renderToTemplate = (
       // Make edits monomorphic
       if (isValueHole) {
         current.e.push({
-          /* type */ t: Flags.Event,
+          /* type */ t: EventFlag,
           /* name */ n: name.slice(2),
           /* value */ v: null,
           /* hole */ h: value.$,
@@ -50,7 +60,7 @@ export const renderToTemplate = (
         });
       } else {
         current.i!.push({
-          /* type */ t: Flags.Event,
+          /* type */ t: EventFlag,
           /* name */ n: name.slice(2),
           /* value */ v: null,
           /* hole */ h: null,
@@ -68,7 +78,7 @@ export const renderToTemplate = (
       if (typeof value === 'object' && '$' in value) {
         if (name === 'style') {
           current.e.push({
-            /* type */ t: Flags.StyleAttribute,
+            /* type */ t: StyleAttributeFlag,
             /* name */ n: name,
             /* value */ v: null,
             /* hole */ h: value.$,
@@ -79,7 +89,7 @@ export const renderToTemplate = (
           });
         } else if (name.charCodeAt(0) === X_CHAR) {
           current.e.push({
-            /* type */ t: Flags.SvgAttribute,
+            /* type */ t: SvgAttributeFlag,
             /* name */ n: name,
             /* value */ v: null,
             /* hole */ h: value.$,
@@ -90,7 +100,7 @@ export const renderToTemplate = (
           });
         } else {
           current.e.push({
-            /* type */ t: Flags.Attribute,
+            /* type */ t: AttributeFlag,
             /* name */ n: name,
             /* value */ v: null,
             /* hole */ h: value.$,
@@ -115,7 +125,7 @@ export const renderToTemplate = (
     }
   }
 
-  if (VOID_ELEMENTS.has(vnode.type)) {
+  if (SetHas$.call(VOID_ELEMENTS, vnode.type)) {
     return `<${vnode.type}${props} />`;
   }
 
@@ -129,7 +139,7 @@ export const renderToTemplate = (
 
     if (typeof child === 'object' && '$' in child) {
       current.e.push({
-        /* type */ t: Flags.Child,
+        /* type */ t: ChildFlag,
         /* name */ n: null,
         /* value */ v: null,
         /* hole */ h: child.$,
@@ -143,7 +153,7 @@ export const renderToTemplate = (
 
     if (child instanceof AbstractBlock) {
       current.i!.push({
-        /* type */ t: Flags.Block,
+        /* type */ t: BlockFlag,
         /* name */ n: null,
         /* value */ v: null,
         /* hole */ h: null,
@@ -167,7 +177,7 @@ export const renderToTemplate = (
           : child;
       if (canMergeString) {
         current.i!.push({
-          /* type */ t: Flags.Child,
+          /* type */ t: ChildFlag,
           /* name */ n: null,
           /* value */ v: value,
           /* hole */ h: null,

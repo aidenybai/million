@@ -134,7 +134,7 @@ export function Home() {
             <p className="text-xs text-gray-400">
               Based on JS Framework Benchmark data •{' '}
               <a
-                href="https://krausest.github.io/js-framework-benchmark/"
+                href="https://krausest.github.io/js-framework-benchmark/current.html"
                 target="_blank"
                 rel="noreferrer"
                 className="text-[#b073d9] underline decoration-from-font [text-underline-position:from-font]"

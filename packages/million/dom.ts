@@ -3,6 +3,7 @@
 import {
   EVENTS_REGISTRY,
   IS_NON_DIMENSIONAL,
+  Map$,
   NON_PROPS,
   Object$,
   Set$,
@@ -42,6 +43,14 @@ export const characterDataSet$ = getOwnPropertyDescriptor$(
   'data',
 )!.set!;
 
+export const SetHas$ = Set$.prototype.has;
+export const SetAdd$ = Set$.prototype.add;
+export const SetDelete$ = Set$.prototype.delete;
+
+export const MapHas$ = Map$.prototype.has;
+export const MapGet$ = Map$.prototype.get;
+export const MapSet$ = Map$.prototype.set;
+
 document$[EVENTS_REGISTRY] = new Set$();
 
 let listenerPointer = 0;
@@ -54,7 +63,7 @@ export const createEventListener = (
 ) => {
   const event = name.toLowerCase();
   const key = `$$${event}`;
-  if (!document$[EVENTS_REGISTRY].has(event)) {
+  if (!SetHas$.call(document$[EVENTS_REGISTRY], event)) {
     // createEventListener uses a synthetic event handler to capture events
     // https://betterprogramming.pub/whats-the-difference-between-synthetic-react-events-and-javascript-events-ba7dbc742294
     addEventListener$.call(document$, event, (nativeEventObject: Event) => {
@@ -75,7 +84,7 @@ export const createEventListener = (
         el = el.parentNode;
       }
     });
-    document$[EVENTS_REGISTRY].add(event);
+    SetAdd$.call(document$[EVENTS_REGISTRY], event);
   }
   const pointer = listenerPointer++;
   const patch = (newValue?: EventListener | null) => {
@@ -147,7 +156,7 @@ export const setAttribute = (
     el[name] !== undefined &&
     el[name] !== null &&
     !(el instanceof SVGElement) &&
-    NON_PROPS.has(name)
+    SetHas$.call(NON_PROPS, name)
   ) {
     try {
       el[name] = value;

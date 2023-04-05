@@ -15,11 +15,20 @@ import {
   firstChild$,
   nextSibling$,
   template$,
+  MapHas$,
+  MapGet$,
+  MapSet$,
 } from './dom';
 import { renderToTemplate } from './template';
-import { AbstractBlock, Flags } from './types';
+import { AbstractBlock } from './types';
 import { fragmentMount$, fragmentPatch$ } from './fragment';
-import { Map$ } from './constants';
+import {
+  AttributeFlag,
+  ChildFlag,
+  EventFlag,
+  Map$,
+  StyleAttributeFlag,
+} from './constants';
 import type { FragmentBlock } from './fragment';
 import type { EditChild, Props, VElement, Hole, VNode, Edit } from './types';
 
@@ -127,19 +136,19 @@ export class Block extends AbstractBlock {
         const edit = current.e[k]!;
         const value = this.d![edit.h];
 
-        if (edit.t & Flags.Child) {
+        if (edit.t & ChildFlag) {
           if (value instanceof AbstractBlock) {
             value.m(el);
             continue;
           }
           // insertText() on mount, setText() on patch
           insertText(el, String(value), edit.i!);
-        } else if (edit.t & Flags.Event) {
+        } else if (edit.t & EventFlag) {
           const patch = createEventListener(el, edit.n!, value);
           edit.p = patch;
-        } else if (edit.t & Flags.Attribute) {
+        } else if (edit.t & AttributeFlag) {
           setAttribute(el, edit.n!, value);
-        } else if (edit.t & Flags.StyleAttribute) {
+        } else if (edit.t & StyleAttributeFlag) {
           if (typeof value === 'string') {
             setStyleAttribute(el, edit.n!, value);
           } else {
@@ -157,13 +166,13 @@ export class Block extends AbstractBlock {
       for (let k = 0; k < initsLength; ++k) {
         const init = current.i![k]!;
 
-        if (init.t & Flags.Child) {
+        if (init.t & ChildFlag) {
           // Handles case for positioning text nodes. When text nodes are
           // put into a template, they can be merged. For example,
           // ["hello", "world"] becomes "helloworld" in the DOM.
           // Inserts text nodes into the DOM at the correct position.
           insertText(el, init.v, init.i!);
-        } else if (init.t & Flags.Event) {
+        } else if (init.t & EventFlag) {
           createEventListener(el, init.n!, init.l!);
         } else {
           init.b!.m(el, childNodes$.call(el)[init.i!]);
@@ -196,7 +205,7 @@ export class Block extends AbstractBlock {
 
         if (newValue === oldValue) continue;
 
-        if (edit.t & Flags.Event) {
+        if (edit.t & EventFlag) {
           edit.p!(newValue);
           continue;
         }
@@ -207,7 +216,7 @@ export class Block extends AbstractBlock {
             ? getCurrentElement(current.p, root, this.c, i)
             : this.l!;
         }
-        if (edit.t & Flags.Child) {
+        if (edit.t & ChildFlag) {
           if (oldValue instanceof AbstractBlock) {
             // Remember! If we find a block inside a child, we need to locate
             // the cooresponding block in the new props and patch it.
@@ -217,9 +226,9 @@ export class Block extends AbstractBlock {
             continue;
           }
           setText(el, String(newValue), edit.i!);
-        } else if (edit.t & Flags.Attribute) {
+        } else if (edit.t & AttributeFlag) {
           setAttribute(el, edit.n!, newValue);
-        } else if (edit.t & Flags.StyleAttribute) {
+        } else if (edit.t & StyleAttributeFlag) {
           if (typeof newValue === 'string') {
             setStyleAttribute(el, edit.n!, newValue);
           } else {
@@ -264,8 +273,8 @@ const getCurrentElement = (
 ): HTMLElement => {
   const pathLength = path.length;
   if (!pathLength) return root;
-  if (cache && key !== undefined && cache.has(key)) {
-    return cache.get(key)!;
+  if (cache && key !== undefined && MapHas$.call(cache, key)) {
+    return MapGet$.call(cache, key)!;
   }
   // path is an array of indices to traverse the DOM tree
   // For example, [0, 1, 2] becomes:
@@ -280,7 +289,7 @@ const getCurrentElement = (
       root = nextSibling$.call(root) as HTMLElement;
     }
   }
-  if (cache && key !== undefined) cache.set(key, root);
+  if (cache && key !== undefined) MapSet$.call(cache, key, root);
   return root;
 };
 

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { setTextContent$ } from './dom';
+import { MapSet$, setTextContent$ } from './dom';
 import { AbstractBlock } from './types';
 import { mount$, patch$, move$, remove$ } from './block';
 import { Map$ } from './constants';
@@ -102,7 +102,7 @@ export class FragmentBlock extends AbstractBlock {
       if (!oldKeyMap) {
         oldKeyMap = new Map$<string, number>();
         for (let i = oldHead; i <= oldTail; i++) {
-          oldKeyMap.set(oldChildren[i]!.k!, i);
+          MapSet$.call(oldKeyMap, oldChildren[i]!.k!, i);
         }
       }
       const oldIndex = oldKeyMap.get(newHeadKey);
