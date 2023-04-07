@@ -30,6 +30,7 @@ export abstract class AbstractBlock {
   /* root */ r?: HTMLElement;
   /* edits */ e?: Edit[];
   /* el */ l?: HTMLElement | null;
+  /* getElements */ g?: (root: HTMLElement) => HTMLElement[];
   /* _parent */ _t?: HTMLElement | null;
   /* props */ d?: Props | null;
   /* key */ k?: string;
@@ -158,5 +159,4 @@ export interface Edit {
     | EditEvent
   )[];
   /* inits */ i: (InitChild | InitEvent | InitBlock)[] | null;
-  /* root */ r: ((el: HTMLElement) => HTMLElement) | null;
 }

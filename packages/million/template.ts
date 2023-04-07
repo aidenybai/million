@@ -33,7 +33,6 @@ export const renderToTemplate = (
     p: path, // The location of the edit in in the virtual node tree
     e: [], // Occur on mount + patch
     i: [], // Occur before mount
-    r: null, // altenative to path
   };
 
   for (let name in vnode.props) {

@@ -1,6 +1,12 @@
 import * as t from '@babel/types';
-import { Flags } from '../million/types';
-import { X_CHAR } from '../million/constants';
+import {
+  X_CHAR,
+  EventFlag,
+  StyleAttributeFlag,
+  SvgAttributeFlag,
+  AttributeFlag,
+  ChildFlag,
+} from '../million/constants';
 import type { IrEdit } from './types';
 
 export const renderToString = (node: t.JSXElement) => {
@@ -93,13 +99,13 @@ export const renderToTemplate = (
           const event = name.toLowerCase().slice(2);
           if (isDynamicListener) {
             current.edits.push({
-              type: t.numericLiteral(Flags.Event),
+              type: t.numericLiteral(EventFlag),
               name: t.stringLiteral(event),
               hole: t.stringLiteral(expression.name),
             });
           } else {
             current.inits.push({
-              type: t.numericLiteral(Flags.Event),
+              type: t.numericLiteral(EventFlag),
               listener: expression,
               name: t.stringLiteral(event),
             });
@@ -146,10 +152,10 @@ export const renderToTemplate = (
           current.edits.push({
             type: t.numericLiteral(
               name === 'style'
-                ? Flags.StyleAttribute
+                ? StyleAttributeFlag
                 : name.charCodeAt(0) === X_CHAR
-                ? Flags.SvgAttribute
-                : Flags.Attribute,
+                ? SvgAttributeFlag
+                : AttributeFlag,
             ),
             hole: t.stringLiteral(expression.name),
             name: t.stringLiteral(name),
@@ -185,7 +191,7 @@ export const renderToTemplate = (
       holes.includes(child.expression.name)
     ) {
       current.edits.push({
-        type: t.numericLiteral(Flags.Child),
+        type: t.numericLiteral(ChildFlag),
         hole: t.stringLiteral(child.expression.name),
         index: t.numericLiteral(i),
         name: undefined,

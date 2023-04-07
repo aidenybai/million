@@ -67,3 +67,17 @@ export interface IrEdit {
   )[];
   inits: IrInitEvent[];
 }
+
+export interface IrTreeNode {
+  children: IrTreeNode[];
+  path?: number[];
+}
+
+export interface IrPrunedNode {
+  index: number;
+  parent?: IrPrunedNode;
+  path?: number[];
+  child?: IrPrunedNode;
+  next?: IrPrunedNode;
+  prev?: IrPrunedNode;
+}

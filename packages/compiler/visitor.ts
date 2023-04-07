@@ -1,9 +1,9 @@
 import { addNamed } from '@babel/helper-module-imports';
 import * as t from '@babel/types';
-import { renderToTemplate, renderToString } from './render';
+import { renderToString, renderToTemplate } from './render';
 import { chainOrLogic } from './utils';
+import type { IrEdit, IrEditBase, IrPrunedNode, IrTreeNode } from './types';
 import type { NodePath } from '@babel/core';
-import type { IrEdit, IrEditBase } from './types';
 
 export const visitCallExpression = (path: NodePath<t.CallExpression>) => {
   // TODO: allow aliasing (block as newBlock)
@@ -40,15 +40,18 @@ export const visitCallExpression = (path: NodePath<t.CallExpression>) => {
 
       const template = renderToTemplate(fn.body, edits, [], holes);
 
-      const firstChild = addNamed(
+      const paths: number[][] = [];
+      let maxPathLength = 0;
+      for (let i = 0, j = edits.length; i < j; ++i) {
+        const path = edits[i]?.path || [];
+        if (path.length > maxPathLength) maxPathLength = path.length;
+        paths.push(path);
+      }
+
+      const { declarators, accessedIds } = hoistElements(
+        paths,
         path,
-        'firstChild$',
-        importSource.source.value,
-      );
-      const nextSibling = addNamed(
-        path,
-        'nextSibling$',
-        importSource.source.value,
+        importSource,
       );
 
       const editsArray = t.arrayExpression(
@@ -100,21 +103,6 @@ export const visitCallExpression = (path: NodePath<t.CallExpression>) => {
             );
           }
 
-          let root: t.CallExpression | t.Identifier | undefined;
-          for (let i = 0, j = edit.path.length; i < j; ++i) {
-            root = t.callExpression(
-              t.memberExpression(firstChild, t.identifier('call')),
-              [root ?? t.identifier('e')],
-            );
-
-            for (let k = 0, l = edit.path[i]!; k < l; ++k) {
-              root = t.callExpression(
-                t.memberExpression(nextSibling, t.identifier('call')),
-                [root],
-              );
-            }
-          }
-
           return t.objectExpression([
             t.objectProperty(t.identifier('p'), t.nullLiteral()),
             t.objectProperty(
@@ -125,12 +113,6 @@ export const visitCallExpression = (path: NodePath<t.CallExpression>) => {
               t.identifier('i'),
               initsProperties.length
                 ? t.arrayExpression(initsProperties)
-                : t.nullLiteral(),
-            ),
-            t.objectProperty(
-              t.identifier('r'),
-              root
-                ? t.arrowFunctionExpression([t.identifier('e')], root)
                 : t.nullLiteral(),
             ),
           ]);
@@ -183,6 +165,8 @@ export const visitCallExpression = (path: NodePath<t.CallExpression>) => {
       const editsVariable = path.scope.generateUidIdentifier('edits$');
       const shouldUpdateVariable =
         path.scope.generateUidIdentifier('shouldUpdate$');
+      const getElementsVariable =
+        path.scope.generateUidIdentifier('getElements$');
 
       const variables = t.variableDeclaration('const', [
         t.variableDeclarator(
@@ -204,6 +188,16 @@ export const visitCallExpression = (path: NodePath<t.CallExpression>) => {
           shouldUpdateExists
             ? t.nullLiteral()
             : (shouldUpdate as t.Identifier | t.ArrowFunctionExpression),
+        ),
+        t.variableDeclarator(
+          getElementsVariable,
+          t.arrowFunctionExpression(
+            [t.identifier('root')],
+            t.blockStatement([
+              t.variableDeclaration('const', declarators),
+              t.returnStatement(t.arrayExpression(accessedIds)),
+            ]),
+          ),
         ),
       ]);
       const BlockClass = addNamed(path, 'Block', importSource.source.value, {
@@ -232,6 +226,7 @@ export const visitCallExpression = (path: NodePath<t.CallExpression>) => {
                 t.identifier('shouldUpdate'),
                 shouldUpdateVariable,
               ),
+              getElementsVariable,
             ]),
           ),
         ]),
@@ -241,4 +236,138 @@ export const visitCallExpression = (path: NodePath<t.CallExpression>) => {
       path.replaceWith(t.returnStatement(blockFactory));
     }
   }
+};
+
+/**
+ *  Direct credit to Alexis H. Munsayac (https://github.com/LXSMNSYC)
+ *  for the original implementation of this algorithm.
+ */
+export const hoistElements = (
+  paths: number[][],
+  path: NodePath<t.CallExpression>,
+  importSource: t.ImportDeclaration,
+) => {
+  const createTreeNode = (): IrTreeNode => ({
+    children: [],
+    path: undefined,
+  });
+
+  const createPrunedNode = (
+    index: number,
+    parent?: IrPrunedNode,
+  ): IrPrunedNode => ({
+    index,
+    parent,
+    path: undefined,
+    child: undefined,
+    next: undefined,
+    prev: undefined,
+  });
+
+  const tree = createTreeNode();
+  for (let i = 0, j = paths.length; i < j; i++) {
+    const path = paths[i]!;
+
+    let prev = tree;
+    for (let k = 0, l = path.length; k < l; k++) {
+      const index = path[k]!;
+      prev.children[index] ||= createTreeNode();
+      prev = prev.children[index]!;
+      if (k === l - 1) {
+        prev.path ||= [];
+        prev.path.push(i);
+      }
+    }
+  }
+
+  const prune = (node: IrTreeNode, parent: IrPrunedNode) => {
+    let prev = parent;
+    for (let i = 0, j = node.children.length; i < j; i++) {
+      const treeNode = node.children[i];
+      const current = createPrunedNode(i, parent);
+      if (prev === parent) {
+        prev.child = current;
+      } else {
+        current.prev = prev;
+        prev.next = current;
+      }
+      prev = current;
+
+      if (treeNode) {
+        prev.path = treeNode.path;
+        prune(treeNode, current);
+      }
+    }
+  };
+
+  const root = createPrunedNode(0);
+  prune(tree, root);
+
+  const getId = () => path.scope.generateUidIdentifier('el$');
+  const firstChild = addNamed(path, 'firstChild$', importSource.source.value);
+  const nextSibling = addNamed(path, 'nextSibling$', importSource.source.value);
+
+  const declarators: t.VariableDeclarator[] = [];
+  const accessedIds: t.Identifier[] = Array(paths.length).fill(
+    t.identifier('root'),
+  );
+
+  const traverse = (
+    node: IrPrunedNode,
+    prev: t.Identifier | t.CallExpression,
+    isParent?: boolean,
+  ) => {
+    if (isParent) {
+      prev = t.callExpression(
+        t.memberExpression(firstChild, t.identifier('call')),
+        [prev],
+      );
+      for (let i = 0, j = node.index; i < j; i++) {
+        prev = t.callExpression(
+          t.memberExpression(nextSibling, t.identifier('call')),
+          [prev],
+        );
+      }
+    } else {
+      for (let i = 0, j = node.index - (node.prev?.index ?? 0); i < j; i++) {
+        prev = t.callExpression(
+          t.memberExpression(nextSibling, t.identifier('call')),
+          [prev],
+        );
+      }
+    }
+
+    if (node.child && node.next) {
+      const id = getId();
+      declarators.push(t.variableDeclarator(id, prev));
+      prev = id;
+      if (node.path !== undefined) {
+        for (let i = 0, j = node.path.length; i < j; ++i) {
+          accessedIds[node.path[i]!] = id;
+        }
+      }
+    } else if (node.path !== undefined) {
+      const id = getId();
+      declarators.push(t.variableDeclarator(id, prev));
+      for (let i = 0, j = node.path.length; i < j; ++i) {
+        accessedIds[node.path[i]!] = id;
+      }
+      prev = id;
+    }
+    if (node.next) {
+      traverse(node.next, prev, false);
+    }
+    if (node.child) {
+      traverse(node.child, prev, true);
+    }
+  };
+
+  if (root.child) {
+    traverse(root.child, t.identifier('root'), true);
+  }
+
+  return {
+    declarators,
+    accessedIds,
+  };
 };

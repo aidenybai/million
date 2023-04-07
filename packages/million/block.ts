@@ -112,6 +112,7 @@ export class Block extends AbstractBlock {
     props?: Props | null,
     key?: string,
     shouldUpdate?: (oldProps: Props, newProps: Props) => boolean,
+    getElements?: (root: HTMLElement) => HTMLElement[],
   ) {
     super();
     this.r = root;
@@ -119,16 +120,19 @@ export class Block extends AbstractBlock {
     this.e = edits;
     this.k = key;
     if (shouldUpdate) this.u = shouldUpdate;
+    if (getElements) this.g = getElements;
   }
   m(parent?: HTMLElement, refNode: Node | null = null): HTMLElement {
     if (this.l) return this.l;
     // cloneNode(true) uses less memory than recursively creating new nodes
     const root = cloneNode$.call(this.r, true) as HTMLElement;
+    const elements = this.g?.(root);
 
     for (let i = 0, j = this.e.length; i < j; ++i) {
       const current = this.e[i]!;
-      const el = current.r
-        ? current.r(root)
+      const el = elements?.[i]
+        ? // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+          this.c.set(i, elements[i]!) && elements[i]!
         : current.p
         ? getCurrentElement(current.p, root, this.c, i)
         : root;
@@ -210,11 +214,9 @@ export class Block extends AbstractBlock {
           continue;
         }
         if (!el) {
-          el = current.r
-            ? current.r(root)
-            : current.p
+          el = current.p
             ? getCurrentElement(current.p, root, this.c, i)
-            : this.l!;
+            : this.c.get(i)!;
         }
         if (edit.t & ChildFlag) {
           if (oldValue instanceof AbstractBlock) {
