@@ -1,6 +1,13 @@
 import * as t from '@babel/types';
-import { X_CHAR } from '../million/constants';
-import type { AstEdit } from './types';
+import {
+  X_CHAR,
+  EventFlag,
+  StyleAttributeFlag,
+  SvgAttributeFlag,
+  AttributeFlag,
+  ChildFlag,
+} from '../million/constants';
+import type { IrEdit } from './types';
 
 export const renderToString = (node: t.JSXElement) => {
   const type = node.openingElement.name as t.JSXIdentifier;
@@ -51,12 +58,12 @@ export const renderToString = (node: t.JSXElement) => {
 
 export const renderToTemplate = (
   node: t.JSXElement,
-  edits: AstEdit[],
+  edits: IrEdit[],
   path: number[] = [],
   holes: string[] = [],
 ) => {
   const attributesLength = node.openingElement.attributes.length;
-  const current: AstEdit = {
+  const current: IrEdit = {
     path, // The location of the edit in in the virtual node tree
     edits: [], // Occur on mount + patch
     inits: [], // Occur before mount
@@ -86,22 +93,23 @@ export const renderToTemplate = (
           ) {
             continue;
           }
-          // Make objects monomorphic
-          current.edits.push({
-            type: t.stringLiteral('event'),
-            listener:
-              t.isArrowFunctionExpression(expression) ||
-              t.isIdentifier(expression)
-                ? expression
-                : undefined,
-            name: t.stringLiteral(name),
-            hole:
-              t.isIdentifier(expression) && holes.includes(expression.name)
-                ? t.stringLiteral(expression.name)
-                : undefined,
-            value: undefined,
-            index: undefined,
-          });
+          const isDynamicListener =
+            t.isIdentifier(expression) && holes.includes(expression.name);
+
+          const event = name.toLowerCase().slice(2);
+          if (isDynamicListener) {
+            current.edits.push({
+              type: t.numericLiteral(EventFlag),
+              name: t.stringLiteral(event),
+              hole: t.stringLiteral(expression.name),
+            });
+          } else {
+            current.inits.push({
+              type: t.numericLiteral(EventFlag),
+              listener: expression,
+              name: t.stringLiteral(event),
+            });
+          }
 
           continue;
         }
@@ -140,22 +148,17 @@ export const renderToTemplate = (
             );
             continue;
           }
-          const { expression } = attribute.value;
+          const { expression } = attribute.value as { expression: any };
           current.edits.push({
-            type: t.stringLiteral(
+            type: t.numericLiteral(
               name === 'style'
-                ? 'style'
+                ? StyleAttributeFlag
                 : name.charCodeAt(0) === X_CHAR
-                ? 'svg'
-                : 'attribute',
+                ? SvgAttributeFlag
+                : AttributeFlag,
             ),
-            hole: t.isIdentifier(expression)
-              ? t.stringLiteral(expression.name)
-              : undefined,
+            hole: t.stringLiteral(expression.name),
             name: t.stringLiteral(name),
-            listener: undefined,
-            value: undefined,
-            index: undefined,
           });
           continue;
         }
@@ -188,7 +191,7 @@ export const renderToTemplate = (
       holes.includes(child.expression.name)
     ) {
       current.edits.push({
-        type: t.stringLiteral('child'),
+        type: t.numericLiteral(ChildFlag),
         hole: t.stringLiteral(child.expression.name),
         index: t.numericLiteral(i),
         name: undefined,
@@ -217,7 +220,7 @@ export const renderToTemplate = (
   }
   node.children = newChildren;
 
-  if (current.edits.length) {
+  if (current.inits.length || current.edits.length) {
     edits.push(current);
   }
 
