@@ -5,8 +5,8 @@ import type {
   Identifier,
 } from '@babel/types';
 
-export interface AstEditBase {
-  type: StringLiteral;
+export interface IrEditBase {
+  type: NumericLiteral;
   name?: StringLiteral;
   value?: StringLiteral;
   hole?: StringLiteral;
@@ -14,51 +14,70 @@ export interface AstEditBase {
   listener?: ArrowFunctionExpression | Identifier;
 }
 
-export interface AstEditAttribute extends AstEditBase {
-  type: StringLiteral;
+export interface IrEditAttribute extends IrEditBase {
+  type: NumericLiteral;
   hole: StringLiteral;
   name: StringLiteral;
 }
 
-export interface AstEditStyleAttribute extends AstEditBase {
-  type: StringLiteral;
+export interface IrEditStyleAttribute extends IrEditBase {
+  type: NumericLiteral;
   hole: StringLiteral;
   name: StringLiteral;
 }
 
-export interface AstEditSvgAttribute extends AstEditBase {
-  type: StringLiteral;
+export interface IrEditSvgAttribute extends IrEditBase {
+  type: NumericLiteral;
   hole: StringLiteral;
   name: StringLiteral;
 }
 
-export interface AstEditChild extends AstEditBase {
-  type: StringLiteral;
+export interface IrEditChild extends IrEditBase {
+  type: NumericLiteral;
   hole: StringLiteral;
   index: NumericLiteral;
 }
 
-export interface AstEditBlock extends AstEditBase {
-  type: StringLiteral;
+export interface IrEditBlock extends IrEditBase {
+  type: NumericLiteral;
   index: NumericLiteral;
 }
 
-export interface AstEditEvent extends AstEditBase {
-  type: StringLiteral;
-  hole?: StringLiteral;
+export interface IrEditEvent extends IrEditBase {
+  type: NumericLiteral;
+  hole: StringLiteral;
   name: StringLiteral;
-  listener?: ArrowFunctionExpression | Identifier;
 }
 
-export interface AstEdit {
+export interface IrInitEvent extends IrEditBase {
+  type: NumericLiteral;
+  name: StringLiteral;
+  listener: ArrowFunctionExpression | Identifier;
+}
+
+export interface IrEdit {
   path: number[];
   edits: (
-    | AstEditAttribute
-    | AstEditStyleAttribute
-    | AstEditSvgAttribute
-    | AstEditChild
-    | AstEditBlock
-    | AstEditEvent
+    | IrEditAttribute
+    | IrEditStyleAttribute
+    | IrEditSvgAttribute
+    | IrEditChild
+    | IrEditBlock
+    | IrEditEvent
   )[];
-  inits: [];
+  inits: IrInitEvent[];
+}
+
+export interface IrTreeNode {
+  children: IrTreeNode[];
+  path?: number[];
+}
+
+export interface IrPrunedNode {
+  index: number;
+  parent?: IrPrunedNode;
+  path?: number[];
+  child?: IrPrunedNode;
+  next?: IrPrunedNode;
+  prev?: IrPrunedNode;
 }

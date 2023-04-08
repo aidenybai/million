@@ -13,7 +13,7 @@ export function Home() {
     <>
       <div
         id="hero"
-        className="flex w-full h-[75vh] flex-row items-center justify-center px-[2rem] md:px-[2rem] xl:px-[7rem] pt-[5rem] pb-[5rem] md:pt-[6rem] md:pb-[8rem]"
+        className="flex w-full h-full md:h-[75vh] flex-row items-center justify-center px-[2rem] md:px-[2rem] xl:px-[7rem] pt-[5rem] pb-[5rem] md:pt-[6rem] md:pb-[8rem]"
       >
         <main className="!max-w-[1500px] mx-auto my-0 flex w-full flex-col items-center gap-20 md:max-w-screen-sm lg:max-w-[var(--max-width)] lg:flex-row lg:justify-between">
           <div className="flex-1 lg:max-w-[700px] mx-auto">
@@ -134,7 +134,7 @@ export function Home() {
             <p className="text-xs text-gray-400">
               Based on JS Framework Benchmark data •{' '}
               <a
-                href="https://krausest.github.io/js-framework-benchmark/"
+                href="https://krausest.github.io/js-framework-benchmark/current.html"
                 target="_blank"
                 rel="noreferrer"
                 className="text-[#b073d9] underline decoration-from-font [text-underline-position:from-font]"

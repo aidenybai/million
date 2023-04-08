@@ -1,39 +1,40 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { mapGet$, mapSet$, setTextContent$ } from './dom';
+import { MapSet$, setTextContent$ } from './dom';
 import { AbstractBlock } from './types';
 import { mount$, patch$, move$, remove$ } from './block';
+import { Map$ } from './constants';
 
 export const fragment = (children: AbstractBlock[]) => {
   return new FragmentBlock(children);
 };
 
 export class FragmentBlock extends AbstractBlock {
-  children: AbstractBlock[];
+  b: AbstractBlock[];
   constructor(children: AbstractBlock[]) {
     super();
-    this.children = children;
+    this.b = children;
   }
-  move() {
-    throw new Error('Cannot move a FragmentBlock');
+  v() {
+    /**/
   }
-  // @ts-expect-error - override
-  override patch(fragment: FragmentBlock) {
-    const oldChildren = this.children;
-    const newChildren = fragment.children;
+  p(fragment: FragmentBlock) {
+    const oldChildren = this.b;
+    const newChildren = fragment.b;
     const oldChildrenLength = oldChildren.length;
     const newChildrenLength = newChildren.length;
-    const parent = this.parent()!;
-    if (this === fragment) return;
-    if (newChildrenLength === 0 && oldChildrenLength === 0) return;
-    this.children = newChildren;
+    const parent = this.t()!;
+    if (this === fragment) return parent;
+    if (newChildrenLength === 0 && oldChildrenLength === 0) return parent;
+
+    this.b = newChildren;
 
     if (newChildrenLength === 0) {
       fragmentRemove$.call(this);
-      return;
+      return parent;
     }
     if (oldChildrenLength === 0) {
       fragmentMount$.call(fragment, parent);
-      return;
+      return parent;
     }
 
     let oldHead = 0;
@@ -58,8 +59,8 @@ export class FragmentBlock extends AbstractBlock {
         continue;
       }
 
-      const oldHeadKey = oldHeadChild.key!;
-      const newHeadKey = newHeadChild.key!;
+      const oldHeadKey = oldHeadChild.k!;
+      const newHeadKey = newHeadChild.k!;
       if (oldHeadKey === newHeadKey) {
         patch$.call(oldHeadChild, newHeadChild);
         newChildren[newHead] = oldHeadChild;
@@ -68,8 +69,8 @@ export class FragmentBlock extends AbstractBlock {
         continue;
       }
 
-      const oldTailKey = oldTailChild.key!;
-      const newTailKey = newTailChild.key!;
+      const oldTailKey = oldTailChild.k!;
+      const newTailKey = newTailChild.k!;
       if (oldTailKey === newTailKey) {
         patch$.call(oldTailChild, newTailChild);
         newChildren[newTail] = oldTailChild;
@@ -82,7 +83,7 @@ export class FragmentBlock extends AbstractBlock {
         patch$.call(oldHeadChild, newTailChild);
         newChildren[newTail] = oldHeadChild;
         const nextChild = newChildren[newTail + 1];
-        move$.call(oldHeadChild, nextChild, nextChild?.el || null);
+        move$.call(oldHeadChild, nextChild, nextChild?.l || null);
         oldHeadChild = oldChildren[++oldHead];
         newTailChild = newChildren[--newTail]!;
         continue;
@@ -92,21 +93,21 @@ export class FragmentBlock extends AbstractBlock {
         patch$.call(oldTailChild, newHeadChild);
         newChildren[newHead] = oldTailChild;
         const nextChild = oldChildren[oldHead];
-        move$.call(oldTailChild, nextChild, nextChild?.el || null);
+        move$.call(oldTailChild, nextChild, nextChild?.l || null);
         oldTailChild = oldChildren[--oldTail];
         newHeadChild = newChildren[++newHead]!;
         continue;
       }
 
       if (!oldKeyMap) {
-        oldKeyMap = new Map<string, number>();
+        oldKeyMap = new Map$<string, number>();
         for (let i = oldHead; i <= oldTail; i++) {
-          mapSet$.call(oldKeyMap, oldChildren[i]!.key!, i);
+          MapSet$.call(oldKeyMap, oldChildren[i]!.k!, i);
         }
       }
-      const oldIndex = mapGet$.call(oldKeyMap, newHeadKey);
+      const oldIndex = oldKeyMap.get(newHeadKey);
       if (oldIndex === undefined) {
-        mount$.call(newHeadChild, parent, oldHeadChild.el || null);
+        mount$.call(newHeadChild, parent, oldHeadChild.l || null);
       } else {
         const oldChild = oldChildren[oldIndex]!;
         move$.call(oldChild, oldHeadChild, null);
@@ -121,7 +122,7 @@ export class FragmentBlock extends AbstractBlock {
       if (oldHead > oldTail) {
         const nextChild = newChildren[newTail + 1];
         for (let i = newHead; i <= newTail; i++) {
-          mount$.call(newChildren[i], parent, nextChild ? nextChild.el : null);
+          mount$.call(newChildren[i], parent, nextChild ? nextChild.l : null);
         }
       } else {
         for (let i = oldHead; i <= oldTail; ++i) {
@@ -129,40 +130,42 @@ export class FragmentBlock extends AbstractBlock {
         }
       }
     }
-    return this._parent;
-  }
-  mount(parent: HTMLElement, refNode: Node | null = null): HTMLElement {
-    if (this._parent) return this._parent;
-    for (let i = 0, j = this.children.length; i < j; ++i) {
-      const block = this.children[i]!;
-      mount$.call(block, parent, refNode);
-    }
-    this._parent = parent;
     return parent;
   }
-  remove() {
-    const parent = this.parent();
+  m(parent: HTMLElement, refNode: Node | null = null): HTMLElement {
+    if (this._t) return this._t;
+    for (let i = 0, j = this.b.length; i < j; ++i) {
+      const block = this.b[i]!;
+      mount$.call(block, parent, refNode);
+    }
+    this._t = parent;
+    return parent;
+  }
+  x() {
+    const parent = this.t();
     if (parent) {
       setTextContent$.call(parent, '');
     } else {
-      for (let i = 0, j = this.children.length; i < j; ++i) {
-        remove$.call(this.children[i]!);
+      for (let i = 0, j = this.b.length; i < j; ++i) {
+        remove$.call(this.b[i]!);
       }
     }
-    this.children = [];
+    this.b = [];
   }
-  shouldUpdate(): boolean {
+  u(): boolean {
     return true;
   }
-  toString() {
-    return this.children.map((block) => block.toString()).join('');
+  s() {
+    return this.b.map((block) => block.s()).join('');
   }
-  parent(): HTMLElement | null | undefined {
-    if (!this._parent) this._parent = this.children[0]!.parent();
-    return this._parent;
+  t(): HTMLElement | null | undefined {
+    if (!this._t) this._t = this.b[0]!.t();
+    return this._t;
   }
 }
 
-export const fragmentMount$ = FragmentBlock.prototype.mount;
-export const fragmentPatch$ = FragmentBlock.prototype.patch;
-export const fragmentRemove$ = FragmentBlock.prototype.remove;
+const fragment$ = FragmentBlock.prototype;
+
+export const fragmentMount$ = fragment$.m;
+export const fragmentPatch$ = fragment$.p;
+export const fragmentRemove$ = fragment$.x;

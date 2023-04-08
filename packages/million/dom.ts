@@ -3,15 +3,22 @@
 import {
   EVENTS_REGISTRY,
   IS_NON_DIMENSIONAL,
+  Map$,
   NON_PROPS,
+  Object$,
+  Set$,
   XLINK_NS,
   XML_NS,
 } from './constants';
+
+export const document$ = document;
+export const template$ = document$.createElement('template');
 
 // Caching prototypes for performance
 export const node$ = Node.prototype;
 export const element$ = Element.prototype;
 export const characterData$ = CharacterData.prototype;
+export const getOwnPropertyDescriptor$ = Object$.getOwnPropertyDescriptor;
 export const insertBefore$ = node$.insertBefore;
 export const cloneNode$ = node$.cloneNode;
 export const replaceChild$ = node$.replaceChild;
@@ -23,37 +30,28 @@ export const removeEventListener$ = node$.removeEventListener;
 export const removeAttribute$ = element$.removeAttribute;
 export const setAttribute$ = element$.setAttribute;
 export const setAttributeNS$ = element$.setAttributeNS;
-export const setTextContent$ = Object.getOwnPropertyDescriptor(
-  node$,
-  'textContent',
-)!.set!;
-export const innerHTML$ = Object.getOwnPropertyDescriptor(
-  element$,
-  'innerHTML',
-)!.set!;
-export const childNodes$ = Object.getOwnPropertyDescriptor(node$, 'childNodes')!
+export const setTextContent$ = getOwnPropertyDescriptor$(node$, 'textContent')!
+  .set!;
+export const innerHTML$ = getOwnPropertyDescriptor$(element$, 'innerHTML')!
+  .set!;
+export const childNodes$ = getOwnPropertyDescriptor$(node$, 'childNodes')!.get!;
+export const firstChild$ = getOwnPropertyDescriptor$(node$, 'firstChild')!.get!;
+export const nextSibling$ = getOwnPropertyDescriptor$(node$, 'nextSibling')!
   .get!;
-export const firstChild$ = Object.getOwnPropertyDescriptor(node$, 'firstChild')!
-  .get!;
-export const nextSibling$ = Object.getOwnPropertyDescriptor(
-  node$,
-  'nextSibling',
-)!.get!;
-export const characterDataSet$ = Object.getOwnPropertyDescriptor(
+export const characterDataSet$ = getOwnPropertyDescriptor$(
   characterData$,
   'data',
 )!.set!;
 
-export const map$ = Map.prototype;
-export const mapSet$ = map$.set;
-export const mapHas$ = map$.has;
-export const mapGet$ = map$.get;
+export const SetHas$ = Set$.prototype.has;
+export const SetAdd$ = Set$.prototype.add;
+export const SetDelete$ = Set$.prototype.delete;
 
-export const set$ = Set.prototype;
-export const setAdd$ = set$.add;
-export const setHas$ = set$.has;
+export const MapHas$ = Map$.prototype.has;
+export const MapGet$ = Map$.prototype.get;
+export const MapSet$ = Map$.prototype.set;
 
-document[EVENTS_REGISTRY] = new Set();
+document$[EVENTS_REGISTRY] = new Set$();
 
 let listenerPointer = 0;
 
@@ -63,18 +61,18 @@ export const createEventListener = (
   name: string,
   value?: EventListener,
 ) => {
-  const event = name.toLowerCase().slice(2);
+  const event = name.toLowerCase();
   const key = `$$${event}`;
-  if (!setHas$.call(document[EVENTS_REGISTRY], event)) {
+  if (!SetHas$.call(document$[EVENTS_REGISTRY], event)) {
     // createEventListener uses a synthetic event handler to capture events
     // https://betterprogramming.pub/whats-the-difference-between-synthetic-react-events-and-javascript-events-ba7dbc742294
-    addEventListener$.call(document, event, (nativeEventObject: Event) => {
+    addEventListener$.call(document$, event, (nativeEventObject: Event) => {
       let el = nativeEventObject.target as Node | null;
       // Bubble up the DOM tree to find all event listeners
       while (el) {
         const listeners = el[key] as Record<string, any> | undefined;
         if (listeners) {
-          const handlers = Object.values(listeners);
+          const handlers = Object$.values(listeners);
           let returnFalse = false;
           for (let i = 0, j = handlers.length; i < j; ++i) {
             if (handlers[i](nativeEventObject) === false) {
@@ -86,7 +84,7 @@ export const createEventListener = (
         el = el.parentNode;
       }
     });
-    document[EVENTS_REGISTRY].add(event);
+    SetAdd$.call(document$[EVENTS_REGISTRY], event);
   }
   const pointer = listenerPointer++;
   const patch = (newValue?: EventListener | null) => {
@@ -104,7 +102,7 @@ export const insertText = (
   value: any,
   index: number,
 ): Text => {
-  const node = document.createTextNode(value);
+  const node = document$.createTextNode(value);
   const childNodes = childNodes$.call(el);
   insertBefore$.call(el, node, childNodes[index]);
   return node;
@@ -158,7 +156,7 @@ export const setAttribute = (
     el[name] !== undefined &&
     el[name] !== null &&
     !(el instanceof SVGElement) &&
-    setHas$.call(NON_PROPS, name)
+    SetHas$.call(NON_PROPS, name)
   ) {
     try {
       el[name] = value;

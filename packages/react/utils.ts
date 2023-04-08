@@ -32,7 +32,7 @@ export const flatten = <T>(rawChildren: T): T[] => {
   if (rawChildren === undefined || rawChildren === null) return [];
   if (
     !Array.isArray(rawChildren) ||
-    (typeof rawChildren === 'object' && '__key' in rawChildren)
+    (typeof rawChildren === 'object' && '$' in rawChildren)
   ) {
     return [rawChildren];
   }

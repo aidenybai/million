@@ -1,5 +1,14 @@
-import { setHas$ } from './dom';
-import { X_CHAR, VOID_ELEMENTS } from './constants';
+import {
+  X_CHAR,
+  VOID_ELEMENTS,
+  EventFlag,
+  StyleAttributeFlag,
+  SvgAttributeFlag,
+  AttributeFlag,
+  ChildFlag,
+  BlockFlag,
+} from './constants';
+import { SetHas$ } from './dom';
 import { AbstractBlock } from './types';
 import type { Edit, VNode } from './types';
 
@@ -21,10 +30,9 @@ export const renderToTemplate = (
   let props = '';
   let children = '';
   const current: Edit = {
-    path, // The location of the edit in in the virtual node tree
-    edits: [], // Occur on mount + patch
-    inits: [], // Occur before mount
-    getRoot: undefined, // altenative to path
+    p: path, // The location of the edit in in the virtual node tree
+    e: [], // Occur on mount + patch
+    i: [], // Occur before mount
   };
 
   for (let name in vnode.props) {
@@ -36,57 +44,70 @@ export const renderToTemplate = (
     if (name === 'htmlFor') name = 'for';
 
     if (name.startsWith('on')) {
-      const isValueHole = '__key' in value;
+      const isValueHole = '$' in value;
       // Make edits monomorphic
-      current.edits.push([
-        /* type */ 'event',
-        /* name */ name,
-        /* value */ undefined,
-        /* hole */ isValueHole ? value.__key : undefined,
-        /* index */ undefined,
-        /* listener */ isValueHole ? value.__key : value,
-        /* patch */ undefined,
-        /* block */ undefined,
-      ]);
+      if (isValueHole) {
+        current.e.push({
+          /* type */ t: EventFlag,
+          /* name */ n: name.slice(2),
+          /* value */ v: null,
+          /* hole */ h: value.$,
+          /* index */ i: null,
+          /* listener */ l: null,
+          /* patch */ p: null,
+          /* block */ b: null,
+        });
+      } else {
+        current.i!.push({
+          /* type */ t: EventFlag,
+          /* name */ n: name.slice(2),
+          /* value */ v: null,
+          /* hole */ h: null,
+          /* index */ i: null,
+          /* listener */ l: value,
+          /* patch */ p: null,
+          /* block */ b: null,
+        });
+      }
 
       continue;
     }
 
     if (value) {
-      if (typeof value === 'object' && '__key' in value) {
+      if (typeof value === 'object' && '$' in value) {
         if (name === 'style') {
-          current.edits.push([
-            /* type */ 'style',
-            /* name */ name,
-            /* value */ undefined,
-            /* hole */ value.__key,
-            /* index */ undefined,
-            /* listener */ undefined,
-            /* patch */ undefined,
-            /* block */ undefined,
-          ]);
+          current.e.push({
+            /* type */ t: StyleAttributeFlag,
+            /* name */ n: name,
+            /* value */ v: null,
+            /* hole */ h: value.$,
+            /* index */ i: null,
+            /* listener */ l: null,
+            /* patch */ p: null,
+            /* block */ b: null,
+          });
         } else if (name.charCodeAt(0) === X_CHAR) {
-          current.edits.push([
-            /* type */ 'svg',
-            /* name */ name,
-            /* value */ undefined,
-            /* hole */ value.__key,
-            /* index */ undefined,
-            /* listener */ undefined,
-            /* patch */ undefined,
-            /* block */ undefined,
-          ]);
+          current.e.push({
+            /* type */ t: SvgAttributeFlag,
+            /* name */ n: name,
+            /* value */ v: null,
+            /* hole */ h: value.$,
+            /* index */ i: null,
+            /* listener */ l: null,
+            /* patch */ p: null,
+            /* block */ b: null,
+          });
         } else {
-          current.edits.push([
-            /* type */ 'attribute',
-            /* name */ name,
-            /* value */ undefined,
-            /* hole */ value.__key,
-            /* index */ undefined,
-            /* listener */ undefined,
-            /* patch */ undefined,
-            /* block */ undefined,
-          ]);
+          current.e.push({
+            /* type */ t: AttributeFlag,
+            /* name */ n: name,
+            /* value */ v: null,
+            /* hole */ h: value.$,
+            /* index */ i: null,
+            /* listener */ l: null,
+            /* patch */ p: null,
+            /* block */ b: null,
+          });
         }
 
         continue;
@@ -103,7 +124,7 @@ export const renderToTemplate = (
     }
   }
 
-  if (setHas$.call(VOID_ELEMENTS, vnode.type)) {
+  if (SetHas$.call(VOID_ELEMENTS, vnode.type)) {
     return `<${vnode.type}${props} />`;
   }
 
@@ -115,31 +136,31 @@ export const renderToTemplate = (
     const child = vnode.props.children?.[i];
     if (child === null || child === undefined || child === false) continue;
 
-    if (typeof child === 'object' && '__key' in child) {
-      current.edits.push([
-        /* type */ 'child',
-        /* name */ undefined,
-        /* value */ undefined,
-        /* hole */ child.__key,
+    if (typeof child === 'object' && '$' in child) {
+      current.e.push({
+        /* type */ t: ChildFlag,
+        /* name */ n: null,
+        /* value */ v: null,
+        /* hole */ h: child.$,
         /* index */ i,
-        /* listener */ undefined,
-        /* patch */ undefined,
-        /* block */ undefined,
-      ]);
+        /* listener */ l: null,
+        /* patch */ p: null,
+        /* block */ b: null,
+      });
       continue;
     }
 
     if (child instanceof AbstractBlock) {
-      current.edits.push([
-        /* type */ 'block',
-        /* name */ undefined,
-        /* value */ undefined,
-        /* hole */ undefined,
+      current.i!.push({
+        /* type */ t: BlockFlag,
+        /* name */ n: null,
+        /* value */ v: null,
+        /* hole */ h: null,
         /* index */ i,
-        /* listener */ undefined,
-        /* patch */ undefined,
-        /* block */ child,
-      ]);
+        /* listener */ l: null,
+        /* patch */ p: null,
+        /* block */ b: child,
+      });
 
       continue;
     }
@@ -154,9 +175,15 @@ export const renderToTemplate = (
           ? String(child)
           : child;
       if (canMergeString) {
-        current.inits.push({
-          index: i,
-          value,
+        current.i!.push({
+          /* type */ t: ChildFlag,
+          /* name */ n: null,
+          /* value */ v: value,
+          /* hole */ h: null,
+          /* index */ i,
+          /* listener */ l: null,
+          /* patch */ p: null,
+          /* block */ b: null,
         });
         continue;
       }
@@ -170,7 +197,7 @@ export const renderToTemplate = (
     children += renderToTemplate(child, edits, [...path, k++]);
   }
 
-  if (current.inits.length || current.edits.length) {
+  if (current.i!.length || current.e.length) {
     edits.push(current);
   }
 

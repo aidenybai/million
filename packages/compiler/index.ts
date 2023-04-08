@@ -25,7 +25,7 @@ export const unplugin = createUnplugin((options?: UserOptions) => {
       }
 
       const result = await transformAsync(code, { plugins });
-      return result?.code;
+      return result?.code ?? code;
     },
   };
 });
