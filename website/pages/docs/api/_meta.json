@@ -1,9 +1,0 @@
-{
-  "block": "block()",
-  "mount": "mount()",
-  "patch": "patch()",
-  "fragment": "fragment()",
-  "render-to-template": "renderToTemplate()",
-  "string-to-dom": "stringToDOM()",
-  "compiler": "Optimizing compiler"
-}

@@ -21,12 +21,12 @@ ChartJS.register(
 );
 
 const data = [
-  { framework: 'JavaScript', val: 1 },
-  { framework: 'Million.js', val: 0.95 },
-  { framework: 'Solid', val: 0.93 },
-  { framework: 'Inferno', val: 0.93 },
-  { framework: 'Preact', val: 0.64 },
-  { framework: 'React', val: 0.27 },
+  { framework: 'JavaScript', val: 0.99 },
+  { framework: 'Million.js', val: 0.93 },
+  { framework: 'Inferno', val: 0.91 },
+  { framework: 'Solid', val: 0.9 },
+  { framework: 'Preact', val: 0.6 },
+  { framework: 'React', val: 0.29 },
 ];
 const options = {
   plugins: {
