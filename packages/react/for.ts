@@ -1,11 +1,11 @@
-import { createElement, memo, useEffect, useRef } from 'react';
+import { createElement, memo, useEffect, useRef } from 'react/index';
 import {
   fragmentMount$,
   fragmentPatch$,
   fragmentRemove$,
 } from '../million/fragment';
 import { fragment } from '../million';
-import type { FunctionComponent, ReactNode } from 'react';
+import type { FunctionComponent, ReactNode } from 'react/index';
 
 const createChildren = (each: any[], getComponent: any) => {
   const children = Array(each.length);

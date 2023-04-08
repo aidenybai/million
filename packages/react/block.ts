@@ -5,7 +5,7 @@ import {
   useEffect,
   useMemo,
   useRef,
-} from 'react';
+} from 'react/index';
 import {
   block as createBlock,
   mount$,
@@ -17,7 +17,7 @@ import type {
   FunctionComponentElement,
   ReactNode,
   FunctionComponent,
-} from 'react';
+} from 'react/index';
 import type { Props } from '../million';
 
 const IS_SSR_ENVIRONMENT = typeof window === 'undefined';
