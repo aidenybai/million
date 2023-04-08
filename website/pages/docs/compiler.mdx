@@ -1,0 +1,69 @@
+---
+title: 'Optimizing Compiler'
+description: 'Million.js has an optimizing compiler that can be used to optimize block initialization.'
+---
+
+import { Callout } from 'nextra-theme-docs';
+
+# Optimizing Compiler
+
+<Callout>
+  This is an experimental feature. It is not recommended to use this in
+  production.
+</Callout>
+
+Million.js has an optimizing compiler that can be used to optimize block initialization. It current supports [Vite](https://vitejs.dev), [Webpack](https://webpack.js.org), [Rollup](https://rollupjs.org), [RSPack](https://www.rspack.dev/), and [ESBuild](https://esbuild.github.io/) through [`unplugin`](https://github.com/unjs/unplugin).
+
+## Vite
+
+```js filename="vite.config.js"
+import million from 'million/compiler';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  plugins: [million.vite()],
+});
+```
+
+## Webpack
+
+```js filename="webpack.config.js"
+import million from 'million/compiler';
+
+export default {
+  plugins: [million.webpack()],
+};
+```
+
+## Rollup
+
+```js filename="rollup.config.js"
+import million from 'million/compiler';
+
+export default {
+  plugins: [million.rollup()],
+};
+```
+
+## RSPack
+
+```js filename="rspack.config.js"
+// @ts-check
+const million = require('million/compiler');
+
+/** @type {import('@rspack/cli').Configuration} */
+module.exports = {
+  plugins: [million.rspack()],
+};
+```
+
+## ESBuild
+
+```js filename="esbuild.config.js"
+import million from 'million/compiler';
+import { build } from 'esbuild';
+
+build({
+  plugins: [million.esbuild()],
+});
+```

@@ -3,12 +3,11 @@ title: 'Quickstart'
 description: 'Get started with Million.js'
 ---
 
-import { Callout, Tabs, Tab, Steps, Cards, Card } from 'nextra-theme-docs';
+import { Callout, Tabs, Tab, Cards, Card } from 'nextra-theme-docs';
 
 # Quickstart
 
-<Steps>
-  ### Install Million.js
+## Install Million.js
 
 Inside your project directory, run the following command:
 
@@ -35,42 +34,89 @@ Inside your project directory, run the following command:
   </Tab>
 </Tabs>
 
-### Integrate into your project
+## Integrate with `block(){:jsx}`
 
-Here's an example of how to use `block(){:jsx}`, which creates a reusable component, and `<Block />{:jsx}`, which renders a callback returning JSX.
+Million.js introduces the concept of a "Block" component. Blocks are a way for components to be rendered using the Million.js virtual DOM.
 
-{/* prettier-ignore */}
-```jsx copy filename="App.js" {2,11,16}
+## `block(){:jsx}`
+
+**Syntax:** `block((props) => vnode){:jsx}`\
+**Example:** `block((props) => <div>{props.foo}</div>){:jsx}`
+
+`block(){:jsx}` must consume a stateless component with props, and returns a Block component.
+
+<Callout>
+  `props` access is limited to top-level access only. No hooks, no interpolating
+  props, etc.
+</Callout>
+
+```jsx {2, 8}
 import { createRoot } from 'react-dom/client';
-import { block, Block } from 'million/react';
+import { block } from 'million/react';
 
-function Hello({ name }) {
-  return <p>Hey there {name}</p>;
+function Component(props) {
+  return <div>Hello {props.text}</div>;
 }
 
-// You can create a block either by:
+const ComponentBlock = block(Component);
 
-// 1. Creating a reusable block
-const HelloBlock = block(Hello);
+createRoot(document.getElementById('root')).render(
+  <ComponentBlock text="world" />,
+);
+```
+
+Here's some thing's that are **not allowed:**
+
+```jsx
+import { createRoot } from 'react-dom/client';
+import { block } from 'million/react';
+
+function IllegalComponent(props) {
+  const [count, setCount] = useState(0); // ❌ Don't use hooks
+  const bad = props.text + " don't do this"; // ❌ don't interpolate props
+
+  return <div>Hello {bad}</div>;
+}
+
+const IllegalComponentBlock = block(IllegalComponent);
+
+createRoot(document.getElementById('root')).render(
+  // ❌ don't pass nonprimitives
+  <IllegalComponentBlock text={{ object: 'X' }} />,
+);
+```
+
+# `<For />{:jsx}`
+
+**Syntax:** `<For each={array}>{(item, index) => Block}</For>{:jsx}`\
+**Example:** `<For each={[1, 2, 3]}>{(item) => myBlock({ item })}</For>{:jsx}`
+
+The `<For />{:jsx}` component is used to render a list of blocks. It takes an array as the `each` prop and a function as its children. The function is called for each item in the array and is passed the item and its index as arguments.
+
+It's the best way to loop over an array. As the array changes, `<For />{:jsx}` updates or moves items in the DOM rather than recreating them. Let's look at an example:
+
+```jsx {8, 18}
+import { createRoot } from 'react-dom/client';
+import { block, For } from 'million/react';
+
+function Display() {
+  return <div>{this.props.item}</div>;
+}
+
+const DisplayBlock = block(Display);
 
 function App() {
-  return <>
-    {/* 2. Rendering a block inside the JSX */}
-    <Block name="Million">{Hello}</Block>
+  const [items, setItems] = useState([1, 2, 3]);
 
-    <HelloBlock name="Million" />
-  </>;
+  return (
+    <div>
+      <button onClick={() => setItems([...items, items.length + 1])}>
+        Add item
+      </button>
+      <For each={items}>{(item) => <DisplayBlock item={item} />}</For>
+    </div>
+  );
 }
 
 createRoot(document.getElementById('root')).render(<App />);
 ```
-
-### Profit. 🎉
-
-<Cards num={3}>
-  <Card arrow title="Integrate with React" href="/docs/react/block"></Card>
-  <Card arrow title="Integrate with Next.js" href="/docs/react/next"></Card>
-  <Card arrow title="Use the virtual DOM" href="/docs/api/block"></Card>
-</Cards>
-
-</Steps>
