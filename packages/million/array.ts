@@ -4,11 +4,11 @@ import { AbstractBlock } from './types';
 import { mount$, patch$, move$, remove$ } from './block';
 import { Map$ } from './constants';
 
-export const fragment = (children: AbstractBlock[]) => {
-  return new FragmentBlock(children);
+export const mapArray = (children: AbstractBlock[]) => {
+  return new ArrayBlock(children);
 };
 
-export class FragmentBlock extends AbstractBlock {
+export class ArrayBlock extends AbstractBlock {
   b: AbstractBlock[];
   constructor(children: AbstractBlock[]) {
     super();
@@ -17,7 +17,7 @@ export class FragmentBlock extends AbstractBlock {
   v() {
     /**/
   }
-  p(fragment: FragmentBlock) {
+  p(fragment: ArrayBlock) {
     const oldChildren = this.b;
     const newChildren = fragment.b;
     const oldChildrenLength = oldChildren.length;
@@ -29,11 +29,11 @@ export class FragmentBlock extends AbstractBlock {
     this.b = newChildren;
 
     if (newChildrenLength === 0) {
-      fragmentRemove$.call(this);
+      arrayRemove$.call(this);
       return parent;
     }
     if (oldChildrenLength === 0) {
-      fragmentMount$.call(fragment, parent);
+      arrayMount$.call(fragment, parent);
       return parent;
     }
 
@@ -164,8 +164,8 @@ export class FragmentBlock extends AbstractBlock {
   }
 }
 
-const fragment$ = FragmentBlock.prototype;
+const array$ = ArrayBlock.prototype;
 
-export const fragmentMount$ = fragment$.m;
-export const fragmentPatch$ = fragment$.p;
-export const fragmentRemove$ = fragment$.x;
+export const arrayMount$ = array$.m;
+export const arrayPatch$ = array$.p;
+export const arrayRemove$ = array$.x;
