@@ -48,6 +48,7 @@
       "require": "./dist/compiler.cjs"
     }
   },
+  "packageManager": "pnpm@8.1.1",
   "sideEffects": false,
   "keywords": [
     "million",
