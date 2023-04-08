@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { ReactNode } from 'react/index';
 import type { VNode } from '../million';
 
 export const unwrap = (vnode?: ReactNode): VNode => {
