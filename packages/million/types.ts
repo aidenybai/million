@@ -34,7 +34,7 @@ export abstract class AbstractBlock {
   /* _parent */ _t?: HTMLElement | null;
   /* props */ d?: Props | null;
   /* key */ k?: string;
-  /* cache */ c?: Map<number, HTMLElement>;
+  /* cache */ c?: HTMLElement[];
   /* patch */ abstract p(block: AbstractBlock): HTMLElement;
   /* mount */ abstract m(
     parent?: HTMLElement,

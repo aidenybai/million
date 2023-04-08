@@ -15,21 +15,18 @@ import {
   firstChild$,
   nextSibling$,
   template$,
-  MapHas$,
   MapGet$,
-  MapSet$,
 } from './dom';
 import { renderToTemplate } from './template';
 import { AbstractBlock } from './types';
-import { fragmentMount$, fragmentPatch$ } from './fragment';
+import { arrayMount$, arrayPatch$ } from './array';
 import {
   AttributeFlag,
   ChildFlag,
   EventFlag,
-  Map$,
   StyleAttributeFlag,
 } from './constants';
-import type { FragmentBlock } from './fragment';
+import type { ArrayBlock } from './array';
 import type { EditChild, Props, VElement, Hole, VNode, Edit } from './types';
 
 const HOLE_PROXY = new Proxy(
@@ -77,7 +74,7 @@ export const mount = (
   parent?: HTMLElement,
 ): HTMLElement => {
   if ('b' in block && parent) {
-    return fragmentMount$.call(block, parent);
+    return arrayMount$.call(block, parent);
   }
   return mount$.call(block, parent);
 };
@@ -87,7 +84,7 @@ export const patch = (
   newBlock: AbstractBlock,
 ): HTMLElement => {
   if ('b' in oldBlock || 'b' in newBlock) {
-    fragmentPatch$.call(oldBlock, newBlock as FragmentBlock);
+    arrayPatch$.call(oldBlock, newBlock as ArrayBlock);
   }
 
   if (!oldBlock.l) mount$.call(oldBlock);
@@ -103,8 +100,6 @@ export const patch = (
 export class Block extends AbstractBlock {
   r: HTMLElement;
   e: Edit[];
-  // Cache for getCurrentElement()
-  c = new Map$<number, HTMLElement>();
 
   constructor(
     root: HTMLElement,
@@ -119,6 +114,7 @@ export class Block extends AbstractBlock {
     this.d = props;
     this.e = edits;
     this.k = key;
+    this.c = Array(edits.length);
     if (shouldUpdate) this.u = shouldUpdate;
     if (getElements) this.g = getElements;
   }
@@ -127,15 +123,12 @@ export class Block extends AbstractBlock {
     // cloneNode(true) uses less memory than recursively creating new nodes
     const root = cloneNode$.call(this.r, true) as HTMLElement;
     const elements = this.g?.(root);
+    if (elements) this.c = elements;
 
     for (let i = 0, j = this.e.length; i < j; ++i) {
       const current = this.e[i]!;
-      const el = elements?.[i]
-        ? // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-          this.c.set(i, elements[i]!) && elements[i]!
-        : current.p
-        ? getCurrentElement(current.p, root, this.c, i)
-        : root;
+      const el =
+        elements?.[i] ?? getCurrentElement(current.p!, root, this.c, i);
       for (let k = 0, l = current.e.length; k < l; ++k) {
         const edit = current.e[k]!;
         const value = this.d![edit.h];
@@ -201,7 +194,8 @@ export class Block extends AbstractBlock {
 
     for (let i = 0, j = this.e.length; i < j; ++i) {
       const current = this.e[i]!;
-      let el: HTMLElement | undefined;
+      const el: HTMLElement =
+        this.c![i] ?? getCurrentElement(current.p!, root, this.c, i);
       for (let k = 0, l = current.e.length; k < l; ++k) {
         const edit = current.e[k]!;
         const oldValue = props[edit.h];
@@ -212,11 +206,6 @@ export class Block extends AbstractBlock {
         if (edit.t & EventFlag) {
           edit.p!(newValue);
           continue;
-        }
-        if (!el) {
-          el = current.p
-            ? getCurrentElement(current.p, root, this.c, i)
-            : this.c.get(i)!;
         }
         if (edit.t & ChildFlag) {
           if (oldValue instanceof AbstractBlock) {
@@ -270,12 +259,12 @@ export class Block extends AbstractBlock {
 const getCurrentElement = (
   path: number[],
   root: HTMLElement,
-  cache?: Map<number, HTMLElement>,
+  cache?: HTMLElement[],
   key?: number,
 ): HTMLElement => {
   const pathLength = path.length;
   if (!pathLength) return root;
-  if (cache && key !== undefined && MapHas$.call(cache, key)) {
+  if (cache && key !== undefined && cache[key]) {
     return MapGet$.call(cache, key)!;
   }
   // path is an array of indices to traverse the DOM tree
@@ -291,7 +280,7 @@ const getCurrentElement = (
       root = nextSibling$.call(root) as HTMLElement;
     }
   }
-  if (cache && key !== undefined) MapSet$.call(cache, key, root);
+  if (cache && key !== undefined) cache[key] = root;
   return root;
 };
 
