@@ -21,7 +21,10 @@
     "url": "git+https://github.com/aidenybai/million.git"
   },
   "files": [
-    "dist/**/*"
+    "dist/**/*",
+    "react.d.ts",
+    "jsx-runtime.d.ts",
+    "compiler.d.ts"
   ],
   "exports": {
     ".": {
