@@ -2,6 +2,7 @@ name: Publish Package to npmjs
 on:
   release:
     types: [published]
+  workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,6 +20,10 @@ jobs:
       - run: pnpm test
       - run: pnpm lint
       - run: pnpm build
+<<<<<<< HEAD
+=======
+      - run: pnpm publint
+>>>>>>> 5fc968c37fc8968863670b091f81823e15720e5f
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
