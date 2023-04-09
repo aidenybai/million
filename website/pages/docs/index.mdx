@@ -5,43 +5,68 @@ title: 'What is Million.js?'
 import { Callout } from 'nextra-theme-docs';
 import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
+
 export const Demo = dynamic(() =>
   import('../../components/demo').then((mod) => mod.Demo),
 );
 
 # What is Million.js?
 
-Million is an extremely fast and lightweight (`<4kb`) virtual DOM that makes [React components](https://reactjs.org) up to [_**65% faster**_](https://krausest.github.io/js-framework-benchmark/current.html).
+Million is an extremely fast and lightweight (`<4kb`) virtual DOM that makes [React components](https://reactjs.org) up to [_**70% faster**_](https://krausest.github.io/js-framework-benchmark/current.html).
 
 > Oh man... Another [`/virtual dom|javascript/gi{:js}`](https://regexr.com/6mr5f) framework? I'm fine with [React](https://reactjs.org) already, why do I need this?
 
-Million makes creating user interfaces as easy (It's just [React](https://reactjs.org)!), but with faster rendering and loading speeds. By using a fine-tuned, optimized virtual DOM, Million.js reduces the overhead of the React Reconciler.
-
-Furthermore, while alternative libraries like [Preact](https://preactjs.com/) reduce bundle sizes via efficient code design, Million.js can be used inside [React](https://reactjs.org) and is much faster than Preact.
+Million makes creating web apps just as easy (It's just wrapping a [React](https://reactjs.org) component!), but with faster rendering and loading speeds. By using a fine-tuned, optimized virtual DOM, Million.js reduces the overhead of React.
 
 <Callout>
-  Imagine [React](https://reactjs.org/) at the speed of raw JavaScript.
+  Imagine [React](https://reactjs.org/) components running at the speed of raw
+  JavaScript.
 </Callout>
 
 ## React vs. Million.js
 
 The following example is a simple counter app that uses React and Million.js. The code is identical, but the performance is different.
 
+Alternatively, view on another tab: [demo.millionjs.org](https://demo.millionjs.org)
+
 <br />
 
 <Demo />
 
-Alternatively, view on another tab: [demo.millionjs.org](https://demo.millionjs.org)
+## How does it work?
 
-## What is a virtual DOM?
+Million.js at its lowest level is a virtual DOM.
 
 A virtual DOM a concept that allows you to create user interfaces declaratively, without having to directly manipulate the DOM. Instead, you create a virtual representation of the DOM, and the virtual DOM library will take care of updating the actual DOM for you.
 
 The virtual DOM is used by many popular libraries, including [React](https://reactjs.org), [Preact](https://preactjs.com/), and [Vue](https://vuejs.org). However, it suffers from [performance overhead](https://svelte.dev/blog/virtual-dom-is-pure-overhead), often making it impractical for highly interactive runtime applications.
 
-Million.js is a underlying runtime for virtual DOM based frameworks. The long-term goal is to serve as a faithful partner to existing frameworks, allowing them to be faster and more lightweight without migrating your entire project to a new framework.
+Below you can see here the "diff" algorithm needs to check against every node in the tree in order to make one simple change.
 
-You can track our progress through our [Roadmap](https://github.com/users/aidenybai/projects/5/views/1?layout=roadmap).
+<div className="flex justify-center my-3">
+  <Image
+    src="/vdom-diff.svg"
+    alt="Hello"
+    width={700}
+    height={500}
+    className="rounded-lg shadow"
+  />
+</div>
+
+Comparatively, Million.js uses a "block" virtual DOM. It achieves this by statically analyzing JSX and creating a "mapping" between the props and the DOM. This allows Million.js to skip the diffing step and directly update the DOM after dirty checking the props.
+
+<div className="flex justify-center my-3">
+  <Image
+    src="/block-diff.svg"
+    alt="Hello"
+    width={700}
+    height={500}
+    className="rounded-lg shadow"
+  />
+</div>
+
+By keeping the update step minimal with a small block tree and direct mappings to the DOM, Million.js can achieve fast benchmarks on the [JS Framework Benchmark](https://krausest.github.io/js-framework-benchmark/current.html). The long-term goal is to serve as a faithful partner to existing frameworks (_like React_), allowing them to be faster and more lightweight without migrating your entire project to a new framework.
 
 ## Acknowledgements
 

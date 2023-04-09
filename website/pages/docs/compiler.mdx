@@ -3,67 +3,69 @@ title: 'Optimizing Compiler'
 description: 'Million.js has an optimizing compiler that can be used to optimize block initialization.'
 ---
 
-import { Callout } from 'nextra-theme-docs';
+import { Callout, Tabs, Tab } from 'nextra-theme-docs';
 
 # Optimizing Compiler
 
+> "Compilers \[...\] are like 95% about convenience features, actually, and 5% about performance" [- Fabio Spampinato (author of Voby)](https://dev.to/fabiospampinato/voby-simplifications-over-solid-no-babel-no-compiler-5epg)
+
+Million.js has an optimizing compiler that can be used to optimize block initialization. In accordance with Fabio's quote, it also is planned to support other features like React Hooks, non-primitives, and auto-optimization of components in Next.js.
+
 <Callout>
   This is an experimental feature. It is not recommended to use this in
-  production.
+  production. Furthermore, it is currently intended to be used with the internal API.
 </Callout>
 
-Million.js has an optimizing compiler that can be used to optimize block initialization. It current supports [Vite](https://vitejs.dev), [Webpack](https://webpack.js.org), [Rollup](https://rollupjs.org), [RSPack](https://www.rspack.dev/), and [ESBuild](https://esbuild.github.io/) through [`unplugin`](https://github.com/unjs/unplugin).
+It current supports [Vite](https://vitejs.dev), [Webpack](https://webpack.js.org), [Rollup](https://rollupjs.org), [RSPack](https://www.rspack.dev/), and [ESBuild](https://esbuild.github.io/) through [`unplugin`](https://github.com/unjs/unplugin).
 
-## Vite
+<Tabs items={['vite', 'webpack', 'rollup', 'rspack', 'esbuild']} storageKey="selected-pkg-manager">
+  <Tab>
+  ```js filename="vite.config.js"
+  import million from 'million/compiler';
+  import { defineConfig } from 'vite';
 
-```js filename="vite.config.js"
-import million from 'million/compiler';
-import { defineConfig } from 'vite';
+  export default defineConfig({
+    plugins: [million.vite()],
+  });
+  ```
+  </Tab>
+  <Tab>
+  ```js filename="webpack.config.js"
+  import million from 'million/compiler';
 
-export default defineConfig({
-  plugins: [million.vite()],
-});
-```
+  export default {
+    plugins: [million.webpack()],
+  };
+  ```
+  </Tab>
+  <Tab>
+  ```js filename="rollup.config.js"
+  import million from 'million/compiler';
 
-## Webpack
+  export default {
+    plugins: [million.rollup()],
+  };
+  ```
+  </Tab>
+  <Tab>
+  ```js filename="rspack.config.js"
+  // @ts-check
+  const million = require('million/compiler');
 
-```js filename="webpack.config.js"
-import million from 'million/compiler';
+  /** @type {import('@rspack/cli').Configuration} */
+  module.exports = {
+    plugins: [million.rspack()],
+  };
+  ```
+  </Tab>
+  <Tab>
+  ```js filename="esbuild.config.js"
+  import million from 'million/compiler';
+  import { build } from 'esbuild';
 
-export default {
-  plugins: [million.webpack()],
-};
-```
-
-## Rollup
-
-```js filename="rollup.config.js"
-import million from 'million/compiler';
-
-export default {
-  plugins: [million.rollup()],
-};
-```
-
-## RSPack
-
-```js filename="rspack.config.js"
-// @ts-check
-const million = require('million/compiler');
-
-/** @type {import('@rspack/cli').Configuration} */
-module.exports = {
-  plugins: [million.rspack()],
-};
-```
-
-## ESBuild
-
-```js filename="esbuild.config.js"
-import million from 'million/compiler';
-import { build } from 'esbuild';
-
-build({
-  plugins: [million.esbuild()],
-});
-```
+  build({
+    plugins: [million.esbuild()],
+  });
+  ```
+  </Tab>
+</Tabs>

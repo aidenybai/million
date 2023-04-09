@@ -9,7 +9,9 @@ import { Callout, Tabs, Tab, Cards, Card } from 'nextra-theme-docs';
 
 ## Install Million.js
 
-Inside your project directory, run the following command:
+Feel free to skip this step if you just want to [try it out on Stackblitz](https://stackblitz.com/edit/million-template?file=App.tsx).
+
+Otherwise, inside your project directory, run the following command:
 
 {' '}
 
@@ -34,9 +36,11 @@ Inside your project directory, run the following command:
   </Tab>
 </Tabs>
 
-## Integrate with `block(){:jsx}`
+## Learn Million.js
 
-Million.js introduces the concept of a "Block" component. Blocks are a way for components to be rendered using the Million.js virtual DOM.
+Million.js operates off of the concept of "blocks". Imagine blocks as special [Higher Order Components (HOCs)](https://legacy.reactjs.org/docs/higher-order-components.html) that you use in your React application, but are rendered using the Million.js virtual DOM.
+
+In order to create blocks from your components, all you'll need to is wrap your components in a `block(){:jsx}` function.
 
 ## `block(){:jsx}`
 
@@ -86,7 +90,12 @@ createRoot(document.getElementById('root')).render(
 );
 ```
 
-# `<For />{:jsx}`
+## Optimized Array Rendering
+
+Similar to how [React uses keys](https://react.dev/learn/rendering-lists#keeping-list-items-in-order-with-key
+) to optimize rendering of lists, Million.js uses keys and a special `<For />{:jsx}` component to optimize rendering of arrays.
+
+## `<For />{:jsx}`
 
 **Syntax:** `<For each={array}>{(item, index) => Block}</For>{:jsx}`\
 **Example:** `<For each={[1, 2, 3]}>{(item) => myBlock({ item })}</For>{:jsx}`
@@ -95,12 +104,12 @@ The `<For />{:jsx}` component is used to render a list of blocks. It takes an ar
 
 It's the best way to loop over an array. As the array changes, `<For />{:jsx}` updates or moves items in the DOM rather than recreating them. Let's look at an example:
 
-```jsx {8, 18}
+```jsx {8, 18-20}
 import { createRoot } from 'react-dom/client';
 import { block, For } from 'million/react';
 
-function Display() {
-  return <div>{this.props.item}</div>;
+function Display({ item }) {
+  return <div>{item}</div>;
 }
 
 const DisplayBlock = block(Display);
@@ -113,10 +122,16 @@ function App() {
       <button onClick={() => setItems([...items, items.length + 1])}>
         Add item
       </button>
-      <For each={items}>{(item) => <DisplayBlock item={item} />}</For>
+      <For each={items}>
+        {(item) => <DisplayBlock key={item} item={item} />}
+      </For>
     </div>
   );
 }
 
 createRoot(document.getElementById('root')).render(<App />);
 ```
+
+## You're ready to go!
+
+Yep, that's all there is to geting started with Million.js. You can now start building your own blocks and use them in your React application.

@@ -21,7 +21,7 @@ export function Home() {
               Up to{' '}
               <span className="gradient-text inline-block">
                 <span className="font-mono">
-                  <CountUp useEasing end={65} duration={5} />
+                  <CountUp useEasing end={70} duration={5} />
                 </span>
                 % faster*
               </span>
@@ -54,7 +54,7 @@ export function Home() {
                       setChecked(true);
 
                       void navigator.clipboard.writeText(
-                        `${command} i million`,
+                        `${command as string} i million`,
                       );
 
                       setTimeout(() => {
