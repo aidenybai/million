@@ -1,5 +1,4 @@
 **/*.js
 /*.ts
 dist/
-website/
 node_modules/
