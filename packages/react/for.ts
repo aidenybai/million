@@ -1,7 +1,7 @@
-import { createElement, memo, useEffect, useRef } from 'react';
+import { createElement, memo, useEffect, useRef } from 'react/index';
 import { arrayMount$, arrayPatch$, arrayRemove$ } from '../million/array';
 import { mapArray } from '../million';
-import type { FunctionComponent, ReactNode } from 'react';
+import type { FunctionComponent, ReactNode } from 'react/index';
 
 const createChildren = (each: any[], getComponent: any) => {
   const children = Array(each.length);
