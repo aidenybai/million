@@ -8,7 +8,7 @@ export function Home() {
   const [checked, setChecked] = useState<boolean>(false);
   const [count, setCount] = useState<number>(0);
   const pkgManagers = ['npm', 'pnpm', 'yarn'];
-  const command = pkgManagers[count % 3] as string;
+  const command = pkgManagers[count % 3];
   return (
     <>
       <div
