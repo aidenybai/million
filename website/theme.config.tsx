@@ -141,7 +141,7 @@ const config: DocsThemeConfig = {
         <meta name="twitter:site" content={`@${ogConfig.author.twitter}`} />
         <meta name="twitter:creator" content={`@${ogConfig.author.twitter}`} />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:image" content="/banner.png" />
+        <meta name="twitter:image" content="https://millionjs.org/banner.png" />
 
         <link rel="shortcut icon" href={favicon} type="image/svg+xml" />
         <link rel="apple-touch-icon" href={favicon} type="image/svg+xml" />
@@ -163,10 +163,7 @@ const config: DocsThemeConfig = {
       openGraph: {
         images: [
           {
-            url: new URL(
-              'https://millionjs.org/banner.png',
-              'https://millionjs.org',
-            ).toString(),
+            url: 'https://millionjs.org/banner.png',
             width: 1328,
             height: 345,
             alt: 'Million.js banner',
@@ -183,10 +180,10 @@ const config: DocsThemeConfig = {
     return { ...shared, titleTemplate: `%s | Million.js` };
   },
   banner: {
-    key: '2.0-release',
+    key: '2.0.0-release',
     text: (
       <a href="https://github.com/aidenybai/million">
-        ⭐ Million.js 2.0 is released. Leave a star →
+        ⭐ Million.js 2.0.0 is released. Leave a star →
       </a>
     ),
   },
