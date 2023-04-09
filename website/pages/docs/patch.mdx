@@ -23,14 +23,17 @@ import { block, mount, patch, fragment } from 'million';
 const display = block(({ text }) => {
   return <p>{text}</p>;
 });
+
+// we will patch against this block for updates
+const main = display({ text: 'Hello' });
+
+mount(main, document.getElementById('root'));
+
+patch(main, display({ text: 'World' }));
+
 const bigDisplay = block(({ text }) => {
   return <h1>{text}</h1>;
 });
 
-const main = display({ text: 'Hello' });
-
-mount(main, document.getElementById('root')); // optional
-
-patch(main, display({ text: 'World' }));
 patch(main, bigDisplay({ text: 'World' })); // inefficent, but works
 ```

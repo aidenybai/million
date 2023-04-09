@@ -14,7 +14,7 @@
     "lint:fix": "pnpm lint --fix",
     "test": "vitest run --coverage",
     "test:dev": "vitest watch",
-    "bump": "pnpm build && publint && bumpp && pnpm publish"
+    "bump": "pnpm build && pnpm test && pnpm lint && publint && bumpp"
   },
   "repository": {
     "type": "git",

@@ -1,10 +1,6 @@
 import { createElement, memo, useEffect, useRef } from 'react/index';
-import {
-  fragmentMount$,
-  fragmentPatch$,
-  fragmentRemove$,
-} from '../million/fragment';
-import { fragment } from '../million';
+import { arrayMount$, arrayPatch$, arrayRemove$ } from '../million/array';
+import { mapArray } from '../million';
 import type { FunctionComponent, ReactNode } from 'react/index';
 
 const createChildren = (each: any[], getComponent: any) => {
@@ -18,27 +14,27 @@ const createChildren = (each: any[], getComponent: any) => {
   return children;
 };
 
-const MillionFragment: FunctionComponent<{
+const MillionArray: FunctionComponent<{
   each: any[];
   children: (value: any, i: number) => ReactNode;
 }> = ({ each, children }) => {
   const ref = useRef<HTMLElement>(null);
-  const fragmentRef = useRef<ReturnType<typeof fragment> | null>(null);
+  const fragmentRef = useRef<ReturnType<typeof mapArray> | null>(null);
   if (fragmentRef.current) {
     const newChildren = createChildren(each, children);
-    fragmentPatch$.call(fragmentRef.current, fragment(newChildren));
+    arrayPatch$.call(fragmentRef.current, mapArray(newChildren));
   }
   useEffect(() => {
-    fragmentRef.current = fragment(createChildren(each, children));
-    fragmentMount$.call(fragmentRef.current, ref.current!);
+    fragmentRef.current = mapArray(createChildren(each, children));
+    arrayMount$.call(fragmentRef.current, ref.current!);
     return () => {
-      fragmentRemove$.call(fragmentRef.current!);
+      arrayRemove$.call(fragmentRef.current);
     };
   }, []);
 
   return createElement('million-fragment', { ref });
 };
 
-export const For = memo(MillionFragment, (oldProps, newProps) =>
+export const For = memo(MillionArray, (oldProps, newProps) =>
   Object.is(newProps.each, oldProps.each),
 );

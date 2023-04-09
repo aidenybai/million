@@ -3,12 +3,11 @@ import { useState } from 'react';
 export function Demo() {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <div className="w-full h-[60vh]">
+    <div className={`w-full ${isOpen ? 'h-[60vh]' : 'h-[30vh]'}`}>
       {isOpen ? (
-        <iframe
-          className="w-full h-full"
-          src="https://stackblitz.com/edit/react-1km67h?embed=1&file=src/index.js&view=preview&embed=1&hideExplorer=1&hidedevtools=1&devtoolsheight=0"
-        ></iframe>
+        <iframe className="w-full h-full" src="https://demo.millionjs.org/">
+          IFrame is not supported
+        </iframe>
       ) : (
         <div className="w-full h-full flex items-center justify-center border shadow border-[#e5e7eb] dark:border-[#262626] rounded-lg">
           <button

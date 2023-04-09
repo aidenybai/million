@@ -1,10 +1,20 @@
 {
   "index": "Introduction",
+  "-- Guide": {
+    "type": "separator",
+    "title": "Guide"
+  },
   "quickstart": "Quickstart",
+  "next": "Usage Inside Next.js",
+  "compiler": "Optimizing compiler",
   "-- API Reference": {
     "type": "separator",
     "title": "API Reference"
   },
-  "react": "React",
-  "api": "Virtual DOM"
+  "block": "block()",
+  "mount": "mount()",
+  "patch": "patch()",
+  "map-array": "mapArray()",
+  "render-to-template": "renderToTemplate()",
+  "string-to-dom": "stringToDOM()"
 }

@@ -16,12 +16,12 @@ export function Home() {
         className="flex w-full h-full md:h-[75vh] flex-row items-center justify-center px-[2rem] md:px-[2rem] xl:px-[7rem] pt-[5rem] pb-[5rem] md:pt-[6rem] md:pb-[8rem]"
       >
         <main className="!max-w-[1500px] mx-auto my-0 flex w-full flex-col items-center gap-20 md:max-w-screen-sm lg:max-w-[var(--max-width)] lg:flex-row lg:justify-between">
-          <div className="flex-1 lg:max-w-[700px] mx-auto">
+          <div className="flex-1 lg:max-w-[550px] mx-auto">
             <h1 className="mt-0 text-[26pt] font-extrabold leading-none dark:text-gray-50 md:text-[32pt] lg:text-[38pt] xl:text-[40pt]">
               Up to{' '}
               <span className="gradient-text inline-block">
                 <span className="font-mono">
-                  <CountUp useEasing end={70} duration={5} />
+                  <CountUp useEasing end={65} duration={5} />
                 </span>
                 % faster*
               </span>
@@ -30,9 +30,8 @@ export function Home() {
             </h1>
             <div className="h-8"></div>
             <p className="text-[1.3rem] leading-normal dark:text-gray-300">
-              Harness the speed of Million.js to build blazing fast components -
-              all using React. Million.js is a low level virtual DOM library
-              with optimization utilites to make rendering faster!
+              Wrap your React components with Million.js to make them faster
+              with one function.
             </p>
             <div className="rounded-[5px] mt-8 w-full">
               <div className="flex gap-3">
@@ -101,7 +100,8 @@ export function Home() {
               <div className="hidden text-small whitespace-nowrap pt-[3px] text-[0.9rem] text-gray-500 opacity-70 md:flex md:flex-row md:flex-wrap md:justify-between">
                 <p className="text-[0.9rem] text-gray-500 dark:text-gray-300">
                   <span className="font-bold">*</span>comparison between virtual
-                  DOM and relative frameworks. <br />{' '}
+                  DOM and relative frameworks. <br />
+                  Results may vary between runs.{' '}
                   <a
                     href="https://krausest.github.io/js-framework-benchmark/current.html"
                     className="underline"
