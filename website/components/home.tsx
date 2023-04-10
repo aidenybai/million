@@ -30,8 +30,7 @@ export function Home() {
             </h1>
             <div className="h-8"></div>
             <p className="text-[1.3rem] leading-normal dark:text-gray-300">
-              Wrap your React components with Million.js to make them faster
-              with one function.
+              Wrap your React components with one function to make them faster.
             </p>
             <div className="rounded-[5px] mt-8 w-full">
               <div className="flex gap-3">
@@ -99,8 +98,8 @@ export function Home() {
               </div>
               <div className="hidden text-small whitespace-nowrap pt-[3px] text-[0.9rem] text-gray-500 opacity-70 md:flex md:flex-row md:flex-wrap md:justify-between">
                 <p className="text-[0.9rem] text-gray-500 dark:text-gray-300">
-                  <span className="font-bold">*</span>comparison between virtual
-                  DOM and relative frameworks. <br />
+                  <span className="font-bold">*</span>comparison between Million.js virtual
+                  DOM and other JS Frameworks. <br />
                   Results may vary between runs.{' '}
                   <a
                     href="https://krausest.github.io/js-framework-benchmark/current.html"
