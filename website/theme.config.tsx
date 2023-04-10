@@ -103,7 +103,7 @@ const config: DocsThemeConfig = {
   chat: {
     link: 'https://discord.gg/X9yFbcV2rF',
   },
-  docsRepositoryBase: 'https://github.com/aidenybai/million/website',
+  docsRepositoryBase: 'https://github.com/aidenybai/million/tree/main/website/',
   footer: {
     text: (
       <p>
