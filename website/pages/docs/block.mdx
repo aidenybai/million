@@ -3,12 +3,21 @@ title: 'block()'
 description: 'The block() function instantiates a Block. It accepts a function with a props object parameter and returns a VNode.'
 ---
 
+import { Callout } from 'nextra-theme-docs';
+
+<Callout>
+  This function is part of the internal API. Only use if you know what you are
+  doing and are optimizing for performance.
+</Callout>
+
+<br />
+
 # `block(){:jsx}`
 
 **Syntax:** `block((props) => vnode){:jsx}`\
 **Example:** `block((props) => <div>{props.foo}</div>){:jsx}`
 
-The `block` function instantiates a `Block` (_a stateless "component"_). It accepts a function with a props object parameter and returns a `VNode`.
+The `block` function instantiates a `Block` (_a stateless "component"_). It accepts a function with a props object parameter that returns a `VNode`.
 
 ## Rules of usage
 
@@ -17,17 +26,18 @@ The `block` function instantiates a `Block` (_a stateless "component"_). It acce
 ```jsx
 someBlock({
   one: '1', // ✅
-  two: 1 + 1 // ✅
-  three: true // ✅
-  four: Date.now() // ✅
-  five: { imposter: true } // ❌
-  six: new Date() // ❌
+  two: 1 + 1, // ✅
+  three: true, // ✅
+  four: Date.now(), // ✅
+  five: anotherBlock({ crewmate: true }), // ✅
+  six: { imposter: true }, // ❌
+  seven: new Date(), // ❌
 });
 ```
 
 ##### Top level values of `props` may not be interpolated with other values.
 
-The props are filled with `Hole` values. These `Hole` values are replaced with the actual values when the `Block` is instantiated. The `Hole` values are immutable and cannot be interpolated with other values.
+The props are filled with `Hole` values. These `Hole` values are replaced with the actual values when the `block(){:jsx}` is called. The `Hole` values are immutable and cannot be derived with other values.
 
 ```jsx
 // Anatomy of a `Hole`
@@ -37,7 +47,7 @@ The props are filled with `Hole` values. These `Hole` values are replaced with t
 
 // Example:
 block((props) => {
-  console.log(props.foo); // { $: 'foo' }
+  console.log(props.foo); // { $: 'foo' } ✅
   console.log(props.foo + ' bar'); // { $: 'foo' } + ' bar' ❌
   return <div>{props.foo}</div>;
 });
@@ -53,7 +63,7 @@ block((props) => {
     {Date.now() /* ✅ */}
     <button
       onClick={() => {
-        console.log(props.world); /* ❌ */
+        console.log(props.world); /* ❌ (no holes inside listeners) */
       }}
     >
       {props.count + 1 /* ❌ */}

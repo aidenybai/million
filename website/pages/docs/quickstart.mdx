@@ -7,9 +7,12 @@ import { Callout, Tabs, Tab, Cards, Card } from 'nextra-theme-docs';
 
 # Quickstart
 
-## Install Million.js
+<Callout>
+  Want to just try it out? [Open the Million.js template on
+  Stackblitz](https://stackblitz.com/edit/million-template?file=App.tsx).
+</Callout>
 
-Feel free to skip this step if you just want to [try it out on Stackblitz](https://stackblitz.com/edit/million-template?file=App.tsx).
+## Install Million.js
 
 Otherwise, inside your project directory, run the following command:
 
@@ -47,11 +50,11 @@ In order to create blocks from your components, all you'll need to is wrap your 
 **Syntax:** `block((props) => vnode){:jsx}`\
 **Example:** `block((props) => <div>{props.foo}</div>){:jsx}`
 
-`block(){:jsx}` must consume a stateless component with props, and returns a Block component.
+`block(){:jsx}` must consume a stateless component with primitive props, and returns a Block component.
 
 <Callout>
-  `props` access is limited to top-level access only. No hooks, no interpolating
-  props, etc.
+  `props` access is limited to top-level access only. No hooks, no deriving
+  values, etc.
 </Callout>
 
 ```jsx {2, 8}
@@ -69,7 +72,7 @@ createRoot(document.getElementById('root')).render(
 );
 ```
 
-Here's some thing's that are **not allowed:**
+Here's some things that are **not allowed:**
 
 ```jsx
 import { createRoot } from 'react-dom/client';
@@ -77,32 +80,37 @@ import { block } from 'million/react';
 
 function IllegalComponent(props) {
   const [count, setCount] = useState(0); // ❌ Don't use hooks
-  const bad = props.text + " don't do this"; // ❌ don't interpolate props
+  const bad = props.text + " don't do this"; // ❌ don't derive values
 
-  return <div>Hello {bad}</div>;
+  return (
+    <div>
+      Hello {bad} {props.children}
+    </div>
+  );
 }
 
 const IllegalComponentBlock = block(IllegalComponent);
 
 createRoot(document.getElementById('root')).render(
   // ❌ don't pass nonprimitives
-  <IllegalComponentBlock text={{ object: 'X' }} />,
+  <IllegalComponentBlock text={{ object: 'X' }}>
+    <div>uh oh...</div>
+  </IllegalComponentBlock>,
 );
 ```
 
 ## Optimized Array Rendering
 
-Similar to how [React uses keys](https://react.dev/learn/rendering-lists#keeping-list-items-in-order-with-key
-) to optimize rendering of lists, Million.js uses keys and a special `<For />{:jsx}` component to optimize rendering of arrays.
+Similar to how [React uses keys](https://react.dev/learn/rendering-lists#keeping-list-items-in-order-with-key) to optimize rendering of lists, Million.js uses keys and a special `<For />{:jsx}` component to optimize rendering of arrays.
 
 ## `<For />{:jsx}`
 
 **Syntax:** `<For each={array}>{(item, index) => Block}</For>{:jsx}`\
-**Example:** `<For each={[1, 2, 3]}>{(item) => myBlock({ item })}</For>{:jsx}`
+**Example:** `<For each={[1, 2, 3]}>{(item, index) => myBlock({ item, index })}</For>{:jsx}`
 
 The `<For />{:jsx}` component is used to render a list of blocks. It takes an array as the `each` prop and a function as its children. The function is called for each item in the array and is passed the item and its index as arguments.
 
-It's the best way to loop over an array. As the array changes, `<For />{:jsx}` updates or moves items in the DOM rather than recreating them. Let's look at an example:
+It's the best way to loop over an array (uses [`mapArray(){:jsx}`](/map-array) under the hood). As the array changes, `<For />{:jsx}` updates or moves items in the DOM rather than recreating them. Let's look at an example:
 
 ```jsx {8, 18-20}
 import { createRoot } from 'react-dom/client';
@@ -132,6 +140,6 @@ function App() {
 createRoot(document.getElementById('root')).render(<App />);
 ```
 
-## You're ready to go!
+## You're ready to go! 🎉
 
 Yep, that's all there is to geting started with Million.js. You can now start building your own blocks and use them in your React application.

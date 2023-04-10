@@ -17,14 +17,14 @@ Million is an extremely fast and lightweight (`<4kb`) virtual DOM that makes [Re
 
 > Oh man... Another [`/virtual dom|javascript/gi{:js}`](https://regexr.com/6mr5f) framework? I'm fine with [React](https://reactjs.org) already, why do I need this?
 
-Million makes creating web apps just as easy (It's just wrapping a [React](https://reactjs.org) component!), but with faster rendering and loading speeds. By using a fine-tuned, optimized virtual DOM, Million.js reduces the overhead of React.
+Million works with React. Million makes creating web apps just as easy (It's just wrapping a [React](https://reactjs.org) component!), but with faster rendering and loading speeds. By using a fine-tuned, optimized virtual DOM, Million.js reduces the overhead of React.
 
 <Callout>
   Imagine [React](https://reactjs.org/) components running at the speed of raw
   JavaScript.
 </Callout>
 
-## React vs. Million.js
+## React Virtual DOM vs. Million.js
 
 The following example is a simple counter app that uses React and Million.js. The code is identical, but the performance is different.
 
@@ -36,11 +36,9 @@ Alternatively, view on another tab: [demo.millionjs.org](https://demo.millionjs.
 
 ## How does it work?
 
-Million.js at its lowest level is a virtual DOM.
+A virtual DOM one methodology to create user interfaces declaratively, while efficiently manipulating the DOM. Instead, you create a virtual representation of the DOM, and the virtual DOM library will take care of updating the actual DOM for you.
 
-A virtual DOM a concept that allows you to create user interfaces declaratively, without having to directly manipulate the DOM. Instead, you create a virtual representation of the DOM, and the virtual DOM library will take care of updating the actual DOM for you.
-
-The virtual DOM is used by many popular libraries, including [React](https://reactjs.org), [Preact](https://preactjs.com/), and [Vue](https://vuejs.org). However, it suffers from [performance overhead](https://svelte.dev/blog/virtual-dom-is-pure-overhead), often making it impractical for highly interactive runtime applications.
+The virtual DOM is used by many popular libraries, including [React](https://reactjs.org) and [Preact](https://preactjs.com/). However, it suffers from [performance overhead](https://svelte.dev/blog/virtual-dom-is-pure-overhead), making it less efficient.
 
 Below you can see here the "diff" algorithm needs to check against every node in the tree in order to make one simple change.
 
