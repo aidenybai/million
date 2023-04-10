@@ -6,7 +6,7 @@
   },
   "quickstart": "Quickstart",
   "next": "Usage Inside Next.js",
-  "compiler": "Optimizing compiler",
+  "compiler": "Experimental compiler",
   "-- API Reference": {
     "type": "separator",
     "title": "API Reference"
