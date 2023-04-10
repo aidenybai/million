@@ -30,7 +30,10 @@ export function Home() {
             </h1>
             <div className="h-8"></div>
             <p className="text-[1.3rem] leading-normal dark:text-gray-300">
-              The <span className="font-medium dark: dark:text-gray-100">virtual DOM replacement</span>{' '}
+              The{' '}
+              <span className="font-medium dark: dark:text-gray-100">
+                virtual DOM replacement
+              </span>{' '}
               you've been waiting for: Just wrap your React components with one
               function to make them faster.
             </p>
@@ -104,7 +107,7 @@ export function Home() {
                   Million.js virtual DOM and other JS Frameworks. <br />
                   Results may vary between runs.{' '}
                   <a
-                    href="https://krausest.github.io/js-framework-benchmark/current.html"
+                    href="https://krausest.github.io/js-framework-benchmark/2023/table_chrome_112.0.5615.49.html"
                     className="underline"
                     target="_blank"
                   >
@@ -135,12 +138,12 @@ export function Home() {
             <p className="text-xs text-gray-400">
               Based on JS Framework Benchmark data •{' '}
               <a
-                href="https://krausest.github.io/js-framework-benchmark/current.html"
+                href="https://krausest.github.io/js-framework-benchmark/2023/table_chrome_112.0.5615.49.html"
                 target="_blank"
                 rel="noreferrer"
                 className="text-[#b073d9] underline decoration-from-font [text-underline-position:from-font]"
               >
-                View the full benchmark
+                View the full benchmark (Chrome 102)
               </a>
             </p>
           </Tilt>
