@@ -11,6 +11,6 @@
     "target": "esnext",
     "noImplicitAny": false
   },
-  "include": ["./**/*.ts", "./**/*.tsx"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["./packages/**/*.ts", "./packages/**/*.tsx"],
+  "exclude": ["node_modules", "dist", "*.d.ts"]
 }
