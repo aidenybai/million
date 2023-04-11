@@ -20,7 +20,9 @@ export const react = (path: NodePath<t.CallExpression>) => {
 
     // Get the name of the component
     const componentId = path.node.arguments[0] as t.Identifier;
-    if (!t.isIdentifier(componentId)) return;
+    if (!t.isIdentifier(componentId)) {
+      throw new Error('Unsupported argument for block');
+    }
     const componentBinding = path.scope.getBinding(componentId.name);
     const component = componentBinding?.path.node;
 
@@ -62,7 +64,7 @@ const handleComponent = (
 
     // Replaces the return statement with a call to the new block() function
     componentFunction.body[bodyLength - 1] = t.returnStatement(
-      t.callExpression(blockVariable, [
+      t.callExpression(component.id, [
         t.objectExpression(
           // Creates an object that passes expression values down
           dynamics.map(({ id, value }) => t.objectProperty(id, value || id)),
