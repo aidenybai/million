@@ -9,7 +9,7 @@ export function Home() {
 
   const [checked, setChecked] = useState<boolean>(false);
   const [count, setCount] = useState<number>(0);
-  const [command, setCommand] = useState(installCommands[count]);
+  const [command, setCommand] = useState<string>(installCommands[count]);
 
   useEffect(() => {
     setCommand(installCommands[count % 3]);
