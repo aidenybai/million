@@ -118,6 +118,16 @@ const getDynamicsFromJSX = (
         attribute.value.expression = id;
       }
     }
+
+    if (t.isJSXSpreadAttribute(attribute)) {
+      const { argument } = attribute;
+      if (t.isIdentifier(argument)) {
+        createDynamic(argument, null);
+      } else if (t.isExpression(argument)) {
+        const id = createDynamic(null, argument);
+        attribute.argument = id;
+      }
+    }
   }
 
   for (let i = 0, j = jsx.children.length; i < j; i++) {
