@@ -5,7 +5,7 @@ import { chainOrLogic } from './utils';
 import type { IrEdit, IrEditBase, IrPrunedNode, IrTreeNode } from './types';
 import type { NodePath } from '@babel/core';
 
-export const optimizeInternal = (path: NodePath<t.CallExpression>) => {
+export const optimize = (path: NodePath<t.CallExpression>) => {
   // TODO: allow aliasing (block as newBlock)
   if (t.isIdentifier(path.node.callee, { name: 'block' })) {
     const blockFunction = path.scope.getBinding(path.node.callee.name);
@@ -15,7 +15,6 @@ export const optimizeInternal = (path: NodePath<t.CallExpression>) => {
     if (
       !t.isVariableDeclarator(path.parentPath.node) ||
       !t.isImportDeclaration(importSource) ||
-      // Currently uses includes. Fix this because million/react could be included
       !importSource.source.value.includes('million')
     ) {
       return;

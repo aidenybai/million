@@ -4,7 +4,7 @@ import babelPlugin from './babel';
 
 interface UserOptions {
   ignoreFiles?: string[];
-  react?: boolean;
+  mode: 'react' | 'optimize';
 }
 
 export const unplugin = createUnplugin((options?: UserOptions) => {
