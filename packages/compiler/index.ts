@@ -4,6 +4,7 @@ import babelPlugin from './babel';
 
 interface UserOptions {
   ignoreFiles?: string[];
+  react?: boolean;
 }
 
 export const unplugin = createUnplugin((options?: UserOptions) => {
@@ -18,7 +19,7 @@ export const unplugin = createUnplugin((options?: UserOptions) => {
         return code;
       }
 
-      const plugins = ['@babel/plugin-syntax-jsx', babelPlugin];
+      const plugins = ['@babel/plugin-syntax-jsx', [babelPlugin, options]];
 
       if (/\.[t]sx$/.test(id)) {
         plugins.unshift('@babel/plugin-syntax-typescript');

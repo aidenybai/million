@@ -5,7 +5,7 @@ import { chainOrLogic } from './utils';
 import type { IrEdit, IrEditBase, IrPrunedNode, IrTreeNode } from './types';
 import type { NodePath } from '@babel/core';
 
-export const visitCallExpression = (path: NodePath<t.CallExpression>) => {
+export const optimizeInternal = (path: NodePath<t.CallExpression>) => {
   // TODO: allow aliasing (block as newBlock)
   if (t.isIdentifier(path.node.callee, { name: 'block' })) {
     const blockFunction = path.scope.getBinding(path.node.callee.name);
