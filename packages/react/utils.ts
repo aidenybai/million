@@ -1,4 +1,6 @@
-import type { ReactNode } from 'react/index';
+// @ts-expect-error - override react.d.ts
+// prettier-ignore
+import type { ReactNode } from 'react';
 import type { VNode } from '../million';
 
 export const unwrap = (vnode?: ReactNode): VNode => {
@@ -11,7 +13,7 @@ export const unwrap = (vnode?: ReactNode): VNode => {
     return vnode as VNode;
   }
   if (typeof vnode.type === 'function') {
-    const type = vnode.type as any;
+    const type = vnode.type;
     return unwrap(type(vnode.props));
   }
 
