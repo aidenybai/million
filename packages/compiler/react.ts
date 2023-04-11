@@ -120,13 +120,7 @@ const getDynamicsFromJSX = (
     }
 
     if (t.isJSXSpreadAttribute(attribute)) {
-      const { argument } = attribute;
-      if (t.isIdentifier(argument)) {
-        createDynamic(argument, null);
-      } else if (t.isExpression(argument)) {
-        const id = createDynamic(null, argument);
-        attribute.argument = id;
-      }
+      throw new Error('Spread attributes are not supported. ');
     }
   }
 
@@ -137,6 +131,10 @@ const getDynamicsFromJSX = (
       const { expression } = child;
       if (t.isIdentifier(expression)) {
         createDynamic(expression, null);
+      } else if (t.isJSXElement(expression)) {
+        throw new Error(
+          'JSX elements cannot be used as expressions. Please wrap them in a block.',
+        );
       } else if (t.isExpression(expression)) {
         const id = createDynamic(null, expression);
         child.expression = id;
