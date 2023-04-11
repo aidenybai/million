@@ -9,23 +9,18 @@ import { Callout, Tabs, Tab } from 'nextra-theme-docs';
 
 > "Compilers \[...\] are like 95% about convenience features, actually, and 5% about performance \[for web environments\]" [- Fabio Spampinato (author of Voby)](https://dev.to/fabiospampinato/voby-simplifications-over-solid-no-babel-no-compiler-5epg)
 
-Million.js has an optimizing compiler that can be used to optimize block initialization. The compiler _is planned_ to support other features like React Hooks, non-primitives, and auto-optimization of components in Next.js.
-
-<Callout>
-  This is an experimental feature. It is not recommended to use this in
-  production. Furthermore, it is currently intended to be used with the internal API.
-</Callout>
+Million.js has an optimizing compiler that can be used to optimize block initialization in `optimize` mode. The compiler supports other features like React Hooks, non-primitives, and auto-optimization of components in `react` mode.
 
 It current supports [Vite](https://vitejs.dev), [Webpack](https://webpack.js.org), [Rollup](https://rollupjs.org), [RSPack](https://www.rspack.dev/), and [ESBuild](https://esbuild.github.io/) through [`unplugin`](https://github.com/unjs/unplugin).
 
-<Tabs items={['vite', 'webpack', 'rollup', 'rspack', 'esbuild']} storageKey="selected-pkg-manager">
+<Tabs items={['vite', 'webpack', 'rollup', 'rspack', 'esbuild']} storageKey="selected-bundler-compiler">
   <Tab>
   ```js filename="vite.config.js"
   import million from 'million/compiler';
   import { defineConfig } from 'vite';
 
   export default defineConfig({
-    plugins: [million.vite()],
+    plugins: [million.vite({ mode: 'optimize' | 'react', ignoreFiles: [] })],
   });
   ```
   </Tab>
@@ -34,7 +29,7 @@ It current supports [Vite](https://vitejs.dev), [Webpack](https://webpack.js.org
   import million from 'million/compiler';
 
   export default {
-    plugins: [million.webpack()],
+    plugins: [million.webpack({ mode: 'optimize' | 'react', ignoreFiles: [] })],
   };
   ```
   </Tab>
@@ -43,7 +38,7 @@ It current supports [Vite](https://vitejs.dev), [Webpack](https://webpack.js.org
   import million from 'million/compiler';
 
   export default {
-    plugins: [million.rollup()],
+    plugins: [million.rollup({ mode: 'optimize' | 'react', ignoreFiles: [] })],
   };
   ```
   </Tab>
@@ -54,7 +49,7 @@ It current supports [Vite](https://vitejs.dev), [Webpack](https://webpack.js.org
 
   /** @type {import('@rspack/cli').Configuration} */
   module.exports = {
-    plugins: [million.rspack()],
+    plugins: [million.rspack({ mode: 'optimize' | 'react', ignoreFiles: [] })],
   };
   ```
   </Tab>
@@ -64,7 +59,7 @@ It current supports [Vite](https://vitejs.dev), [Webpack](https://webpack.js.org
   import { build } from 'esbuild';
 
   build({
-    plugins: [million.esbuild()],
+    plugins: [million.esbuild({ mode: 'optimize' | 'react', ignoreFiles: [] })],
   });
   ```
   </Tab>
