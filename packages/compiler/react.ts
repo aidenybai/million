@@ -13,7 +13,7 @@ export const react = (path: NodePath<t.CallExpression>) => {
     if (
       !t.isVariableDeclarator(path.parentPath.node) ||
       !t.isImportDeclaration(importSource) ||
-      !importSource.source.value.includes('million/react')
+      !importSource.source.value.includes('million')
     ) {
       return;
     }

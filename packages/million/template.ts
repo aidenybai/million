@@ -125,6 +125,7 @@ export const renderToTemplate = (
   }
 
   if (SetHas$.call(VOID_ELEMENTS, vnode.type)) {
+    if (current.i!.length || current.e.length) edits.push(current);
     return `<${vnode.type}${props} />`;
   }
 
@@ -194,12 +195,10 @@ export const renderToTemplate = (
     }
 
     canMergeString = false;
-    children += renderToTemplate(child, edits, [...path, k++]);
+    children += renderToTemplate(child, edits, path.concat(k++));
   }
 
-  if (current.i!.length || current.e.length) {
-    edits.push(current);
-  }
+  if (current.i!.length || current.e.length) edits.push(current);
 
   return `<${vnode.type}${props}>${children}</${vnode.type}>`;
 };

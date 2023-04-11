@@ -15,7 +15,6 @@ import {
   firstChild$,
   nextSibling$,
   template$,
-  MapGet$,
 } from './dom';
 import { renderToTemplate } from './template';
 import { AbstractBlock } from './types';
@@ -265,7 +264,7 @@ const getCurrentElement = (
   const pathLength = path.length;
   if (!pathLength) return root;
   if (cache && key !== undefined && cache[key]) {
-    return MapGet$.call(cache, key)!;
+    return cache[key]!;
   }
   // path is an array of indices to traverse the DOM tree
   // For example, [0, 1, 2] becomes:
