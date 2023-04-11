@@ -21,6 +21,9 @@
         <td>
           <a href="https://discord.gg/X9yFbcV2rF">💬 Join our Discord</a>
         </td>
+        <td>
+          <a href="https://twitter.com/milliondotjs">🌐 Follow Us On Twitter</a>
+        </td>
       </tr>
     </tbody>
   </table>
