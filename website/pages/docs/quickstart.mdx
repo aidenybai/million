@@ -107,7 +107,7 @@ In order to create blocks from your components, all you'll need to is wrap your 
   Block components must be deterministic, meaning that they must always return the same JSX. However, they can use hooks, any props, and other React features, except passing in JSX as children.
 </Callout>
 
-```jsx {3, 13}
+```jsx {3, 18}
 import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { block } from 'million/react';
