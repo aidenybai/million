@@ -12,5 +12,5 @@
     "noImplicitAny": false
   },
   "include": ["./**/*.ts", "./**/*.tsx"],
-  "exclude": ["node_modules", "dist", "*.d.ts"]
+  "exclude": ["node_modules", "dist", "*.d.ts", "website"]
 }
