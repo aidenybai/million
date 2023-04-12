@@ -8,8 +8,8 @@ import {
   Title,
   Tooltip,
 } from 'chart.js';
-import { useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
+import { useDarkMode } from './useDarkMode';
 
 ChartJS.register(
   CategoryScale,
@@ -48,35 +48,17 @@ const options = {
 };
 
 export function Chart() {
-  const [darkMode, setDarkMode] = useState<boolean | null>(null);
-  useEffect(() => {
-    const updateColors = () => {
-      const isDarkMode = document.documentElement.classList.contains('dark');
-      if (isDarkMode) {
-        defaults.borderColor = '#545864';
-        defaults.color = '#bdbfc7';
-      } else {
-        defaults.borderColor = '#bdbfc7';
-        defaults.color = '#545864';
-      }
-      setDarkMode(isDarkMode);
-    };
-    updateColors();
+  const isDarkMode = useDarkMode();
 
-    const observer = new MutationObserver((mutations) => {
-      for (const mutation of mutations) {
-        if (mutation.attributeName === 'class') {
-          updateColors();
-        }
-      }
-    });
-    observer.observe(document.documentElement, { attributes: true });
-  }, []);
-  const color = darkMode ? '#54527b' : '#dcc9e8';
+  defaults.borderColor = isDarkMode ? '#545864' : '#bdbfc7';
+  defaults.color = isDarkMode ? '#bdbfc7' : '#545864';
+
+  const color = isDarkMode ? '#54527b' : '#dcc9e8';
   const backgroundColor = [color, '#b073d9', color, color];
+
   return (
     <div className="p-4 rounded-lg w-auto min-h-[270px]">
-      {darkMode !== null && (
+      {isDarkMode !== null && (
         <Bar
           redraw
           options={options}
