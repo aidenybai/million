@@ -7,10 +7,9 @@ import { Callout, Tabs, Tab, Cards, Card } from 'nextra-theme-docs';
 
 # Quickstart
 
-<Callout>
-  Want to just try it out? [Open the Million.js template on
-  Stackblitz](https://stackblitz.com/edit/million-template?file=App.tsx).
-</Callout>
+Want to just try Million.js out? Open the following link in a new tab to get started with a pre-configured Million.js project:
+
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/aidenybai/million)
 
 ## Install Million.js
 
@@ -39,69 +38,145 @@ Otherwise, inside your project directory, run the following command:
   </Tab>
 </Tabs>
 
+Then, add the compiler to your bundler of choice:
+
+<Tabs items={['vite', 'webpack', 'rollup', 'rspack', 'esbuild']} storageKey="selected-bundler-compiler">
+  <Tab>
+  ```js filename="vite.config.js"
+  import million from 'million/compiler';
+  import { defineConfig } from 'vite';
+
+  export default defineConfig({
+    plugins: [million.vite()],
+  });
+  ```
+  </Tab>
+  <Tab>
+  ```js filename="webpack.config.js"
+  import million from 'million/compiler';
+
+  export default {
+    plugins: [million.webpack()],
+  };
+  ```
+  </Tab>
+  <Tab>
+  ```js filename="rollup.config.js"
+  import million from 'million/compiler';
+
+  export default {
+    plugins: [million.rollup()],
+  };
+  ```
+  </Tab>
+  <Tab>
+  ```js filename="rspack.config.js"
+  // @ts-check
+  const million = require('million/compiler');
+
+  /** @type {import('@rspack/cli').Configuration} */
+  module.exports = {
+    plugins: [million.rspack()],
+  };
+  ```
+  </Tab>
+  <Tab>
+  ```js filename="esbuild.config.js"
+  import million from 'million/compiler';
+  import { build } from 'esbuild';
+
+  build({
+    plugins: [million.esbuild()],
+  });
+  ```
+  </Tab>
+</Tabs>
+
+
 ## Learn Million.js
 
 Million.js operates off of the concept of "blocks". Imagine blocks as special [Higher Order Components (HOCs)](https://legacy.reactjs.org/docs/higher-order-components.html) that you use in your React application, but are rendered using the Million.js virtual DOM.
 
 In order to create blocks from your components, all you'll need to is wrap your components in a `block(){:jsx}` function.
 
-## `block(){:jsx}`
+## `block(Component){:jsx}`
 
-**Syntax:** `block((props) => vnode){:jsx}`\
-**Example:** `block((props) => <div>{props.foo}</div>){:jsx}`
-
-`block(){:jsx}` must consume a stateless component with primitive props, and returns a Block component.
+`block(Component){:jsx}` must consume a stateless component with primitive props, and returns a Block component.
 
 <Callout>
-  `props` access is limited to top-level access only. No hooks, no deriving
-  values, etc.
+  Block components must be deterministic, meaning that they must always return the same JSX. However, they can use hooks and other React features, except passing in JSX into expression.
 </Callout>
 
-```jsx {2, 8}
+```jsx {3, 13}
+import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { block } from 'million/react';
 
-function Component(props) {
-  return <div>Hello {props.text}</div>;
+function Component({ initial, name }) {
+  // ✅ hooks are allowed
+  const [count, setCount] = useState(initial.count);
+  const greeting = `Hello ${name}!`;
+
+  // ✅ always use a consistent, top level return
+  return <div>
+    {greeting}
+    <button onClick={() => setCount(count + 1)}>{count}</button>
+  </div>;
 }
 
+// ✅ always define on a new line
 const ComponentBlock = block(Component);
 
 createRoot(document.getElementById('root')).render(
-  <ComponentBlock text="world" />,
+  <ComponentBlock name="Dan Jutan" initial={{ count: 0 }} />,
 );
 ```
 
 Here's some things that are **not allowed:**
 
-```jsx
+```jsx {10, 16, 26, 28-29}
+import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { block } from 'million/react';
 
-function IllegalComponent(props) {
-  const [count, setCount] = useState(0); // ❌ Don't use hooks
-  const bad = props.text + " don't do this"; // ❌ don't derive values
+function IllegalComponent({ name, initial }) {
+  const [count, setCount] = useState(initial.count);
+  const greeting = `Hello ${name}!`;
 
+  if (count > 10) {
+    return <div>Too many clicks!</div>; // ❌ don't use conditionals
+  }
   return (
     <div>
-      Hello {bad} {props.children}
+      {greeting}
+      <button onClick={() => setCount(count + 1)}>
+        {<div>{count}</div> /* ❌ don't pass JSX */}
+      </button>
     </div>
   );
 }
 
 const IllegalComponentBlock = block(IllegalComponent);
 
-createRoot(document.getElementById('root')).render(
-  // ❌ don't pass nonprimitives
-  <IllegalComponentBlock text={{ object: 'X' }}>
-    <div>uh oh...</div>
+createRoot(document.getElementById('root')).render(<>
+  <IllegalComponentBlock name="Sad Jutan" initial={{ count: 0 }}>
+    <div>uh oh...</div> // ❌ don't pass JSX as props
   </IllegalComponentBlock>,
-);
+  // ❌ don't use components that have been converted to blocks
+  <IllegalComponent />
+</>);
 ```
 
 ## Optimized Array Rendering
 
-Similar to how [React uses keys](https://react.dev/learn/rendering-lists#keeping-list-items-in-order-with-key) to optimize rendering of lists, Million.js uses keys and a special `<For />{:jsx}` component to optimize rendering of arrays.
+Similar to how [React uses keys](https://react.dev/learn/rendering-lists#keeping-list-items-in-order-with-key) to optimize rendering of lists, Million.js uses keys and a special `<For />{:jsx}` component to optimize rendering of arrays, as the following is **NOT allowed**:
+
+```jsx
+// ❌ not allowed within block
+array.map((name) => {
+  <div>{name}</div>
+});
+```
 
 ## `<For />{:jsx}`
 

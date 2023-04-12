@@ -1,7 +1,7 @@
 import * as t from '@babel/types';
 import type { NodePath } from '@babel/core';
 
-export const react = (path: NodePath<t.CallExpression>) => {
+export const transformReact = (path: NodePath<t.CallExpression>) => {
   // TODO: allow aliasing (block as newBlock)
   if (t.isIdentifier(path.node.callee, { name: 'block' })) {
     // gets the binding for the "Component" in "block(Component)"
@@ -21,7 +21,10 @@ export const react = (path: NodePath<t.CallExpression>) => {
     // Get the name of the component
     const componentId = path.node.arguments[0] as t.Identifier;
     if (!t.isIdentifier(componentId)) {
-      throw new Error('Unsupported argument for block');
+      // eslint-disable-next-line no-console
+      return console.warn(
+        `Found unsupported argument for block. Make sure blocks consume the reference to a component function, not the direct declaration.`,
+      );
     }
     const componentBinding = path.scope.getBinding(componentId.name);
     const component = componentBinding?.path.node;
@@ -33,6 +36,11 @@ export const react = (path: NodePath<t.CallExpression>) => {
       t.isArrowFunctionExpression(component.init)
     ) {
       handleComponent(path, component.init.body, component);
+    } else {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `Found unsupported component declaration. Make sure blocks consume the reference to a component function.`,
+      );
     }
   }
 };
@@ -42,10 +50,28 @@ const handleComponent = (
   componentFunction: object | null | undefined,
   component: any,
 ) => {
-  if (!t.isBlockStatement(componentFunction)) return;
+  if (!t.isBlockStatement(componentFunction)) {
+    // eslint-disable-next-line no-console
+    return console.warn(
+      'Expected a block statement for the component function. Make sure you are using a function declaration or arrow function.',
+    );
+  }
 
   const bodyLength = componentFunction.body.length;
   // Gets the returned JSX element
+  for (let i = 0; i < bodyLength; ++i) {
+    const node = componentFunction.body[i];
+    if (!t.isIfStatement(node)) continue;
+    if (
+      t.isReturnStatement(node.consequent) ||
+      (t.isBlockStatement(node.consequent) &&
+        node.consequent.body.some((n) => t.isReturnStatement(n)))
+    ) {
+      throw new Error(
+        'Early returns are not supported in blocks. Block components must be deterministic, meaning they return the same JSX element every time they are called.',
+      );
+    }
+  }
   const view = componentFunction.body[bodyLength - 1];
 
   if (t.isReturnStatement(view) && t.isJSXElement(view.argument)) {
@@ -122,7 +148,7 @@ const getDynamicsFromJSX = (
     }
 
     if (t.isJSXSpreadAttribute(attribute)) {
-      throw new Error('Spread attributes are not supported. ');
+      throw new Error('Spread attributes in JSX are not supported.');
     }
   }
 
