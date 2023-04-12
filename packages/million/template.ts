@@ -125,7 +125,7 @@ export const renderToTemplate = (
   }
 
   if (SetHas$.call(VOID_ELEMENTS, vnode.type)) {
-    if (current.i!.length || current.e.length) edits.push(current);
+    if (current.e.length) edits.push(current);
     return `<${vnode.type}${props} />`;
   }
 

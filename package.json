@@ -73,6 +73,7 @@
   "prettier": "@vercel/style-guide/prettier",
   "dependencies": {
     "@babel/core": "^7.21.0",
+    "@babel/plugin-syntax-jsx": "^7.21.4",
     "@babel/types": "^7.21.3",
     "unplugin": "^1.3.1"
   },
