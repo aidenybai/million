@@ -101,10 +101,10 @@ In order to create blocks from your components, all you'll need to is wrap your 
 
 ## `block(Component){:jsx}`
 
-`block(Component){:jsx}` must consume a stateless component with primitive props, and returns a Block component.
+`block(Component){:jsx}` must consume a React component, and returns a Block component.
 
 <Callout>
-  Block components must be deterministic, meaning that they must always return the same JSX. However, they can use hooks and other React features, except passing in JSX into expression.
+  Block components must be deterministic, meaning that they must always return the same JSX. However, they can use hooks, any props, and other React features, except passing in JSX as children.
 </Callout>
 
 ```jsx {3, 13}
@@ -113,7 +113,7 @@ import { createRoot } from 'react-dom/client';
 import { block } from 'million/react';
 
 function Component({ initial, name }) {
-  // ✅ hooks are allowed
+  // ✅ hooks + object props are allowed
   const [count, setCount] = useState(initial.count);
   const greeting = `Hello ${name}!`;
 
