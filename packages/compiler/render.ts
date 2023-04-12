@@ -215,7 +215,7 @@ export const renderToTemplate = (
     }
 
     if (t.isJSXElement(child)) {
-      newChildren.push(renderToTemplate(child, edits, [...path, k++], holes));
+      newChildren.push(renderToTemplate(child, edits, path.concat(k++), holes));
     }
   }
   node.children = newChildren;
