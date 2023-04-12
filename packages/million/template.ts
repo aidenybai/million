@@ -1,7 +1,6 @@
 import {
   X_CHAR,
   VOID_ELEMENTS,
-  concat$,
   EventFlag,
   StyleAttributeFlag,
   SvgAttributeFlag,
@@ -196,17 +195,9 @@ export const renderToTemplate = (
     }
 
     canMergeString = false;
-    if (path.length > 100) {
-      children += renderToTemplate(
-        child,
-        edits,
-        concat$.apply([], [path, [k++]]),
-      );
-    } else {
-      const newPath = path.slice();
-      newPath.push(k++);
-      children += renderToTemplate(child, edits, newPath);
-    }
+    const newPath = path.slice();
+    newPath.push(k++);
+    children += renderToTemplate(child, edits, newPath);
   }
 
   if (current.i!.length || current.e.length) edits.push(current);
