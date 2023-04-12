@@ -1,14 +1,20 @@
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CountUp from 'react-countup';
 import Tilt from 'react-parallax-tilt';
 import { Chart } from './chart';
 
 export function Home() {
+  const installCommands = ['npm i', 'pnpm add', 'yarn add'];
+
   const [checked, setChecked] = useState<boolean>(false);
   const [count, setCount] = useState<number>(0);
-  const pkgManagers = ['npm', 'pnpm', 'yarn'];
-  const command = pkgManagers[count % 3];
+  const [command, setCommand] = useState<string>(installCommands[count]);
+
+  useEffect(() => {
+    setCommand(installCommands[count % 3]);
+  }, [count]);
+
   return (
     <>
       <div
@@ -44,22 +50,15 @@ export function Home() {
                 </div>
                 <div className="shadow hidden md:flex gap-2 rounded-lg my-[10px] border-2 border-[#b073d9] py-[12px] px-[20px] bg-[#e9e6f4] dark:bg-[#231f31]">
                   <span className="font-mono text-lg font-medium">
-                    <span
-                      onClick={() => setCount(count + 1)}
-                      className="font-bold"
-                    >
-                      {command}
-                    </span>{' '}
-                    install million
+                    <span className="font-bold">{command}</span> million
                   </span>
                   <div
                     className="ml-auto"
                     onClick={() => {
+                      setCount(count + 1);
                       setChecked(true);
 
-                      void navigator.clipboard.writeText(
-                        `${command} i million`,
-                      );
+                      void navigator.clipboard.writeText(`${command} million`);
 
                       setTimeout(() => {
                         setChecked(false);
@@ -73,7 +72,7 @@ export function Home() {
                       strokeWidth="1.5"
                       stroke="currentColor"
                       aria-hidden="true"
-                      className={`cursor-pointer opacity-70 hover:opacity-100 p-0 w-7 h-7 ${
+                      className={`cursor-pointer opacity-70 hover:opacity-100 p-0 w-6 h-6 ${
                         checked ? 'hidden' : ''
                       }`}
                     >
@@ -88,7 +87,7 @@ export function Home() {
                       viewBox="0 0 24 24"
                       fill="currentColor"
                       aria-hidden="true"
-                      className={`p-0 w-7 h-7 ${
+                      className={`p-0 w-6 h-6 ${
                         checked ? 'animate-pulse animate-once' : 'hidden'
                       }`}
                     >
