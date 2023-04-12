@@ -9,7 +9,7 @@
     <a href="https://www.npmjs.com/package/million" target="_blank">
   <a href="https://discord.gg/X9yFbcV2rF" target="_blank"><img src="https://img.shields.io/discord/938129049539186758?style=flat&colorA=000000&colorB=000000&label=discord&logo=discord&logoColor=ffffff" /></a>
 
-  <table>
+<table>
     <tbody>
       <tr>
         <td>
@@ -55,8 +55,8 @@ This repo is a "mono-repo" with modules. Million ships as one NPM package, but h
 
 You can also track our progress through our [Roadmap](https://github.com/users/aidenybai/projects/5/views/1?layout=roadmap).
 
-| Module                                                                               | Description                                          |
-| ------------------------------------------------------------------------------------ | ---------------------------------------------------- |
+| Module                                                                              | Description                                          |
+| ----------------------------------------------------------------------------------- | ---------------------------------------------------- |
 | [`million`](https://github.com/aidenybai/million/tree/main/packages/million)         | The main Virtual DOM with all of Million's core.     |
 | [`react`](https://github.com/aidenybai/million/tree/main/packages/react)             | A module that gives React compatibility for Million. |
 | [`compiler`](https://github.com/aidenybai/million/tree/main/packages/compiler)       | The compiler for Million in React.                   |
@@ -82,12 +82,9 @@ Million takes heavy inspiration from the following projects:
 
 - [`blockdom`](https://github.com/ged-odoo/blockdom) ([Géry Debongnie](https://github.com/ged-odoo))
   Thank you to Géry pioneering the concept of "blocks" in the virtual DOM. Many parts of the Million.js codebase either directly or indirectly derive from his work.
-
 - [`voby`](https://github.com/vobyjs/voby) ([Fabio Spampinato](https://github.com/fabiospampinato))
   The Million.js "template" concept is derived from Voby's `template()` API.
-
 - [`bun`](https://bun.sh) for their homepage. The Million.js homepage is a remix of what they have currently.
-
 - [`ivi`](https://github.com/localvoid/ivi), [Preact](https://github.com/preactjs/preact), [and more](https://krausest.github.io/js-framework-benchmark/2021/table_chrome_96.0.4664.45.html)
 
 Million is being used at companies like [Wyze](https://wyze.com) and [Dimension](https://dimension.dev), as well as open source work like [Quartz](https://github.com/jackyzha0/quartz), [TinyPages](https://github.com/Borrus-sudo/tinypages), [and more](https://github.com/aidenybai/million/network/dependents).
