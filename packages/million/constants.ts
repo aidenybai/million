@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/unbound-method */
 export const Object$ = Object;
 export const Map$ = Map;
 export const Set$ = Set;
+export const concat$ = Array.prototype.concat;
 
 export const ChildFlag = 1;
 export const AttributeFlag = 2;
