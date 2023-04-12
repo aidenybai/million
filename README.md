@@ -16,13 +16,13 @@
           <a href="https://millionjs.org">📚 Read the docs</a>
         </td>
         <td>
-          <a href="https://www.youtube.com/watch?v=KgnSM9NbV2s">🎦 Watch Video</a>
+          <a href="https://www.youtube.com/watch?v=KgnSM9NbV2s">🎦 Watch video</a>
         </td>
         <td>
           <a href="https://discord.gg/X9yFbcV2rF">💬 Join our Discord</a>
         </td>
         <td>
-          <a href="https://twitter.com/milliondotjs">🌐 Follow Us On Twitter</a>
+          <a href="https://twitter.com/milliondotjs">🌐 Follow on Twitter</a>
         </td>
       </tr>
     </tbody>
@@ -31,17 +31,15 @@
 
 ## What is Million?
 
-Million is an extremely fast and lightweight (`<4kb`) virtual DOM that makes [React](https://reactjs.org) up to [_**70% faster**_](https://millionjs.org).
+Million is an extremely fast and lightweight (`<4kb`) virtual DOM that makes [React components](https://reactjs.org) up to [_**70% faster**_](https://krausest.github.io/js-framework-benchmark/current.html).
 
-> Oh man... Another [`/virtual dom|javascript/gi`](https://regexr.com/6mr5f) library? I'm fine with [React](https://reactjs.org) already, why should I need it?
+> Oh man... Another [`/virtual dom|javascript/gi{:js}`](https://regexr.com/6mr5f) framework? I'm fine with [React](https://reactjs.org) already, why do I need this?
 
-Million makes creating user interfaces as easy (It's just [React](https://reactjs.org)!), but with faster rendering and loading speeds. By using a fine-tuned, optimized virtual DOM, Million.js reduces the overhead of the React Reconciler.
+Million works with React. Million makes creating web apps just as easy (It's just wrapping a [React](https://reactjs.org) component!), but with faster rendering and loading speeds. By using a fine-tuned, optimized virtual DOM, Million.js reduces the overhead of React.
 
-Furthermore, while alternative libraries like [Preact](https://preactjs.com/) reduce bundle sizes via efficient code design, Million.js can be used inside [React](https://reactjs.org) and is much faster than Preact.
+**TL;DR:** Imagine [React](https://reactjs.org/) components running at the speed of raw JavaScript.
 
-**TL;DR:** Imagine [React](https://preactjs.com/) at the speed of raw JavaScript.
-
-### [**📚 Learn Million in <5 minutes! →**](https://millionjs.org)
+### [**📚 Learn Million in <5 minutes! →**](https://millionjs.org/docs/quickstart)
 
 ## Installing Million
 
@@ -61,7 +59,7 @@ You can also track our progress through our [Roadmap](https://github.com/users/a
 | ------------------------------------------------------------------------------------ | ---------------------------------------------------- |
 | [`million`](https://github.com/aidenybai/million/tree/main/packages/million)         | The main Virtual DOM with all of Million's core.     |
 | [`react`](https://github.com/aidenybai/million/tree/main/packages/react)             | A module that gives React compatibility for Million. |
-| [`compiler`](https://github.com/aidenybai/million/tree/main/packages/compiler)       | An optimizing compiler for Million in React.         |
+| [`compiler`](https://github.com/aidenybai/million/tree/main/packages/compiler)       | The compiler for Million in React.                   |
 | [`jsx-runtime`](https://github.com/aidenybai/million/tree/main/packages/jsx-runtime) | A simple JSX runtime for Million core.               |
 
 ## Resources & Contributing Back
@@ -96,6 +94,6 @@ Million is being used at companies like [Wyze](https://wyze.com) and [Dimension]
 
 ## License
 
-Million is [MIT-licensed](LICENSE) open-source software by [Aiden Bai](https://aidenybai.com).
+Million is [MIT-licensed](LICENSE) open-source software by [Aiden Bai](https://aidenybai.com) and [contributors](https://github.com/aidenybai/million/graphs/contributors).
 
 ![View count](https://hits-app.vercel.app/hits?url=https://github.com/aidenybai/million&bgRight=000&bgLeft=000)
