@@ -26,6 +26,7 @@ const data = [
   { framework: 'Preact', val: 0.59 },
   { framework: 'React', val: 0.26 },
 ];
+
 const options = {
   plugins: {
     legend: {
