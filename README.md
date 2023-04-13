@@ -49,11 +49,11 @@ Inside your project directory, run the following command:
 npm install million
 ```
 
-## Tell me more
+## Example Usage
 
 Million.js operates off of the concept of "blocks". Imagine blocks as special [Higher Order Components (HOCs)](https://legacy.reactjs.org/docs/higher-order-components.html) that you use in your React application, but are rendered using the Million.js virtual DOM.
 
-In order to create blocks from your components, all you'll need to is wrap your components in a `block()` function. Below is an example of a React "counter" component that's been wrapped with Million.js.
+In order to create blocks from your components, all you'll need to is **wrap your components in a `block()` function**. Below is an example of a React "counter" component that's been wrapped with Million.js.
 
 ```jsx
 import React, { useState } from 'react';
@@ -69,8 +69,10 @@ function Counter({ initialCount }) {
   return <button onClick={handleClick}>{count}</button>;
 }
 
+// Just wrap Counter in a block() function!
 const CounterBlock = block(Counter);
 
+//                                            👇 render as normal
 createRoot(document.getElementById('root')).render(<CounterBlock />);
 ```
 
