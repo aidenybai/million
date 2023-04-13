@@ -10,9 +10,15 @@ importers:
       '@babel/plugin-syntax-jsx':
         specifier: ^7.21.4
         version: 7.21.4(@babel/core@7.21.0)
+      '@babel/plugin-syntax-typescript':
+        specifier: ^7.21.4
+        version: 7.21.4(@babel/core@7.21.0)
       '@babel/types':
         specifier: ^7.21.3
         version: 7.21.3
+      forgetti:
+        specifier: ^0.4.0
+        version: 0.4.0(@babel/core@7.21.0)
       unplugin:
         specifier: ^1.3.1
         version: 1.3.1
@@ -507,6 +513,16 @@ packages:
       '@babel/helper-plugin-utils': 7.20.2
     dev: false
 
+  /@babel/plugin-syntax-typescript@7.21.4(@babel/core@7.21.0):
+    resolution: {integrity: sha512-xz0D39NvhQn4t4RNsHmDnnsaQizIlUkdtYvLs8La1BlfjQ6JEwxkJGeqJMW2tAXx+q6H+WFuUTXNdYVpEya0YA==}
+    engines: {node: '>=6.9.0'}
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
+    dependencies:
+      '@babel/core': 7.21.0
+      '@babel/helper-plugin-utils': 7.20.2
+    dev: false
+
   /@babel/plugin-transform-typescript@7.21.3(@babel/core@7.21.0):
     resolution: {integrity: sha512-RQxPz6Iqt8T0uw/WsJNReuBpWpBqs/n7mNo18sKLoTbMp+UrEekhH+pKSVC7gWz+DNjo9gryfV8YzCiT45RgMw==}
     engines: {node: '>=6.9.0'}
@@ -517,7 +533,7 @@ packages:
       '@babel/helper-annotate-as-pure': 7.18.6
       '@babel/helper-create-class-features-plugin': 7.21.0(@babel/core@7.21.0)
       '@babel/helper-plugin-utils': 7.20.2
-      '@babel/plugin-syntax-typescript': 7.20.0(@babel/core@7.21.0)
+      '@babel/plugin-syntax-typescript': 7.21.4(@babel/core@7.21.0)
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -3166,6 +3182,20 @@ packages:
       cross-spawn: 7.0.3
       signal-exit: 3.0.7
     dev: true
+
+  /forgetti@0.4.0(@babel/core@7.21.0):
+    resolution: {integrity: sha512-Bm8sayAeKPpd4FLPrqy0oCg67riOb8EsSnbij7o8sHUqWeEeqPA3AD/t+NnqrqA/YBjNoDQv/cIemu8s+pPXzA==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      '@babel/core': ^7
+    dependencies:
+      '@babel/core': 7.21.0
+      '@babel/helper-module-imports': 7.18.6
+      '@babel/traverse': 7.21.4
+      '@babel/types': 7.21.4
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
 
   /form-data@4.0.0:
     resolution: {integrity: sha512-ETEklSGi5t0QMZuiXoA/Q6vcnxcLQP5vdugSpuAyi6SVGi2clPPp+xgEhuMaHC+zGgn31Kd235W35f7Hykkaww==}
