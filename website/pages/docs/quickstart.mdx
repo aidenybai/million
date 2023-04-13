@@ -118,10 +118,12 @@ function Component({ initial, name }) {
   const greeting = `Hello ${name}!`;
 
   // ✅ always use a consistent, top level return
-  return <div>
-    {greeting}
-    <button onClick={() => setCount(count + 1)}>{count}</button>
-  </div>;
+  return (
+    <div>
+      {greeting}
+      <button onClick={() => setCount(count + 1)}>{count}</button>
+    </div>
+  );
 }
 
 // ✅ always define on a new line

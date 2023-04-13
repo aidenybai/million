@@ -79,6 +79,9 @@ const handleComponent = (
     // Extracts all expressions / identifiers from the JSX element
     const dynamics = getDynamicsFromJSX(path, jsx);
     const blockVariable = path.scope.generateUidIdentifier('block$');
+    const forgettiCompatibleComponentName = t.identifier(
+      `use${String(component.id.name)}`,
+    );
 
     // Creates a new function that will be wrapped in block() instead
     const blockFunction = t.functionDeclaration(
@@ -90,7 +93,7 @@ const handleComponent = (
 
     // Replaces the return statement with a call to the new block() function
     componentFunction.body[bodyLength - 1] = t.returnStatement(
-      t.callExpression(component.id, [
+      t.callExpression(forgettiCompatibleComponentName, [
         t.objectExpression(
           // Creates an object that passes expression values down
           dynamics.map(({ id, value }) => t.objectProperty(id, value || id)),
@@ -102,7 +105,7 @@ const handleComponent = (
     // block is called instead
     const blockComponent = path.parentPath.node as any;
     const temp = blockComponent.id;
-    blockComponent.id = component.id;
+    blockComponent.id = forgettiCompatibleComponentName;
     component.id = temp;
     path.node.arguments[0] = blockVariable;
 
