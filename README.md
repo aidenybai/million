@@ -39,7 +39,7 @@ Million works with React. Million makes creating web apps just as easy (It's jus
 
 **TL;DR:** Imagine [React](https://reactjs.org/) components running at the speed of raw JavaScript.
 
-### [**📚 Learn Million in <5 minutes! →**](https://millionjs.org/docs/quickstart)
+### [**📚 Learn Million in <5 minutes! →**](https://millionjs.org/)
 
 ## Installing Million
 
@@ -72,11 +72,10 @@ function Counter({ initialCount }) {
 // Just wrap Counter in a block() function!
 const CounterBlock = block(Counter);
 
-//                                            👇 render as normal
 createRoot(document.getElementById('root')).render(<CounterBlock />);
 ```
 
-[_Want to learn more? Check out the quickstart!_](https://millionjs.org/docs/quickstart)
+[**→ Try the quickstart**](https://millionjs.org/docs/quickstart)
 
 ## Codebase
 
