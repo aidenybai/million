@@ -21,87 +21,93 @@ export const unplugin = createUnplugin((options?: UserOptions) => {
         return code;
       }
 
-      const plugins: any = ['@babel/plugin-syntax-jsx', [babelPlugin, options]];
+      const plugins: any = ['@babel/plugin-syntax-jsx'];
 
       if (/\.[t]sx$/.test(id)) {
         plugins.unshift('@babel/plugin-syntax-typescript');
       }
 
+      let result = await transformAsync(code, {
+        plugins: [...plugins, [babelPlugin, options]],
+      });
       if (options?.memo === undefined || options.memo) {
-        plugins.push([
-          forgetti(),
-          {
-            preset: {
-              optimizeJSX: false,
-              componentFilter: {
-                source: '^[A-Z]',
-                flags: '',
+        result = await transformAsync(result?.code ?? code, {
+          plugins: [
+            ...plugins,
+            [
+              forgetti(),
+              {
+                preset: {
+                  optimizeJSX: false,
+                  componentFilter: {
+                    source: '^_',
+                    flags: '',
+                  },
+                  hookFilter: {
+                    source: '^use[A-Z]',
+                    flags: '',
+                  },
+                  memo: {
+                    name: 'useMemo',
+                    source: 'react',
+                    kind: 'named',
+                  },
+                  hooks: [
+                    {
+                      type: 'ref',
+                      name: 'useRef',
+                      source: 'react',
+                      kind: 'named',
+                    },
+                    {
+                      type: 'memo',
+                      name: 'useMemo',
+                      source: 'react',
+                      kind: 'named',
+                    },
+                    {
+                      type: 'callback',
+                      name: 'useCallback',
+                      source: 'react',
+                      kind: 'named',
+                    },
+                    {
+                      type: 'effect',
+                      name: 'useEffect',
+                      source: 'react',
+                      kind: 'named',
+                    },
+                    {
+                      type: 'effect',
+                      name: 'useLayoutEffect',
+                      source: 'react',
+                      kind: 'named',
+                    },
+                    {
+                      type: 'effect',
+                      name: 'useInsertionEffect',
+                      source: 'react',
+                      kind: 'named',
+                    },
+                  ],
+                  hocs: [
+                    {
+                      name: 'forwardRef',
+                      source: 'react',
+                      kind: 'named',
+                    },
+                    {
+                      name: 'memo',
+                      source: 'react',
+                      kind: 'named',
+                    },
+                  ],
+                },
               },
-              hookFilter: {
-                source: '^use[A-Z]',
-                flags: '',
-              },
-              memo: {
-                name: 'useMemo',
-                source: 'react',
-                kind: 'named',
-              },
-              hooks: [
-                {
-                  type: 'ref',
-                  name: 'useRef',
-                  source: 'react',
-                  kind: 'named',
-                },
-                {
-                  type: 'memo',
-                  name: 'useMemo',
-                  source: 'react',
-                  kind: 'named',
-                },
-                {
-                  type: 'callback',
-                  name: 'useCallback',
-                  source: 'react',
-                  kind: 'named',
-                },
-                {
-                  type: 'effect',
-                  name: 'useEffect',
-                  source: 'react',
-                  kind: 'named',
-                },
-                {
-                  type: 'effect',
-                  name: 'useLayoutEffect',
-                  source: 'react',
-                  kind: 'named',
-                },
-                {
-                  type: 'effect',
-                  name: 'useInsertionEffect',
-                  source: 'react',
-                  kind: 'named',
-                },
-              ],
-              hocs: [
-                {
-                  name: 'forwardRef',
-                  source: 'react',
-                  kind: 'named',
-                },
-                {
-                  name: 'memo',
-                  source: 'react',
-                  kind: 'named',
-                },
-              ],
-            },
-          },
-        ]);
+            ],
+          ],
+        });
       }
-
-      const result = await transformAsync(code, { plugins });
       return result?.code ?? code;
     },
   };

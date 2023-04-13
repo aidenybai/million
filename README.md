@@ -35,7 +35,7 @@ Million is an extremely fast and lightweight (`<4kb`) virtual DOM that makes [Re
 
 > Oh man... Another [`/virtual dom|javascript/gi{:js}`](https://regexr.com/6mr5f) framework? I'm fine with [React](https://reactjs.org) already, why do I need this?
 
-Million works with React. Million makes creating web apps just as easy (It's just wrapping a [React](https://reactjs.org) component!), but with faster rendering and loading speeds. By using a fine-tuned, optimized virtual DOM, Million.js reduces the overhead of React.
+Million works with React. Million makes creating web apps just as easy (It's just wrapping a [React](https://reactjs.org) component!), but with faster rendering and loading speeds. By using a fine-tuned, optimized virtual DOM, Million.js reduces the overhead of React ([_try it out here_](https://demo.millionjs.org))
 
 **TL;DR:** Imagine [React](https://reactjs.org/) components running at the speed of raw JavaScript.
 
@@ -49,14 +49,41 @@ Inside your project directory, run the following command:
 npm install million
 ```
 
+## Tell me more
+
+Million.js operates off of the concept of "blocks". Imagine blocks as special [Higher Order Components (HOCs)](https://legacy.reactjs.org/docs/higher-order-components.html) that you use in your React application, but are rendered using the Million.js virtual DOM.
+
+In order to create blocks from your components, all you'll need to is wrap your components in a `block()` function. Below is an example of a React "counter" component that's been wrapped with Million.js.
+
+```jsx
+import React, { useState } from 'react';
+import { createRoot } from 'react-dom/client';
+import { block } from 'million/react';
+
+function Counter({ initialCount }) {
+  const [count, setCount] = useState(initialCount);
+  const handleClick = () => {
+    setCount(count + 1);
+  };
+
+  return <button onClick={handleClick}>{count}</button>;
+}
+
+const CounterBlock = block(Counter);
+
+createRoot(document.getElementById('root')).render(<CounterBlock />);
+```
+
+[_Want to learn more? Check out the quickstart!_](https://millionjs.org/docs/quickstart)
+
 ## Codebase
 
 This repo is a "mono-repo" with modules. Million ships as one NPM package, but has first class modules for more complex, but important extensions. Each module has its own folder in the `/packages` directory.
 
 You can also track our progress through our [Roadmap](https://github.com/users/aidenybai/projects/5/views/1?layout=roadmap).
 
-| Module                                                                              | Description                                          |
-| ----------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| Module                                                                               | Description                                          |
+| ------------------------------------------------------------------------------------ | ---------------------------------------------------- |
 | [`million`](https://github.com/aidenybai/million/tree/main/packages/million)         | The main Virtual DOM with all of Million's core.     |
 | [`react`](https://github.com/aidenybai/million/tree/main/packages/react)             | A module that gives React compatibility for Million. |
 | [`compiler`](https://github.com/aidenybai/million/tree/main/packages/compiler)       | The compiler for Million in React.                   |
