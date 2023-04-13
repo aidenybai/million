@@ -79,8 +79,9 @@ const handleComponent = (
     // Extracts all expressions / identifiers from the JSX element
     const dynamics = getDynamicsFromJSX(path, jsx);
     const blockVariable = path.scope.generateUidIdentifier('block$');
+    const componentVariable = path.scope.generateUidIdentifier('component$');
     const forgettiCompatibleComponentName = t.identifier(
-      `use${String(component.id.name)}`,
+      `useBlock${componentVariable.name}`,
     );
 
     // Creates a new function that will be wrapped in block() instead
@@ -104,12 +105,18 @@ const handleComponent = (
     // Swaps the names of the functions so that the component that wraps the
     // block is called instead
     const blockComponent = path.parentPath.node as any;
-    const temp = blockComponent.id;
+    const temp = blockComponent.id as t.Identifier;
     blockComponent.id = forgettiCompatibleComponentName;
-    component.id = temp;
+    component.id = componentVariable;
     path.node.arguments[0] = blockVariable;
 
     path.parentPath.parentPath?.insertBefore(blockFunction);
+    path.parentPath.parentPath?.insertBefore(
+      t.variableDeclaration('const', [
+        t.variableDeclarator(temp, component.id),
+      ]),
+    );
+    path.scope.crawl();
   }
 };
 
