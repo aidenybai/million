@@ -1,10 +1,6 @@
-// @ts-expect-error - override react.d.ts
-// prettier-ignore
 import { createElement, memo, useEffect, useRef } from 'react';
 import { arrayMount$, arrayPatch$, arrayRemove$ } from '../million/array';
 import { mapArray } from '../million';
-// @ts-expect-error - override react.d.ts
-// prettier-ignore
 import type { FunctionComponent, ReactNode } from 'react';
 
 const createChildren = (each: any[], getComponent: any) => {
