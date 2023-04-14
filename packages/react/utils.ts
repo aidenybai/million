@@ -1,5 +1,3 @@
-// @ts-expect-error - override react.d.ts
-// prettier-ignore
 import type { ReactNode } from 'react';
 import type { VNode } from '../million';
 

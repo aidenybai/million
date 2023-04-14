@@ -9,7 +9,11 @@
     "moduleResolution": "node",
     "module": "esnext",
     "target": "esnext",
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "paths": {
+      // Make sure the root react.d.ts isn't picked up by TS locally
+      "react": ["node_modules/react"]
+    }
   },
   "include": ["./**/*.ts", "./**/*.tsx"],
   "exclude": ["node_modules", "dist", "*.d.ts", "website"]
