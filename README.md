@@ -35,11 +35,11 @@ Million is an extremely fast and lightweight (`<4kb`) virtual DOM that makes [Re
 
 > Oh man... Another [`/virtual dom|javascript/gi{:js}`](https://regexr.com/6mr5f) framework? I'm fine with [React](https://reactjs.org) already, why do I need this?
 
-Million works with React. Million makes creating web apps just as easy (It's just wrapping a [React](https://reactjs.org) component!), but with faster rendering and loading speeds. By using a fine-tuned, optimized virtual DOM, Million.js reduces the overhead of React.
+Million works with React. Million makes creating web apps just as easy (It's just wrapping a [React](https://reactjs.org) component!), but with faster rendering and loading speeds. By using a fine-tuned, optimized virtual DOM, Million.js reduces the overhead of React ([_try it out here_](https://demo.millionjs.org))
 
 **TL;DR:** Imagine [React](https://reactjs.org/) components running at the speed of raw JavaScript.
 
-### [**📚 Learn Million in <5 minutes! →**](https://millionjs.org/docs/quickstart)
+### [**📚 Learn Million in <5 minutes! →**](https://millionjs.org/)
 
 ## Installing Million
 
@@ -48,6 +48,34 @@ Inside your project directory, run the following command:
 ```sh
 npm install million
 ```
+
+## Example Usage
+
+Million.js operates off of the concept of "blocks". Imagine blocks as special [Higher Order Components (HOCs)](https://legacy.reactjs.org/docs/higher-order-components.html) that you use in your React application, but are rendered using the Million.js virtual DOM.
+
+In order to create blocks from your components, all you'll need to is **wrap your components in a `block()` function**. Below is an example of a React "counter" component that's been wrapped with Million.js.
+
+```jsx
+import React, { useState } from 'react';
+import { createRoot } from 'react-dom/client';
+import { block } from 'million/react';
+
+function Counter({ initialCount }) {
+  const [count, setCount] = useState(initialCount);
+  const handleClick = () => {
+    setCount(count + 1);
+  };
+
+  return <button onClick={handleClick}>{count}</button>;
+}
+
+// Just wrap Counter in a block() function!
+const CounterBlock = block(Counter);
+
+createRoot(document.getElementById('root')).render(<CounterBlock />);
+```
+
+[**→ Try the quickstart**](https://millionjs.org/docs/quickstart)
 
 ## Codebase
 

@@ -1,5 +1,3 @@
-// @ts-expect-error - override react.d.ts
-// prettier-ignore
 import { createElement, Fragment, useCallback, useEffect, useMemo, useRef } from 'react';
 import {
   block as createBlock,
@@ -8,8 +6,6 @@ import {
   remove$,
 } from '../million/block';
 import { unwrap } from './utils';
-// @ts-expect-error - override react.d.ts
-// prettier-ignore
 import type { FunctionComponentElement, ReactNode, FunctionComponent } from 'react';
 import type { Props } from '../million';
 
