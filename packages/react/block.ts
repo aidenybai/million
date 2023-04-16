@@ -1,4 +1,11 @@
-import { createElement, Fragment, useCallback, useEffect, useMemo, useRef } from 'react';
+import {
+  createElement,
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
 import {
   block as createBlock,
   mount$,
@@ -6,7 +13,11 @@ import {
   remove$,
 } from '../million/block';
 import { unwrap } from './utils';
-import type { FunctionComponentElement, ReactNode, FunctionComponent } from 'react';
+import type {
+  FunctionComponentElement,
+  ReactNode,
+  FunctionComponent,
+} from 'react';
 import type { Props } from '../million';
 
 const IS_SSR_ENVIRONMENT = typeof window === 'undefined';
