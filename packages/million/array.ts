@@ -121,7 +121,7 @@ export class ArrayBlock extends AbstractBlock {
     if (oldHead <= oldTail || newHead <= newTail) {
       if (oldHead > oldTail) {
         const nextChild = newChildren[newTail + 1];
-        for (let i = newHead; i <= newTail; i++) {
+        for (let i = newHead; i <= newTail; ++i) {
           mount$.call(newChildren[i], parent, nextChild ? nextChild.l : null);
         }
       } else {

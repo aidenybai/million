@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react';
 import type { VNode } from '../million';
 
+const FRAGMENT_SYMBOL = Symbol('react.fragment');
+
 export const unwrap = (vnode?: ReactNode): VNode => {
   if (typeof vnode !== 'object' || vnode === null || !('type' in vnode)) {
     if (typeof vnode === 'number' || vnode === true) {
@@ -10,8 +12,8 @@ export const unwrap = (vnode?: ReactNode): VNode => {
     }
     return vnode as VNode;
   }
-  if (typeof vnode.type === 'function') {
-    const type = vnode.type;
+  const type = vnode.type as any;
+  if (typeof type === 'function') {
     return unwrap(type(vnode.props));
   }
 
@@ -22,14 +24,26 @@ export const unwrap = (vnode?: ReactNode): VNode => {
       unwrap(child),
     );
   }
+
   return {
-    type: vnode.type, // lets pretend no function go through
+    type, // lets pretend no function go through
     props,
   };
 };
 
 export const flatten = <T>(rawChildren: T): T[] => {
   if (rawChildren === undefined || rawChildren === null) return [];
+  if (
+    typeof rawChildren === 'object' &&
+    'type' in rawChildren &&
+    'props' in rawChildren &&
+    rawChildren.props &&
+    typeof rawChildren.props === 'object' &&
+    'children' in rawChildren.props &&
+    rawChildren.type === FRAGMENT_SYMBOL
+  ) {
+    return flatten(rawChildren.props.children as T);
+  }
   if (
     !Array.isArray(rawChildren) ||
     (typeof rawChildren === 'object' && '$' in rawChildren)
