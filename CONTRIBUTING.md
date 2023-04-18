@@ -100,14 +100,56 @@ git push origin your-branch-name
 
 ## ✨ Understanding the project
 
-The project is divided into two main folders:
+The project is divided into 3 main folders:
 
-- `src` - This folder contains all the code related to the website.
-- `docs` - This folder contains everything related to the 4C community
+- `packages` - This folder contains all the packages used within the million library
+- `test` - This folder contains all the tests written for the million library
+- `website` - This folder contains the code for the website [Millionjs](https://millionjs.org/)
 
-### `src` folder
+### `packages` folder
 
-The `src` folder contains all the code related to the website. The website is built using [Next.js](https://nextjs.org/), a React framework. The website is hosted on [Vercel](https://vercel.com/).
+The `packages` folder contains all the code related to the website. The website is built using [Next.js](https://nextjs.org/), a React framework. The website is hosted on [Vercel](https://vercel.com/).
+
+The source code is divided into two main folders:
+
+- `pages` - This folder contains all the pages of the website.
+- `components` - This folder contains all the components of the website.
+
+I suggest you to read the [Next.js documentation](https://nextjs.org/docs) to understand the project structure.
+
+To run the website locally, you need to install the dependencies and run the development server:
+
+```bash
+npm i -g pnpm # Install yarn
+pnpm install # Install dependencies
+pnpm {command} # Run the development server
+```
+
+
+`test` folder
+
+The `test` folder contains all the code related to the website. The website is built using [Next.js](https://nextjs.org/), a React framework. The website is hosted on [Vercel](https://vercel.com/).
+
+The source code is divided into two main folders:
+
+- `pages` - This folder contains all the pages of the website.
+- `components` - This folder contains all the components of the website.
+
+I suggest you to read the [Next.js documentation](https://nextjs.org/docs) to understand the project structure.
+
+To run the website locally, you need to install the dependencies and run the development server:
+
+```bash
+npm i -g pnpm # Install yarn
+pnpm install # Install dependencies
+pnpm {command} # Run the development server
+```
+
+
+
+`website` folder
+
+The `website` folder contains all the code related to the website. The website is built using [Next.js](https://nextjs.org/), a React framework. The website is hosted on [Vercel](https://vercel.com/).
 
 The source code is divided into two main folders:
 
