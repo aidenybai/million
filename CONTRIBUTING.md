@@ -88,14 +88,11 @@ The commit message should be structured as follows:
 <type>(optional scope): <description>
 ```
 
-
-
 Push your local commits to the remote repository.
 
 ```bash
 git push origin your-branch-name
 ```
-
 
 **8.** Create a new [pull request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request) from `your-branch-name`
 
@@ -122,11 +119,7 @@ I suggest you to read the [Next.js documentation](https://nextjs.org/docs) to un
 To run the website locally, you need to install the dependencies and run the development server:
 
 ```bash
-npm i -g yarn # Install yarn
-yarn # Install dependencies
-yarn dev # Run the development server
+npm i -g pnpm # Install yarn
+pnpm install # Install dependencies
+pnpm {command} # Run the development server
 ```
-
-### `docs` folder
-
-This folder contains markdown files describing the design of the main website and some detail about the 4C community
