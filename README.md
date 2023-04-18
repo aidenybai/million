@@ -102,6 +102,8 @@ Find a bug? Head over to our [issue tracker](https://github.com/aidenybai/millio
 
 We expect all Million contributors to abide by the terms of our [Code of Conduct](https://github.com/aidenybai/million/blob/main/.github/CODE_OF_CONDUCT.md).
 
+Here is the [Contributing Guideline]()
+
 [**→ Start contributing on GitHub**](https://github.com/aidenybai/million/blob/main/.github/CONTRIBUTING.md)
 
 ## Acknowledgments
