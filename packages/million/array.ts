@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { MapSet$, setTextContent$ } from './dom';
+import { setTextContent$ } from './dom';
 import { AbstractBlock } from './types';
 import { mount$, patch$, move$, remove$ } from './block';
-import { Map$ } from './constants';
+import { Map$, MapSet$ } from './constants';
 
 export const mapArray = (children: AbstractBlock[]) => {
   return new ArrayBlock(children);

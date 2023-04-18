@@ -7,8 +7,8 @@ import {
   AttributeFlag,
   ChildFlag,
   BlockFlag,
+  SetHas$,
 } from './constants';
-import { SetHas$ } from './dom';
 import { AbstractBlock } from './types';
 import type { Edit, VNode } from './types';
 

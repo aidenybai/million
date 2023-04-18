@@ -1,6 +1,15 @@
+/* eslint-disable @typescript-eslint/unbound-method */
 export const Object$ = Object;
 export const Map$ = Map;
 export const Set$ = Set;
+
+export const SetHas$ = Set$.prototype.has;
+export const SetAdd$ = Set$.prototype.add;
+export const SetDelete$ = Set$.prototype.delete;
+
+export const MapHas$ = Map$.prototype.has;
+export const MapGet$ = Map$.prototype.get;
+export const MapSet$ = Map$.prototype.set;
 
 export const ChildFlag = 1;
 export const AttributeFlag = 2;

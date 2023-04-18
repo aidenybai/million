@@ -12,12 +12,9 @@ import {
   patch as patchBlock,
   remove$,
 } from '../million/block';
+import { Map$, MapSet$, MapHas$ } from '../million/constants';
 import { unwrap } from './utils';
-import type {
-  FunctionComponentElement,
-  ReactNode,
-  FunctionComponent,
-} from 'react';
+import type { ReactNode, FunctionComponent } from 'react';
 import type { Props } from '../million';
 
 const IS_SSR_ENVIRONMENT = typeof window === 'undefined';
@@ -27,7 +24,7 @@ interface Options {
 }
 
 if (!IS_SSR_ENVIRONMENT) {
-  const css = 'million-island, million-fragment { display: contents }';
+  const css = 'million-block, million-fragment { display: contents }';
 
   // @ts-expect-error - CSSStyleSheet is not supported on Safari
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -43,12 +40,19 @@ if (!IS_SSR_ENVIRONMENT) {
   }
 }
 
+export const REGISTRY =
+  (window as any).__MILLION_REGISTRY__ ??
+  new Map$<(props: Props) => ReactNode, ReturnType<typeof createBlock>>();
+
+(window as any).__MILLION_REGISTRY__ = REGISTRY;
+
 export const block = (
   fn: (props: Props) => ReactNode,
   options: Options = {},
 ) => {
   const block = createBlock(fn as any, unwrap);
-  const MillionBlock = (props: Props): FunctionComponentElement<Props> => {
+  if (!MapHas$.call(REGISTRY, fn)) MapSet$.call(REGISTRY, fn, block);
+  function MillionBlock(props: Props) {
     const ref = useRef<HTMLElement>(null);
     const patch = useRef<((props: Props) => void) | null>(null);
 
@@ -79,21 +83,9 @@ export const block = (
     );
 
     return vnode;
-  };
-
-  (MillionBlock as any).__block = block;
+  }
 
   return MillionBlock;
-};
-
-export const Block: FunctionComponent<
-  Props & { children: (props: Props) => ReactNode }
-> = ({ children, ...props }) => {
-  const ref = useRef<ReturnType<typeof block> | null>(null);
-  if (!ref.current) {
-    ref.current = block(children);
-  }
-  return createElement(ref.current, props);
 };
 
 const Effect: FunctionComponent<{ effect: () => void }> = ({ effect }) => {

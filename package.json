@@ -46,6 +46,11 @@
       "types": "./dist/compiler.d.ts",
       "import": "./dist/compiler.mjs",
       "require": "./dist/compiler.cjs"
+    },
+    "./next": {
+      "types": "./dist/next.d.ts",
+      "import": "./dist/next.mjs",
+      "require": "./dist/next.cjs"
     }
   },
   "packageManager": "pnpm@8.1.1",
