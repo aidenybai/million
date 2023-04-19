@@ -115,7 +115,7 @@ The source code is divided into two main folders:
 - `pages` - This folder contains all the pages of the website.
 - `components` - This folder contains all the components of the website.
 
-I suggest you to read the [Next.js documentation](https://nextjs.org/docs) to understand the project structure.
+Reading the [Next.js documentation](https://nextjs.org/docs) is highly recommended for understanding the project structure.
 
 To run the website locally, you need to install the dependencies and run the development server:
 
