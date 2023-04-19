@@ -32,7 +32,7 @@ Feature requests are tracked as [GitHub issues](https://guides.github.com/featur
 
 ### Fork the repository.
 
-Click on the fork button on the top of the page. This will create a copy of this repository in your account. Instead click [here](https://github.com/FrancescoXX/4c-site/fork) to fork the repository.
+Click on the fork button on the top of the page. This will create a copy of this repository in your account. Instead click [here](https://github.com/aidenybai/million/fork) to fork the repository.
 
 ### Clone the forked repository.
 
@@ -87,6 +87,7 @@ The commit message should be structured as follows:
 ```
 <type>(optional scope): <description>
 ```
+
 Push your local commits to the remote repository.
 
 ```bash
@@ -124,7 +125,6 @@ pnpm install # Install dependencies
 pnpm {command} # Run the development server
 ```
 
-
 `test` folder
 
 The `test` folder contains all the code related to the website. The website is built using [Next.js](https://nextjs.org/), a React framework. The website is hosted on [Vercel](https://vercel.com/).
@@ -143,8 +143,6 @@ npm i -g pnpm # Install yarn
 pnpm install # Install dependencies
 pnpm {command} # Run the development server
 ```
-
-
 
 `website` folder
 
