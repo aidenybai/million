@@ -120,7 +120,7 @@ I suggest you to read the [Next.js documentation](https://nextjs.org/docs) to un
 To run the website locally, you need to install the dependencies and run the development server:
 
 ```bash
-npm i -g pnpm # Install yarn
+npm i -g pnpm # Install pnpm
 pnpm install # Install dependencies
 pnpm {command} # Run the development server
 ```
