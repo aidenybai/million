@@ -84,10 +84,9 @@ We implement the Conventional Commits specification for commit messages. This sp
 
 The commit message should be structured as follows:
 
-```bash
+```
 <type>(optional scope): <description>
 ```
-
 Push your local commits to the remote repository.
 
 ```bash
