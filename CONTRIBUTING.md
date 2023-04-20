@@ -139,7 +139,8 @@ I suggest you to read the [Next.js documentation](https://nextjs.org/docs) to un
 To run the website locally, you need to install the dependencies and run the development server:
 
 ```bash
-npm i -g pnpm # Install yarn
+npm i -g pnpm # Install pnpm
+
 pnpm install # Install dependencies
 pnpm {command} # Run the development server
 ```
@@ -158,7 +159,10 @@ I suggest you to read the [Next.js documentation](https://nextjs.org/docs) to un
 To run the website locally, you need to install the dependencies and run the development server:
 
 ```bash
-npm i -g pnpm # Install yarn
+npm i -g pnpm # Install pnpm
 pnpm install # Install dependencies
 pnpm {command} # Run the development server
 ```
+
+
+> This contributing guideline was copied from [FrancescoXX/4c-site](https://github.com/FrancescoXX/4c-site). Thank you for the amazing guidelines.
