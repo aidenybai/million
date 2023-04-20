@@ -13,8 +13,9 @@ export const unwrap = (vnode?: ReactNode): VNode => {
   }
   const type = vnode.type as any;
   if (typeof type === 'function') {
-    return unwrap(type(vnode.props));
+    return unwrap(type(vnode.props ?? {}));
   }
+  if (typeof type === 'object' && '$' in type) return type;
 
   const props = { ...vnode.props };
   const children = vnode.props?.children;

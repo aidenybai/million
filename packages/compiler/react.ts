@@ -1,4 +1,5 @@
 import * as t from '@babel/types';
+import { addNamed } from '@babel/helper-module-imports';
 import type { NodePath } from '@babel/core';
 
 export const transformReact = (path: NodePath<t.CallExpression>) => {
@@ -30,12 +31,22 @@ export const transformReact = (path: NodePath<t.CallExpression>) => {
     const component = componentBinding?.path.node;
 
     if (t.isFunctionDeclaration(component)) {
-      handleComponent(path, component.body, component);
+      handleComponent(
+        path,
+        component.body,
+        component,
+        importSource.source.value,
+      );
     } else if (
       t.isVariableDeclarator(component) &&
       t.isArrowFunctionExpression(component.init)
     ) {
-      handleComponent(path, component.init.body, component);
+      handleComponent(
+        path,
+        component.init.body,
+        component,
+        importSource.source.value,
+      );
     } else {
       // eslint-disable-next-line no-console
       console.warn(
@@ -49,6 +60,7 @@ const handleComponent = (
   path: NodePath<t.CallExpression>,
   componentFunction: object | null | undefined,
   component: any,
+  sourceName: string,
 ) => {
   if (!t.isBlockStatement(componentFunction)) {
     // eslint-disable-next-line no-console
@@ -76,10 +88,12 @@ const handleComponent = (
 
   if (t.isReturnStatement(view) && t.isJSXElement(view.argument)) {
     const jsx = view.argument;
-    // Extracts all expressions / identifiers from the JSX element
-    const dynamics = getDynamicsFromJSX(path, jsx);
     const blockVariable = path.scope.generateUidIdentifier('block$');
     const componentVariable = path.scope.generateUidIdentifier('component$');
+
+    // Extracts all expressions / identifiers from the JSX element
+    const dynamics = getDynamicsFromJSX(path, jsx, sourceName);
+
     const forgettiCompatibleComponentName = t.identifier(
       `useBlock${componentVariable.name}`,
     );
@@ -123,8 +137,8 @@ const handleComponent = (
 const getDynamicsFromJSX = (
   path: NodePath<t.CallExpression>,
   jsx: t.JSXElement,
+  sourceName: string,
   dynamics: { id: t.Identifier; value: t.Expression | null }[] = [],
-  count = 0,
 ) => {
   const { openingElement } = jsx;
   const { attributes } = openingElement;
@@ -133,12 +147,87 @@ const getDynamicsFromJSX = (
     identifier: t.Identifier | null,
     expression: t.Expression | null,
   ) => {
-    // We need to create identifiers for expressions
-    const id = identifier || t.identifier(`__${count}`);
+    const id = identifier || path.scope.generateUidIdentifier('$');
     dynamics.push({ value: expression, id });
-    count++;
     return id;
   };
+
+  const type = openingElement.name;
+  if (t.isJSXIdentifier(type)) {
+    const componentBinding = path.scope.getBinding(type.name);
+    const component = componentBinding?.path.node;
+
+    if (
+      t.isFunctionDeclaration(component) ||
+      t.isVariableDeclarator(component) ||
+      type.name.startsWith(type.name[0]!.toUpperCase())
+    ) {
+      const createRoot = addNamed(path, 'createRoot', 'react-dom/client', {
+        nameHint: 'createRoot$',
+      });
+      const createElement = addNamed(path, 'createElement', 'react', {
+        nameHint: 'createElement$',
+      });
+
+      const objectProperties: t.ObjectProperty[] = [];
+      for (const attribute of openingElement.attributes) {
+        if (t.isJSXAttribute(attribute)) {
+          if (
+            t.isJSXAttribute(attribute) &&
+            t.isJSXExpressionContainer(attribute.value)
+          ) {
+            const { expression } = attribute.value;
+            const name = attribute.name;
+
+            if (t.isIdentifier(expression)) {
+              const id = createDynamic(expression, null);
+
+              if (t.isJSXIdentifier(name)) {
+                objectProperties.push(
+                  t.objectProperty(t.identifier(name.name), id),
+                );
+              }
+            } else if (t.isExpression(expression)) {
+              const id = createDynamic(null, expression);
+              attribute.value.expression = id;
+              if (t.isJSXIdentifier(name)) {
+                objectProperties.push(
+                  t.objectProperty(t.identifier(name.name), id),
+                );
+              }
+            }
+          }
+
+          if (t.isJSXSpreadAttribute(attribute)) {
+            throw new Error('Spread attributes in JSX are not supported.');
+          }
+        }
+      }
+
+      const nestedRender = t.arrowFunctionExpression(
+        [t.identifier('el')],
+        t.blockStatement([
+          t.expressionStatement(
+            t.callExpression(
+              t.memberExpression(
+                t.callExpression(createRoot, [t.identifier('el')]),
+                t.identifier('render'),
+              ),
+              [
+                t.callExpression(createElement, [
+                  t.identifier(type.name),
+                  t.objectExpression(objectProperties),
+                ]),
+              ],
+            ),
+          ),
+        ]),
+      );
+
+      const id = createDynamic(null, nestedRender);
+      openingElement.name = t.jsxIdentifier(id.name);
+    }
+  }
 
   for (let i = 0, j = attributes.length; i < j; i++) {
     const attribute = attributes[i]!;
@@ -178,7 +267,7 @@ const getDynamicsFromJSX = (
         child.expression = id;
       }
     } else if (t.isJSXElement(child)) {
-      getDynamicsFromJSX(path, child, dynamics, count);
+      getDynamicsFromJSX(path, child, sourceName, dynamics);
     }
   }
   return dynamics;
