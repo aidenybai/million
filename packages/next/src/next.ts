@@ -11,13 +11,19 @@ export const block = (Component: FunctionComponent) => {
       const importSource = async () => {
         // @ts-expect-error - is defined
         millionModule = await import('million/react');
-        blockFactory = millionModule.block(Component);
+        if (!blockFactory) {
+          blockFactory = millionModule.block(Component);
+        }
       };
       try {
         void importSource();
       } catch (e) {
         throw new Error('Failed to load Million library');
       }
+
+      return () => {
+        blockFactory = null;
+      };
     }, []);
 
     if (!blockFactory) {
@@ -59,6 +65,6 @@ export function For(props: {
   return createElement(
     'million-fragment',
     null,
-    // ...props.each.map(props.children),
+    ...props.each.map(props.children),
   );
 }

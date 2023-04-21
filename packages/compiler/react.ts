@@ -179,36 +179,34 @@ const getDynamicsFromJSX = (
 
       const objectProperties: t.ObjectProperty[] = [];
       for (const attribute of openingElement.attributes) {
-        if (t.isJSXAttribute(attribute)) {
-          if (
-            t.isJSXAttribute(attribute) &&
-            t.isJSXExpressionContainer(attribute.value)
-          ) {
-            const { expression } = attribute.value;
-            const name = attribute.name;
+        if (
+          t.isJSXAttribute(attribute) &&
+          t.isJSXExpressionContainer(attribute.value)
+        ) {
+          const { expression } = attribute.value;
+          const name = attribute.name;
 
-            if (t.isIdentifier(expression)) {
-              const id = createDynamic(expression, null);
+          if (t.isIdentifier(expression)) {
+            const id = createDynamic(expression, null);
 
-              if (t.isJSXIdentifier(name)) {
-                objectProperties.push(
-                  t.objectProperty(t.identifier(name.name), id),
-                );
-              }
-            } else if (t.isExpression(expression)) {
-              const id = createDynamic(null, expression);
-              attribute.value.expression = id;
-              if (t.isJSXIdentifier(name)) {
-                objectProperties.push(
-                  t.objectProperty(t.identifier(name.name), id),
-                );
-              }
+            if (t.isJSXIdentifier(name)) {
+              objectProperties.push(
+                t.objectProperty(t.identifier(name.name), id),
+              );
+            }
+          } else if (t.isExpression(expression)) {
+            const id = createDynamic(null, expression);
+            attribute.value.expression = id;
+            if (t.isJSXIdentifier(name)) {
+              objectProperties.push(
+                t.objectProperty(t.identifier(name.name), id),
+              );
             }
           }
+        }
 
-          if (t.isJSXSpreadAttribute(attribute)) {
-            throw new Error('Spread attributes in JSX are not supported.');
-          }
+        if (t.isJSXSpreadAttribute(attribute)) {
+          throw new Error('Spread attributes in JSX are not supported.');
         }
       }
 
