@@ -2,7 +2,7 @@
 import { createElement, useEffect, useReducer } from 'react';
 import type { ComponentProps, FunctionComponent } from 'react';
 
-let millionModule: any = null;
+let millionModule: typeof import('million/react') | null = null;
 
 export const block = (Component: FunctionComponent) => {
   let blockFactory: any;
