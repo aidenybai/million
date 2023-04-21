@@ -2,12 +2,7 @@ import { createUnplugin } from 'unplugin';
 import { transformAsync } from '@babel/core';
 import forgetti from 'forgetti';
 import babelPlugin from './babel';
-
-interface UserOptions {
-  ignoreFiles?: string[];
-  memo: boolean;
-  mode: 'react' | 'optimize';
-}
+import type { UserOptions } from './types';
 
 export const unplugin = createUnplugin((options?: UserOptions) => {
   return {
@@ -23,10 +18,6 @@ export const unplugin = createUnplugin((options?: UserOptions) => {
         }
 
         const plugins: any = ['@babel/plugin-syntax-jsx'];
-
-        if (/\.[t]sx$/.test(id)) {
-          // plugins.unshift('@babel/plugin-syntax-typescript');
-        }
 
         let result = await transformAsync(code, {
           plugins: [...plugins, [babelPlugin, options]],
@@ -116,6 +107,24 @@ export const unplugin = createUnplugin((options?: UserOptions) => {
     },
   };
 });
+
+export const withMillion =
+  ({ enabled = true } = {}) =>
+  (nextConfig: Record<string, any> = {}) => {
+    return {
+      ...nextConfig,
+      webpack(config: Record<string, any>, options: Record<string, any>) {
+        if (enabled) {
+          config.plugins.push(unplugin.webpack({ mode: 'next' }));
+        }
+
+        if (typeof nextConfig.webpack === 'function') {
+          return nextConfig.webpack(config, options);
+        }
+        return config;
+      },
+    };
+  };
 
 export { babelPlugin };
 export default unplugin;

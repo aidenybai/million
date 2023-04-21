@@ -10,9 +10,6 @@ importers:
       '@babel/plugin-syntax-jsx':
         specifier: ^7.21.4
         version: 7.21.4(@babel/core@7.21.0)
-      '@babel/plugin-syntax-typescript':
-        specifier: ^7.21.4
-        version: 7.21.4(@babel/core@7.21.0)
       '@babel/types':
         specifier: ^7.21.3
         version: 7.21.3

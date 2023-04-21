@@ -5,7 +5,7 @@ import type { ComponentProps, FunctionComponent } from 'react';
 let millionModule: any = null;
 
 export const block = (Component: FunctionComponent) => {
-  let blockFactory;
+  let blockFactory: any;
   function MillionBlockLoader(props: ComponentProps<any>) {
     useEffect(() => {
       const importSource = async () => {

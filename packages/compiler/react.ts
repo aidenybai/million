@@ -2,59 +2,67 @@ import * as t from '@babel/types';
 import { addNamed } from '@babel/helper-module-imports';
 import type { NodePath } from '@babel/core';
 
-export const transformReact = (path: NodePath<t.CallExpression>) => {
-  // TODO: allow aliasing (block as newBlock)
-  if (t.isIdentifier(path.node.callee, { name: 'block' })) {
-    // gets the binding for the "Component" in "block(Component)"
-    const blockFunction = path.scope.getBinding(path.node.callee.name);
-    if (!blockFunction) return;
-    const importSource = blockFunction.path.parent;
+export const transformReact =
+  (options?: Record<string, any>) => (path: NodePath<t.CallExpression>) => {
+    // TODO: allow aliasing (block as newBlock)
+    if (t.isIdentifier(path.node.callee, { name: 'block' })) {
+      // gets the binding for the "Component" in "block(Component)"
+      const blockFunction = path.scope.getBinding(path.node.callee.name);
+      if (!blockFunction) return;
+      const importSource = blockFunction.path.parent;
 
-    // Check if import is from million/react
-    if (
-      !t.isVariableDeclarator(path.parentPath.node) ||
-      !t.isImportDeclaration(importSource) ||
-      !importSource.source.value.includes('million')
-    ) {
-      return;
-    }
+      // Check if import is from million/react
+      if (
+        !t.isVariableDeclarator(path.parentPath.node) ||
+        !t.isImportDeclaration(importSource) ||
+        !importSource.source.value.includes('million')
+      ) {
+        return;
+      }
 
-    // Get the name of the component
-    const componentId = path.node.arguments[0] as t.Identifier;
-    if (!t.isIdentifier(componentId)) {
-      // eslint-disable-next-line no-console
-      return console.warn(
-        `Found unsupported argument for block. Make sure blocks consume the reference to a component function, not the direct declaration.`,
-      );
-    }
-    const componentBinding = path.scope.getBinding(componentId.name);
-    const component = componentBinding?.path.node;
+      if (
+        options?.mode === 'next' &&
+        importSource.source.value === 'million/react'
+      ) {
+        importSource.source.value = 'million/next';
+      }
 
-    if (t.isFunctionDeclaration(component)) {
-      handleComponent(
-        path,
-        component.body,
-        component,
-        importSource.source.value,
-      );
-    } else if (
-      t.isVariableDeclarator(component) &&
-      t.isArrowFunctionExpression(component.init)
-    ) {
-      handleComponent(
-        path,
-        component.init.body,
-        component,
-        importSource.source.value,
-      );
-    } else {
-      // eslint-disable-next-line no-console
-      console.warn(
-        `Found unsupported component declaration. Make sure blocks consume the reference to a component function.`,
-      );
+      // Get the name of the component
+      const componentId = path.node.arguments[0] as t.Identifier;
+      if (!t.isIdentifier(componentId)) {
+        // eslint-disable-next-line no-console
+        return console.warn(
+          `Found unsupported argument for block. Make sure blocks consume the reference to a component function, not the direct declaration.`,
+        );
+      }
+      const componentBinding = path.scope.getBinding(componentId.name);
+      const component = componentBinding?.path.node;
+
+      if (t.isFunctionDeclaration(component)) {
+        handleComponent(
+          path,
+          component.body,
+          component,
+          importSource.source.value,
+        );
+      } else if (
+        t.isVariableDeclarator(component) &&
+        t.isArrowFunctionExpression(component.init)
+      ) {
+        handleComponent(
+          path,
+          component.init.body,
+          component,
+          importSource.source.value,
+        );
+      } else {
+        // eslint-disable-next-line no-console
+        console.warn(
+          `Found unsupported component declaration. Make sure blocks consume the reference to a component function.`,
+        );
+      }
     }
-  }
-};
+  };
 
 const handleComponent = (
   path: NodePath<t.CallExpression>,

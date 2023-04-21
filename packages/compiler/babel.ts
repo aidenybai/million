@@ -7,7 +7,8 @@ export default declare((api, options) => {
   return {
     name: 'million',
     visitor: {
-      CallExpression: options.mode === 'optimize' ? optimize : transformReact,
+      CallExpression:
+        options.mode === 'optimize' ? optimize : transformReact(options),
     },
   };
 });
