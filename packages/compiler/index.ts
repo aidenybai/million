@@ -108,7 +108,7 @@ export const unplugin = createUnplugin((options?: UserOptions) => {
   };
 });
 
-export const withMillion =
+export const next =
   ({ enabled = true } = {}) =>
   (nextConfig: Record<string, any> = {}) => {
     return {
@@ -125,6 +125,9 @@ export const withMillion =
       },
     };
   };
+
+// @ts-expect-error - Hack to make this export work
+unplugin.next = next;
 
 export { babelPlugin };
 export default unplugin;

@@ -5,7 +5,6 @@
     "title": "Guide"
   },
   "quickstart": "Quickstart",
-  "next": "Usage Inside Next.js",
   "compiler": "Experimental compiler",
   "-- API Reference": {
     "type": "separator",
