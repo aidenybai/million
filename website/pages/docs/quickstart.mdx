@@ -72,7 +72,7 @@ Then, add the compiler to your bundler of choice:
   <Tab>
   ```js filename="rspack.config.js"
   // @ts-check
-  const million = require('million/compiler').default;
+  const { default: million } = require('million/compiler');
 
   /** @type {import('@rspack/cli').Configuration} */
   module.exports = {
