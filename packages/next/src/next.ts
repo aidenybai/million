@@ -1,5 +1,5 @@
 // Must be in an input folder for mkdist to build
-import { createElement, useEffect, useState } from 'react';
+import { createElement, useEffect, useReducer } from 'react';
 import type { ComponentProps, FunctionComponent } from 'react';
 
 let millionModule: any = null;
@@ -10,9 +10,8 @@ export const block = (Component: FunctionComponent) => {
     useEffect(() => {
       const importSource = async () => {
         // @ts-expect-error - is defined
-        const mod = await import('million/react');
-        blockFactory = mod.block(Component);
-        (window as any).__MILLION_REGISTRY__.set(Component, blockFactory);
+        millionModule = await import('million/react');
+        blockFactory = millionModule.block(Component);
       };
       try {
         void importSource();
@@ -39,13 +38,13 @@ export function For(props: {
   each: any[];
   children: (item: any, index: number) => any;
 }) {
-  const [mod, setMod] = useState<any>(millionModule);
+  const [_, forceUpdate] = useReducer((x: number) => x + 1, 0);
 
   useEffect(() => {
     const importSource = async () => {
       // @ts-expect-error - is defined
       millionModule = await import('million/react');
-      setMod(millionModule);
+      forceUpdate();
     };
     try {
       void importSource();
@@ -54,8 +53,8 @@ export function For(props: {
     }
   }, []);
 
-  if (mod) {
-    return createElement(mod.For, props);
+  if (millionModule) {
+    return createElement(millionModule.For, props);
   }
   return createElement(
     'million-fragment',

@@ -139,11 +139,11 @@ export class Block extends AbstractBlock {
             continue;
           }
           if (typeof value === 'function') {
-            const temp = document$.createElement('million-block');
+            const parent = document$.createElement('million-block');
             const childNodes = childNodes$.call(el);
 
-            value(temp);
-            insertBefore$.call(el, temp, childNodes[edit.i!]);
+            value(parent);
+            insertBefore$.call(el, parent, childNodes[edit.i!]);
             continue;
           }
           // insertText() on mount, setText() on patch

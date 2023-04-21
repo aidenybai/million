@@ -12,7 +12,7 @@ import {
   patch as patchBlock,
   remove$,
 } from '../million/block';
-import { Map$, MapSet$, MapHas$ } from '../million/constants';
+import { Map$, MapSet$, MapHas$, MapGet$ } from '../million/constants';
 import { unwrap } from './utils';
 import type { ReactNode, FunctionComponent } from 'react';
 import type { Props } from '../million';
@@ -45,7 +45,10 @@ export const block = (
   fn: (props: Props) => ReactNode,
   options: Options = {},
 ) => {
-  const block = createBlock(fn as any, unwrap);
+  const block = MapHas$.call(REGISTRY, fn)
+    ? MapGet$.call(REGISTRY, fn)
+    : createBlock(fn as any, unwrap);
+
   function MillionBlock(props: Props) {
     const ref = useRef<HTMLElement>(null);
     const patch = useRef<((props: Props) => void) | null>(null);
