@@ -36,7 +36,7 @@ export const transformReact =
         );
       }
       const componentBinding = path.scope.getBinding(componentId.name);
-      const component = componentBinding?.path.node;
+      const component = structuredClone(componentBinding?.path.node);
 
       if (t.isFunctionDeclaration(component)) {
         handleComponent(
@@ -132,12 +132,15 @@ const handleComponent = (
     component.id = componentVariable;
     path.node.arguments[0] = blockVariable;
 
-    path.parentPath.parentPath?.insertBefore(blockFunction);
-    path.parentPath.parentPath?.insertBefore(
+    const parentPath = path.parentPath.parentPath;
+    parentPath?.insertBefore(t.variableDeclaration('const', [component]));
+    parentPath?.insertBefore(blockFunction);
+    parentPath?.insertBefore(
       t.variableDeclaration('const', [
         t.variableDeclarator(temp, component.id),
       ]),
     );
+
     path.scope.crawl();
   }
 };
