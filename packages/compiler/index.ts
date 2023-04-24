@@ -108,23 +108,21 @@ export const unplugin = createUnplugin((options?: UserOptions) => {
   };
 });
 
-export const next =
-  ({ enabled = true } = {}) =>
-  (nextConfig: Record<string, any> = {}) => {
-    return {
-      ...nextConfig,
-      webpack(config: Record<string, any>, options: Record<string, any>) {
-        if (enabled) {
-          config.plugins.push(unplugin.webpack({ mode: 'next' }));
-        }
+export const next = (nextConfig: Record<string, any> = {}) => {
+  return {
+    ...nextConfig,
+    webpack(config: Record<string, any>, options: Record<string, any>) {
+      if (enabled) {
+        config.plugins.push(unplugin.webpack({ mode: 'next' }));
+      }
 
-        if (typeof nextConfig.webpack === 'function') {
-          return nextConfig.webpack(config, options);
-        }
-        return config;
-      },
-    };
+      if (typeof nextConfig.webpack === 'function') {
+        return nextConfig.webpack(config, options);
+      }
+      return config;
+    },
   };
+};
 
 // @ts-expect-error - Hack to make this export work
 unplugin.next = next;
