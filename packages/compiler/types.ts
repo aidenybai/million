@@ -5,6 +5,12 @@ import type {
   Identifier,
 } from '@babel/types';
 
+export interface UserOptions {
+  ignoreFiles?: string[];
+  memo?: boolean;
+  mode: 'react' | 'next' | 'optimize';
+}
+
 export interface IrEditBase {
   type: NumericLiteral;
   name?: StringLiteral;

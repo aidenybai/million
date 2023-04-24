@@ -1,5 +1,2 @@
-import { block, Block } from './block';
-
+export { block, REGISTRY } from './block';
 export { For } from './for';
-export { block, Block };
-export default Block;
