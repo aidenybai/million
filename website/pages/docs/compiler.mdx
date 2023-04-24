@@ -19,14 +19,14 @@ It current supports [Next.js (beta)](https://nextjs.org), [Vite](https://vitejs.
     Next.js support is currently in beta. Please report any issues you encounter.
   </Callout>
   ```js filename="next.config.mjs"
- import million from 'million/compiler';
+  import million from 'million/compiler';
  
   /** @type {import('next').NextConfig} */
   const nextConfig = {
     reactStrictMode: true,
   };
  
-export default million.next(nextConfig);
+  export default million.next(nextConfig);
   ```
   </Tab>
   <Tab>
