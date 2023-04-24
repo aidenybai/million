@@ -6,6 +6,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@codesandbox/sandpack-react": "^2.6.1",
     "@headlessui/react": "^1.7.13",
     "autoprefixer": "^10.4.13",
     "chart.js": "^4.2.1",
