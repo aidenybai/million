@@ -112,9 +112,7 @@ export const next = (nextConfig: Record<string, any> = {}) => {
   return {
     ...nextConfig,
     webpack(config: Record<string, any>, options: Record<string, any>) {
-      if (enabled) {
-        config.plugins.push(unplugin.webpack({ mode: 'next' }));
-      }
+      config.plugins.push(unplugin.webpack({ mode: 'next' }));
 
       if (typeof nextConfig.webpack === 'function') {
         return nextConfig.webpack(config, options);
