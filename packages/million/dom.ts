@@ -3,10 +3,11 @@
 import {
   EVENTS_REGISTRY,
   IS_NON_DIMENSIONAL,
-  Map$,
   NON_PROPS,
   Object$,
   Set$,
+  SetAdd$,
+  SetHas$,
   XLINK_NS,
   XML_NS,
 } from './constants';
@@ -42,14 +43,6 @@ export const characterDataSet$ = getOwnPropertyDescriptor$(
   characterData$,
   'data',
 )!.set!;
-
-export const SetHas$ = Set$.prototype.has;
-export const SetAdd$ = Set$.prototype.add;
-export const SetDelete$ = Set$.prototype.delete;
-
-export const MapHas$ = Map$.prototype.has;
-export const MapGet$ = Map$.prototype.get;
-export const MapSet$ = Map$.prototype.set;
 
 document$[EVENTS_REGISTRY] = new Set$();
 
