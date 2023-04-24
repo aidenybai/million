@@ -104,6 +104,14 @@ We expect all Million contributors to abide by the terms of our [Code of Conduct
 
 [**→ Start contributing on GitHub**](https://github.com/aidenybai/million/blob/main/.github/CONTRIBUTING.md)
 
+## Sponsors
+
+<p align="center">
+  <a href="https://github.com/sponsors/aidenybai">
+    <img src="https://raw.githubusercontent.com/aidenybai/aidenybai/master/sponsors.svg"/>
+  </a>
+</p>
+
 ## Acknowledgments
 
 Million takes heavy inspiration from the following projects:
