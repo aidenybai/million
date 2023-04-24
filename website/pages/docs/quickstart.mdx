@@ -48,14 +48,12 @@ Then, add the compiler to your bundler of choice:
   ```js filename="next.config.mjs"
   import million from 'million/compiler';
 
-  const withMillion = million.next();
-
   /** @type {import('next').NextConfig} */
   const nextConfig = {
     reactStrictMode: true,
   };
 
-  export default withMillion(nextConfig);
+  export default million.next(nextConfig);
   ```
   </Tab>
   <Tab>
