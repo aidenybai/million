@@ -185,7 +185,7 @@ const config: DocsThemeConfig = {
     key: '2.0.0-release',
     text: (
       <a href="https://github.com/aidenybai/million">
-        ⭐ ${packageJson['version']} is released. Leave a star →
+        ⭐ ${packageJson.version} is released. Leave a star →
       </a>
     ),
   },

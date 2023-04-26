@@ -88,6 +88,14 @@ The commit message should be structured as follows:
 <type>(optional scope): <description>
 ```
 
+Before you push your local commits to the remote repository.
+
+```bash
+pnpm cleanup
+pnpm lint
+pnpm test
+```
+
 Push your local commits to the remote repository.
 
 ```bash
