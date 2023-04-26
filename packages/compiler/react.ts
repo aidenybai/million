@@ -21,7 +21,7 @@ export const transformReact =
       }
 
       if (
-        options?.mode === 'next' &&
+        (options?.mode === 'next' || options?.mode === 'ssr') &&
         importSource.source.value === 'million/react'
       ) {
         importSource.source.value = 'million/next';
