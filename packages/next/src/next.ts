@@ -2,6 +2,8 @@
 import { createElement, useEffect, useReducer } from 'react';
 import type { ComponentProps, FunctionComponent } from 'react';
 
+// @ts-expect-error - is defined
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
 let millionModule: typeof import('million/react') | null = null;
 
 export const block = (Component: FunctionComponent) => {
