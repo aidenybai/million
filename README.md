@@ -33,7 +33,7 @@
 
 Million is an extremely fast and lightweight (`<4kb`) virtual DOM that makes [React components](https://reactjs.org) up to [_**70% faster**_](https://krausest.github.io/js-framework-benchmark/current.html).
 
-> Oh man... Another [`/virtual dom|javascript/gi{:js}`](https://regexr.com/6mr5f) framework? I'm fine with [React](https://reactjs.org) already, why do I need this?
+> Oh man... Another [`/virtual dom|javascript/gi`](https://regexr.com/6mr5f) framework? I'm fine with [React](https://reactjs.org) already, why do I need this?
 
 Million works with React. Million makes creating web apps just as easy (It's just wrapping a [React](https://reactjs.org) component!), but with faster rendering and loading speeds. By using a fine-tuned, optimized virtual DOM, Million.js reduces the overhead of React ([_try it out here_](https://demo.millionjs.org))
 
@@ -105,6 +105,14 @@ We expect all Million contributors to abide by the terms of our [Code of Conduct
 Here is the [Contributing Guideline]()
 
 [**→ Start contributing on GitHub**](https://github.com/aidenybai/million/blob/main/.github/CONTRIBUTING.md)
+
+## Sponsors
+
+<p align="center">
+  <a href="https://github.com/sponsors/aidenybai">
+    <img src="https://raw.githubusercontent.com/aidenybai/aidenybai/master/sponsors.svg"/>
+  </a>
+</p>
 
 ## Acknowledgments
 

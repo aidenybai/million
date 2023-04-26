@@ -15,6 +15,7 @@ import {
   firstChild$,
   nextSibling$,
   template$,
+  document$,
 } from './dom';
 import { renderToTemplate } from './template';
 import { AbstractBlock } from './types';
@@ -137,6 +138,14 @@ export class Block extends AbstractBlock {
             value.m(el);
             continue;
           }
+          if (typeof value === 'function') {
+            const parent = document$.createElement('million-block');
+            const childNodes = childNodes$.call(el);
+
+            value(parent);
+            insertBefore$.call(el, parent, childNodes[edit.i!]);
+            continue;
+          }
           // insertText() on mount, setText() on patch
           insertText(el, String(value), edit.i!);
         } else if (edit.t & EventFlag) {
@@ -213,6 +222,9 @@ export class Block extends AbstractBlock {
             const firstEdit = newBlock.e?.[i]?.e[k] as EditChild;
             const newChildBlock = newBlock.d[firstEdit.h];
             oldValue.p(newChildBlock);
+            continue;
+          }
+          if (typeof oldValue === 'function') {
             continue;
           }
           setText(el, String(newValue), edit.i!);

@@ -100,7 +100,15 @@ git push origin your-branch-name
 
 ## ✨ Understanding the project
 
-The project is divided into 3 main folders:
+## Prerequites
+
+This project uses [pnpm](https://pnpm.io/) as its package manager. If you had [nodejs](https://nodejs.org/en) installed, this is how you can install [pnpm](https://pnpm.io/) globally:
+
+```
+npm i -g pnpm # Install pnpm
+```
+
+The project uses a [monorepo](https://monorepo.tools/) structure. It is divided into 3 main folders:
 
 - `packages` - This folder contains all the packages used within the million library
 - `test` - This folder contains all the tests written for the million library
@@ -108,61 +116,61 @@ The project is divided into 3 main folders:
 
 ### `packages` folder
 
-The `packages` folder contains all the code related to the website. The website is built using [Next.js](https://nextjs.org/), a React framework. The website is hosted on [Vercel](https://vercel.com/).
+The `packages` folder contains all the code related to the million package. The package is built  using Typescript.
 
-The source code is divided into two main folders:
+The source code is divided into five main folders:
 
-- `pages` - This folder contains all the pages of the website.
-- `components` - This folder contains all the components of the website.
+* `compiler` - This folder contains all the code related to the millionjs React and NEXT compilers
+* `jsx-runtime` - This folder contains the code related to the runtime code for jsx.
+* `million` - This folder contains the code for the core millionjs package. The implementation of the optimized array rendering (`<For/>`), `block()` and virtual DOM for React are in here.
+* `next` - This folder contains the million support package for Nextjs
+* `react` - This folder contains the million support package for React
 
-Reading the [Next.js documentation](https://nextjs.org/docs) is highly recommended for understanding the project structure.
-
-To run the website locally, you need to install the dependencies and run the development server:
+To run the project locally, you need to install the dependencies.
 
 ```bash
-npm i -g pnpm # Install pnpm
 pnpm install # Install dependencies
-pnpm {command} # Run the development server
+cd {whichever of the packages}
+pnpm {command} # Run the project
 ```
 
 `test` folder
 
-The `test` folder contains all the code related to the website. The website is built using [Next.js](https://nextjs.org/), a React framework. The website is hosted on [Vercel](https://vercel.com/).
+This folder contains the code for the tests for the implemetation of core millionjs features like the "map-array" with ``<For/>, ``block() and so on. The test use the [Vitest Framework](https://vitest.dev/).
 
-The source code is divided into two main folders:
+The source code is divided into three main modules:
 
-- `pages` - This folder contains all the pages of the website.
-- `components` - This folder contains all the components of the website.
+- `block.test.tsx` - This file contains the code for the test written for the block
+- `map-array.test.tsx` - This file contains the code for the test written for the optimized array rendering that `<For/>`  offers.
+- `react-compiler.test.tsx` - This file contains the code for the test written for the compiler built for react million package.
 
-I suggest you to read the [Next.js documentation](https://nextjs.org/docs) to understand the project structure.
-
-To run the website locally, you need to install the dependencies and run the development server:
+To run the test locally:
 
 ```bash
-npm i -g pnpm # Install pnpm
-
 pnpm install # Install dependencies
-pnpm {command} # Run the development server
+pnpm run test # Run all tests
 ```
+
+
 
 `website` folder
 
-The `website` folder contains all the code related to the website. The website is built using [Next.js](https://nextjs.org/), a React framework. The website is hosted on [Vercel](https://vercel.com/).
+This folder contains the code for the millionjs website built with [Nextra](https://nextra.site/) a framework that allows you to build static websites with [Nextjs](https://nextjs.org/) and [MDX.](https://mdxjs.com/)
 
 The source code is divided into two main folders:
 
 - `pages` - This folder contains all the pages of the website.
 - `components` - This folder contains all the components of the website.
+- `styles` - This folder contains all the styles of the website
 
-I suggest you to read the [Next.js documentation](https://nextjs.org/docs) to understand the project structure.
+It is  suggested you to read the [Nextra](https://nextra.site/) to understand the project structure.
 
 To run the website locally, you need to install the dependencies and run the development server:
 
 ```bash
-npm i -g pnpm # Install pnpm
 pnpm install # Install dependencies
-pnpm {command} # Run the development server
+pnpm run dev # Run the development server
 ```
 
 
-> This contributing guideline was copied from [FrancescoXX/4c-site](https://github.com/FrancescoXX/4c-site). Thank you for the amazing guidelines.
+*This contributing guideline was copied from [FrancescoXX/4c-site](https://github.com/FrancescoXX/4c-site). Thank you for the amazing guidelines.*

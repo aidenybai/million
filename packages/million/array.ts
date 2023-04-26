@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { MapSet$, setTextContent$ } from './dom';
+import { setTextContent$ } from './dom';
 import { AbstractBlock } from './types';
 import { mount$, patch$, move$, remove$ } from './block';
-import { Map$ } from './constants';
+import { Map$, MapSet$ } from './constants';
 
 export const mapArray = (children: AbstractBlock[]) => {
   return new ArrayBlock(children);
@@ -121,7 +121,7 @@ export class ArrayBlock extends AbstractBlock {
     if (oldHead <= oldTail || newHead <= newTail) {
       if (oldHead > oldTail) {
         const nextChild = newChildren[newTail + 1];
-        for (let i = newHead; i <= newTail; i++) {
+        for (let i = newHead; i <= newTail; ++i) {
           mount$.call(newChildren[i], parent, nextChild ? nextChild.l : null);
         }
       } else {
