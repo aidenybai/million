@@ -179,10 +179,17 @@ importers:
         version: 13.2.1(@babel/core@7.21.3)(react-dom@18.2.0)(react@18.2.0)
       nextra:
         specifier: latest
+<<<<<<< HEAD
         version: 2.3.0(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
       nextra-theme-docs:
         specifier: latest
         version: 2.3.0(next@13.2.1)(nextra@2.3.0)(react-dom@18.2.0)(react@18.2.0)
+=======
+        version: 2.4.0(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
+      nextra-theme-docs:
+        specifier: latest
+        version: 2.4.0(next@13.2.1)(nextra@2.4.0)(react-dom@18.2.0)(react@18.2.0)
+>>>>>>> df289de0da064566408bea8bb4e8cf934d101e49
       postcss:
         specifier: ^8.4.21
         version: 8.4.21
@@ -5234,12 +5241,20 @@ packages:
       - '@babel/core'
       - babel-plugin-macros
     dev: false
+<<<<<<< HEAD
 
   /nextra-theme-docs@2.3.0(next@13.2.1)(nextra@2.3.0)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-KMvHhGOvaKIqR71Gnx+w/1c9LLfpQJ3+fnCAgg9qfjXo2agr1zRKyRDROyY8cGINdslpzmEGgs/MH2gDSAI6nw==}
     peerDependencies:
       next: '>=9.5.3'
       nextra: 2.3.0
+=======
+  /nextra-theme-docs@2.4.0(next@13.2.1)(nextra@2.4.0)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-RXwrMUOZANpw11d+IYaRW9OclwVYGcX6z4K27lLx1w2qCVW5Qvlfkm30lIKtqLrksgHnGa2UI50QzmQ0MYa5uw==}
+    peerDependencies:
+      next: '>=9.5.3'
+      nextra: 2.4.0
+>>>>>>> df289de0da064566408bea8bb4e8cf934d101e49
       react: '>=16.13.1'
       react-dom: '>=16.13.1'
     dependencies:
@@ -5254,15 +5269,24 @@ packages:
       next: 13.2.1(@babel/core@7.21.3)(react-dom@18.2.0)(react@18.2.0)
       next-seo: 5.15.0(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
       next-themes: 0.2.1(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
+<<<<<<< HEAD
       nextra: 2.3.0(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
+=======
+      nextra: 2.4.0(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
+>>>>>>> df289de0da064566408bea8bb4e8cf934d101e49
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       scroll-into-view-if-needed: 3.0.6
       zod: 3.21.4
     dev: false
+<<<<<<< HEAD
 
   /nextra@2.3.0(next@13.2.1)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-v17vMq2bJa15iKKt9+6AidSeIoKcK1ZlXmwqFqTgc0pQmRrl6pTJaSR36UZKcpMwvvLZ/7/xWuWV/OQB599O3g==}
+=======
+  /nextra@2.4.0(next@13.2.1)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-bAA1BOf/aegOXy878FLms3nOD4I+s8ksrPEoaFi1PrDzIATuf3ftgPf4y8vpgVGlkbE666p3bDHi7QHOclS22Q==}
+>>>>>>> df289de0da064566408bea8bb4e8cf934d101e49
     engines: {node: '>=16'}
     peerDependencies:
       next: '>=9.5.3'
