@@ -183,7 +183,7 @@ const config: DocsThemeConfig = {
     key: '2.0.0-release',
     text: (
       <a href="https://github.com/aidenybai/million">
-        ⭐ Million.js 2.0.0 is released. Leave a star →
+        ⭐ Million.js 2.3.0 is released. Leave a star →
       </a>
     ),
   },
