@@ -1,4 +1,4 @@
-# ✨ Contributing to this project
+# ✨ Contributing Guide
 
 First of all, thanks for taking the time to contribute! 🎉👍
 
@@ -40,7 +40,7 @@ Click on the fork button on the top of the page. This will create a copy of this
  git clone https://github.com/<your-username>/million.git
 ```
 
-or if use the github cli
+or if use the Github CLI
 
 ```bash
 gh repo clone <your-username>/million
@@ -49,7 +49,7 @@ gh repo clone <your-username>/million
 ### Navigate to the project directory.
 
 ```bash
-cd {/path}
+cd million
 ```
 
 ### Create a new branch (naming convention: type-description-issueNo)
@@ -102,10 +102,10 @@ git push origin your-branch-name
 
 ## Prerequites
 
-This project uses [pnpm](https://pnpm.io/) as its package manager. If you had [nodejs](https://nodejs.org/en) installed, this is how you can install [pnpm](https://pnpm.io/) globally:
+This project uses [pnpm](https://pnpm.io/) as its package manager. If you had [NodeJS](https://nodejs.org/en) installed, this is how you can install [pnpm](https://pnpm.io/) globally:
 
 ```
-npm i -g pnpm # Install pnpm
+npm i -g pnpm
 ```
 
 The project uses a [monorepo](https://monorepo.tools/) structure. It is divided into 3 main folders:
@@ -116,33 +116,27 @@ The project uses a [monorepo](https://monorepo.tools/) structure. It is divided 
 
 ### `packages` folder
 
-The `packages` folder contains all the code related to the Million.js package. The package is built  using Typescript.
+The `packages` folder contains all the code related to the Million.js package. The package is built using Typescript.
 
 The source code is divided into five main folders:
 
-* `compiler` - This folder contains all the code related to the Million.js React and Next.js compilers
-* `jsx-runtime` - This folder contains the code related to the runtime code for jsx.
-* `million` - This folder contains the code for the core Million.js package. The implementation of the optimized array rendering (`<For/>`), `block()` and virtual DOM for React are in here.
-* `next` - This folder contains the Million.js support package for Next.js
-* `react` - This folder contains the Million.js support package for React
+- `compiler` - This folder contains all the code related to the Million.js React and Next.js compilers
+- `jsx-runtime` - This folder contains the code related to the runtime code for jsx.
+- `million` - This folder contains the code for the core Million.js package. The implementation of the optimized array rendering (`<For/>`), `block()` and virtual DOM for React are in here.
+- `next` - This folder contains the Million.js support package for Next.js
+- `react` - This folder contains the Million.js support package for React
 
 To run the project locally, you need to install the dependencies.
 
 ```bash
 pnpm install # Install dependencies
-cd {whichever of the packages}
-pnpm {command} # Run the project
+cd website  # Takes you to the website mono-repo
+pnpm run dev # Run the project
 ```
 
-`test` folder
+### `test` folder
 
-This folder contains the code for the tests for the implemetation of core Million.js features like the "map-array" with ``<For/>, ``block() and so on. The test use the [Vitest Framework](https://vitest.dev/).
-
-The source code is divided into three main modules:
-
-- `block.test.tsx` - This file contains the code for the test written for the block
-- `map-array.test.tsx` - This file contains the code for the test written for the optimized array rendering that `<For/>`  offers.
-- `react-compiler.test.tsx` - This file contains the code for the test written for the compiler built for react Million.js package.
+This folder contains the code for the tests for the implemetation of core Million.js features like the "map-array" with `<For/>, `block() and so on. The test use the [Vitest](https://vitest.dev/).
 
 To run the test locally:
 
@@ -151,9 +145,9 @@ pnpm install # Install dependencies
 pnpm run test # Run all tests
 ```
 
-`website` folder
+### `website` folder
 
-This folder contains the code for the Million.js website built with [Nextra](https://nextra.site/) a framework that allows you to build static websites with [Next.js](https://nextjs.org/) and [MDX.](https://mdxjs.com/)
+This folder contains the code for the Million.js website built with [Nextra](https://nextra.site/) a framework that allows you to build static websites with [NextJS](https://nextjs.org/) and [MDX.](https://mdxjs.com/)
 
 The source code is divided into two main folders:
 
@@ -161,7 +155,7 @@ The source code is divided into two main folders:
 - `components` - This folder contains all the components of the website.
 - `styles` - This folder contains all the styles of the website
 
-It is  suggested you to read the [Nextra](https://nextra.site/) to understand the project structure.
+It is suggested you to read the [Nextra](https://nextra.site/) to understand the project structure.
 
 To run the website locally, you need to install the dependencies and run the development server:
 
@@ -170,19 +164,14 @@ pnpm install # Install dependencies
 pnpm run dev # Run the development server
 ```
 
+## Create A Dev Playground
 
-## To Test Million.js While Contributing
+To test your changes on Million locally, make sure you have an already existing [React.js](https://react.dev/learn/start-a-new-react-project) or [Next.js](https://nextjs.org/docs) project. Open your local project and do the following:
 
-To test your changes on Million locally, make sure you have an already existing [React.js ](https://react.dev/learn/start-a-new-react-project)or [Next.js](https://nextjs.org/docs) project. Open your local project and do the following:
-
-* Go to the parts of your project where you are importing Million and then change the paths to absolute paths that are links to the Million.js codebase you have on your machine. For example:
+- Go to the parts of your project where you are importing Million and then change the paths to absolute paths that are links to the Million.js codebase you have on your machine. For example:
 
   ```
-  /home/tobiloba/Desktop/million
+  import {block} from "/home/tobiloba/Desktop/million/react"
   ```
-* Make sure the server of your React.js or Next.js project is running.
-* Make changes to the Million.js codebase on your machine and see the changes happen.
-* That's all.
 
-
-*The template for this contributing guideline was copied from [FrancescoXX/4c-site](https://github.com/FrancescoXX/4c-site). Thank you for the amazing guidelines.*
+_The template for this contributing guideline was copied from [FrancescoXX/4c-site](https://github.com/FrancescoXX/4c-site). Thank you for the amazing guidelines._
