@@ -8,7 +8,7 @@ import type {
 export interface UserOptions {
   ignoreFiles?: string[];
   memo?: boolean;
-  mode: 'react' | 'next' | 'optimize';
+  mode: 'react' | 'next' | 'ssr' | 'optimize';
 }
 
 export interface IrEditBase {
