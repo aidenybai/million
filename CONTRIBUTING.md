@@ -26,7 +26,7 @@ Feature requests are tracked as [GitHub issues](https://guides.github.com/featur
 
 - **Use a clear and descriptive title** for the issue to identify the suggestion.
 - **Provide a in detail description of the suggested enhancement** in as many details as possible.
-- **Explain why this enhancement would be useful** to the website and the community.
+- **Explain why this enhancement would be useful** to the project and the community.
 
 ## 📝 Cloning the project & creating PR
 
@@ -49,7 +49,7 @@ gh repo clone <your-username>/million
 ### Navigate to the project directory.
 
 ```bash
-cd 
+cd {/path}
 ```
 
 ### Create a new branch (naming convention: type-description-issueNo)
