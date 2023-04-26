@@ -4,7 +4,6 @@ description: 'Get started with Million.js'
 ---
 
 import { Callout, Tabs, Tab, Cards, Card } from 'nextra-theme-docs';
-import { Sandpack } from "@codesandbox/sandpack-react";
 
 # Quickstart
 
@@ -125,48 +124,32 @@ In order to create blocks from your components, all you'll need to is wrap your 
 
 <br />
 
-<Sandpack
-  theme="auto"
-  options={{
-    editorHeight: 500,
-    editorWidthPercentage: 70
-  }}
-  template="vite-react"
-  customSetup={{
-    dependencies: {
-      "react": "latest",
-      "million": "latest"
-    }
-  }}
-  files={{
-    "vite.config.js": `import million from 'million/compiler';\nimport { defineConfig } from 'vite';\n\nexport default defineConfig({\n  plugins: [million.vite()],\n});`,
-    "/index.jsx": `import React, { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import "./styles.css";
-import App from "./App";
-const root = createRoot(document.getElementById("root"));
-root.render(<StrictMode><App /></StrictMode>);`,
-    "/App.jsx": `import React, { useState } from 'react';
+```jsx {3, 18}
+import React, { useState } from 'react';
+import { createRoot } from 'react-dom/client';
 import { block } from 'million/react';
 
-function App() {
+function Component({ initial, name }) {
   // ✅ hooks + object props are allowed
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(initial.count);
+  const greeting = `Hello ${name}!`;
 
   // ✅ always use a consistent, top level return
   return (
-    <button onClick={() => setCount(count + 1)}>
-      {count}
-    </button>
+    <div>
+      {greeting}
+      <button onClick={() => setCount(count + 1)}>{count}</button>
+    </div>
   );
 }
 
 // ✅ always define on a new line
-const AppBlock = block(App);
+const ComponentBlock = block(Component);
 
-export default AppBlock;`
-  }}
-/>
+createRoot(document.getElementById('root')).render(
+  <ComponentBlock name="Dan Jutan" initial={{ count: 0 }} />,
+);
+```
 
 Here's some things that are **not allowed:**
 
@@ -223,28 +206,9 @@ The `<For />{:jsx}` component is used to render a list of blocks. It takes an ar
 
 It's the best way to loop over an array (uses [`mapArray(){:jsx}`](/map-array) under the hood). As the array changes, `<For />{:jsx}` updates or moves items in the DOM rather than recreating them. Let's look at an example:
 
-<Sandpack
-  theme="auto"
-  options={{
-    editorHeight: 500,
-    editorWidthPercentage: 70
-  }}
-  template="vite-react"
-  customSetup={{
-    dependencies: {
-      "react": "latest",
-      "million": "latest"
-    }
-  }}
-  files={{
-    "vite.config.js": `import million from 'million/compiler';\nimport { defineConfig } from 'vite';\n\nexport default defineConfig({\n  plugins: [million.vite()],\n});`,
-     "/index.jsx": `import React, { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import "./styles.css";
-import App from "./App";
-const root = createRoot(document.getElementById("root"));
-root.render(<StrictMode><App /></StrictMode>);`,
-    "/App.jsx": `import React, { useState } from 'react';
+
+```jsx {8, 18-20}
+import { createRoot } from 'react-dom/client';
 import { block, For } from 'million/react';
 
 function Display({ item }) {
@@ -256,13 +220,9 @@ const DisplayBlock = block(Display);
 function App() {
   const [items, setItems] = useState([1, 2, 3]);
 
-  const handleClick = () => {
-    setItems([...items, items.length + 1]);
-  }
-
   return (
     <div>
-      <button onClick={handleClick}>
+      <button onClick={() => setItems([...items, items.length + 1])}>
         Add item
       </button>
       <For each={items}>
@@ -272,9 +232,8 @@ function App() {
   );
 }
 
-export default App;`
-  }}
-/>
+createRoot(document.getElementById('root')).render(<App />);
+```
 
 ```jsx {8, 18-20}
 import { createRoot } from 'react-dom/client';
