@@ -175,15 +175,14 @@ pnpm run dev # Run the development server
 
 To test your changes on Million locally, make sure you have an already existing [React.js ](https://react.dev/learn/start-a-new-react-project)or [Next.js](https://nextjs.org/docs) project. Open your local project and do the following:
 
-* [ ] Go to the parts of your project where you are importing Million and then change the paths to absolute paths that are links to the Million.js codebase you have on your machine. For example:
-
+* Go to the parts of your project where you are importing Million and then change the paths to absolute paths that are links to the Million.js codebase you have on your machine. For example:
 
   ```
   /home/tobiloba/Desktop/million
   ```
-* [ ] Make sure the server of your React.js or Next.js project is running.
-* [ ] Make changes to the Million.js codebase on your machine and see the changes happen.
-* [ ] That's all.
+* Make sure the server of your React.js or Next.js project is running.
+* Make changes to the Million.js codebase on your machine and see the changes happen.
+* That's all.
 
 
 *The template for this contributing guideline was copied from [FrancescoXX/4c-site](https://github.com/FrancescoXX/4c-site). Thank you for the amazing guidelines.*
