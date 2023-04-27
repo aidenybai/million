@@ -2,6 +2,8 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import { type DocsThemeConfig, useConfig } from 'nextra-theme-docs';
 import { ExtraContent } from './components/extra-content';
+import packageJson from '../package.json' assert { type: 'json' };
+
 
 const config: DocsThemeConfig = {
   logo: () => {
@@ -183,7 +185,7 @@ const config: DocsThemeConfig = {
     key: '2.0.0-release',
     text: (
       <a href="https://github.com/aidenybai/million">
-        ⭐ Million.js 2.0.0 is released. Leave a star →
+        ⭐ ${packageJson.version} is released. Leave a star →
       </a>
     ),
   },
