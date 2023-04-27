@@ -129,6 +129,12 @@ Million is being used at companies like [Wyze](https://wyze.com) and [Dimension]
 
 ## License
 
-Million is [MIT-licensed](LICENSE) open-source software by [Aiden Bai](https://aidenybai.com) and [contributors](https://github.com/aidenybai/million/graphs/contributors).
+Million is [MIT-licensed](LICENSE) open-source software by [Aiden Bai](https://aidenybai.com) and [contributors](https://github.com/aidenybai/million/graphs/contributors):
+
+<a href="https://github.com/aidenybai/million/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=aidenybai/million" />
+</a>
+
+<br />
 
 ![View count](https://hits-app.vercel.app/hits?url=https://github.com/aidenybai/million&bgRight=000&bgLeft=000)
