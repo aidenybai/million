@@ -391,7 +391,8 @@ export const BlockdomExample = () => {
       </div>
       <div className="w-full flex gap-2 justify-center items-center">
         <button
-          className="bg-gray-500 py-2 px-8 rounded font-bold hover:bg-gray-600 transition-colors"
+          className="bg-gray-500 py-2 px-8 rounded font-bold hover:bg-gray-600 transition-colors disabled:opacity-30"
+          disabled={frame <= 0}
           onClick={() => {
             if (frame <= 0) return;
             setFrame(frame - 1);
@@ -403,7 +404,8 @@ export const BlockdomExample = () => {
           ({frame + 1}/{frames.length})
         </p>
         <button
-          className="bg-gray-500 py-2 px-8 rounded font-bold hover:bg-gray-600 transition-colors"
+          className="bg-gray-500 py-2 px-8 rounded font-bold hover:bg-gray-600 transition-colors disabled:opacity-30"
+          disabled={frame >= frames.length - 1}
           onClick={() => {
             if (frame >= frames.length - 1) return;
             setFrame(frame + 1);

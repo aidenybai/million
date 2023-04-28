@@ -11,11 +11,11 @@ A comprehensive analysis on the current state of the virtual DOM, and what's to 
 
 ---
 
-<small>[AIDEN BAI](https://aidenybai.com) DEC 1 2023</small>
+<small>[AIDEN BAI](https://aidenybai.com) MAY 1 2023</small>
 
 <br />
 
-A little over four years ago, Rich Harris released [Virtual DOM is pure overhead](https://svelte.dev/blog/virtual-dom-is-pure-overhead), criticizing the performance "meme" <a href="#0"><sup>[0]</sup></a> that the virtual DOM is faster than the DOM.
+A little over four years ago, Rich Harris released [Virtual DOM is pure overhead](https://svelte.dev/blog/virtual-dom-is-pure-overhead), criticizing the performance "meme" <a href="#0"><sup>[0]</sup></a> that the virtual DOM is faster than the DOM. Which it is not.
 
 > <sup id="#0">[0]</sup> "you've probably heard the phrase 'the virtual DOM is fast',
 > often said to mean that it's faster than the real DOM. It's a surprisingly resilient
@@ -23,13 +23,13 @@ A little over four years ago, Rich Harris released [Virtual DOM is pure overhead
 
 Rich's article was not a critique of the virtual DOM itself. Rather, it was a critique of the performance meme that the virtual DOM is faster than the DOM.
 
-But what followed years after was the emergence of a new meme: that the virtual DOM is pure overhead. The meme became so resilient that it turned the "no virtual DOM" framework movement from an iconoclastic subgroup to a fully fledged crusade.
+But what followed years after was the emergence of a new meme: that the virtual DOM **is pure overhead**. The meme became so resilient that it turned the "no virtual DOM" framework movement from an iconoclastic subgroup to a fully fledged crusade.
 
 Thus, the virtual DOM was relegated to the "annoying cousin nobody likes but has to invite to family gatherings" status. It became necessary evil, a performance tax that we had to pay for the convenience of declarative UIs.
 
 Until now.
 
-## The Block Virtual DOM
+## Origin story
 
 Up until 2022, most frameworks thought of the virtual DOM as a tree of element nodes. These frameworks would then diff a "current" virtual DOM tree with a "new" virtual DOM tree, and apply the necessary changes to the real DOM.
 
@@ -37,13 +37,17 @@ Up until 2022, most frameworks thought of the virtual DOM as a tree of element n
 
 In the previous example, you can see that diffing depends on the size of the tree, ultimately resulting in the bottleneck of the virtual DOM.
 
-But in 2022, [Blockdom](https://github.com/ged-odoo/blockdom) was released–a major breakthrough in the virtual DOM space. Blockdom introduced the concept of "blocks"–Instead of diffing each node in the element tree, it extracts the dynamic content and diffs by the state.
+But in 2022, [Blockdom](https://github.com/ged-odoo/blockdom) was released–a major breakthrough in the virtual DOM space.
 
-Million.js takes a very similar approach to Blockdom.
+What did Blockdom do? They introduced the concept of the block virtual DOM.
+
+## The Block Virtual DOM
+
+Million.js takes a very similar approach to Blockdom. The Block virtual DOM takes a different approach to diffing–Instead of diffing each node in the element tree, it extracts the dynamic content and diffs by the state.
 
 If we take an example like this:
 
-```jsx {7-8,13-14,23}
+```jsx {7-8,13-14}
 import { useState } from 'react';
 import { block } from 'million/react';
 
@@ -73,12 +77,24 @@ function Count() {
 const CountBlock = block(Count);
 ```
 
+### Static Analysis
+
 <StaticAnalysisExample />
 
 We can essentially represent this as a block of elements:
+
+### Dirty Checking
 
 <BlockdomExample />
 
 ## Is this technique effective?
 
+**Yes\*.**
+
+The block virtual DOM is effective in cases where the number of dynamic nodes is small. In the previous example, the number of dynamic nodes is 2.
+
 ## Closing Thoughts
+
+The block virtual DOM introduces a new way of thinking about the virtual DOM. And while it's not a silver bullet (virtual DOM is still overhead), it's an interesting field that has a lot of exploring to do.
+
+Ultimately, my goal with Million.js is to finish what Blockdom started: to advance the idea of the block virtual DOM and see what we can make out of it.
