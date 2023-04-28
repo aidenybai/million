@@ -5,8 +5,9 @@ export const useDarkMode = () => {
 
   useEffect(() => {
     const detectDarkMode = () => {
-      const isDarkMode = document.documentElement.classList.contains('dark');
-      setIsDarkMode(isDarkMode);
+      const isDarkModeTailwind =
+        document.documentElement.classList.contains('dark');
+      setIsDarkMode(isDarkModeTailwind);
     };
 
     const observer = new MutationObserver((mutations) => {

@@ -1,0 +1,84 @@
+import Image from 'next/image';
+import { VirtualDomExample } from '../../components/virtual-dom-example';
+import { StaticAnalysisExample } from '../../components/static-analysis-example';
+import { BlockdomExample } from '../../components/blockdom-example';
+
+<Image src="/back-in-block.png" width={300} height={130} />
+
+# Virtual DOM: Back in Block
+
+A comprehensive analysis on the current state of the virtual DOM, and what's to come next.
+
+---
+
+<small>[AIDEN BAI](https://aidenybai.com) DEC 1 2023</small>
+
+<br />
+
+A little over four years ago, Rich Harris released [Virtual DOM is pure overhead](https://svelte.dev/blog/virtual-dom-is-pure-overhead), criticizing the performance "meme" <a href="#0"><sup>[0]</sup></a> that the virtual DOM is faster than the DOM.
+
+> <sup id="#0">[0]</sup> "you've probably heard the phrase 'the virtual DOM is fast',
+> often said to mean that it's faster than the real DOM. It's a surprisingly resilient
+> meme" – Harris, 2018
+
+Rich's article was not a critique of the virtual DOM itself. Rather, it was a critique of the performance meme that the virtual DOM is faster than the DOM.
+
+But what followed years after was the emergence of a new meme: that the virtual DOM is pure overhead. The meme became so resilient that it turned the "no virtual DOM" framework movement from an iconoclastic subgroup to a fully fledged crusade.
+
+Thus, the virtual DOM was relegated to the "annoying cousin nobody likes but has to invite to family gatherings" status. It became necessary evil, a performance tax that we had to pay for the convenience of declarative UIs.
+
+Until now.
+
+## The Block Virtual DOM
+
+Up until 2022, most frameworks thought of the virtual DOM as a tree of element nodes. These frameworks would then diff a "current" virtual DOM tree with a "new" virtual DOM tree, and apply the necessary changes to the real DOM.
+
+<VirtualDomExample />
+
+In the previous example, you can see that diffing depends on the size of the tree, ultimately resulting in the bottleneck of the virtual DOM.
+
+But in 2022, [Blockdom](https://github.com/ged-odoo/blockdom) was released–a major breakthrough in the virtual DOM space. Blockdom introduced the concept of "blocks"–Instead of diffing each node in the element tree, it extracts the dynamic content and diffs by the state.
+
+Million.js takes a very similar approach to Blockdom.
+
+If we take an example like this:
+
+```jsx {7-8,13-14,23}
+import { useState } from 'react';
+import { block } from 'million/react';
+
+function Count() {
+  const [count, setCount] = useState(0);
+
+  const node1 = count + 1;
+  const node2 = count + 2;
+
+  return (
+    <div>
+      <ul>
+        <li>{node1}</li>
+        <li>{node2}</li>
+      </ul>
+      <button
+        onClick={() => {
+          setCount(count + 1);
+        }}
+      >
+        Increment Count
+      </button>
+    </div>
+  );
+}
+
+const CountBlock = block(Count);
+```
+
+<StaticAnalysisExample />
+
+We can essentially represent this as a block of elements:
+
+<BlockdomExample />
+
+## Is this technique effective?
+
+## Closing Thoughts
