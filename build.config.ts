@@ -26,6 +26,9 @@ export default defineBuildConfig({
   rollup: {
     emitCJS: true,
     inlineDependencies: true,
+    esbuild: {
+      banner: '"use client";',
+    },
   },
   externals: ['react', 'react-dom'],
 });

@@ -96,7 +96,7 @@ Looking for the docs? Check the [documentation](https://millionjs.org) out.
 
 Want to talk to the community? Hop in our [Discord](https://discord.gg/X9yFbcV2rF) and share your ideas and what you've build with Million.
 
-Have a question about Million? Post it on the [Discord](https://discord.gg/X9yFbcV2rF) or [GitHub Discussions](https://github.com/aidenybai/million/discussions) and ask the community for help.
+Have a question about Million? Post it on the [Discord](https://discord.gg/X9yFbcV2rF) and ask the community for help.
 
 Find a bug? Head over to our [issue tracker](https://github.com/aidenybai/million/issues) and we'll do our best to help. We love pull requests, too!
 
