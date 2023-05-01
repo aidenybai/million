@@ -83,7 +83,11 @@ The Block virtual DOM takes a different approach to diffing, and can be broken d
 
 2. **Dirty Checking**: The state (**not** the virtual DOM tree) is diffed the to determine what has changed. If the state has changed, the DOM is updated directly via the "Edit Mapping."
 
-Since Million.js takes a similar approach to Blockdom, we'll be using Million.js as an example for the rest of this article.
+Since Million.js takes a similar approach to Blockdom, we'll be using Million.js syntax for the rest of this article.
+
+### Counter Example
+
+Let's take a look at a simple counter example and how it would be handled with Million.js
 
 ```jsx {7-8,13-14}
 import { useState } from 'react';
