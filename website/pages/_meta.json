@@ -11,6 +11,10 @@
     "type": "page",
     "title": "Documentation"
   },
+  "blog": {
+    "type": "page",
+    "title": "Blog"
+  },
   "demo": {
     "title": "Demo",
     "type": "page",

@@ -14,8 +14,8 @@ import {
 } from '../million/block';
 import { Map$, MapSet$, MapHas$, MapGet$ } from '../million/constants';
 import { unwrap } from './utils';
-import type { ReactNode, FunctionComponent } from 'react';
 import type { Props } from '../million';
+import type { ReactNode, FunctionComponent } from 'react';
 
 interface Options {
   shouldUpdate?: (oldProps: Props, newProps: Props) => boolean;

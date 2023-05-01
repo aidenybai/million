@@ -193,7 +193,7 @@ export class Block extends AbstractBlock {
     return root;
   }
   p(newBlock: AbstractBlock): HTMLElement {
-    const root = this.l as HTMLElement;
+    const root = this.l!;
     if (!newBlock.d) return root;
     const props = this.d!;
     // If props are the same, no need to patch
