@@ -35,6 +35,9 @@ importers:
       '@vercel/style-guide':
         specifier: ^4.0.2
         version: 4.0.2(eslint@8.39.0)(prettier@2.8.8)(typescript@5.0.4)
+      '@vitest/coverage-c8':
+        specifier: ^0.30.1
+        version: 0.30.1(vitest@0.30.1)
       bumpp:
         specifier: ^9.1.0
         version: 9.1.0
@@ -1885,6 +1888,17 @@ packages:
       - eslint-import-resolver-webpack
       - jest
       - supports-color
+    dev: true
+
+  /@vitest/coverage-c8@0.30.1(vitest@0.30.1):
+    resolution: {integrity: sha512-/Wa3dtSuckpdngAmiCwowaEXXgJkqPrtfvrs9HTB9QoEfNbZWPu4E4cjEn4lJZb4qcGf4fxFtUA2f9DnDNAzBA==}
+    peerDependencies:
+      vitest: '>=0.30.0 <1'
+    dependencies:
+      c8: 7.13.0
+      picocolors: 1.0.0
+      std-env: 3.3.2
+      vitest: 0.30.1(jsdom@21.1.1)
     dev: true
 
   /@vitest/expect@0.30.1:
