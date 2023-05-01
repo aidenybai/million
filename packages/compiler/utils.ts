@@ -11,7 +11,7 @@ export const chainOrLogic = (
 
   return t.logicalExpression(
     '||',
-    first as t.BinaryExpression,
+    first!,
     chainOrLogic(...rest),
   );
 };

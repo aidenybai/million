@@ -11,6 +11,7 @@
     "autoprefixer": "^10.4.13",
     "chart.js": "^4.2.1",
     "classnames": "^2.3.2",
+    "framer-motion": "^10.12.4",
     "markprompt": "^0.1.6",
     "next": "^13.0.6",
     "nextra": "latest",
