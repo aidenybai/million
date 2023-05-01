@@ -10,15 +10,7 @@ const withNextra = nextra({
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
-  // async redirects() {
-  //   return [
-  //     {
-  //       source: '/',
-  //       destination: '/docs',
-  //       permanent: false,
-  //     },
-  //   ];
-  // },
+  transpilePackages: ['framer-motion'],
 };
 
 // eslint-disable-next-line import/no-default-export

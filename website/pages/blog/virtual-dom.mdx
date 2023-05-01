@@ -31,7 +31,7 @@ A little over four years ago, Rich Harris released [Virtual DOM is pure overhead
 
 > <sup id="#0">[0]</sup> "you've probably heard the phrase 'the virtual DOM is fast',
 > often said to mean that it's faster than the real DOM. It's a surprisingly resilient
-> meme" – Harris, 2018
+> meme" - Harris, 2018
 
 In his article "Virtual DOM is pure overhead," Rich Harris argues that the virtual DOM, a widely praised feature of frameworks like React, is not as efficient as many developers believe. He goes on to critique the way it works and presents an alternative approach.
 
@@ -136,7 +136,7 @@ You can see that the dirty checking example takes much less computation than the
 
 ## Is this technique effective?
 
-**Yes\*, but it's not a silver bullet.** [(View latest benchmark)](https://krausest.github.io/js-framework-benchmark/2023/table_chrome_112.0.5615.49.html)
+**Yes, but it's not a silver bullet.** [(View latest benchmark)](https://krausest.github.io/js-framework-benchmark/2023/table_chrome_112.0.5615.49.html)
 
 <Chart />
 
@@ -214,7 +214,6 @@ Instead, you should recognize certain patterns where the block virtual DOM is fa
 The block virtual DOM offers a fresh perspective on the virtual DOM concept, providing an alternative approach to managing updates and minimizing overhead. Despite its potential, it is not a one-size-fits-all solution, and developers should evaluate the specific needs and performance requirements of their applications before deciding whether to adopt this approach.
 
 For many applications, the conventional virtual DOM may be sufficient, and there may be no need to switch to the block virtual DOM or other performance-focused frameworks. If your application runs smoothly without performance issues on most devices, it might not be worth the time and effort to transition to a different framework. It's essential to carefully weigh the trade-offs and evaluate your application's unique requirements before making any major changes to your tech stack.
-
 
 That said, I'm excited to see what the future holds for it. Are you too?
 
