@@ -80,9 +80,9 @@ In 2022, [Blockdom](https://github.com/ged-odoo/blockdom) was released. Taking a
 
 The Block virtual DOM takes a different approach to diffing, and can be broken down into two parts:
 
-1. **Static Analysis**: The virtual DOM is analyzed to extract dynamic parts of the tree into a "Edit Mapping."
+1. **Static Analysis**: The virtual DOM is analyzed to extract dynamic parts of the tree into a "Edit Map," or the list of the "edits" (mappings) of the dynamic parts of the virtual DOM to the state.
 
-2. **Dirty Checking**: The state (**not** the virtual DOM tree) is diffed the to determine what has changed. If the state has changed, the DOM is updated directly via the "Edit Mapping."
+2. **Dirty Checking**: The state (**not** the virtual DOM tree) is diffed the to determine what has changed. If the state has changed, the DOM is updated directly via the Edit Map.
 
 Since Million.js takes a similar approach to Blockdom, we'll be using Million.js syntax for the rest of this article.
 
@@ -125,13 +125,13 @@ const CountBlock = block(Count);
 
 The static analysis step can occur at compile time or the first thing at runtime, depending on whether you use Milllion.js' experimental compiler or not.
 
-This step is responsible for extracting dynamic parts of the virtual DOM into a the Edit Mapping, which stores the "edits" (mappings) of the dynamic parts of the virtual DOM to the state.
+This step is responsible for extracting dynamic parts of the virtual DOM into a the Edit Map.
 
 <StaticAnalysisExample />
 
 ### Dirty Checking
 
-After the Edit Mapping is created, the dirty checking step can begin. This step is responsible for determining what has changed in the state, and updating the DOM accordingly.
+After the Edit Map is created, the dirty checking step can begin. This step is responsible for determining what has changed in the state, and updating the DOM accordingly.
 
 <BlockVDomExample />
 
@@ -145,7 +145,7 @@ You can see that the dirty checking example takes much less computation than the
 
 Million.js sports pretty high performance, and is able to outperform React in the JavaScript Framework Benchmark. But it's important understand how Million.js can be fast in this case.
 
-The JavaScript Framework Benchmark is a benchmark that tests the performance of frameworks by rendering a large table of rows and columns. The benchmark is designed to test the performance highly unrealistic tests (like adding/replacing 1000 rows), and is not necessarily representative of real world applications.
+The JavaScript Framework Benchmark is a benchmark that tests the performance of frameworks by rendering a large table of rows and columns. The benchmark is designed to test the performance highly unrealistic performance tests (like adding/replacing 1000 rows), and is not necessarily representative of real world applications.
 
 So where can Million.js or the block virtual DOM be used?
 
@@ -176,9 +176,11 @@ But you may not see much difference between the block virtual DOM and the regula
 </div>
 ```
 
+If you're building an admin dashboard, or a website of components with lots of static content, the block virtual DOM might be a good fit for you. But if you're building a website where the computation it takes to diff the data is significantly greater than the computation it takes to diff the virtual DOM, you might not see much of a difference.
+
 ### "Stable" UI trees
 
-The block virtual DOM is also good for "stable" UI trees, or UI trees that don't change much. This is because the Edit Mapping is only created once, and shouldn't need to be recreated on every render.
+The block virtual DOM is also good for "stable" UI trees, or UI trees that don't change much. This is because the Edit Map is only created once, and shouldn't need to be recreated on every render.
 
 For example, the following component would be a good candidate for the block virtual DOM:
 
@@ -206,6 +208,8 @@ function Component() {
 }
 ```
 
+Notice how there is a limitation how the application UI can be structured.
+
 ### Use granularly
 
 One of the biggest mistakes begineers make is using the block virtual DOM everywhere. This is a bad idea, because the block virtual DOM is not a silver bullet, and is not always faster than the regular virtual DOM.
@@ -224,9 +228,9 @@ That said, I'm excited to see what the future holds for it. Are you too? ([Go bu
 
 ### Acknowledgements
 
-- [Seb Lorber](https://twitter.com/sebastienlorber) for suggesting this blog article
-- [Jesse Pense](https://twitter.com/JessePence5) for article inspiration resources
-- [Everyone](https://twitter.com/aidenybai/status/1651286922957062144) who commented on the thread for feedback
+- [Seb Lorber](https://twitter.com/sebastienlorber) for suggesting this post idea
+- [Jesse Pense](https://twitter.com/JessePence5) for helping read and edit the post
+- [Dan Jutan](https://twitter.com/jutanium) for making the [fastest investment of 2023](https://twitter.com/jutanium/status/1652907080330665984)
 - [Rich Harris](https://twitter.com/Rich_Harris)'s "Virtual DOM is pure overhead"
 - [Dan Abramov](https://twitter.com/dan_abramov)'s "React as a UI runtime"
 - [Ryan Carniato](https://twitter.com/RyanCarniato)'s "Components are Pure Overhead"

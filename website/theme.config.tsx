@@ -123,7 +123,7 @@ const config: DocsThemeConfig = {
     const ogConfig = {
       title: 'Million.js',
       description:
-        'Million is an extremely fast and lightweight <4kb virtual DOM that makes React up to 70% faster',
+        'The Virtual DOM Replacement for React',
       author: {
         twitter: 'aidenybai',
       },
