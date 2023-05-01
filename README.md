@@ -83,8 +83,8 @@ This repo is a "mono-repo" with modules. Million ships as one NPM package, but h
 
 You can also track our progress through our [Roadmap](https://github.com/users/aidenybai/projects/5/views/1?layout=roadmap).
 
-| Module                                                                              | Description                                          |
-| ----------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| Module                                                                               | Description                                          |
+| ------------------------------------------------------------------------------------ | ---------------------------------------------------- |
 | [`million`](https://github.com/aidenybai/million/tree/main/packages/million)         | The main Virtual DOM with all of Million's core.     |
 | [`react`](https://github.com/aidenybai/million/tree/main/packages/react)             | A module that gives React compatibility for Million. |
 | [`compiler`](https://github.com/aidenybai/million/tree/main/packages/compiler)       | The compiler for Million in React.                   |
@@ -92,17 +92,13 @@ You can also track our progress through our [Roadmap](https://github.com/users/a
 
 ## Resources & Contributing Back
 
-Looking for the docs? Check the [documentation](https://millionjs.org) out.
+Looking for the docs? Check the [documentation](https://millionjs.org) or the [Contributing Guide](https://github.com/aidenybai/million/blob/main/.github/CONTRIBUTING.md) out.
 
 Want to talk to the community? Hop in our [Discord](https://discord.gg/X9yFbcV2rF) and share your ideas and what you've build with Million.
-
-Have a question about Million? Post it on the [Discord](https://discord.gg/X9yFbcV2rF) and ask the community for help.
 
 Find a bug? Head over to our [issue tracker](https://github.com/aidenybai/million/issues) and we'll do our best to help. We love pull requests, too!
 
 We expect all Million contributors to abide by the terms of our [Code of Conduct](https://github.com/aidenybai/million/blob/main/.github/CODE_OF_CONDUCT.md).
-
-Here is the [Contributing Guideline]()
 
 [**→ Start contributing on GitHub**](https://github.com/aidenybai/million/blob/main/.github/CONTRIBUTING.md)
 
