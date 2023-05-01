@@ -1,11 +1,11 @@
 import { createElement, memo, useEffect, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
+import type { FC, ReactNode } from 'react';
 import { arrayMount$, arrayPatch$, arrayRemove$ } from '../million/array';
 import { mapArray, block as createBlock } from '../million';
 import { MapSet$, MapHas$, MapGet$ } from '../million/constants';
-import { REGISTRY } from './block';
 import type { Props } from '../million';
-import type { FC, ReactNode } from 'react';
+import { REGISTRY } from './block';
 
 const createChildren = (each: any[], getComponent: any) => {
   const children = Array(each.length);

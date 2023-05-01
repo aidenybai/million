@@ -10,7 +10,7 @@
   "scripts": {
     "build": "unbuild",
     "cleanup": "prettier --write ./**/*.{ts,tsx}",
-    "lint": "eslint ./packages --ext .ts --cache",
+    "lint": "eslint ./packages/million --ext .ts --cache",
     "lint:fix": "pnpm lint --fix",
     "test": "vitest run --coverage",
     "test:dev": "vitest watch",

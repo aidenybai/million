@@ -1,9 +1,9 @@
 import { addNamed } from '@babel/helper-module-imports';
 import * as t from '@babel/types';
+import type { NodePath } from '@babel/core';
 import { renderToString, renderToTemplate } from './render';
 import { chainOrLogic } from './utils';
 import type { IrEdit, IrEditBase, IrPrunedNode, IrTreeNode } from './types';
-import type { NodePath } from '@babel/core';
 
 export const optimize = (path: NodePath<t.CallExpression>) => {
   // TODO: allow aliasing (block as newBlock)

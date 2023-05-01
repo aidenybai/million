@@ -13,7 +13,7 @@
     "classnames": "^2.3.2",
     "framer-motion": "^10.12.4",
     "markprompt": "^0.1.6",
-    "next": "^13.0.6",
+    "next": "^13.3.2",
     "nextra": "latest",
     "nextra-theme-docs": "latest",
     "postcss": "^8.4.21",

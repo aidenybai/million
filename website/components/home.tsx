@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import CountUp from 'react-countup';
 import Tilt from 'react-parallax-tilt';
 import { Chart } from './chart';
 
@@ -26,10 +25,7 @@ export function Home() {
             <h1 className="mt-0 text-[26pt] font-extrabold leading-none dark:text-gray-50 md:text-[32pt] lg:text-[38pt] xl:text-[40pt]">
               Up to{' '}
               <span className="gradient-text inline-block">
-                <span className="font-mono">
-                  <CountUp useEasing end={70} duration={5} />
-                </span>
-                % faster*
+                <span className="font-mono">70</span>% faster*
               </span>
               <br />
               React components.

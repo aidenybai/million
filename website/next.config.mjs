@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/default
 import nextra from 'nextra';
 
 const withNextra = nextra({
@@ -9,9 +10,7 @@ const withNextra = nextra({
 /**
  * @type {import('next').NextConfig}
  */
-const nextConfig = {
-  transpilePackages: ['framer-motion'],
-};
+const nextConfig = {};
 
 // eslint-disable-next-line import/no-default-export
 export default withNextra(nextConfig);

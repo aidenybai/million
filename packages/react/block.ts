@@ -6,6 +6,7 @@ import {
   useMemo,
   useRef,
 } from 'react';
+import type { ReactNode, FunctionComponent } from 'react';
 import {
   block as createBlock,
   mount$,
@@ -13,9 +14,8 @@ import {
   remove$,
 } from '../million/block';
 import { Map$, MapSet$, MapHas$, MapGet$ } from '../million/constants';
-import { unwrap } from './utils';
-import type { ReactNode, FunctionComponent } from 'react';
 import type { Props } from '../million';
+import { unwrap } from './utils';
 
 interface Options {
   shouldUpdate?: (oldProps: Props, newProps: Props) => boolean;
