@@ -82,7 +82,7 @@ The Block virtual DOM takes a different approach to diffing, and can be broken d
 
 1. **Static Analysis**: The virtual DOM is analyzed to extract dynamic parts of the tree into a "Edit Map," or the list of the "edits" (mappings) of the dynamic parts of the virtual DOM to the state.
 
-2. **Dirty Checking**: The state (**not** the virtual DOM tree) is diffed the to determine what has changed. If the state has changed, the DOM is updated directly via the Edit Map.
+2. **Dirty Checking**: The state (**not** the virtual DOM tree) is diffed to determine what has changed. If the state has changed, the DOM is updated directly via the Edit Map.
 
 Since Million.js takes a similar approach to Blockdom, we'll be using Million.js syntax for the rest of this article.
 
@@ -123,9 +123,9 @@ const CountBlock = block(Count);
 
 ### Static Analysis
 
-The static analysis step can occur at compile time or the first thing at runtime, depending on whether you use Milllion.js' experimental compiler or not.
+The static analysis step can occur at compile time or the first thing at runtime, depending on whether you use Million.js' experimental compiler or not.
 
-This step is responsible for extracting dynamic parts of the virtual DOM into a the Edit Map.
+This step is responsible for extracting dynamic parts of the virtual DOM into the Edit Map.
 
 <StaticAnalysisExample />
 
