@@ -43,7 +43,7 @@ Until now.
 
 ## Origin story
 
-The virtual DOM was created to address performance issues caused by frequent manipulation of the real DOM. It is a lightweight, in-memory representation of the real DOM, which can be later used as refernce to update the actual web page.
+The virtual DOM was created to address performance issues caused by frequent manipulation of the real DOM. It is a lightweight, in-memory representation of the real DOM, which can be later used as reference to update the actual web page.
 
 When a component is rendered, the virtual DOM calculates the difference between the new state and the previous state (A process called "diffing") and makes the minimal set of changes to the real DOM to bring it in sync with the updated virtual DOM (a process called "reconciliation").
 
@@ -72,7 +72,7 @@ When React renders this component, it will go through the process of diffing (ch
 
 In the previous example, you can see that diffing depends on the size of the tree, ultimately resulting in the bottleneck of the virtual DOM. The more nodes you have, the more time it takes to diff.
 
-With newer frameworks like Svelte, the virtual DOM isn't even used because of the performance overhead. Instead, Svelte uses a technique called "dirty checking" to determine what has changed. Fine-grained reactivity frameworks like Solid.js take this a step further by pinpointing exactly what has changed and updating only that part of the DOM.
+With newer frameworks like Svelte, the virtual DOM isn't even used because of the performance overhead. Instead, Svelte uses a technique called "dirty checking" to determine what has changed. Fine-grained reactivity frameworks like SolidJS take this a step further by pinpointing exactly what has changed and updating only that part of the DOM.
 
 ## The Block Virtual DOM
 
@@ -88,15 +88,18 @@ Since Million.js takes a similar approach to Blockdom, we'll be using Million.js
 
 ### Counter Example
 
-Let's take a look at a simple counter example and how it would be handled with Million.js
+Let's take a look at a simple counter example and how it would be handled with Million.js:
 
 ```jsx {7-8,13-14}
 import { useState } from 'react';
 import { block } from 'million/react';
+
 function Count() {
   const [count, setCount] = useState(0);
+
   const node1 = count + 1;
   const node2 = count + 2;
+
   return (
     <div>
       <ul>
@@ -215,7 +218,7 @@ The block virtual DOM offers a fresh perspective on the virtual DOM concept, pro
 
 For many applications, the conventional virtual DOM may be sufficient, and there may be no need to switch to the block virtual DOM or other performance-focused frameworks. If your application runs smoothly without performance issues on most devices, it might not be worth the time and effort to transition to a different framework. It's essential to carefully weigh the trade-offs and evaluate your application's unique requirements before making any major changes to your tech stack.
 
-That said, I'm excited to see what the future holds for it. Are you too?
+That said, I'm excited to see what the future holds for it. Are you too? ([Go build your own!](https://github.com/aidenybai/hundred#readme))
 
 [Discuss on Twitter](https://mobile.twitter.com/search?q=https%3A%2F%2Fmillionjs.org%2Fblog%2Fvirtual-dom) | [Edit on GitHub](https://github.com/aidenybai/million/blob/main/website/pages/blog/virtual-dom.mdx)
 
