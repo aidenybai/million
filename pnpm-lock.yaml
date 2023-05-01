@@ -511,7 +511,7 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.21.0
-      '@babel/helper-plugin-utils': 7.20.2
+      '@babel/helper-plugin-utils': 7.21.5
     dev: false
 
   /@babel/plugin-syntax-jsx@7.21.4(@babel/core@7.21.5):
