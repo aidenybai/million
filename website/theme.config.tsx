@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { type DocsThemeConfig, useConfig } from 'nextra-theme-docs';
-import packageJson from '../package.json' assert { type: 'json' };
+import packageJson from '../package.json' assert { type: 'json'};
 import { ExtraContent } from './components/extra-content';
 
 
