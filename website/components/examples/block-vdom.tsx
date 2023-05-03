@@ -530,8 +530,8 @@ const frames = [
         y2="-89.87"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#10D310" />
-        <stop offset="1" stop-color="white" />
+        <stop stopColor="#10D310" />
+        <stop offset="1" stopColor="white" />
       </linearGradient>
     </defs>
   </motion.svg>,
@@ -870,8 +870,8 @@ const frames = [
         y2="-90.87"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#10D310" />
-        <stop offset="1" stop-color="white" />
+        <stop stopColor="#10D310" />
+        <stop offset="1" stopColor="white" />
       </linearGradient>
     </defs>
   </motion.svg>,
