@@ -31,13 +31,13 @@
 
 ## What is Million?
 
-Million is an extremely fast and lightweight (`<4kb`) virtual DOM that makes [React components](https://reactjs.org) up to [_**70% faster**_](https://krausest.github.io/js-framework-benchmark/current.html).
+Million is an extremely fast and lightweight (`<4kb`) virtual DOM that makes [React components](https://react.dev) up to [_**70% faster**_](https://krausest.github.io/js-framework-benchmark/current.html).
 
 > Oh man... Another [`/virtual dom|javascript/gi`](https://regexr.com/6mr5f) framework? I'm fine with [React](https://reactjs.org) already, why do I need this?
 
-Million works with React. Million makes creating web apps just as easy (It's just wrapping a [React](https://reactjs.org) component!), but with faster rendering and loading speeds. By using a fine-tuned, optimized virtual DOM, Million.js reduces the overhead of React ([_try it out here_](https://demo.millionjs.org))
+Million works with React. Million makes creating web apps just as easy (It's just wrapping a [React](https://react.dev) component!), but with faster rendering and loading speeds. By using a fine-tuned, optimized virtual DOM, Million.js reduces the overhead of React ([_try it out here_](https://demo.millionjs.org))
 
-**TL;DR:** Imagine [React](https://reactjs.org/) components running at the speed of raw JavaScript.
+**TL;DR:** Imagine [React](https://react.dev) components running at the speed of raw JavaScript.
 
 ### [**📚 Learn Million in <5 minutes! →**](https://millionjs.org/)
 
