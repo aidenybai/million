@@ -195,6 +195,9 @@ importers:
       postcss:
         specifier: ^8.4.21
         version: 8.4.21
+      powered-by-vercel:
+        specifier: ^1.1.0
+        version: 1.1.0(react@18.2.0)
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -5779,6 +5782,15 @@ packages:
       nanoid: 3.3.4
       picocolors: 1.0.0
       source-map-js: 1.0.2
+
+  /powered-by-vercel@1.1.0(react@18.2.0):
+    resolution: {integrity: sha512-j6Xib6yNtbUKJEEVCPg1D/Pq4cTiisusLo49oJ6TKjK3TVF1ouN5TwfziabGrF1Hx6HcndolqTKpyOgIa6jeEQ==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: ^16.14.0 || ^17.0.0
+    dependencies:
+      react: 18.2.0
+    dev: false
 
   /prelude-ls@1.1.2:
     resolution: {integrity: sha512-ESF23V4SKG6lVSGZgYNpbsiaAkdab6ZgOxe52p7+Kid3W3u3bxR4Vfd/o21dmN7jSt0IwgZ4v5MUd26FEtXE9w==}
