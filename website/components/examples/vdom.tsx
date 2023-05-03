@@ -635,8 +635,8 @@ const frames = [
         y2="83.9453"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#10D310" />
-        <stop offset="1" stop-color="white" />
+        <stop stopColor="#10D310" />
+        <stop offset="1" stopColor="white" />
       </linearGradient>
     </defs>
   </motion.svg>,
@@ -918,8 +918,8 @@ const frames = [
         y2="83.9453"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#10D310" />
-        <stop offset="1" stop-color="white" />
+        <stop stopColor="#10D310" />
+        <stop offset="1" stopColor="white" />
       </linearGradient>
     </defs>
   </motion.svg>,
@@ -1219,8 +1219,8 @@ const frames = [
         y2="103.63"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#10D310" />
-        <stop offset="1" stop-color="white" />
+        <stop stopColor="#10D310" />
+        <stop offset="1" stopColor="white" />
       </linearGradient>
     </defs>
   </motion.svg>,
@@ -1550,8 +1550,8 @@ const frames = [
         y2="103.63"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#10D310" />
-        <stop offset="1" stop-color="white" />
+        <stop stopColor="#10D310" />
+        <stop offset="1" stopColor="white" />
       </linearGradient>
     </defs>
   </motion.svg>,
