@@ -107,8 +107,9 @@ We expect all Million contributors to abide by the terms of our [Code of Conduct
 
 <p align="center">
   <a href="https://github.com/sponsors/aidenybai">
-    <img src="https://raw.githubusercontent.com/aidenybai/aidenybai/master/sponsors.svg"/>
+    <img src="https://raw.githubusercontent.com/aidenybai/aidenybai/master/sponsors.svg" />
   </a>
+  <a href="https://vercel.com?utm_source=millionjs&utm_campaign=oss"><img height="30" src="https://raw.githubusercontent.com/abumalick/powered-by-vercel/master/powered-by-vercel.svg" /></a>
 </p>
 
 ## Acknowledgments
@@ -131,7 +132,3 @@ Million is [MIT-licensed](LICENSE) open-source software by [Aiden Bai](https://a
 <a href="https://github.com/aidenybai/million/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=aidenybai/million" />
 </a>
-
-<br />
-
-[![Powered by Vercel](https://raw.githubusercontent.com/abumalick/powered-by-vercel/master/powered-by-vercel.svg)](https://vercel.com?utm_source=millionjs&utm_campaign=oss)
