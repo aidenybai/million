@@ -1,7 +1,8 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { type DocsThemeConfig, useConfig } from 'nextra-theme-docs';
-import packageJson from '../package.json' assert { type: 'json'};
+import PoweredByVercel from 'powered-by-vercel';
+import packageJson from '../package.json' assert { type: 'json' };
 import { ExtraContent } from './components/extra-content';
 
 const config: DocsThemeConfig = {
