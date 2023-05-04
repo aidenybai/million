@@ -1,9 +1,9 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { type DocsThemeConfig, useConfig } from 'nextra-theme-docs';
-import packageJson from '../package.json' assert { type: 'json'};
+import PoweredByVercel from 'powered-by-vercel';
+import packageJson from '../package.json' assert { type: 'json' };
 import { ExtraContent } from './components/extra-content';
-
 
 const config: DocsThemeConfig = {
   logo: () => {
@@ -108,13 +108,20 @@ const config: DocsThemeConfig = {
   docsRepositoryBase: 'https://github.com/aidenybai/million/tree/main/website/',
   footer: {
     text: (
-      <p>
-        MIT {new Date().getFullYear()} ©{' '}
-        <a target="_blank" href="https://aidenybai.com">
-          Aiden Bai
-        </a>
-        .
-      </p>
+      <div className="flex w-full items-center justify-between">
+        <div>
+          MIT {new Date().getFullYear()} ©{' '}
+          <a target="_blank" href="https://aidenybai.com">
+            Aiden Bai
+          </a>
+          .
+        </div>
+        <PoweredByVercel
+          utmSource="millionjs"
+          target="_blank"
+          rel="noopener noreferrer"
+        />
+      </div>
     ),
   },
   head: () => {
@@ -122,8 +129,7 @@ const config: DocsThemeConfig = {
     const { frontMatter } = useConfig();
     const ogConfig = {
       title: 'Million.js',
-      description:
-        'The Virtual DOM Replacement for React',
+      description: 'The Virtual DOM Replacement for React',
       author: {
         twitter: 'aidenybai',
       },
