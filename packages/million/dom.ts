@@ -12,6 +12,12 @@ import {
   XML_NS,
 } from './constants';
 
+if (typeof window === 'undefined') {
+  throw new Error(
+    'You need to use the Million.js compiler. See https://millionjs.org/docs/quickstart',
+  );
+}
+
 export const document$ = document;
 export const template$ = document$.createElement('template');
 

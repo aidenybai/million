@@ -21,10 +21,10 @@ export const transformReact =
       }
 
       if (
-        (options?.mode === 'next' || options?.mode === 'ssr') &&
+        (options?.mode === 'next' || options?.mode === 'react-server') &&
         importSource.source.value === 'million/react'
       ) {
-        importSource.source.value = 'million/next';
+        importSource.source.value = 'million/react-server';
       }
 
       // Get the name of the component
@@ -146,7 +146,7 @@ const handleComponent = (
 };
 
 const getDynamicsFromJSX = (
-  path: NodePath<t.CallExpression>,
+  path: NodePath<t.Node>,
   jsx: t.JSXElement,
   sourceName: string,
   dynamics: { id: t.Identifier; value: t.Expression | null }[] = [],
@@ -173,9 +173,14 @@ const getDynamicsFromJSX = (
       t.isVariableDeclarator(component) ||
       type.name.startsWith(type.name[0]!.toUpperCase())
     ) {
-      const createRoot = addNamed(path, 'createRoot', 'react-dom/client', {
-        nameHint: 'createRoot$',
-      });
+      const createRoot = addNamed(
+        path as any,
+        'createRoot',
+        'react-dom/client',
+        {
+          nameHint: 'createRoot$',
+        },
+      );
       const createElement = addNamed(path, 'createElement', 'react', {
         nameHint: 'createElement$',
       });

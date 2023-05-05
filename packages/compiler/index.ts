@@ -4,7 +4,7 @@ import forgetti from 'forgetti';
 import babelPlugin from './babel';
 import type { UserOptions } from './types';
 
-export const unplugin = createUnplugin((options?: UserOptions) => {
+const unplugin = createUnplugin((options?: UserOptions) => {
   return {
     enforce: 'pre',
     name: 'million',
@@ -18,6 +18,14 @@ export const unplugin = createUnplugin((options?: UserOptions) => {
         }
 
         const plugins: any = ['@babel/plugin-syntax-jsx'];
+
+        if (id.endsWith('.tsx')) {
+          console.log('adding tsx plugin');
+          plugins.unshift([
+            '@babel/plugin-transform-typescript',
+            { jsx: 'preserve' },
+          ]);
+        }
 
         let result = await transformAsync(code, {
           plugins: [...plugins, [babelPlugin, options]],
@@ -102,17 +110,18 @@ export const unplugin = createUnplugin((options?: UserOptions) => {
         }
         return result?.code ?? code;
       } catch (_err) {
+        console.log(_err);
         return code;
       }
     },
   };
 });
 
-export const next = (nextConfig: Record<string, any> = {}) => {
+const next = (nextConfig: Record<string, any> = {}) => {
   return {
     ...nextConfig,
     webpack(config: Record<string, any>, options: Record<string, any>) {
-      config.plugins.push(unplugin.webpack({ mode: 'ssr' }));
+      config.plugins.unshift(unplugin.webpack({ mode: 'react-server' }));
 
       if (typeof nextConfig.webpack === 'function') {
         return nextConfig.webpack(config, options);
@@ -122,8 +131,4 @@ export const next = (nextConfig: Record<string, any> = {}) => {
   };
 };
 
-// @ts-expect-error - Hack to make this export work
-unplugin.next = next;
-
-export { babelPlugin };
-export default unplugin;
+export default { ...unplugin, next };
