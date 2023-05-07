@@ -148,7 +148,7 @@ export class Block extends AbstractBlock {
           }
 
           if (value === null || value === undefined || value === false) {
-            continue
+            continue;
           }
 
           // insertText() on mount, setText() on patch
@@ -233,8 +233,12 @@ export class Block extends AbstractBlock {
             continue;
           }
 
-          if (newValue === null || newValue === undefined || newValue === false) {
-            continue
+          if (
+            newValue === null ||
+            newValue === undefined ||
+            newValue === false
+          ) {
+            continue;
           }
 
           setText(el, String(newValue), edit.i!);
