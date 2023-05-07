@@ -131,4 +131,6 @@ const FORGETTI_OPTIONS = {
   },
 };
 
+export { babelPlugin };
+
 export default unplugin;
