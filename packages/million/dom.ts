@@ -12,6 +12,12 @@ import {
   XML_NS,
 } from './constants';
 
+if (typeof window === 'undefined') {
+  throw new Error(
+    "See http://millionjs.org/docs/quickstart to use the compiler. If that doesn't work, import from `million/react-server` instead.",
+  );
+}
+
 export const document$ = document;
 export const template$ = document$.createElement('template');
 
