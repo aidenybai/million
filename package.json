@@ -79,12 +79,12 @@
   "dependencies": {
     "@babel/core": "^7.21.0",
     "@babel/plugin-syntax-jsx": "^7.21.4",
+    "@babel/plugin-syntax-typescript": "^7.21.4",
     "@babel/types": "^7.21.3",
     "forgetti": "^0.4.4",
     "unplugin": "^1.3.1"
   },
   "devDependencies": {
-    "@babel/plugin-syntax-typescript": "^7.21.4",
     "@types/babel__core": "^7.20.0",
     "@types/node": "^18.14.1",
     "@typescript-eslint/eslint-plugin": "^5.53.0",
