@@ -17,10 +17,11 @@ export const unplugin = createUnplugin((options?: UserOptions) => {
           return code;
         }
 
-        const plugins: any = [
-          '@babel/plugin-syntax-jsx',
-          ['@babel/plugin-syntax-typescript', { isTSX: true }],
-        ];
+        const plugins: any = ['@babel/plugin-syntax-jsx'];
+
+        if (id.endsWith('.tsx')) {
+          plugins.push(['@babel/plugin-syntax-typescript', { isTSX: true }]);
+        }
 
         let result = await transformAsync(code, {
           plugins: [...plugins, [babelPlugin, options]],
