@@ -13,29 +13,14 @@ Million.js has an optimizing compiler that can be used to optimize block initial
 
 It current supports [Next.js (beta)](https://nextjs.org), [Vite](https://vitejs.dev), [Webpack](https://webpack.js.org), [Rollup](https://rollupjs.org), [RSPack](https://www.rspack.dev/), and [ESBuild](https://esbuild.github.io/) through [`unplugin`](https://github.com/unjs/unplugin).
 
-<Tabs items={['Next.js (beta)', 'Vite', 'Webpack', 'Rollup', 'Rspack', 'Esbuild']} storageKey="selected-bundler-compiler">
-  <Tab>
-  <Callout>
-    Next.js support is currently in beta. Please report any issues you encounter.
-  </Callout>
-  ```js filename="next.config.mjs"
-  import million from 'million/compiler';
-
-  /** @type {import('next').NextConfig} */
-  const nextConfig = {
-    reactStrictMode: true,
-  };
-
-  export default million.next(nextConfig);
-  ```
-  </Tab>
+<Tabs items={['Vite', 'Webpack', 'Rollup', 'Rspack', 'Esbuild']} storageKey="selected-bundler-compiler">
   <Tab>
   ```js filename="vite.config.js"
   import million from 'million/compiler';
   import { defineConfig } from 'vite';
 
   export default defineConfig({
-    plugins: [million.vite({ mode: 'optimize' | 'react' | 'ssr', ignoreFiles: [] })],
+    plugins: [million.vite({ mode: 'optimize', ignoreFiles: [] })],
   });
   ```
   </Tab>
@@ -44,7 +29,7 @@ It current supports [Next.js (beta)](https://nextjs.org), [Vite](https://vitejs.
   import million from 'million/compiler';
 
   export default {
-    plugins: [million.webpack({ mode: 'optimize' | 'react' | 'ssr', ignoreFiles: [] })],
+    plugins: [million.webpack({ mode: 'optimize', ignoreFiles: [] })],
   };
   ```
   </Tab>
@@ -53,7 +38,7 @@ It current supports [Next.js (beta)](https://nextjs.org), [Vite](https://vitejs.
   import million from 'million/compiler';
 
   export default {
-    plugins: [million.rollup({ mode: 'optimize' | 'react' | 'ssr', ignoreFiles: [] })],
+    plugins: [million.rollup({ mode: 'optimize', ignoreFiles: [] })],
   };
   ```
   </Tab>
@@ -64,7 +49,7 @@ It current supports [Next.js (beta)](https://nextjs.org), [Vite](https://vitejs.
 
   /** @type {import('@rspack/cli').Configuration} */
   module.exports = {
-    plugins: [million.rspack({ mode: 'optimize' | 'react' | 'ssr', ignoreFiles: [] })],
+    plugins: [million.rspack({ mode: 'optimize', ignoreFiles: [] })],
   };
   ```
   </Tab>
@@ -74,7 +59,7 @@ It current supports [Next.js (beta)](https://nextjs.org), [Vite](https://vitejs.
   import { build } from 'esbuild';
 
   build({
-    plugins: [million.esbuild({ mode: 'optimize' | 'react' | 'ssr', ignoreFiles: [] })],
+    plugins: [million.esbuild({ mode: 'optimize', ignoreFiles: [] })],
   });
   ```
   </Tab>

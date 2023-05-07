@@ -40,7 +40,7 @@ Otherwise, inside your project directory, run the following command:
 
 Then, add the compiler to your bundler of choice:
 
-<Tabs items={['Next.js (beta)', 'Vite', 'Webpack', 'Rollup', 'Rspack', 'Esbuild']} storageKey="selected-bundler-compiler">
+<Tabs items={['Next.js', 'Astro', 'Vite', 'Webpack', 'Rollup', 'Rspack', 'Esbuild']} storageKey="selected-bundler-compiler">
   <Tab>
   <Callout>
     Next.js support is currently in beta. Please report any issues you encounter.
@@ -54,6 +54,21 @@ Then, add the compiler to your bundler of choice:
   };
 
   export default million.next(nextConfig);
+  ```
+  </Tab>
+  <Tab>
+  <Callout>
+    Astro support is currently in beta. Please report any issues you encounter.
+  </Callout>
+  ```js filename="astro.config.mjs"
+  import { defineConfig } from 'astro/config';
+  import million from 'million/compiler';
+
+  export default defineConfig({
+    vite: {
+      plugins: [million.vite()]
+    }
+  });
   ```
   </Tab>
   <Tab>
@@ -106,7 +121,6 @@ Then, add the compiler to your bundler of choice:
   ```
   </Tab>
 </Tabs>
-
 
 ## Learn Million.js
 

@@ -40,37 +40,7 @@ Alternatively, view on another tab: [demo.millionjs.org](https://demo.millionjs.
 
 ## How does it work?
 
-A virtual DOM is a methodology enabling creating user interfaces declaratively, while efficiently manipulating the DOM. Instead, you create a virtual representation of the DOM, and the virtual DOM library will take care of updating the actual DOM for you.
-
-The virtual DOM is used by many popular libraries, including [React](https://react.dev) and [Preact](https://preactjs.com/). However, it suffers from [performance overhead](https://svelte.dev/blog/virtual-dom-is-pure-overhead), making it less efficient.
-
-Below you can see the "diff" algorithm needing to check against every node in the tree in order to make one simple change.
-
-<div className="flex justify-center my-3">
-  <Image
-    src="/vdom-diff.svg"
-    alt="Hello"
-    width={700}
-    height={500}
-    className="rounded-lg shadow"
-  />
-</div>
-
-Comparatively, Million.js uses a "block" virtual DOM. It achieves this by statically analyzing JSX and creating a "mapping" between the props and the DOM. This allows Million.js to skip the diffing step and directly update the DOM after dirty checking the props.
-
-<div className="flex justify-center my-3">
-  <Image
-    src="/block-diff.svg"
-    alt="Hello"
-    width={700}
-    height={500}
-    className="rounded-lg shadow"
-  />
-</div>
-
-By keeping the update step minimal with a small block tree and direct mappings to the DOM, Million.js can achieve fast benchmarks on the [JS Framework Benchmark](https://krausest.github.io/js-framework-benchmark/current.html). The long-term goal is to serve as a faithful partner to existing frameworks (_like React_), allowing them to be faster and more lightweight without migrating your entire project to a new framework.
-
-> Interested in playing with a simple implementation of the block virtual DOM? Check out [`hundred`](https://github.com/aidenybai/hundred/blob/main/src/index.ts)
+Go read: [Virtual DOM: Back in Block](http://millionjs.org/blog/virtual-dom).
 
 ## Sponsors
 

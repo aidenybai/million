@@ -7,7 +7,7 @@
     "@babel/helper-module-imports": "^7.18.6",
     "@babel/helper-plugin-utils": "^7.20.2",
     "@babel/plugin-syntax-jsx": "^7.18.6",
-    "@babel/plugin-syntax-typescript": "^7.20.0",
+    "@babel/plugin-syntax-typescript": "^7.21.4",
     "@babel/plugin-transform-typescript": "^7.21.3",
     "@babel/types": "^7.21.2",
     "forgetti": "^0.4.6",

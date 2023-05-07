@@ -21,10 +21,10 @@ export const transformReact =
       }
 
       if (
-        (options?.mode === 'next' || options?.mode === 'ssr') &&
+        (options?.mode === 'next' || options?.mode === 'react-server') &&
         importSource.source.value === 'million/react'
       ) {
-        importSource.source.value = 'million/next';
+        importSource.source.value = 'million/react-server';
       }
 
       // Get the name of the component
@@ -133,15 +133,17 @@ const handleComponent = (
     path.node.arguments[0] = blockVariable;
 
     const parentPath = path.parentPath.parentPath;
-    parentPath?.insertBefore(t.variableDeclaration('const', [component]));
+    if (t.isFunctionDeclaration(component)) {
+      parentPath?.insertBefore(component);
+    } else {
+      parentPath?.insertBefore(t.variableDeclaration('const', [component]));
+    }
     parentPath?.insertBefore(blockFunction);
     parentPath?.insertBefore(
       t.variableDeclaration('const', [
         t.variableDeclarator(temp, component.id),
       ]),
     );
-
-    path.scope.crawl();
   }
 };
 

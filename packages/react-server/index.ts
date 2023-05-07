@@ -1,4 +1,3 @@
-// Must be in an input folder for mkdist to build
 import { createElement, useEffect, useReducer } from 'react';
 import type { ComponentProps, FunctionComponent } from 'react';
 
