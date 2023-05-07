@@ -6,20 +6,7 @@ export default defineBuildConfig({
     './packages/react',
     './packages/jsx-runtime',
     './packages/compiler',
-    {
-      builder: 'mkdist',
-      input: './packages/next/src',
-      outDir: './dist',
-      format: 'esm',
-      declaration: true,
-    },
-    {
-      builder: 'mkdist',
-      input: './packages/next/src',
-      outDir: './dist',
-      format: 'cjs',
-      ext: 'cjs',
-    },
+    './packages/react-server',
   ],
   declaration: true,
   clean: true,
@@ -27,5 +14,5 @@ export default defineBuildConfig({
     emitCJS: true,
     inlineDependencies: true,
   },
-  externals: ['react', 'react-dom'],
+  externals: ['react', 'react-dom', 'million'],
 });
