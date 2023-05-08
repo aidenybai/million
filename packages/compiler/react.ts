@@ -3,10 +3,12 @@ import { addNamed } from '@babel/helper-module-imports';
 import type { NodePath } from '@babel/core';
 
 export const transformReact =
-  (options?: Record<string, any>) => (path: NodePath<t.CallExpression>) => {
+  (options: Record<string, any> = {}) =>
+  (path: NodePath<t.CallExpression>) => {
+    options._defer = [];
     // TODO: allow aliasing (block as newBlock)
     if (t.isIdentifier(path.node.callee, { name: 'block' })) {
-      // gets the binding for the "Component" in "block(Component)"
+      // gets the binding for the "block()" in "block(Component)"
       const blockFunction = path.scope.getBinding(path.node.callee.name);
       if (!blockFunction) return;
       const importSource = blockFunction.path.parent;
@@ -19,9 +21,12 @@ export const transformReact =
       ) {
         return;
       }
+      if (importSource.source.value === 'million') {
+        importSource.source.value = 'million/react';
+      }
 
       if (
-        (options?.mode === 'next' || options?.mode === 'react-server') &&
+        (options.mode === 'next' || options.mode === 'react-server') &&
         importSource.source.value === 'million/react'
       ) {
         importSource.source.value = 'million/react-server';
@@ -30,8 +35,9 @@ export const transformReact =
       // Get the name of the component
       const componentId = path.node.arguments[0] as t.Identifier;
       if (!t.isIdentifier(componentId)) {
-        throw path.buildCodeFrameError(
+        throw BlockError(
           'Found unsupported argument for block. Make sure blocks consume the reference to a component function, not the direct declaration.',
+          path,
         );
       }
       const componentBinding = path.scope.getBinding(componentId.name);
@@ -57,8 +63,9 @@ export const transformReact =
           importSource.source.value,
         );
       } else {
-        throw path.buildCodeFrameError(
+        throw BlockError(
           'You can only use block() with a function declaration or arrow function.',
+          path,
         );
       }
     }
@@ -72,15 +79,17 @@ const handleComponent = (
   sourceName: string,
 ) => {
   if (!t.isBlockStatement(componentFunction)) {
-    throw path.buildCodeFrameError(
+    throw BlockError(
       'Expected a block statement for the component function. Make sure you are using a function declaration or arrow function.',
+      path,
     );
   }
 
   const bodyLength = componentFunction.body.length;
   const correctSubPath = t.isVariableDeclarator(component)
     ? 'init.body.body'
-    : 'body';
+    : 'body.body';
+
   // Gets the returned JSX element
   for (let i = 0; i < bodyLength; ++i) {
     const node = componentFunction.body[i];
@@ -94,18 +103,19 @@ const handleComponent = (
       const ifStatementPath = componentBinding.path.get(
         `${correctSubPath}.${i}.consequent`,
       );
-      throw ifStatementPath.buildCodeFrameError(
+      throw BlockError(
         'You cannot use multiple returns in blocks. There can only be one return statement at the end of the block.',
+        path,
+        ifStatementPath,
       );
     }
   }
   const view = componentFunction.body[bodyLength - 1];
 
-  const returnJsxPath = componentBinding.path.get(
-    `${correctSubPath}.${bodyLength - 1}.argument`,
-  );
-
   if (t.isReturnStatement(view) && t.isJSXElement(view.argument)) {
+    const returnJsxPath = componentBinding.path.get(
+      `${correctSubPath}.${bodyLength - 1}.argument`,
+    );
     const jsx = view.argument;
     const blockVariable = path.scope.generateUidIdentifier('block$');
     const componentVariable = path.scope.generateUidIdentifier('component$');
@@ -135,6 +145,10 @@ const handleComponent = (
       ]),
     );
 
+    for (let i = 0; i < dynamics.length; ++i) {
+      dynamics[i]?.callback?.();
+    }
+
     // Swaps the names of the functions so that the component that wraps the
     // block is called instead
     const blockComponent = path.parentPath.node as any;
@@ -163,14 +177,19 @@ const getDynamicsFromJSX = (
   jsx: t.JSXElement,
   sourceName: string,
   returnJsxPath: any,
-  dynamics: { id: t.Identifier; value: t.Expression | null }[] = [],
+  dynamics: {
+    id: t.Identifier;
+    value: t.Expression | null;
+    callback: (() => void) | null;
+  }[] = [],
 ) => {
   const createDynamic = (
     identifier: t.Identifier | null,
     expression: t.Expression | null,
+    callback: (() => void) | null,
   ) => {
     const id = identifier || path.scope.generateUidIdentifier('$');
-    dynamics.push({ value: expression, id });
+    dynamics.push({ value: expression, id, callback });
     return id;
   };
 
@@ -203,7 +222,7 @@ const getDynamicsFromJSX = (
           const name = attribute.name;
 
           if (t.isIdentifier(expression)) {
-            const id = createDynamic(expression, null);
+            const id = createDynamic(expression, null, null);
 
             if (t.isJSXIdentifier(name)) {
               objectProperties.push(
@@ -211,8 +230,10 @@ const getDynamicsFromJSX = (
               );
             }
           } else if (t.isExpression(expression)) {
-            const id = createDynamic(null, expression);
-            attribute.value.expression = id;
+            const id = createDynamic(null, expression, () => {
+              // @ts-expect-error TypeScript doesn't know that this is a JSXAttribute even though it is.
+              attribute.value.expression = id;
+            });
             if (t.isJSXIdentifier(name)) {
               objectProperties.push(
                 t.objectProperty(t.identifier(name.name), id),
@@ -225,8 +246,10 @@ const getDynamicsFromJSX = (
           const spreadPath = returnJsxPath.get(
             `openingElement.attributes.${i}.argument`,
           );
-          throw spreadPath.buildCodeFrameError(
-            'Spread attributes in JSX are not supported.',
+          throw BlockError(
+            "Spread attributes aren't supported.",
+            path,
+            spreadPath,
           );
         }
       }
@@ -251,7 +274,7 @@ const getDynamicsFromJSX = (
         ]),
       );
 
-      const id = createDynamic(null, nestedRender);
+      const id = createDynamic(null, nestedRender, null);
       jsx.openingElement.name = t.jsxIdentifier(id.name);
     }
   }
@@ -266,10 +289,12 @@ const getDynamicsFromJSX = (
       const { expression } = attribute.value;
 
       if (t.isIdentifier(expression)) {
-        createDynamic(expression, null);
+        createDynamic(expression, null, null);
       } else if (t.isExpression(expression)) {
-        const id = createDynamic(null, expression);
-        attribute.value.expression = id;
+        const id = createDynamic(null, expression, () => {
+          // @ts-expect-error TypeScript doesn't know that this is a JSXAttribute even though it is.
+          attribute.value.expression = id;
+        });
       }
     }
 
@@ -277,9 +302,7 @@ const getDynamicsFromJSX = (
       const spreadPath = returnJsxPath.get(
         `openingElement.attributes.${i}.argument`,
       );
-      throw spreadPath.buildCodeFrameError(
-        'Spread attributes in JSX are not supported.',
-      );
+      throw BlockError("Spread attributes aren't supported.", path, spreadPath);
     }
   }
 
@@ -289,11 +312,13 @@ const getDynamicsFromJSX = (
     if (t.isJSXExpressionContainer(child)) {
       const { expression } = child;
       if (t.isIdentifier(expression)) {
-        createDynamic(expression, null);
+        createDynamic(expression, null, null);
       } else if (t.isJSXElement(expression)) {
         const expressionPath = returnJsxPath.get(`children.${i}.expression`);
-        throw expressionPath.buildCodeFrameError(
+        throw BlockError(
           'JSX elements cannot be used as expressions.',
+          path,
+          expressionPath,
         );
       } else if (t.isExpression(expression)) {
         if (
@@ -302,13 +327,15 @@ const getDynamicsFromJSX = (
           t.isIdentifier(expression.callee.property, { name: 'map' })
         ) {
           const expressionPath = returnJsxPath.get(`children.${i}.expression`);
-
-          throw expressionPath.buildCodeFrameError(
+          throw BlockError(
             'You are using an array as a child, which is not allowed. We recommend looking into <For /> (https://millionjs.org/docs/quickstart#for-)',
+            path,
+            expressionPath,
           );
         }
-        const id = createDynamic(null, expression);
-        child.expression = id;
+        const id = createDynamic(null, expression, () => {
+          child.expression = id;
+        });
       }
     } else if (t.isJSXElement(child)) {
       getDynamicsFromJSX(
@@ -321,4 +348,18 @@ const getDynamicsFromJSX = (
     }
   }
   return dynamics;
+};
+
+const BlockError = (
+  message: string,
+  path: NodePath<t.CallExpression>,
+  localPath?: NodePath,
+) => {
+  if (
+    t.isVariableDeclarator(path.parentPath.node) &&
+    t.isIdentifier(path.node.arguments[0])
+  ) {
+    path.parentPath.node.init = path.node.arguments[0];
+  }
+  return (localPath ?? path).buildCodeFrameError(message);
 };

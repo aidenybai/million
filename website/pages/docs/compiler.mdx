@@ -9,9 +9,9 @@ import { Callout, Tabs, Tab } from 'nextra-theme-docs';
 
 > "Compilers \[...\] are like 95% about convenience features, actually, and 5% about performance \[for web environments\]" [- Fabio Spampinato (author of Voby)](https://dev.to/fabiospampinato/voby-simplifications-over-solid-no-babel-no-compiler-5epg)
 
-Million.js has an optimizing compiler that can be used to optimize block initialization in `optimize` mode. The compiler supports other features like React Hooks, non-primitives, and auto-optimization of components in `react` mode.
+Million.js has an optimizing compiler that can be used to optimize block initialization in `optimize` mode. **Note that this is an experimental feature and may not work with React**.
 
-It current supports [Next.js (beta)](https://nextjs.org), [Vite](https://vitejs.dev), [Webpack](https://webpack.js.org), [Rollup](https://rollupjs.org), [RSPack](https://www.rspack.dev/), and [ESBuild](https://esbuild.github.io/) through [`unplugin`](https://github.com/unjs/unplugin).
+It current supports [Vite](https://vitejs.dev), [Webpack](https://webpack.js.org), [Rollup](https://rollupjs.org), [RSPack](https://www.rspack.dev/), and [ESBuild](https://esbuild.github.io/) through [`unplugin`](https://github.com/unjs/unplugin).
 
 <Tabs items={['Vite', 'Webpack', 'Rollup', 'Rspack', 'Esbuild']} storageKey="selected-bundler-compiler">
   <Tab>
