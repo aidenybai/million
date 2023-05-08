@@ -12,36 +12,30 @@ export const unplugin = createUnplugin((options?: UserOptions) => {
       return /\.[jt]sx$/.test(id);
     },
     async transform(code: string, id: string) {
-      try {
-        if (options?.ignoreFiles?.some((pattern) => id.match(pattern))) {
-          return code;
-        }
-
-        const plugins: any = ['@babel/plugin-syntax-jsx'];
-
-        if (id.endsWith('.tsx')) {
-          plugins.push(['@babel/plugin-syntax-typescript', { isTSX: true }]);
-        }
-
-        let result = await transformAsync(code, {
-          plugins: [...plugins, [babelPlugin, options]],
-        });
-
-        if (options?.memo || options?.memo === undefined) {
-          try {
-            result = await transformAsync(result?.code ?? code, {
-              plugins: [...plugins, [forgetti(), FORGETTI_OPTIONS]],
-            });
-          } catch (_err) {
-            /**/
-          }
-        }
-        return result?.code ?? code;
-      } catch (_err) {
-        throw new Error(
-          `Failed to compile ${id}. Please report this as an bug https://github.com/aidenybai/million/issues/new/choose`,
-        );
+      if (options?.ignoreFiles?.some((pattern) => id.match(pattern))) {
+        return code;
       }
+
+      const plugins: any = ['@babel/plugin-syntax-jsx'];
+
+      if (id.endsWith('.tsx')) {
+        plugins.push(['@babel/plugin-syntax-typescript', { isTSX: true }]);
+      }
+
+      let result = await transformAsync(code, {
+        plugins: [...plugins, [babelPlugin, options]],
+      });
+
+      if (options?.memo || options?.memo === undefined) {
+        try {
+          result = await transformAsync(result?.code ?? code, {
+            plugins: [...plugins, [forgetti(), FORGETTI_OPTIONS]],
+          });
+        } catch (_err) {
+          /**/
+        }
+      }
+      return result?.code ?? code;
     },
   };
 });
