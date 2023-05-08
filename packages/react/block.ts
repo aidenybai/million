@@ -82,8 +82,8 @@ export const block = (
     return vnode;
   }
 
-  if (!MapHas$.call(REGISTRY, fn)) {
-    MapSet$.call(REGISTRY, fn, block);
+  if (!MapHas$.call(REGISTRY, MillionBlock)) {
+    MapSet$.call(REGISTRY, MillionBlock, block);
   }
 
   return MillionBlock;
