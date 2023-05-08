@@ -16,9 +16,6 @@ importers:
       '@babel/types':
         specifier: ^7.21.3
         version: 7.21.3
-      forgetti:
-        specifier: ^0.4.4
-        version: 0.4.4(@babel/core@7.21.0)
       unplugin:
         specifier: ^1.3.1
         version: 1.3.1
@@ -107,9 +104,6 @@ importers:
       '@babel/types':
         specifier: ^7.21.2
         version: 7.21.2
-      forgetti:
-        specifier: ^0.4.6
-        version: 0.4.6(@babel/core@7.21.0)
       unplugin:
         specifier: ^1.3.0
         version: 1.3.0
@@ -191,10 +185,10 @@ importers:
         version: 13.2.1(@babel/core@7.21.4)(react-dom@18.2.0)(react@18.2.0)
       nextra:
         specifier: latest
-        version: 2.4.2(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
+        version: 2.5.0(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
       nextra-theme-docs:
         specifier: latest
-        version: 2.4.2(next@13.2.1)(nextra@2.4.2)(react-dom@18.2.0)(react@18.2.0)
+        version: 2.5.0(next@13.2.1)(nextra@2.5.0)(react-dom@18.2.0)(react@18.2.0)
       postcss:
         specifier: ^8.4.21
         version: 8.4.21
@@ -245,12 +239,6 @@ packages:
       '@jridgewell/gen-mapping': 0.1.1
       '@jridgewell/trace-mapping': 0.3.17
 
-  /@babel/code-frame@7.18.6:
-    resolution: {integrity: sha512-TDCmlK5eOvH+eH7cdAFlNXeVJqWIQ7gW9tY1GJIpUtFb6CmjVyq2VM3u71bOyR8CRihcCgMUYoDNyLXao3+70Q==}
-    engines: {node: '>=6.9.0'}
-    dependencies:
-      '@babel/highlight': 7.18.6
-
   /@babel/code-frame@7.21.4:
     resolution: {integrity: sha512-LYvhNKfwWSPpocw8GI7gpK2nq3HSDuEPC/uSYaALSJu9xjsalaaYFOq0Pwt5KmVqwEbZlDu81aLXwBOmD/Fv9g==}
     engines: {node: '>=6.9.0'}
@@ -270,7 +258,7 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       '@ampproject/remapping': 2.2.0
-      '@babel/code-frame': 7.18.6
+      '@babel/code-frame': 7.21.4
       '@babel/generator': 7.21.4
       '@babel/helper-compilation-targets': 7.20.7(@babel/core@7.21.0)
       '@babel/helper-module-transforms': 7.21.2
@@ -3511,34 +3499,6 @@ packages:
       signal-exit: 3.0.7
     dev: true
 
-  /forgetti@0.4.4(@babel/core@7.21.0):
-    resolution: {integrity: sha512-jbq6o8TH/Xwf8KrAWzeuJdZhczp9XTAJBpWajzMxeOdAh4oyz2YUAlTRbPJ8+NctLe84AHA2Ad0i1t7XiAUj9A==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      '@babel/core': ^7
-    dependencies:
-      '@babel/core': 7.21.0
-      '@babel/helper-module-imports': 7.18.6
-      '@babel/traverse': 7.21.4
-      '@babel/types': 7.21.4
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
-  /forgetti@0.4.6(@babel/core@7.21.0):
-    resolution: {integrity: sha512-heshWw+wdRDI+FE6Dc1Mz/MMFX3EX4AmFFvNFRzV65LpSU9dzR/lrBd1EcbTbcx4dQiVju/M451b4mCQTTbKuQ==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      '@babel/core': ^7
-    dependencies:
-      '@babel/core': 7.21.0
-      '@babel/helper-module-imports': 7.18.6
-      '@babel/traverse': 7.21.4
-      '@babel/types': 7.21.4
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
   /form-data@4.0.0:
     resolution: {integrity: sha512-ETEklSGi5t0QMZuiXoA/Q6vcnxcLQP5vdugSpuAyi6SVGi2clPPp+xgEhuMaHC+zGgn31Kd235W35f7Hykkaww==}
     engines: {node: '>= 6'}
@@ -5311,11 +5271,11 @@ packages:
       - babel-plugin-macros
     dev: false
 
-  /nextra-theme-docs@2.4.2(next@13.2.1)(nextra@2.4.2)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-5H6NJ38TlbgetNx9HjMmQcNpsp6GFH26TfjLVC0RWxhEPuoutSFpJ8RjWKXv6WEaWaL500CoErW0/DeXzuQGUg==}
+  /nextra-theme-docs@2.5.0(next@13.2.1)(nextra@2.5.0)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-xmJx0xj0Mewfr/h4xkZH5TuTB6qWeygCGW384ySqZA81LargQjEqw8a25BSif8dWaMAZZ+oIBOvJ2Et+CJytQQ==}
     peerDependencies:
       next: '>=9.5.3'
-      nextra: 2.4.2
+      nextra: 2.5.0
       react: '>=16.13.1'
       react-dom: '>=16.13.1'
     dependencies:
@@ -5330,15 +5290,15 @@ packages:
       next: 13.2.1(@babel/core@7.21.4)(react-dom@18.2.0)(react@18.2.0)
       next-seo: 6.0.0(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
       next-themes: 0.2.1(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
-      nextra: 2.4.2(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
+      nextra: 2.5.0(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       scroll-into-view-if-needed: 3.0.6
       zod: 3.21.4
     dev: false
 
-  /nextra@2.4.2(next@13.2.1)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-FH2BTCF8q3aBtc1w1pj1N6LMFyiMP5KL+w6Ph4s2M5FwTtv150dSNWWw5Hy2GgxLTi391B/CRkO31OCjp9trkA==}
+  /nextra@2.5.0(next@13.2.1)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-YvknuUvV2fdFY3F3gsxNFA2lwDWg3KHEAiyumUxZKOnW8+yTwocXGFccD76Py9fYxcmUL9ARo+PEusnXlWmLeQ==}
     engines: {node: '>=16'}
     peerDependencies:
       next: '>=9.5.3'
