@@ -7,9 +7,18 @@ import { REGISTRY } from './block';
 import type { Props } from '../million';
 import type { FC, ReactNode } from 'react';
 
-const createChildren = (each: any[], getComponent: any) => {
+const createChildren = (
+  each: any[],
+  getComponent: any,
+  prevEach: any[],
+  prevChildren: any[],
+) => {
   const children = Array(each.length);
   for (let i = 0, l = each.length; i < l; ++i) {
+    if (each[i] === prevEach[i]) {
+      children[i] = prevChildren[i];
+      continue;
+    }
     const vnode = getComponent(each[i], i);
 
     if (MapHas$.call(REGISTRY, vnode.type)) {
@@ -44,12 +53,24 @@ const MillionArray: FC<{
 }> = ({ each, children }) => {
   const ref = useRef<HTMLElement>(null);
   const fragmentRef = useRef<ReturnType<typeof mapArray> | null>(null);
+  const prevEach = useRef<any[]>(Array(each.length));
+  const prevChildren = useRef<any[]>(Array(each.length));
   if (fragmentRef.current) {
-    const newChildren = createChildren(each, children);
+    const newChildren = createChildren(
+      each,
+      children,
+      prevEach.current,
+      prevChildren.current,
+    );
     arrayPatch$.call(fragmentRef.current, mapArray(newChildren));
   }
   useEffect(() => {
-    const newChildren = createChildren(each, children);
+    const newChildren = createChildren(
+      each,
+      children,
+      prevEach.current,
+      prevChildren.current,
+    );
     fragmentRef.current = mapArray(newChildren);
     arrayMount$.call(fragmentRef.current, ref.current!);
     return () => {
