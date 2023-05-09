@@ -5,7 +5,8 @@
     "title": "Guide"
   },
   "quickstart": "Quickstart",
-  "compiler": "Experimental compiler",
+  "rules": "Rules of Blocks",
+  "compiler": "Optimizing compiler",
   "-- API Reference": {
     "type": "separator",
     "title": "API Reference"

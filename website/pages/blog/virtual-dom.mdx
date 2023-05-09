@@ -178,6 +178,16 @@ But you may not see much difference between the block virtual DOM and the regula
 
 If you're building an admin dashboard, or a website of components with lots of static content, the block virtual DOM might be a good fit for you. But if you're building a website where the computation it takes to diff the data is significantly greater than the computation it takes to diff the virtual DOM, you might not see much of a difference.
 
+For example, this component would be a **bad** candidate for the block virtual DOM, since there are more data values to diff than there are virtual DOM nodes:
+
+```jsx
+// 5 data values to diff
+function Component({ a, b, c, d, e }) {
+  // 1 virtual DOM node to diff
+  return <div>{a + b + c + d + e}</div>;
+}
+```
+
 ### "Stable" UI trees
 
 The block virtual DOM is also good for "stable" UI trees, or UI trees that don't change much. This is because the Edit Map is only created once, and shouldn't need to be recreated on every render.
@@ -212,7 +222,7 @@ Notice how there is a limitation how the application UI can be structured. "Stab
 
 ### Use granularly
 
-One of the biggest mistakes begineers make is using the block virtual DOM everywhere. This is a bad idea, because the block virtual DOM is not a silver bullet, and is not always faster than the regular virtual DOM.
+One of the biggest mistakes beginners make is using the block virtual DOM everywhere. This is a bad idea, because the block virtual DOM is not a silver bullet, and is not always faster than the regular virtual DOM.
 
 Instead, you should recognize certain patterns where the block virtual DOM is faster, and use it only in those cases. For example, you might use the block virtual DOM for a large table, but use the regular virtual DOM for a small form with a little static content.
 
