@@ -41,6 +41,9 @@ importers:
       '@vercel/style-guide':
         specifier: ^4.0.2
         version: 4.0.2(eslint@8.40.0)(prettier@2.8.8)(typescript@5.0.4)
+      '@vitest/coverage-c8':
+        specifier: ^0.31.0
+        version: 0.31.0(vitest@0.31.0)
       bumpp:
         specifier: ^9.1.0
         version: 9.1.0
@@ -1277,7 +1280,7 @@ packages:
       react: '>=16'
     dependencies:
       '@types/mdx': 2.0.5
-      '@types/react': 18.0.28
+      '@types/react': 18.0.38
       react: 18.2.0
     dev: false
 
@@ -1876,7 +1879,6 @@ packages:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.2
       csstype: 3.1.0
-    dev: true
 
   /@types/resolve@1.20.2:
     resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
@@ -2076,6 +2078,19 @@ packages:
       - eslint-import-resolver-webpack
       - jest
       - supports-color
+    dev: true
+
+  /@vitest/coverage-c8@0.31.0(vitest@0.31.0):
+    resolution: {integrity: sha512-h72qN1D962AO7UefQVulm9JFP5ACS7OfhCdBHioXU8f7ohH/+NTZCgAqmgcfRNHHO/8wLFxx+93YVxhodkEJVA==}
+    peerDependencies:
+      vitest: '>=0.30.0 <1'
+    dependencies:
+      '@ampproject/remapping': 2.2.1
+      c8: 7.13.0
+      magic-string: 0.30.0
+      picocolors: 1.0.0
+      std-env: 3.3.3
+      vitest: 0.31.0(jsdom@22.0.0)
     dev: true
 
   /@vitest/expect@0.31.0:
