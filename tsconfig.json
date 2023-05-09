@@ -1,5 +1,5 @@
 {
-  "extends": "@vercel/style-guide/typescript",
+  "extends": "./node_modules/@vercel/style-guide/typescript",
   "compilerOptions": {
     "baseUrl": ".",
     "jsx": "react-jsx",
