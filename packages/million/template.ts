@@ -133,7 +133,7 @@ export const renderToTemplate = (
   //                                      ↕️ Block edit here
   // 👍: 'foo' + Block + 'bar'   => 'foo', 'bar'
   let canMergeString = false;
-  for (let i = 0, j = vnode.props.children?.length || 0, k = 0; i < j; ++i) {
+  for (let i = 0, j = (vnode.props?.children?.length ?? vnode.props?.children?.length) || 0, k = 0; i < j; ++i) {
     const child = vnode.props.children?.[i];
     if (child === null || child === undefined || child === false) continue;
 
