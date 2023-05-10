@@ -137,6 +137,8 @@ export const renderToTemplate = (
     const child = vnode.props.children?.[i];
     if (child === null || child === undefined || child === false) continue;
 
+
+    console.log(i, j, vnode);
     if (typeof child === 'object' && '$' in child) {
       current.e.push({
         /* type */ t: ChildFlag,
