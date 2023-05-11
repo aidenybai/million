@@ -18,6 +18,7 @@ export const StyleAttributeFlag = 8;
 export const SvgAttributeFlag = 16;
 export const BlockFlag = 32;
 
+export const TEXT_NODE_CACHE = '__t'
 export const EVENTS_REGISTRY = '__m';
 export const IS_NON_DIMENSIONAL =
   /acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i;

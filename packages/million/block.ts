@@ -1,7 +1,6 @@
 /* eslint-disable no-bitwise */
 /* eslint-disable @typescript-eslint/unbound-method */
 import {
-  childNodes$,
   cloneNode$,
   createEventListener,
   insertBefore$,
@@ -12,15 +11,15 @@ import {
   setText,
   setStyleAttribute,
   setSvgAttribute,
-  firstChild$,
-  nextSibling$,
   template$,
   document$,
+  childAt,
 } from './dom';
 import { renderToTemplate } from './template';
 import { AbstractBlock } from './types';
 import { arrayMount$, arrayPatch$ } from './array';
 import {
+  TEXT_NODE_CACHE,
   AttributeFlag,
   ChildFlag,
   EventFlag,
@@ -140,14 +139,14 @@ export class Block extends AbstractBlock {
           }
           if (typeof value === 'function') {
             const parent = document$.createElement('million-block');
-            const childNodes = childNodes$.call(el);
 
             value(parent);
-            insertBefore$.call(el, parent, childNodes[edit.i!]);
+            insertBefore$.call(el, parent, childAt(el, edit.i!));
             continue;
           }
+          if (!el[TEXT_NODE_CACHE]) el[TEXT_NODE_CACHE] = new Array(l);
           // insertText() on mount, setText() on patch
-          insertText(el, String(value), edit.i!);
+          el[TEXT_NODE_CACHE][k] = insertText(el, String(value), edit.i!);
         } else if (edit.t & EventFlag) {
           const patch = createEventListener(el, edit.n!, value);
           edit.p = patch;
@@ -180,7 +179,7 @@ export class Block extends AbstractBlock {
         } else if (init.t & EventFlag) {
           createEventListener(el, init.n!, init.l!);
         } else {
-          init.b!.m(el, childNodes$.call(el)[init.i!]);
+          init.b!.m(el, childAt(el, init.i!));
         }
       }
     }
@@ -227,7 +226,7 @@ export class Block extends AbstractBlock {
           if (typeof oldValue === 'function') {
             continue;
           }
-          setText(el, String(newValue), edit.i!);
+          setText(el[TEXT_NODE_CACHE][k], String(newValue));
         } else if (edit.t & AttributeFlag) {
           setAttribute(el, edit.n!, newValue);
         } else if (edit.t & StyleAttributeFlag) {
@@ -284,12 +283,7 @@ const getCurrentElement = (
   // We use path because we don't have the actual DOM nodes until mount()
   for (let i = 0; i < pathLength; ++i) {
     const siblings = path[i]!;
-    // https://www.measurethat.net/Benchmarks/Show/15652/0/childnodes-vs-children-vs-firstchildnextsibling-vs-firs
-    root = firstChild$.call(root);
-    if (!siblings) continue;
-    for (let j = 0; j < siblings; ++j) {
-      root = nextSibling$.call(root) as HTMLElement;
-    }
+    root = childAt(root, siblings);
   }
   if (cache && key !== undefined) cache[key] = root;
   return root;

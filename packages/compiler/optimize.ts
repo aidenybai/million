@@ -190,13 +190,15 @@ export const optimize = (path: NodePath<t.CallExpression>) => {
         ),
         t.variableDeclarator(
           getElementsVariable,
-          t.arrowFunctionExpression(
-            [t.identifier('root')],
-            t.blockStatement([
-              t.variableDeclaration('const', declarators),
-              t.returnStatement(t.arrayExpression(accessedIds)),
-            ]),
-          ),
+          declarators.length
+            ? t.arrowFunctionExpression(
+                [t.identifier('root')],
+                t.blockStatement([
+                  t.variableDeclaration('const', declarators),
+                  t.returnStatement(t.arrayExpression(accessedIds)),
+                ]),
+              )
+            : t.nullLiteral(),
         ),
       ]);
       const BlockClass = addNamed(path, 'Block', importSource.source.value, {
