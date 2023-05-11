@@ -25,7 +25,7 @@ export const renderToTemplate = (
   ) {
     return String(vnode);
   }
-  if (vnode === null || vnode === undefined || vnode === false) return '';
+  if (vnode == undefined || vnode === false) return '';
 
   let props = '';
   let children = '';
@@ -133,10 +133,9 @@ export const renderToTemplate = (
   //                                      ↕️ Block edit here
   // 👍: 'foo' + Block + 'bar'   => 'foo', 'bar'
   let canMergeString = false;
-  for (let i = 0, j = (vnode.props?.children?.length ?? vnode.props?.children?.length) || 0, k = 0; i < j; ++i) {
-    const child = vnode.props.children?.[i];
-    if (child === null || child === undefined || child === false) continue;
-
+  for (let i = 0, j = vnode.props?.children?.length || 0, k = 0; i < j; ++i) {
+    const child = vnode.props?.children?.[i];
+    if (child == null || child === false) continue;
 
     console.log(i, j, vnode);
     if (typeof child === 'object' && '$' in child) {

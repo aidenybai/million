@@ -1,6 +1,6 @@
 import type { Props, VNode } from './million';
 
-export const jsxDEV = (
+export const h = (
   type: string,
   props: Props | null = {},
   ...children: VNode[]
@@ -12,4 +12,4 @@ export const jsxDEV = (
     props,
   };
 };
-export { jsxDEV as createElement, jsxDEV as jsx, jsxDEV as jsxs };
+export { h as jsxDEV };
