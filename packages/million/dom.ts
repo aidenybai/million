@@ -41,7 +41,6 @@ export const setTextContent$ = getOwnPropertyDescriptor$(node$, 'textContent')!
   .set!;
 export const innerHTML$ = getOwnPropertyDescriptor$(element$, 'innerHTML')!
   .set!;
-export const childNodes$ = getOwnPropertyDescriptor$(node$, 'childNodes')!.get!;
 export const firstChild$ = getOwnPropertyDescriptor$(node$, 'firstChild')!.get!;
 export const nextSibling$ = getOwnPropertyDescriptor$(node$, 'nextSibling')!
   .get!;
@@ -96,19 +95,31 @@ export const createEventListener = (
   return patch;
 };
 
+// https://www.measurethat.net/Benchmarks/Show/15652/0/childnodes-vs-children-vs-firstchildnextsibling-vs-firs
+export const childAt = (el: HTMLElement, index: number) => {
+  let child = firstChild$.call(el);
+  if (index) {
+    for (let j = 0; j < index; ++j) {
+      if (!child) break;
+      child = nextSibling$.call(child);
+    }
+  }
+  return child;
+};
+
 export const insertText = (
   el: HTMLElement,
   value: any,
   index: number,
 ): Text => {
   const node = document$.createTextNode(value);
-  const childNodes = childNodes$.call(el);
-  insertBefore$.call(el, node, childNodes[index]);
+  const child = childAt(el, index);
+  insertBefore$.call(el, node, child);
   return node;
 };
 
-export const setText = (el: HTMLElement, value: string, index: number) => {
-  characterDataSet$.call(childNodes$.call(el)[index], value);
+export const setText = (el: Text, value: string) => {
+  characterDataSet$.call(el, value);
 };
 
 export const setStyleAttribute = (

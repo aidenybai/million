@@ -41,7 +41,7 @@ export const transformReact =
         );
       }
       const componentBinding = path.scope.getBinding(componentId.name);
-      const component = { ...componentBinding?.path.node };
+      const component = t.cloneNode(componentBinding?.path.node);
 
       if (t.isFunctionDeclaration(component)) {
         handleComponent(
@@ -131,7 +131,11 @@ const handleComponent = (
     const blockFunction = t.functionDeclaration(
       blockVariable,
       // Destructures props
-      [t.objectPattern(dynamics.map(({ id }) => t.objectProperty(id, id)))],
+      [
+        t.objectPattern(
+          dynamics.data.map(({ id }) => t.objectProperty(id, id)),
+        ),
+      ],
       t.blockStatement([view]),
     );
 
@@ -140,13 +144,15 @@ const handleComponent = (
       t.callExpression(forgettiCompatibleComponentName, [
         t.objectExpression(
           // Creates an object that passes expression values down
-          dynamics.map(({ id, value }) => t.objectProperty(id, value || id)),
+          dynamics.data.map(({ id, value }) =>
+            t.objectProperty(id, value || id),
+          ),
         ),
       ]),
     );
 
-    for (let i = 0; i < dynamics.length; ++i) {
-      dynamics[i]?.callback?.();
+    for (let i = 0; i < dynamics.deferred.length; ++i) {
+      dynamics.deferred[i]?.();
     }
 
     // Swaps the names of the functions so that the component that wraps the
@@ -178,10 +184,13 @@ const getDynamicsFromJSX = (
   sourceName: string,
   returnJsxPath: any,
   dynamics: {
-    id: t.Identifier;
-    value: t.Expression | null;
-    callback: (() => void) | null;
-  }[] = [],
+    cache: Set<string>;
+    data: {
+      id: t.Identifier;
+      value: t.Expression | null;
+    }[];
+    deferred: (() => void)[];
+  } = { data: [], cache: new Set(), deferred: [] },
 ) => {
   const createDynamic = (
     identifier: t.Identifier | null,
@@ -189,7 +198,11 @@ const getDynamicsFromJSX = (
     callback: (() => void) | null,
   ) => {
     const id = identifier || path.scope.generateUidIdentifier('$');
-    dynamics.push({ value: expression, id, callback });
+    if (!dynamics.cache.has(id.name)) {
+      dynamics.data.push({ value: expression, id });
+      dynamics.cache.add(id.name);
+    }
+    dynamics.deferred.push(callback!);
     return id;
   };
 
