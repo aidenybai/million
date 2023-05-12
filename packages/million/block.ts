@@ -145,6 +145,11 @@ export class Block extends AbstractBlock {
             continue;
           }
           if (!el[TEXT_NODE_CACHE]) el[TEXT_NODE_CACHE] = new Array(l);
+
+          if (value === null || value === undefined || value === false) {
+            continue;
+          }
+
           // insertText() on mount, setText() on patch
           el[TEXT_NODE_CACHE][k] = insertText(el, String(value), edit.i!);
         } else if (edit.t & EventFlag) {
@@ -223,7 +228,12 @@ export class Block extends AbstractBlock {
             oldValue.p(newChildBlock);
             continue;
           }
-          if (typeof oldValue === 'function') {
+          if (
+            typeof oldValue === 'function' ||
+            newValue === null ||
+            newValue === undefined ||
+            newValue === false
+          ) {
             continue;
           }
           setText(el[TEXT_NODE_CACHE][k], String(newValue));
