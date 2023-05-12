@@ -41,7 +41,7 @@ export const transformReact =
         );
       }
       const componentBinding = path.scope.getBinding(componentId.name);
-      const component = structuredClone(componentBinding?.path.node);
+      const component = t.cloneNode(componentBinding?.path.node);
 
       if (t.isFunctionDeclaration(component)) {
         handleComponent(
