@@ -1,4 +1,4 @@
-import { createElement, useEffect, useReducer } from 'react';
+import { useId, createElement, useEffect, useReducer } from 'react';
 import type { ComponentProps, FunctionComponent } from 'react';
 
 // @ts-expect-error - is defined
@@ -8,6 +8,7 @@ let millionModule: typeof import('million/react') | null = null;
 export const block = (Component: FunctionComponent) => {
   let blockFactory: any;
   function MillionBlockLoader(props: ComponentProps<any>) {
+    const id = useId();
     useEffect(() => {
       const importSource = async () => {
         // @ts-expect-error - is defined
@@ -30,12 +31,12 @@ export const block = (Component: FunctionComponent) => {
     if (!blockFactory) {
       return createElement(
         'million-block',
-        null,
+        { 'data-hydration-key': id },
         createElement(Component, props),
       );
     }
 
-    return createElement(blockFactory, props);
+    return createElement(blockFactory, { ...props, 'data-hydration-key': id });
   }
 
   return MillionBlockLoader;

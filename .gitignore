@@ -11,3 +11,4 @@ coverage
 .next
 .turbo
 .eslintcache
+.log

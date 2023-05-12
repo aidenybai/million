@@ -162,6 +162,17 @@ export const setAttribute = (
   const isValueNully = value === undefined || value === null;
   value = isValueNully ? '' : value;
   if (
+    name !== 'width' &&
+    name !== 'height' &&
+    name !== 'href' &&
+    name !== 'list' &&
+    name !== 'form' &&
+    // Default value in browsers is `-1` and an empty string is
+    // cast to `0` instead
+    name !== 'tabIndex' &&
+    name !== 'download' &&
+    name !== 'rowSpan' &&
+    name !== 'colSpan' &&
     name in el &&
     el[name] !== undefined &&
     el[name] !== null &&

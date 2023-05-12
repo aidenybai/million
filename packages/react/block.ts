@@ -10,7 +10,6 @@ import {
   block as createBlock,
   mount$,
   patch as patchBlock,
-  remove$,
 } from '../million/block';
 import { Map$, MapSet$, MapHas$, MapGet$ } from '../million/constants';
 import { unwrap } from './utils';
@@ -51,21 +50,26 @@ export const block = (
 
   function MillionBlock(props: Props) {
     const ref = useRef<HTMLElement>(null);
+    const ssrElement = useRef<HTMLElement | null>(null);
     const patch = useRef<((props: Props) => void) | null>(null);
+    const hydrationKey: string = props['data-hydration-key'];
+
+    if (!ssrElement.current && hydrationKey) {
+      ssrElement.current = document.querySelector(
+        `[data-hydration-key="${hydrationKey}"]`,
+      ) as HTMLElement;
+    }
 
     patch.current?.(props);
 
     const effect = useCallback(() => {
       const currentBlock = block(props, props.key, options.shouldUpdate);
-      if (ref.current) {
-        mount$.call(currentBlock, ref.current, null);
+      if (ssrElement.current || ref.current) {
+        mount$.call(currentBlock, ssrElement.current ?? ref.current!, null);
         patch.current = (props: Props) => {
           patchBlock(currentBlock, block(props));
         };
       }
-      return () => {
-        remove$.call(currentBlock);
-      };
     }, []);
 
     const marker = useMemo(() => {
