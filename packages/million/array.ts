@@ -5,6 +5,9 @@ import { mount$, patch$, move$, remove$ } from './block';
 import { Map$, MapSet$ } from './constants';
 
 export const mapArray = (children: AbstractBlock[]) => {
+  if (children === null || children === undefined) {
+    return new ArrayBlock([]);
+  }
   return new ArrayBlock(children);
 };
 

@@ -1,3 +1,4 @@
+import { Block } from './block';
 import {
   X_CHAR,
   VOID_ELEMENTS,
@@ -133,12 +134,12 @@ export const renderToTemplate = (
   //                                      ↕️ Block edit here
   // 👍: 'foo' + Block + 'bar'   => 'foo', 'bar'
   let canMergeString = false;
-  for (let i = 0, j = vnode.props?.children?.length || 0, k = 0; i < j; ++i) {
+  for (let i = 0, j = vnode.props.children?.length || 0, k = 0; i < j; ++i) {
     const child = vnode.props?.children?.[i];
-    if (child == null || child === false) continue;
+    if (child === null || child === undefined || child === false) continue;
 
-    console.log(i, j, vnode);
-    if (typeof child === 'object' && '$' in child) {
+  
+    if (typeof child === 'object' && child !== null && '$' in child) {
       current.e.push({
         /* type */ t: ChildFlag,
         /* name */ n: null,
