@@ -146,6 +146,11 @@ export class Block extends AbstractBlock {
             insertBefore$.call(el, parent, childNodes[edit.i!]);
             continue;
           }
+
+          if (value === null || value === undefined || value === false) {
+            continue;
+          }
+
           // insertText() on mount, setText() on patch
           insertText(el, String(value), edit.i!);
         } else if (edit.t & EventFlag) {
@@ -227,6 +232,15 @@ export class Block extends AbstractBlock {
           if (typeof oldValue === 'function') {
             continue;
           }
+
+          if (
+            newValue === null ||
+            newValue === undefined ||
+            newValue === false
+          ) {
+            continue;
+          }
+
           setText(el, String(newValue), edit.i!);
         } else if (edit.t & AttributeFlag) {
           setAttribute(el, edit.n!, newValue);
