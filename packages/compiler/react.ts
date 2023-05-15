@@ -40,8 +40,8 @@ export const transformReact =
           path,
         );
       }
-      const componentBinding = path.scope.getBinding(componentId.name);
-      const component = t.cloneNode(componentBinding?.path.node);
+      const componentBinding = path.scope.getBinding(componentId.name)!;
+      const component = t.cloneNode(componentBinding.path.node);
 
       if (t.isFunctionDeclaration(component)) {
         handleComponent(
@@ -289,6 +289,9 @@ const getDynamicsFromJSX = (
 
       const id = createDynamic(null, nestedRender, null);
       jsx.openingElement.name = t.jsxIdentifier(id.name);
+      if (jsx.closingElement) {
+        jsx.closingElement.name = t.jsxIdentifier(id.name);
+      }
     }
   }
 
@@ -327,24 +330,45 @@ const getDynamicsFromJSX = (
       if (t.isIdentifier(expression)) {
         createDynamic(expression, null, null);
       } else if (t.isJSXElement(expression)) {
-        const expressionPath = returnJsxPath.get(`children.${i}.expression`);
-        throw BlockError(
-          'JSX elements cannot be used as expressions.',
+        getDynamicsFromJSX(
           path,
-          expressionPath,
+          expression,
+          sourceName,
+          returnJsxPath.get(`children.${i}`),
+          dynamics,
         );
+        jsx.children[i] = expression;
       } else if (t.isExpression(expression)) {
         if (
           t.isCallExpression(expression) &&
           t.isMemberExpression(expression.callee) &&
           t.isIdentifier(expression.callee.property, { name: 'map' })
         ) {
-          const expressionPath = returnJsxPath.get(`children.${i}.expression`);
-          throw BlockError(
-            'You are using an array as a child, which is not allowed. We recommend looking into <For /> (https://millionjs.org/docs/quickstart#for-)',
-            path,
-            expressionPath,
+          const For = addNamed(path, 'For', sourceName, {
+            nameHint: 'For$',
+          });
+          const jsxFor = t.jsxIdentifier(For.name);
+          const newJsxArrayIterator = t.jsxElement(
+            t.jsxOpeningElement(jsxFor, [
+              t.jsxAttribute(
+                t.jsxIdentifier('each'),
+                t.jsxExpressionContainer(expression.callee.object),
+              ),
+            ]),
+            t.jsxClosingElement(jsxFor),
+            [t.jsxExpressionContainer(expression.arguments[0] as t.Expression)],
           );
+
+          getDynamicsFromJSX(
+            path,
+            newJsxArrayIterator,
+            sourceName,
+            returnJsxPath.get(`children.${i}`),
+            dynamics,
+          );
+
+          jsx.children[i] = newJsxArrayIterator;
+          continue;
         }
         const id = createDynamic(null, expression, () => {
           child.expression = id;

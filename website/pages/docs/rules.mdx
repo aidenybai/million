@@ -1,0 +1,22 @@
+# Rules of Blocks
+
+You are probably here because you got an error message.
+
+There are three common reasons you might be seeing it:
+
+1. You might be **breaking Rules of Blocks.**
+2. You might have **forgot to use the compiler.**
+3. You've entered **unsupported behavior.**
+
+## Breaking Rules of Blocks
+
+Components wrapped in the `block(){:jsx}` function are called Blocks in Million.js.
+
+Blocks are a special type of component that use a special, more performant virtual DOM to render. As such, they follow certain rules
+
+Don’t call Hooks inside loops, conditions, or nested functions. Instead, always use Hooks at the top level of your React function, before any early returns. You can only call Hooks while React is rendering a function component:
+
+- ✅ Call them at the top level in the body of a function component.
+- ✅ Call them at the top level in the body of a custom Hook.
+
+## Using the compiler
