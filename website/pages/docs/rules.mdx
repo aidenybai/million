@@ -1,3 +1,11 @@
+---
+title: 'Rules Of Blocks'
+description: 'How to use blocks in your projects the right way'
+---
+
+import { Callout, Tabs, Tab, Cards, Card } from 'nextra-theme-docs';
+
+
 # Rules of Blocks
 
 You are probably here because you got an error message.
@@ -20,3 +28,113 @@ Don’t call Hooks inside loops, conditions, or nested functions. Instead, alway
 - ✅ Call them at the top level in the body of a custom Hook.
 
 ## Using the compiler
+
+You should add the compiler to the bundler of your choice for your project, that's like your way of informing your project about Million.js.
+
+Not adding the compiler for your bundler will cause incompatibility with `block(){:jsx}` in your project.
+
+__It simply won't work!__ Exactly why you need to add the compiler to your bundler, like this:
+
+<Tabs items={['Next.js', 'Astro', 'Gatsby', 'Vite', 'Webpack', 'Rollup', 'Rspack', 'Esbuild']} storageKey="selected-bundler-compiler">
+  <Tab>
+  <Callout>
+    Next.js support is currently in beta. Please report any issues you encounter.
+  </Callout>
+  ```js filename="next.config.mjs"
+  import million from 'million/compiler';
+
+  /** @type {import('next').NextConfig} */
+  const nextConfig = {
+    reactStrictMode: true,
+  };
+
+  export default million.next(nextConfig);
+  ```
+  </Tab>
+  <Tab>
+  <Callout>
+    Astro support is currently in beta. Please report any issues you encounter.
+  </Callout>
+  ```js filename="astro.config.mjs"
+  import { defineConfig } from 'astro/config';
+  import million from 'million/compiler';
+
+  export default defineConfig({
+    vite: {
+      plugins: [million.vite()]
+    }
+  });
+  ```
+  </Tab>
+  <Tab>
+  <Callout>
+    Gatsby support is currently in beta. Please report any issues you encounter.
+  </Callout>
+  ```js filename="gatsby-node.js"
+  const million = require('million/compiler');
+
+  exports.onCreateWebpackConfig = ({ actions }) => {
+    actions.setWebpackConfig({
+      plugins: [million.webpack()],
+    })
+  }
+  ```
+  </Tab>
+  <Tab>
+  ```js filename="vite.config.js"
+  import million from 'million/compiler';
+  import { defineConfig } from 'vite';
+
+  export default defineConfig({
+    plugins: [million.vite()],
+  });
+  ```
+  </Tab>
+  <Tab>
+  ```js filename="webpack.config.js"
+  import million from 'million/compiler';
+
+  export default {
+    plugins: [million.webpack()],
+  };
+  ```
+  </Tab>
+  <Tab>
+  ```js filename="rollup.config.js"
+  import million from 'million/compiler';
+
+  export default {
+    plugins: [million.rollup()],
+  };
+  ```
+  </Tab>
+  <Tab>
+  ```js filename="rspack.config.js"
+  // @ts-check
+  const { default: million } = require('million/compiler');
+
+  /** @type {import('@rspack/cli').Configuration} */
+  module.exports = {
+    plugins: [million.rspack()],
+  };
+  ```
+  </Tab>
+  <Tab>
+  ```js filename="esbuild.config.js"
+  import million from 'million/compiler';
+  import { build } from 'esbuild';
+
+  build({
+    plugins: [million.esbuild()],
+  });
+  ```
+  </Tab>
+</Tabs>
+
+If you've managed to do everything stated here so far; you're on the right track. Kudos to you!
+
+## Unsupported Behavior
+
+There are a number of ways that could have caused you to enter unsupported behavior. Here are some of them:
+
+
