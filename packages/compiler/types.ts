@@ -7,7 +7,7 @@ import type {
 
 export interface UserOptions {
   ignoreFiles?: string[];
-  memo?: boolean;
+  mute: boolean;
   mode: 'react' | 'next' | 'react-server' | 'optimize';
 }
 

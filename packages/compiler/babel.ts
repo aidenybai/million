@@ -8,11 +8,19 @@ export default declare((api, options) => {
   api.assertVersion(7);
   const callExpressionHandler =
     options.mode === 'optimize' ? optimize : transformReact(options);
+
   return {
     name: 'million',
     visitor: {
       CallExpression(path: NodePath<t.CallExpression>) {
-        callExpressionHandler(path);
+        try {
+          callExpressionHandler(path);
+        } catch (err: unknown) {
+          if (err instanceof Error) {
+            // eslint-disable-next-line no-console
+            console.warn(err.message, '\n');
+          }
+        }
       },
     },
   };
