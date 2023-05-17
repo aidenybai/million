@@ -132,23 +132,26 @@ export class Block extends AbstractBlock {
         const value = this.d![edit.h];
 
         if (edit.t & ChildFlag) {
-          if (value === null || value === undefined || value === false) {
-            continue;
-          }
           if (value instanceof AbstractBlock) {
             value.m(el);
             continue;
           }
           if (!el[TEXT_NODE_CACHE]) el[TEXT_NODE_CACHE] = new Array(l);
+
           if (typeof value === 'function') {
             const scopeEl = value(null);
             el[TEXT_NODE_CACHE][k] = scopeEl;
             insertBefore$.call(el, scopeEl, childAt(el, edit.i!));
             continue;
           }
-
           // insertText() on mount, setText() on patch
-          el[TEXT_NODE_CACHE][k] = insertText(el, String(value), edit.i!);
+          el[TEXT_NODE_CACHE][k] = insertText(
+            el,
+            value === null || value === undefined || value === false
+              ? ''
+              : String(value),
+            edit.i!,
+          );
         } else if (edit.t & EventFlag) {
           const patch = createEventListener(el, edit.n!, value);
           edit.p = patch;
