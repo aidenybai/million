@@ -9,7 +9,17 @@ const withNextra = nextra({
 /**
  * @type {import('next').NextConfig}
  */
-const nextConfig = {};
+const nextConfig = {
+  async redirects() {
+    return [
+      {
+        source: '/chat',
+        destination: 'discord.gg/X9yFbcV2rF',
+        permanent: true,
+      },
+    ];
+  },
+};
 
 // eslint-disable-next-line import/no-default-export
 export default withNextra(nextConfig);
