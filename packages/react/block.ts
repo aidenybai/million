@@ -15,7 +15,7 @@ import {
 import { Map$, MapSet$, MapHas$, MapGet$ } from '../million/constants';
 import { unwrap } from './utils';
 import type { Props } from '../million';
-import type { ReactNode, FunctionComponent } from 'react';
+import type { ReactNode, FunctionComponent, ComponentType } from 'react';
 
 interface Options {
   shouldUpdate?: (oldProps: Props, newProps: Props) => boolean;
@@ -41,10 +41,7 @@ export const REGISTRY = new Map$<
   ReturnType<typeof createBlock>
 >();
 
-export const block = (
-  fn: (props: Props) => ReactNode,
-  options: Options = {},
-) => {
+export const block = (fn: ComponentType<any>, options: Options = {}) => {
   const block = MapHas$.call(REGISTRY, fn)
     ? MapGet$.call(REGISTRY, fn)
     : createBlock(fn as any, unwrap);
