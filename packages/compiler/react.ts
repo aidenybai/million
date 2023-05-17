@@ -2,6 +2,8 @@ import * as t from '@babel/types';
 import { addNamed } from '@babel/helper-module-imports';
 import type { NodePath } from '@babel/core';
 
+export const RENDER_SCOPE = 'million-render-scope';
+
 export const transformReact =
   (options: Record<string, any> = {}) =>
   (path: NodePath<t.CallExpression>) => {
@@ -216,9 +218,6 @@ const getDynamicsFromJSX = (
       t.isVariableDeclarator(component) ||
       type.name.startsWith(type.name[0]!.toUpperCase())
     ) {
-      const createRoot = addNamed(path, 'createRoot', 'react-dom/client', {
-        nameHint: 'createRoot$',
-      });
       const createElement = addNamed(path, 'createElement', 'react', {
         nameHint: 'createElement$',
       });
@@ -267,25 +266,21 @@ const getDynamicsFromJSX = (
         }
       }
 
-      const nestedRender = t.arrowFunctionExpression(
-        [t.identifier('el')],
-        t.blockStatement([
-          t.expressionStatement(
-            t.callExpression(
-              t.memberExpression(
-                t.callExpression(createRoot, [t.identifier('el')]),
-                t.identifier('render'),
-              ),
-              [
-                t.callExpression(createElement, [
-                  t.identifier(type.name),
-                  t.objectExpression(objectProperties),
-                ]),
-              ],
-            ),
-          ),
-        ]),
+      BlockWarning(
+        'Deoptimization Warning: Components will cause degraded performnace. Ideally, you should use DOM elements instead.',
+        returnJsxPath.openingElement,
       );
+
+      const renderReactScope = addNamed(path, 'renderReactScope', sourceName, {
+        nameHint: 'renderReactScope$',
+      });
+
+      const nestedRender = t.callExpression(renderReactScope, [
+        t.callExpression(createElement, [
+          t.identifier(type.name),
+          t.objectExpression(objectProperties),
+        ]),
+      ]);
 
       const id = createDynamic(null, nestedRender, null);
       jsx.openingElement.name = t.jsxIdentifier(id.name);
@@ -303,6 +298,14 @@ const getDynamicsFromJSX = (
       t.isJSXExpressionContainer(attribute.value)
     ) {
       const { expression } = attribute.value;
+      const { leadingComments } = expression;
+
+      if (
+        leadingComments?.length &&
+        leadingComments[0]?.value.trim() === '@once'
+      ) {
+        continue;
+      }
 
       if (t.isIdentifier(expression)) {
         createDynamic(expression, null, null);
@@ -327,6 +330,15 @@ const getDynamicsFromJSX = (
 
     if (t.isJSXExpressionContainer(child)) {
       const { expression } = child;
+      const { leadingComments } = expression;
+
+      if (
+        leadingComments?.length &&
+        leadingComments[0]?.value.trim() === '@once'
+      ) {
+        continue;
+      }
+
       if (t.isIdentifier(expression)) {
         createDynamic(expression, null, null);
       } else if (t.isJSXElement(expression)) {
@@ -359,17 +371,61 @@ const getDynamicsFromJSX = (
             [t.jsxExpressionContainer(expression.arguments[0] as t.Expression)],
           );
 
-          getDynamicsFromJSX(
-            path,
-            newJsxArrayIterator,
-            sourceName,
-            returnJsxPath.get(`children.${i}`),
-            dynamics,
+          const expressionPath = returnJsxPath.get(`children.${i}.expression`);
+
+          BlockWarning(
+            'Deoptimization Warning: Array.map() will degrade performance. We recommend removing the block on the current component and using a <For /> component instead.',
+            expressionPath,
           );
 
-          jsx.children[i] = newJsxArrayIterator;
+          const renderReactScope = addNamed(
+            path,
+            'renderReactScope',
+            sourceName,
+            {
+              nameHint: 'renderReactScope$',
+            },
+          );
+
+          const nestedRender = t.callExpression(renderReactScope, [
+            newJsxArrayIterator,
+          ]);
+
+          const id = createDynamic(null, nestedRender, () => {
+            jsx.children[i] = t.jsxExpressionContainer(id);
+          });
           continue;
         }
+
+        if (
+          t.isConditionalExpression(expression) ||
+          t.isLogicalExpression(expression)
+        ) {
+          const expressionPath = returnJsxPath.get(`children.${i}.expression`);
+
+          BlockWarning(
+            'Deoptimization Warning: Conditional expressions will degrade performance. We recommend using deterministic returns instead.',
+            expressionPath,
+          );
+          const renderReactScope = addNamed(
+            path,
+            'renderReactScope',
+            sourceName,
+            {
+              nameHint: 'renderReactScope$',
+            },
+          );
+
+          const id = createDynamic(
+            null,
+            t.callExpression(renderReactScope, [expression]),
+            () => {
+              jsx.children[i] = t.jsxExpressionContainer(id);
+            },
+          );
+          continue;
+        }
+
         const id = createDynamic(null, expression, () => {
           child.expression = id;
         });
@@ -399,4 +455,10 @@ const BlockError = (
     path.parentPath.node.init = path.node.arguments[0];
   }
   return (localPath ?? path).buildCodeFrameError(message);
+};
+
+const BlockWarning = (message: string, localPath: NodePath) => {
+  const err = localPath.buildCodeFrameError(message);
+  // eslint-disable-next-line no-console
+  console.warn(err.message);
 };

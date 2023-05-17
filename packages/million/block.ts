@@ -12,7 +12,6 @@ import {
   setStyleAttribute,
   setSvgAttribute,
   template$,
-  document$,
   childAt,
 } from './dom';
 import { renderToTemplate } from './template';
@@ -133,20 +132,18 @@ export class Block extends AbstractBlock {
         const value = this.d![edit.h];
 
         if (edit.t & ChildFlag) {
+          if (value === null || value === undefined || value === false) {
+            continue;
+          }
           if (value instanceof AbstractBlock) {
             value.m(el);
             continue;
           }
-          if (typeof value === 'function') {
-            const parent = document$.createElement('million-block');
-
-            value(parent);
-            insertBefore$.call(el, parent, childAt(el, edit.i!));
-            continue;
-          }
           if (!el[TEXT_NODE_CACHE]) el[TEXT_NODE_CACHE] = new Array(l);
-
-          if (value === null || value === undefined || value === false) {
+          if (typeof value === 'function') {
+            const scopeEl = value(null);
+            el[TEXT_NODE_CACHE][k] = scopeEl;
+            insertBefore$.call(el, scopeEl, childAt(el, edit.i!));
             continue;
           }
 
@@ -228,15 +225,16 @@ export class Block extends AbstractBlock {
             oldValue.p(newChildBlock);
             continue;
           }
-          if (
-            typeof oldValue === 'function' ||
-            newValue === null ||
-            newValue === undefined ||
-            newValue === false
-          ) {
+          if (typeof newValue === 'function') {
+            newValue(el[TEXT_NODE_CACHE][k]);
             continue;
           }
-          setText(el[TEXT_NODE_CACHE][k], String(newValue));
+          setText(
+            el[TEXT_NODE_CACHE][k],
+            newValue === null || newValue === undefined || newValue === false
+              ? ''
+              : String(newValue),
+          );
         } else if (edit.t & AttributeFlag) {
           setAttribute(el, edit.n!, newValue);
         } else if (edit.t & StyleAttributeFlag) {

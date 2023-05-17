@@ -51,9 +51,6 @@ export const characterDataSet$ = getOwnPropertyDescriptor$(
 
 document$[EVENTS_REGISTRY] = new Set$();
 
-let listenerPointer = 0;
-
-// TODO: this consumes a lot of memory
 export const createEventListener = (
   el: HTMLElement,
   name: string,
@@ -65,31 +62,30 @@ export const createEventListener = (
     // createEventListener uses a synthetic event handler to capture events
     // https://betterprogramming.pub/whats-the-difference-between-synthetic-react-events-and-javascript-events-ba7dbc742294
     addEventListener$.call(document$, event, (nativeEventObject: Event) => {
-      let el = nativeEventObject.target as Node | null;
-      // Bubble up the DOM tree to find all event listeners
-      while (el) {
-        const listeners = el[key] as Record<string, any> | undefined;
-        if (listeners) {
-          const handlers = Object$.values(listeners);
-          let returnFalse = false;
-          for (let i = 0, j = handlers.length; i < j; ++i) {
-            if (handlers[i](nativeEventObject) === false) {
+      requestAnimationFrame(() => {
+        let el = nativeEventObject.target as Node | null;
+        // Bubble up the DOM tree to find all event listeners
+        while (el) {
+          const handler = el[key];
+          if (handler) {
+            let returnFalse = false;
+            if (handler(nativeEventObject) === false) {
               returnFalse = true;
             }
+            if (returnFalse) return;
           }
-          if (returnFalse) return;
+          el = el.parentNode;
         }
-        el = el.parentNode;
-      }
+      });
     });
     SetAdd$.call(document$[EVENTS_REGISTRY], event);
   }
-  const pointer = listenerPointer++;
   const patch = (newValue?: EventListener | null) => {
-    if (!el[key]) el[key] = {};
-    if (!newValue) return delete el[key][pointer];
-    if ('key' in newValue && newValue.key === el[key][pointer]?.key) return;
-    el[key][pointer] = newValue;
+    if (!newValue) {
+      el[key] = null;
+    } else if (!('key' in newValue && newValue.key === el[key]?.key)) {
+      el[key] = newValue;
+    }
   };
   patch(value);
   return patch;
