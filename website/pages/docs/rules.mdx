@@ -4,7 +4,7 @@ description: 'How to use blocks in your projects the right way'
 ---
 
 import { Callout, Tabs, Tab, Cards, Card } from 'nextra-theme-docs';
-import ErrorMessage from "../.././components/error-message"
+
 
 
 # Rules of Blocks
@@ -143,68 +143,82 @@ There are a number of things that could have caused you to encounter errors.
 
 __Here are some errors / warnings and how to resolve them__:
 
-- <ErrorMessage message={"Found unsupported argument for block. Make sure blocks consume the reference to a component function, not the direct declaration."}/>
+<Callout>Found unsupported argument for block. Make sure blocks consume the reference to a component function, not the direct declaration.</Callout>
 
    The above usually occurs when you have an actual JSX component like `<Component/>` passed into the `block()` function instead of a reference to the JSX element as in `Component`. 
    Like this:
 
-   ```jsx
-   const wrongComponentBlock = block(<Component/>) {/*wrong! ❌*/}
+```jsx
+const wrongComponentBlock = block(<Component/>) {/*wrong! ❌*/}
 
-   const correctComponentBlock = block(Component)  {/*correct! ✅*/}
-   ```
+const correctComponentBlock = block(Component)  {/*correct! ✅*/}
+```
 
 <br/>
 
-- <ErrorMessage message={"Array.map() will degrade performance. We recommend removing the block on the current component and using a <For /> component instead."}/>
+<Callout>Array.map() will degrade performance. We recommend removing the block on the current component and using a `<For />` component instead</Callout>
 
    The above usually occurs when you have an array of items to be rendered on your UI from your component, but you're trying to wrap the entire component with `block()`. Its not allowed to use `array.map()` inside a block, but you should use 
    `<For/>` instead. 
    
    It also allows for optimized array rendering:
 
-  ```jsx
-  import { For } from 'million/react';
+```jsx
+import { For } from 'million/react';
   
-  // Do this instead 
+// Do this instead 
 
-  function MyComponent() {
-  const [items, setItems] = useState([1, 2, 3]);
+function MyComponent() {
+const [items, setItems] = useState([1, 2, 3]);
     
-    return (
-      <div>
-        <For each={items}>
-          {(item) => <div key={item}>{item}</div>}
-        </For>
-     </div>
-    );
-  }
-  ```
+  return (
+    <div>
+      <For each={items}>
+        {(item) => <div key={item}>{item}</div>}
+      </For>
+    </div>
+  );
+}
+```
 
 <br/>
 
-- <ErrorMessage message={"Conditional expressions will degrade performance. We recommend using deterministic returns instead."}/>
+<Callout>Conditional expressions will degrade performance. We recommend using deterministic returns instead</Callout>
 
    The above usually occurs when you have use conditions to return (`if` statements for example) instead of returning at the end as in every regular component
 
-  ```jsx
-   function MyComponent() {
-    const [count, setCount] = useState(initial.count);
+```jsx
+function MyComponent() {
+ const [count, setCount] = useState(initial.count);
   
-    if (count > 10) {
-      return <div>Too many clicks!</div>; // ❌ don't use conditionals
-    }
-
-    return (
-      <div>
-        Count is {count}
-      </div>
-    );
+  if (count > 10) {
+   return <div>Too many clicks!</div>; // ❌ don't use conditionals
   }
 
-  const MyComponentBlock = block(MyComponent) // ❌ ERROR
-  ```
+  return (
+   <div>
+     Count is {count}
+   </div>
+ );
+}
 
+const MyComponentBlock = block(MyComponent) // ❌ ERROR
+```
+
+<br/>
+
+
+<Callout>You cannot use multiple returns in blocks. There can only be one return statement at the end of the block.</Callout>
+
+   As the above says, you cannot use multiple return in blocks. This is unsupported at the moment. This is how you should return when you create a `block()`. A more subtle case:
+
+```jsx
+function MyComponent({bool}){
+    return <div>{bool && <span>true</span>}</div> 
+}
+
+const MyComponentBlock = block(MyComponent) // ❌ ERROR
+```
 
 
 
