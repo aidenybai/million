@@ -12,7 +12,6 @@ import {
   setStyleAttribute,
   setSvgAttribute,
   template$,
-  document$,
   childAt,
 } from './dom';
 import { renderToTemplate } from './template';
@@ -137,21 +136,22 @@ export class Block extends AbstractBlock {
             value.m(el);
             continue;
           }
-          if (typeof value === 'function') {
-            const parent = document$.createElement('million-block');
-
-            value(parent);
-            insertBefore$.call(el, parent, childAt(el, edit.i!));
-            continue;
-          }
           if (!el[TEXT_NODE_CACHE]) el[TEXT_NODE_CACHE] = new Array(l);
 
-          if (value === null || value === undefined || value === false) {
+          if (typeof value === 'function') {
+            const scopeEl = value(null);
+            el[TEXT_NODE_CACHE][k] = scopeEl;
+            insertBefore$.call(el, scopeEl, childAt(el, edit.i!));
             continue;
           }
-
           // insertText() on mount, setText() on patch
-          el[TEXT_NODE_CACHE][k] = insertText(el, String(value), edit.i!);
+          el[TEXT_NODE_CACHE][k] = insertText(
+            el,
+            value === null || value === undefined || value === false
+              ? ''
+              : String(value),
+            edit.i!,
+          );
         } else if (edit.t & EventFlag) {
           const patch = createEventListener(el, edit.n!, value);
           edit.p = patch;
@@ -228,15 +228,16 @@ export class Block extends AbstractBlock {
             oldValue.p(newChildBlock);
             continue;
           }
-          if (
-            typeof oldValue === 'function' ||
-            newValue === null ||
-            newValue === undefined ||
-            newValue === false
-          ) {
+          if (typeof newValue === 'function') {
+            newValue(el[TEXT_NODE_CACHE][k]);
             continue;
           }
-          setText(el[TEXT_NODE_CACHE][k], String(newValue));
+          setText(
+            el[TEXT_NODE_CACHE][k],
+            newValue === null || newValue === undefined || newValue === false
+              ? ''
+              : String(newValue),
+          );
         } else if (edit.t & AttributeFlag) {
           setAttribute(el, edit.n!, newValue);
         } else if (edit.t & StyleAttributeFlag) {

@@ -1,3 +1,4 @@
+import { RENDER_SCOPE } from 'packages/react/utils';
 import { createElement, useEffect, useReducer } from 'react';
 import type { ComponentProps, FunctionComponent } from 'react';
 
@@ -28,11 +29,7 @@ export const block = (Component: FunctionComponent) => {
     }, []);
 
     if (!blockFactory) {
-      return createElement(
-        'million-block',
-        null,
-        createElement(Component, props),
-      );
+      return createElement(RENDER_SCOPE, null, createElement(Component, props));
     }
 
     return createElement(blockFactory, props);
