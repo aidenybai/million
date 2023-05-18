@@ -5,7 +5,7 @@
     "title": "Guide"
   },
   "quickstart": "Quickstart",
-  "thinking": "Thinking in Million.js",
+  "thinking-in-million": "Thinking in Million.js",
   "rules": "Rules of Blocks",
   "-- API Reference": {
     "type": "separator",
