@@ -9,7 +9,7 @@ import {
   Tooltip,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import { useDarkMode } from './useDarkMode';
+import { useDarkMode } from './use-dark-mode';
 
 ChartJS.register(
   CategoryScale,

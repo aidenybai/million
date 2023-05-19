@@ -1,4 +1,5 @@
 node_modules
 dist
 website/pages/docs/compiler.mdx
+website/pages/docs/install.mdx
 website/pages/docs/quickstart.mdx

@@ -1,11 +1,10 @@
 {
-  "index": "Introduction",
   "-- Guide": {
     "type": "separator",
     "title": "Guide"
   },
-  "quickstart": "Quickstart",
-  "thinking": "Thinking in Million.js",
+  "quickstart": "Quick Start",
+  "install": "Installation",
   "rules": "Rules of Blocks",
   "-- API Reference": {
     "type": "separator",
