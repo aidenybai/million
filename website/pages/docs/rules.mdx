@@ -145,8 +145,8 @@ __Here are some errors / warnings and how to resolve them__:
 
 <Callout>Found unsupported argument for block. Make sure blocks consume the reference to a component function, not the direct declaration.</Callout>
 
-   The above usually occurs when you have an actual JSX component like `<Component/>` passed into the `block()` function instead of a reference to the JSX element as in `Component`. 
-   Like this:
+The above usually occurs when you have an actual JSX component like `<Component/>` passed into the `block()` function instead of a reference to the JSX element as in `Component`. 
+Like this:
 
 ```jsx
 const wrongComponentBlock = block(<Component/>) {/*wrong! ❌*/}
@@ -158,10 +158,10 @@ const correctComponentBlock = block(Component)  {/*correct! ✅*/}
 
 <Callout>Array.map() will degrade performance. We recommend removing the block on the current component and using a `<For />` component instead</Callout>
 
-   The above usually occurs when you have an array of items to be rendered on your UI from your component, but you're trying to wrap the entire component with `block()`. Its not allowed to use `array.map()` inside a block, but you should use 
-   `<For/>` instead. 
+The above usually occurs when you have an array of items to be rendered on your UI from your component, but you're trying to wrap the entire component with `block()`. Its not allowed to use `array.map()` inside a block, but you should use 
+`<For/>` instead. 
    
-   It also allows for optimized array rendering:
+It also allows for optimized array rendering:
 
 ```jsx
 import { For } from 'million/react';
@@ -185,7 +185,7 @@ const [items, setItems] = useState([1, 2, 3]);
 
 <Callout>Conditional expressions will degrade performance. We recommend using deterministic returns instead</Callout>
 
-   The above usually occurs when you have use conditions to return (`if` statements for example) instead of returning at the end as in every regular component
+The above usually occurs when you have use conditions to return (`if` statements for example) instead of returning at the end as in every regular component
 
 ```jsx
 function MyComponent() {
@@ -210,7 +210,7 @@ const MyComponentBlock = block(MyComponent) // ❌ ERROR
 
 <Callout>You cannot use multiple returns in blocks. There can only be one return statement at the end of the block.</Callout>
 
-   As the above says, you cannot use multiple return in blocks. This is unsupported at the moment. This is how you should return when you create a `block()`. A more subtle case:
+As the above says, you cannot use multiple return in blocks. This is unsupported at the moment. This is how you should return when you create a `block()`. A more subtle case:
 
 ```jsx
 function MyComponent({bool}){
@@ -225,13 +225,13 @@ const MyComponentBlock = block(MyComponent) // ❌ ERROR
 
 <Callout>Components will cause degraded performance. Ideally, you should use DOM elements instead</Callout>
 
-    At the moment, not everything needs to be handled / can be handled by Million.js; hence, if it can handle it, it's left for React to take over.
+At the moment, not everything needs to be handled / can be handled by Million.js; hence, if it can handle it, it's left for React to take over.
   
 <br/>
 
 <Callout>Expected a block statement for the component function. Make sure you are using a function declaration or arrow function </Callout>
 
-    At the moment, Million.js doesn't do well with one-liners, the error above refers to the fact that you should be doing this:
+At the moment, Million.js doesn't do well with one-liners, the error above refers to the fact that you should be doing this:
 
   ```jsx
    const MyComponent = () => { return <div></div> } // ✅ Correct
@@ -243,7 +243,7 @@ const MyComponentBlock = block(MyComponent) // ❌ ERROR
    }
   ```
 
-   You however cannot do this, because, it is not a block (as in a Javascript block)
+You however cannot do this, because, it is not a block (as in a Javascript block)
    ```jsx
     const Test = () => <div></div>  
    ```
@@ -252,8 +252,8 @@ const MyComponentBlock = block(MyComponent) // ❌ ERROR
 
 <Callout>Spread attributes aren't supported.</Callout>
 
-    As the above says, you might want to use the spread syntax (ES6 syntax) on props, though React allows it, there is no support for them yet in blocks.
-    For example:
+As the above says, you might want to use the spread syntax (ES6 syntax) on props, though React allows it, there is no support for them yet in blocks.
+For example:
 
     ```jsx
     function MyWrongComponent({props}) {
@@ -273,8 +273,8 @@ const MyComponentBlock = block(MyComponent) // ❌ ERROR
 
 <Callout>You can only use block() with a function declaration or arrow function</Callout>
 
-   Well, leagacy React has it such that we can have classes be used to create components, however that is old syntax now, but, if you happen to be finding it hard to be getting the error above; it might be because you
-   aren't using function-components. To resolve this, all you have to do is to use Functional Components.
+Well, legacy React has it such that we can have classes be used to create components, however that is old syntax now, but, if you happen to be finding it hard to be getting the error above; it might be because you
+aren't using function-components. To resolve this, all you have to do is to use Functional Components.
 
 
 Goodluck and make sure to smile like you just won a Million dollars.
