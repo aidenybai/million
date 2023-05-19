@@ -247,20 +247,20 @@ At the moment, not everything needs to be handled / can be handled by Million.js
 
 At the moment, Million.js doesn't do well with one-liners, the error above refers to the fact that you should be doing this:
 
-  ```jsx
-   const MyComponent = () => { return <div></div> } // ✅ Correct
+```jsx
+const MyComponent = () => { return <div></div> } // ✅ Correct
 
-   // or this
+// or this
 
-   function MyComponent() {
-    return <div></div> // ✅ Correct
-   }
-  ```
+function MyComponent() {
+  return <div></div> // ✅ Correct
+}
+```
 
 You however cannot do this, because, it is not a block (as in a Javascript block)
-   ```jsx
-    const Test = () => <div></div>  
-   ```
+```jsx
+const Test = () => <div></div>  
+```
 
 <br/>
 
@@ -271,20 +271,20 @@ You however cannot do this, because, it is not a block (as in a Javascript block
 As the above says, you might want to use the spread syntax (ES6 syntax) on props, though React allows it, there is no support for them yet in blocks.
 For example:
 
-    ```jsx
-    function MyWrongComponent({props}) {
-     return (
-        <div {...props}>Some Props have been used</div> // ❌ Wrong
-        )
-    }
+```jsx
+function MyWrongComponent({props}) {
+  return (
+    <div {...props}>Some Props have been used</div> // ❌ Wrong
+    )
+}
 
-    
-    function MyCorrectComponent({props}) {
-      return (
-        <div name={props.name} style={props.styles}>Some Props have been used</div> // ✅ Correct
-      )
-    }
-    ```
+
+function MyCorrectComponent({props}) {
+  return (
+    <div name={props.name} style={props.styles}>Some Props have been used</div> // ✅ Correct
+  )
+}
+```
 <br/>
 
 <Callout>
