@@ -274,7 +274,7 @@ const getDynamicsFromJSX = (
 
       throwCodeFrame({
         message:
-          'Components will cause degraded performnace. Ideally, you should use DOM elements instead.',
+          'Components will cause degraded performance. Ideally, you should use DOM elements instead.',
         localPath: returnJsxPath,
         path: null,
       });
