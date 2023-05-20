@@ -96,7 +96,7 @@
     "eslint-config-prettier": "^8.6.0",
     "jsdom": "^21.1.0",
     "prettier": "^2.8.4",
-    "publint": "^0.1.10",
+    "publint": "^0.1.12",
     "source-map": "^0.7.4",
     "tslib": "^2.5.0",
     "turbo": "^1.8.2",
