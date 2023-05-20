@@ -6,9 +6,14 @@ description: 'Get started with Million.js'
 import dynamic from 'next/dynamic';
 import { Callout, Tabs, Tab, Cards, Card } from 'nextra-theme-docs';
 import { Box } from '../../components/box';
+import { BrowserView, MobileView } from 'react-device-detect';
 export const Demo = dynamic(() =>
   import('../../components/demo').then((mod) => mod.Demo),
 );
+
+<MobileView type="warning">
+  We highly recommend viewing this documentation on a desktop browser to get access to interactive code examples.
+</MobileView>
 
 # Quick Start
 
@@ -51,6 +56,8 @@ export default function App() {
 }
 ```
 
+<BrowserView>
+
 Have a look at the result:
 
 <Box previewOnly code={`
@@ -73,6 +80,8 @@ Have a look at the result:
     );
   }
 `} />
+
+</BrowserView>
 
 With that in hand, let's build an app.
 
@@ -128,6 +137,8 @@ function App() {
 }
 ```
 
+<BrowserView>
+
 <Box previewOnly code={`
   import { useState } from 'react';
   import { Table, Input } from './ui';
@@ -156,9 +167,13 @@ function App() {
 export default App;
 `} />
 
+</BrowserView>
+
 We can see that it performs pretty well. From 0-100, there's virtually no lag, but once you get higher than 500 or so, there's a noticable delay in rendering.
 
 Cool right? React is great because we can declaratively write great UI and get pretty good performance. But the data grid we just made is a rudimentary example, and is not necessarily representative of most React applications.
+
+<BrowserView>
 
 ### More realistic rendering
 
@@ -194,6 +209,8 @@ Try changing the input value up and down from 0 to 1000. Notice how React _reall
 
 export default App;
 `} />
+
+</BrowserView>
 
 ### Just `block` it
 
@@ -264,6 +281,8 @@ With this in mind, we can rewrite our table to use `<For />{:jsx}`:
 </For>
 ```
 
+<BrowserView>
+
 Now that we've integrated Million.js, let's check the new example out.
 
 Notice when you change the input value, the lag radar shows significantly less lag than the pure React example. With a [faster underlying virtual DOM](/blog/virtual-dom), Million.js can take a lot of the pain out of rendering large lists.
@@ -308,6 +327,8 @@ Notice when you change the input value, the lag radar shows significantly less l
 export default App;
 `} />
 
+</BrowserView>
+
 ### Million.js vs. React
 
 <Callout type="info">
@@ -332,8 +353,6 @@ Looking for more strict guidelines? Check out [Rules of Blocks](/docs/rules).
 By now, you know the basics of how to integrate Million.js into your application!
 
 Check out the the [installation guide](/docs/install) to put them into practice and start using blocks.
-
-
 
 ---
 

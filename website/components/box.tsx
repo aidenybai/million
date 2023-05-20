@@ -21,7 +21,7 @@ export function Box({
       template="vite-react"
       customSetup={{
         dependencies: {
-          vite: "3.2.3",
+          vite: '3.2.3',
           million: '2.3.3',
           '@vitejs/plugin-react': 'latest',
           'react-lag-radar': 'latest',
