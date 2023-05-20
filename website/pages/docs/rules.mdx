@@ -3,11 +3,22 @@ title: 'Rules Of Blocks'
 description: 'How to use blocks in your projects the right way'
 ---
 
-import { Callout, Tabs, Tab, Cards, Card } from 'nextra-theme-docs';
+import { Callout } from 'nextra-theme-docs';
 
 # Rules of Blocks
 
-You are probably here because you got an error message.
+You are probably here because you got an warning message in your console.
+
+<Callout type="warning">
+  <code><strong>\[Million.js\]</strong> You did something wrong!</code>
+
+  ```jsx showLineNumbers filename="App.jsx" {2}
+  <div>
+    <YourBlock>Uh oh...</YourBlock>
+              ^
+  </div>
+  ```
+</Callout>
 
 There are three common reasons you might be seeing it:
 
@@ -17,288 +28,137 @@ There are three common reasons you might be seeing it:
 
 ## Breaking Rules of Blocks
 
-Components wrapped in the `block(){:jsx}` function are called Blocks in Million.js.
+You may have heard of ["progressive enhancement,"](https://developer.mozilla.org/en-US/docs/Glossary/Progressive_Enhancement) which is the idea that tools progressively use features based on what is supported. Similarly, Million.js has "progressive degradation," or the concept that if you use features that are not supported, it will degrade to default React rendering gracefully.
 
-Blocks are a special type of component that use a special, more performant virtual DOM to render. As such, they follow certain rules
+This section highlights some of the possible warnings you might encounter using blocks. Note that this is not an exhaustive list.
 
-Don’t call Hooks inside loops, conditions, or nested functions. Instead, always use Hooks at the top level of your React function, before any early returns. You can only call Hooks while React is rendering a function component:
-
-- ✅ Call them at the top level in the body of a function component.
-- ✅ Call them at the top level in the body of a custom Hook.
-
-## Using the compiler
-
-You should add the compiler to the bundler of your choice for your project, that's like your way of informing your project about Million.js.
-
-Not adding the compiler for your bundler will cause incompatibility with `block(){:jsx}` in your project.
-
-**It simply won't work!** Exactly why you need to add the compiler to your bundler, like this:
-
-<Tabs items={['Next.js', 'Astro', 'Gatsby', 'Vite', 'Webpack', 'Rollup', 'Rspack', 'Esbuild']} storageKey="selected-bundler-compiler">
-  <Tab>
-  <Callout type="warning">
-    Next.js support is currently in beta. Please report any issues you encounter.
-  </Callout>
-  ```js filename="next.config.mjs"
-  import million from 'million/compiler';
-
-/\*_ @type {import('next').NextConfig} _/
-const nextConfig = {
-reactStrictMode: true,
-};
-
-export default million.next(nextConfig);
-
-````
-</Tab>
-<Tab>
-<Callout type="warning">
-  Astro support is currently in beta. Please report any issues you encounter.
-</Callout>
-```js filename="astro.config.mjs"
-import { defineConfig } from 'astro/config';
-import million from 'million/compiler';
-
-export default defineConfig({
-  vite: {
-    plugins: [million.vite()]
-  }
-});
-````
-
-  </Tab>
-  <Tab>
-  <Callout type="warning">
-    Gatsby support is currently in beta. Please report any issues you encounter.
-  </Callout>
-  ```js filename="gatsby-node.js"
-  const million = require('million/compiler');
-
-exports.onCreateWebpackConfig = ({ actions }) => {
-actions.setWebpackConfig({
-plugins: [million.webpack()],
-})
-}
-
-````
-</Tab>
-<Tab>
-```js filename="vite.config.js"
-import million from 'million/compiler';
-import { defineConfig } from 'vite';
-
-export default defineConfig({
-  plugins: [million.vite()],
-});
-````
-
-  </Tab>
-  <Tab>
-  ```js filename="webpack.config.js"
-  import million from 'million/compiler';
-
-export default {
-  plugins: [million.webpack()],
-};
-
-````
-</Tab>
-<Tab>
-```js filename="rollup.config.js"
-import million from 'million/compiler';
-
-export default {
-  plugins: [million.rollup()],
-};
-````
-
-  </Tab>
-  <Tab>
-  ```js filename="rspack.config.js"
-  // @ts-check
-  const { default: million } = require('million/compiler');
-
-/\*_ @type {import('@rspack/cli').Configuration} _/
-module.exports = {
-plugins: [million.rspack()],
-};
-
-````
-</Tab>
-<Tab>
-```js filename="esbuild.config.js"
-import million from 'million/compiler';
-import { build } from 'esbuild';
-
-build({
-  plugins: [million.esbuild()],
-});
-````
-
-  </Tab>
-</Tabs>
-
-If you've managed to do everything stated here so far; you're on the right track. Kudos to you!
-
-## Deoptimizations
+### Calling `block()`
 
 <Callout type="warning">
-  This section highlights some of the possible errors you might encounter using
-  blocks
-</Callout>
-
-There are a number of things that could have caused you to encounter errors.
-
-**Here are some errors / warnings and how to resolve them**:
-
-<Callout type="warning">
-  Found unsupported argument for block. Make sure blocks consume the reference
+  <code>
+  <strong>[Million.js]</strong> Found unsupported argument for block. Make sure blocks consume the reference
   to a component function, not the direct declaration.
+  </code>
 </Callout>
 
-The above usually occurs when you have an actual JSX component like `<Component/>` passed into the `block()` function instead of a reference to the JSX element as in `Component`.
-Like this:
+The above usually occurs when you have an actual JSX component like `<Component />{:jsx}` passed into the `block(){:jsx}` function instead of a reference to the Component itself.
 
 ```jsx
-const wrongComponentBlock = block(<Component/>) {/*wrong! ❌*/}
+const BadBlock = block(<Component />) // ❌ Wrong
 
-const correctComponentBlock = block(Component)  {/*correct! ✅*/}
+const GoodBlock = block(App)  // ✅ Correct
 ```
 
-<br />
+### Using `map()` instead of `<For />`
 
 <Callout type="warning">
+  <code>
+  <strong>[Million.js]</strong>
   Array.map() will degrade performance. We recommend removing the block on the
   current component and using a `<For />` component instead
+  </code>
 </Callout>
 
-The above usually occurs when you have an array of items to be rendered on your UI from your component, but you're trying to wrap the entire component with `block()`. Its not allowed to use `array.map()` inside a block, but you should use
-`<For/>` instead.
-
-It also allows for optimized array rendering:
+The above will occur when you use `<Array>.map` within a block. This is not ideal, especially if the component that holds the list is a block. The right pattern is to remove the block on the current component and use a `<For />` component instead for the children.
 
 ```jsx
-import { For } from 'million/react';
+<div>
+  {items.map((item) => (
+    <div key={item}>{item}</div>
+  ))}
+</div>
 
-// Do this instead
+// 👇👇👇
 
-function MyComponent() {
-  const [items, setItems] = useState([1, 2, 3]);
-
-  return (
-    <div>
-      <For each={items}>{(item) => <div key={item}>{item}</div>}</For>
-    </div>
-  );
-}
+<For each={items}>
+  {(item) => <div key={item}>{item}</div>}
+</For>
 ```
 
-<br />
+### Deterministic returns
 
 <Callout type="warning">
+  <code>
+  <strong>[Million.js]</strong>
   Conditional expressions will degrade performance. We recommend using
-  deterministic returns instead
+  deterministic returns instead.
+  </code>
 </Callout>
 
-The above usually occurs when you have use conditions to return (`if` statements for example) instead of returning at the end as in every regular component
+Returns must be "deterministic," meaning there can only be one return statement at the end of the block that returns a stable tree.
+
+Some examples of non-deterministic returns:
 
 ```jsx
-function MyComponent() {
+function Component() {
   const [count, setCount] = useState(initial.count);
 
   if (count > 10) {
-    return <div>Too many clicks!</div>; // ❌ don't use conditionals
+    return <div>Too many clicks!</div>; // ❌ Wrong
   }
 
-  return <div>Count is {count}</div>;
-}
-
-const MyComponentBlock = block(MyComponent); // ❌ ERROR
-```
-
-<br />
-
-<Callout type="warning">
-  You cannot use multiple returns in blocks. There can only be one return
-  statement at the end of the block.
-</Callout>
-
-As the above says, you cannot use multiple return in blocks. This is unsupported at the moment. This is how you should return when you create a `block()`. A more subtle case:
-
-```jsx
-function MyComponent({ bool }) {
-  return <div>{bool && <span>true</span>}</div>;
-}
-
-const MyComponentBlock = block(MyComponent); // ❌ ERROR
-```
-
-<br />
-
-<Callout type="warning">
-  Components will cause degraded performance. Ideally, you should use DOM
-  elements instead
-</Callout>
-
-At the moment, not everything needs to be handled / can be handled by Million.js; hence, if it can handle it, it's left for React to take over.
-
-<br />
-
-<Callout type="warning">
-  Expected a block statement for the component function. Make sure you are using
-  a function declaration or arrow function
-</Callout>
-
-At the moment, Million.js doesn't do well with one-liners, the error above refers to the fact that you should be doing this:
-
-```jsx
-const MyComponent = () => {
-  return <div></div>;
-}; // ✅ Correct
-
-// or this
-
-function MyComponent() {
-  return <div></div>; // ✅ Correct
-}
-```
-
-You however cannot do this, because, it is not a block (as in a Javascript block)
-
-```jsx
-const Test = () => <div></div>;
-```
-
-<br />
-
-<Callout type="warning">Spread attributes aren't supported.</Callout>
-
-As the above says, you might want to use the spread syntax (ES6 syntax) on props, though React allows it, there is no support for them yet in blocks.
-For example:
-
-```jsx
-function MyWrongComponent({ props }) {
-  return (
-    <div {...props}>Some Props have been used</div> // ❌ Wrong
+  // ❌ Wrong
+  return count > 5 ? (
+    'Count is greater than 5'
+  ) : (
+    <div>Count is {count}.</div>
   );
 }
 
-function MyCorrectComponent({ props }) {
-  return (
-    <div name={props.name} style={props.styles}>
-      Some Props have been used
-    </div> // ✅ Correct
-  );
-}
+const ComponentBlock = block(Component);
 ```
 
-<br />
+### UI Component libraries 🙅‍♀️
 
 <Callout type="warning">
-  You can only use block() with a function declaration or arrow function
+  <code>
+    <strong>[Million.js]</strong>
+    Components will cause degraded performance. Ideally, you should use DOM elements instead.
+  </code>
 </Callout>
 
-Well, legacy React has it such that we can have classes be used to create components, however that is old syntax now, but, if you happen to be finding it hard to be getting the error above; it might be because you
-aren't using function-components. To resolve this, all you have to do is to use Functional Components.
+Many React applications use UI component libraries like Material UI, Chakra UI, or Tailwind UI. These libraries are great, but they are not optimized for Million.js.
 
-Goodluck and make sure to smile like you just won a Million dollars.
+Million.js requires that you use DOM elements instead of components. This is because components can introduce non-deterministic returns, which can cause degraded performance.
+
+```jsx
+// ❌ Bad
+<Stack>
+  <Text>What's up my fellow components</Text>
+</Stack>
+
+// 🤨 Maybe
+<div>
+  <Text>What's up my fellow components</Text>
+</div>
+
+// ✅ Good
+<div>
+  <p>What's up my fellow components</p>
+</div>
+```
+
+### Spread attributes
+
+<Callout type="warning">
+  <code>
+  <strong>[Million.js]</strong>
+  Spread attributes aren't supported.
+  </code>
+</Callout>
+
+You can't use spread attributes in Million.js, as they can introduce non-deterministic returns.
+
+```jsx
+<div {...props} /> // ❌ Wrong
+```
+
+## Using the compiler
+
+You may have forgot to use the compiler, a necessary part in ensuring that your JSX is compiled to Million.js compatible code. You can view the instructions at [the installation guide](/docs/install).
+
+On a side note, Million.js is technically usable without the compiler, but it's significantly more limited in scope, and there is a [more limited set of features available](/docs/block#rules-of-usage). This is not recommended.
+
+## Unsupported behavior
+
+If none of this worked, please [create an issue](https://github.com/aidenybai/million/issues/new?assignees=aidenybai&labels=bug&projects=&template=bug_report.md&title=bug%3A+) and we'll try to help. Try to create a small reproducing example — you might discover the problem as you're doing it.

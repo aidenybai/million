@@ -6,9 +6,9 @@
   "quickstart": "Quick Start",
   "install": "Installation",
   "rules": "Rules of Blocks",
-  "-- API Reference": {
+  "-- Internal API": {
     "type": "separator",
-    "title": "API Reference"
+    "title": "Internal API"
   },
   "block": "block()",
   "mount": "mount()",

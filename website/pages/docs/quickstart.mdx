@@ -7,6 +7,8 @@ import dynamic from 'next/dynamic';
 import { Callout, Tabs, Tab, Cards, Card } from 'nextra-theme-docs';
 import { Box } from '../../components/box';
 import { BrowserView, MobileView } from 'react-device-detect';
+import { VDomExample } from '../../components/examples/vdom';
+import { CombinedBlockExample } from '../../components/examples/combined-block';
 export const Demo = dynamic(() =>
   import('../../components/demo').then((mod) => mod.Demo),
 );
@@ -23,11 +25,13 @@ export const Demo = dynamic(() =>
 
 Welcome to the Million.js documentation (_woop woop 🎉🤑_). Let's learn how we can integrate Million.js into our React applications.
 
+Million.js assumes that you're already familiar with and you're using React. If you're not, we recommend checking out [react.dev](https://react.dev/) first.
+
 <Callout type="info">
 **You will learn:**
 - How to use `block(){:jsx}` to convert React components into blocks
-- How to use `<For>{:jsx}` for efficiently rendering lists
-- When to use `block(){:jsx}` and `<For>{:jsx}`
+- How to use `<For />{:jsx}` for efficiently rendering lists
+- When to use `block(){:jsx}` and `<For />{:jsx}`
 - The limitations of blocks
 </Callout>
 
@@ -38,13 +42,13 @@ Million.js is a library that enables you to create _blocks_. A block is a specia
 Blocks are essentially components wrapped by `block(){:jsx}`.
 
 ```jsx {7}
-function Dino() {
+function Lion() {
   return (
-    <img src="https://millionjs.org/rubber-ducky-dino.png" />
+    <img src="https://millionjs.org/lion.svg" />
   );
 }
 
-const DinoBlock = block(Dino);
+const LionBlock = block(Lion);
 ```
 
 Blocks can be used just like a normal React component:
@@ -53,7 +57,7 @@ Blocks can be used just like a normal React component:
 export default function App() {
   return (
     <div>
-      <h1>you promised me answers duck</h1>
+      <h1>mil + LION = million</h1>
       <DinoBlock />
     </div>
   );
@@ -67,19 +71,19 @@ Have a look at the result:
 <Box previewOnly code={`
   import { block } from 'million/react';
 
-  function Dino() {
+  function Lion() {
     return (
-      <img src="/rubber-ducky-dino.png" />
+      <img src="https://millionjs.org/lion.svg" />
     );
   }
 
-  const DinoBlock = block(Dino);
+  const LionBlock = block(Lion);
 
   export default function App() {
     return (
       <div>
-        <h1>you promised me answers duck</h1>
-        <DinoBlock />
+        <h1>mil + LION = million</h1>
+        <LionBlock />
       </div>
     );
   }
@@ -93,7 +97,7 @@ With that in hand, let's build an app.
 
 One use case of blocks is rendering lists of data efficiently. In this example, let's build a data grid in React.
 
-We have access to the prebuilt components `<Table />{:jsx}` and `<Input />{:jsx}` from our user interface (UI) library. We can then store the number of rows we want to display in a `useState(){:jsx}` hook.
+We have access to the prebuilt components `<Table />{:jsx}` and `<Input />{:jsx}` from our fake user interface (UI) library. We can then store the number of rows we want to display in a `useState(){:jsx}` hook.
 
 ```jsx
 function App() {
@@ -341,12 +345,29 @@ export default App;
 
 ## Hitting the limit
 
-Blocks are great for rendering large lists, data grids, and many other use cases. However, you should always use best judgement, as blocks are not a silver bullet. Here are some general guidelines to follow:
+<Callout type="warning">
+  This section is a bit more advanced. If you want a list of limitations, check out the [Rules of Blocks](/docs/rules). Or, if you just want to start integrating Million.js, check out the the [installation guide](/docs/install).
+</Callout>
+
+Blocks are great for rendering large lists, data grids, and many other use cases. The reason is because it's use static analysis in order to identify and directly mutate dynamic nodes.
+
+Click on either tab to compare (or read the blog post for an [in-depth explanation](http://millionjs.org/blog/virtual-dom)):
+
+<Tabs items={['React', 'Million.js']}>
+  <Tab>
+    <VDomExample />
+  </Tab>
+   <Tab>
+    <CombinedBlockExample />
+  </Tab>
+</Tabs>
+
+As illustrated above, using a block can allow us to capture potential performance gains. However, you should always use best judgement, as blocks are not a silver bullet. Here are some general guidelines to follow:
 
 - **Static views**: Blocks perform best when there's not that much dynamic data. Since static parts of the React tree need to be unnecessary rerendered when dynamic data changes by React, blocks can directly skip to what's dynamic.
 - **Nested data**: Blocks are great for rendering nested data. Million.js turns tree traversal from `O(tree)` to `O(1)`, allowing for fast access and changes.
 
-Looking for more strict guidelines? Check out [Rules of Blocks](/docs/rules).
+Looking for the full guidelines? Check out [Rules of Blocks](/docs/rules).
 
 ## Next Steps
 
@@ -356,4 +377,4 @@ Check out the the [installation guide](/docs/install) to put them into practice 
 
 ---
 
-_This page is directly inspired by [React's Quick start page](https://react.dev/learn)._
+_This page is directly inspired by [React's "Quick Start" page](https://react.dev/learn)._

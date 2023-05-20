@@ -477,7 +477,7 @@ const throwCodeFrame = ({
   ) {
     path.parentPath.node.init = path.node.arguments[0];
   }
-  const err = localPath.buildCodeFrameError(message);
+  const err = localPath.buildCodeFrameError(`[Million.js] ${message}`);
   if (path) throw err;
   // eslint-disable-next-line no-console
   console.warn(err.message, '\n');
