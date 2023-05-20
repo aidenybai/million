@@ -64,7 +64,7 @@ Then, add the compiler to your build tool of choice:
 
   export default defineConfig({
     vite: {
-      plugins: [million.vite()]
+      plugins: [million.vite({ mode: 'react-server' })]
     }
   });
   ```
@@ -75,7 +75,7 @@ Then, add the compiler to your build tool of choice:
 
   exports.onCreateWebpackConfig = ({ actions }) => {
     actions.setWebpackConfig({
-      plugins: [million.webpack()],
+      plugins: [million.webpack({ mode: 'react-server' })],
     })
   }
   ```
