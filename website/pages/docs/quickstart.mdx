@@ -11,8 +11,12 @@ export const Demo = dynamic(() =>
   import('../../components/demo').then((mod) => mod.Demo),
 );
 
-<MobileView type="warning">
+<MobileView>
+
+<Callout type="warning">
   We highly recommend viewing this documentation on a desktop browser to get access to interactive code examples.
+</Callout>
+
 </MobileView>
 
 # Quick Start
@@ -167,13 +171,9 @@ function App() {
 export default App;
 `} />
 
-</BrowserView>
-
 We can see that it performs pretty well. From 0-100, there's virtually no lag, but once you get higher than 500 or so, there's a noticable delay in rendering.
 
 Cool right? React is great because we can declaratively write great UI and get pretty good performance. But the data grid we just made is a rudimentary example, and is not necessarily representative of most React applications.
-
-<BrowserView>
 
 ### More realistic rendering
 
