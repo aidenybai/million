@@ -20,7 +20,7 @@ jobs:
       - run: pnpm test
       - run: pnpm lint
       - run: pnpm build
-      - run: pnpm publint
+      - run: pnpm publint --strict
       - run: npm publish --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

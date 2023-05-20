@@ -57,8 +57,8 @@ importers:
         specifier: ^2.8.4
         version: 2.8.4
       publint:
-        specifier: ^0.1.10
-        version: 0.1.10
+        specifier: ^0.1.12
+        version: 0.1.12
       source-map:
         specifier: ^0.7.4
         version: 0.7.4
@@ -188,10 +188,10 @@ importers:
         version: 13.2.1(@babel/core@7.21.4)(react-dom@18.2.0)(react@18.2.0)
       nextra:
         specifier: latest
-        version: 2.5.2(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
+        version: 2.3.0(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
       nextra-theme-docs:
         specifier: latest
-        version: 2.5.2(next@13.2.1)(nextra@2.5.2)(react-dom@18.2.0)(react@18.2.0)
+        version: 2.3.0(next@13.2.1)(nextra@2.3.0)(react-dom@18.2.0)(react@18.2.0)
       postcss:
         specifier: ^8.4.21
         version: 8.4.21
@@ -5213,8 +5213,8 @@ packages:
       - supports-color
     dev: false
 
-  /next-seo@6.0.0(next@13.2.1)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-jKKt1p1z4otMA28AyeoAONixVjdYmgFCWwpEFtu+DwRHQDllVX3RjtyXbuCQiUZEfQ9rFPBpAI90vDeLZlMBdg==}
+  /next-seo@5.15.0(next@13.2.1)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-LGbcY91yDKGMb7YI+28n3g+RuChUkt6pXNpa8FkfKkEmNiJkeRDEXTnnjVtwT9FmMhG6NH8qwHTelGrlYm9rgg==}
     peerDependencies:
       next: ^8.1.1-canary.54 || >=9.0.0
       react: '>=16.0.0'
@@ -5288,11 +5288,11 @@ packages:
       - babel-plugin-macros
     dev: false
 
-  /nextra-theme-docs@2.5.2(next@13.2.1)(nextra@2.5.2)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-DLrAtMtlUx3y3QsHcnIHhkb8b/VUFSvU5Cgb0Tzm7VlngKJW8ftPg9IxgoRZouqgQvkvvxbMLTPgBw+8n0VZTw==}
+  /nextra-theme-docs@2.3.0(next@13.2.1)(nextra@2.3.0)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-KMvHhGOvaKIqR71Gnx+w/1c9LLfpQJ3+fnCAgg9qfjXo2agr1zRKyRDROyY8cGINdslpzmEGgs/MH2gDSAI6nw==}
     peerDependencies:
       next: '>=9.5.3'
-      nextra: 2.5.2
+      nextra: 2.3.0
       react: '>=16.13.1'
       react-dom: '>=16.13.1'
     dependencies:
@@ -5305,17 +5305,17 @@ packages:
       intersection-observer: 0.12.2
       match-sorter: 6.3.1
       next: 13.2.1(@babel/core@7.21.4)(react-dom@18.2.0)(react@18.2.0)
-      next-seo: 6.0.0(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
+      next-seo: 5.15.0(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
       next-themes: 0.2.1(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
-      nextra: 2.5.2(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
+      nextra: 2.3.0(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       scroll-into-view-if-needed: 3.0.6
       zod: 3.21.4
     dev: false
 
-  /nextra@2.5.2(next@13.2.1)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-22kw8s2OShvA625cKi3P9JioUybL5hEcCn1txXyQh+Mn3jmQXlXdbzmuT4BdYRNWo5lGqmYwm2h73igXjbssRQ==}
+  /nextra@2.3.0(next@13.2.1)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-v17vMq2bJa15iKKt9+6AidSeIoKcK1ZlXmwqFqTgc0pQmRrl6pTJaSR36UZKcpMwvvLZ/7/xWuWV/OQB599O3g==}
     engines: {node: '>=16'}
     peerDependencies:
       next: '>=9.5.3'
@@ -5336,7 +5336,7 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       rehype-katex: 6.0.3
-      rehype-pretty-code: 0.9.4(shiki@0.14.2)
+      rehype-pretty-code: 0.9.3(shiki@0.14.2)
       remark-gfm: 3.0.1
       remark-math: 5.1.1
       remark-reading-time: 2.0.1
@@ -5814,8 +5814,8 @@ packages:
     resolution: {integrity: sha512-E/ZsdU4HLs/68gYzgGTkMicWTLPdAftJLfJFlLUAAKZGkStNU72sZjT66SnMDVOfOWY/YAoiD7Jxa9iHvngcag==}
     dev: true
 
-  /publint@0.1.10:
-    resolution: {integrity: sha512-maW+K+S1cN7//l3dfZjgVKczDRyytMNeFryp7TyFJMmqAq6dQRycTyT9x5/Nc8N5yIeSc6G2H96iOShKW1M4mQ==}
+  /publint@0.1.12:
+    resolution: {integrity: sha512-8LxkO430t/SOhUl0qXQWdXq34m6oyLcPhE4Kc8eXhOEnB82vCHcShPQ2kH53n/ksC7jWdRWDP7MPGxKJbntQfg==}
     engines: {node: '>=16'}
     hasBin: true
     dependencies:
@@ -6016,8 +6016,8 @@ packages:
       unist-util-visit: 4.1.2
     dev: false
 
-  /rehype-pretty-code@0.9.4(shiki@0.14.2):
-    resolution: {integrity: sha512-3m4aQT15n8C+UizcZL0enaahoZwCDm5K1qKQ3DGgHE7U8l/DEEEJ/hm+uDe9yyK4sxVOSfZcRIMHrpJwLQi+Rg==}
+  /rehype-pretty-code@0.9.3(shiki@0.14.2):
+    resolution: {integrity: sha512-57i+ifrttqpeQxub0NZ2pRw0aiUPYeBpr234NLWfZ4BfbEaP+29+iCXB1rUMkzoPi6IBC4w4I93mUPgw36IajQ==}
     engines: {node: ^12.16.0 || >=13.2.0}
     peerDependencies:
       shiki: '*'
