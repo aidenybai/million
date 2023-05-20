@@ -44,7 +44,7 @@ Blocks are essentially components wrapped by `block(){:jsx}`.
 ```jsx {7}
 function Lion() {
   return (
-    <img src="https://millionjs.org/lion.svg" />
+    <img src="https://million.dev/lion.svg" />
   );
 }
 
@@ -73,7 +73,7 @@ Have a look at the result:
 
   function Lion() {
     return (
-      <img src="https://millionjs.org/lion.svg" />
+      <img src="https://million.dev/lion.svg" />
     );
   }
 
@@ -349,20 +349,23 @@ export default App;
   This section is a bit more advanced. If you want a list of limitations, check out the [Rules of Blocks](/docs/rules). Or, if you just want to start integrating Million.js, check out the the [installation guide](/docs/install).
 </Callout>
 
-Blocks are great for rendering large lists, data grids, and many other use cases. The reason is because it's use static analysis in order to identify and directly mutate dynamic nodes.
+Blocks are great for rendering large lists, data grids, and many other use cases. Under the hood, they render with the Million.js virtual DOM instead of React.
 
-Click on either tab to compare (or read the blog post for an [in-depth explanation](http://millionjs.org/blog/virtual-dom)):
+<details>
+  <summary>
+    <strong>Deep Dive:</strong> How does it work?
+  </summary>
+  <Tabs items={['React', 'Million.js']}>
+    <Tab>
+      <VDomExample />
+    </Tab>
+    <Tab>
+      <CombinedBlockExample />
+    </Tab>
+  </Tabs>
+</details>
 
-<Tabs items={['React', 'Million.js']}>
-  <Tab>
-    <VDomExample />
-  </Tab>
-   <Tab>
-    <CombinedBlockExample />
-  </Tab>
-</Tabs>
-
-As illustrated above, using a block can allow us to capture potential performance gains. However, you should always use best judgement, as blocks are not a silver bullet. Here are some general guidelines to follow:
+Using a block can allow us to capture potential performance gains. However, you should always use best judgement, as blocks are not a silver bullet. Here are some general guidelines to follow:
 
 - **Static views**: Blocks perform best when there's not that much dynamic data. Since static parts of the React tree need to be unnecessary rerendered when dynamic data changes by React, blocks can directly skip to what's dynamic.
 - **Nested data**: Blocks are great for rendering nested data. Million.js turns tree traversal from `O(tree)` to `O(1)`, allowing for fast access and changes.

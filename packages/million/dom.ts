@@ -14,7 +14,7 @@ import {
 
 if (typeof window === 'undefined') {
   throw new Error(
-    "See http://millionjs.org/docs/quickstart to use the compiler. If that doesn't work, import from `million/react-server` instead.",
+    "See http://million.dev/docs/quickstart to use the compiler. If that doesn't work, import from `million/react-server` instead.",
   );
 }
 

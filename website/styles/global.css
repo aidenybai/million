@@ -4,17 +4,11 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: 'Mona Sans';
-  src: url('/Mona-Sans.woff2') format('woff2'),
-    url('/Mona-Sans.woff') format('woff');
-}
-
 html,
 body {
-  font-family: 'Mona Sans', -apple-system, BlinkMacSystemFont, avenir next,
-    avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto,
-    arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui,
+    helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial,
+    sans-serif;
 }
 
 #hero {

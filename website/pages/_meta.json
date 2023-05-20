@@ -18,7 +18,7 @@
   "demo": {
     "title": "Demo",
     "type": "page",
-    "href": "https://demo.millionjs.org",
+    "href": "https://demo.million.dev",
     "newWindow": true
   }
 }
