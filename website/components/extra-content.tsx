@@ -21,6 +21,8 @@ export function ExtraContent() {
       const reactRoot = document.createElement('div');
       const millionRoot = document.createElement('div');
 
+      const filledArray = Array(1000).fill(0);
+
       const b = block(({ text }: { text: string }) => ({
         type: 'div',
         props: {
@@ -29,19 +31,15 @@ export function ExtraContent() {
               type: 'div',
               props: {
                 children: [
-                  ...Array(2000)
-                    .fill(0)
-                    .map(() => ({
-                      type: 'div',
-                      props: {
-                        children: Array(1000)
-                          .fill(0)
-                          .map(() => ({
-                            type: 'div',
-                            props: {},
-                          })),
-                      },
-                    })),
+                  ...filledArray.map(() => ({
+                    type: 'div',
+                    props: {
+                      children: filledArray.map(() => ({
+                        type: 'div',
+                        props: {},
+                      })),
+                    },
+                  })),
                   {
                     type: 'div',
                     props: {
@@ -59,17 +57,13 @@ export function ExtraContent() {
         return (
           <div>
             <div>
-              {Array(2000)
-                .fill(0)
-                .map(() => (
-                  <div>
-                    {Array(1000)
-                      .fill(0)
-                      .map(() => (
-                        <div></div>
-                      ))}
-                  </div>
-                ))}
+              {filledArray.map(() => (
+                <div>
+                  {filledArray.map(() => (
+                    <div></div>
+                  ))}
+                </div>
+              ))}
               <div>{text}</div>
             </div>
           </div>
