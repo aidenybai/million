@@ -180,9 +180,6 @@ importers:
       framer-motion:
         specifier: ^10.12.4
         version: 10.12.4(react-dom@18.2.0)(react@18.2.0)
-      million:
-        specifier: latest
-        version: link:..
       next:
         specifier: ^13.0.6
         version: 13.2.1(@babel/core@7.21.4)(react-dom@18.2.0)(react@18.2.0)

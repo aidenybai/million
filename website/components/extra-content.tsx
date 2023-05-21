@@ -13,13 +13,14 @@ export function ExtraContent() {
 
   useEffect(() => {
     const setup = async () => {
-      const { block, mount, patch } = await import('million');
+      const { block, mount, patch } = await import(
+        './local-million/million.mjs'
+      );
       const { createRoot } = await import('react-dom/client');
 
       const reactRoot = document.createElement('div');
       const millionRoot = document.createElement('div');
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
       const b = block(({ text }: { text: string }) => ({
         type: 'div',
         props: {
@@ -62,9 +63,7 @@ export function ExtraContent() {
         );
       };
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
       const currentBlock = b({ text: String(Math.random()) });
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       mount(currentBlock, millionRoot);
       const root = createRoot(reactRoot);
 
@@ -75,7 +74,6 @@ export function ExtraContent() {
           root.render(<Component text={String(Math.random())} />);
         },
         renderMillion() {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call
           patch(currentBlock, b({ text: String(Math.random()) }));
         },
       };
@@ -93,7 +91,7 @@ export function ExtraContent() {
         <div>
           <button
             onClick={() => setStart(true)}
-            className="w-full bg-[#f0e1ff] text-[#5200a3  ] dark:bg-[#17262f] dark:text-[#038ae6] px-2 py-2 font-bold rounded"
+            className="w-full bg-[#f0e1ff] text-[#5200a3] dark:bg-[#17262f] dark:text-[#038ae6] px-2 py-2 font-bold rounded"
           >
             Begin
           </button>
