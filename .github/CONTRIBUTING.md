@@ -120,7 +120,7 @@ The project uses a [monorepo](https://monorepo.tools/) structure. It is divided 
 
 - `packages` - This folder contains all the packages used within the Million.js library
 - `test` - This folder contains all the tests written for the Million.js library
-- `website` - This folder contains the code for the website [Million.js](https://millionjs.org/)
+- `website` - This folder contains the code for the website [Million.js](https://million.dev/)
 
 ### `packages` folder
 

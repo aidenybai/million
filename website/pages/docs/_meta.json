@@ -1,20 +1,20 @@
 {
-  "index": "Introduction",
   "-- Guide": {
     "type": "separator",
     "title": "Guide"
   },
-  "quickstart": "Quickstart",
+  "quickstart": "Quick Start",
+  "install": "Installation",
   "rules": "Rules of Blocks",
-  "compiler": "Optimizing compiler",
-  "-- API Reference": {
+  "-- Internal API": {
     "type": "separator",
-    "title": "API Reference"
+    "title": "Internal API"
   },
   "block": "block()",
   "mount": "mount()",
   "patch": "patch()",
   "map-array": "mapArray()",
   "render-to-template": "renderToTemplate()",
-  "string-to-dom": "stringToDOM()"
+  "string-to-dom": "stringToDOM()",
+  "compiler": "Optimizing compiler"
 }

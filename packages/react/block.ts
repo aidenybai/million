@@ -13,7 +13,7 @@ import {
   remove$,
 } from '../million/block';
 import { Map$, MapSet$, MapHas$, MapGet$ } from '../million/constants';
-import { unwrap } from './utils';
+import { RENDER_SCOPE, unwrap } from './utils';
 import type { Props } from '../million';
 import type { ReactNode, FunctionComponent, ComponentType } from 'react';
 
@@ -21,7 +21,7 @@ interface Options {
   shouldUpdate?: (oldProps: Props, newProps: Props) => boolean;
 }
 
-const css = 'million-block, million-fragment { display: contents }';
+const css = `${RENDER_SCOPE} { display: contents }`;
 
 // @ts-expect-error - CSSStyleSheet is not supported on Safari
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -66,7 +66,7 @@ export const block = (fn: ComponentType<any>, options: Options = {}) => {
     }, []);
 
     const marker = useMemo(() => {
-      return createElement('million-block', { ref });
+      return createElement(RENDER_SCOPE, { ref });
     }, []);
 
     const vnode = createElement(

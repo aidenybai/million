@@ -18,19 +18,7 @@
   "demo": {
     "title": "Demo",
     "type": "page",
-    "href": "https://demo.millionjs.org",
-    "newWindow": true
-  },
-  "roadmap": {
-    "title": "Roadmap",
-    "type": "page",
-    "href": "https://github.com/users/aidenybai/projects/5/views/1?layout=roadmap",
-    "newWindow": true
-  },
-  "benchmarks": {
-    "title": "Benchmarks",
-    "type": "page",
-    "href": "https://krausest.github.io/js-framework-benchmark/current.html",
+    "href": "https://demo.million.dev",
     "newWindow": true
   }
 }

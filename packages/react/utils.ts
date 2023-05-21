@@ -1,6 +1,24 @@
 import { Fragment } from 'react';
+import { createRoot } from 'react-dom/client';
+import { document$ } from '../million/dom';
 import type { ReactNode } from 'react';
+import type { Root } from 'react-dom/client';
 import type { VNode } from '../million';
+
+const REACT_ROOT = '__react_root';
+export const RENDER_SCOPE = 'million-render-scope';
+
+export const renderReactScope = (jsx: ReactNode) => {
+  return (el: HTMLElement | null) => {
+    const parent = el ?? document$.createElement(RENDER_SCOPE);
+    const root =
+      REACT_ROOT in parent
+        ? (parent[REACT_ROOT] as Root)
+        : (parent[REACT_ROOT] = createRoot(parent));
+    root.render(jsx);
+    return parent;
+  };
+};
 
 export const unwrap = (vnode?: ReactNode): VNode => {
   if (typeof vnode !== 'object' || vnode === null || !('type' in vnode)) {

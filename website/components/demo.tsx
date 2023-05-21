@@ -12,7 +12,7 @@ export function Demo() {
           >
             Close Demo ❌
           </button>
-          <iframe className="w-full h-full" src="https://demo.millionjs.org/">
+          <iframe className="w-full h-full" src="https://demo.million.dev/">
             iframe is not supported
           </iframe>
         </div>

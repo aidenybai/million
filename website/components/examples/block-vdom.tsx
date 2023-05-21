@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { Slideshow, motionAnimationProps } from './slideshow';
 
-const frames = [
+export const frames = [
   <motion.svg
     {...motionAnimationProps}
     className="w-full svg"
@@ -62,19 +62,19 @@ const frames = [
       {...motionAnimationProps}
       d="M139 115L54 260.5"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M139.5 116L182 186"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M98 185L145 261"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
@@ -160,19 +160,19 @@ const frames = [
       {...motionAnimationProps}
       d="M334 115L249 260.5"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M334.5 116L377 186"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M293 185L340 261"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
@@ -292,19 +292,19 @@ const frames = [
       {...motionAnimationProps}
       d="M139 115L54 260.5"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M139.5 116L182 186"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M98 185L145 261"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
@@ -431,19 +431,19 @@ const frames = [
       {...motionAnimationProps}
       d="M334 115L249 260.5"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M334.5 116L377 186"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M293 185L340 261"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
@@ -596,19 +596,19 @@ const frames = [
       {...motionAnimationProps}
       d="M139 115L54 260.5"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M139.5 116L182 186"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M98 185L145 261"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
@@ -766,13 +766,13 @@ const frames = [
       {...motionAnimationProps}
       d="M334 115L249 260.5"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M334.5 116L377 186"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
@@ -783,7 +783,7 @@ const frames = [
       {...motionAnimationProps}
       d="M293 185L340 261"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
@@ -877,7 +877,7 @@ const frames = [
   </motion.svg>,
 ];
 
-const descriptions = [
+export const descriptions = [
   'Instead of diffing by element, we can just diff `prop1` and `prop2`. Since both have associations to their respective nodes with the "Edit Mapping" we created during static analysis, once we determine a difference, we can directly update the DOM.',
   "We diff the current `prop1` and new `prop1` values, and since they're different, we update the DOM.",
   "We diff the current `prop2` and new `prop2` values, and since they're different, we update the DOM.",
