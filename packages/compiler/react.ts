@@ -22,8 +22,13 @@ export const transformReact =
       ) {
         return;
       }
+
+      const IS_PREACT =
+        options.mode === 'preact' ||
+        importSource.source.value === 'million/preact';
+
       if (importSource.source.value === 'million') {
-        importSource.source.value = 'million/react';
+        importSource.source.value = `million/${IS_PREACT ? 'preact' : 'react'}`;
       }
 
       if (
@@ -48,6 +53,7 @@ export const transformReact =
 
       if (t.isFunctionDeclaration(component)) {
         handleComponent(
+          IS_PREACT,
           path,
           component.body,
           componentBinding,
@@ -59,6 +65,7 @@ export const transformReact =
         t.isArrowFunctionExpression(component.init)
       ) {
         handleComponent(
+          IS_PREACT,
           path,
           component.init.body,
           componentBinding,
@@ -77,6 +84,7 @@ export const transformReact =
   };
 
 const handleComponent = (
+  IS_PREACT: boolean,
   path: NodePath<t.CallExpression>,
   componentFunction: object | null | undefined,
   componentBinding: any,
@@ -129,7 +137,13 @@ const handleComponent = (
     const componentVariable = path.scope.generateUidIdentifier('component$');
 
     // Extracts all expressions / identifiers from the JSX element
-    const dynamics = getDynamicsFromJSX(path, jsx, sourceName, returnJsxPath);
+    const dynamics = getDynamicsFromJSX(
+      IS_PREACT,
+      path,
+      jsx,
+      sourceName,
+      returnJsxPath,
+    );
 
     const forgettiCompatibleComponentName = t.identifier(
       `useBlock${componentVariable.name}`,
@@ -187,6 +201,7 @@ const handleComponent = (
 };
 
 const getDynamicsFromJSX = (
+  IS_PREACT: boolean,
   path: NodePath<t.CallExpression>,
   jsx: t.JSXElement,
   sourceName: string,
@@ -224,9 +239,14 @@ const getDynamicsFromJSX = (
       t.isVariableDeclarator(component) ||
       type.name.startsWith(type.name[0]!.toUpperCase())
     ) {
-      const createElement = addNamed(path, 'createElement', 'react', {
-        nameHint: 'createElement$',
-      });
+      const createElement = addNamed(
+        path,
+        IS_PREACT ? 'h' : 'createElement',
+        IS_PREACT ? 'preact' : 'react',
+        {
+          nameHint: 'createElement$',
+        },
+      );
 
       const objectProperties: t.ObjectProperty[] = [];
       for (let i = 0, j = jsx.openingElement.attributes.length; i < j; i++) {
@@ -356,6 +376,7 @@ const getDynamicsFromJSX = (
         createDynamic(expression, null, null);
       } else if (t.isJSXElement(expression)) {
         getDynamicsFromJSX(
+          IS_PREACT,
           path,
           expression,
           sourceName,
@@ -449,6 +470,7 @@ const getDynamicsFromJSX = (
       }
     } else if (t.isJSXElement(child)) {
       getDynamicsFromJSX(
+        IS_PREACT,
         path,
         child,
         sourceName,

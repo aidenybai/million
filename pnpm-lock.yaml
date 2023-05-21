@@ -128,6 +128,12 @@ importers:
 
   packages/million: {}
 
+  packages/preact:
+    dependencies:
+      preact:
+        specifier: ^10.15.0
+        version: 10.15.0
+
   packages/react:
     dependencies:
       react:
@@ -5746,6 +5752,10 @@ packages:
       react: ^16.14.0 || ^17.0.0
     dependencies:
       react: 18.2.0
+    dev: false
+
+  /preact@10.15.0:
+    resolution: {integrity: sha512-nZSa8M2R2m1n7nJSBlzDpxRJaIsejrTO1vlFbdpFvyC8qM1iU+On2y0otfoUm6SRB5o0lF0CKDFxg6grEFU0iQ==}
     dev: false
 
   /prelude-ls@1.1.2:

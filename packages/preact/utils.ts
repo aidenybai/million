@@ -1,26 +1,19 @@
-import { Fragment } from 'react';
-import { createRoot } from 'react-dom/client';
+import { Fragment, render } from 'preact';
 import { document$ } from '../million/dom';
-import type { ReactNode } from 'react';
-import type { Root } from 'react-dom/client';
+import type { VNode as PreactNode, ComponentChild } from 'preact';
 import type { VNode } from '../million';
 
-const REACT_ROOT = '__react_root';
 export const RENDER_SCOPE = 'million-render-scope';
 
-export const renderReactScope = (vnode: ReactNode) => {
+export const renderReactScope = (vnode: PreactNode) => {
   return (el: HTMLElement | null) => {
     const parent = el ?? document$.createElement(RENDER_SCOPE);
-    const root =
-      REACT_ROOT in parent
-        ? (parent[REACT_ROOT] as Root)
-        : (parent[REACT_ROOT] = createRoot(parent));
-    root.render(vnode);
+    render(vnode, parent);
     return parent;
   };
 };
 
-export const unwrap = (vnode?: ReactNode): VNode => {
+export const unwrap = (vnode?: ComponentChild): VNode => {
   if (typeof vnode !== 'object' || vnode === null || !('type' in vnode)) {
     if (typeof vnode === 'number' || vnode === true) {
       return String(vnode);
@@ -29,9 +22,9 @@ export const unwrap = (vnode?: ReactNode): VNode => {
     }
     return vnode as VNode;
   }
-  const type = vnode.type as any;
+  const type = vnode.type;
   if (typeof type === 'function') {
-    return unwrap(type(vnode.props ?? {}));
+    return unwrap((type as any)(vnode.props ?? {}));
   }
   if (typeof type === 'object' && '$' in type) return type;
 
@@ -50,8 +43,8 @@ export const unwrap = (vnode?: ReactNode): VNode => {
 };
 
 export const flatten = (
-  rawChildren?: ReactNode | ReactNode[] | null,
-): ReactNode[] => {
+  rawChildren?: ComponentChild | ComponentChild[] | null,
+): ComponentChild[] => {
   if (rawChildren === undefined || rawChildren === null) return [];
   if (
     typeof rawChildren === 'object' &&
@@ -67,9 +60,9 @@ export const flatten = (
     return [rawChildren];
   }
   const flattenedChildren = rawChildren.flat(Infinity);
-  const children: (ReactNode | ReactNode[])[] = [];
+  const children: (ComponentChild | ComponentChild[])[] = [];
   for (let i = 0, l = flattenedChildren.length; i < l; ++i) {
-    children.push(...flatten(flattenedChildren[i] as any));
+    children.push(...flatten(flattenedChildren[i]));
   }
   return children;
 };
