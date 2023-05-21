@@ -180,9 +180,9 @@ importers:
       framer-motion:
         specifier: ^10.12.4
         version: 10.12.4(react-dom@18.2.0)(react@18.2.0)
-      markprompt:
-        specifier: ^0.1.6
-        version: 0.1.6(@types/react@18.0.28)(react-dom@18.2.0)(react@18.2.0)
+      million:
+        specifier: workspace:^
+        version: link:..
       next:
         specifier: ^13.0.6
         version: 13.2.1(@babel/core@7.21.4)(react-dom@18.2.0)(react@18.2.0)
@@ -213,6 +213,9 @@ importers:
       react-dom:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
+      react-lag-radar:
+        specifier: ^1.0.0
+        version: 1.0.0(react@18.2.0)
       react-markdown:
         specifier: ^8.0.6
         version: 8.0.6(@types/react@18.0.28)(react@18.2.0)
@@ -811,6 +814,10 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /@gaearon/lag-radar@0.1.0:
+    resolution: {integrity: sha512-gRBjSuEG6HuyoXhy+yedPXlcGKyUNMlNpgKTncgfXwIi6ejt/0KuqOzck/geYqy8z02fuJrz1VjkF4EwH2Oq8g==}
+    dev: false
 
   /@headlessui/react@1.7.13(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-9n+EQKRtD9266xIHXdY5MfiXPDfYwl7zBM7KOx2Ae3Gdgxy8QML1FkCMjq6AsOf0l6N9uvI4HcFtuFlenaldKg==}
@@ -4519,24 +4526,6 @@ packages:
     resolution: {integrity: sha512-Z1NL3Tb1M9wH4XESsCDEksWoKTdlUafKc4pt0GRwjUyXaCFZ+dc3g2erqB6zm3szA2IUSi7VnPI+o/9jnxh9hw==}
     dev: false
 
-  /markprompt@0.1.6(@types/react@18.0.28)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-nHuLS/EuOOIv7H9KbKolgQOdKdfyOueM1wMrwr96eLXTHsgaEd6NskAx+EwPdLvP1XJ03WLtFKAFBJ/qhWD58A==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      react: ^16 || ^17 || ^18
-      react-dom: ^16 || ^17 || ^18
-    dependencies:
-      classnames: 2.3.2
-      client-only: 0.0.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      react-markdown: 8.0.6(@types/react@18.0.28)(react@18.2.0)
-      remark-gfm: 3.0.1
-    transitivePeerDependencies:
-      - '@types/react'
-      - supports-color
-    dev: false
-
   /match-sorter@6.3.1:
     resolution: {integrity: sha512-mxybbo3pPNuA+ZuCUhm5bwNkXrJTbsk5VWbR5wiwz/GC6LIiegBGn2w3O08UG/jdbYLinw51fSQ5xNU1U3MgBw==}
     dependencies:
@@ -5901,6 +5890,15 @@ packages:
 
   /react-is@18.2.0:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
+    dev: false
+
+  /react-lag-radar@1.0.0(react@18.2.0):
+    resolution: {integrity: sha512-3Pv3B3PuMgFgnakXBrVGYPt0eOHQX+zwcImXSKI9CcF2RDw7VUImr5yb+F1hNl35niL7HSF1wAsMko6I4bO7LQ==}
+    peerDependencies:
+      react: '*'
+    dependencies:
+      '@gaearon/lag-radar': 0.1.0
+      react: 18.2.0
     dev: false
 
   /react-markdown@8.0.6(@types/react@18.0.28)(react@18.2.0):

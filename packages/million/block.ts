@@ -52,8 +52,8 @@ export const block = (
     renderToTemplate(unwrap ? unwrap(vnode) : vnode, edits),
   );
 
-  return (
-    props?: Props | null,
+  return <T extends Props>(
+    props?: T | null,
     key?: string,
     shouldUpdateCurrentBlock?: (oldProps: Props, newProps: Props) => boolean,
   ) => {
