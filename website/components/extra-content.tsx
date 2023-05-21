@@ -93,7 +93,7 @@ export function ExtraContent() {
         <div>
           <button
             onClick={() => setStart(true)}
-            className="w-full bg-[#f0e1ff] text-[#5200a3] dark:bg-[#17262f] dark:text-[#038ae6] px-2 py-2 font-bold rounded"
+            className="w-full bg-[#f0e1ff] text-[#5200a3  ] dark:bg-[#17262f] dark:text-[#038ae6] px-2 py-2 font-bold rounded"
           >
             Begin
           </button>

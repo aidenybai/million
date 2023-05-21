@@ -181,7 +181,7 @@ importers:
         specifier: ^10.12.4
         version: 10.12.4(react-dom@18.2.0)(react@18.2.0)
       million:
-        specifier: workspace:^
+        specifier: ^2.3.3
         version: link:..
       next:
         specifier: ^13.0.6
