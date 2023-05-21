@@ -14,7 +14,7 @@
     "classnames": "^2.3.2",
     "dedent": "^0.7.0",
     "framer-motion": "^10.12.4",
-    "million": "^2.3.3",
+    "million": "latest",
     "next": "^13.0.6",
     "nextra": "latest",
     "nextra-theme-docs": "latest",
