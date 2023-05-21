@@ -29,12 +29,12 @@ export function ExtraContent() {
               type: 'div',
               props: {
                 children: [
-                  ...Array(1000)
+                  ...Array(5000)
                     .fill(0)
                     .map(() => ({
                       type: 'div',
                       props: {
-                        children: Array(1000)
+                        children: Array(5000)
                           .fill(0)
                           .map(() => ({
                             type: 'div',
@@ -59,11 +59,11 @@ export function ExtraContent() {
         return (
           <div>
             <div>
-              {Array(1000)
+              {Array(5000)
                 .fill(0)
                 .map(() => (
                   <div>
-                    {Array(1000)
+                    {Array(5000)
                       .fill(0)
                       .map(() => (
                         <div></div>
