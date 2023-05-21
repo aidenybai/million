@@ -29,12 +29,12 @@ export function ExtraContent() {
               type: 'div',
               props: {
                 children: [
-                  ...Array(5000)
+                  ...Array(2000)
                     .fill(0)
                     .map(() => ({
                       type: 'div',
                       props: {
-                        children: Array(5000)
+                        children: Array(1000)
                           .fill(0)
                           .map(() => ({
                             type: 'div',
@@ -59,11 +59,11 @@ export function ExtraContent() {
         return (
           <div>
             <div>
-              {Array(5000)
+              {Array(2000)
                 .fill(0)
                 .map(() => (
                   <div>
-                    {Array(5000)
+                    {Array(1000)
                       .fill(0)
                       .map(() => (
                         <div></div>
@@ -91,7 +91,11 @@ export function ExtraContent() {
         },
       };
     };
-    if (start) void setup();
+    if (start) {
+      startTransition(() => {
+        void setup();
+      });
+    }
   }, [start]);
 
   return (
@@ -131,9 +135,7 @@ export function ExtraContent() {
             <button
               onClick={() => {
                 setRenders(renders + 1);
-                startTransition(() => {
-                  ref.current?.renderReact();
-                });
+                ref.current?.renderReact();
               }}
               className="bg-[#139eca] transition-all active:scale-105 hover:opacity-80 text-white py-2 px-4 rounded-full shadow"
             >
