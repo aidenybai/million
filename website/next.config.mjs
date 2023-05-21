@@ -9,7 +9,17 @@ const withNextra = nextra({
 /**
  * @type {import('next').NextConfig}
  */
-const nextConfig = {};
+const nextConfig = {
+  async redirects() {
+    return [
+      {
+        source: '/docs',
+        destination: '/docs/quickstart',
+        permanent: false,
+      },
+    ];
+  },
+};
 
 // eslint-disable-next-line import/no-default-export
 export default withNextra(nextConfig);

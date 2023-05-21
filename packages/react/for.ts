@@ -1,9 +1,9 @@
 import { createElement, memo, useEffect, useRef } from 'react';
-import { createRoot } from 'react-dom/client';
 import { arrayMount$, arrayPatch$ } from '../million/array';
 import { mapArray, block as createBlock } from '../million';
 import { MapSet$, MapHas$, MapGet$ } from '../million/constants';
 import { REGISTRY } from './block';
+import { RENDER_SCOPE, renderReactScope } from './utils';
 import type { Props } from '../million';
 import type { FC, ReactNode, MutableRefObject } from 'react';
 
@@ -36,7 +36,7 @@ const MillionArray: FC<MillionArrayProps> = ({ each, children }) => {
     arrayMount$.call(fragmentRef.current, ref.current!);
   }, []);
 
-  return createElement('million-fragment', { ref });
+  return createElement(RENDER_SCOPE, { ref });
 };
 
 export const For = memo(MillionArray, (oldProps, newProps) =>
@@ -64,16 +64,14 @@ const createChildren = (
     } else {
       const block = createBlock((props?: Props) => {
         return {
-          type: 'million-block',
-          props: { children: [props?.__l] },
+          type: RENDER_SCOPE,
+          props: { children: [props?.__scope] },
         } as any;
       });
       const currentBlock = (props: Props) => {
         return block({
           props,
-          __l: (el: HTMLElement) => {
-            createRoot(el).render(createElement(vnode.type, props));
-          },
+          __scope: renderReactScope(createElement(vnode.type, props)),
         });
       };
 
