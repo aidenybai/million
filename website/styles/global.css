@@ -6,9 +6,9 @@
 
 html,
 body {
-  font-family: Space Grotesk, -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui,
-    helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial,
-    sans-serif;
+  font-family: Space Grotesk, -apple-system, BlinkMacSystemFont, avenir next,
+    avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto,
+    arial, sans-serif;
 }
 
 #hero {
@@ -19,6 +19,10 @@ body {
 html[class~='dark'] #hero {
   background: linear-gradient(to bottom, #111 50%, #2a2044af 100%),
     url(https://grainy-gradients.vercel.app/noise.svg);
+}
+
+.gradient-bg {
+  background: linear-gradient(#a788ec, #8066b7);
 }
 
 .gradient-text {
@@ -47,10 +51,6 @@ html[class~='dark'] .gradient-text {
 .animate-once {
   -webkit-animation-iteration-count: 1;
   animation-iteration-count: 1;
-}
-
-.caret {
-  display: none;
 }
 
 .svg {

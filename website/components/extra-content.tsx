@@ -122,7 +122,7 @@ export function ExtraContent() {
                 setRenders(renders + 1);
                 ref.current?.renderMillion();
               }}
-              className="bg-[#b073d9] transition-all active:scale-105 hover:opacity-80 font-bold text-white py-2 px-4 rounded-full shadow"
+              className="bg-[#b073d9] gradient-bg transition-all active:scale-105 hover:opacity-90 active:opacity-90 font-bold text-white py-2 px-4 rounded-full shadow"
             >
               Million.js
             </button>
@@ -131,7 +131,7 @@ export function ExtraContent() {
                 setRenders(renders + 1);
                 ref.current?.renderReact();
               }}
-              className="bg-[#139eca] transition-all active:scale-105 hover:opacity-80 text-white py-2 px-4 rounded-full shadow"
+              className="bg-[#139eca] transition-all active:scale-105 hover:opacity-90 active:opacity-90 text-white py-2 px-4 rounded-full shadow"
             >
               React
             </button>
