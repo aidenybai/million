@@ -32,11 +32,6 @@
       "import": "./dist/million.mjs",
       "require": "./dist/million.cjs"
     },
-    "./react": {
-      "types": "./dist/react.d.ts",
-      "import": "./dist/react.mjs",
-      "require": "./dist/react.cjs"
-    },
     "./jsx-runtime": {
       "types": "./dist/jsx-runtime.d.ts",
       "import": "./dist/jsx-runtime.mjs",
@@ -47,10 +42,25 @@
       "import": "./dist/compiler.mjs",
       "require": "./dist/compiler.cjs"
     },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.mjs",
+      "require": "./dist/react.cjs"
+    },
     "./react-server": {
       "types": "./dist/react-server.d.ts",
       "import": "./dist/react-server.mjs",
       "require": "./dist/react-server.cjs"
+    },
+    "./preact": {
+      "types": "./dist/preact.d.ts",
+      "import": "./dist/preact.mjs",
+      "require": "./dist/preact.cjs"
+    },
+    "./preact-server": {
+      "types": "./dist/preact-server.d.ts",
+      "import": "./dist/preact-server.mjs",
+      "require": "./dist/preact-server.cjs"
     }
   },
   "packageManager": "pnpm@8.1.1",
