@@ -47,8 +47,8 @@ export function Home() {
             </p>
             <div className="rounded-[5px] mt-8 w-full">
               <div className="flex gap-3">
-                <div className="flex items-center justify-center my-[10px] py-[14px] px-[20px] text-lg font-medium text-white dark:text-black no-underline bg-gray-800 dark:bg-gray-200 hover:bg-gray-700 dark:hover:bg-gray-300 border border-transparent rounded-md shadow">
-                  <Link href="/docs">Get Started →</Link>
+                <div className="flex items-center justify-center my-[10px] text-lg font-medium text-white dark:text-black no-underline bg-gray-800 dark:bg-gray-200 hover:bg-gray-700 dark:hover:bg-gray-300 border border-transparent rounded-md shadow">
+                  <Link href="/docs" className="py-[14px] px-[20px]">Get Started →</Link>
                 </div>
                 <div className="shadow hidden md:flex gap-2 rounded-lg my-[10px] border-2 border-[#b073d9] py-[12px] px-[20px] bg-[#e9e6f4] dark:bg-[#231f31]">
                   <span
