@@ -1,6 +1,10 @@
-import { Fragment, render } from 'preact';
+import { render, Fragment } from 'preact';
 import { document$ } from '../million/dom';
-import type { VNode as PreactNode, ComponentChild } from 'preact';
+import type {
+  VNode as PreactNode,
+  ComponentChild,
+  ComponentChildren,
+} from 'preact';
 import type { VNode } from '../million';
 
 export const RENDER_SCOPE = 'million-render-scope';
@@ -24,6 +28,7 @@ export const unwrap = (vnode?: ComponentChild): VNode => {
   }
   const type = vnode.type;
   if (typeof type === 'function') {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     return unwrap((type as any)(vnode.props ?? {}));
   }
   if (typeof type === 'object' && '$' in type) return type;
@@ -43,7 +48,7 @@ export const unwrap = (vnode?: ComponentChild): VNode => {
 };
 
 export const flatten = (
-  rawChildren?: ComponentChild | ComponentChild[] | null,
+  rawChildren?: ComponentChildren | null,
 ): ComponentChild[] => {
   if (rawChildren === undefined || rawChildren === null) return [];
   if (
@@ -60,7 +65,7 @@ export const flatten = (
     return [rawChildren];
   }
   const flattenedChildren = rawChildren.flat(Infinity);
-  const children: (ComponentChild | ComponentChild[])[] = [];
+  const children: ComponentChildren[] = [];
   for (let i = 0, l = flattenedChildren.length; i < l; ++i) {
     children.push(...flatten(flattenedChildren[i]));
   }

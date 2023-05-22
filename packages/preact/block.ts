@@ -1,15 +1,16 @@
-import { createElement, Fragment } from 'preact';
-import { useCallback, useEffect, useMemo, useRef } from 'preact/compat';
+import { Fragment, h } from 'preact';
+import { useCallback, useEffect, useMemo, useRef } from 'preact/hooks';
 import {
   block as createBlock,
   mount$,
   patch as patchBlock,
   remove$,
 } from '../million/block';
-import { Map$, MapSet$, MapHas$, MapGet$ } from '../million/constants';
+import { Map$, MapGet$, MapHas$, MapSet$ } from '../million/constants';
+import { document$ } from '../million/dom';
 import { RENDER_SCOPE, unwrap } from './utils';
 import type { Props } from '../million';
-import type { VNode, FunctionComponent, ComponentType } from 'preact';
+import type { ComponentType, FunctionComponent, VNode } from 'preact';
 
 interface Options {
   shouldUpdate?: (oldProps: Props, newProps: Props) => boolean;
@@ -22,12 +23,12 @@ const css = `${RENDER_SCOPE} { display: contents }`;
 if (CSSStyleSheet.prototype.replaceSync) {
   const sheet = new CSSStyleSheet();
   sheet.replaceSync(css);
-  document.adoptedStyleSheets = [sheet];
+  document$.adoptedStyleSheets = [sheet];
 } else {
-  const style = document.createElement('style');
-  document.head.appendChild(style);
+  const style = document$.createElement('style');
+  document$.head.appendChild(style);
   style.type = 'text/css';
-  style.appendChild(document.createTextNode(css));
+  style.appendChild(document$.createTextNode(css));
 }
 
 export const REGISTRY = new Map$<
@@ -60,15 +61,10 @@ export const block = (fn: ComponentType<any>, options: Options = {}) => {
     }, []);
 
     const marker = useMemo(() => {
-      return createElement(RENDER_SCOPE as any, { ref });
+      return h(RENDER_SCOPE as any, { ref });
     }, []);
 
-    const vnode = createElement(
-      Fragment,
-      null,
-      marker,
-      createElement(Effect, { effect }),
-    );
+    const vnode = h(Fragment, null, marker, h(Effect, { effect }));
 
     return vnode;
   }

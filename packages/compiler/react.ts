@@ -38,6 +38,13 @@ export const transformReact =
         importSource.source.value = 'million/react-server';
       }
 
+      if (
+        options.mode === 'preact-server' &&
+        importSource.source.value === 'million/preact'
+      ) {
+        importSource.source.value = 'million/preact-server';
+      }
+
       // Get the name of the component
       const componentId = path.node.arguments[0] as t.Identifier;
       if (!t.isIdentifier(componentId)) {

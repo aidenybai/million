@@ -1,9 +1,10 @@
-import { createElement, useEffect, useReducer } from 'react';
-import type { ComponentProps, FunctionComponent } from 'react';
+import { h } from 'preact';
+import { useEffect, useReducer } from 'preact/hooks';
+import type { ComponentProps, FunctionComponent } from 'preact';
 
 // @ts-expect-error - is defined
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-let millionModule: typeof import('million/react') | null = null;
+let millionModule: typeof import('million/preact') | null = null;
 const RENDER_SCOPE = 'million-render-scope';
 
 export const block = (Component: FunctionComponent) => {
@@ -29,10 +30,10 @@ export const block = (Component: FunctionComponent) => {
     }, []);
 
     if (!blockFactory) {
-      return createElement(RENDER_SCOPE, null, createElement(Component, props));
+      return h(RENDER_SCOPE, null, h(Component, props));
     }
 
-    return createElement(blockFactory, props);
+    return h(blockFactory, props);
   }
 
   return MillionBlockLoader;
@@ -48,7 +49,7 @@ export function For(props: {
     const importSource = async () => {
       // @ts-expect-error - is defined
       millionModule = await import('million/react');
-      forceUpdate();
+      forceUpdate(0);
     };
     try {
       void importSource();
@@ -58,7 +59,7 @@ export function For(props: {
   }, []);
 
   if (millionModule) {
-    return createElement(millionModule.For, props);
+    return h(millionModule.For, props);
   }
-  return createElement(RENDER_SCOPE, null, ...props.each.map(props.children));
+  return h(RENDER_SCOPE, null, ...props.each.map(props.children));
 }

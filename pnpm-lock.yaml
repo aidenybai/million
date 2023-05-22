@@ -134,6 +134,12 @@ importers:
         specifier: ^10.15.0
         version: 10.15.0
 
+  packages/preact-server:
+    dependencies:
+      preact:
+        specifier: ^10.15.0
+        version: 10.15.0
+
   packages/react:
     dependencies:
       react:
