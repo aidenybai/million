@@ -137,7 +137,7 @@ const config: DocsThemeConfig = {
     };
     const favicon = String(ogConfig.favicon);
     const description = String(frontMatter.description || ogConfig.description);
-    const canonical = new URL(asPath, 'https://millionjs.org').toString();
+    const canonical = new URL(asPath, 'https://million.dev').toString();
 
     return (
       <>
@@ -149,7 +149,7 @@ const config: DocsThemeConfig = {
         <meta name="twitter:site" content={`@${ogConfig.author.twitter}`} />
         <meta name="twitter:creator" content={`@${ogConfig.author.twitter}`} />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:image" content="https://millionjs.org/banner.png" />
+        <meta name="twitter:image" content="https://million.dev/banner.png" />
 
         <link rel="shortcut icon" href={favicon} type="image/svg+xml" />
         <link rel="apple-touch-icon" href={favicon} type="image/svg+xml" />
@@ -171,7 +171,7 @@ const config: DocsThemeConfig = {
       openGraph: {
         images: [
           {
-            url: 'https://millionjs.org/banner.png',
+            url: 'https://million.dev/banner.png',
             width: 1328,
             height: 345,
             alt: 'Million.js banner',

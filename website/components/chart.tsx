@@ -9,7 +9,7 @@ import {
   Tooltip,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import { useDarkMode } from './useDarkMode';
+import { useDarkMode } from './use-dark-mode';
 
 ChartJS.register(
   CategoryScale,
@@ -50,8 +50,8 @@ const options = {
 export function Chart() {
   const isDarkMode = useDarkMode();
 
-  defaults.borderColor = isDarkMode ? '#545864' : '#bdbfc7';
-  defaults.color = isDarkMode ? '#bdbfc7' : '#545864';
+  defaults.borderColor = isDarkMode ? '#545864' : '#e1e3eb';
+  defaults.color = isDarkMode ? '#e1e3eb' : '#545864';
 
   const color = isDarkMode ? '#54527b' : '#dcc9e8';
   const backgroundColor = [color, '#b073d9', color, color];

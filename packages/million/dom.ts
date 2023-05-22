@@ -14,7 +14,7 @@ import {
 
 if (typeof window === 'undefined') {
   throw new Error(
-    "See http://millionjs.org/docs/quickstart to use the compiler. If that doesn't work, import from `million/react-server` instead.",
+    "See http://million.dev/docs/quickstart to use the compiler. If that doesn't work, import from `million/react-server` instead.",
   );
 }
 
@@ -41,7 +41,6 @@ export const setTextContent$ = getOwnPropertyDescriptor$(node$, 'textContent')!
   .set!;
 export const innerHTML$ = getOwnPropertyDescriptor$(element$, 'innerHTML')!
   .set!;
-export const childNodes$ = getOwnPropertyDescriptor$(node$, 'childNodes')!.get!;
 export const firstChild$ = getOwnPropertyDescriptor$(node$, 'firstChild')!.get!;
 export const nextSibling$ = getOwnPropertyDescriptor$(node$, 'nextSibling')!
   .get!;
@@ -52,9 +51,6 @@ export const characterDataSet$ = getOwnPropertyDescriptor$(
 
 document$[EVENTS_REGISTRY] = new Set$();
 
-let listenerPointer = 0;
-
-// TODO: this consumes a lot of memory
 export const createEventListener = (
   el: HTMLElement,
   name: string,
@@ -66,34 +62,45 @@ export const createEventListener = (
     // createEventListener uses a synthetic event handler to capture events
     // https://betterprogramming.pub/whats-the-difference-between-synthetic-react-events-and-javascript-events-ba7dbc742294
     addEventListener$.call(document$, event, (nativeEventObject: Event) => {
-      let el = nativeEventObject.target as Node | null;
-      // Bubble up the DOM tree to find all event listeners
-      while (el) {
-        const listeners = el[key] as Record<string, any> | undefined;
-        if (listeners) {
-          const handlers = Object$.values(listeners);
-          let returnFalse = false;
-          for (let i = 0, j = handlers.length; i < j; ++i) {
-            if (handlers[i](nativeEventObject) === false) {
+      requestAnimationFrame(() => {
+        let el = nativeEventObject.target as Node | null;
+        // Bubble up the DOM tree to find all event listeners
+        while (el) {
+          const handler = el[key];
+          if (handler) {
+            let returnFalse = false;
+            if (handler(nativeEventObject) === false) {
               returnFalse = true;
             }
+            if (returnFalse) return;
           }
-          if (returnFalse) return;
+          el = el.parentNode;
         }
-        el = el.parentNode;
-      }
+      });
     });
     SetAdd$.call(document$[EVENTS_REGISTRY], event);
   }
-  const pointer = listenerPointer++;
   const patch = (newValue?: EventListener | null) => {
-    if (!el[key]) el[key] = {};
-    if (!newValue) return delete el[key][pointer];
-    if ('key' in newValue && newValue.key === el[key][pointer]?.key) return;
-    el[key][pointer] = newValue;
+    if (!newValue) {
+      el[key] = null;
+    } else if (!('key' in newValue && newValue.key === el[key]?.key)) {
+      el[key] = newValue;
+    }
   };
   patch(value);
   return patch;
+};
+
+// https://www.measurethat.net/Benchmarks/Show/15652/0/childnodes-vs-children-vs-firstchildnextsibling-vs-firs
+export const childAt = (el: HTMLElement, index: number) => {
+  let child = firstChild$.call(el);
+  if (index) {
+    for (let j = 0; j < index; ++j) {
+      if (!child) break;
+      child = nextSibling$.call(child);
+    }
+  }
+  return child;
 };
 
 export const insertText = (
@@ -102,13 +109,13 @@ export const insertText = (
   index: number,
 ): Text => {
   const node = document$.createTextNode(value);
-  const childNodes = childNodes$.call(el);
-  insertBefore$.call(el, node, childNodes[index]);
+  const child = childAt(el, index);
+  insertBefore$.call(el, node, child);
   return node;
 };
 
-export const setText = (el: HTMLElement, value: string, index: number) => {
-  characterDataSet$.call(childNodes$.call(el)[index], value);
+export const setText = (el: Text, value: string) => {
+  characterDataSet$.call(el, value);
 };
 
 export const setStyleAttribute = (

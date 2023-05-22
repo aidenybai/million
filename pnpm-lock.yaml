@@ -57,8 +57,8 @@ importers:
         specifier: ^2.8.4
         version: 2.8.4
       publint:
-        specifier: ^0.1.10
-        version: 0.1.10
+        specifier: ^0.1.12
+        version: 0.1.12
       source-map:
         specifier: ^0.7.4
         version: 0.7.4
@@ -128,6 +128,18 @@ importers:
 
   packages/million: {}
 
+  packages/preact:
+    dependencies:
+      preact:
+        specifier: ^10.15.0
+        version: 10.15.0
+
+  packages/preact-server:
+    dependencies:
+      preact:
+        specifier: ^10.15.0
+        version: 10.15.0
+
   packages/react:
     dependencies:
       react:
@@ -174,21 +186,21 @@ importers:
       classnames:
         specifier: ^2.3.2
         version: 2.3.2
+      dedent:
+        specifier: ^0.7.0
+        version: 0.7.0
       framer-motion:
         specifier: ^10.12.4
         version: 10.12.4(react-dom@18.2.0)(react@18.2.0)
-      markprompt:
-        specifier: ^0.1.6
-        version: 0.1.6(@types/react@18.0.28)(react-dom@18.2.0)(react@18.2.0)
       next:
         specifier: ^13.0.6
         version: 13.2.1(@babel/core@7.21.4)(react-dom@18.2.0)(react@18.2.0)
       nextra:
         specifier: latest
-        version: 2.5.0(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
+        version: 2.5.2(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
       nextra-theme-docs:
         specifier: latest
-        version: 2.5.0(next@13.2.1)(nextra@2.5.0)(react-dom@18.2.0)(react@18.2.0)
+        version: 2.5.2(next@13.2.1)(nextra@2.5.2)(react-dom@18.2.0)(react@18.2.0)
       postcss:
         specifier: ^8.4.21
         version: 8.4.21
@@ -204,9 +216,15 @@ importers:
       react-countup:
         specifier: ^6.4.1
         version: 6.4.1(@babel/core@7.21.4)(@types/babel__core@7.20.0)(react@18.2.0)(rollup@2.79.1)
+      react-device-detect:
+        specifier: ^2.2.3
+        version: 2.2.3(react-dom@18.2.0)(react@18.2.0)
       react-dom:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
+      react-lag-radar:
+        specifier: ^1.0.0
+        version: 1.0.0(react@18.2.0)
       react-markdown:
         specifier: ^8.0.6
         version: 8.0.6(@types/react@18.0.28)(react@18.2.0)
@@ -217,6 +235,9 @@ importers:
         specifier: ^3.2.7
         version: 3.2.7(postcss@8.4.21)
     devDependencies:
+      '@types/dedent':
+        specifier: ^0.7.0
+        version: 0.7.0
       '@types/node':
         specifier: 18.11.10
         version: 18.11.10
@@ -802,6 +823,10 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /@gaearon/lag-radar@0.1.0:
+    resolution: {integrity: sha512-gRBjSuEG6HuyoXhy+yedPXlcGKyUNMlNpgKTncgfXwIi6ejt/0KuqOzck/geYqy8z02fuJrz1VjkF4EwH2Oq8g==}
+    dev: false
 
   /@headlessui/react@1.7.13(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-9n+EQKRtD9266xIHXdY5MfiXPDfYwl7zBM7KOx2Ae3Gdgxy8QML1FkCMjq6AsOf0l6N9uvI4HcFtuFlenaldKg==}
@@ -1455,6 +1480,10 @@ packages:
     dependencies:
       '@types/ms': 0.7.31
     dev: false
+
+  /@types/dedent@0.7.0:
+    resolution: {integrity: sha512-EGlKlgMhnLt/cM4DbUSafFdrkeJoC9Mvnj0PUCU7tFmTjMjNRT957kXCx0wYm3JuEq4o4ZsS5vG+NlkM2DMd2A==}
+    dev: true
 
   /@types/estree-jsx@1.0.0:
     resolution: {integrity: sha512-3qvGd0z8F2ENTGr/GG1yViqfiKmRfrXVx5sJyHGFu3z7m5g5utCQtGp/g29JnjflhtQJBv1WDQukHiT58xPcYQ==}
@@ -2498,6 +2527,10 @@ packages:
     resolution: {integrity: sha512-O8x12RzrUF8xyVcY0KJowWsmaJxQbmy0/EtnNtHRpsOcT7dFk5W598coHqBVpmWo1oQQfsCqfCmkZN5DJrZVdg==}
     dependencies:
       character-entities: 2.0.2
+    dev: false
+
+  /dedent@0.7.0:
+    resolution: {integrity: sha512-Q6fKUPqnAHAyhiUgFU7BUzLiv0kd8saH9al7tnu5Q/okj6dnupxyTgFIBjVzJATdfIAm9NAsvXNzjaKa+bxVyA==}
     dev: false
 
   /deep-eql@4.1.3:
@@ -4502,24 +4535,6 @@ packages:
     resolution: {integrity: sha512-Z1NL3Tb1M9wH4XESsCDEksWoKTdlUafKc4pt0GRwjUyXaCFZ+dc3g2erqB6zm3szA2IUSi7VnPI+o/9jnxh9hw==}
     dev: false
 
-  /markprompt@0.1.6(@types/react@18.0.28)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-nHuLS/EuOOIv7H9KbKolgQOdKdfyOueM1wMrwr96eLXTHsgaEd6NskAx+EwPdLvP1XJ03WLtFKAFBJ/qhWD58A==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      react: ^16 || ^17 || ^18
-      react-dom: ^16 || ^17 || ^18
-    dependencies:
-      classnames: 2.3.2
-      client-only: 0.0.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      react-markdown: 8.0.6(@types/react@18.0.28)(react@18.2.0)
-      remark-gfm: 3.0.1
-    transitivePeerDependencies:
-      - '@types/react'
-      - supports-color
-    dev: false
-
   /match-sorter@6.3.1:
     resolution: {integrity: sha512-mxybbo3pPNuA+ZuCUhm5bwNkXrJTbsk5VWbR5wiwz/GC6LIiegBGn2w3O08UG/jdbYLinw51fSQ5xNU1U3MgBw==}
     dependencies:
@@ -5271,11 +5286,11 @@ packages:
       - babel-plugin-macros
     dev: false
 
-  /nextra-theme-docs@2.5.0(next@13.2.1)(nextra@2.5.0)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-xmJx0xj0Mewfr/h4xkZH5TuTB6qWeygCGW384ySqZA81LargQjEqw8a25BSif8dWaMAZZ+oIBOvJ2Et+CJytQQ==}
+  /nextra-theme-docs@2.5.2(next@13.2.1)(nextra@2.5.2)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-DLrAtMtlUx3y3QsHcnIHhkb8b/VUFSvU5Cgb0Tzm7VlngKJW8ftPg9IxgoRZouqgQvkvvxbMLTPgBw+8n0VZTw==}
     peerDependencies:
       next: '>=9.5.3'
-      nextra: 2.5.0
+      nextra: 2.5.2
       react: '>=16.13.1'
       react-dom: '>=16.13.1'
     dependencies:
@@ -5290,15 +5305,15 @@ packages:
       next: 13.2.1(@babel/core@7.21.4)(react-dom@18.2.0)(react@18.2.0)
       next-seo: 6.0.0(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
       next-themes: 0.2.1(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
-      nextra: 2.5.0(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
+      nextra: 2.5.2(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       scroll-into-view-if-needed: 3.0.6
       zod: 3.21.4
     dev: false
 
-  /nextra@2.5.0(next@13.2.1)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-YvknuUvV2fdFY3F3gsxNFA2lwDWg3KHEAiyumUxZKOnW8+yTwocXGFccD76Py9fYxcmUL9ARo+PEusnXlWmLeQ==}
+  /nextra@2.5.2(next@13.2.1)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-22kw8s2OShvA625cKi3P9JioUybL5hEcCn1txXyQh+Mn3jmQXlXdbzmuT4BdYRNWo5lGqmYwm2h73igXjbssRQ==}
     engines: {node: '>=16'}
     peerDependencies:
       next: '>=9.5.3'
@@ -5745,6 +5760,10 @@ packages:
       react: 18.2.0
     dev: false
 
+  /preact@10.15.0:
+    resolution: {integrity: sha512-nZSa8M2R2m1n7nJSBlzDpxRJaIsejrTO1vlFbdpFvyC8qM1iU+On2y0otfoUm6SRB5o0lF0CKDFxg6grEFU0iQ==}
+    dev: false
+
   /prelude-ls@1.1.2:
     resolution: {integrity: sha512-ESF23V4SKG6lVSGZgYNpbsiaAkdab6ZgOxe52p7+Kid3W3u3bxR4Vfd/o21dmN7jSt0IwgZ4v5MUd26FEtXE9w==}
     engines: {node: '>= 0.8.0'}
@@ -5797,8 +5816,8 @@ packages:
     resolution: {integrity: sha512-E/ZsdU4HLs/68gYzgGTkMicWTLPdAftJLfJFlLUAAKZGkStNU72sZjT66SnMDVOfOWY/YAoiD7Jxa9iHvngcag==}
     dev: true
 
-  /publint@0.1.10:
-    resolution: {integrity: sha512-maW+K+S1cN7//l3dfZjgVKczDRyytMNeFryp7TyFJMmqAq6dQRycTyT9x5/Nc8N5yIeSc6G2H96iOShKW1M4mQ==}
+  /publint@0.1.12:
+    resolution: {integrity: sha512-8LxkO430t/SOhUl0qXQWdXq34m6oyLcPhE4Kc8eXhOEnB82vCHcShPQ2kH53n/ksC7jWdRWDP7MPGxKJbntQfg==}
     engines: {node: '>=16'}
     hasBin: true
     dependencies:
@@ -5848,6 +5867,17 @@ packages:
       - rollup
     dev: false
 
+  /react-device-detect@2.2.3(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-buYY3qrCnQVlIFHrC5UcUoAj7iANs/+srdkwsnNjI7anr3Tt7UY6MqNxtMLlr0tMBied0O49UZVK8XKs3ZIiPw==}
+    peerDependencies:
+      react: '>= 0.14.0'
+      react-dom: '>= 0.14.0'
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      ua-parser-js: 1.0.35
+    dev: false
+
   /react-devtools-inline@4.4.0:
     resolution: {integrity: sha512-ES0GolSrKO8wsKbsEkVeiR/ZAaHQTY4zDh1UW8DImVmm8oaGLl3ijJDvSGe+qDRKPZdPRnDtWWnSvvrgxXdThQ==}
     dependencies:
@@ -5873,6 +5903,15 @@ packages:
 
   /react-is@18.2.0:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
+    dev: false
+
+  /react-lag-radar@1.0.0(react@18.2.0):
+    resolution: {integrity: sha512-3Pv3B3PuMgFgnakXBrVGYPt0eOHQX+zwcImXSKI9CcF2RDw7VUImr5yb+F1hNl35niL7HSF1wAsMko6I4bO7LQ==}
+    peerDependencies:
+      react: '*'
+    dependencies:
+      '@gaearon/lag-radar': 0.1.0
+      react: 18.2.0
     dev: false
 
   /react-markdown@8.0.6(@types/react@18.0.28)(react@18.2.0):
@@ -6745,6 +6784,10 @@ packages:
     engines: {node: '>=4.2.0'}
     hasBin: true
     dev: true
+
+  /ua-parser-js@1.0.35:
+    resolution: {integrity: sha512-fKnGuqmTBnIE+/KXSzCn4db8RTigUzw1AN0DmdU6hJovUTbYJKyqj+8Mt1c4VfRDnOVJnENmfYkIPZ946UrSAA==}
+    dev: false
 
   /ufo@1.1.0:
     resolution: {integrity: sha512-LQc2s/ZDMaCN3QLpa+uzHUOQ7SdV0qgv3VBXOolQGXTaaZpIur6PwUclF5nN2hNkiTRcUugXd1zFOW3FLJ135Q==}

@@ -4,6 +4,7 @@ import type { ComponentProps, FunctionComponent } from 'react';
 // @ts-expect-error - is defined
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 let millionModule: typeof import('million/react') | null = null;
+const RENDER_SCOPE = 'million-render-scope';
 
 export const block = (Component: FunctionComponent) => {
   let blockFactory: any;
@@ -28,11 +29,7 @@ export const block = (Component: FunctionComponent) => {
     }, []);
 
     if (!blockFactory) {
-      return createElement(
-        'million-block',
-        null,
-        createElement(Component, props),
-      );
+      return createElement(RENDER_SCOPE, null, createElement(Component, props));
     }
 
     return createElement(blockFactory, props);
@@ -63,9 +60,5 @@ export function For(props: {
   if (millionModule) {
     return createElement(millionModule.For, props);
   }
-  return createElement(
-    'million-fragment',
-    null,
-    ...props.each.map(props.children),
-  );
+  return createElement(RENDER_SCOPE, null, ...props.each.map(props.children));
 }

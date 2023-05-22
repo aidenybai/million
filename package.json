@@ -1,6 +1,6 @@
 {
   "name": "million",
-  "version": "2.3.2",
+  "version": "2.4.1",
   "description": "<1kb compiler-augmented virtual DOM. It's fast!",
   "main": "dist/million.mjs",
   "module": "dist/million.mjs",
@@ -14,7 +14,7 @@
     "lint:fix": "pnpm lint --fix",
     "test": "vitest run --coverage",
     "test:dev": "vitest watch",
-    "bump": "pnpm build && pnpm test && pnpm lint && publint && bumpp"
+    "bump": "pnpm build && pnpm test && pnpm lint && publint --strict && bumpp"
   },
   "repository": {
     "type": "git",
@@ -32,11 +32,6 @@
       "import": "./dist/million.mjs",
       "require": "./dist/million.cjs"
     },
-    "./react": {
-      "types": "./dist/react.d.ts",
-      "import": "./dist/react.mjs",
-      "require": "./dist/react.cjs"
-    },
     "./jsx-runtime": {
       "types": "./dist/jsx-runtime.d.ts",
       "import": "./dist/jsx-runtime.mjs",
@@ -47,10 +42,25 @@
       "import": "./dist/compiler.mjs",
       "require": "./dist/compiler.cjs"
     },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.mjs",
+      "require": "./dist/react.cjs"
+    },
     "./react-server": {
       "types": "./dist/react-server.d.ts",
       "import": "./dist/react-server.mjs",
       "require": "./dist/react-server.cjs"
+    },
+    "./preact": {
+      "types": "./dist/preact.d.ts",
+      "import": "./dist/preact.mjs",
+      "require": "./dist/preact.cjs"
+    },
+    "./preact-server": {
+      "types": "./dist/preact-server.d.ts",
+      "import": "./dist/preact-server.mjs",
+      "require": "./dist/preact-server.cjs"
     }
   },
   "packageManager": "pnpm@8.1.1",
@@ -96,7 +106,7 @@
     "eslint-config-prettier": "^8.6.0",
     "jsdom": "^21.1.0",
     "prettier": "^2.8.4",
-    "publint": "^0.1.10",
+    "publint": "^0.1.12",
     "source-map": "^0.7.4",
     "tslib": "^2.5.0",
     "turbo": "^1.8.2",

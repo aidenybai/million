@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { Slideshow, motionAnimationProps } from './slideshow';
 
-const frames = [
+export const frames = [
   <motion.svg
     {...motionAnimationProps}
     className="w-full svg"
@@ -62,19 +62,19 @@ const frames = [
       {...motionAnimationProps}
       d="M334 96L249 241.5"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M334.5 97L377 167"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M293 166L340 242"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
@@ -163,19 +163,19 @@ const frames = [
       {...motionAnimationProps}
       d="M334 96L249 241.5"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M334.5 97L377 167"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M293 166L340 242"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
@@ -267,19 +267,19 @@ const frames = [
       {...motionAnimationProps}
       d="M334 96L249 241.5"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M334.5 97L377 167"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M293 166L340 242"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
@@ -371,19 +371,19 @@ const frames = [
       {...motionAnimationProps}
       d="M173 88L88 233.5"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M173.5 89L216 159"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M132 158L179 234"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
@@ -529,19 +529,19 @@ const frames = [
       {...motionAnimationProps}
       d="M173 88L88 233.5"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M173.5 89L216 159"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M132 158L179 234"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
@@ -714,19 +714,19 @@ const frames = [
       {...motionAnimationProps}
       d="M173 88L88 233.5"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M173.5 89L216 159"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M132 158L179 234"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
@@ -841,7 +841,7 @@ const frames = [
   </motion.svg>,
 ];
 
-const descriptions = [
+export const descriptions = [
   'Instead of rendering the JSX with React, we render it using Million.js, which passes "holes" (represented with "?") to the virtual DOM. These holes will act as placeholders for dynamic content and are used during static analysis.',
   'We now begin static analysis. We check the first node for a placeholder and find none. We go next.',
   'We check the second node for a placeholder and find none. We go next.',

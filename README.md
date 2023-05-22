@@ -1,4 +1,4 @@
-<a href="https://millionjs.org">
+<a href="https://million.dev">
   <img src="https://raw.githubusercontent.com/aidenybai/million/main/.github/assets/banner.png" alt="Million Banner" />
 </a>
 
@@ -13,7 +13,7 @@
     <tbody>
       <tr>
         <td>
-          <a href="https://millionjs.org">📚 Read the docs</a>
+          <a href="https://million.dev">📚 Read the docs</a>
         </td>
         <td>
           <a href="https://www.youtube.com/watch?v=KgnSM9NbV2s">🎦 Watch video</a>
@@ -35,11 +35,11 @@ Million is an extremely fast and lightweight (`<4kb`) virtual DOM that makes [Re
 
 > Oh man... Another [`/virtual dom|javascript/gi`](https://regexr.com/6mr5f) framework? I'm fine with [React](https://reactjs.org) already, why do I need this?
 
-Million works with React. Million makes creating web apps just as easy (It's just wrapping a [React](https://react.dev) component!), but with faster rendering and loading speeds. By using a fine-tuned, optimized virtual DOM, Million.js reduces the overhead of React ([_try it out here_](https://demo.millionjs.org))
+Million works with React. Million makes creating web apps just as easy (It's just wrapping a [React](https://react.dev) component!), but with faster rendering and loading speeds. By using a fine-tuned, optimized virtual DOM, Million.js reduces the overhead of React ([_try it out here_](https://demo.million.dev))
 
 **TL;DR:** Imagine [React](https://react.dev) components running at the speed of raw JavaScript.
 
-### [**📚 Learn Million in <5 minutes! →**](https://millionjs.org/)
+### [**📚 Learn Million in <5 minutes! →**](https://million.dev/)
 
 ## Installing Million
 
@@ -51,16 +51,15 @@ npm install million
 
 ## Example Usage
 
-Million.js operates off of the concept of "blocks". Imagine blocks as special [Higher Order Components (HOCs)](https://legacy.reactjs.org/docs/higher-order-components.html) that you use in your React application, but are rendered using the Million.js virtual DOM.
+Million.js is a library that enables you to create _blocks_. A block is a special [Higher Order Components (HOCs)](https://legacy.reactjs.org/docs/higher-order-components.html) that can be used as a React component but are hyper-optimized for rendering speed.
 
-In order to create blocks from your components, all you'll need to is **wrap your components in a `block()` function**. Below is an example of a React "counter" component that's been wrapped with Million.js.
+Blocks are essentially components wrapped by `block()`. Below is an example of a React "counter" component that's been wrapped with Million.js.
 
 ```jsx
-import React, { useState } from 'react';
-import { createRoot } from 'react-dom/client';
+import { useState } from 'react';
 import { block } from 'million/react';
 
-function Counter({ initialCount }) {
+export function Counter({ initialCount }) {
   const [count, setCount] = useState(initialCount);
   const handleClick = () => {
     setCount(count + 1);
@@ -72,10 +71,10 @@ function Counter({ initialCount }) {
 // Just wrap Counter in a block() function!
 const CounterBlock = block(Counter);
 
-createRoot(document.getElementById('root')).render(<CounterBlock />);
+export default CounterBlock;
 ```
 
-[**→ Try the quickstart**](https://millionjs.org/docs/quickstart)
+[**→ Try the quickstart**](https://million.dev/docs/quickstart)
 
 ## Codebase
 
@@ -92,7 +91,7 @@ You can also track our progress through our [Roadmap](https://github.com/users/a
 
 ## Resources & Contributing Back
 
-Looking for the docs? Check the [documentation](https://millionjs.org) or the [Contributing Guide](https://github.com/aidenybai/million/blob/main/.github/CONTRIBUTING.md) out. We also recommend reading [_Virtual DOM: Back in Block_](https://millionjs.org/blog/virtual-dom) to learn more about Million's internals.
+Looking for the docs? Check the [documentation](https://million.dev) or the [Contributing Guide](https://github.com/aidenybai/million/blob/main/.github/CONTRIBUTING.md) out. We also recommend reading [_Virtual DOM: Back in Block_](https://million.dev/blog/virtual-dom) to learn more about Million's internals.
 
 Want to talk to the community? Hop in our [Discord](https://discord.gg/X9yFbcV2rF) and share your ideas and what you've build with Million.
 
@@ -119,14 +118,15 @@ Million takes heavy inspiration from the following projects:
   Thank you to Géry pioneering the concept of "blocks" in the virtual DOM. Many parts of the Million.js codebase either directly or indirectly derive from his work.
 - [`voby`](https://github.com/vobyjs/voby) ([Fabio Spampinato](https://github.com/fabiospampinato))
   The Million.js "template" concept is derived from Voby's `template()` API.
-- [`bun`](https://bun.sh) for their homepage. The Million.js homepage is a remix of what they have currently.
+- [`bun`](https://bun.sh) for their homepage.
+- [`react`](https://react.dev) for their documentation.
 - [`ivi`](https://github.com/localvoid/ivi), [Preact](https://github.com/preactjs/preact), [and more](https://krausest.github.io/js-framework-benchmark/2021/table_chrome_96.0.4664.45.html)
 
 Million is being used at companies like [Wyze](https://wyze.com) and [Dimension](https://dimension.dev), as well as open source work like [Quartz](https://github.com/jackyzha0/quartz), [TinyPages](https://github.com/Borrus-sudo/tinypages), [and more](https://github.com/aidenybai/million/network/dependents).
 
 ## License
 
-Million is [MIT-licensed](LICENSE) open-source software by [Aiden Bai](https://aidenybai.com) and [contributors](https://github.com/aidenybai/million/graphs/contributors):
+Million is [MIT-licensed](LICENSE) open-source software by [Aiden Bai](https://aiden.mov) and [contributors](https://github.com/aidenybai/million/graphs/contributors):
 
 <a href="https://github.com/aidenybai/million/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=aidenybai/million" />

@@ -1,18 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: 'Mona Sans';
-  src: url('/Mona-Sans.woff2') format('woff2'),
-    url('/Mona-Sans.woff') format('woff');
-}
-
 html,
 body {
-  font-family: 'Mona Sans', -apple-system, BlinkMacSystemFont, avenir next,
+  font-family: Space Grotesk, -apple-system, BlinkMacSystemFont, avenir next,
     avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto,
     arial, sans-serif;
 }
@@ -25,6 +19,10 @@ body {
 html[class~='dark'] #hero {
   background: linear-gradient(to bottom, #111 50%, #2a2044af 100%),
     url(https://grainy-gradients.vercel.app/noise.svg);
+}
+
+.gradient-bg {
+  background: linear-gradient(#a788ec, #8066b7);
 }
 
 .gradient-text {
@@ -53,46 +51,6 @@ html[class~='dark'] .gradient-text {
 .animate-once {
   -webkit-animation-iteration-count: 1;
   animation-iteration-count: 1;
-}
-
-.caret {
-  display: none;
-}
-
-pre.markdown-node,
-code.markdown-node {
-  line-height: 1.5;
-  background-color: #302e30;
-  border-radius: 0.5rem;
-  padding: 0.15rem 0.4rem;
-}
-
-pre.markdown-node {
-  padding: 1rem;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  border: 1px solid #494749;
-  background-color: #302e30;
-}
-
-input[placeholder='Ask me anything...'] {
-  font-family: 'Roboto Mono', monospace;
-  font-size: 1.1rem;
-  line-height: 1.5;
-  background-color: #fff;
-  border-radius: 0.5rem;
-  padding: 0.15rem 0.4rem;
-  border: 1px solid #494749;
-}
-
-html[class~='dark'] input[placeholder='Ask me anything...'] {
-  font-family: 'Roboto Mono', monospace;
-  font-size: 1.1rem;
-  line-height: 1.5;
-  background-color: #302e30;
-  border-radius: 0.5rem;
-  padding: 0.15rem 0.4rem;
-  border: 1px solid #494749;
 }
 
 .svg {

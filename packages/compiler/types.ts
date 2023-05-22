@@ -7,8 +7,14 @@ import type {
 
 export interface UserOptions {
   ignoreFiles?: string[];
-  memo?: boolean;
-  mode: 'react' | 'next' | 'react-server' | 'optimize';
+  mute?: boolean;
+  mode:
+    | 'react'
+    | 'react-server'
+    | 'next'
+    | 'preact'
+    | 'preact-server'
+    | 'optimize';
 }
 
 export interface IrEditBase {
