@@ -9,16 +9,14 @@
   },
   "docs": {
     "type": "page",
-    "title": "Documentation"
+    "title": "Docs"
   },
   "blog": {
     "type": "page",
     "title": "Blog"
   },
-  "demo": {
-    "title": "Demo",
+  "showcase": {
     "type": "page",
-    "href": "https://demo.million.dev",
-    "newWindow": true
+    "title": "Showcase"
   }
 }
