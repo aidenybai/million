@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { parseSync } from '@babel/core';
-import { babelPlugin } from '../packages/compiler';
+import million from '../packages/compiler';
 
 const BABEL_CONFIG = {
-  plugins: ['@babel/plugin-syntax-jsx', babelPlugin],
+  plugins: ['@babel/plugin-syntax-jsx', million.babel],
 };
 
 describe('react-compiler', () => {
