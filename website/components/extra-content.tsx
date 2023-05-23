@@ -138,6 +138,16 @@ export function ExtraContent() {
           </div>
         </div>
       )}
+      <div className="flex justify-center">
+        <div className="mt-2 text-xs text-[#6b7280]">
+          <a
+            target="_blank"
+            href="https://github.com/aidenybai/million/blob/188febf41af66a1af12064bdee943e0d680bd09e/website/components/extra-content.tsx#L15"
+          >
+            <u>View Source</u>
+          </a>
+        </div>
+      </div>
     </div>
   );
 }
