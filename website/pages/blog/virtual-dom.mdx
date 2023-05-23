@@ -1,3 +1,9 @@
+---
+title: 'Virtual DOM: Back in Block'
+date: MAY 1, 2023
+description: A deep dive into the block virtual DOM and how Million.js uses it.
+---
+
 import Image from 'next/image';
 import { VDomExample } from '../../components/examples/vdom';
 import { StaticAnalysisExample } from '../../components/examples/static-analysis';
@@ -6,13 +12,21 @@ import { CountExample } from '../../components/examples/count';
 import { Callout } from 'nextra-theme-docs';
 import { Chart } from '../../components/chart';
 
-<a href="https://www.youtube.com/watch?v=2-fR2rrmw3I">
-  <Image src="/back-in-block.webp" width={1000} height={130} />
-</a>
+<div className="flex justify-center">
+  <a href="https://www.youtube.com/watch?v=2-fR2rrmw3I">
+    <Image src="/back-in-block.webp" width={350} height={130} />
+  </a>
+</div>
 
 # Virtual DOM: Back in Block
 
-<Callout>
+<div className="flex justify-center">
+  <small>[AIDEN BAI](https://aidenybai.com) MAY 1 2023</small>
+</div>
+
+---
+
+<Callout type="info">
   **This is a deep dive — THIS IS NOT a beginner-friendly post.** If you're
   looking to learn Million.js, try the
   [quickstart](https://million.dev/docs/quickstart) instead.
@@ -20,12 +34,6 @@ import { Chart } from '../../components/chart';
 This post is aimed at experienced programmers that want to deep dive into React and Million.js internals.
 
 </Callout>
-
----
-
-<small>[AIDEN BAI](https://aidenybai.com) MAY 1 2023</small>
-
-<br />
 
 A little over four years ago, Rich Harris released [Virtual DOM is pure overhead](https://svelte.dev/blog/virtual-dom-is-pure-overhead), analyzing the performance of traditional virtual DOM manipulation.<a href="#0"><sup>[0]</sup></a>
 

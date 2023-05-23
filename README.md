@@ -119,7 +119,7 @@ Million takes heavy inspiration from the following projects:
 - [`voby`](https://github.com/vobyjs/voby) ([Fabio Spampinato](https://github.com/fabiospampinato))
   The Million.js "template" concept is derived from Voby's `template()` API.
 - [`bun`](https://bun.sh) for their homepage.
-- [`react`](https://react.dev) for their documentation.
+- [`react`](https://react.dev) and [`turbo`](https://turbo.build) for their documentation. Many parts of the current Million.js documentation are grokked and modified from theirs.
 - [`ivi`](https://github.com/localvoid/ivi), [Preact](https://github.com/preactjs/preact), [and more](https://krausest.github.io/js-framework-benchmark/2021/table_chrome_96.0.4664.45.html)
 
 Million is being used at companies like [Wyze](https://wyze.com) and [Dimension](https://dimension.dev), as well as open source work like [Quartz](https://github.com/jackyzha0/quartz), [TinyPages](https://github.com/Borrus-sudo/tinypages), [and more](https://github.com/aidenybai/million/network/dependents).
