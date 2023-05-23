@@ -45,12 +45,19 @@ export const next = (nextConfig: Record<string, any> = {}) => {
   };
 };
 
+export const vite = unplugin.vite;
+export const webpack = unplugin.webpack;
+export const rollup = unplugin.rollup;
+export const rspack = unplugin.rspack;
+export const esbuild = unplugin.esbuild;
+export { babel };
+
 export default {
-  vite: unplugin.vite,
-  webpack: unplugin.webpack,
-  rollup: unplugin.rollup,
-  rspack: unplugin.rspack,
-  esbuild: unplugin.esbuild,
+  vite,
+  webpack,
+  rollup,
+  rspack,
+  esbuild,
   next,
   unplugin,
   babel,
