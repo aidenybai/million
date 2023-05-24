@@ -196,11 +196,11 @@ importers:
         specifier: ^13.0.6
         version: 13.2.1(@babel/core@7.21.4)(react-dom@18.2.0)(react@18.2.0)
       nextra:
-        specifier: latest
-        version: 2.5.2(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^2.6.0
+        version: 2.6.0(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
       nextra-theme-docs:
-        specifier: latest
-        version: 2.5.2(next@13.2.1)(nextra@2.5.2)(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^2.6.0
+        version: 2.6.0(next@13.2.1)(nextra@2.6.0)(react-dom@18.2.0)(react@18.2.0)
       postcss:
         specifier: ^8.4.21
         version: 8.4.21
@@ -5286,11 +5286,11 @@ packages:
       - babel-plugin-macros
     dev: false
 
-  /nextra-theme-docs@2.5.2(next@13.2.1)(nextra@2.5.2)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-DLrAtMtlUx3y3QsHcnIHhkb8b/VUFSvU5Cgb0Tzm7VlngKJW8ftPg9IxgoRZouqgQvkvvxbMLTPgBw+8n0VZTw==}
+  /nextra-theme-docs@2.6.0(next@13.2.1)(nextra@2.6.0)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-/baIEzrBDjWD60/6l+mxUND0ZAjF27uRIUWP5QRWb01TQDA8Nqy8a/ANYM0a3bx4RgL/YBt47D0aWu/beWL1Fg==}
     peerDependencies:
       next: '>=9.5.3'
-      nextra: 2.5.2
+      nextra: 2.6.0
       react: '>=16.13.1'
       react-dom: '>=16.13.1'
     dependencies:
@@ -5305,15 +5305,15 @@ packages:
       next: 13.2.1(@babel/core@7.21.4)(react-dom@18.2.0)(react@18.2.0)
       next-seo: 6.0.0(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
       next-themes: 0.2.1(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
-      nextra: 2.5.2(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
+      nextra: 2.6.0(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       scroll-into-view-if-needed: 3.0.6
       zod: 3.21.4
     dev: false
 
-  /nextra@2.5.2(next@13.2.1)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-22kw8s2OShvA625cKi3P9JioUybL5hEcCn1txXyQh+Mn3jmQXlXdbzmuT4BdYRNWo5lGqmYwm2h73igXjbssRQ==}
+  /nextra@2.6.0(next@13.2.1)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-yLYcjQWBfzlUUuf7q8M5DXIpNId19RB5SyrpjcNB/KvZ1S2CQpf5cXmpRzKGl015NI3MRAX+z7pMR2qiU3HtwA==}
     engines: {node: '>=16'}
     peerDependencies:
       next: '>=9.5.3'
@@ -5323,6 +5323,7 @@ packages:
       '@mdx-js/mdx': 2.3.0
       '@mdx-js/react': 2.3.0(react@18.2.0)
       '@napi-rs/simple-git': 0.1.8
+      clsx: 1.2.1
       github-slugger: 2.0.0
       graceful-fs: 4.2.11
       gray-matter: 4.0.3

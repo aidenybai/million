@@ -1,6 +1,6 @@
 import { createUnplugin } from 'unplugin';
 import { transformAsync } from '@babel/core';
-import babelPlugin from './babel';
+import babel from './babel';
 import type { UserOptions } from './types';
 
 export const unplugin = createUnplugin((options?: UserOptions) => {
@@ -22,7 +22,7 @@ export const unplugin = createUnplugin((options?: UserOptions) => {
       }
 
       const result = await transformAsync(code, {
-        plugins: [...plugins, [babelPlugin, options]],
+        plugins: [...plugins, [babel, options]],
       });
       code = result?.code ?? code;
 
@@ -45,9 +45,20 @@ export const next = (nextConfig: Record<string, any> = {}) => {
   };
 };
 
-// @ts-expect-error - Hack to make this export work
-unplugin.next = next;
+export const vite = unplugin.vite;
+export const webpack = unplugin.webpack;
+export const rollup = unplugin.rollup;
+export const rspack = unplugin.rspack;
+export const esbuild = unplugin.esbuild;
+export { babel };
 
-export { babelPlugin };
-
-export default unplugin;
+export default {
+  vite,
+  webpack,
+  rollup,
+  rspack,
+  esbuild,
+  next,
+  unplugin,
+  babel,
+};

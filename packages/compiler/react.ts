@@ -187,6 +187,13 @@ const handleComponent = (
     // Swaps the names of the functions so that the component that wraps the
     // block is called instead
     const blockComponent = path.parentPath.node as any;
+    if (!t.isVariableDeclarator(blockComponent)) {
+      throwCodeFrame({
+        message: 'Block needs to be defined as a variable declaration.',
+        localPath: path,
+        path,
+      });
+    }
     const temp = blockComponent.id as t.Identifier;
     blockComponent.id = forgettiCompatibleComponentName;
     component.id = componentVariable;
@@ -509,5 +516,10 @@ const throwCodeFrame = ({
   const err = localPath.buildCodeFrameError(`[Million.js] ${message}`);
   if (path) throw err;
   // eslint-disable-next-line no-console
-  console.warn(err.message, '\n');
+  console.warn(
+    err.message,
+    '\n',
+    'You may want to reference the Rules of Blocks (https://million.dev/docs/rules)',
+    '\n',
+  );
 };

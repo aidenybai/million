@@ -32,6 +32,27 @@ You may have heard of ["progressive enhancement,"](https://developer.mozilla.org
 
 This section highlights some of the possible warnings you might encounter using blocks. Note that this is not an exhaustive list.
 
+### Declaring blocks
+
+<Callout type="warning">
+  <code>
+  <strong>[Million.js]</strong> Block needs to be defined as a variable declaration.
+  </code>
+</Callout>
+
+The above usually occurs when you have a block that is not declared as a variable. This prevents the compiler from analyzing the block correctly.
+
+```jsx
+console.log(block(<div />)) // ❌ Wrong
+export default block(<div />) // ❌ Wrong
+
+// 👇👇👇
+
+const Block = block(<div />) // ✅ Correct
+console.log(Block);
+export default Block;
+```
+
 ### Calling `block()`
 
 <Callout type="warning">
