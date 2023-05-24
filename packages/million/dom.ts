@@ -19,6 +19,7 @@ if (typeof window === 'undefined') {
 }
 
 export const document$ = document;
+export const queueMicrotask$ = queueMicrotask;
 export const template$ = document$.createElement('template');
 
 // Caching prototypes for performance

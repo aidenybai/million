@@ -7,7 +7,7 @@ import {
   remove$,
 } from '../million/block';
 import { Map$, MapGet$, MapHas$, MapSet$ } from '../million/constants';
-import { document$ } from '../million/dom';
+import { document$, queueMicrotask$ } from '../million/dom';
 import { RENDER_SCOPE, unwrap } from './utils';
 import type { Props } from '../million';
 import type { ComponentType, FunctionComponent, VNode } from 'preact';
@@ -50,10 +50,14 @@ export const block = (fn: ComponentType<any>, options: Options = {}) => {
     const effect = useCallback(() => {
       const currentBlock = block(props, props.key, options.shouldUpdate);
       if (ref.current) {
-        mount$.call(currentBlock, ref.current, null);
-        patch.current = (props: Props) => {
-          patchBlock(currentBlock, block(props));
-        };
+        queueMicrotask$(() => {
+          mount$.call(currentBlock, ref.current!, null);
+          patch.current = (props: Props) => {
+            queueMicrotask$(() => {
+              patchBlock(currentBlock, block(props));
+            });
+          };
+        });
       }
       return () => {
         remove$.call(currentBlock);

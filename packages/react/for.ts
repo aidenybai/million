@@ -2,6 +2,7 @@ import { createElement, memo, useEffect, useRef } from 'react';
 import { arrayMount$, arrayPatch$ } from '../million/array';
 import { mapArray, block as createBlock } from '../million';
 import { MapSet$, MapHas$, MapGet$ } from '../million/constants';
+import { queueMicrotask$ } from '../million/dom';
 import { REGISTRY } from './block';
 import { RENDER_SCOPE, renderReactScope } from './utils';
 import type { Props } from '../million';
@@ -26,14 +27,18 @@ const MillionArray: FC<MillionArrayProps> = ({ each, children }) => {
     children: null,
   });
   if (fragmentRef.current && each !== cache.current.each) {
-    const newChildren = createChildren(each, children, cache);
-    arrayPatch$.call(fragmentRef.current, mapArray(newChildren));
+    queueMicrotask$(() => {
+      const newChildren = createChildren(each, children, cache);
+      arrayPatch$.call(fragmentRef.current, mapArray(newChildren));
+    });
   }
   useEffect(() => {
     if (fragmentRef.current) return;
-    const newChildren = createChildren(each, children, cache);
-    fragmentRef.current = mapArray(newChildren);
-    arrayMount$.call(fragmentRef.current, ref.current!);
+    queueMicrotask$(() => {
+      const newChildren = createChildren(each, children, cache);
+      fragmentRef.current = mapArray(newChildren);
+      arrayMount$.call(fragmentRef.current, ref.current!);
+    });
   }, []);
 
   return createElement(RENDER_SCOPE, { ref });

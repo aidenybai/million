@@ -13,6 +13,7 @@ import {
   remove$,
 } from '../million/block';
 import { Map$, MapSet$, MapHas$, MapGet$ } from '../million/constants';
+import { queueMicrotask$ } from '../million/dom';
 import { RENDER_SCOPE, unwrap } from './utils';
 import type { Props } from '../million';
 import type { ReactNode, FunctionComponent, ComponentType } from 'react';
@@ -55,9 +56,13 @@ export const block = (fn: ComponentType<any>, options: Options = {}) => {
     const effect = useCallback(() => {
       const currentBlock = block(props, props.key, options.shouldUpdate);
       if (ref.current) {
-        mount$.call(currentBlock, ref.current, null);
+        queueMicrotask$(() => {
+          mount$.call(currentBlock, ref.current!, null);
+        });
         patch.current = (props: Props) => {
-          patchBlock(currentBlock, block(props));
+          queueMicrotask$(() => {
+            patchBlock(currentBlock, block(props));
+          });
         };
       }
       return () => {
