@@ -67,20 +67,14 @@ export const block = (
   };
 };
 
-export const mount = (
-  block: AbstractBlock,
-  parent?: HTMLElement,
-): HTMLElement => {
+export const mount = (block: AbstractBlock, parent?: HTMLElement) => {
   if ('b' in block && parent) {
     return arrayMount$.call(block, parent);
   }
   return mount$.call(block, parent);
 };
 
-export const patch = (
-  oldBlock: AbstractBlock,
-  newBlock: AbstractBlock,
-): HTMLElement => {
+export const patch = (oldBlock: AbstractBlock, newBlock: AbstractBlock) => {
   if ('b' in oldBlock || 'b' in newBlock) {
     arrayPatch$.call(oldBlock, newBlock as ArrayBlock);
   }

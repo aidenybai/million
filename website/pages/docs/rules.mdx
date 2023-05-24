@@ -98,6 +98,7 @@ The above will occur when you use `<Array>.map` within a block. This is not idea
 
 ### Deterministic returns
 
+<div className="flex gap-3">
 <Callout type="warning">
   <code>
   <strong>[Million.js]</strong>
@@ -105,6 +106,15 @@ The above will occur when you use `<Array>.map` within a block. This is not idea
   deterministic returns instead.
   </code>
 </Callout>
+
+<Callout type="error">
+  <code>
+  Uncaught Error: Rendered fewer hooks than expected. This may be caused by an accidental early return statement.
+  </code>
+</Callout>
+</div>
+
+
 
 Returns must be "deterministic," meaning there can only be one return statement at the end of the block that returns a stable tree.
 
@@ -176,10 +186,23 @@ You can't use spread attributes in Million.js, as they can introduce non-determi
 
 ## Using the compiler
 
+<Callout type="error">
+  <code>
+  <strong>Warning: </strong>
+  Invalid Hook Call. Hooks can only be called inside of the body of a function component.
+  </code>
+</Callout>
+
 You may have forgot to use the compiler, a necessary part in ensuring that your JSX is compiled to Million.js compatible code. You can view the instructions at [the installation guide](/docs/install).
 
 On a side note, Million.js is technically usable without the compiler, but it's significantly more limited in scope, and there is a [more limited set of features available](/docs/block#rules-of-usage). This is not recommended.
 
 ## Unsupported behavior
+
+<Callout type="error">
+  <code>
+    Uncaught Error: ??? :(
+  </code>
+</Callout>
 
 If none of this worked, please [create an issue](https://github.com/aidenybai/million/issues/new?assignees=aidenybai&labels=bug&projects=&template=bug_report.md&title=bug%3A+) and we'll try to help. Try to create a small reproducing example — you might discover the problem as you're doing it.
