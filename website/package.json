@@ -24,6 +24,7 @@
     "react-countup": "^6.4.1",
     "react-device-detect": "^2.2.3",
     "react-dom": "^18.2.0",
+    "react-github-btn": "^1.4.0",
     "react-lag-radar": "^1.0.0",
     "react-markdown": "^8.0.6",
     "react-parallax-tilt": "^1.7.110",
