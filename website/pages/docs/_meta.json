@@ -3,6 +3,7 @@
     "type": "separator",
     "title": "Guide"
   },
+  "index": "Introduction",
   "quickstart": "Quick Start",
   "install": "Installation",
   "rules": "Rules of Blocks",
