@@ -1,10 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { parseSync } from '@babel/core';
 import million from '../packages/compiler';
+import preactPreset from 'preact';
 
 const BABEL_CONFIG = {
+  presets: [preactPreset],
   plugins: ['@babel/plugin-syntax-jsx', million.babel],
 };
+
 
 describe('react-compiler', () => {
   it('should compile hooks', () => {
