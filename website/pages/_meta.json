@@ -14,9 +14,5 @@
   "blog": {
     "type": "page",
     "title": "Blog"
-  },
-  "showcase": {
-    "type": "page",
-    "title": "Showcase"
   }
 }
