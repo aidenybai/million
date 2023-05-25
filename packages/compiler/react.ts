@@ -135,19 +135,26 @@ const handleComponent = (
   }
   const view = componentFunction.body[bodyLength - 1];
 
-  if (t.isReturnStatement(view) && t.isJSXElement(view.argument)) {
+  if (t.isReturnStatement(view)) {
     const returnJsxPath = componentBinding.path.get(
       `${correctSubPath}.${bodyLength - 1}.argument`,
     );
-    const jsx = view.argument;
     const blockVariable = path.scope.generateUidIdentifier('block$');
     const componentVariable = path.scope.generateUidIdentifier('component$');
+
+    if (t.isJSXFragment(view.argument)) {
+      view.argument = t.jsxElement(
+        t.jsxOpeningElement(t.jsxIdentifier(RENDER_SCOPE), []),
+        t.jsxClosingElement(t.jsxIdentifier(RENDER_SCOPE)),
+        view.argument.children,
+      );
+    }
 
     // Extracts all expressions / identifiers from the JSX element
     const dynamics = getDynamicsFromJSX(
       IS_PREACT,
       path,
-      jsx,
+      view.argument as t.JSXElement,
       sourceName,
       returnJsxPath,
     );
@@ -372,7 +379,7 @@ const getDynamicsFromJSX = (
     }
   }
 
-  for (let i = 0, j = jsx.children.length; i < j; i++) {
+  for (let i = 0; i < jsx.children.length; i++) {
     const child = jsx.children[i]!;
 
     if (t.isJSXExpressionContainer(child)) {
@@ -491,6 +498,10 @@ const getDynamicsFromJSX = (
         returnJsxPath.get(`children.${i}`),
         dynamics,
       );
+    } else if (t.isJSXFragment(child)) {
+      jsx.children.splice(i, 1);
+      jsx.children.splice(i, 0, ...child.children);
+      i--;
     }
   }
   return dynamics;

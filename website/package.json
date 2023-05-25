@@ -10,14 +10,12 @@
     "@babel/traverse": "^7.21.5",
     "@codesandbox/sandpack-react": "^2.6.1",
     "@headlessui/react": "^1.7.13",
-    "@monaco-editor/react": "^4.5.1",
     "@vercel/analytics": "^1.0.0",
     "autoprefixer": "^10.4.13",
     "chart.js": "^4.2.1",
     "classnames": "^2.3.2",
     "dedent": "^0.7.0",
     "framer-motion": "^10.12.4",
-    "monaco-jsx-highlighter": "^2.0.4",
     "next": "^13.0.6",
     "nextra": "^2.6.0",
     "nextra-theme-docs": "^2.6.0",
@@ -32,8 +30,7 @@
     "react-lag-radar": "^1.0.0",
     "react-markdown": "^8.0.6",
     "react-parallax-tilt": "^1.7.110",
-    "tailwindcss": "^3.2.7",
-    "use-local-storage": "^3.0.0"
+    "tailwindcss": "^3.2.7"
   },
   "devDependencies": {
     "@types/dedent": "^0.7.0",
