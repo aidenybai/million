@@ -15,8 +15,11 @@
     "type": "page",
     "title": "Blog"
   },
-  "showcase": {
+  "playground": {
     "type": "page",
-    "title": "Showcase"
+    "title": "Playground",
+    "theme": {
+      "layout": "raw"
+    }
   }
 }
