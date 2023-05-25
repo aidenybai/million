@@ -14,12 +14,5 @@
   "blog": {
     "type": "page",
     "title": "Blog"
-  },
-  "playground": {
-    "type": "page",
-    "title": "Playground",
-    "theme": {
-      "layout": "raw"
-    }
   }
 }
