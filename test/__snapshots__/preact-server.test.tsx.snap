@@ -40,7 +40,7 @@ Node {
         "source": Node {
           "end": 41,
           "extra": {
-            "raw": "'preact'",
+            "raw": "preact",
             "rawValue": "preact",
           },
           "loc": SourceLocation {

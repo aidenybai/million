@@ -16,6 +16,7 @@ describe('react-compiler', () => {
       import { useState } from 'preact/hooks';
       import { block } from 'million/preact';
       
+      
       function Component({ initialCount }) {
         const [count, setCount] = useState(initialCount);
       
@@ -43,7 +44,6 @@ describe('react-compiler', () => {
     const ast = parseSync(
       `
       import { h, render } from 'preact';
-      import { useState } from 'preact/hooks';
       import { block } from 'million/preact';
       
       function Component({ object }) {
@@ -70,7 +70,6 @@ describe('react-compiler', () => {
     const ast = parseSync(
       `
       import { h, render } from 'preact';
-      import { useState } from 'preact/hooks';
       import { block } from 'million/preact';
       
       function Component({ object }) {
@@ -97,7 +96,6 @@ describe('react-compiler', () => {
     const ast = parseSync(
       `
       import { h, render } from 'preact';
-      import { useState } from 'preact/hooks';
       import { block } from 'million/preact';
 
      function Component() {
@@ -125,7 +123,6 @@ describe('react-compiler', () => {
     const ast = parseSync(
       `
       import { h, render } from 'preact';
-      import { useState } from 'preact/hooks';
       import { block } from 'million/preact';
       
       function Component() {
