@@ -37,7 +37,7 @@ describe('react-compiler', () => {
       `,
       BABEL_CONFIG,
     );
-  
+    console.log(ast)
     expect(ast).toMatchSnapshot();
   });
 
@@ -64,7 +64,7 @@ describe('react-compiler', () => {
       `,
       BABEL_CONFIG,
     );
-
+    console.log(ast)
     expect(ast).toMatchSnapshot();
   });
 
@@ -91,7 +91,7 @@ describe('react-compiler', () => {
       `,
       BABEL_CONFIG,
     );
-
+    console.log(ast)
     expect(ast).toMatchSnapshot();
   });
 
@@ -119,6 +119,7 @@ describe('react-compiler', () => {
     `,
       BABEL_CONFIG,
     );
+    console.log(ast)
     expect(ast).toMatchSnapshot();
   });
 
@@ -146,7 +147,7 @@ describe('react-compiler', () => {
       `,
       BABEL_CONFIG,
     );
-
+    console.log(ast)
     expect(ast).toMatchSnapshot();
   });
 });
