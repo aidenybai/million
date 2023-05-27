@@ -1,7 +1,7 @@
 import { type SandpackFiles } from '@codesandbox/sandpack-react';
 
 export const files: SandpackFiles = {
-  '/next.config.js': {
+  '/next.config.mjs': {
     code: `import million from 'million/compiler';
  
     /** @type {import('next').NextConfig} */
