@@ -6,12 +6,12 @@ import {
   useSandpack,
 } from '@codesandbox/sandpack-react';
 
-export const MonacoEditor: React.FC = () => {
+export const MonacoEditor: React.FC<{ flex: number }>= (props) => {
   const { code, updateCode } = useActiveCode();
   const { sandpack } = useSandpack();
 
   return (
-    <SandpackStack style={{ height: '100vh', margin: 0 }}>
+    <SandpackStack style={{  height: '100%', margin: 0, flex: props.flex }}>
       <FileTabs />
       <div style={{ flex: 1, paddingTop: 8, background: '#1e1e1e' }}>
         <Editor
