@@ -8,7 +8,7 @@ const BABEL_CONFIG = {
 };
 
 
-describe('react-compiler', () => {
+describe('preact-compiler', () => {
   it('should compile hooks', () => {
     const ast = parseSync(
       `
