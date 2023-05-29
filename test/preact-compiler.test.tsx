@@ -2,11 +2,9 @@ import { describe, expect, it } from 'vitest';
 import { parseSync } from '@babel/core';
 import million from '../packages/compiler';
 
-
 const BABEL_CONFIG = {
   plugins: ['@babel/plugin-syntax-jsx', million.babel],
 };
-
 
 describe('preact-compiler', () => {
   it('should compile hooks', () => {
@@ -15,25 +13,25 @@ describe('preact-compiler', () => {
       import { h, render } from 'preact';
       import { useState } from 'preact/hooks';
       import { block } from 'million/preact';
-      
-      
+
+
       function Component({ initialCount }) {
         const [count, setCount] = useState(initialCount);
-      
+
         return (
           <div>
             {greeting}
           </div>
         );
       }
-      
+
       const ComponentBlock = block(Component);
-      
+
       render(
         <ComponentBlock initialCount={0} />,
         document.getElementById('root')
       );
-      
+
       `,
       BABEL_CONFIG,
     );
@@ -45,7 +43,7 @@ describe('preact-compiler', () => {
       `
       import { h, render } from 'preact';
       import { block } from 'million/preact';
-      
+
       function Component({ object }) {
         return (
           <div>
@@ -53,13 +51,13 @@ describe('preact-compiler', () => {
           </div>
         );
       }
-      
+
       const ComponentBlock = block(Component);
-      
+
       render(
         <ComponentBlock object={{ name: 'foo' }} />,
         document.getElementById('root')
-      );      
+      );
       `,
       BABEL_CONFIG,
     );
@@ -71,7 +69,7 @@ describe('preact-compiler', () => {
       `
       import { h, render } from 'preact';
       import { block } from 'million/preact';
-      
+
       function Component({ object }) {
         return (
           <div>
@@ -79,13 +77,13 @@ describe('preact-compiler', () => {
           </div>
         );
       }
-      
+
       const ComponentBlock = block(Component);
-      
+
       render(
         <ComponentBlock object={{ name: 'foo' }} />,
         document.getElementById('root')
-      );      
+      );
       `,
       BABEL_CONFIG,
     );
@@ -124,7 +122,7 @@ describe('preact-compiler', () => {
       `
       import { h, render } from 'preact';
       import { block } from 'million/preact';
-      
+
       function Component() {
         const handleClick = () => alert(1);
         return (
@@ -133,9 +131,9 @@ describe('preact-compiler', () => {
           </div>
         );
       }
-      
+
       const ComponentBlock = block(Component);
-      
+
       render(
         <ComponentBlock />,
         document.getElementById('root')
