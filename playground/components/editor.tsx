@@ -1,4 +1,3 @@
-'use client';
 import {
   type SandpackPredefinedTemplate,
   type SandpackFiles,
@@ -15,6 +14,9 @@ import { GridResizer } from './gridResize';
 import { useRef, useState } from 'react';
 import cls from 'classnames';
 import { FrameworkSwitcher } from './framework-switcher';
+import { useAtomValue, atom } from 'jotai';
+
+export const frameworkAtom = atom<Frameworks>('react');
 
 type Props = {
   framework?: Frameworks;
@@ -31,7 +33,7 @@ const FRAMEWORK_FILES_MAP: Record<Frameworks, SandpackFiles> = {
 };
 
 export const Editor: React.FC<Props> = () => {
-  const [framework, setFramework] = useState<Frameworks>('react');
+  const framework = useAtomValue(frameworkAtom);
 
   const template = FRAMEWORK_TEMPLATE_MAP[framework];
   const files = FRAMEWORK_FILES_MAP[framework];
@@ -75,11 +77,12 @@ export const Editor: React.FC<Props> = () => {
         customSetup={{ dependencies }}
         files={files}
       >
-        <FrameworkSwitcher setFramework={setFramework} />
+        <FrameworkSwitcher />
         <SandpackLayout
           ref={gridRef as any}
           className="flex"
-          style={{ height: 'calc(100vh - 50px)' }}
+          // I want this to be dyanmic with whatever else is in the parent div but I can't figure it out
+          style={{ height: 'calc(100vh - 100px)' }}
         >
           <MonacoEditor flex={left} />
 
@@ -91,6 +94,7 @@ export const Editor: React.FC<Props> = () => {
 
           <SandpackPreview
             style={{ height: '100%', flex: 1 - left }}
+            showOpenInCodeSandbox={false}
           ></SandpackPreview>
         </SandpackLayout>
       </SandpackProvider>
