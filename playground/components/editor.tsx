@@ -18,10 +18,6 @@ import { useAtomValue, atom } from 'jotai';
 
 export const frameworkAtom = atom<Frameworks>('react');
 
-type Props = {
-  framework?: Frameworks;
-};
-
 const FRAMEWORK_TEMPLATE_MAP: Record<Frameworks, SandpackPredefinedTemplate> = {
   nextjs: 'nextjs',
   react: 'vite-react',
@@ -32,7 +28,7 @@ const FRAMEWORK_FILES_MAP: Record<Frameworks, SandpackFiles> = {
   nextjs: nextjsFiles,
 };
 
-export const Editor: React.FC<Props> = () => {
+export const Editor: React.FC = () => {
   const framework = useAtomValue(frameworkAtom);
 
   const template = FRAMEWORK_TEMPLATE_MAP[framework];
