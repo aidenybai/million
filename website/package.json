@@ -3,7 +3,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "lint": "eslint components/**/*.tsx --ext .ts --cache",
+    "lint:fix": "pnpm lint --fix"
   },
   "dependencies": {
     "@babel/parser": "^7.21.9",
