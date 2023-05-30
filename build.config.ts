@@ -16,5 +16,5 @@ export default defineBuildConfig({
     emitCJS: true,
     inlineDependencies: true,
   },
-  externals: ['react', 'react-dom', 'preact', 'million'],
+  externals: ['react', 'react-dom', 'preact', 'million', 'vite', 'esbuild'],
 });
