@@ -1,7 +1,10 @@
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import Tilt from 'react-parallax-tilt';
 import { Chart } from './chart';
+
+const CountUp = dynamic(() => import('react-countup'), { ssr: false });
 
 export function Home() {
   const installCommands = ['npm i', 'pnpm add', 'yarn add'];
@@ -25,7 +28,10 @@ export function Home() {
             <h1 className="mt-0 text-[26pt] font-extrabold leading-none dark:text-gray-50 md:text-[32pt] lg:text-[38pt] xl:text-[40pt]">
               Up to{' '}
               <span className="gradient-text inline-block">
-                <span className="font-mono">70</span>% faster*
+                <span className="font-mono">
+                  <CountUp end={70} />
+                </span>
+                % faster*
               </span>
               <br />
               React components.
@@ -41,17 +47,19 @@ export function Home() {
             </p>
             <div className="rounded-[5px] mt-8 w-full">
               <div className="flex gap-3">
-                <div className="flex items-center justify-center my-[10px] py-[14px] px-[20px] text-lg font-medium text-white dark:text-black no-underline bg-gray-800 dark:bg-gray-200 hover:bg-gray-700 dark:hover:bg-gray-300 border border-transparent rounded-md shadow">
-                  <Link href="/docs">Get Started →</Link>
+                <div className="flex items-center justify-center my-[10px] text-lg font-medium text-white dark:text-black no-underline bg-gray-800 dark:bg-gray-200 hover:bg-gray-700 dark:hover:bg-gray-300 border border-transparent rounded-md shadow">
+                  <Link href="/docs" className="py-[14px] px-[20px]">Get Started →</Link>
                 </div>
                 <div className="shadow hidden md:flex gap-2 rounded-lg my-[10px] border-2 border-[#b073d9] py-[12px] px-[20px] bg-[#e9e6f4] dark:bg-[#231f31]">
-                  <span className="font-mono text-lg font-medium">
+                  <span
+                    className="font-mono text-lg font-medium"
+                    onClick={() => setCount(count + 1)}
+                  >
                     <span className="font-bold">{command}</span> million
                   </span>
                   <div
                     className="ml-auto"
                     onClick={() => {
-                      setCount(count + 1);
                       setChecked(true);
 
                       void navigator.clipboard.writeText(`${command} million`);

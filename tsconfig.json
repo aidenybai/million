@@ -11,8 +11,9 @@
     "target": "esnext",
     "noImplicitAny": false,
     "paths": {
-      // Make sure the root react.d.ts isn't picked up by TS locally
-      "react": ["node_modules/react"]
+      // Make sure the root d.ts isn't picked up by TS locally
+      "react": ["node_modules/react"],
+      "preact": ["node_modules/preact"]
     }
   },
   "include": ["./**/*.ts", "./**/*.tsx"],

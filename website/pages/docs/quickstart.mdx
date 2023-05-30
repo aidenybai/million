@@ -1,296 +1,383 @@
 ---
-title: 'Quickstart'
+title: 'Quick Start'
 description: 'Get started with Million.js'
 ---
 
+import dynamic from 'next/dynamic';
 import { Callout, Tabs, Tab, Cards, Card } from 'nextra-theme-docs';
+import { Box } from '../../components/box';
+import { BrowserView, MobileView } from 'react-device-detect';
+import { VDomExample } from '../../components/examples/vdom';
+import { CombinedBlockExample } from '../../components/examples/combined-block';
+export const Demo = dynamic(() =>
+  import('../../components/demo').then((mod) => mod.Demo),
+);
 
-# Quickstart
+<MobileView>
 
-Want to just try Million.js out? Open the following link in a new tab to get started with a pre-configured Million.js project:
+<Callout type="warning">
+  We highly recommend viewing this documentation on a desktop browser to get access to interactive code examples.
+</Callout>
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/aidenybai/million-react)
+</MobileView>
 
-## Install Million.js
+# Quick Start
 
-Otherwise, inside your project directory, run the following command:
+Welcome to the Million.js documentation (_woop woop 🎉🤑_). Let's learn how we can integrate Million.js into our React applications.
 
-{' '}
+Million.js assumes that you're already familiar with and you're using React. If you're not, we recommend checking out [react.dev](https://react.dev/) first.
 
-<Tabs items={['npm', 'pnpm', 'yarn']} storageKey="selected-pkg-manager">
-  {/* prettier-ignore */}
-  <Tab>
-  ```bash copy
-  npm install million
-  ```
-  </Tab>
-  {/* prettier-ignore */}
-  <Tab>
-  ```bash copy
-  pnpm install million
-  ```
-  </Tab>
-  {/* prettier-ignore */}
-  <Tab>
-  ```bash copy
-  yarn add million
-  ```
-  </Tab>
-</Tabs>
+<Callout type="info">
+**You will learn:**
+- How to use `block(){:jsx}` to convert React components into blocks
+- How to use `<For />{:jsx}` for efficiently rendering lists
+- When to use `block(){:jsx}` and `<For />{:jsx}`
+- The limitations of blocks
+</Callout>
 
-Then, add the compiler to your bundler of choice:
+## What's a block?
 
-<Tabs items={['Next.js', 'Astro', 'Vite', 'Webpack', 'Rollup', 'Rspack', 'Esbuild']} storageKey="selected-bundler-compiler">
-  <Tab>
-  <Callout>
-    Next.js support is currently in beta. Please report any issues you encounter.
-  </Callout>
-  ```js filename="next.config.mjs"
-  import million from 'million/compiler';
+Million.js is a library that enables you to create _blocks_. A block is a special [Higher Order Component (HOC)](https://legacy.reactjs.org/docs/higher-order-components.html) that can be used as a React component but are hyper-optimized for rendering speed.
 
-  /** @type {import('next').NextConfig} */
-  const nextConfig = {
-    reactStrictMode: true,
-  };
+Blocks are essentially components wrapped by `block(){:jsx}`.
 
-  export default million.next(nextConfig);
-  ```
-  </Tab>
-  <Tab>
-  <Callout>
-    Astro support is currently in beta. Please report any issues you encounter.
-  </Callout>
-  ```js filename="astro.config.mjs"
-  import { defineConfig } from 'astro/config';
-  import million from 'million/compiler';
+```jsx {7}
+function Lion() {
+  return (
+    <img src="https://million.dev/lion.svg" />
+  );
+}
 
-  export default defineConfig({
-    vite: {
-      plugins: [million.vite()]
-    }
-  });
-  ```
-  </Tab>
-  <Tab>
-  <Callout>
-    Gatsby support is currently in beta. Please report any issues you encounter.
-  </Callout>
-  ```js filename="gatsby-node.js"
-  const million = require('million/compiler');
+const LionBlock = block(Lion);
+```
 
-  exports.onCreateWebpackConfig = ({ actions }) => {
-    actions.setWebpackConfig({
-      plugins: [million.webpack()],
-    })
+Blocks can be used just like a normal React component:
+
+```jsx {5}
+export default function App() {
+  return (
+    <div>
+      <h1>mil + LION = million</h1>
+      <DinoBlock />
+    </div>
+  );
+}
+```
+
+<BrowserView>
+
+Have a look at the result:
+
+<Box previewOnly code={`
+  import { block } from 'million/react';
+
+  function Lion() {
+    return (
+      <img src="https://million.dev/lion.svg" width={200} />
+    );
   }
-  ```
-  </Tab>
-  <Tab>
-  ```js filename="vite.config.js"
-  import million from 'million/compiler';
-  import { defineConfig } from 'vite';
 
-  export default defineConfig({
-    plugins: [million.vite()],
-  });
-  ```
-  </Tab>
-  <Tab>
-  ```js filename="webpack.config.js"
-  import million from 'million/compiler';
+  const LionBlock = block(Lion);
 
-  export default {
-    plugins: [million.webpack()],
-  };
-  ```
-  </Tab>
-  <Tab>
-  ```js filename="rollup.config.js"
-  import million from 'million/compiler';
+  export default function App() {
+    return (
+      <div>
+        <h1>mil + LION = million</h1>
+        <LionBlock />
+      </div>
+    );
+  }
+`} />
 
-  export default {
-    plugins: [million.rollup()],
-  };
-  ```
-  </Tab>
-  <Tab>
-  ```js filename="rspack.config.js"
-  // @ts-check
-  const { default: million } = require('million/compiler');
+</BrowserView>
 
-  /** @type {import('@rspack/cli').Configuration} */
-  module.exports = {
-    plugins: [million.rspack()],
-  };
-  ```
-  </Tab>
-  <Tab>
-  ```js filename="esbuild.config.js"
-  import million from 'million/compiler';
-  import { build } from 'esbuild';
+With that in hand, let's build an app.
 
-  build({
-    plugins: [million.esbuild()],
-  });
-  ```
-  </Tab>
-</Tabs>
+## Data Grid Example
 
-## Learn Million.js
+One use case of blocks is rendering lists of data efficiently. In this example, let's build a data grid in React.
 
-Million.js operates off of the concept of "blocks". Imagine blocks as special [Higher Order Components (HOCs)](https://legacy.reactjs.org/docs/higher-order-components.html) that you use in your React application, but are rendered using the Million.js virtual DOM.
+We have access to the prebuilt components `<Table />{:jsx}` and `<Input />{:jsx}` from our fake user interface (UI) library. We can then store the number of rows we want to display in a `useState(){:jsx}` hook.
 
-In order to create blocks from your components, all you'll need to is wrap your components in a `block(){:jsx}` function.
+```jsx
+function App() {
+  const [rows, setRows] = useState(1);
 
-## `block(Component){:jsx}`
+  return (
+    <div>
+      <Input value={rows} setValue={setRows} />
+      <Table>
+        // ...
+      </Table>
+    </div>
+  );
+}
+```
 
-`block(Component){:jsx}` must consume a React component, and returns a Block component.
+But wait! We made a grid but we have no data. Let's say we can grab some array of arbitrary data from a function called `buildData(rows){:jsx}`:
 
-<Callout>
-  Block components must be deterministic, meaning that they must always return the same JSX. However, they can use hooks, any props, and other React features, except passing in JSX as children.
+```jsx
+const data = buildData(100);
+// returns [{ adjective: '...', color: '...', noun: '...' }, ... x100]
+```
+
+Now, we can render the data in our table using `Array.map(){:jsx}`:
+
+```jsx {3, 9-15}
+function App() {
+  const [rows, setRows] = useState(1);
+  const data = buildData(rows);
+
+  return (
+    <div>
+      <Input value={rows} setValue={setRows} />
+      <Table>
+        {data.map(({ adjective, color, noun }) => (
+          <tr>
+            <td>{adjective}</td>
+            <td>{color}</td>
+            <td>{noun}</td>
+          </tr>
+        ))}
+      </Table>
+    </div>
+  );
+}
+```
+
+<BrowserView>
+
+<Box previewOnly code={`
+  import { useState } from 'react';
+  import { Table, Input } from './ui';
+  import { buildData } from './data';
+
+  function App() {
+    const [rows, setRows] = useState(1);
+    const data = buildData(rows);
+
+    return (
+      <div>
+        <Input value={rows} setValue={setRows} />
+        <Table>
+          {data.map(({ adjective, color, noun }) => (
+            <tr>
+              <td>{adjective}</td>
+              <td>{color}</td>
+              <td>{noun}</td>
+            </tr>
+          ))}
+        </Table>
+      </div>
+    );
+}
+
+export default App;
+`} />
+
+We can see that it performs pretty well. From 0-100, there's virtually no lag, but once you get higher than 500 or so, there's a noticable delay in rendering.
+
+Cool right? React is great because we can declaratively write great UI and get pretty good performance. But the data grid we just made is a rudimentary example, and is not necessarily representative of most React applications.
+
+### More realistic rendering
+
+So, let's introduce some spice. In the following example, we add `lotsOfElements` (an array of a lot of blank elements) to each row. We also add a lag radar to monitor page performance.
+
+Try changing the input value up and down from 0 to 1000. Notice how React _really struggles_ when rendering a lot of elements.
+
+<Box code={`
+  import { useState } from 'react';
+  import { Table, Input, lotsOfElements } from './ui';
+  import { buildData } from './data';
+
+  function App() {
+    const [rows, setRows] = useState(1);
+    const data = buildData(rows);
+
+    return (
+      <div>
+        <Input value={rows} setValue={setRows} />
+        <Table showRadar>
+          {data.map(({ adjective, color, noun }) => (
+            <tr>
+              <td>{adjective}</td>
+              <td>{color}</td>
+              <td>{noun}</td>
+              <td>{...lotsOfElements}</td>
+            </tr>
+          ))}
+        </Table>
+      </div>
+    );
+}
+
+export default App;
+`} />
+
+</BrowserView>
+
+### Just `block` it
+
+In the following example, we use `block(){:jsx}` and `<For />{:jsx}` in order to optimize rendering.
+
+First, we need to abstract the `<tr>{:jsx}` into its own component.
+
+```jsx
+data.map(({ adjective, color, noun }) => (
+  <tr>
+    <td>{adjective}</td>
+    <td>{color}</td>
+    <td>{noun}</td>
+    <td>{...lotsOfElements}</td>
+  </tr>
+))
+
+// 👇👇👇
+
+function Row({ adjective, color, noun }) {
+  return (
+    <tr>
+      <td>{adjective}</td>
+      <td>{color}</td>
+      <td>{noun}</td>
+      {...lotsOfElements}
+    </tr>
+  );
+}
+```
+
+Then, we can wrap it with `block(){:jsx}` in order to optimize the `<Row />{:jsx}` component.
+
+```jsx
+const RowBlock = block(Row);
+```
+
+Once, we've optimized a row, we need to render it as a list:
+
+```jsx
+data.map(({ adjective, color, noun }) => (
+  <RowBlock adjective={adjective} color={color} noun={noun}>
+));
+```
+
+**BUT WAIT!** We can actually use Million.js' built-in rendering solution.
+
+### Optimized List Rendering
+
+The `<For />{:jsx}` component is used to render a list of blocks. It takes an array as the `each` prop and a function as its children. The function is called for each item in the array and is passed the item and its index as arguments.
+
+<Callout type="info">
+**`<For />{:jsx}` Component**
+
+Syntax: `<For each={array}>{(item, index) => Block}</For>{:jsx}`\
+Example: `<For each={[1, 2, 3]}>{(item, index) => myBlock({ item, index })}</For>{:jsx}`
+</Callout>
+
+It's the best way to loop over an array (uses [`mapArray(){:jsx}`](/map-array) under the hood). As the array changes, `<For />{:jsx}` updates or moves items in the DOM rather than recreating them. Let's look at an example:
+
+With this in mind, we can rewrite our table to use `<For />{:jsx}`:
+
+```jsx
+<For each={data}>
+  {({ adjective, color, noun }) => (
+    <RowBlock adjective={adjective} color={color} noun={noun} />
+  )}
+</For>
+```
+
+<BrowserView>
+
+Now that we've integrated Million.js, let's check the new example out.
+
+Notice when you change the input value, the lag radar shows significantly less lag than the pure React example. With a [faster underlying virtual DOM](/blog/virtual-dom), Million.js can take a lot of the pain out of rendering large lists.
+
+<Box code={`
+  import { useState } from 'react';
+  import { Table, Input, lotsOfElements } from './ui';
+  import { buildData } from './data';
+  import { block, For } from 'million/react';
+
+  function Row({ adjective, color, noun }) {
+    return (
+      <tr>
+        <td>{adjective}</td>
+        <td>{color}</td>
+        <td>{noun}</td>
+        {...lotsOfElements}
+      </tr>
+    );
+  }
+
+  const RowBlock = block(Row);
+
+  function App() {
+    const [rows, setRows] = useState(1);
+    const data = buildData(rows);
+
+    return (
+      <div>
+        <Input value={rows} setValue={setRows} />
+        <Table showRadar>
+          <For each={data}>
+            {({ adjective, color, noun }) => (
+              <RowBlock adjective={adjective} color={color} noun={noun} />
+            )}
+          </For>
+        </Table>
+      </div>
+    );
+}
+
+export default App;
+`} />
+
+</BrowserView>
+
+### Million.js vs. React
+
+<Callout type="info">
+ The following is a more comprehensive demo using [key-based rendering](https://react.dev/learn/rendering-lists#keeping-list-items-in-order-with-key) to show how Million.js performance compares to React.
 </Callout>
 
 <br />
 
-```jsx {3, 18}
-import React, { useState } from 'react';
-import { createRoot } from 'react-dom/client';
-import { block } from 'million/react';
+<Demo />
 
-function Component({ initial, name }) {
-  // ✅ hooks + object props are allowed
-  const [count, setCount] = useState(initial.count);
-  const greeting = `Hello ${name}!`;
+## Hitting the limit
 
-  // ✅ always use a consistent, top level return
-  return (
-    <div>
-      {greeting}
-      <button onClick={() => setCount(count + 1)}>{count}</button>
-    </div>
-  );
-}
+<Callout type="warning">
+  This section is a bit more advanced. If you want a list of limitations, check out the [Rules of Blocks](/docs/rules). Or, if you just want to start integrating Million.js, check out the the [installation guide](/docs/install).
+</Callout>
 
-// ✅ always define on a new line
-const ComponentBlock = block(Component);
+Blocks are great for rendering large lists, data grids, and many other use cases. Under the hood, they render with the Million.js virtual DOM instead of React.
 
-createRoot(document.getElementById('root')).render(
-  <ComponentBlock name="Dan Jutan" initial={{ count: 0 }} />,
-);
-```
+<details>
+  <summary>
+    <strong>Deep Dive:</strong> How does it work?
+  </summary>
+  <Tabs items={['React', 'Million.js']}>
+    <Tab>
+      <VDomExample />
+    </Tab>
+    <Tab>
+      <CombinedBlockExample />
+    </Tab>
+  </Tabs>
+</details>
 
-Here's some things that are **not allowed:**
+Using a block can allow us to capture potential performance gains. However, you should always use best judgement, as blocks are not a silver bullet. Here are some general guidelines to follow:
 
-```jsx {10, 16, 26, 28-29}
-import React, { useState } from 'react';
-import { createRoot } from 'react-dom/client';
-import { block } from 'million/react';
+- **Static views**: Blocks perform best when there's not that much dynamic data. Since static parts of the React tree need to be unnecessary rerendered when dynamic data changes by React, blocks can directly skip to what's dynamic.
+- **Nested data**: Blocks are great for rendering nested data. Million.js turns tree traversal from `O(tree)` to `O(1)`, allowing for fast access and changes.
 
-function IllegalComponent({ name, initial }) {
-  const [count, setCount] = useState(initial.count);
-  const greeting = `Hello ${name}!`;
+Looking for the full guidelines? Check out [Rules of Blocks](/docs/rules).
 
-  if (count > 10) {
-    return <div>Too many clicks!</div>; // ❌ don't use conditionals
-  }
-  return (
-    <div>
-      {greeting}
-      <button onClick={() => setCount(count + 1)}>
-        {<div>{count}</div> /* ❌ don't pass JSX */}
-      </button>
-    </div>
-  );
-}
+## Next Steps
 
-const IllegalComponentBlock = block(IllegalComponent);
+By now, you know the basics of how to integrate Million.js into your application!
 
-createRoot(document.getElementById('root')).render(<>
-  <IllegalComponentBlock name="Sad Jutan" initial={{ count: 0 }}>
-    <div>uh oh...</div> // ❌ don't pass JSX as props
-  </IllegalComponentBlock>,
-  // ❌ don't use components that have been converted to blocks
-  <IllegalComponent />
-</>);
-```
+Check out the the [installation guide](/docs/install) to put them into practice and start using blocks.
 
-## Optimized Array Rendering
+---
 
-Similar to how [React uses keys](https://react.dev/learn/rendering-lists#keeping-list-items-in-order-with-key) to optimize rendering of lists, Million.js uses keys and a special `<For />{:jsx}` component to optimize rendering of arrays, as the following is **NOT allowed**:
-
-```jsx
-// ❌ not allowed within block
-array.map((name) => {
-  <div>{name}</div>
-});
-```
-
-## `<For />{:jsx}`
-
-**Syntax:** `<For each={array}>{(item, index) => Block}</For>{:jsx}`\
-**Example:** `<For each={[1, 2, 3]}>{(item, index) => myBlock({ item, index })}</For>{:jsx}`
-
-The `<For />{:jsx}` component is used to render a list of blocks. It takes an array as the `each` prop and a function as its children. The function is called for each item in the array and is passed the item and its index as arguments.
-
-It's the best way to loop over an array (uses [`mapArray(){:jsx}`](/map-array) under the hood). As the array changes, `<For />{:jsx}` updates or moves items in the DOM rather than recreating them. Let's look at an example:
-
-
-```jsx {8, 18-20}
-import { createRoot } from 'react-dom/client';
-import { block, For } from 'million/react';
-
-function Display({ item }) {
-  return <div>{item}</div>;
-}
-
-const DisplayBlock = block(Display);
-
-function App() {
-  const [items, setItems] = useState([1, 2, 3]);
-
-  return (
-    <div>
-      <button onClick={() => setItems([...items, items.length + 1])}>
-        Add item
-      </button>
-      <For each={items}>
-        {(item) => <DisplayBlock key={item} item={item} />}
-      </For>
-    </div>
-  );
-}
-
-createRoot(document.getElementById('root')).render(<App />);
-```
-
-```jsx {8, 18-20}
-import { createRoot } from 'react-dom/client';
-import { block, For } from 'million/react';
-
-function Display({ item }) {
-  return <div>{item}</div>;
-}
-
-const DisplayBlock = block(Display);
-
-function App() {
-  const [items, setItems] = useState([1, 2, 3]);
-
-  return (
-    <div>
-      <button onClick={() => setItems([...items, items.length + 1])}>
-        Add item
-      </button>
-      <For each={items}>
-        {(item) => <DisplayBlock key={item} item={item} />}
-      </For>
-    </div>
-  );
-}
-
-createRoot(document.getElementById('root')).render(<App />);
-```
-
-## You're ready to go! 🎉
-
-Yep, that's all there is to geting started with Million.js. You can now start building your own blocks and use them in your React application.
+_This page is directly inspired by [React's "Quick Start" page](https://react.dev/learn)._

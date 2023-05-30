@@ -1,7 +1,6 @@
 /* eslint-disable no-bitwise */
 /* eslint-disable @typescript-eslint/unbound-method */
 import {
-  childNodes$,
   cloneNode$,
   createEventListener,
   insertBefore$,
@@ -12,15 +11,14 @@ import {
   setText,
   setStyleAttribute,
   setSvgAttribute,
-  firstChild$,
-  nextSibling$,
   template$,
-  document$,
+  childAt,
 } from './dom';
 import { renderToTemplate } from './template';
 import { AbstractBlock } from './types';
 import { arrayMount$, arrayPatch$ } from './array';
 import {
+  TEXT_NODE_CACHE,
   AttributeFlag,
   ChildFlag,
   EventFlag,
@@ -54,8 +52,8 @@ export const block = (
     renderToTemplate(unwrap ? unwrap(vnode) : vnode, edits),
   );
 
-  return (
-    props?: Props | null,
+  return <T extends Props>(
+    props?: T | null,
     key?: string,
     shouldUpdateCurrentBlock?: (oldProps: Props, newProps: Props) => boolean,
   ) => {
@@ -69,20 +67,14 @@ export const block = (
   };
 };
 
-export const mount = (
-  block: AbstractBlock,
-  parent?: HTMLElement,
-): HTMLElement => {
+export const mount = (block: AbstractBlock, parent?: HTMLElement) => {
   if ('b' in block && parent) {
     return arrayMount$.call(block, parent);
   }
   return mount$.call(block, parent);
 };
 
-export const patch = (
-  oldBlock: AbstractBlock,
-  newBlock: AbstractBlock,
-): HTMLElement => {
+export const patch = (oldBlock: AbstractBlock, newBlock: AbstractBlock) => {
   if ('b' in oldBlock || 'b' in newBlock) {
     arrayPatch$.call(oldBlock, newBlock as ArrayBlock);
   }
@@ -138,16 +130,22 @@ export class Block extends AbstractBlock {
             value.m(el);
             continue;
           }
-          if (typeof value === 'function') {
-            const parent = document$.createElement('million-block');
-            const childNodes = childNodes$.call(el);
+          if (!el[TEXT_NODE_CACHE]) el[TEXT_NODE_CACHE] = new Array(l);
 
-            value(parent);
-            insertBefore$.call(el, parent, childNodes[edit.i!]);
+          if (typeof value === 'function') {
+            const scopeEl = value(null);
+            el[TEXT_NODE_CACHE][k] = scopeEl;
+            insertBefore$.call(el, scopeEl, childAt(el, edit.i!));
             continue;
           }
           // insertText() on mount, setText() on patch
-          insertText(el, String(value), edit.i!);
+          el[TEXT_NODE_CACHE][k] = insertText(
+            el,
+            value === null || value === undefined || value === false
+              ? ''
+              : String(value),
+            edit.i!,
+          );
         } else if (edit.t & EventFlag) {
           const patch = createEventListener(el, edit.n!, value);
           edit.p = patch;
@@ -180,7 +178,7 @@ export class Block extends AbstractBlock {
         } else if (init.t & EventFlag) {
           createEventListener(el, init.n!, init.l!);
         } else {
-          init.b!.m(el, childNodes$.call(el)[init.i!]);
+          init.b!.m(el, childAt(el, init.i!));
         }
       }
     }
@@ -224,10 +222,16 @@ export class Block extends AbstractBlock {
             oldValue.p(newChildBlock);
             continue;
           }
-          if (typeof oldValue === 'function') {
+          if (typeof newValue === 'function') {
+            newValue(el[TEXT_NODE_CACHE][k]);
             continue;
           }
-          setText(el, String(newValue), edit.i!);
+          setText(
+            el[TEXT_NODE_CACHE][k],
+            newValue === null || newValue === undefined || newValue === false
+              ? ''
+              : String(newValue),
+          );
         } else if (edit.t & AttributeFlag) {
           setAttribute(el, edit.n!, newValue);
         } else if (edit.t & StyleAttributeFlag) {
@@ -284,12 +288,7 @@ const getCurrentElement = (
   // We use path because we don't have the actual DOM nodes until mount()
   for (let i = 0; i < pathLength; ++i) {
     const siblings = path[i]!;
-    // https://www.measurethat.net/Benchmarks/Show/15652/0/childnodes-vs-children-vs-firstchildnextsibling-vs-firs
-    root = firstChild$.call(root);
-    if (!siblings) continue;
-    for (let j = 0; j < siblings; ++j) {
-      root = nextSibling$.call(root) as HTMLElement;
-    }
+    root = childAt(root, siblings);
   }
   if (cache && key !== undefined) cache[key] = root;
   return root;

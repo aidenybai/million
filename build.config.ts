@@ -3,10 +3,12 @@ import { defineBuildConfig } from 'unbuild';
 export default defineBuildConfig({
   entries: [
     './packages/million',
-    './packages/react',
     './packages/jsx-runtime',
     './packages/compiler',
+    './packages/react',
     './packages/react-server',
+    './packages/preact',
+    './packages/preact-server',
   ],
   declaration: true,
   clean: true,
@@ -14,5 +16,5 @@ export default defineBuildConfig({
     emitCJS: true,
     inlineDependencies: true,
   },
-  externals: ['react', 'react-dom', 'million'],
+  externals: ['react', 'react-dom', 'preact', 'million', 'vite', 'esbuild'],
 });

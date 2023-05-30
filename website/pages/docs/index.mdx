@@ -1,46 +1,36 @@
----
-title: 'What is Million.js?'
----
-
 import { Callout, Card, Cards } from 'nextra-theme-docs';
-import { Suspense } from 'react';
-import dynamic from 'next/dynamic';
-import Image from 'next/image';
 
-export const Demo = dynamic(() =>
-  import('../../components/demo').then((mod) => mod.Demo),
-);
-
-# What is Million.js?
-
-Million is an extremely fast and lightweight (`<4kb`) virtual DOM that makes [React components](https://react.dev) up to [_**70% faster**_](https://krausest.github.io/js-framework-benchmark/current.html).
-
-> Oh man... Another [`/virtual dom|javascript/gi{:js}`](https://regexr.com/6mr5f) framework? I'm fine with [React](https://react.dev) already, why do I need this?
-
-Million works with React. Million makes creating web apps just as easy (It's just wrapping a [React](https://react.dev) component!), but with faster rendering and loading speeds. By using a fine-tuned, optimized virtual DOM, Million.js reduces the overhead of React.
-
-<Callout>
-  Imagine [React](https://react.dev) components running at the speed of raw
-  JavaScript.
-</Callout>
-
-<Cards>
-  <Card title="Get Started" href="/docs/quickstart" arrow />
-</Cards>
-
-## React Virtual DOM vs. Million.js
-
-The following example is a simple counter app that uses React and Million.js. The code is identical, but the performance is different.
-
-Alternatively, view on another tab: [demo.millionjs.org](https://demo.millionjs.org)
+![Million.js Banner](/banner.png)
 
 <br />
 
-<Demo />
+# Million.js
 
-## How does it work?
+**Million.js** is an extremely fast and lightweight (`<4kb`) virtual DOM that makes [React components](https://react.dev) up to [**70% faster**](https://krausest.github.io/js-framework-benchmark/current.html).
 
-Go read: [Virtual DOM: Back in Block](http://millionjs.org/blog/virtual-dom).
+> Oh man... Another [`/virtual dom|javascript/gi`](https://regexr.com/6mr5f) framework? I'm fine with [React](https://reactjs.org) already, why do I need this?
+
+Million works with React. Million makes creating web apps just as easy (It's just wrapping a [React](https://react.dev) component!), but with faster rendering and loading speeds. By using a fine-tuned, optimized virtual DOM, Million.js reduces the overhead of React ([_try it out here_](https://demo.million.dev))
+
+<Callout type="info">
+  **TL;DR:** Imagine [React](https://react.dev) components running at the speed
+  of raw JavaScript.
+</Callout>
+
+## Choose Your Own Adventure
+
+If you're just looking into trying out Million.js, you can follow guided examples with the Quickstart. If you know what you're doing, jump right into the Installation Guide.
+
+<Cards num={2}>
+  <Card image arrow title="Quick Start" href="/docs/quickstart">
+    <>![Quickstart Preview](/card-1.svg)</>
+  </Card>
+  <Card image arrow title="Installation Guide" href="/docs/install">
+    <>![Install Preview](/card-2.svg)</>
+  </Card>
+</Cards>
+
+If you're confused about an error message, you can check out the [rules of blocks](/docs/rules) to see what's allowed and what's not.
 
 ## Sponsors
 
@@ -48,20 +38,34 @@ Go read: [Virtual DOM: Back in Block](http://millionjs.org/blog/virtual-dom).
   <a href="https://github.com/sponsors/aidenybai">
     <img src="https://raw.githubusercontent.com/aidenybai/aidenybai/master/sponsors.svg" />
   </a>
+  <a href="https://vercel.com?utm_source=millionjs&utm_campaign=oss">
+    <img
+      height="30"
+      src="https://raw.githubusercontent.com/abumalick/powered-by-vercel/master/powered-by-vercel.svg"
+    />
+  </a>
 </p>
 
-## Acknowledgements
+## Acknowledgments
+
+Million takes heavy inspiration from the following projects:
 
 - [`blockdom`](https://github.com/ged-odoo/blockdom) ([Géry Debongnie](https://github.com/ged-odoo))
   Thank you to Géry pioneering the concept of "blocks" in the virtual DOM. Many parts of the Million.js codebase either directly or indirectly derive from his work.
-
 - [`voby`](https://github.com/vobyjs/voby) ([Fabio Spampinato](https://github.com/fabiospampinato))
   The Million.js "template" concept is derived from Voby's `template()` API.
-
-- [`bun`](https://bun.sh) for their homepage. The Million.js homepage is a remix of what they have currently.
-
+- [`bun`](https://bun.sh) for their homepage.
+- [`react`](https://react.dev) and [`turbo`](https://turbo.build) for their documentation. Many parts of the current Million.js documentation are grokked and modified from theirs.
 - [`ivi`](https://github.com/localvoid/ivi), [Preact](https://github.com/preactjs/preact), [and more](https://krausest.github.io/js-framework-benchmark/2021/table_chrome_96.0.4664.45.html)
+
+Million is being used at companies like [Wyze](https://wyze.com) and [Dimension](https://dimension.dev), as well as open source work like [Quartz](https://github.com/jackyzha0/quartz), [TinyPages](https://github.com/Borrus-sudo/tinypages), [and more](https://github.com/aidenybai/million/network/dependents).
 
 ## License
 
-Million is MIT-licensed open-source software by [Aiden Bai](https://aidenybai.com) and [contributors](https://github.com/aidenybai/million/graphs/contributors).
+Million is [MIT-licensed](LICENSE) open-source software by [Aiden Bai](https://aiden.mov) and [contributors](https://github.com/aidenybai/million/graphs/contributors):
+
+<br />
+
+<a href="https://github.com/aidenybai/million/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=aidenybai/million" />
+</a>

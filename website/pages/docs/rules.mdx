@@ -1,0 +1,208 @@
+---
+title: 'Rules Of Blocks'
+description: 'How to use blocks in your projects the right way'
+---
+
+import { Callout } from 'nextra-theme-docs';
+
+# Rules of Blocks
+
+You are probably here because you got an warning message in your console.
+
+<Callout type="warning">
+  <code><strong>\[Million.js\]</strong> You did something wrong!</code>
+
+  ```jsx showLineNumbers filename="App.jsx" {2}
+  <div>
+    <YourBlock>Uh oh...</YourBlock>
+              ^
+  </div>
+  ```
+</Callout>
+
+There are three common reasons you might be seeing it:
+
+1. You might be **breaking Rules of Blocks.**
+2. You might have **forgot to use the compiler.**
+3. You've entered **unsupported behavior.**
+
+## Breaking Rules of Blocks
+
+You may have heard of ["progressive enhancement,"](https://developer.mozilla.org/en-US/docs/Glossary/Progressive_Enhancement) which is the idea that tools progressively use features based on what is supported. Similarly, Million.js has "progressive degradation," or the concept that if you use features that are not supported, it will degrade to default React rendering gracefully.
+
+This section highlights some of the possible warnings you might encounter using blocks. Note that this is not an exhaustive list.
+
+### Declaring blocks
+
+<Callout type="warning">
+  <code>
+  <strong>[Million.js]</strong> Block needs to be defined as a variable declaration.
+  </code>
+</Callout>
+
+The above usually occurs when you have a block that is not declared as a variable. This prevents the compiler from analyzing the block correctly.
+
+```jsx
+console.log(block(<div />)) // ❌ Wrong
+export default block(<div />) // ❌ Wrong
+
+// 👇👇👇
+
+const Block = block(<div />) // ✅ Correct
+console.log(Block);
+export default Block;
+```
+
+### Calling `block()`
+
+<Callout type="warning">
+  <code>
+  <strong>[Million.js]</strong> Found unsupported argument for block. Make sure blocks consume the reference
+  to a component function, not the direct declaration.
+  </code>
+</Callout>
+
+The above usually occurs when you have an actual JSX component like `<Component />{:jsx}` passed into the `block(){:jsx}` function instead of a reference to the Component itself.
+
+```jsx
+const BadBlock = block(<Component />) // ❌ Wrong
+
+const GoodBlock = block(App)  // ✅ Correct
+```
+
+### Using `map()` instead of `<For />`
+
+<Callout type="warning">
+  <code>
+  <strong>[Million.js]</strong>
+  Array.map() will degrade performance. We recommend removing the block on the
+  current component and using a `<For />` component instead
+  </code>
+</Callout>
+
+The above will occur when you use `<Array>.map` within a block. This is not ideal, especially if the component that holds the list is a block. The right pattern is to remove the block on the current component and use a `<For />` component instead for the children.
+
+```jsx
+<div>
+  {items.map((item) => (
+    <div key={item}>{item}</div>
+  ))}
+</div>
+
+// 👇👇👇
+
+<For each={items}>
+  {(item) => <div key={item}>{item}</div>}
+</For>
+```
+
+### Deterministic returns
+
+<div className="flex gap-3">
+<Callout type="warning">
+  <code>
+  <strong>[Million.js]</strong>
+  Conditional expressions will degrade performance. We recommend using
+  deterministic returns instead.
+  </code>
+</Callout>
+
+<Callout type="error">
+  <code>
+  Uncaught Error: Rendered fewer hooks than expected. This may be caused by an accidental early return statement.
+  </code>
+</Callout>
+</div>
+
+
+
+Returns must be "deterministic," meaning there can only be one return statement at the end of the block that returns a stable tree.
+
+Some examples of non-deterministic returns:
+
+```jsx
+function Component() {
+  const [count, setCount] = useState(initial.count);
+
+  if (count > 10) {
+    return <div>Too many clicks!</div>; // ❌ Wrong
+  }
+
+  // ❌ Wrong
+  return count > 5 ? (
+    'Count is greater than 5'
+  ) : (
+    <div>Count is {count}.</div>
+  );
+}
+
+const ComponentBlock = block(Component);
+```
+
+### UI Component libraries 🙅‍♀️
+
+<Callout type="warning">
+  <code>
+    <strong>[Million.js]</strong>
+    Components will cause degraded performance. Ideally, you should use DOM elements instead.
+  </code>
+</Callout>
+
+Many React applications use UI component libraries like Material UI, Chakra UI, or Tailwind UI. These libraries are great, but they are not optimized for Million.js.
+
+Million.js requires that you use DOM elements instead of components. This is because components can introduce non-deterministic returns, which can cause degraded performance.
+
+```jsx
+// ❌ Bad
+<Stack>
+  <Text>What's up my fellow components</Text>
+</Stack>
+
+// 🤨 Maybe
+<div>
+  <Text>What's up my fellow components</Text>
+</div>
+
+// ✅ Good
+<div>
+  <p>What's up my fellow components</p>
+</div>
+```
+
+### Spread attributes
+
+<Callout type="warning">
+  <code>
+  <strong>[Million.js]</strong>
+  Spread attributes aren't supported.
+  </code>
+</Callout>
+
+You can't use spread attributes in Million.js, as they can introduce non-deterministic returns.
+
+```jsx
+<div {...props} /> // ❌ Wrong
+```
+
+## Using the compiler
+
+<Callout type="error">
+  <code>
+  <strong>Warning: </strong>
+  Invalid Hook Call. Hooks can only be called inside of the body of a function component.
+  </code>
+</Callout>
+
+You may have forgot to use the compiler, a necessary part in ensuring that your JSX is compiled to Million.js compatible code. You can view the instructions at [the installation guide](/docs/install).
+
+On a side note, Million.js is technically usable without the compiler, but it's significantly more limited in scope, and there is a [more limited set of features available](/docs/block#rules-of-usage). This is not recommended.
+
+## Unsupported behavior
+
+<Callout type="error">
+  <code>
+    Uncaught Error: ??? :(
+  </code>
+</Callout>
+
+If none of this worked, please [create an issue](https://github.com/aidenybai/million/issues/new?assignees=aidenybai&labels=bug&projects=&template=bug_report.md&title=bug%3A+) and we'll try to help. Try to create a small reproducing example — you might discover the problem as you're doing it.

@@ -62,19 +62,19 @@ const frames = [
       {...motionAnimationProps}
       d="M139 89L54 234.5"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M139.5 90L182 160"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M98 159L145 235"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.ellipse
       {...motionAnimationProps}
@@ -107,13 +107,13 @@ const frames = [
       {...motionAnimationProps}
       d="M332 90L290 160"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M330 88L377 164"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
@@ -247,19 +247,19 @@ const frames = [
       {...motionAnimationProps}
       d="M139 89L54 234.5"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M139.5 90L182 160"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M98 159L145 235"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.ellipse
       {...motionAnimationProps}
@@ -292,13 +292,13 @@ const frames = [
       {...motionAnimationProps}
       d="M332 90L290 160"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M330 88L377 164"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
@@ -442,19 +442,19 @@ const frames = [
       {...motionAnimationProps}
       d="M139 89L54 234.5"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M139.5 90L182 160"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M98 159L145 235"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.ellipse
       {...motionAnimationProps}
@@ -487,13 +487,13 @@ const frames = [
       {...motionAnimationProps}
       d="M332 90L290 160"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M330 88L377 164"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
@@ -701,19 +701,19 @@ const frames = [
       {...motionAnimationProps}
       d="M139 89L54 234.5"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M139.5 90L182 160"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M98 159L145 235"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.ellipse
       {...motionAnimationProps}
@@ -746,13 +746,13 @@ const frames = [
       {...motionAnimationProps}
       d="M332 90L290 160"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M330 88L377 164"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
@@ -984,19 +984,19 @@ const frames = [
       {...motionAnimationProps}
       d="M139 89L54 234.5"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M139.5 90L182 160"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M98 159L145 235"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.ellipse
       {...motionAnimationProps}
@@ -1029,13 +1029,13 @@ const frames = [
       {...motionAnimationProps}
       d="M332 90L290 160"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M330 88L377 164"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
@@ -1285,19 +1285,19 @@ const frames = [
       {...motionAnimationProps}
       d="M139 89L54 234.5"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M139.5 90L182 160"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M98 159L145 235"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.ellipse
       {...motionAnimationProps}
@@ -1330,13 +1330,13 @@ const frames = [
       {...motionAnimationProps}
       d="M332 90L290 160"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}
       d="M330 88L377 164"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
     />
     <motion.path
       {...motionAnimationProps}

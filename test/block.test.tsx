@@ -57,4 +57,20 @@ describe.concurrent('block', () => {
     main.x();
     expect(main.l).toBeNull();
   });
+  it('should ignore null, undefined, false', () => {
+    const block = createBlock(fn);
+    const main = block({ foo: null, bar: 'bar' });
+    main.m();
+    expect(main.l?.outerHTML).toEqual(
+      '<div><h1>Hello</h1> World<p title="baz" class="bar"></p></div>',
+    );
+    main.p(block({ foo: undefined, bar: 'bar' }));
+    expect(main.l?.outerHTML).toEqual(
+      '<div><h1>Hello</h1> World<p title="baz" class="bar"></p></div>',
+    );
+    main.p(block({ foo: false, bar: 'bar' }));
+    expect(main.l?.outerHTML).toEqual(
+      '<div><h1>Hello</h1> World<p title="baz" class="bar"></p></div>',
+    );
+  });
 });

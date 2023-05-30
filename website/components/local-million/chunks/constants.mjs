@@ -1,0 +1,24 @@
+const Object$ = Object;
+const Map$ = Map;
+const Set$ = Set;
+const SetHas$ = Set$.prototype.has;
+const SetAdd$ = Set$.prototype.add;
+const MapHas$ = Map$.prototype.has;
+const MapGet$ = Map$.prototype.get;
+const MapSet$ = Map$.prototype.set;
+const ChildFlag = 1;
+const AttributeFlag = 2;
+const EventFlag = 4;
+const StyleAttributeFlag = 8;
+const SvgAttributeFlag = 16;
+const BlockFlag = 32;
+const TEXT_NODE_CACHE = "__t";
+const EVENTS_REGISTRY = "__m";
+const IS_NON_DIMENSIONAL = /acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i;
+const XLINK_NS = "http://www.w3.org/1999/xlink";
+const XML_NS = "http://www.w3.org/2000/xmlns/";
+const X_CHAR = 120;
+const NON_PROPS = new Set$(["href", "list", "form", "tabIndex", "download"]);
+const VOID_ELEMENTS = new Set$(["area", "base", "basefont", "bgsound", "br", "col", "command", "embed", "frame", "hr", "image", "img", "input", "isindex", "keygen", "link", "menuitem", "meta", "nextid", "param", "source", "track", "wbr"]);
+
+export { AttributeFlag as A, BlockFlag as B, ChildFlag as C, EVENTS_REGISTRY as E, IS_NON_DIMENSIONAL as I, Map$ as M, NON_PROPS as N, Object$ as O, Set$ as S, TEXT_NODE_CACHE as T, VOID_ELEMENTS as V, XML_NS as X, SetHas$ as a, SetAdd$ as b, XLINK_NS as c, EventFlag as d, StyleAttributeFlag as e, X_CHAR as f, SvgAttributeFlag as g, MapSet$ as h, MapHas$ as i, MapGet$ as j };
