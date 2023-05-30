@@ -1,9 +1,11 @@
-import ClientEntry from '@/components/client';
+'use client';
+
+import { Editor } from '@/components/editor';
 
 const Home: React.FC = () => {
   return (
     <main className="f">
-      <ClientEntry />
+      <Editor />
     </main>
   );
 };
