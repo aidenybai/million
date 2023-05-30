@@ -7,14 +7,20 @@ import {
   forwardRef,
   MutableRefObject,
 } from 'react';
-import cls from 'classnames';
+import { clsx } from 'clsx';
 
 const Dot: FC<{ isDragging: boolean }> = (props: { isDragging: boolean }) => {
-  return <div className={cls('h-1 w-1 rounded-full bg-slate-300 dark:bg-white dark:group-hover:bg-slate-200', {
-    'bg-slate-200 dark:bg-slate-200': props.isDragging
-  })} />;
+  return (
+    <div
+      className={clsx(
+        'h-1 w-1 rounded-full bg-slate-300 dark:bg-white dark:group-hover:bg-slate-200',
+        {
+          'bg-slate-200 dark:bg-slate-200': props.isDragging,
+        },
+      )}
+    />
+  );
 };
-
 
 export const GridResizer = forwardRef<
   MutableRefObject<HTMLDivElement>,
@@ -66,13 +72,13 @@ export const GridResizer = forwardRef<
         window.removeEventListener('touchmove', onTouchMove);
         window.removeEventListener('touchend', onResizeEnd);
       };
-    } 
+    }
   }, [isDragging]);
 
   return (
     <div
       ref={ref}
-      className={cls(
+      className={clsx(
         'hover:bg-brand-default dark:hover:bg-brand-default flex items-center justify-center gap-2 border-slate-200 dark:border-neutral-800',
         {
           'bg-brand-default dark:bg-brand-default': isDragging,
@@ -85,7 +91,7 @@ export const GridResizer = forwardRef<
       )}
     >
       <div
-        className={cls({
+        className={clsx({
           'fixed inset-0 z-10': isDragging,
           hidden: !isDragging,
           'cursor-col-resize': !props.isHorizontal,

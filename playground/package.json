@@ -14,7 +14,7 @@
     "@types/react-dom": "18.2.4",
     "add": "^2.0.6",
     "autoprefixer": "10.4.14",
-    "classnames": "^2.3.2",
+    "clsx": "^1.2.1",
     "eslint": "^8.34.0",
     "eslint-config-next": "13.4.4",
     "jotai": "^2.1.0",

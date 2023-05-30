@@ -12,7 +12,6 @@ import { files as nextjsFiles } from '@/configurations/nextjs';
 import { MonacoEditor } from './monaco-editor';
 import { GridResizer } from './gridResize';
 import { useRef, useState } from 'react';
-import cls from 'classnames';
 import { FrameworkSwitcher } from './framework-switcher';
 import { useAtomValue, atom } from 'jotai';
 
