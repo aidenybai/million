@@ -14,5 +14,12 @@
   "blog": {
     "type": "page",
     "title": "Blog"
+  },
+  "about": {
+    "type": "page",
+    "title": "About",
+    "theme": {
+      "typesetting": "article"
+    }
   }
 }
