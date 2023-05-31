@@ -1,4 +1,3 @@
-'use client';
 import {
   type SandpackPredefinedTemplate,
   type SandpackFiles,
@@ -13,11 +12,10 @@ import { files as nextjsFiles } from '@/configurations/nextjs';
 import { MonacoEditor } from './monaco-editor';
 import { GridResizer } from './gridResize';
 import { useRef, useState } from 'react';
-import cls from 'classnames';
+import { FrameworkSwitcher } from './framework-switcher';
+import { useAtomValue, atom } from 'jotai';
 
-type Props = {
-  framework?: Frameworks;
-};
+export const frameworkAtom = atom<Frameworks>('react');
 
 const FRAMEWORK_TEMPLATE_MAP: Record<Frameworks, SandpackPredefinedTemplate> = {
   nextjs: 'nextjs',
@@ -29,7 +27,9 @@ const FRAMEWORK_FILES_MAP: Record<Frameworks, SandpackFiles> = {
   nextjs: nextjsFiles,
 };
 
-export const Editor: React.FC<Props> = ({ framework = 'react' }) => {
+export const Editor: React.FC = () => {
+  const framework = useAtomValue(frameworkAtom);
+
   const template = FRAMEWORK_TEMPLATE_MAP[framework];
   const files = FRAMEWORK_FILES_MAP[framework];
   const dependencies = {
@@ -39,7 +39,7 @@ export const Editor: React.FC<Props> = ({ framework = 'react' }) => {
   let resizerRef = useRef<null | HTMLDivElement>()!;
   let gridRef = useRef<null | HTMLDivElement>()!;
   const [left, setLeft] = useState(0.5);
-  const [isHorizontal, setIsHorizontal] = useState(false)
+  const [isHorizontal, setIsHorizontal] = useState(false);
 
   const changeLeft = (clientX: number, clientY: number) => {
     let position: number;
@@ -65,21 +65,19 @@ export const Editor: React.FC<Props> = ({ framework = 'react' }) => {
   };
   return (
     <div className="flex flex-col h-100vw">
-      <header
-        style={{ height: 50 }}
-      >
-        header
-      </header>
+      <header style={{ height: 50 }}>header</header>
       <SandpackProvider
         theme="dark"
         template={template}
         customSetup={{ dependencies }}
         files={files}
       >
+        <FrameworkSwitcher />
         <SandpackLayout
           ref={gridRef as any}
           className="flex"
-          style={{ height: 'calc(100vh - 50px)' }}
+          // I want this to be dyanmic with whatever else is in the parent div but I can't figure it out
+          style={{ height: 'calc(100vh - 100px)' }}
         >
           <MonacoEditor flex={left} />
 
@@ -91,6 +89,7 @@ export const Editor: React.FC<Props> = ({ framework = 'react' }) => {
 
           <SandpackPreview
             style={{ height: '100%', flex: 1 - left }}
+            showOpenInCodeSandbox={false}
           ></SandpackPreview>
         </SandpackLayout>
       </SandpackProvider>

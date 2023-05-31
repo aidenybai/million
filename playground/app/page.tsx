@@ -1,3 +1,5 @@
+'use client';
+
 import { Editor } from '@/components/editor';
 
 const Home: React.FC = () => {
