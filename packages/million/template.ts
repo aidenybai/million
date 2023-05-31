@@ -1,4 +1,3 @@
-import { Block } from './block';
 import {
   X_CHAR,
   VOID_ELEMENTS,
@@ -26,7 +25,9 @@ export const renderToTemplate = (
   ) {
     return String(vnode);
   }
+    // eslint-disable-next-line
   if (vnode == undefined || vnode === false) return '';
+
 
   let props = '';
   let children = '';
