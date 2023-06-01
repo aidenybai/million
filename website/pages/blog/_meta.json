@@ -8,5 +8,6 @@
       "typesetting": "article"
     }
   },
+  "behind-the-block": "Behind the block()",
   "virtual-dom": "Virtual DOM: Back in Block"
 }
