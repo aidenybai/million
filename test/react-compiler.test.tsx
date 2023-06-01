@@ -1,14 +1,14 @@
-import { describe, expect, it } from 'vitest';
-import { parseSync } from '@babel/core';
+import { describe, it } from 'vitest';
+import { parseAsync } from '@babel/core';
 import million from '../packages/compiler';
 
 const BABEL_CONFIG = {
   plugins: ['@babel/plugin-syntax-jsx', million.babel],
 };
 
-describe('react-compiler', () => {
-  it('should compile hooks', () => {
-    const ast = parseSync(
+describe.concurrent('react-compiler', () => {
+  it('should compile hooks', async ({ expect }) => {
+    const ast = await parseAsync(
       `
         import React, { useState } from 'react';
         import { createRoot } from 'react-dom/client';
@@ -35,8 +35,8 @@ describe('react-compiler', () => {
     expect(ast).toMatchSnapshot();
   });
 
-  it('should compile objects', () => {
-    const ast = parseSync(
+  it('should compile objects', async ({ expect }) => {
+    const ast = await parseAsync(
       `
         import React, { useState } from 'react';
         import { createRoot } from 'react-dom/client';
@@ -61,8 +61,8 @@ describe('react-compiler', () => {
     expect(ast).toMatchSnapshot();
   });
 
-  it('should compile derived values', () => {
-    const ast = parseSync(
+  it('should compile derived values', async ({ expect }) => {
+    const ast = await parseAsync(
       `
         import React, { useState } from 'react';
         import { createRoot } from 'react-dom/client';
@@ -87,8 +87,8 @@ describe('react-compiler', () => {
     expect(ast).toMatchSnapshot();
   });
 
-  it('should compile event listeners', () => {
-    const ast = parseSync(
+  it('should compile event listeners', async ({ expect }) => {
+    const ast = await parseAsync(
       `
         import React, { useState } from 'react';
         import { createRoot } from 'react-dom/client';
@@ -113,8 +113,8 @@ describe('react-compiler', () => {
     expect(ast).toMatchSnapshot();
   });
 
-  it('should compile identifiers', () => {
-    const ast = parseSync(
+  it('should compile identifiers', async ({ expect }) => {
+    const ast = await parseAsync(
       `
         import React, { useState } from 'react';
         import { createRoot } from 'react-dom/client';
