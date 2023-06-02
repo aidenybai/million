@@ -59,19 +59,17 @@ Blocks are essentially components wrapped by `block()`. Below is an example of a
 import { useState } from 'react';
 import { block } from 'million/react';
 
-export function Counter({ initialCount }) {
+// Just wrap Counter in a block() function!
+const Counter = block(function Counter({ initialCount }) {
   const [count, setCount] = useState(initialCount);
   const handleClick = () => {
     setCount(count + 1);
   };
 
   return <button onClick={handleClick}>{count}</button>;
-}
+});
 
-// Just wrap Counter in a block() function!
-const CounterBlock = block(Counter);
-
-export default CounterBlock;
+export default Counter;
 ```
 
 [**→ Try the quickstart**](https://million.dev/docs/quickstart)
