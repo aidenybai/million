@@ -15,12 +15,26 @@ export const transformReact =
       const importSource = blockFunction.path.parent;
 
       // Check if import is from million/react
+      if (!t.isVariableDeclarator(path.parentPath.node)) {
+        return throwCodeFrame({
+          message:
+            'You must assign the block to a variable. (e.g. const MyBlock = block(MyComponent))',
+          localPath: path.parentPath,
+          path: path.parentPath,
+        });
+      }
+
       if (
-        !t.isVariableDeclarator(path.parentPath.node) ||
         !t.isImportDeclaration(importSource) ||
         !importSource.source.value.includes('million')
       ) {
-        return;
+        const importSourcePath = blockFunction.path.parentPath!;
+        return throwCodeFrame({
+          message:
+            'Found unsupported import for block. Make sure blocks are imported from million/react.',
+          localPath: importSourcePath,
+          path: importSourcePath,
+        });
       }
 
       const IS_PREACT =
@@ -46,8 +60,28 @@ export const transformReact =
       }
 
       // Get the name of the component
-      const componentId = path.node.arguments[0] as t.Identifier;
-      if (!t.isIdentifier(componentId)) {
+      const argument = path.node.arguments[0];
+      let overrideBinding;
+
+      if (
+        t.isFunctionExpression(argument) ||
+        t.isArrowFunctionExpression(argument)
+      ) {
+        const fnVariable = path.scope.generateUidIdentifier('fn$');
+        path.parentPath.parentPath?.insertBefore(
+          t.functionDeclaration(
+            fnVariable,
+            argument.params,
+            t.isBlockStatement(argument.body)
+              ? argument.body
+              : t.blockStatement([t.returnStatement(argument.body)]),
+          ),
+        );
+        path.node.arguments[0] = fnVariable;
+        overrideBinding = {
+          path: path.parentPath.parentPath?.getPrevSibling(),
+        };
+      } else if (!t.isIdentifier(argument)) {
         throwCodeFrame({
           message:
             'Found unsupported argument for block. Make sure blocks consume the reference to a component function, not the direct declaration.',
@@ -55,7 +89,10 @@ export const transformReact =
           path,
         });
       }
-      const componentBinding = path.scope.getBinding(componentId.name)!;
+
+      const componentBinding =
+        overrideBinding ||
+        path.scope.getBinding((argument as t.Identifier).name);
       const component = t.cloneNode(componentBinding.path.node);
 
       if (t.isFunctionDeclaration(component)) {
@@ -108,7 +145,9 @@ const handleComponent = (
   }
 
   const bodyLength = componentFunction.body.length;
-  const correctSubPath = t.isVariableDeclarator(component)
+  const correctSubPath = t.isFunctionExpression(component)
+    ? 'body'
+    : t.isVariableDeclarator(component)
     ? 'init.body.body'
     : 'body.body';
 
@@ -133,6 +172,7 @@ const handleComponent = (
       });
     }
   }
+
   const view = componentFunction.body[bodyLength - 1];
 
   if (t.isReturnStatement(view)) {

@@ -42,13 +42,11 @@ Million.js is a library that enables you to create _blocks_. A block is a specia
 Blocks are essentially components wrapped by `block(){:jsx}`.
 
 ```jsx {7}
-function Lion() {
+const LionBlock = block(function Lion() {
   return (
     <img src="https://million.dev/lion.svg" />
   );
-}
-
-const LionBlock = block(Lion);
+})
 ```
 
 Blocks can be used just like a normal React component:
@@ -58,7 +56,7 @@ export default function App() {
   return (
     <div>
       <h1>mil + LION = million</h1>
-      <DinoBlock />
+      <LionBlock />
     </div>
   );
 }
@@ -249,7 +247,18 @@ function Row({ adjective, color, noun }) {
 Then, we can wrap it with `block(){:jsx}` in order to optimize the `<Row />{:jsx}` component.
 
 ```jsx
-const RowBlock = block(Row);
+const RowBlock = block(
+  function Row({ adjective, color, noun }) {
+    return (
+      <tr>
+        <td>{adjective}</td>
+        <td>{color}</td>
+        <td>{noun}</td>
+        {...lotsOfElements}
+      </tr>
+    );
+  }
+);
 ```
 
 Once, we've optimized a row, we need to render it as a list:
@@ -297,18 +306,18 @@ Notice when you change the input value, the lag radar shows significantly less l
   import { buildData } from './data';
   import { block, For } from 'million/react';
 
-  function Row({ adjective, color, noun }) {
-    return (
-      <tr>
-        <td>{adjective}</td>
-        <td>{color}</td>
-        <td>{noun}</td>
-        {...lotsOfElements}
-      </tr>
-    );
-  }
-
-  const RowBlock = block(Row);
+  const RowBlock = block(
+    function Row({ adjective, color, noun }) {
+      return (
+        <tr>
+          <td>{adjective}</td>
+          <td>{color}</td>
+          <td>{noun}</td>
+          {...lotsOfElements}
+        </tr>
+      );
+    }
+  );
 
   function App() {
     const [rows, setRows] = useState(1);

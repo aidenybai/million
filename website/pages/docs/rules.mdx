@@ -184,6 +184,41 @@ You can't use spread attributes in Million.js, as they can introduce non-determi
 <div {...props} /> // ❌ Wrong
 ```
 
+### Block variable declaration
+
+<Callout type="error">
+  <code>
+  <strong>[Million.js]</strong>
+    You must assign the block to a variable. (e.g. const MyBlock = block(MyComponent))
+  </code>
+</Callout>
+
+Due to restrictions with the compiler, you must assign the block to a variable. This is because the compiler needs to analyze the block to ensure that it is valid.
+
+```jsx
+export default block(App); // ❌ Wrong
+
+const AppBlock = block(App); // ✅ Correct
+export default AppBlock;
+```
+
+### Unsupported import
+
+<Callout type="error">
+  <code>
+  <strong>[Million.js]</strong>
+    Found unsupported import for block. Make sure blocks are imported from million/react.
+  </code>
+</Callout>
+
+This may be caused by importing the block from the wrong place. Make sure you import the block from `million/react` instead of `million`.
+
+```jsx
+import { block } from 'million'; // ❌ Wrong
+
+import { block } from 'million/react'; // ✅ Correct
+```
+
 ## Using the compiler
 
 <Callout type="error">
