@@ -4,25 +4,21 @@ import type { NodePath } from '@babel/core';
 
 export const RENDER_SCOPE = 'million-render-scope';
 
+const seen = new WeakSet();
+
 export const transformReact =
   (options: Record<string, any> = {}) =>
   (path: NodePath<t.CallExpression>) => {
     // TODO: allow aliasing (block as newBlock)
-    if (t.isIdentifier(path.node.callee, { name: 'block' })) {
+    if (
+      t.isIdentifier(path.node.callee, { name: 'block' }) &&
+      !seen.has(path.node)
+    ) {
+      seen.add(path.node);
       // gets the binding for the "block()" in "block(Component)"
       const blockFunction = path.scope.getBinding(path.node.callee.name);
       if (!blockFunction) return;
       const importSource = blockFunction.path.parent;
-
-      // Check if import is from million/react
-      if (!t.isVariableDeclarator(path.parentPath.node)) {
-        return throwCodeFrame({
-          message:
-            'You must assign the block to a variable. (e.g. const MyBlock = block(MyComponent))',
-          localPath: path.parentPath,
-          path: path.parentPath,
-        });
-      }
 
       if (
         !t.isImportDeclaration(importSource) ||
@@ -67,17 +63,18 @@ export const transformReact =
         t.isFunctionExpression(argument) ||
         t.isArrowFunctionExpression(argument)
       ) {
-        const fnVariable = path.scope.generateUidIdentifier('fn$');
+        const anonymousComponentId =
+          path.scope.generateUidIdentifier('anonymous');
         path.parentPath.parentPath?.insertBefore(
           t.functionDeclaration(
-            fnVariable,
+            anonymousComponentId,
             argument.params,
             t.isBlockStatement(argument.body)
               ? argument.body
               : t.blockStatement([t.returnStatement(argument.body)]),
           ),
         );
-        path.node.arguments[0] = fnVariable;
+        path.node.arguments[0] = anonymousComponentId;
         overrideBinding = {
           path: path.parentPath.parentPath?.getPrevSibling(),
         };
@@ -179,8 +176,13 @@ const handleComponent = (
     const returnJsxPath = componentBinding.path.get(
       `${correctSubPath}.${bodyLength - 1}.argument`,
     );
-    const blockVariable = path.scope.generateUidIdentifier('block$');
-    const componentVariable = path.scope.generateUidIdentifier('component$');
+    const originalComponentName = String(component.id.name);
+    const statelessComponentId = path.scope.generateUidIdentifier(
+      `${originalComponentName}_view$`,
+    );
+    const wrapperComponentId = path.scope.generateUidIdentifier(
+      `${originalComponentName}_block$`,
+    );
 
     if (t.isJSXFragment(view.argument)) {
       view.argument = t.jsxElement(
@@ -200,12 +202,12 @@ const handleComponent = (
     );
 
     const forgettiCompatibleComponentName = t.identifier(
-      `useBlock${componentVariable.name}`,
+      `use${statelessComponentId.name}`,
     );
 
     // Creates a new function that will be wrapped in block() instead
     const blockFunction = t.functionDeclaration(
-      blockVariable,
+      statelessComponentId,
       // Destructures props
       [
         t.objectPattern(
@@ -234,17 +236,23 @@ const handleComponent = (
     // Swaps the names of the functions so that the component that wraps the
     // block is called instead
     const blockComponent = path.parentPath.node as any;
-    if (!t.isVariableDeclarator(blockComponent)) {
-      throwCodeFrame({
-        message: 'Block needs to be defined as a variable declaration.',
-        localPath: path,
-        path,
-      });
+    let temp;
+    if (t.isVariableDeclarator(blockComponent)) {
+      temp = blockComponent.id as t.Identifier;
+      blockComponent.id = forgettiCompatibleComponentName;
+    } else {
+      path.parentPath.parentPath?.insertBefore(
+        t.variableDeclaration('const', [
+          t.variableDeclarator(
+            forgettiCompatibleComponentName,
+            blockComponent.arguments[0],
+          ),
+        ]),
+      );
+      temp = path.node.arguments[0];
     }
-    const temp = blockComponent.id as t.Identifier;
-    blockComponent.id = forgettiCompatibleComponentName;
-    component.id = componentVariable;
-    path.node.arguments[0] = blockVariable;
+    path.node.arguments[0] = statelessComponentId;
+    component.id = wrapperComponentId;
 
     const parentPath = path.parentPath.parentPath;
     if (t.isFunctionDeclaration(component)) {
@@ -253,11 +261,16 @@ const handleComponent = (
       parentPath?.insertBefore(t.variableDeclaration('const', [component]));
     }
     parentPath?.insertBefore(blockFunction);
-    parentPath?.insertBefore(
-      t.variableDeclaration('const', [
-        t.variableDeclarator(temp, component.id),
-      ]),
-    );
+
+    if (t.isVariableDeclarator(blockComponent)) {
+      parentPath?.insertBefore(
+        t.variableDeclaration('const', [
+          t.variableDeclarator(temp, component.id),
+        ]),
+      );
+    } else {
+      path.replaceWith(temp);
+    }
   }
 };
 
