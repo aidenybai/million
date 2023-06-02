@@ -10,7 +10,6 @@ import {
   block as createBlock,
   mount$,
   patch as patchBlock,
-  remove$,
 } from '../million/block';
 import { Map$, MapSet$, MapHas$, MapGet$ } from '../million/constants';
 import { queueMicrotask$ } from '../million/dom';
@@ -55,7 +54,7 @@ export const block = (fn: ComponentType<any>, options: Options = {}) => {
 
     const effect = useCallback(() => {
       const currentBlock = block(props, props.key, options.shouldUpdate);
-      if (ref.current) {
+      if (ref.current && patch.current === null) {
         queueMicrotask$(() => {
           mount$.call(currentBlock, ref.current!, null);
         });
@@ -65,9 +64,6 @@ export const block = (fn: ComponentType<any>, options: Options = {}) => {
           });
         };
       }
-      return () => {
-        remove$.call(currentBlock);
-      };
     }, []);
 
     const marker = useMemo(() => {
