@@ -66,7 +66,7 @@ Then, add the compiler to your build tool of choice:
 
     export default defineConfig({
       vite: {
-        plugins: [million.vite({ mode: 'react-server' })]
+        plugins: [million.vite({ mode: 'react', server: true })]
       }
     });
     ```
@@ -77,7 +77,7 @@ Then, add the compiler to your build tool of choice:
 
     exports.onCreateWebpackConfig = ({ actions }) => {
       actions.setWebpackConfig({
-        plugins: [million.webpack({ mode: 'react-server' })],
+        plugins: [million.webpack({ mode: 'react', server: true })],
       })
     }
     ```
@@ -128,7 +128,7 @@ Then, add the compiler to your build tool of choice:
 
     export default defineConfig({
       vite: {
-        plugins: [million.vite({ mode: 'preact-server' })]
+        plugins: [million.vite({ mode: 'preact', server: true })]
       }
     });
     ```
@@ -185,6 +185,24 @@ Then, add the compiler to your build tool of choice:
   </Tabs>
 </details>
 
-### Profit 🎉
+### Customizing the config
+
+Here some of the options you can pass to the compiler:
+
+```typescript
+interface Options {
+  mode: 'react' | 'preact' | 'vdom' // default: 'react'
+  optimize: boolean // default: false
+  server: boolean // default: false
+}
+```
+
+### Using the experimental Optimizer
+
+<Callout type="warning">
+ This is a _**highly experimental**_ feature. It's not recommended to use this in production.
+</Callout>
+
+You can enable the experimental optimizer by passing `optimize: true{:js}` to the compiler options. This will allow the server to attempt to statically analyze blocks beforehand for a zero initialization cost.
 
 </Steps>
