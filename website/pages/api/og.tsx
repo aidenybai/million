@@ -1,3 +1,4 @@
+// eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { ImageResponse } from '@vercel/og';
 import type { NextRequest } from 'next/server';
