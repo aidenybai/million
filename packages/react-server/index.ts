@@ -6,8 +6,6 @@ import type { ComponentProps, ComponentType } from 'react';
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 let millionModule: typeof import('million/react') | null = null;
 
-export type { MillionBlock } from '../react/types';
-
 export const block = (Component: ComponentType<any>) => {
   let blockFactory: any;
   function MillionBlockLoader(props: ComponentProps<any>) {
