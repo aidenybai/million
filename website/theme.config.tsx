@@ -167,15 +167,13 @@ const config: DocsThemeConfig = {
     const favicon = String(ogConfig.favicon);
     const title = String(frontMatter.title || ogConfig.title);
     const description = String(frontMatter.description || ogConfig.description);
-    const canonical = new URL(asPath, 'https://million.dev').toString();
-
-    const ogUrl = `https://million.dev/api/og?title=${
-      ogConfig.title
-    }&description=${ogConfig.description}&note=${
+    const note =
       (frontMatter.date as string | undefined) ?? pathname === '/'
         ? 'million.dev'
-        : pathname
-    }`;
+        : pathname;
+    const canonical = new URL(asPath, 'https://million.dev').toString();
+
+    const ogUrl = `https://million.dev/api/og?title=${title}&description=${description}&note=${note}`;
 
     return (
       <>
