@@ -36,20 +36,20 @@ export default async function handler(request: NextRequest) {
       {
         width: 800,
         height: 400,
-        fonts: [
-          {
-            name: 'Space Grotesk',
-            data: SpaceGrotesk,
-            weight: 500 as const,
-            style: 'normal' as const,
-          },
-          {
-            name: 'Space Grotesk',
-            data: SpaceGrotesk,
-            weight: 700 as const,
-            style: 'normal' as const,
-          },
-        ],
+        // fonts: [
+        //   {
+        //     name: 'Space Grotesk',
+        //     data: SpaceGrotesk,
+        //     weight: 500 as const,
+        //     style: 'normal' as const,
+        //   },
+        //   {
+        //     name: 'Space Grotesk',
+        //     data: SpaceGrotesk,
+        //     weight: 700 as const,
+        //     style: 'normal' as const,
+        //   },
+        // ],
       },
     );
   } catch (err: unknown) {
@@ -75,7 +75,7 @@ export function OgImage({
   return (
     <div
       tw="h-full w-full flex flex-col bg-[#111] p-10 pb-5"
-      style={{ fontFamily: 'Space Grotesk' }}
+      // style={{ fontFamily: 'Space Grotesk' }}
     >
       <div tw="flex flex-col">
         <span tw="text-white text-6xl font-bold pb-5">{title}</span>
