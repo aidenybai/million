@@ -12,18 +12,22 @@ import type { Options } from './types';
 import type { Props } from '../million';
 import type { ReactNode, ComponentType } from 'react';
 
-// @ts-expect-error - CSSStyleSheet is not supported on Safari
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-if (CSSStyleSheet.prototype.replaceSync) {
-  const sheet = new CSSStyleSheet();
-  sheet.replaceSync(css);
-  document.adoptedStyleSheets = [sheet];
-} else {
-  const style = document.createElement('style');
-  document.head.appendChild(style);
-  style.type = 'text/css';
-  style.appendChild(document.createTextNode(css));
-}
+export const initCSS = () => {
+  // @ts-expect-error - CSSStyleSheet is not supported on Safari
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (CSSStyleSheet.prototype.replaceSync) {
+    const sheet = new CSSStyleSheet();
+    sheet.replaceSync(css);
+    document.adoptedStyleSheets = [sheet];
+  } else {
+    const style = document.createElement('style');
+    document.head.appendChild(style);
+    style.type = 'text/css';
+    style.appendChild(document.createTextNode(css));
+  }
+};
+
+queueMicrotask$(initCSS);
 
 export const REGISTRY = new Map$<
   (props: Props) => ReactNode,
@@ -51,7 +55,10 @@ export const block = (fn: ComponentType<any> | null, options: Options = {}) => {
         });
         patch.current = (props: Props) => {
           queueMicrotask$(() => {
-            patchBlock(currentBlock, block(props));
+            patchBlock(
+              currentBlock,
+              block(props, props.key, options.shouldUpdate),
+            );
           });
         };
       }

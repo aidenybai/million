@@ -1,5 +1,6 @@
 import * as t from '@babel/types';
 import { RENDER_SCOPE } from '../../react/constants';
+import { createDirtyChecker } from '../experimental/utils';
 import { createDeopt, resolvePath, warn, isComponent } from './utils';
 import { optimize } from './optimize';
 import type { Options } from '../plugin';
@@ -175,10 +176,11 @@ export const transformComponent = (
    * ```js
    * const puppet = block(({ foo }) => {
    *  return ...
-   * })
+   * }, { shouldUpdate: (oldProps, newProps) => oldProps.foo !== newProps.foo })
    * ```
    */
 
+  const holes = dynamics.data.map(({ id }) => id.name);
   const puppetBlock = t.callExpression(block, [
     t.arrowFunctionExpression(
       [
@@ -188,6 +190,9 @@ export const transformComponent = (
       ],
       t.blockStatement([returnStatement]),
     ),
+    t.objectExpression([
+      t.objectProperty(t.identifier('shouldUpdate'), createDirtyChecker(holes)),
+    ]),
   ]);
 
   /**
@@ -260,7 +265,7 @@ export const transformComponent = (
     const { variables, blockFactory } = optimize(
       options,
       {
-        dynamics,
+        holes,
         jsx: returnStatement.argument as t.JSXElement,
       },
       SHARED,
