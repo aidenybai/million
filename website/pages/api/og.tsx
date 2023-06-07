@@ -10,14 +10,16 @@ export const config = {
 // eslint-disable-next-line import/no-default-export
 export default async function handler(request: NextRequest) {
   try {
-    const SpaceGrotesk = await fetch(
-      String(
-        new URL(
-          '../../public/SpaceGrotesk-VariableFont_wght.ttf',
-          import.meta.url,
+    const [SpaceGrotesk, SpaceGroteskBold] = await Promise.all([
+      fetch(
+        String(
+          new URL('../../public/SpaceGrotesk-Medium.ttf', import.meta.url),
         ),
-      ),
-    ).then((res) => res.arrayBuffer());
+      ).then((res) => res.arrayBuffer()),
+      fetch(
+        String(new URL('../../public/SpaceGrotesk-Bold.ttf', import.meta.url)),
+      ).then((res) => res.arrayBuffer()),
+    ]);
 
     const { searchParams } = new URL(request.url);
 
@@ -36,20 +38,20 @@ export default async function handler(request: NextRequest) {
       {
         width: 800,
         height: 400,
-        // fonts: [
-        //   {
-        //     name: 'Space Grotesk',
-        //     data: SpaceGrotesk,
-        //     weight: 500 as const,
-        //     style: 'normal' as const,
-        //   },
-        //   {
-        //     name: 'Space Grotesk',
-        //     data: SpaceGrotesk,
-        //     weight: 700 as const,
-        //     style: 'normal' as const,
-        //   },
-        // ],
+        fonts: [
+          {
+            name: 'Space Grotesk',
+            data: SpaceGrotesk,
+            weight: 500 as const,
+            style: 'normal' as const,
+          },
+          {
+            name: 'Space Grotesk Bold',
+            data: SpaceGroteskBold,
+            weight: 700 as const,
+            style: 'normal' as const,
+          },
+        ],
       },
     );
   } catch (err: unknown) {
@@ -75,10 +77,15 @@ export function OgImage({
   return (
     <div
       tw="h-full w-full flex flex-col bg-[#111] p-10 pb-5"
-      // style={{ fontFamily: 'Space Grotesk' }}
+      style={{ fontFamily: 'Space Grotesk' }}
     >
       <div tw="flex flex-col">
-        <span tw="text-white text-6xl font-bold pb-5">{title}</span>
+        <span
+          tw="text-white text-6xl font-bold pb-5"
+          style={{ fontFamily: 'Space Grotesk Bold' }}
+        >
+          {title}
+        </span>
         <span tw="text-[#b9bdc4] text-3xl flex">{description}</span>
       </div>
       <div tw="mt-auto flex-col flex">
