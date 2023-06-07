@@ -153,7 +153,7 @@ const config: DocsThemeConfig = {
     ),
   },
   head: () => {
-    const { asPath } = useRouter();
+    const { asPath, pathname } = useRouter();
     const { frontMatter } = useConfig();
 
     const ogConfig = {
@@ -172,7 +172,9 @@ const config: DocsThemeConfig = {
     const ogUrl = `https://million.dev/api/og?title=${
       ogConfig.title
     }&description=${ogConfig.description}&note=${
-      (frontMatter.date as string | undefined) ?? 'aidenybai/million'
+      (frontMatter.date as string | undefined) ?? pathname === '/'
+        ? 'million.dev'
+        : pathname
     }`;
 
     return (
