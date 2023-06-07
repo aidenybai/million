@@ -1,12 +1,12 @@
 import { createElement, useEffect, useReducer } from 'react';
-import type { ComponentProps, FunctionComponent } from 'react';
+import { RENDER_SCOPE } from '../react/constants';
+import type { ComponentProps, ComponentType } from 'react';
 
 // @ts-expect-error - is defined
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 let millionModule: typeof import('million/react') | null = null;
-const RENDER_SCOPE = 'million-render-scope';
 
-export const block = (Component: FunctionComponent) => {
+export const block = (Component: ComponentType<any>) => {
   let blockFactory: any;
   function MillionBlockLoader(props: ComponentProps<any>) {
     useEffect(() => {

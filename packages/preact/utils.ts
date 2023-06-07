@@ -1,5 +1,6 @@
 import { render, Fragment } from 'preact';
 import { document$ } from '../million/dom';
+import { RENDER_SCOPE } from '../react/constants';
 import type {
   VNode as PreactNode,
   ComponentChild,
@@ -7,9 +8,7 @@ import type {
 } from 'preact';
 import type { VNode } from '../million';
 
-export const RENDER_SCOPE = 'million-render-scope';
-
-export const renderReactScope = (vnode: PreactNode) => {
+export const renderPreactScope = (vnode: PreactNode) => {
   return (el: HTMLElement | null) => {
     const parent = el ?? document$.createElement(RENDER_SCOPE);
     render(vnode, parent);
@@ -28,7 +27,7 @@ export const unwrap = (vnode?: ComponentChild): VNode => {
   }
   const type = vnode.type;
   if (typeof type === 'function') {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+     
     return unwrap((type as any)(vnode.props ?? {}));
   }
   if (typeof type === 'object' && '$' in type) return type;
