@@ -195,25 +195,11 @@ const config: DocsThemeConfig = {
   useNextSeoProps() {
     const { asPath } = useRouter();
 
-    const shared = {
-      openGraph: {
-        images: [
-          {
-            url: 'https://million.dev/banner.png',
-            width: 1328,
-            height: 345,
-            alt: 'Million.js banner',
-            type: 'image/png',
-          },
-        ],
-      },
-    };
-
     if (['/', '/docs'].includes(asPath)) {
-      return { ...shared, titleTemplate: 'Million.js' };
+      return { titleTemplate: 'Million.js' };
     }
 
-    return { ...shared, titleTemplate: `%s | Million.js` };
+    return { titleTemplate: `%s | Million.js` };
   },
   banner: {
     key: '2.0.0-release',

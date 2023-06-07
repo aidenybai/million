@@ -15,7 +15,7 @@ export function ExtraContent() {
   useEffect(() => {
     const setup = async () => {
       const { block, mount, patch } = await import(
-        './local-million/million.mjs'
+        './million-library/million.mjs'
       );
       const { createRoot } = await import('react-dom/client');
 
