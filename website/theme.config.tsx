@@ -185,11 +185,33 @@ const config: DocsThemeConfig = {
         <meta name="twitter:site" content={`@${ogConfig.author.twitter}`} />
         <meta name="twitter:creator" content={`@${ogConfig.author.twitter}`} />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:image" content="https://million.dev/banner.png" />
+        <meta property="twitter:image" content={ogUrl} />
+        <meta property="og:image" content={ogUrl} />
 
         <link rel="shortcut icon" href={favicon} type="image/svg+xml" />
         <link rel="apple-touch-icon" href={favicon} type="image/svg+xml" />
         <meta name="apple-mobile-web-app-title" content={title} />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          as="font"
+          href="https://fonts.gstatic.com/s/spacegrotesk/v13/V8mQoQDjQSkFtoMM3T6r8E7mF71Q-gOoraIAEj7aUXskPMBBSSJLm2E.woff2"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          as="font"
+          href="https://fonts.gstatic.com/s/spacegrotesk/v13/V8mQoQDjQSkFtoMM3T6r8E7mF71Q-gOoraIAEj7oUXskPMBBSSJLm2E.woff2"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
       </>
     );
   },
