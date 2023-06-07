@@ -9,34 +9,34 @@ import { RENDER_SCOPE } from './constants';
 import type { Props } from '../million';
 import type { FC, ReactNode, MutableRefObject } from 'react';
 
-interface MillionArrayProps {
-  each: any[];
-  children: (value: any, i: number) => ReactNode;
+interface MillionArrayProps<T> {
+  each: T[];
+  children: (value: T, i: number) => ReactNode;
 }
 
-interface ArrayCache {
-  each: any[] | null;
-  children: any[] | null;
+interface ArrayCache<T> {
+  each: T[] | null;
+  children: T[] | null;
   block?: ReturnType<typeof createBlock>;
 }
 
-const MillionArray: FC<MillionArrayProps> = ({ each, children }) => {
+const MillionArray = <T>({ each, children }: MillionArrayProps<T>) => {
   const ref = useRef<HTMLElement>(null);
   const fragmentRef = useRef<ReturnType<typeof mapArray> | null>(null);
-  const cache = useRef<ArrayCache>({
+  const cache = useRef<ArrayCache<T>>({
     each: null,
     children: null,
   });
   if (fragmentRef.current && each !== cache.current.each) {
     queueMicrotask$(() => {
-      const newChildren = createChildren(each, children, cache);
+      const newChildren = createChildren<T>(each, children, cache);
       arrayPatch$.call(fragmentRef.current, mapArray(newChildren));
     });
   }
   useEffect(() => {
     if (fragmentRef.current) return;
     queueMicrotask$(() => {
-      const newChildren = createChildren(each, children, cache);
+      const newChildren = createChildren<T>(each, children, cache);
       fragmentRef.current = mapArray(newChildren);
       arrayMount$.call(fragmentRef.current, ref.current!);
     });
@@ -49,10 +49,10 @@ export const For = memo(MillionArray, (oldProps, newProps) =>
   Object.is(newProps.each, oldProps.each),
 );
 
-const createChildren = (
+const createChildren = <T>(
   each: any[],
   getComponent: any,
-  cache: MutableRefObject<ArrayCache>,
+  cache: MutableRefObject<ArrayCache<T>>,
 ) => {
   const children = Array(each.length);
   const currentCache = cache.current;
