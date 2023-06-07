@@ -16,8 +16,8 @@ import { Map$, MapSet$, MapHas$, MapGet$ } from '../million/constants';
 import { queueMicrotask$ } from '../million/dom';
 import { unwrap } from './utils';
 import { Effect, RENDER_SCOPE } from './constants';
-import type { Options, MillionProps } from './types';
-import type { Props } from '../million';
+import type { Options, MillionProps } from 'packages/types';
+import { Props } from 'packages/million';
 
 export const REGISTRY = new Map$<
   (props: Props) => ReactNode,
