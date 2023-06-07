@@ -10,7 +10,11 @@ export interface Shared {
   isReact: boolean;
   imports: {
     cache: Map<string, t.Identifier>;
-    addNamed: (name: string, source?: string) => t.Identifier;
+    addNamed: (
+      name: string,
+      source?: string,
+      forceClient?: boolean,
+    ) => t.Identifier;
   };
 }
 

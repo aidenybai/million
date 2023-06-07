@@ -15,9 +15,9 @@
     "type": "page",
     "title": "Blog"
   },
-  "about": {
+  "readme": {
     "type": "page",
-    "title": "About",
+    "title": "Readme",
     "theme": {
       "typesetting": "article"
     }

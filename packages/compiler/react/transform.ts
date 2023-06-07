@@ -407,7 +407,11 @@ export const transformJSX = (
       jsxPath,
     );
 
-    const renderReactScope = imports.addNamed('renderReactScope');
+    const renderReactScope = imports.addNamed(
+      'renderReactScope',
+      undefined,
+      true,
+    );
 
     const nestedRender = t.callExpression(renderReactScope, [
       t.callExpression(createElement, [
@@ -572,7 +576,11 @@ export const transformJSX = (
             resolvePath(expressionPath),
           );
 
-          const renderReactScope = imports.addNamed('renderReactScope');
+          const renderReactScope = imports.addNamed(
+            'renderReactScope',
+            undefined,
+            true,
+          );
 
           const nestedRender = t.callExpression(renderReactScope, [
             newJsxArrayIterator,
@@ -610,7 +618,11 @@ export const transformJSX = (
             resolvePath(expressionPath),
           );
 
-          const renderReactScope = imports.addNamed('renderReactScope');
+          const renderReactScope = imports.addNamed(
+            'renderReactScope',
+            undefined,
+            true,
+          );
 
           const id = createDynamic(
             null,
