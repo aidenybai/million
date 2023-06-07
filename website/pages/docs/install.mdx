@@ -205,4 +205,10 @@ interface Options {
 
 You can enable the experimental optimizer by passing `optimize: true{:js}` to the compiler options. This will allow the server to attempt to statically analyze blocks beforehand for a zero initialization cost.
 
+You can also add a leading comment of `/* @optimize */` to any block to opt-in to optimization on a component-by-component basis.
+
+```js
+const AppBlock = /* @optimize */ block(App);
+```
+
 </Steps>

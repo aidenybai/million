@@ -18,6 +18,16 @@ export const visitor = (options: Options = {}, isReact = true) => {
     // TODO: check if the block is aliased (e.g. import { block as createBlock } ...)
     if (!t.isIdentifier(callSite.callee, { name: 'block' })) return;
 
+    // Allow the user to opt into experimental optimization by adding a /* @optimize */
+    // to the block call.
+    if (
+      callSite.leadingComments?.some(
+        (comment) => comment.value.trim() === '@optimize',
+      )
+    ) {
+      options.optimize = true;
+    }
+
     /**
      * It's possible that the block call is in a scope we don't have access to.
      * This is when we can't access the import specifier for the block function.
