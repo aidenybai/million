@@ -4,7 +4,8 @@ import { mapArray, block as createBlock } from '../million';
 import { MapSet$, MapHas$, MapGet$ } from '../million/constants';
 import { queueMicrotask$ } from '../million/dom';
 import { REGISTRY } from './block';
-import { RENDER_SCOPE, renderReactScope } from './utils';
+import { renderReactScope } from './utils';
+import { RENDER_SCOPE } from './constants';
 import type { Props } from '../million';
 import type { FC, ReactNode, MutableRefObject } from 'react';
 
@@ -54,18 +55,19 @@ const createChildren = (
   cache: MutableRefObject<ArrayCache>,
 ) => {
   const children = Array(each.length);
+  const currentCache = cache.current;
   for (let i = 0, l = each.length; i < l; ++i) {
-    if (cache.current.each && cache.current.each[i] === each[i]) {
-      children[i] = cache.current.children?.[i];
+    if (currentCache.each && currentCache.each[i] === each[i]) {
+      children[i] = currentCache.children?.[i];
       continue;
     }
     const vnode = getComponent(each[i], i);
 
     if (MapHas$.call(REGISTRY, vnode.type)) {
-      if (!cache.current.block) {
-        cache.current.block = MapGet$.call(REGISTRY, vnode.type)!;
+      if (!currentCache.block) {
+        currentCache.block = MapGet$.call(REGISTRY, vnode.type)!;
       }
-      children[i] = cache.current.block!(vnode.props);
+      children[i] = currentCache.block!(vnode.props);
     } else {
       const block = createBlock((props?: Props) => {
         return {
@@ -81,11 +83,11 @@ const createChildren = (
       };
 
       MapSet$.call(REGISTRY, vnode.type, currentBlock);
-      cache.current.block = currentBlock as ReturnType<typeof createBlock>;
+      currentCache.block = currentBlock as ReturnType<typeof createBlock>;
       children[i] = currentBlock(vnode.props);
     }
   }
-  cache.current.each = each;
-  cache.current.children = children;
+  currentCache.each = each;
+  currentCache.children = children;
   return children;
 };

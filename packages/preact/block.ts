@@ -1,22 +1,17 @@
 import { Fragment, h } from 'preact';
-import { useCallback, useEffect, useMemo, useRef } from 'preact/hooks';
+import { useCallback, useMemo, useRef } from 'preact/hooks';
 import {
   block as createBlock,
   mount$,
   patch as patchBlock,
-  remove$,
 } from '../million/block';
 import { Map$, MapGet$, MapHas$, MapSet$ } from '../million/constants';
 import { document$, queueMicrotask$ } from '../million/dom';
-import { RENDER_SCOPE, unwrap } from './utils';
+import { Effect, RENDER_SCOPE, css } from '../react/constants';
+import { unwrap } from './utils';
+import type { Options } from '../react/types';
 import type { Props } from '../million';
-import type { ComponentType, FunctionComponent, VNode } from 'preact';
-
-interface Options {
-  shouldUpdate?: (oldProps: Props, newProps: Props) => boolean;
-}
-
-const css = `${RENDER_SCOPE} { display: contents }`;
+import type { ComponentType, VNode } from 'preact';
 
 // @ts-expect-error - CSSStyleSheet is not supported on Safari
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -36,10 +31,12 @@ export const REGISTRY = new Map$<
   ReturnType<typeof createBlock>
 >();
 
-export const block = (fn: ComponentType<any>, options: Options = {}) => {
+export const block = (fn: ComponentType<any> | null, options: Options = {}) => {
   const block = MapHas$.call(REGISTRY, fn)
     ? MapGet$.call(REGISTRY, fn)
-    : createBlock(fn as any, unwrap as any);
+    : fn
+    ? createBlock(fn as any, unwrap)
+    : options.block;
 
   function MillionBlock(props: Props) {
     const ref = useRef<HTMLElement>(null);
@@ -49,19 +46,16 @@ export const block = (fn: ComponentType<any>, options: Options = {}) => {
 
     const effect = useCallback(() => {
       const currentBlock = block(props, props.key, options.shouldUpdate);
-      if (ref.current) {
+      if (ref.current && patch.current === null) {
         queueMicrotask$(() => {
           mount$.call(currentBlock, ref.current!, null);
-          patch.current = (props: Props) => {
-            queueMicrotask$(() => {
-              patchBlock(currentBlock, block(props));
-            });
-          };
         });
+        patch.current = (props: Props) => {
+          queueMicrotask$(() => {
+            patchBlock(currentBlock, block(props));
+          });
+        };
       }
-      return () => {
-        remove$.call(currentBlock);
-      };
     }, []);
 
     const marker = useMemo(() => {
@@ -78,9 +72,4 @@ export const block = (fn: ComponentType<any>, options: Options = {}) => {
   }
 
   return MillionBlock;
-};
-
-const Effect: FunctionComponent<{ effect: () => void }> = ({ effect }) => {
-  useEffect(effect, []);
-  return null;
 };

@@ -1,3 +1,3 @@
 export { block, REGISTRY } from './block';
 export { For } from './for';
-export { renderReactScope, unwrap } from './utils';
+export { renderPreactScope as renderReactScope, unwrap } from './utils';

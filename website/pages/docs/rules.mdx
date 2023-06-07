@@ -184,6 +184,23 @@ You can't use spread attributes in Million.js, as they can introduce non-determi
 <div {...props} /> // ❌ Wrong
 ```
 
+### Unsupported import
+
+<Callout type="error">
+  <code>
+  <strong>[Million.js]</strong>
+    Found unsupported import for block. Make sure blocks are imported from million/react.
+  </code>
+</Callout>
+
+This may be caused by importing the block from the wrong place. Make sure you import the block from `million/react` instead of `million`.
+
+```jsx
+import { block } from 'million'; // ❌ Wrong
+
+import { block } from 'million/react'; // ✅ Correct
+```
+
 ## Using the compiler
 
 <Callout type="error">
