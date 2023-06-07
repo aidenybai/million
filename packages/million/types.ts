@@ -1,5 +1,3 @@
-import { Block } from './block';
-
 declare const enum Flags {
   Child = 1,
   Attribute = 2,
