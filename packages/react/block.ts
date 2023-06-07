@@ -7,27 +7,10 @@ import {
 import { Map$, MapSet$, MapHas$, MapGet$ } from '../million/constants';
 import { queueMicrotask$ } from '../million/dom';
 import { unwrap } from './utils';
-import { css, Effect, RENDER_SCOPE } from './constants';
+import { Effect, RENDER_SCOPE } from './constants';
 import type { Options } from './types';
 import type { Props } from '../million';
 import type { ReactNode, ComponentType } from 'react';
-
-export const initCSS = () => {
-  // @ts-expect-error - CSSStyleSheet is not supported on Safari
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (CSSStyleSheet.prototype.replaceSync) {
-    const sheet = new CSSStyleSheet();
-    sheet.replaceSync(css);
-    document.adoptedStyleSheets = [sheet];
-  } else {
-    const style = document.createElement('style');
-    document.head.appendChild(style);
-    style.type = 'text/css';
-    style.appendChild(document.createTextNode(css));
-  }
-};
-
-queueMicrotask$(initCSS);
 
 export const REGISTRY = new Map$<
   (props: Props) => ReactNode,
