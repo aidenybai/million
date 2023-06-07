@@ -155,6 +155,7 @@ const config: DocsThemeConfig = {
   head: () => {
     const { asPath } = useRouter();
     const { frontMatter } = useConfig();
+
     const ogConfig = {
       title: 'Million.js',
       description: 'The Virtual DOM Replacement for React',
@@ -164,8 +165,15 @@ const config: DocsThemeConfig = {
       favicon: '/favicon.svg',
     };
     const favicon = String(ogConfig.favicon);
+    const title = String(frontMatter.title || ogConfig.title);
     const description = String(frontMatter.description || ogConfig.description);
     const canonical = new URL(asPath, 'https://million.dev').toString();
+
+    const ogUrl = `https://million.dev/api/og?title=${
+      ogConfig.title
+    }&description=${ogConfig.description}&note=${
+      (frontMatter.date as string | undefined) ?? 'aidenybai/million'
+    }`;
 
     return (
       <>
@@ -181,7 +189,7 @@ const config: DocsThemeConfig = {
 
         <link rel="shortcut icon" href={favicon} type="image/svg+xml" />
         <link rel="apple-touch-icon" href={favicon} type="image/svg+xml" />
-        <meta name="apple-mobile-web-app-title" content={ogConfig.title} />
+        <meta name="apple-mobile-web-app-title" content={title} />
       </>
     );
   },

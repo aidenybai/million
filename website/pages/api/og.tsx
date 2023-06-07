@@ -27,8 +27,8 @@ export default async function handler(request: NextRequest) {
     const description = searchParams.has('description')
       ? searchParams.get('description')!.slice(0, 200)
       : '';
-    const note = searchParams.has('date')
-      ? searchParams.get('date')!.slice(0, 100)
+    const note = searchParams.has('note')
+      ? searchParams.get('note')!.slice(0, 30)
       : '';
 
     return new ImageResponse(
