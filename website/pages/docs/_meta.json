@@ -16,6 +16,5 @@
   "patch": "patch()",
   "map-array": "mapArray()",
   "render-to-template": "renderToTemplate()",
-  "string-to-dom": "stringToDOM()",
-  "compiler": "Optimizing compiler"
+  "string-to-dom": "stringToDOM()"
 }
