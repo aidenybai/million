@@ -7,10 +7,20 @@ export const config = {
   runtime: 'edge',
 };
 
+function arrayBufferToBase64(buffer: ArrayBuffer) {
+  let binary = '';
+  const bytes = new Uint8Array(buffer);
+  const len = bytes.byteLength;
+  for (let i = 0; i < len; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary);
+}
+
 // eslint-disable-next-line import/no-default-export
 export default async function handler(request: NextRequest) {
   try {
-    const [SpaceGrotesk, SpaceGroteskBold] = await Promise.all([
+    const [SpaceGrotesk, SpaceGroteskBold, rawBg] = await Promise.all([
       fetch(
         String(
           new URL('../../public/SpaceGrotesk-Medium.ttf', import.meta.url),
@@ -19,7 +29,11 @@ export default async function handler(request: NextRequest) {
       fetch(
         String(new URL('../../public/SpaceGrotesk-Bold.ttf', import.meta.url)),
       ).then((res) => res.arrayBuffer()),
+      fetch(String(new URL('../../public/bg.jpg', import.meta.url))).then(
+        (res) => res.arrayBuffer(),
+      ),
     ]);
+    const bg = arrayBufferToBase64(rawBg);
 
     const { searchParams } = new URL(request.url);
 
@@ -34,7 +48,7 @@ export default async function handler(request: NextRequest) {
       : '';
 
     return new ImageResponse(
-      <OgImage title={title} description={description} note={note} />,
+      <OgImage title={title} description={description} note={note} bg={bg} />,
       {
         width: 800,
         height: 400,
@@ -55,6 +69,7 @@ export default async function handler(request: NextRequest) {
       },
     );
   } catch (err: unknown) {
+    // eslint-disable-next-line no-console
     console.log(err);
     return new Response(undefined, {
       status: 302,
@@ -69,15 +84,20 @@ export function OgImage({
   title,
   description,
   note,
+  bg,
 }: {
   title: string;
   description: string;
   note: string;
+  bg: string;
 }) {
   return (
     <div
-      tw="h-full w-full flex flex-col bg-[#111] p-10 pb-5"
-      style={{ fontFamily: 'Space Grotesk' }}
+      tw="h-full w-full flex flex-col p-11 pb-7"
+      style={{
+        fontFamily: 'Space Grotesk',
+        backgroundImage: `url(data:image/jpeg;base64,${bg})`,
+      }}
     >
       <div tw="flex flex-col">
         <span
@@ -90,7 +110,7 @@ export function OgImage({
       </div>
       <div tw="mt-auto flex-col flex">
         <hr tw="bg-[#2a2c35] w-full" />
-        <div tw="flex mt-4">
+        <div tw="flex mt-7">
           <span tw="text-[#838793] text-3xl flex mr-auto">{note}</span>
           <img
             tw="h-10"
