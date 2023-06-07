@@ -53,6 +53,7 @@ export default async function handler(request: NextRequest) {
       },
     );
   } catch (err: unknown) {
+    console.log(err);
     return new Response(undefined, {
       status: 302,
       headers: {
