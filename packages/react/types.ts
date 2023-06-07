@@ -1,3 +1,4 @@
+import { Block } from 'packages/million';
 import type { Props } from '../million/types';
 import type { FC } from 'react';
 
@@ -18,3 +19,8 @@ export interface Options {
   shouldUpdate?: (oldProps: Props, newProps: Props) => boolean;
   block?: any;
 }
+
+export type MillionProps = Record<
+  string,
+  string | number | boolean | null | undefined | Block | Symbol | BigInt
+>;

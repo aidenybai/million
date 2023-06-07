@@ -11,7 +11,7 @@ import { Effect, RENDER_SCOPE } from './constants';
 import type { Options } from './types';
 import type { Props } from '../million';
 import type { ReactNode, ComponentType } from 'react';
-import { MillionProps } from 'packages/million/types';
+import { MillionProps } from './types';
 
 export const REGISTRY = new Map$<
   (props: Props) => ReactNode,

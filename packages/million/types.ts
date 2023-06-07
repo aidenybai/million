@@ -18,11 +18,6 @@ export type VNode =
   | undefined
   | null;
 
-export type MillionProps = Record<
-  string,
-  string | number | boolean | null | undefined | Block | Symbol | BigInt
->;
-
 export type Props = Record<string, any>;
 export interface VElement {
   type: string;
