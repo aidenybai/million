@@ -6,9 +6,9 @@ import {
   renderToTemplate,
 } from '../experimental/render';
 import { EventFlag } from '../../million/constants';
-import { createEdit } from '../experimental/utils';
+import { createDirtyChecker, createEdit } from '../experimental/utils';
 import type { Options } from '../plugin';
-import type { Dynamics, Shared } from './types';
+import type { Shared } from './types';
 import type {
   IrEdit,
   IrEditBase,
@@ -17,19 +17,18 @@ import type {
 } from '../experimental/types';
 
 export const optimize = (
-  options: Options,
+  _options: Options,
   {
-    dynamics,
+    holes,
     jsx,
   }: {
-    dynamics: Dynamics;
+    holes: string[];
     jsx: t.JSXElement;
   },
   SHARED: Shared,
 ) => {
   const { callSitePath, imports } = SHARED;
   const edits: IrEdit[] = [];
-  const holes = dynamics.data.map(({ id }) => id.name);
   const template = renderToTemplate(jsx, edits, [], holes);
 
   const paths: number[][] = [];
@@ -140,7 +139,7 @@ export const optimize = (
       ]),
     ),
     t.variableDeclarator(editsVariable, editsArray),
-    t.variableDeclarator(shouldUpdateVariable, t.nullLiteral()),
+    t.variableDeclarator(shouldUpdateVariable, createDirtyChecker(holes)),
     t.variableDeclarator(
       getElementsVariable,
       declarators.length

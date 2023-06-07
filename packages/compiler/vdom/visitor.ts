@@ -11,6 +11,7 @@ import {
   renderToString,
   renderToTemplate,
 } from '../experimental/render';
+import { chainOrLogic } from '../experimental/utils';
 import type { IrEdit, IrEditBase } from '../experimental/types';
 import type { NodePath } from '@babel/core';
 import type { Options } from '../plugin';
@@ -255,15 +256,3 @@ export const visitor =
       }
     }
   };
-
-export const chainOrLogic = (
-  ...binaryExpressions: t.BinaryExpression[]
-): t.LogicalExpression | t.BinaryExpression => {
-  if (binaryExpressions.length === 1) {
-    return binaryExpressions[0]!;
-  }
-
-  const [first, ...rest] = binaryExpressions;
-
-  return t.logicalExpression('||', first!, chainOrLogic(...rest));
-};

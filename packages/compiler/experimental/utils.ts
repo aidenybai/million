@@ -30,3 +30,31 @@ export const createEdit = ({
     t.objectProperty(t.identifier('b'), block ?? t.nullLiteral()),
   ]);
 };
+
+export const chainOrLogic = (
+  ...binaryExpressions: t.BinaryExpression[]
+): t.LogicalExpression | t.BinaryExpression => {
+  if (binaryExpressions.length === 1) {
+    return binaryExpressions[0]!;
+  }
+
+  const [first, ...rest] = binaryExpressions;
+
+  return t.logicalExpression('||', first!, chainOrLogic(...rest));
+};
+
+export const createDirtyChecker = (holes: string[]) => {
+  return t.arrowFunctionExpression(
+    [t.identifier('oldProps'), t.identifier('newProps')],
+    chainOrLogic(
+      ...holes.map((hole) => {
+        const id = t.identifier(hole);
+        return t.binaryExpression(
+          '!==',
+          t.optionalMemberExpression(t.identifier('oldProps'), id, false, true),
+          t.optionalMemberExpression(t.identifier('newProps'), id, false, true),
+        );
+      }),
+    ),
+  );
+};

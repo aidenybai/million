@@ -6,25 +6,15 @@ import {
   patch as patchBlock,
 } from '../million/block';
 import { Map$, MapGet$, MapHas$, MapSet$ } from '../million/constants';
-import { document$, queueMicrotask$ } from '../million/dom';
-import { Effect, RENDER_SCOPE, css } from '../react/constants';
+import { queueMicrotask$ } from '../million/dom';
+import { Effect, RENDER_SCOPE } from '../react/constants';
+import { initCSS } from '../react/block';
 import { unwrap } from './utils';
 import type { Options } from '../react/types';
 import type { Props } from '../million';
 import type { ComponentType, VNode } from 'preact';
 
-// @ts-expect-error - CSSStyleSheet is not supported on Safari
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-if (CSSStyleSheet.prototype.replaceSync) {
-  const sheet = new CSSStyleSheet();
-  sheet.replaceSync(css);
-  document$.adoptedStyleSheets = [sheet];
-} else {
-  const style = document$.createElement('style');
-  document$.head.appendChild(style);
-  style.type = 'text/css';
-  style.appendChild(document$.createTextNode(css));
-}
+queueMicrotask$(initCSS);
 
 export const REGISTRY = new Map$<
   (props: Props) => VNode,
