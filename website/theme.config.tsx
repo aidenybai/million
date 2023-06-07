@@ -153,8 +153,9 @@ const config: DocsThemeConfig = {
     ),
   },
   head: () => {
-    const { asPath } = useRouter();
+    const { asPath, pathname } = useRouter();
     const { frontMatter } = useConfig();
+
     const ogConfig = {
       title: 'Million.js',
       description: 'The Virtual DOM Replacement for React',
@@ -164,8 +165,17 @@ const config: DocsThemeConfig = {
       favicon: '/favicon.svg',
     };
     const favicon = String(ogConfig.favicon);
+    const title = String(frontMatter.title || ogConfig.title);
     const description = String(frontMatter.description || ogConfig.description);
     const canonical = new URL(asPath, 'https://million.dev').toString();
+
+    const ogUrl = `https://million.dev/api/og?title=${
+      ogConfig.title
+    }&description=${ogConfig.description}&note=${
+      (frontMatter.date as string | undefined) ?? pathname === '/'
+        ? 'million.dev'
+        : pathname
+    }`;
 
     return (
       <>
@@ -177,11 +187,33 @@ const config: DocsThemeConfig = {
         <meta name="twitter:site" content={`@${ogConfig.author.twitter}`} />
         <meta name="twitter:creator" content={`@${ogConfig.author.twitter}`} />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:image" content="https://million.dev/banner.png" />
+        <meta property="twitter:image" content={ogUrl} />
+        <meta property="og:image" content={ogUrl} />
 
         <link rel="shortcut icon" href={favicon} type="image/svg+xml" />
         <link rel="apple-touch-icon" href={favicon} type="image/svg+xml" />
-        <meta name="apple-mobile-web-app-title" content={ogConfig.title} />
+        <meta name="apple-mobile-web-app-title" content={title} />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          as="font"
+          href="https://fonts.gstatic.com/s/spacegrotesk/v13/V8mQoQDjQSkFtoMM3T6r8E7mF71Q-gOoraIAEj7aUXskPMBBSSJLm2E.woff2"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          as="font"
+          href="https://fonts.gstatic.com/s/spacegrotesk/v13/V8mQoQDjQSkFtoMM3T6r8E7mF71Q-gOoraIAEj7oUXskPMBBSSJLm2E.woff2"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
       </>
     );
   },
@@ -195,25 +227,11 @@ const config: DocsThemeConfig = {
   useNextSeoProps() {
     const { asPath } = useRouter();
 
-    const shared = {
-      openGraph: {
-        images: [
-          {
-            url: 'https://million.dev/banner.png',
-            width: 1328,
-            height: 345,
-            alt: 'Million.js banner',
-            type: 'image/png',
-          },
-        ],
-      },
-    };
-
     if (['/', '/docs'].includes(asPath)) {
-      return { ...shared, titleTemplate: 'Million.js' };
+      return { titleTemplate: 'Million.js' };
     }
 
-    return { ...shared, titleTemplate: `%s | Million.js` };
+    return { titleTemplate: `%s | Million.js` };
   },
   banner: {
     key: '2.0.0-release',
