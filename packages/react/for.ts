@@ -45,7 +45,14 @@ const MillionArray = <T>({ each, children }: MillionArrayProps<T>) => {
   return createElement(RENDER_SCOPE, { ref });
 };
 
-export const For = memo(MillionArray, (oldProps, newProps) =>
+// Using fix below to add type support to MillionArray
+//https://github.com/DefinitelyTyped/DefinitelyTyped/issues/37087#issuecomment-542793243
+const typedMemo: <T>(
+  c: T,
+  equal?: (oldProps: any, newProps: any) => boolean,
+) => T = memo;
+
+export const For = typedMemo(MillionArray, (oldProps, newProps) =>
   Object.is(newProps.each, oldProps.each),
 );
 
