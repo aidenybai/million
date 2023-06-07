@@ -5,18 +5,6 @@ import type {
   Identifier,
 } from '@babel/types';
 
-export interface UserOptions {
-  ignoreFiles?: string[];
-  mute?: boolean;
-  mode:
-    | 'react'
-    | 'react-server'
-    | 'next'
-    | 'preact'
-    | 'preact-server'
-    | 'optimize';
-}
-
 export interface IrEditBase {
   type: NumericLiteral;
   name?: StringLiteral;
@@ -67,6 +55,12 @@ export interface IrInitEvent extends IrEditBase {
   listener: ArrowFunctionExpression | Identifier;
 }
 
+export interface IrInitChild extends IrEditBase {
+  type: NumericLiteral;
+  value: StringLiteral;
+  index: NumericLiteral;
+}
+
 export interface IrEdit {
   path: number[];
   edits: (
@@ -77,7 +71,7 @@ export interface IrEdit {
     | IrEditBlock
     | IrEditEvent
   )[];
-  inits: IrInitEvent[];
+  inits: (IrInitEvent | IrInitChild)[];
 }
 
 export interface IrTreeNode {
