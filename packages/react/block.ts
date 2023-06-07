@@ -1,4 +1,12 @@
-import { createElement, Fragment, useCallback, useMemo, useRef } from 'react';
+import {
+  createElement,
+  Fragment,
+  useCallback,
+  useMemo,
+  useRef,
+  ReactNode,
+  ComponentType,
+} from 'react';
 import {
   block as createBlock,
   mount$,
@@ -8,10 +16,8 @@ import { Map$, MapSet$, MapHas$, MapGet$ } from '../million/constants';
 import { queueMicrotask$ } from '../million/dom';
 import { unwrap } from './utils';
 import { Effect, RENDER_SCOPE } from './constants';
-import type { Options } from './types';
+import type { Options, MillionProps } from './types';
 import type { Props } from '../million';
-import type { ReactNode, ComponentType } from 'react';
-import { MillionProps } from './types';
 
 export const REGISTRY = new Map$<
   (props: Props) => ReactNode,
