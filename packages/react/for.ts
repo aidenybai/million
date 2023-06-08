@@ -7,7 +7,7 @@ import { REGISTRY } from './block';
 import { renderReactScope } from './utils';
 import { RENDER_SCOPE } from './constants';
 import type { Props } from '../million';
-import type { FC, ReactNode, MutableRefObject } from 'react';
+import type { ReactNode, MutableRefObject } from 'react';
 
 interface MillionArrayProps<T> {
   each: T[];

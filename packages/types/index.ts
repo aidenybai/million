@@ -2,7 +2,7 @@ import { Block, Props } from 'packages/million';
 
 export type MillionProps = Record<
   string,
-  string | number | boolean | null | undefined | Block | Symbol | BigInt
+  string | number | boolean | null | undefined | Block | symbol | bigint
 >;
 
 export interface Options {
