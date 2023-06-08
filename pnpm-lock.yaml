@@ -166,6 +166,16 @@ importers:
         specifier: ^18.0.28
         version: 18.0.28
 
+  packages/types:
+    dependencies:
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
+    devDependencies:
+      '@types/react':
+        specifier: ^18.0.28
+        version: 18.0.28
+
   website:
     dependencies:
       '@babel/parser':

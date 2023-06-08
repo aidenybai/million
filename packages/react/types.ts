@@ -1,5 +1,3 @@
-import type { Props } from '../million/types';
-
 export interface MillionArrayProps {
   each: any[];
   children: (value: any, i: number) => any;
