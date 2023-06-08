@@ -9,6 +9,7 @@ import {
   Tooltip,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
+import { memo } from 'react';
 import { useDarkMode } from './use-dark-mode';
 
 ChartJS.register(
@@ -21,7 +22,6 @@ ChartJS.register(
 );
 
 const data = [
-  { framework: 'JavaScript', val: 0.96 },
   { framework: 'Million.js', val: 0.92 },
   { framework: 'Preact', val: 0.59 },
   { framework: 'React', val: 0.26 },
@@ -33,8 +33,9 @@ const options = {
       display: false,
     },
   },
+  indexAxis: 'y' as const,
   scales: {
-    y: {
+    x: {
       max: 1,
       ticks: {
         format: {
@@ -50,31 +51,52 @@ const options = {
 export function Chart() {
   const isDarkMode = useDarkMode();
 
-  defaults.borderColor = isDarkMode ? '#545864' : '#e1e3eb';
+  defaults.borderColor = isDarkMode ? '#2b2b2d' : '#e1e3eb';
   defaults.color = isDarkMode ? '#e1e3eb' : '#545864';
+  defaults.font.size = 16;
+  defaults.font.family = 'Space Grotesk';
 
   const color = isDarkMode ? '#54527b' : '#dcc9e8';
-  const backgroundColor = [color, '#b073d9', color, color];
+  const backgroundColor = ['#b073d9', color, color];
 
   return (
-    <div className="p-4 rounded-lg w-auto min-h-[270px]">
+    <div className="p-4 rounded-lg w-auto">
       {isDarkMode !== null && (
-        <Bar
-          redraw
-          options={options}
-          data={{
-            labels: data.map((row) => row.framework),
-            datasets: [
-              {
-                label: '% of vanilla JavaScript',
-                data: data.map((row) => row.val),
-                backgroundColor,
-                barPercentage: 0.5,
-              },
-            ],
-          }}
-        />
+        <BarChart darkMode={isDarkMode} backgroundColor={backgroundColor} />
       )}
     </div>
   );
 }
+
+interface BarChartProps {
+  backgroundColor: string[];
+  darkMode: boolean;
+}
+
+export const BarChart = memo(
+  function BarChart({ backgroundColor, darkMode: _darkMode }: BarChartProps) {
+    return (
+      <Bar
+        redraw
+        options={options}
+        data={{
+          labels: data.map((row) => row.framework),
+          datasets: [
+            {
+              label: '% of vanilla JavaScript',
+              data: data.map((row) => row.val),
+              backgroundColor,
+              barPercentage: 0.5,
+            },
+          ],
+        }}
+      />
+    );
+  },
+  (prevProps, nextProps) => {
+    return (
+      prevProps.backgroundColor[0] === nextProps.backgroundColor[0] &&
+      prevProps.darkMode === nextProps.darkMode
+    );
+  },
+);
