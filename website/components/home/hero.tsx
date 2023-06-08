@@ -21,15 +21,13 @@ export function Hero() {
         <div className="relative pt-20 md:pt-44 ml-auto">
           <div className="lg:w-2/3 text-center mx-auto">
             <h1 className="text-zinc-900 dark:text-white font-bold text-5xl md:text-6xl xl:text-7xl">
-              Up to{' '}
+              Make React{' '}
               <span className="gradient-text inline-block">
                 <span className="font-mono">
-                  <CountUp end={70} />
+                  <CountUp end={70} useEasing />
                 </span>
-                % faster*
+                % faster
               </span>
-              <br />
-              React components.
             </h1>
             <p className="mt-8 text-xl text-zinc-700 dark:text-zinc-300">
               The{' '}
