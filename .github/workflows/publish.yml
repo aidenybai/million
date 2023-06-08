@@ -6,6 +6,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v2.0.1
@@ -21,6 +24,6 @@ jobs:
       - run: pnpm lint
       - run: pnpm build
       - run: pnpm publint --strict
-      - run: npm publish --provenance
+      - run: npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
