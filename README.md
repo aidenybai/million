@@ -80,12 +80,14 @@ This repo is a "mono-repo" with modules. Million ships as one NPM package, but h
 
 You can also track our progress through our [Roadmap](https://github.com/users/aidenybai/projects/5/views/1?layout=roadmap).
 
-| Module                                                                               | Description                                          |
-| ------------------------------------------------------------------------------------ | ---------------------------------------------------- |
-| [`million`](https://github.com/aidenybai/million/tree/main/packages/million)         | The main Virtual DOM with all of Million's core.     |
-| [`react`](https://github.com/aidenybai/million/tree/main/packages/react)             | A module that gives React compatibility for Million. |
-| [`compiler`](https://github.com/aidenybai/million/tree/main/packages/compiler)       | The compiler for Million in React.                   |
-| [`jsx-runtime`](https://github.com/aidenybai/million/tree/main/packages/jsx-runtime) | A simple JSX runtime for Million core.               |
+| Module                                                                                                                                                                  | Description                                      |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| [`million`](https://github.com/aidenybai/million/tree/main/packages/million)                                                                                            | The main Virtual DOM with all of Million's core. |
+| [`react`](https://github.com/aidenybai/million/tree/main/packages/react) / [`react-server`](https://github.com/aidenybai/million/tree/main/packages/react-server) /     | React compatibility for Million.                 |
+| [`preact`](https://github.com/aidenybai/million/tree/main/packages/preact) / [`preact-server`](https://github.com/aidenybai/million/tree/main/packages/preact-server) / | React compatibility for Million.                 |
+| [`compiler`](https://github.com/aidenybai/million/tree/main/packages/compiler)                                                                                          | The compiler for Million in React.               |
+| [`jsx-runtime`](https://github.com/aidenybai/million/tree/main/packages/jsx-runtime)                                                                                    | A simple JSX runtime for Million core.           |
+| [`types`](https://github.com/aidenybai/million/tree/main/packages/types)                                                                                                | Shared types between packages                    |
 
 ## Resources & Contributing Back
 
@@ -116,7 +118,7 @@ Million takes heavy inspiration from the following projects:
   Thank you to Géry pioneering the concept of "blocks" in the virtual DOM. Many parts of the Million.js codebase either directly or indirectly derive from his work.
 - [`voby`](https://github.com/vobyjs/voby) ([Fabio Spampinato](https://github.com/fabiospampinato))
   The Million.js "template" concept is derived from Voby's `template()` API.
-- [`bun`](https://bun.sh) for their homepage.
+- [Hack the Wave](https://hackthewave.com) ([Melinda Chang](https://github.com/melindachang)) for their homepage.
 - [`react`](https://react.dev) and [`turbo`](https://turbo.build) for their documentation. Many parts of the current Million.js documentation are grokked and modified from theirs.
 - [`ivi`](https://github.com/localvoid/ivi), [Preact](https://github.com/preactjs/preact), [and more](https://krausest.github.io/js-framework-benchmark/2021/table_chrome_96.0.4664.45.html)
 
