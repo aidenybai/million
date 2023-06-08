@@ -1,14 +1,7 @@
-import {
-  ComponentClass,
-  FunctionComponent,
-  createElement,
-  useEffect,
-  useReducer,
-} from 'react';
+import { createElement, useEffect, useReducer } from 'react';
 import { RENDER_SCOPE } from '../react/constants';
-import type { ComponentProps, ComponentType } from 'react';
-import { MillionArrayProps, MillionProps } from '../types';
-export type { MillionBlock } from '../react/types';
+import type { ComponentType, ComponentClass, FunctionComponent } from 'react';
+import type { MillionArrayProps, MillionProps } from '../types';
 
 // @ts-expect-error - is defined
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports

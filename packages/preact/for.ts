@@ -8,8 +8,7 @@ import { RENDER_SCOPE } from '../react/constants';
 import { REGISTRY } from './block';
 import { renderPreactScope } from './utils';
 import type { Props } from '../million';
-import type { FunctionComponent as FC, RefObject } from 'preact';
-import type { ArrayCache, MillionArrayProps } from 'packages/types';
+import type { ArrayCache, MillionArrayProps } from '../types';
 
 export const For = <T>({ each, children }: MillionArrayProps<T>) => {
   const ref = useRef<HTMLElement>(null);

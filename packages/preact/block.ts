@@ -9,17 +9,19 @@ import { Map$, MapGet$, MapHas$, MapSet$ } from '../million/constants';
 import { queueMicrotask$ } from '../million/dom';
 import { Effect, RENDER_SCOPE } from '../react/constants';
 import { unwrap } from './utils';
-import type { Options } from 'packages/types';
+import type { MillionProps, Options } from '../types';
 import type { Props } from '../million';
 import type { ComponentType, VNode } from 'preact';
-import { MillionProps } from 'packages/types';
 
 export const REGISTRY = new Map$<
   (props: Props) => VNode,
   ReturnType<typeof createBlock>
 >();
 
-export const block = <P extends MillionProps>(fn: ComponentType<P> | null, options: Options = {}) => {
+export const block = <P extends MillionProps>(
+  fn: ComponentType<P> | null,
+  options: Options = {},
+) => {
   const block = MapHas$.call(REGISTRY, fn)
     ? MapGet$.call(REGISTRY, fn)
     : fn
