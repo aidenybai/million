@@ -8,17 +8,7 @@ import { renderReactScope } from './utils';
 import { RENDER_SCOPE } from './constants';
 import type { Props } from '../million';
 import type { ReactNode, MutableRefObject } from 'react';
-
-interface MillionArrayProps<T> {
-  each: T[];
-  children: (value: T, i: number) => ReactNode;
-}
-
-interface ArrayCache<T> {
-  each: T[] | null;
-  children: T[] | null;
-  block?: ReturnType<typeof createBlock>;
-}
+import type { ArrayCache, MillionArrayProps } from 'packages/types';
 
 const MillionArray = <T>({ each, children }: MillionArrayProps<T>) => {
   const ref = useRef<HTMLElement>(null);
@@ -57,7 +47,7 @@ export const For = typedMemo(MillionArray, (oldProps, newProps) =>
 );
 
 const createChildren = <T>(
-  each: any[],
+  each: T[],
   getComponent: any,
   cache: MutableRefObject<ArrayCache<T>>,
 ) => {

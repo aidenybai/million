@@ -9,25 +9,25 @@ import { REGISTRY } from './block';
 import { renderPreactScope } from './utils';
 import type { Props } from '../million';
 import type { FunctionComponent as FC, RefObject } from 'preact';
-import type { ArrayCache, MillionArrayProps } from '../react/types';
+import type { ArrayCache, MillionArrayProps } from 'packages/types';
 
-export const For: FC<MillionArrayProps> = ({ each, children }) => {
+export const For = <T>({ each, children }: MillionArrayProps<T>) => {
   const ref = useRef<HTMLElement>(null);
   const fragmentRef = useRef<ReturnType<typeof mapArray> | null>(null);
-  const cache = useRef<ArrayCache>({
+  const cache = useRef<ArrayCache<T>>({
     each: null,
     children: null,
   });
   if (fragmentRef.current && each !== cache.current.each) {
     queueMicrotask$(() => {
-      const newChildren = createChildren(each, children, cache);
+      const newChildren = createChildren<T>(each, children, cache);
       arrayPatch$.call(fragmentRef.current, mapArray(newChildren));
     });
   }
   useEffect(() => {
     if (fragmentRef.current) return;
     queueMicrotask$(() => {
-      const newChildren = createChildren(each, children, cache);
+      const newChildren = createChildren<T>(each, children, cache);
       fragmentRef.current = mapArray(newChildren);
       arrayMount$.call(fragmentRef.current, ref.current!);
     });
@@ -36,13 +36,13 @@ export const For: FC<MillionArrayProps> = ({ each, children }) => {
   return h(RENDER_SCOPE as any, { ref });
 };
 
-const createChildren = (
-  each: any[],
+const createChildren = <T>(
+  each: T[],
   getComponent: any,
-  cache: RefObject<ArrayCache>,
+  cache: { current: ArrayCache<T> },
 ) => {
   const children = Array(each.length);
-  const currentCache = cache.current!;
+  const currentCache = cache.current;
   for (let i = 0, l = each.length; i < l; ++i) {
     if (currentCache.each && currentCache.each[i] === each[i]) {
       children[i] = currentCache.children?.[i];
@@ -54,7 +54,9 @@ const createChildren = (
       if (!currentCache.block) {
         currentCache.block = MapGet$.call(REGISTRY, vnode.type)!;
       }
-      children[i] = cache.current?.block(vnode.props);
+      if (cache.current.block) {
+        children[i] = cache.current.block(vnode.props);
+      }
     } else {
       const block = createBlock((props?: Props) => {
         return {

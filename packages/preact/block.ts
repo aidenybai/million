@@ -59,5 +59,5 @@ export const block = <P extends MillionProps>(fn: ComponentType<P> | null, optio
     MapSet$.call(REGISTRY, MillionBlock, block);
   }
 
-  return MillionBlock;
+  return MillionBlock<P>;
 };
