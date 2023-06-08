@@ -17,13 +17,14 @@ jobs:
       # Setup .npmrc file to publish to npm
       - uses: actions/setup-node@v3
         with:
-          node-version: '16.x'
+          node-version: '18.x'
           registry-url: 'https://registry.npmjs.org'
       - run: pnpm i
       - run: pnpm test
       - run: pnpm lint
       - run: pnpm build
       - run: pnpm publint --strict
+      - run: npm i -g npm
       - run: npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
