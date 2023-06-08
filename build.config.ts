@@ -9,6 +9,7 @@ export default defineBuildConfig({
     './packages/react-server',
     './packages/preact',
     './packages/preact-server',
+    './packages/types',
   ],
   declaration: true,
   clean: true,
