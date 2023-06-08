@@ -1,6 +1,6 @@
-import { Block, Props } from 'packages/million';
-import { block as createBlock } from '../million';
-import { ReactNode } from 'react';
+import type { Block, Props } from 'packages/million';
+import type { block as createBlock } from '../million';
+import type { ReactNode } from 'react';
 
 export type MillionProps = Record<
   string,

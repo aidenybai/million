@@ -7,8 +7,8 @@ import { REGISTRY } from './block';
 import { renderReactScope } from './utils';
 import { RENDER_SCOPE } from './constants';
 import type { Props } from '../million';
-import type { ReactNode, MutableRefObject } from 'react';
-import type { ArrayCache, MillionArrayProps } from 'packages/types';
+import type { MutableRefObject } from 'react';
+import type { ArrayCache, MillionArrayProps } from '../types';
 
 const MillionArray = <T>({ each, children }: MillionArrayProps<T>) => {
   const ref = useRef<HTMLElement>(null);
