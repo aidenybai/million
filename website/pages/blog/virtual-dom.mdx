@@ -92,6 +92,14 @@ The Block virtual DOM takes a different approach to diffing, and can be broken d
 
 2. **Dirty Checking**: The state (**not** the virtual DOM tree) is diffed to determine what has changed. If the state has changed, the DOM is updated directly via the Edit Map.
 
+<Callout type="info">
+
+**TL;DR: Diff the data, not the DOM.**
+
+Why? The size of data is generally much smaller than the size of the DOM. It also can be much simpler to diff data values than to diff full DOM nodes.
+
+</Callout>
+
 Since Million.js takes a similar approach to Blockdom, we'll be using Million.js syntax for the rest of this article.
 
 ### Counter Example
