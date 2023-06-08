@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "main": "./index.ts",
+  "module": "./index.ts",
+  "dependencies": {
+    "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.28"
+  }
+}

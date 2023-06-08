@@ -7,36 +7,26 @@ import { REGISTRY } from './block';
 import { renderReactScope } from './utils';
 import { RENDER_SCOPE } from './constants';
 import type { Props } from '../million';
-import type { FC, ReactNode, MutableRefObject } from 'react';
+import type { MutableRefObject } from 'react';
+import type { ArrayCache, MillionArrayProps } from '../types';
 
-interface MillionArrayProps {
-  each: any[];
-  children: (value: any, i: number) => ReactNode;
-}
-
-interface ArrayCache {
-  each: any[] | null;
-  children: any[] | null;
-  block?: ReturnType<typeof createBlock>;
-}
-
-const MillionArray: FC<MillionArrayProps> = ({ each, children }) => {
+const MillionArray = <T>({ each, children }: MillionArrayProps<T>) => {
   const ref = useRef<HTMLElement>(null);
   const fragmentRef = useRef<ReturnType<typeof mapArray> | null>(null);
-  const cache = useRef<ArrayCache>({
+  const cache = useRef<ArrayCache<T>>({
     each: null,
     children: null,
   });
   if (fragmentRef.current && each !== cache.current.each) {
     queueMicrotask$(() => {
-      const newChildren = createChildren(each, children, cache);
+      const newChildren = createChildren<T>(each, children, cache);
       arrayPatch$.call(fragmentRef.current, mapArray(newChildren));
     });
   }
   useEffect(() => {
     if (fragmentRef.current) return;
     queueMicrotask$(() => {
-      const newChildren = createChildren(each, children, cache);
+      const newChildren = createChildren<T>(each, children, cache);
       fragmentRef.current = mapArray(newChildren);
       arrayMount$.call(fragmentRef.current, ref.current!);
     });
@@ -45,14 +35,21 @@ const MillionArray: FC<MillionArrayProps> = ({ each, children }) => {
   return createElement(RENDER_SCOPE, { ref });
 };
 
-export const For = memo(MillionArray, (oldProps, newProps) =>
+// Using fix below to add type support to MillionArray
+//https://github.com/DefinitelyTyped/DefinitelyTyped/issues/37087#issuecomment-542793243
+const typedMemo: <T>(
+  c: T,
+  equal?: (oldProps: any, newProps: any) => boolean,
+) => T = memo;
+
+export const For = typedMemo(MillionArray, (oldProps, newProps) =>
   Object.is(newProps.each, oldProps.each),
 );
 
-const createChildren = (
-  each: any[],
+const createChildren = <T>(
+  each: T[],
   getComponent: any,
-  cache: MutableRefObject<ArrayCache>,
+  cache: MutableRefObject<ArrayCache<T>>,
 ) => {
   const children = Array(each.length);
   const currentCache = cache.current;

@@ -8,25 +8,28 @@ import { Map$, MapSet$, MapHas$, MapGet$ } from '../million/constants';
 import { queueMicrotask$ } from '../million/dom';
 import { unwrap } from './utils';
 import { Effect, RENDER_SCOPE } from './constants';
-import type { Options } from './types';
 import type { Props } from '../million';
 import type { ReactNode, ComponentType } from 'react';
+import type { Options, MillionProps } from '../types';
 
 export const REGISTRY = new Map$<
   (props: Props) => ReactNode,
   ReturnType<typeof createBlock>
 >();
 
-export const block = (fn: ComponentType<any> | null, options: Options = {}) => {
+export const block = <P extends MillionProps>(
+  fn: ComponentType<P> | null,
+  options: Options = {},
+) => {
   const block = MapHas$.call(REGISTRY, fn)
     ? MapGet$.call(REGISTRY, fn)
     : fn
     ? createBlock(fn as any, unwrap)
     : options.block;
 
-  function MillionBlock(props: Props) {
+  function MillionBlock<P extends MillionProps>(props: P) {
     const ref = useRef<HTMLElement>(null);
-    const patch = useRef<((props: Props) => void) | null>(null);
+    const patch = useRef<((props: P) => void) | null>(null);
 
     patch.current?.(props);
 
@@ -36,7 +39,7 @@ export const block = (fn: ComponentType<any> | null, options: Options = {}) => {
         queueMicrotask$(() => {
           mount$.call(currentBlock, ref.current!, null);
         });
-        patch.current = (props: Props) => {
+        patch.current = (props: P) => {
           queueMicrotask$(() => {
             patchBlock(
               currentBlock,
@@ -51,7 +54,7 @@ export const block = (fn: ComponentType<any> | null, options: Options = {}) => {
       return createElement(RENDER_SCOPE, { ref });
     }, []);
 
-    const vnode = createElement(
+    const vnode = createElement<P>(
       Fragment,
       null,
       marker,
@@ -61,9 +64,9 @@ export const block = (fn: ComponentType<any> | null, options: Options = {}) => {
     return vnode;
   }
 
-  if (!MapHas$.call(REGISTRY, MillionBlock)) {
-    MapSet$.call(REGISTRY, MillionBlock, block);
+  if (!MapHas$.call(REGISTRY, MillionBlock<P>)) {
+    MapSet$.call(REGISTRY, MillionBlock<P>, block);
   }
 
-  return MillionBlock;
+  return MillionBlock<P>;
 };

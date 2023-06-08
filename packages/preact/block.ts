@@ -9,7 +9,7 @@ import { Map$, MapGet$, MapHas$, MapSet$ } from '../million/constants';
 import { queueMicrotask$ } from '../million/dom';
 import { Effect, RENDER_SCOPE } from '../react/constants';
 import { unwrap } from './utils';
-import type { Options } from '../react/types';
+import type { MillionProps, Options } from '../types';
 import type { Props } from '../million';
 import type { ComponentType, VNode } from 'preact';
 
@@ -18,16 +18,19 @@ export const REGISTRY = new Map$<
   ReturnType<typeof createBlock>
 >();
 
-export const block = (fn: ComponentType<any> | null, options: Options = {}) => {
+export const block = <P extends MillionProps>(
+  fn: ComponentType<P> | null,
+  options: Options = {},
+) => {
   const block = MapHas$.call(REGISTRY, fn)
     ? MapGet$.call(REGISTRY, fn)
     : fn
     ? createBlock(fn as any, unwrap)
     : options.block;
 
-  function MillionBlock(props: Props) {
+  function MillionBlock<P extends MillionProps>(props: P) {
     const ref = useRef<HTMLElement>(null);
-    const patch = useRef<((props: Props) => void) | null>(null);
+    const patch = useRef<((props: P) => void) | null>(null);
 
     patch.current?.(props);
 
@@ -37,7 +40,7 @@ export const block = (fn: ComponentType<any> | null, options: Options = {}) => {
         queueMicrotask$(() => {
           mount$.call(currentBlock, ref.current!, null);
         });
-        patch.current = (props: Props) => {
+        patch.current = (props: P) => {
           queueMicrotask$(() => {
             patchBlock(currentBlock, block(props));
           });
@@ -46,10 +49,10 @@ export const block = (fn: ComponentType<any> | null, options: Options = {}) => {
     }, []);
 
     const marker = useMemo(() => {
-      return h(RENDER_SCOPE as any, { ref });
+      return h(RENDER_SCOPE, { ref });
     }, []);
 
-    const vnode = h(Fragment, null, marker, h(Effect, { effect }));
+    const vnode = h<P>(Fragment, null, marker, h(Effect, { effect }));
 
     return vnode;
   }
@@ -58,5 +61,5 @@ export const block = (fn: ComponentType<any> | null, options: Options = {}) => {
     MapSet$.call(REGISTRY, MillionBlock, block);
   }
 
-  return MillionBlock;
+  return MillionBlock<P>;
 };

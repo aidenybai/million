@@ -61,6 +61,11 @@
       "types": "./dist/preact-server.d.ts",
       "import": "./dist/preact-server.mjs",
       "require": "./dist/preact-server.cjs"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts",
+      "import": "./dist/types.mjs",
+      "require": "./dist/types.cjs"
     }
   },
   "packageManager": "pnpm@8.1.1",
