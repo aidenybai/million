@@ -154,16 +154,20 @@ export const visitor = (options: Options = {}, isReact = true) => {
       isReact,
       imports: {
         cache: new Map<string, t.Identifier>(),
-        addNamed(name: string, source?: string) {
+        addNamed(
+          name: string,
+          source: string = importSource.value,
+          forceClient?: boolean,
+        ) {
           if (this.cache.has(name)) return this.cache.get(name)!;
-          const id = addNamed(
-            callSitePath,
-            name,
-            source ?? importSource.value,
-            {
-              nameHint: `${name}$`,
-            },
-          );
+
+          if (forceClient) {
+            source = source.replace('-server', '');
+          }
+
+          const id = addNamed(callSitePath, name, source, {
+            nameHint: `${name}$`,
+          });
           this.cache.set(name, id);
           return id;
         },

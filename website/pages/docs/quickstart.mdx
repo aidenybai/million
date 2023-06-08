@@ -7,8 +7,8 @@ import dynamic from 'next/dynamic';
 import { Callout, Tabs, Tab, Cards, Card } from 'nextra-theme-docs';
 import { Box } from '../../components/box';
 import { BrowserView, MobileView } from 'react-device-detect';
-import { VDomExample } from '../../components/examples/vdom';
-import { CombinedBlockExample } from '../../components/examples/combined-block';
+import { VDomExample } from '../../components/back-in-block/vdom';
+import { CombinedBlockExample } from '../../components/back-in-block/combined-block';
 export const Demo = dynamic(() =>
   import('../../components/demo').then((mod) => mod.Demo),
 );

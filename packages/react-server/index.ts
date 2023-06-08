@@ -7,13 +7,12 @@ import {
 } from 'react';
 import { RENDER_SCOPE } from '../react/constants';
 import type { ComponentProps, ComponentType } from 'react';
-import { MillionArrayProps, MillionProps } from 'packages/types';
+import { MillionArrayProps, MillionProps } from '../types';
+export type { MillionBlock } from '../react/types';
 
 // @ts-expect-error - is defined
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 let millionModule: typeof import('million/react') | null = null;
-
-export type { MillionBlock } from '../react/types';
 
 export const block = <P extends MillionProps>(Component: ComponentType<P>) => {
   let blockFactory: any;

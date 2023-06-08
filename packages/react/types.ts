@@ -1,6 +1,4 @@
-import type { FC } from 'react';
-
-export type MillionBlock<T> = FC<T>;
+import type { Props } from '../million/types';
 
 export interface MillionArrayProps {
   each: any[];
