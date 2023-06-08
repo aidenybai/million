@@ -47,7 +47,7 @@ export function About() {
             </div>
             <div className="md:w-7/12 lg:w-1/2">
               <h2 className="text-3xl font-bold text-zinc-900 md:text-4xl dark:text-white">
-                React at the speed light
+                React at the speed of light
               </h2>
               <p className="text-lg my-8 text-zinc-600 dark:text-zinc-300">
                 Million.js runs on the same React API you know and love, but
