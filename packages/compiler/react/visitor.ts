@@ -73,7 +73,7 @@ export const visitor = (options: Options = {}, isReact = true) => {
           t.isImportSpecifier(specifier) &&
           t.isIdentifier(specifier.imported) &&
           specifier.imported.name === 'block' &&
-          importedBlocks['block'] === specifier.local.name,
+          importedBlocks.block === specifier.local.name,
       )
     ) {
       const millionImportDeclarationPath = blockCallBinding.path.parentPath!;
