@@ -83,7 +83,7 @@ export function About() {
                   </div>
                 </div>
               </div>
-              <div className="mt-10 text-xs text-zinc-400">
+              <div className="mt-10 text-xs dark:text-zinc-600 text-zinc-300">
                 Note: It's important to note that benchmarks (via JS Framework
                 Benchmark) do not represent real-life performance. Million.js
                 does include some limitations. You may see more performance

@@ -118,7 +118,7 @@ export function FAQ() {
   const [active, setActive] = useState<number[]>([]);
 
   return (
-    <div className="my-32" id="faq">
+    <div className="mt-32" id="faq">
       <Container>
         <div className="mt-32 flex flex-col gap-12 lg:flex-row">
           <div className="text-center lg:w-5/12 lg:pl-12 lg:text-left">
