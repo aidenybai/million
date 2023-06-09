@@ -93,6 +93,16 @@ Then, add the compiler to your build tool of choice:
     ```
     </Tab>
     <Tab>
+    ```js filename="craco.js"
+    const million = require('million/compiler');
+    module.exports = {
+      webpack: {
+        plugins: { add: [million.webpack()] }
+      }
+    };
+    ```
+    </Tab>
+    <Tab>
     ```js filename="webpack.config.js"
     import million from 'million/compiler';
 
@@ -107,16 +117,6 @@ Then, add the compiler to your build tool of choice:
 
     export default {
       plugins: [million.rollup()],
-    };
-    ```
-    </Tab>
-     <Tab>
-    ```js filename="craco.js"
-    const million = require('million/compiler');
-    module.exports = {
-      webpack: {
-        plugins: { add: [million.webpack()] }
-      }
     };
     ```
     </Tab>
