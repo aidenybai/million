@@ -58,11 +58,11 @@ export function Hero() {
             </div>
           </div>
         </div>
-        <div className="mt-36 text-center lg:mt-32">
+        <div className="mt-36 text-center lg:mt-32 md:block hidden">
           <span className="uppercase text-sm font-semibold tracking-wider text-gray-800 dark:text-white">
             Used & sponsored by companies
           </span>
-          <div className="mt-4 2xl:flex-col flex justify-center md:justify-around items-center">
+          <div className="mt-4 flex justify-around items-center">
             <div className="p-4 grayscale opacity-60 hover:opacity-100 transition duration-200 hover:grayscale-0">
               <a href="https://wyze.com" target="_blank">
                 <WyzeLogo />
