@@ -15,7 +15,7 @@ export function Hero() {
         aria-hidden="true"
         className="absolute inset-0 grid grid-cols-2 -space-x-52 opacity-40 dark:opacity-20"
       >
-        <div className="blur-[106px] h-56 bg-gradient-to-br from-primary to-purple-400 dark:from-purple-700"></div>
+        <div className="blur-[106px] h-56 bg-gradient-to-br from-purple-500 to-purple-400 dark:from-purple-700"></div>
         <div className="blur-[106px] h-32 bg-gradient-to-r from-purple-400 to-purple-300 dark:to-purple-600"></div>
       </div>
       <Container>
@@ -61,7 +61,7 @@ export function Hero() {
                 href="/docs/install"
                 className="relative flex h-11 w-full items-center justify-center px-6 before:absolute before:inset-0 before:rounded-full before:border before:border-transparent before:bg-purple-600/10 before:bg-gradient-to-b before:transition before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 dark:before:border-zinc-700 dark:before:bg-zinc-800 sm:w-max"
               >
-                <span className="relative text-base font-semibold text-primary dark:text-white">
+                <span className="relative text-base font-semibold text-purple-500 dark:text-white">
                   Install
                 </span>
               </Link>
