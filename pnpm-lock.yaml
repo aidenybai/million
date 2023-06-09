@@ -223,9 +223,6 @@ importers:
       postcss:
         specifier: ^8.4.21
         version: 8.4.21
-      powered-by-vercel:
-        specifier: ^1.1.0
-        version: 1.1.0(react@18.2.0)
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -234,7 +231,7 @@ importers:
         version: 5.2.0(chart.js@4.2.1)(react@18.2.0)
       react-countup:
         specifier: ^6.4.1
-        version: 6.4.1(@babel/core@7.21.4)(@types/babel__core@7.20.0)(react@18.2.0)(rollup@2.79.1)
+        version: 6.4.1(@babel/core@7.21.4)(react@18.2.0)
       react-device-detect:
         specifier: ^2.2.3
         version: 2.2.3(react-dom@18.2.0)(react@18.2.0)
@@ -1334,7 +1331,7 @@ packages:
       slash: 3.0.0
     dev: true
 
-  /@rollup/plugin-babel@6.0.3(@babel/core@7.21.4)(@types/babel__core@7.20.0)(rollup@2.79.1):
+  /@rollup/plugin-babel@6.0.3(@babel/core@7.21.4):
     resolution: {integrity: sha512-fKImZKppa1A/gX73eg4JGo+8kQr/q1HBQaCGKECZ0v4YBBv3lFqi14+7xyApECzvkLTHCifx+7ntcrvtBIRcpg==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -1349,9 +1346,7 @@ packages:
     dependencies:
       '@babel/core': 7.21.4
       '@babel/helper-module-imports': 7.18.6
-      '@rollup/pluginutils': 5.0.2(rollup@2.79.1)
-      '@types/babel__core': 7.20.0
-      rollup: 2.79.1
+      '@rollup/pluginutils': 5.0.2
     dev: false
 
   /@rollup/plugin-commonjs@22.0.2(rollup@2.79.1):
@@ -1424,7 +1419,7 @@ packages:
       picomatch: 2.3.1
     dev: true
 
-  /@rollup/pluginutils@5.0.2(rollup@2.79.1):
+  /@rollup/pluginutils@5.0.2:
     resolution: {integrity: sha512-pTd9rIsP92h+B6wWwFbW8RkZv4hiR/xKsqre4SIuAOaOEQRxi0lqLke9k2/7WegC85GgUs9pjmOjCUi3In4vwA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -1436,7 +1431,6 @@ packages:
       '@types/estree': 1.0.0
       estree-walker: 2.0.2
       picomatch: 2.3.1
-      rollup: 2.79.1
     dev: false
 
   /@rushstack/eslint-patch@1.1.1:
@@ -1485,11 +1479,13 @@ packages:
       '@types/babel__generator': 7.6.4
       '@types/babel__template': 7.4.1
       '@types/babel__traverse': 7.18.3
+    dev: true
 
   /@types/babel__generator@7.6.4:
     resolution: {integrity: sha512-tFkciB9j2K755yrTALxD44McOrk+gfpIpvC3sxHjRawj6PfnQxrse4Clq5y/Rq+G3mrBurMax/lG8Qn2t9mSsg==}
     dependencies:
       '@babel/types': 7.21.2
+    dev: true
 
   /@types/babel__helper-module-imports@7.18.0:
     resolution: {integrity: sha512-bXrjmO0EhInafHtFIaimws2rDf8Sp0E6T3cstzSL4lUAPtzZ2GhoV48U6n4IHyBIBsd88r4JIw2UPTqlyWwXcg==}
@@ -1509,11 +1505,13 @@ packages:
     dependencies:
       '@babel/parser': 7.21.9
       '@babel/types': 7.21.5
+    dev: true
 
   /@types/babel__traverse@7.18.3:
     resolution: {integrity: sha512-1kbcJ40lLB7MHsj39U4Sh1uTd2E7rLEa79kmDpI6cy+XiXsteB3POdQomoq4FxszMrO3ZYchkhYJw7A2862b3w==}
     dependencies:
       '@babel/types': 7.21.5
+    dev: true
 
   /@types/chai-subset@1.3.3:
     resolution: {integrity: sha512-frBecisrNGz+F4T6bcc+NLeolfiojh5FxW2klu669+8BARtyQv2C/GkNW6FUodVe4BroGMP/wER/YDGc7rEllw==}
@@ -5876,15 +5874,6 @@ packages:
       picocolors: 1.0.0
       source-map-js: 1.0.2
 
-  /powered-by-vercel@1.1.0(react@18.2.0):
-    resolution: {integrity: sha512-j6Xib6yNtbUKJEEVCPg1D/Pq4cTiisusLo49oJ6TKjK3TVF1ouN5TwfziabGrF1Hx6HcndolqTKpyOgIa6jeEQ==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      react: ^16.14.0 || ^17.0.0
-    dependencies:
-      react: 18.2.0
-    dev: false
-
   /preact@10.15.0:
     resolution: {integrity: sha512-nZSa8M2R2m1n7nJSBlzDpxRJaIsejrTO1vlFbdpFvyC8qM1iU+On2y0otfoUm6SRB5o0lF0CKDFxg6grEFU0iQ==}
     dev: false
@@ -5978,12 +5967,12 @@ packages:
       react: 18.2.0
     dev: false
 
-  /react-countup@6.4.1(@babel/core@7.21.4)(@types/babel__core@7.20.0)(react@18.2.0)(rollup@2.79.1):
+  /react-countup@6.4.1(@babel/core@7.21.4)(react@18.2.0):
     resolution: {integrity: sha512-FxQ7qaNnnbA+Px9RebOZY4Tbawa1bhgpVPlUqRemZb90mh3f3OqyHVgr1SZqnJgaRxR3uEYqgkszgkDgFVCeEw==}
     peerDependencies:
       react: '>= 16.3.0'
     dependencies:
-      '@rollup/plugin-babel': 6.0.3(@babel/core@7.21.4)(@types/babel__core@7.20.0)(rollup@2.79.1)
+      '@rollup/plugin-babel': 6.0.3(@babel/core@7.21.4)
       countup.js: 2.5.0
       react: 18.2.0
     transitivePeerDependencies:
@@ -6320,6 +6309,7 @@ packages:
     hasBin: true
     optionalDependencies:
       fsevents: 2.3.2
+    dev: true
 
   /run-parallel@1.2.0:
     resolution: {integrity: sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==}

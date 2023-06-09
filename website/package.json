@@ -23,7 +23,6 @@
     "nextra": "^2.6.0",
     "nextra-theme-docs": "^2.6.0",
     "postcss": "^8.4.21",
-    "powered-by-vercel": "^1.1.0",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-countup": "^6.4.1",
