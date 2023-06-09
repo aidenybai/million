@@ -178,27 +178,6 @@ Then, add the compiler to your build tool of choice:
     };
     ```
     </Tab>
-    <Tab>
-    ```js filename="rspack.config.js"
-    // @ts-check
-    const { default: million } = require('million/compiler');
-
-    /** @type {import('@rspack/cli').Configuration} */
-    module.exports = {
-      plugins: [million.rspack({ mode: 'preact' })],
-    };
-    ```
-    </Tab>
-    <Tab>
-    ```js filename="esbuild.config.js"
-    import million from 'million/compiler';
-    import { build } from 'esbuild';
-
-    build({
-      plugins: [million.esbuild({ mode: 'preact' })],
-    });
-    ```
-    </Tab>
   </Tabs>
 </details>
 
