@@ -35,8 +35,18 @@ export function Hero() {
               <span className="font-medium dark: dark:text-zinc-100">
                 virtual DOM replacement
               </span>{' '}
-              you've been waiting for: Just wrap your React components with one
-              function to make them faster.
+              you've been waiting for. Works best with UI and data heavy React
+              apps, but dead-simple to use. Try it out with just a{' '}
+              <span data-rehype-pretty-code-fragment="">
+                <code
+                  className="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10"
+                  dir="ltr"
+                  data-language="jsx"
+                  data-theme="default"
+                >
+                  <span className="line">block()</span>
+                </code>
+              </span>
             </p>
             <div className="mt-16 flex flex-wrap justify-center gap-y-4 gap-x-6">
               <Link
@@ -60,7 +70,7 @@ export function Hero() {
         </div>
         <div className="mt-36 text-center lg:mt-32 md:block hidden">
           <span className="uppercase text-sm font-semibold tracking-wider text-gray-800 dark:text-white">
-            Used & sponsored by companies
+            Used / sponsored by companies
           </span>
           <div className="mt-4 flex justify-around items-center">
             <div className="p-4 grayscale opacity-60 hover:opacity-100 transition duration-200 hover:grayscale-0">

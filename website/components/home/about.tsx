@@ -47,12 +47,12 @@ export function About() {
             </div>
             <div className="md:w-7/12 lg:w-1/2">
               <h2 className="text-3xl font-bold text-zinc-900 md:text-4xl dark:text-white">
-                React at the speed of light
+                React at the speed of JS
               </h2>
               <p className="text-lg my-8 text-zinc-600 dark:text-zinc-300">
-                Million.js runs on the same React API you know and love, but
-                uses a hyper-optimized virtual DOM. It's one of the top
-                performers in the JS Framework Benchmark.
+                Million.js can run on the same React API you know and love, but
+                uses a hyper-optimized virtual DOM. The Million.js virtual DOM
+                is one of the top performers in the JS Framework Benchmark.
               </p>
               <div className="divide-y space-y-4 divide-zinc-100 dark:divide-zinc-800">
                 <div className="mt-8 flex gap-4 md:items-center">
@@ -77,10 +77,17 @@ export function About() {
                       Integrate and ship fast.
                     </h4>
                     <p className="text-zinc-500 dark:text-zinc-400">
-                      No need to learn a new framework. Just use React.
+                      No need to learn a new framework. Works with your existing
+                      React components.
                     </p>
                   </div>
                 </div>
+              </div>
+              <div className="mt-10 text-xs text-zinc-400">
+                Note: It's important to note that benchmarks (via JS Framework
+                Benchmark) do not represent real-life performance. Million.js
+                does include some limitations. You may see more performance
+                improvement if you have more data / UI heavy apps.
               </div>
             </div>
           </div>
@@ -105,10 +112,10 @@ export function About() {
               }
             />
             <Card
-              title="Just one function"
+              title="Powerful APIs"
               icon={<ThumbsUpIcon />}
               description={
-                'Tired of learning new frameworks and big migrations? Million.js ships one powerful function that you can use to optimize any component.'
+                'Tired of learning new frameworks and big migrations? Million.js ships one powerful APIs that you can use to optimize any component.'
               }
             />
           </div>
