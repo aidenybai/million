@@ -24,6 +24,7 @@
     "nextra-theme-docs": "^2.6.0",
     "postcss": "^8.4.21",
     "react": "^18.2.0",
+    "react-card-flip": "^1.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-countup": "^6.4.1",
     "react-device-detect": "^2.2.3",

@@ -1,6 +1,6 @@
-import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Disclosure, Transition } from '@headlessui/react';
 import { Container } from './container';
 
 const faq = [
@@ -115,8 +115,6 @@ const faq = [
 ];
 
 export function FAQ() {
-  const [active, setActive] = useState<number[]>([]);
-
   return (
     <div className="mt-32" id="faq">
       <Container>
@@ -132,20 +130,16 @@ export function FAQ() {
           </div>
           <div className="divide-y divide-gray-200 border-y border-gray-200 dark:divide-gray-800 dark:border-gray-800 lg:w-7/12">
             {faq.map((item, i) => (
-              <div key={i}>
-                <dl className="faq mx-auto max-w-2xl">
-                  <dt className="text-lg">
-                    <button
+              <Disclosure
+                as="div"
+                key={i}
+                className="mx-auto max-w-2xl text-lg"
+              >
+                {({ open }) => (
+                  <>
+                    <Disclosure.Button
                       type="button"
                       className="flex w-full items-start justify-between py-6 text-left text-gray-400"
-                      aria-controls="faq-5"
-                      data-active="false"
-                      onClick={() => {
-                        if (active.includes(i)) {
-                          active.splice(active.indexOf(i), 1);
-                        } else active.push(i);
-                        setActive([...active]);
-                      }}
                     >
                       <span className="font-medium text-gray-900 dark:text-white">
                         {item.question}
@@ -153,7 +147,7 @@ export function FAQ() {
                       <span className="ml-6 flex h-7 items-center">
                         <svg
                           className={`arrow-down h-6 w-6 transform duration-300 ${
-                            active.includes(i) ? 'rotate-180' : 'rotate-0'
+                            open ? 'rotate-180' : 'rotate-0'
                           }`}
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -169,19 +163,28 @@ export function FAQ() {
                           ></path>
                         </svg>
                       </span>
-                    </button>
-                  </dt>
-                  <dd
-                    className={`${
-                      active.includes(i) ? '' : 'hidden'
-                    } pr-12 duration-300 ease-in-out`}
-                  >
-                    <p className="pb-6 text-base text-gray-600 dark:text-gray-400">
-                      {item.answer}
-                    </p>
-                  </dd>
-                </dl>
-              </div>
+                    </Disclosure.Button>
+                    <Transition
+                      enter="transition duration-100 ease-out"
+                      enterFrom="transform scale-95 opacity-0"
+                      enterTo="transform scale-100 opacity-100"
+                      leave="transition duration-75 ease-out"
+                      leaveFrom="transform scale-100 opacity-100"
+                      leaveTo="transform scale-95 opacity-0"
+                    >
+                      <Disclosure.Panel
+                        className={`pr-12 duration-300 ease-in-out ${
+                          open ? '' : 'hidden'
+                        }`}
+                      >
+                        <p className="pb-6 text-base text-gray-600 dark:text-gray-400">
+                          {item.answer}
+                        </p>
+                      </Disclosure.Panel>
+                    </Transition>
+                  </>
+                )}
+              </Disclosure>
             ))}
           </div>
         </div>
