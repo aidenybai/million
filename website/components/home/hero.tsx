@@ -30,23 +30,25 @@ export function Hero() {
                 % faster
               </span>
             </h1>
-            <p className="mt-8 text-xl text-zinc-700 dark:text-zinc-300">
+            <p className="mt-8 text-xl text-zinc-700 dark:text-zinc-300 leading-8">
               The{' '}
               <span className="font-medium dark: dark:text-zinc-100">
                 virtual DOM replacement
               </span>{' '}
-              you've been waiting for. Works best with UI and data heavy React
-              apps, but dead-simple to use. Try it out with just a{' '}
-              <span data-rehype-pretty-code-fragment="">
-                <code
-                  className="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10"
-                  dir="ltr"
-                  data-language="jsx"
-                  data-theme="default"
-                >
-                  <span className="line">block()</span>
-                </code>
-              </span>
+              for React. Gain big performance wins for UI and data heavy React
+              apps. Dead simple to use – try it out today with just a{' '}
+              <Link href="/docs/quickstart">
+                <span data-rehype-pretty-code-fragment="">
+                  <code
+                    className="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10"
+                    dir="ltr"
+                    data-language="jsx"
+                    data-theme="default"
+                  >
+                    <span className="line">block()</span>
+                  </code>
+                </span>
+              </Link>
             </p>
             <div className="mt-16 flex flex-wrap justify-center gap-y-4 gap-x-6">
               <Link
