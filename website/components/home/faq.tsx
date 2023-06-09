@@ -84,7 +84,7 @@ const faq = [
           className="nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]"
           href="/docs/rules"
         >
-          Rules of Block
+          Rules of Blocks
         </Link>
         . We are actively working on removing these limitations. It's also
         important to note that your application may not need Million.js – if

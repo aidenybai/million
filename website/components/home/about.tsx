@@ -1,4 +1,5 @@
 import Tilt from 'react-parallax-tilt';
+import Link from 'next/link';
 import { Chart } from '../chart';
 import { Container } from './container';
 
@@ -47,12 +48,21 @@ export function About() {
             </div>
             <div className="md:w-7/12 lg:w-1/2">
               <h2 className="text-3xl font-bold text-zinc-900 md:text-4xl dark:text-white">
-                React at the speed of JS
+                React at the speed of raw JS
               </h2>
               <p className="text-lg my-8 text-zinc-600 dark:text-zinc-300">
                 Million.js can run on the same React API you know and love, but
-                uses a hyper-optimized virtual DOM. The Million.js virtual DOM
-                is one of the top performers in the JS Framework Benchmark.
+                uses a hyper-optimized virtual DOM. It's one of the top
+                performers in the{' '}
+                <a
+                  href="https://krausest.github.io/js-framework-benchmark/2023/table_chrome_112.0.5615.49.html"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="nx-text-primary-600 underline decoration-from-font [text-underline-position:from-font]"
+                >
+                  JS Framework Benchmark
+                </a>
+                .
               </p>
               <div className="divide-y space-y-4 divide-zinc-100 dark:divide-zinc-800">
                 <div className="mt-8 flex gap-4 md:items-center">
@@ -64,7 +74,8 @@ export function About() {
                       Up to 70% faster than React.
                     </h4>
                     <p className="text-zinc-500 dark:text-zinc-400">
-                      Benchmarks may not represent real-world performance.
+                      Note that benchmarks may not represent real-world
+                      performance.
                     </p>
                   </div>
                 </div>
@@ -83,7 +94,7 @@ export function About() {
                   </div>
                 </div>
               </div>
-              <div className="mt-10 text-xs dark:text-zinc-600 text-zinc-300">
+              <div className="mt-10 text-xs dark:text-zinc-300 text-zinc-600 opacity-50 hover:opacity-90 transition-opacity">
                 Note: It's important to note that benchmarks (via JS Framework
                 Benchmark) do not represent real-life performance. Million.js
                 does include some limitations. You may see more performance
@@ -96,26 +107,58 @@ export function About() {
       <div>
         <Container>
           <h3 className="text-2xl text-center font-bold text-zinc-900 dark:text-white md:text-3xl lg:text-4xl">
-            Sluggish to snappy
+            Novel architecture to make your web apps faster
           </h3>
           <div className="relative mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             <Card
               title="Block Virtual DOM"
               icon={<BoxIcon />}
-              description={`Million.js introduces a novel "block" virtual DOM. It's significantly faster than React's virtual DOM, as it diffs data instead of the DOM.`}
+              description={
+                <>
+                  Million.js introduces a novel{' '}
+                  <Link
+                    href="/blog/virtual-dom"
+                    className="underline text-zinc-500/90"
+                  >
+                    "block" virtual DOM.
+                  </Link>{' '}
+                  It's significantly faster than React's virtual DOM, as it
+                  diffs data instead of the DOM.
+                </>
+              }
             />
             <Card
               title="Supercharged Compiler"
               icon={<LightBulbIcon />}
               description={
-                'Million.js uses a custom compiler that automatically optimizes your React components on the server.'
+                <>
+                  Million.js uses a{' '}
+                  <Link
+                    href="/blog/behind-the-block"
+                    className="underline text-zinc-500/90"
+                  >
+                    custom compiler
+                  </Link>{' '}
+                  that automatically optimizes your React components on the
+                  server.
+                </>
               }
             />
             <Card
               title="Powerful APIs"
               icon={<ThumbsUpIcon />}
               description={
-                'Tired of learning new frameworks and big migrations? Million.js ships one powerful APIs that you can use to optimize any component.'
+                <>
+                  Tired of learning new frameworks and big migrations?
+                  Million.js ships{' '}
+                  <Link
+                    href="/docs/quickstart"
+                    className="underline text-zinc-500/90"
+                  >
+                    powerful APIs
+                  </Link>{' '}
+                  that you can use to optimize any component.
+                </>
               }
             />
           </div>
