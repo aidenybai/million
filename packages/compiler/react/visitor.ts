@@ -20,7 +20,7 @@ export const visitor = (options: Options = {}, isReact = true) => {
     const programPath = callSitePath.findParent((path) =>
       path.isProgram(),
     ) as NodePath<t.Program>;
-    const importedBlocks = collectImportedBindings(programPath, 'block');
+    const importedBlocks = collectImportedBindings(programPath);
     if (
       !t.isIdentifier(callSite.callee) ||
       !importedBlocks[callSite.callee.name]
