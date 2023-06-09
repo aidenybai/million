@@ -193,7 +193,7 @@ function GraphicWrapper({
       glareEnable
       tiltAngleYInitial={0}
       glareMaxOpacity={0.1}
-      className="shadow-lg w-full
+      className="fix-safari-tilt shadow-lg w-full
 rounded-lg text-center bg-gradient-to-b from-zinc-200 to-white dark:from-zinc-700 dark:via-zinc-800 dark:to-darker p-px"
     >
       <div className="absolute z-50 flex p-2 justify-end w-full">
@@ -241,7 +241,7 @@ function Card({ title, description, icon }) {
       glareEnable
       tiltAngleYInitial={0}
       glareMaxOpacity={0.1}
-      className="relative overflow-hidden rounded-2xl bg-gradient-to-b from-zinc-200 to-white p-px dark:from-zinc-700 dark:via-zinc-800 dark:to-darker"
+      className="fix-safari-tilt relative overflow-hidden rounded-2xl bg-gradient-to-b from-zinc-200 to-white p-px dark:from-zinc-700 dark:via-zinc-800 dark:to-darker"
     >
       <div className="relative flex h-full flex-col gap-6 rounded-2xl bg-zinc-100 p-8 dark:bg-zinc-900">
         {icon}
