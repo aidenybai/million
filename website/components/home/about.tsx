@@ -1,6 +1,9 @@
 import Tilt from 'react-parallax-tilt';
 import Link from 'next/link';
+import { useState } from 'react';
+import ReactCardFlip from 'react-card-flip';
 import { Chart } from '../chart';
+import { Showdown } from '../extra-content';
 import { Container } from './container';
 
 export function About() {
@@ -10,41 +13,7 @@ export function About() {
         <Container>
           <div className="lg:p-16 space-y-6 md:flex md:gap-20 justify-center md:space-y-0 lg:items-center">
             <div className="md:w-7/12 lg:w-1/2">
-              <div>
-                <Tilt
-                  tiltMaxAngleX={5}
-                  tiltMaxAngleY={10}
-                  glareEnable
-                  tiltAngleYInitial={0}
-                  glareMaxOpacity={0.1}
-                  className="shadow-lg w-full
-                 rounded-lg text-center bg-gradient-to-b from-zinc-200 to-white dark:from-zinc-700 dark:via-zinc-800 dark:to-darker p-px"
-                >
-                  <div className="bg-white p-4 pb-6 dark:bg-zinc-900 rounded-lg">
-                    <div className="w-full">
-                      <p className="font-bold text-lg">
-                        JS Framework Benchmark
-                      </p>
-                      <p className="text-md mt-1 text-zinc-700 dark:text-zinc-400">
-                        Geometric mean of all benchmarks (higher is better)
-                      </p>
-                      <Chart />
-                    </div>
-                    <div className="text-sm text-zinc-400">
-                      Based on{' '}
-                      <a
-                        href="https://krausest.github.io/js-framework-benchmark/2023/table_chrome_112.0.5615.49.html"
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-zinc-500 underline decoration-from-font [text-underline-position:from-font]"
-                      >
-                        JS Framework Benchmark data
-                      </a>{' '}
-                      (Chrome 102)
-                    </div>
-                  </div>
-                </Tilt>
-              </div>
+              <Graphic />
             </div>
             <div className="md:w-7/12 lg:w-1/2">
               <h2 className="text-3xl font-bold text-zinc-900 md:text-4xl dark:text-white">
@@ -118,7 +87,7 @@ export function About() {
                   Million.js introduces a novel{' '}
                   <Link
                     href="/blog/virtual-dom"
-                    className="underline text-zinc-500/90"
+                    className="underline nx-text-primary-600"
                   >
                     "block" virtual DOM.
                   </Link>{' '}
@@ -135,7 +104,7 @@ export function About() {
                   Million.js uses a{' '}
                   <Link
                     href="/blog/behind-the-block"
-                    className="underline text-zinc-500/90"
+                    className="underline nx-text-primary-600"
                   >
                     custom compiler
                   </Link>{' '}
@@ -153,7 +122,7 @@ export function About() {
                   Million.js ships{' '}
                   <Link
                     href="/docs/quickstart"
-                    className="underline text-zinc-500/90"
+                    className="underline nx-text-primary-600"
                   >
                     powerful APIs
                   </Link>{' '}
@@ -165,6 +134,102 @@ export function About() {
         </Container>
       </div>
     </>
+  );
+}
+
+function Graphic() {
+  const [showShowdown, setShowShowdown] = useState(false);
+
+  const handleClick = () => {
+    setShowShowdown(!showShowdown);
+  };
+
+  return (
+    <ReactCardFlip isFlipped={!showShowdown} flipDirection="vertical">
+      <GraphicWrapper onClick={handleClick} hidden={!showShowdown}>
+        <Showdown initStart />
+      </GraphicWrapper>
+      <GraphicWrapper onClick={handleClick} hidden={showShowdown}>
+        <div className="bg-white p-4 pb-6 dark:bg-zinc-900 rounded-lg">
+          <div className="w-full">
+            <p className="font-bold text-lg">JS Framework Benchmark</p>
+            <p className="text-md mt-1 text-zinc-700 dark:text-zinc-400">
+              Geometric mean of all benchmarks (higher is better)
+            </p>
+            <Chart />
+          </div>
+          <div className="text-sm text-zinc-400">
+            Based on{' '}
+            <a
+              href="https://krausest.github.io/js-framework-benchmark/2023/table_chrome_112.0.5615.49.html"
+              target="_blank"
+              rel="noreferrer"
+              className="text-zinc-500 underline decoration-from-font [text-underline-position:from-font]"
+            >
+              JS Framework Benchmark data
+            </a>{' '}
+            (Chrome 102)
+          </div>
+        </div>
+      </GraphicWrapper>
+    </ReactCardFlip>
+  );
+}
+
+function GraphicWrapper({
+  children,
+  onClick,
+  hidden,
+}: {
+  children: JSX.Element;
+  onClick: () => void;
+  hidden: boolean;
+}) {
+  if (hidden) return null;
+  return (
+    <Tilt
+      tiltMaxAngleX={5}
+      tiltMaxAngleY={10}
+      glareEnable
+      tiltAngleYInitial={0}
+      glareMaxOpacity={0.1}
+      className="shadow-lg w-full
+rounded-lg text-center bg-gradient-to-b from-zinc-200 to-white dark:from-zinc-700 dark:via-zinc-800 dark:to-darker p-px"
+    >
+      <div className="absolute z-50 flex p-2 justify-end w-full">
+        <button onClick={onClick}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="w-6 h-6 absolute"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+            />
+          </svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="w-6 h-6 animate-ping text-purple-500"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+            />
+          </svg>
+        </button>
+      </div>
+      {children}
+    </Tilt>
   );
 }
 
