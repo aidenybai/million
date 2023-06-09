@@ -23,15 +23,20 @@ export function ExtraContent() {
   );
 }
 
-export function Showdown({ initStart = false }) {
+export function Showdown({ initStart = false, amount = 1000 }) {
   const [start, setStart] = useState<boolean>(false);
   const [renders, setRenders] = useState<number>(0);
+  const firstUpdate = useRef(true);
   const ref = useRef<{
     renderReact: () => void;
     renderMillion: () => void;
   }>();
 
   useEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
+    }
     const setup = async () => {
       const { block, mount, patch } = await import(
         './million-library/million.mjs'
@@ -41,7 +46,7 @@ export function Showdown({ initStart = false }) {
       const reactRoot = document.createElement('div');
       const millionRoot = document.createElement('div');
 
-      const filledArray = Array(1000).fill(0);
+      const filledArray = Array(amount).fill(0);
 
       const b = block(({ text }: { text: string }) => ({
         type: 'div',
@@ -114,9 +119,11 @@ export function Showdown({ initStart = false }) {
 
   useEffect(() => {
     if (initStart) {
-      startTransition(() => {
-        setStart(true);
-      });
+      setTimeout(() => {
+        startTransition(() => {
+          setStart(true);
+        });
+      }, 1000);
     }
   }, []);
 

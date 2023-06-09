@@ -147,7 +147,7 @@ function Graphic() {
   return (
     <ReactCardFlip isFlipped={!showShowdown} flipDirection="vertical">
       <GraphicWrapper onClick={handleClick} hidden={!showShowdown}>
-        <Showdown initStart />
+        <Showdown initStart amount={500} />
       </GraphicWrapper>
       <GraphicWrapper onClick={handleClick} hidden={showShowdown}>
         <div className="bg-white p-4 pb-6 dark:bg-zinc-900 rounded-lg">
