@@ -3,7 +3,7 @@ import { Container } from './container';
 
 export function CTA() {
   return (
-    <div className="relative py-16">
+    <div className="relative pb-16">
       <div
         aria-hidden="true"
         className="absolute inset-0 h-max w-full m-auto grid grid-cols-2 -space-x-52 opacity-40 dark:opacity-20"
