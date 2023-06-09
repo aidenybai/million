@@ -2,6 +2,7 @@ import * as t from '@babel/types';
 import { addNamed } from '@babel/helper-module-imports';
 import { createDeopt, resolveCorrectImportSource, resolvePath } from './utils';
 import { transformComponent } from './transform';
+import { collectImportedBindings } from './bindings';
 import type { NodePath } from '@babel/core';
 import type { Options } from '../plugin';
 
@@ -15,8 +16,16 @@ export const visitor = (options: Options = {}, isReact = true) => {
     const globalPath = callSitePath.parentPath.parentPath!;
 
     // We only want to optimize block calls.
-    // TODO: check if the block is aliased (e.g. import { block as createBlock } ...)
-    if (!t.isIdentifier(callSite.callee, { name: 'block' })) return;
+    // check if the block is aliased (e.g. import { block as createBlock } ...)
+    const programPath = callSitePath.findParent((path) =>
+      path.isProgram(),
+    ) as NodePath<t.Program>;
+    const importedBlocks = collectImportedBindings(programPath);
+    if (
+      !t.isIdentifier(callSite.callee) ||
+      !importedBlocks[callSite.callee.name]
+    )
+      return;
 
     // Allow the user to opt into experimental optimization by adding a /* @optimize */
     // to the block call.
@@ -58,7 +67,14 @@ export const visitor = (options: Options = {}, isReact = true) => {
      */
     if (
       !t.isImportDeclaration(importDeclaration) ||
-      !importDeclaration.source.value.includes('million')
+      !importDeclaration.source.value.includes('million') ||
+      !importDeclaration.specifiers.some(
+        (specifier) =>
+          t.isImportSpecifier(specifier) &&
+          t.isIdentifier(specifier.imported) &&
+          specifier.imported.name === 'block' &&
+          importedBlocks.block === specifier.local.name,
+      )
     ) {
       const millionImportDeclarationPath = blockCallBinding.path.parentPath!;
       throw createDeopt(
