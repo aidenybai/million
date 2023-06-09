@@ -44,7 +44,7 @@ Then, add the compiler to your build tool of choice:
 
 <details open>
   <summary>React Instructions</summary>
-  <Tabs items={['Next.js', 'Astro', 'Gatsby', 'Vite', 'Webpack', 'Rollup']} storageKey="selected-bundler-compiler">
+  <Tabs items={['Next.js', 'Astro', 'Gatsby', 'Vite', 'Webpack', 'Rollup', 'Craco.js']} storageKey="selected-bundler-compiler">
     <Tab>
     Million.js is supported within the `/app` ("use client" components only) and `/pages`
 
@@ -108,6 +108,23 @@ Then, add the compiler to your build tool of choice:
     export default {
       plugins: [million.rollup()],
     };
+    ```
+    </Tab>
+      <Tab>
+    ```js filename="craco.config.js"
+    const million = require("million/compiler");
+
+    module.exports = {
+      // ...
+      webpack: {
+       // ...
+       plugins: {
+        add: [million.webpack()],
+       // ...
+       },
+      //  ...
+     };
+   }
     ```
     </Tab>
   </Tabs>
