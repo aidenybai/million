@@ -204,7 +204,7 @@ rounded-lg text-center bg-gradient-to-b from-zinc-200 to-white dark:from-zinc-70
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="w-6 h-6 absolute"
+            className="w-6 h-6 absolute hover:animate-spin"
           >
             <path
               strokeLinecap="round"
