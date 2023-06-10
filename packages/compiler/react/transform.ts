@@ -361,7 +361,6 @@ export const transformJSX = (
    * handing all the edge cases.
    */
   if (t.isJSXIdentifier(type) && isComponent(type.name)) {
-    const jsxParentClone = t.cloneNode(jsxPath.parent);
     const jsxClone = t.cloneNode(jsx);
     const { attributes } = jsxClone.openingElement;
     for (let i = 0, j = attributes.length; i < j; i++) {
