@@ -97,8 +97,7 @@ export const transformComponent = (
    * function Component() {
    *  return <>
    *   <div />
-   *  </>;
-   * }
+   *  </>;   * }
    *
    * // becomes
    *
@@ -296,7 +295,7 @@ export const transformJSX = (
   },
   SHARED: Shared,
 ) => {
-  const { isReact, callSitePath, imports } = SHARED;
+  const { callSitePath, imports } = SHARED;
 
   /**
    * Populates `dynamics` with a new entry.
@@ -362,13 +361,9 @@ export const transformJSX = (
    * handing all the edge cases.
    */
   if (t.isJSXIdentifier(type) && isComponent(type.name)) {
-    const createElement = imports.addNamed(
-      isReact ? 'createElement' : 'h',
-      isReact ? 'react' : 'preact',
-    );
-
-    const componentProps: t.ObjectProperty[] = [];
-    const { attributes } = jsx.openingElement;
+    const jsxParentClone = t.cloneNode(jsxPath.parent);
+    const jsxClone = t.cloneNode(jsx);
+    const { attributes } = jsxClone.openingElement;
     for (let i = 0, j = attributes.length; i < j; i++) {
       const attribute = attributes[i]!;
 
@@ -396,9 +391,7 @@ export const transformJSX = (
             );
 
         if (!t.isJSXIdentifier(attributeId)) continue;
-        componentProps.push(
-          t.objectProperty(t.identifier(attributeId.name), id),
-        );
+        attributeValue.expression = id;
       }
     }
 
@@ -413,12 +406,7 @@ export const transformJSX = (
       true,
     );
 
-    const nestedRender = t.callExpression(renderReactScope, [
-      t.callExpression(createElement, [
-        t.identifier(type.name),
-        t.objectExpression(componentProps),
-      ]),
-    ]);
+    const nestedRender = t.callExpression(renderReactScope, [jsxClone]);
 
     const id = createDynamic(null, nestedRender, null);
     const nestedRenderId = t.jsxIdentifier(id.name);
