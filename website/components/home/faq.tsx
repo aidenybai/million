@@ -139,19 +139,16 @@ export function FAQ() {
 
 export function Disclosures({ full = false }) {
   return (
-    <div className="divide-y divide-gray-200 border-y border-gray-200 dark:divide-gray-800 dark:border-gray-800">
+    <div className="divide-y divide-zinc-200 border-y border-zinc-200 dark:divide-zinc-800 dark:border-zinc-800">
       {faq.map((item, i) => (
         <Disclosure
           as="div"
-          key={i}
+          key={String(i)}
           className={`mx-auto text-lg ${full ? '' : 'max-w-2xl'}`}
         >
           {({ open }) => (
             <>
-              <Disclosure.Button
-                type="button"
-                className="flex w-full items-start justify-between py-6 text-left text-gray-400"
-              >
+              <Disclosure.Button className="flex w-full items-start justify-between py-6 text-left text-gray-400">
                 <span className="font-medium text-gray-900 dark:text-white">
                   {item.question}
                 </span>
