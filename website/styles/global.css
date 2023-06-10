@@ -57,5 +57,5 @@ html[class~='dark'] .gradient-text {
 }
 
 .fix-safari-tilt {
-  -webkit-transform: translateZ(1000px);
+  -webkit-transform: translateZ(0);
 }
