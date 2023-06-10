@@ -137,7 +137,6 @@ export const renderToTemplate = (
           continue;
         }
         if (t.isJSXExpressionContainer(attribute.value)) {
-          // TODO handle interpolations {foo + 1}
           if (
             t.isStringLiteral(attribute.value.expression) ||
             t.isNumericLiteral(attribute.value.expression)

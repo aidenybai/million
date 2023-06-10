@@ -1,6 +1,6 @@
-import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Disclosure, Transition } from '@headlessui/react';
 import { Container } from './container';
 
 const faq = [
@@ -115,8 +115,6 @@ const faq = [
 ];
 
 export function FAQ() {
-  const [active, setActive] = useState<number[]>([]);
-
   return (
     <div className="mt-32" id="faq">
       <Container>
@@ -130,62 +128,72 @@ export function FAQ() {
               digging into the documentation and reading our blog articles.
             </p>
           </div>
-          <div className="divide-y divide-gray-200 border-y border-gray-200 dark:divide-gray-800 dark:border-gray-800 lg:w-7/12">
-            {faq.map((item, i) => (
-              <div key={i}>
-                <dl className="faq mx-auto max-w-2xl">
-                  <dt className="text-lg">
-                    <button
-                      type="button"
-                      className="flex w-full items-start justify-between py-6 text-left text-gray-400"
-                      aria-controls="faq-5"
-                      data-active="false"
-                      onClick={() => {
-                        if (active.includes(i)) {
-                          active.splice(active.indexOf(i), 1);
-                        } else active.push(i);
-                        setActive([...active]);
-                      }}
-                    >
-                      <span className="font-medium text-gray-900 dark:text-white">
-                        {item.question}
-                      </span>
-                      <span className="ml-6 flex h-7 items-center">
-                        <svg
-                          className={`arrow-down h-6 w-6 transform duration-300 ${
-                            active.includes(i) ? 'rotate-180' : 'rotate-0'
-                          }`}
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth="1.5"
-                          stroke="currentColor"
-                          aria-hidden="true"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M19.5 8.25l-7.5 7.5-7.5-7.5"
-                          ></path>
-                        </svg>
-                      </span>
-                    </button>
-                  </dt>
-                  <dd
-                    className={`${
-                      active.includes(i) ? '' : 'hidden'
-                    } pr-12 duration-300 ease-in-out`}
-                  >
-                    <p className="pb-6 text-base text-gray-600 dark:text-gray-400">
-                      {item.answer}
-                    </p>
-                  </dd>
-                </dl>
-              </div>
-            ))}
+          <div className="lg:w-7/12">
+            <Disclosures />
           </div>
         </div>
       </Container>
+    </div>
+  );
+}
+
+export function Disclosures({ full = false }) {
+  return (
+    <div className="divide-y divide-zinc-200 border-y border-zinc-200 dark:divide-zinc-800 dark:border-zinc-800">
+      {faq.map((item, i) => (
+        <Disclosure
+          as="div"
+          key={String(i)}
+          className={`mx-auto text-lg ${full ? '' : 'max-w-2xl'}`}
+        >
+          {({ open }) => (
+            <>
+              <Disclosure.Button className="flex w-full items-start justify-between py-6 text-left text-gray-400">
+                <span className="font-medium text-gray-900 dark:text-white">
+                  {item.question}
+                </span>
+                <span className="ml-6 flex h-7 items-center">
+                  <svg
+                    className={`arrow-down h-6 w-6 transform duration-300 ${
+                      open ? 'rotate-180' : 'rotate-0'
+                    }`}
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                    ></path>
+                  </svg>
+                </span>
+              </Disclosure.Button>
+              <Transition
+                enter="transition duration-100 ease-out"
+                enterFrom="transform scale-95 opacity-0"
+                enterTo="transform scale-100 opacity-100"
+                leave="transition duration-75 ease-out"
+                leaveFrom="transform scale-100 opacity-100"
+                leaveTo="transform scale-95 opacity-0"
+              >
+                <Disclosure.Panel
+                  className={`pr-12 duration-300 ease-in-out ${
+                    open ? '' : 'hidden'
+                  }`}
+                >
+                  <p className="pb-6 text-base text-gray-600 dark:text-gray-400">
+                    {item.answer}
+                  </p>
+                </Disclosure.Panel>
+              </Transition>
+            </>
+          )}
+        </Disclosure>
+      ))}
     </div>
   );
 }
