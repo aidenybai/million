@@ -3,52 +3,25 @@ title: 'How To Use Typescript'
 description: 'Learn how to use Typescript with block and For'
 ---
 
-import dynamic from 'next/dynamic';
 import { Callout, Tabs, Tab, Cards, Card } from 'nextra-theme-docs';
 import { Box } from '../../components/box';
 import { BrowserView, MobileView } from 'react-device-detect';
 import { VDomExample } from '../../components/back-in-block/vdom';
 import { CombinedBlockExample } from '../../components/back-in-block/combined-block';
-export const Demo = dynamic(() =>
-  import('../../components/demo').then((mod) => mod.Demo),
-);
-
-<MobileView>
 
 <Callout type="warning">
   We highly recommend viewing this documentation on a desktop browser to get access to interactive code examples.
 </Callout>
 
-</MobileView>
 
-# How To Use Typescript
 
-Welcome to the Million.js documentation for the Typescript users. Let's learn how we can integrate Million.js into our React Typescript projects.
+# Usage with Typescript
 
-Million.js assumes that you're already familiar with and you're using React Typescript. If you're not, we recommend checking out [react.dev](https://react.dev/) first.
+If your project uses TypeScript, you may want to make your components type-safe. Similar to React's `FC<Props>{:jsx}`, Million.js allows you to pass a generic into `block<Props>(){:jsx}`.
 
-<Callout type="info">
-**You will learn:**
- How to use `block(){:jsx}` in the appropriate way with Typescript
+<Callout type="warning">
+        You must make your Props use `type` instead of `interface`, as this is the [officially recognized behavior](https://github.com/microsoft/TypeScript/issues/15300#issuecomment-332366024) by the Typescript team.
 </Callout>
-
-## How do I use it in my React Typescript?
-
-When working with React Typescript, it's important to remember that there are type information for props that
-we need to pay attention to (remember that the way React works is with a funnel that passes data from some part of your app to another), and yes we don't want you just using `any` everywhere in your codebase. In here, you'll be shown
-how you can use `block()` when working with Typescript.
-
-To illustrate this, consider a scenario where you have some `MyComponent` component that takes in props from it's parent 
-component `Parent` and ypu want it to be such that you render a list of strings called `names` that is passed down from the parent to `MyComponent` and of course,
-we'll be using `<For/>` for optimized rendering.
-
-Here's how to do it:
-
-- Specify the typing information for your Props (using either `type` or `interface`)
-- Type-cast your component and your block with the aforementioned typing information
-
-
-In the case of the above scenario, here's what it will look like:
 
 ```jsx
 type Props = {
@@ -58,22 +31,5 @@ type Props = {
 const MyComponent: React.FC<Props> = ({ name }) => {
   return <div>Hello {name}</div>;
 };
-
 const MyBlock = block<Props>(MyComponent);
-
-const Parent = () => {
-  const names = ['John', 'Jane', 'Joe'];
-
-  return (
-    <div>
-      {/* Name will now be recognized as a string instead of any type, TypeScript will also know that MyBlock takes in a name prop */}
-      <For each={names}>{(name) => <MyBlock name={name} />}</For>
-    </div>
-  );
-};
 ```
-
-
-
-
-

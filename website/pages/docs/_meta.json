@@ -7,7 +7,7 @@
   "quickstart": "Quick Start",
   "install": "Installation",
   "rules": "Rules of Blocks",
-  "how-to-use-typescript": "How to use Typescript",
+  "how-to-use-typescript": "How to use typescript",
   "-- Internal API": {
     "type": "separator",
     "title": "Internal API"
