@@ -7,6 +7,7 @@
   "quickstart": "Quick Start",
   "install": "Installation",
   "rules": "Rules of Blocks",
+  "typescript": "How to use Typescript",
   "-- API Reference": {
     "type": "separator",
     "title": "API Reference"
