@@ -7,11 +7,17 @@
   "quickstart": "Quick Start",
   "install": "Installation",
   "rules": "Rules of Blocks",
+  "-- API Reference": {
+    "type": "separator",
+    "title": "API Reference"
+  },
+  "block": "block()",
+  "for": "<For />",
   "-- Internal API": {
     "type": "separator",
     "title": "Internal API"
   },
-  "block": "block()",
+  "internal-block": "block()",
   "mount": "mount()",
   "patch": "patch()",
   "map-array": "mapArray()",
