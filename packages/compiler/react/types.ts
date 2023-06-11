@@ -13,7 +13,6 @@ export interface Shared {
     addNamed: (
       name: string,
       source?: string,
-      forceClient?: boolean,
     ) => t.Identifier;
   };
 }
