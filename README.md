@@ -49,6 +49,12 @@ Inside your project directory, run the following command:
 npm install million
 ```
 
+Or
+
+```sh
+yarn add million
+```
+
 ## Example Usage
 
 Million.js is a library that enables you to create _blocks_. A block is a special [Higher Order Components (HOCs)](https://legacy.reactjs.org/docs/higher-order-components.html) that can be used as a React component but are hyper-optimized for rendering speed.
