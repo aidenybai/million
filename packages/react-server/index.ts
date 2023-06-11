@@ -3,6 +3,8 @@ import { RENDER_SCOPE } from '../react/constants';
 import type { ComponentType, ComponentClass, FunctionComponent } from 'react';
 import type { MillionArrayProps, MillionProps } from '../types';
 
+export { renderReactScope } from '../react/utils';
+
 // @ts-expect-error - is defined
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 let millionModule: typeof import('million/react') | null = null;

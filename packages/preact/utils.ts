@@ -1,5 +1,4 @@
 import { render, Fragment } from 'preact';
-import { document$ } from '../million/dom';
 import { RENDER_SCOPE } from '../react/constants';
 import type {
   VNode as PreactNode,
@@ -10,7 +9,7 @@ import type { VNode } from '../million';
 
 export const renderPreactScope = (vnode: PreactNode) => {
   return (el: HTMLElement | null) => {
-    const parent = el ?? document$.createElement(RENDER_SCOPE);
+    const parent = el ?? document.createElement(RENDER_SCOPE);
     render(vnode, parent);
     return parent;
   };
@@ -27,7 +26,7 @@ export const unwrap = (vnode?: ComponentChild): VNode => {
   }
   const type = vnode.type;
   if (typeof type === 'function') {
-     
+
     return unwrap((type as any)(vnode.props ?? {}));
   }
   if (typeof type === 'object' && '$' in type) return type;
