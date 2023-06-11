@@ -1,0 +1,36 @@
+---
+title: '<For />'
+description: 'Learn how to render lists of blocks in Million.'
+---
+
+# `<For />{:jsx}`
+
+**Syntax:** `<For each={array}>{(item, index) => Block}</For>{:jsx}`\
+**Example:** `<For each={[1, 2, 3]}>{(item) => myBlock({ item })}</For>{:jsx}`
+
+The `<For />{:jsx}` component is used to render a list of blocks. It takes an array as the `each` prop and a function as its children. The function is called for each item in the array and is passed the item and its index as arguments.
+
+It's the best way to loop over an array. As the array changes, `<For />{:jsx}` updates or moves items in the DOM rather than recreating them. Let's look at an example:
+
+```jsx
+import { block } from 'million/react';
+
+const DisplayBlock = block(function Display() {
+  return <div>{this.props.item}</div>;
+});
+
+function App() {
+  const [items, setItems] = useState([1, 2, 3]);
+
+  return (
+    <div>
+      <button onClick={() => setItems([...items, items.length + 1])}>
+        Add item
+      </button>
+      <For each={items}>{(item) => <DisplayBlock item={item} />}</For>
+    </div>
+  );
+}
+
+export default App;
+```
