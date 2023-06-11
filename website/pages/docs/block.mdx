@@ -1,74 +1,30 @@
 ---
 title: 'block()'
-description: 'The block() function instantiates a Block. It accepts a function with a props object parameter and returns a VNode.'
+description: 'Million.js introduces the concept of a Block. Blocks are a way for React components to be rendered using the Million.js virtual DOM.'
 ---
 
 import { Callout } from 'nextra-theme-docs';
 
-<Callout type="info">
-  This function is part of the internal API. Only use if you know what you are
-  doing and are optimizing for performance.
-</Callout>
-
-<br />
-
-# `block(){:jsx}`
+## `block(){:jsx}`
 
 **Syntax:** `block((props) => vnode){:jsx}`\
 **Example:** `block((props) => <div>{props.foo}</div>){:jsx}`
 
-The `block` function instantiates a `Block` (_a stateless "component"_). It accepts a function with a props object parameter that returns a `VNode`.
+Million.js is a library that enables you to create _blocks_. A block is a special [Higher Order Component (HOC)](https://legacy.reactjs.org/docs/higher-order-components.html) that can be used as a React component but is hyper-optimized for rendering speed.
 
-## Rules of usage
+Blocks are essentially components wrapped by `block(){:jsx}`.
 
-##### `props` is an immutable object with primitive or `Block` values.
-
-```jsx
-someBlock({
-  one: '1', // ✅
-  two: 1 + 1, // ✅
-  three: true, // ✅
-  four: Date.now(), // ✅
-  five: anotherBlock({ crewmate: true }), // ✅
-  six: { imposter: true }, // ❌
-  seven: new Date(), // ❌
-});
-```
-
-##### Top level values of `props` may not be interpolated with other values.
-
-The props are filled with `Hole` values. These `Hole` values are replaced with the actual values when the `block(){:jsx}` is called. The `Hole` values are immutable and cannot be derived with other values.
+<Callout type="warning">
+  There are some limitations to using blocks. Please reference the [Rules of
+  Blocks](/docs/rules) for more information.
+</Callout>
 
 ```jsx
-// Anatomy of a `Hole`
-{
-  $: 'prop';
-}
+import { block } from 'million/react';
 
-// Example:
-block((props) => {
-  console.log(props.foo); // { $: 'foo' } ✅
-  console.log(props.foo + ' bar'); // { $: 'foo' } + ' bar' ❌
-  return <div>{props.foo}</div>;
+const LionBlock = block(function Lion() {
+  return <img src="https://million.dev/lion.svg" />;
 });
-```
 
-The following are examples of this rule:
-
-```jsx
-block((props) => {
-  const { favorite } = props.favorite; // ❌
-  <div className={props.className /* ✅ */}>
-    {props.hello /* ✅ */}
-    {Date.now() /* ✅ */}
-    <button
-      onClick={() => {
-        console.log(props.world); /* ❌ (no holes inside listeners) */
-      }}
-    >
-      {props.count + 1 /* ❌ */}
-      {props.foo.toString() /* ❌ */}
-    </button>
-  </div>;
-});
+export default LionBlock;
 ```

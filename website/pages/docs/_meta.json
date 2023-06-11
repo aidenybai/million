@@ -8,11 +8,17 @@
   "install": "Installation",
   "rules": "Rules of Blocks",
   "how-to-use-typescript": "How to use Typescript",
+  "-- API Reference": {
+    "type": "separator",
+    "title": "API Reference"
+  },
+  "block": "block()",
+  "for": "<For />",
   "-- Internal API": {
     "type": "separator",
     "title": "Internal API"
   },
-  "block": "block()",
+  "internal-block": "block()",
   "mount": "mount()",
   "patch": "patch()",
   "map-array": "mapArray()",

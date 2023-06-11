@@ -41,14 +41,6 @@ Million works with React. Million makes creating web apps just as easy (It's jus
 
 ### [**📚 Learn Million in <5 minutes! →**](https://million.dev/)
 
-## Installing Million
-
-Inside your project directory, run the following command:
-
-```sh
-npm install million
-```
-
 ## Example Usage
 
 Million.js is a library that enables you to create _blocks_. A block is a special [Higher Order Components (HOCs)](https://legacy.reactjs.org/docs/higher-order-components.html) that can be used as a React component but are hyper-optimized for rendering speed.
@@ -84,7 +76,7 @@ You can also track our progress through our [Roadmap](https://github.com/users/a
 | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
 | [`million`](https://github.com/aidenybai/million/tree/main/packages/million)                                                                                            | The main Virtual DOM with all of Million's core. |
 | [`react`](https://github.com/aidenybai/million/tree/main/packages/react) / [`react-server`](https://github.com/aidenybai/million/tree/main/packages/react-server) /     | React compatibility for Million.                 |
-| [`preact`](https://github.com/aidenybai/million/tree/main/packages/preact) / [`preact-server`](https://github.com/aidenybai/million/tree/main/packages/preact-server) / | Preact compatibility for Million.                 |
+| [`preact`](https://github.com/aidenybai/million/tree/main/packages/preact) / [`preact-server`](https://github.com/aidenybai/million/tree/main/packages/preact-server) / | Preact compatibility for Million.                |
 | [`compiler`](https://github.com/aidenybai/million/tree/main/packages/compiler)                                                                                          | The compiler for Million in React.               |
 | [`jsx-runtime`](https://github.com/aidenybai/million/tree/main/packages/jsx-runtime)                                                                                    | A simple JSX runtime for Million core.           |
 | [`types`](https://github.com/aidenybai/million/tree/main/packages/types)                                                                                                | Shared types between packages                    |
