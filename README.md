@@ -52,6 +52,12 @@ npm install million
 Or
 
 ```sh
+pnpm install million
+```
+
+Or
+
+```sh
 yarn add million
 ```
 
