@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 
 export type MillionProps = Record<
   string,
-  string | number | boolean | null | undefined | Block | symbol | bigint
+  any
 >;
 
 export interface Options {
