@@ -197,6 +197,8 @@ You can enable the experimental optimizer by passing `optimize: true{:js}` to th
 You can also add a leading comment of `/* @optimize */` to any block to opt-in to optimization on a component-by-component basis.
 
 ```js
+import { block } from "million/react";
+
 const AppBlock = /* @optimize */ block(App);
 ```
 
