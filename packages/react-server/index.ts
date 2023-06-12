@@ -5,17 +5,14 @@ import type { MillionArrayProps, MillionProps } from '../types';
 
 export { renderReactScope } from '../react/utils';
 
-// @ts-expect-error - is defined
-// eslint-disable-next-line @typescript-eslint/consistent-type-imports
-let millionModule: typeof import('million/react') | null = null;
+let millionModule;
 
 export const block = <P extends MillionProps>(Component: ComponentType<P>) => {
   let blockFactory: any;
   function MillionBlockLoader<P extends MillionProps>(props: P) {
     useEffect(() => {
       const importSource = async () => {
-        // @ts-expect-error - is defined
-        millionModule = await import('million/react');
+        millionModule = await import('../react');
         if (!blockFactory) {
           blockFactory = millionModule.block(Component);
         }
@@ -54,8 +51,7 @@ export function For<T>(props: MillionArrayProps<T>) {
 
   useEffect(() => {
     const importSource = async () => {
-      // @ts-expect-error - is defined
-      millionModule = await import('million/react');
+      millionModule = await import('../react');
       forceUpdate();
     };
     try {
