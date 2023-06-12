@@ -90,8 +90,8 @@ export const patch = (oldBlock: AbstractBlock, newBlock: AbstractBlock) => {
 };
 
 export class Block extends AbstractBlock {
-  r: HTMLElement;
-  e: Edit[];
+  declare r: HTMLElement;
+  declare e: Edit[];
 
   constructor(
     root: HTMLElement,
