@@ -3,6 +3,8 @@ import { useEffect, useReducer } from 'preact/hooks';
 import { RENDER_SCOPE } from '../react/constants';
 import type { ComponentProps, ComponentType } from 'preact';
 
+export { renderPreactScope } from '../preact/utils';
+
 // @ts-expect-error - is defined
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 let millionModule: typeof import('million/preact') | null = null;

@@ -1,27 +1,28 @@
 ---
-title: 'How To Use Typescript'
+title: 'Usage with TypeScript'
 description: 'Learn how to use TypeScript with Million.js'
 ---
 
 import { Callout } from 'nextra-theme-docs';
-
-
 
 # Usage with Typescript
 
 If your project uses TypeScript, you may want to make your components type-safe. Similar to React's `FC<Props>{:jsx}`, Million.js allows you to pass a generic into `block<Props>(){:jsx}`.
 
 <Callout type="warning">
-        You must make your Props use `type` instead of `interface`, as this is the [officially recognized behavior](https://github.com/microsoft/TypeScript/issues/15300#issuecomment-332366024) by the Typescript team.
+  You must make your Props use `type` instead of `interface`, as this is the
+  [officially recognized
+  behavior](https://github.com/microsoft/TypeScript/issues/15300#issuecomment-332366024)
+  by the Typescript team.
 </Callout>
 
 ```jsx
 type Props = {
-  name: string;
+  name: string,
 };
 
 const MyComponent: React.FC<Props> = ({ name }) => {
   return <div>Hello {name}</div>;
 };
-const MyBlock = block<Props>(MyComponent);
+const MyBlock = block < Props > MyComponent;
 ```

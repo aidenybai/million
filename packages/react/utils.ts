@@ -1,6 +1,5 @@
 import { Fragment } from 'react';
 import { createRoot } from 'react-dom/client';
-import { document$ } from '../million/dom';
 import { REACT_ROOT, RENDER_SCOPE } from './constants';
 import type { ReactNode } from 'react';
 import type { Root } from 'react-dom/client';
@@ -8,7 +7,7 @@ import type { VNode } from '../million';
 
 export const renderReactScope = (vnode: ReactNode) => {
   return (el: HTMLElement | null) => {
-    const parent = el ?? document$.createElement(RENDER_SCOPE);
+    const parent = el ?? document.createElement(RENDER_SCOPE);
     const root =
       REACT_ROOT in parent
         ? (parent[REACT_ROOT] as Root)
