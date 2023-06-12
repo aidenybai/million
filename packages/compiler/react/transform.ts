@@ -403,12 +403,9 @@ export const transformJSX = (
 
     const nestedRender = t.callExpression(renderReactScope, [jsxClone]);
 
-    const id = createDynamic(null, nestedRender, null);
-    const nestedRenderId = t.jsxIdentifier(id.name);
-    jsx.openingElement.name = nestedRenderId;
-    if (jsx.closingElement) {
-      jsx.closingElement.name = nestedRenderId;
-    }
+    const id = createDynamic(null, nestedRender, () => {
+      jsxPath.replaceWith(t.jsxExpressionContainer(id));
+    });
   }
 
   /**

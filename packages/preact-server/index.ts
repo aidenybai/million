@@ -5,17 +5,14 @@ import type { ComponentProps, ComponentType } from 'preact';
 
 export { renderPreactScope } from '../preact/utils';
 
-// @ts-expect-error - is defined
-// eslint-disable-next-line @typescript-eslint/consistent-type-imports
-let millionModule: typeof import('million/preact') | null = null;
+let millionModule;
 
 export const block = (Component: ComponentType<any>) => {
   let blockFactory: any;
   function MillionBlockLoader(props: ComponentProps<any>) {
     useEffect(() => {
       const importSource = async () => {
-        // @ts-expect-error - is defined
-        millionModule = await import('million/preact');
+        millionModule = await import('../preact');
         if (!blockFactory) {
           blockFactory = millionModule.block(Component);
         }
@@ -49,8 +46,7 @@ export function For(props: {
 
   useEffect(() => {
     const importSource = async () => {
-      // @ts-expect-error - is defined
-      millionModule = await import('million/preact');
+      millionModule = await import('../preact');
       forceUpdate(0);
     };
     try {
