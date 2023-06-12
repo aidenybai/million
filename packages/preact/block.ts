@@ -8,6 +8,7 @@ import {
 import { Map$, MapGet$, MapHas$, MapSet$ } from '../million/constants';
 import { queueMicrotask$ } from '../million/dom';
 import { Effect, RENDER_SCOPE } from '../react/constants';
+import { processProps } from '../react/utils';
 import { unwrap } from './utils';
 import type { MillionProps, Options } from '../types';
 import type { Props } from '../million';
@@ -31,6 +32,7 @@ export const block = <P extends MillionProps>(
   function MillionBlock<P extends MillionProps>(props: P) {
     const ref = useRef<HTMLElement>(null);
     const patch = useRef<((props: P) => void) | null>(null);
+    processProps(props);
 
     patch.current?.(props);
 
