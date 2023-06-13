@@ -1,6 +1,6 @@
 import { createElement, useEffect, useReducer } from 'react';
 import { RENDER_SCOPE } from '../react/constants';
-import type { ComponentType, ComponentClass, FunctionComponent } from 'react';
+import type { ComponentType } from 'react';
 import type { MillionArrayProps, MillionProps } from '../types';
 
 export { renderReactScope } from '../react/utils';
@@ -10,12 +10,15 @@ let millionModule;
 export const block = <P extends MillionProps>(Component: ComponentType<P>) => {
   let blockFactory: any;
   function MillionBlockLoader<P extends MillionProps>(props: P) {
+    const [_, forceUpdate] = useReducer((x: number) => x + 1, 0);
+
     useEffect(() => {
       const importSource = async () => {
         millionModule = await import('../react');
         if (!blockFactory) {
           blockFactory = millionModule.block(Component);
         }
+        forceUpdate();
       };
       try {
         void importSource();
@@ -29,15 +32,7 @@ export const block = <P extends MillionProps>(Component: ComponentType<P>) => {
     }, []);
 
     if (!blockFactory) {
-      return createElement(
-        RENDER_SCOPE,
-        null,
-        createElement<P>(
-          // This is valid as type ComponentType<P> is by definition FunctionComponent<P> | ComponentClass<P>
-          Component as unknown as FunctionComponent<P> | ComponentClass<P>,
-          props,
-        ),
-      );
+      return createElement(RENDER_SCOPE, null);
     }
 
     return createElement<P>(blockFactory, props);
