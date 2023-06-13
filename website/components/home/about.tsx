@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { Container } from './container';
-import { Blur } from './hero';
 
 const Chart = dynamic(() => import('../chart').then((mod) => mod.Chart));
 const Showdown = dynamic(() =>
