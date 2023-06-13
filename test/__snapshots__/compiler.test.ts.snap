@@ -1,6 +1,6 @@
 // Vitest Snapshot v1
 
-exports[`block() > should transforms a valid block correctly 1`] = `
+exports[`compiler > block() > should transforms a valid block correctly 1`] = `
 "import { block } from \\"million/react\\";
 function Lion() {
   return /*#__PURE__*/React.createElement(\\"img\\", {
