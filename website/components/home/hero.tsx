@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { Container } from './container';
 
 const CountUp = dynamic(() => import('react-countup'), {
-  loading: () => <span>0</span>,
+  loading: () => <span>70</span>,
   ssr: false,
 });
 
@@ -25,7 +25,7 @@ export function Hero() {
               Make React{' '}
               <span className="gradient-text inline-block">
                 <span className="font-mono">
-                  <CountUp end={70} useEasing />
+                  <CountUp start={10} end={70} useEasing />
                 </span>
                 % faster
               </span>
