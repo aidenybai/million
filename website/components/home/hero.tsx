@@ -184,7 +184,7 @@ function DimensionLogo() {
       alt="Dimension"
       className="dark:invert"
       width={25}
-      height={100}
+      height={33.13}
     />
   );
 }
