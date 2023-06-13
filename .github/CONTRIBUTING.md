@@ -144,7 +144,7 @@ pnpm run dev # Run the project
 
 ### `test` folder
 
-This folder contains the code for the tests for the implemetation of core Million.js features like the "map-array" with `<For/>, `block() and so on. The test use the [Vitest](https://vitest.dev/).
+This folder contains the code for the tests for the implementation of core Million.js features like the "map-array" with `<For/>, `block() and so on. The test use the [Vitest](https://vitest.dev/).
 
 To run the test locally:
 
