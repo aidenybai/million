@@ -27,7 +27,7 @@ export function Hero() {
             <p className="mt-8 text-xl text-zinc-700 dark:text-zinc-300 leading-8">
               The{' '}
               <span className="font-medium dark: dark:text-zinc-100">
-                virtual DOM replacement
+                Virtual DOM Replacement
               </span>{' '}
               for React. Gain big performance wins for UI and data heavy React
               apps. Dead simple to use – try it out today with just a{' '}
@@ -79,10 +79,10 @@ export function Blur() {
   return (
     <div
       aria-hidden="true"
-      className="fix-safari-blur absolute inset-0 grid grid-cols-2 -space-x-52 opacity-40 dark:opacity-20"
+      className="absolute inset-0 grid grid-cols-2 -space-x-52 opacity-40 dark:opacity-20"
     >
-      <div className="blur-[106px] h-56 bg-gradient-to-br from-purple-500 to-purple-400 dark:from-purple-700"></div>
-      <div className="blur-[106px] h-32 bg-gradient-to-r from-purple-400 to-purple-300 dark:to-purple-600"></div>
+      <div className="fix-safari-blur blur-[106px] h-56 bg-gradient-to-br from-purple-500 to-purple-400 dark:from-purple-700"></div>
+      <div className="fix-safari-blur blur-[106px] h-32 bg-gradient-to-r from-purple-400 to-purple-300 dark:to-purple-600"></div>
     </div>
   );
 }
