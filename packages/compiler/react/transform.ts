@@ -400,16 +400,19 @@ export const transformJSX = (
     );
 
     const renderReactScope = imports.addNamed('renderReactScope');
-
     const nestedRender = t.callExpression(renderReactScope, [jsxClone]);
 
-    const id = createDynamic(null, nestedRender, null);
-    const nestedRenderId = t.jsxIdentifier(id.name);
-    jsx.openingElement.name = nestedRenderId;
-    if (jsx.closingElement) {
-      jsx.closingElement.name = nestedRenderId;
-    }
-    return dynamics;
+    jsx.openingElement = t.jsxOpeningElement(
+      t.jsxIdentifier(RENDER_SCOPE),
+      [
+        t.jsxAttribute(
+          t.jsxIdentifier('children'),
+          t.jsxExpressionContainer(nestedRender),
+        ),
+      ],
+      true,
+    );
+    // return dynamics; // something wrong with this, it splits when i remove this line of close
   }
 
   /**
