@@ -1,6 +1,7 @@
 import { useSandpack } from '@codesandbox/sandpack-react';
-import { useRef } from 'react';
+import { useEffet, useLayoutEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
+import { files } from '@/configurations/nextjs';
 import type { SandpackFiles } from '@codesandbox/sandpack-react';
 
 interface TabProps {
@@ -15,10 +16,30 @@ export const Tab = ({ name, isActive }: TabProps) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const onRename = (newName: string) => {
-    sandpack.addFile(`/${newName}`, sandpack.files[name]?.code);
-    sandpack.deleteFile(name);
+    const currentPosition = sandpack.visibleFiles.indexOf(name);
+    const newFile = `/${newName}`;
 
-    sandpack.openFile(`/${newName}`);
+    sandpack.addFile(newFile, sandpack.files[name]?.code, false);
+
+    const filesAfter = sandpack.visibleFiles.slice(currentPosition + 1);
+
+    // Close all files after the current one
+    filesAfter.forEach((file) => {
+      sandpack.closeFile(file);
+    });
+
+    // Open the new file (creating a new tab) at the end
+    sandpack.openFile(newFile);
+
+    // Open all files after the current one
+    filesAfter.forEach((file) => {
+      sandpack.openFile(file);
+    });
+
+    // Focus on the renamed file
+    sandpack.openFile(newFile);
+
+    sandpack.deleteFile(name);
   };
 
   return (
@@ -29,6 +50,7 @@ export const Tab = ({ name, isActive }: TabProps) => {
           'border-b-white hover:border-b-white': isActive,
         },
       )}
+      suppressContentEditableWarning
       contentEditable={isActive}
       ref={buttonRef}
       onClick={() => {
@@ -42,7 +64,6 @@ export const Tab = ({ name, isActive }: TabProps) => {
       }}
       onKeyDown={(e) => {
         if (e.key === 'Enter') {
-          onRename(e.currentTarget.textContent || '');
           buttonRef.current?.blur();
         }
       }}
