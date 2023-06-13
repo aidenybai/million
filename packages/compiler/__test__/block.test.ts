@@ -5,7 +5,7 @@ describe('block()', () => {
   let warnSpy;
 
   beforeEach(() => {
-    warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => null);
+    warnSpy = vi.spyOn(console, 'warn');
   });
 
   afterEach(() => {
