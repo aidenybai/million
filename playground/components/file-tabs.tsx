@@ -80,14 +80,19 @@ export const Tab = ({ name, isActive }: TabProps) => {
 };
 
 const AUTO_FILE_REGEX = /^\/File\d+\.jsx$/;
+const prefix = '/File';
+const suffix = '.jsx';
+
 const getNextFileName = (files: SandpackFiles) => {
   const names = Object.keys(files);
   const autoFiles = names.filter((name) => AUTO_FILE_REGEX.test(name));
-  // Remove "/File" and "".jsx"
-  const autoFilesNumbers = autoFiles.map((name) => Number(name.slice(5, -4)));
+  const autoFilesNumbers = autoFiles.map((name) => {
+    const number = name.slice(prefix.length, -suffix.length);
+    return Number(number);
+  });
   const lastAutoFileNumber = Math.max(0, ...autoFilesNumbers);
 
-  return `File${lastAutoFileNumber + 1}.jsx`;
+  return `${prefix}${lastAutoFileNumber + 1}${suffix}`;
 };
 
 const AddButton = () => {
@@ -99,8 +104,8 @@ const AddButton = () => {
     <button
       className="px-4 py-2 hover:bg-gray-900 transition-[background-color] duration-300 border-b-2 border-transparent h-8"
       onClick={() => {
-        sandpack.addFile(`/${nextFileName}`, '', true);
-        sandpack.openFile(`/${nextFileName}`);
+        sandpack.addFile(nextFileName, '', true);
+        sandpack.openFile(nextFileName);
       }}
     >
       +
