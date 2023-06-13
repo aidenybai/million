@@ -1,8 +1,8 @@
 import { vi } from 'vitest';
 import { babelTransform } from './test-utils';
 
-describe('compiler', () => {
-  describe('block()', () => {
+describe.concurrent('compiler', () => {
+  describe.concurrent('block()', () => {
     let warnSpy;
 
     beforeEach(() => {
