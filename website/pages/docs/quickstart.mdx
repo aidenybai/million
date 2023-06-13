@@ -286,7 +286,7 @@ Syntax: `<For each={array}>{(item, index) => Block}</For>{:jsx}`\
 Example: `<For each={[1, 2, 3]}>{(item, index) => myBlock({ item, index })}</For>{:jsx}`
 </Callout>
 
-It's the best way to loop over an array (uses [`mapArray(){:jsx}`](/map-array) under the hood). As the array changes, `<For />{:jsx}` updates or moves items in the DOM rather than recreating them. Let's look at an example:
+It's the best way to loop over an array (uses [`mapArray(){:jsx}`](/docs/map-array) under the hood). As the array changes, `<For />{:jsx}` updates or moves items in the DOM rather than recreating them. Let's look at an example:
 
 With this in mind, we can rewrite our table to use `<For />{:jsx}`:
 
