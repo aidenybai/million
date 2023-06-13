@@ -6,6 +6,10 @@
     {
       "source": "/chat",
       "destination": "https://discord.gg/X9yFbcV2rF"
+    },
+    {
+      "source": "/how",
+      "destination": "https://million.dev/blog/virtual-dom"
     }
   ]
 }
