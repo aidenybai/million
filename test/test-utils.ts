@@ -1,5 +1,5 @@
 import { transformSync } from '@babel/core';
-import { babelPlugin } from '../plugin';
+import { babelPlugin } from '../packages/compiler/plugin';
 import type { BabelFileResult } from '@babel/core';
 
 export function babelTransform(code: string) {
