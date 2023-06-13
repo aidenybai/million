@@ -10,6 +10,10 @@
     {
       "source": "/how",
       "destination": "https://million.dev/blog/virtual-dom"
+    },
+    {
+      "source": "/fork",
+      "destination": "https://github.com/aidenybai/hundred"
     }
   ]
 }
