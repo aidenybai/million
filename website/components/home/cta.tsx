@@ -1,9 +1,11 @@
 import Link from 'next/link';
 import { Container } from './container';
+import { Blur } from './hero';
 
 export function CTA() {
   return (
     <div className="relative pb-16">
+      <Blur />
       <Container>
         <div className="relative">
           <div className="mt-6 m-auto space-y-6 md:w-8/12 lg:w-7/12">

@@ -59,3 +59,7 @@ html[class~='dark'] .gradient-text {
 .fix-safari-tilt {
   -webkit-transform: translateZ(0);
 }
+
+.fix-safari-blur {
+  transform: translate3d(0, 0, 0);
+}
