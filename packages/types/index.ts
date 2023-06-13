@@ -1,9 +1,9 @@
-import type { Block, Props, block as createBlock } from '../million';
+import type { Props, block as createBlock } from '../million';
 import type { ReactNode } from 'react';
 
 export type MillionProps = Record<
   string,
-  string | number | boolean | null | undefined | Block | symbol | bigint
+  any
 >;
 
 export interface Options {
