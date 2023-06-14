@@ -25,7 +25,8 @@ import {
   StyleAttributeFlag,
 } from './constants';
 import type { ArrayBlock } from './array';
-import type { EditChild, Props, VElement, Hole, VNode, Edit } from './types';
+import type { EditChild, VElement, Hole, VNode, Edit } from './types';
+import { MillionProps } from 'packages/types';
 
 const HOLE_PROXY = new Proxy(
   {},
@@ -39,9 +40,9 @@ const HOLE_PROXY = new Proxy(
 );
 
 export const block = (
-  fn: (props?: Props) => VElement,
+  fn: (props?: MillionProps) => VElement,
   unwrap?: (vnode: any) => VNode,
-  shouldUpdate?: (oldProps: Props, newProps: Props) => boolean,
+  shouldUpdate?: (oldProps: MillionProps, newProps: MillionProps) => boolean,
 ) => {
   const vnode = fn(HOLE_PROXY);
   const edits: Edit[] = [];
@@ -52,10 +53,10 @@ export const block = (
     renderToTemplate(unwrap ? unwrap(vnode) : vnode, edits),
   );
 
-  return <T extends Props>(
+  return <T extends MillionProps>(
     props?: T | null,
     key?: string,
-    shouldUpdateCurrentBlock?: (oldProps: Props, newProps: Props) => boolean,
+    shouldUpdateCurrentBlock?: (oldProps: MillionProps, newProps: MillionProps) => boolean,
   ) => {
     return new Block(
       root,
@@ -96,9 +97,9 @@ export class Block extends AbstractBlock {
   constructor(
     root: HTMLElement,
     edits: Edit[],
-    props?: Props | null,
+    props?: MillionProps | null,
     key?: string,
-    shouldUpdate?: (oldProps: Props, newProps: Props) => boolean,
+    shouldUpdate?: (oldProps: MillionProps, newProps: MillionProps) => boolean,
     getElements?: (root: HTMLElement) => HTMLElement[],
   ) {
     super();
@@ -259,7 +260,7 @@ export class Block extends AbstractBlock {
     removeElement$.call(this.l);
     this.l = null;
   }
-  u(_oldProps: Props, _newProps: Props): boolean {
+  u(_oldProps: MillionProps, _newProps: MillionProps): boolean {
     return true;
   }
   s() {

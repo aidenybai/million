@@ -8,12 +8,11 @@ import { Map$, MapSet$, MapHas$, MapGet$ } from '../million/constants';
 import { queueMicrotask$ } from '../million/dom';
 import { unwrap } from './utils';
 import { Effect, RENDER_SCOPE } from './constants';
-import type { Props } from '../million';
 import type { ReactNode, ComponentType } from 'react';
 import type { Options, MillionProps } from '../types';
 
 export const REGISTRY = new Map$<
-  (props: Props) => ReactNode,
+  (props: MillionProps) => ReactNode,
   ReturnType<typeof createBlock>
 >();
 

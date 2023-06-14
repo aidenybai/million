@@ -1,4 +1,4 @@
-import type { Props, block as createBlock } from '../million';
+import type { block as createBlock } from '../million';
 import type { ReactNode } from 'react';
 
 export type MillionProps = Record<
@@ -7,7 +7,7 @@ export type MillionProps = Record<
 >;
 
 export interface Options {
-  shouldUpdate?: (oldProps: Props, newProps: Props) => boolean;
+  shouldUpdate?: (oldProps: MillionProps, newProps: MillionProps) => boolean;
   block?: any;
 }
 

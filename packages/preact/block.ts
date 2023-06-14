@@ -10,11 +10,10 @@ import { queueMicrotask$ } from '../million/dom';
 import { Effect, RENDER_SCOPE } from '../react/constants';
 import { unwrap } from './utils';
 import type { MillionProps, Options } from '../types';
-import type { Props } from '../million';
 import type { ComponentType, VNode } from 'preact';
 
 export const REGISTRY = new Map$<
-  (props: Props) => VNode,
+  (props: MillionProps) => VNode,
   ReturnType<typeof createBlock>
 >();
 

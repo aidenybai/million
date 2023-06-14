@@ -7,8 +7,7 @@ import { queueMicrotask$ } from '../million/dom';
 import { RENDER_SCOPE } from '../react/constants';
 import { REGISTRY } from './block';
 import { renderPreactScope } from './utils';
-import type { Props } from '../million';
-import type { ArrayCache, MillionArrayProps } from '../types';
+import type { ArrayCache, MillionArrayProps, MillionProps } from '../types';
 
 export const For = <T>({ each, children }: MillionArrayProps<T>) => {
   const ref = useRef<HTMLElement>(null);
@@ -57,13 +56,13 @@ const createChildren = <T>(
         children[i] = cache.current.block(vnode.props);
       }
     } else {
-      const block = createBlock((props?: Props) => {
+      const block = createBlock((props?: MillionProps) => {
         return {
           type: RENDER_SCOPE,
           props: { children: [props?.__scope] },
         } as any;
       });
-      const currentBlock = (props: Props) => {
+      const currentBlock = (props: MillionProps) => {
         return block({
           props,
           __scope: renderPreactScope(h(vnode.type, props)),

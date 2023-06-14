@@ -1,3 +1,5 @@
+import { MillionProps } from "packages/types";
+
 declare const enum Flags {
   Child = 1,
   Attribute = 2,
@@ -16,10 +18,9 @@ export type VNode =
   | undefined
   | null;
 
-export type Props = Record<string, any>;
 export interface VElement {
   type: string;
-  props: Props & { children?: (VNode | Hole)[] };
+  props: MillionProps & { children?: (VNode | Hole)[] };
 }
 
 export interface Hole {
@@ -32,7 +33,7 @@ export abstract class AbstractBlock {
   /* el */ l?: HTMLElement | null;
   /* getElements */ g?: (root: HTMLElement) => HTMLElement[];
   /* _parent */ _t?: HTMLElement | null;
-  /* props */ d?: Props | null;
+  /* props */ d?: MillionProps | null;
   /* key */ k?: string;
   /* cache */ c?: HTMLElement[];
   /* patch */ abstract p(block: AbstractBlock): HTMLElement;
@@ -46,7 +47,7 @@ export abstract class AbstractBlock {
   ): void;
   /* remove */ abstract x(): void;
   /* toString */ abstract s(): string;
-  /* shouldUpdate */ abstract u(oldProps: Props, newProps: Props): boolean;
+  /* shouldUpdate */ abstract u(oldProps: MillionProps, newProps: MillionProps): boolean;
   /* parent */ abstract t(): HTMLElement | null | undefined;
 }
 
