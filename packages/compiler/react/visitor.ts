@@ -144,9 +144,13 @@ export const visitor = (options: Options = {}, isReact = true) => {
      * We assume that the component is a identifier (e.g. block(Component)). If `isComponentAnonymous`
      * is true, then we know that it has been replaced with a identifier.
      */
-    if (!t.isIdentifier(RawComponent)) {
+    if (
+      !t.isIdentifier(RawComponent) &&
+      !t.isFunctionDeclaration(RawComponent) &&
+      !t.isArrowFunctionExpression(RawComponent)
+    ) {
       throw createDeopt(
-        'Found unsupported argument for block. Make sure blocks consume the reference to a component function, not the direct declaration.',
+        'Found unsupported argument for block. Make sure blocks consume a reference to a component function or the direct declaration.',
         callSitePath,
       );
     }
