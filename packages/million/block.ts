@@ -41,7 +41,7 @@ const HOLE_PROXY = new Proxy(
 
 export const block = (
   fn: (props?: MillionProps) => VElement,
-  unwrap?: (vnode: any) => VNode,
+  unwrap?: (vnode: VElement) => VNode,
   shouldUpdate?: (oldProps: MillionProps, newProps: MillionProps) => boolean,
 ) => {
   const vnode = fn(HOLE_PROXY);

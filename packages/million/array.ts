@@ -113,7 +113,7 @@ export class ArrayBlock extends AbstractBlock {
         move$.call(oldChild, oldHeadChild, null);
         patch$.call(oldChild, newHeadChild);
         newChildren[newHead] = oldChild;
-        oldChildren[oldIndex] = null as any;
+        oldChildren[oldIndex] = null;
       }
       newHeadChild = newChildren[++newHead]!;
     }
