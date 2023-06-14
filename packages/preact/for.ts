@@ -60,7 +60,7 @@ const createChildren = <T>(
         return {
           type: RENDER_SCOPE,
           props: { children: [props?.__scope] },
-        } as any;
+        };
       });
       const currentBlock = (props: MillionProps) => {
         return block({
