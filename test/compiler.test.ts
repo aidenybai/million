@@ -6,7 +6,8 @@ describe.concurrent('compiler', () => {
     let warnSpy;
 
     beforeEach(() => {
-      warnSpy = vi.spyOn(console, 'warn');
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     });
 
     afterEach(() => {
