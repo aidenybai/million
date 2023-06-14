@@ -147,6 +147,7 @@ export const visitor = (options: Options = {}, isReact = true) => {
     if (
       !t.isIdentifier(RawComponent) &&
       !t.isFunctionDeclaration(RawComponent) &&
+      !t.isFunctionExpression(RawComponent) &&
       !t.isArrowFunctionExpression(RawComponent)
     ) {
       throw createDeopt(
@@ -155,10 +156,14 @@ export const visitor = (options: Options = {}, isReact = true) => {
       );
     }
 
-    const componentDeclarationPath = isComponentAnonymous
-      ? // we just inserted the anonymous function declaration, so we know it's the previous sibling
-        globalPath.getPrevSibling()
-      : callSitePath.scope.getBinding(RawComponent.name)!.path;
+    callSitePath.scope.crawl();
+
+    const componentDeclarationPath = callSitePath.scope.getBinding(
+      isComponentAnonymous
+        ? // We know that the component is a identifier, so we can safely cast it.
+          (callSite.arguments[0] as t.Identifier).name
+        : RawComponent.name,
+    )!.path;
 
     // We want to keep the original component declaration intact, so we clone it.
     const Component = t.cloneNode(componentDeclarationPath.node) as
