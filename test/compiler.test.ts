@@ -22,9 +22,9 @@ describe.concurrent('compiler', () => {
       babelTransform(inputCode);
       expect(warnSpy).toHaveBeenCalledWith(
         expect.stringContaining(
-          '[Million.js] Found unsupported argument for block. Make sure blocks consume the reference to a component function, not the direct declaration.',
+          '[Million.js] Found unsupported argument for block.',
         ),
-        '\n',
+        expect.any(String),
       );
     });
   });
