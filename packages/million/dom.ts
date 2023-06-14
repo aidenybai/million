@@ -106,7 +106,7 @@ export const childAt = (el: HTMLElement, index: number) => {
 
 export const insertText = (
   el: HTMLElement,
-  value: any,
+  value: string,
   index: number,
 ): Text => {
   const node = document$.createTextNode(value);
