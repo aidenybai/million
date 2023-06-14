@@ -186,6 +186,28 @@ export const visitor = (options: Options = {}, isReact = true) => {
       t.isVariableDeclarator(Component) &&
       t.isArrowFunctionExpression(Component.init)
     ) {
+      if (
+        !t.isBlockStatement(Component.init.body) &&
+        t.isJSXElement(Component.init.body)
+      ) {
+        /**
+         * If the function body directly returns a JSX element (i.e., not wrapped in a BlockStatement),
+         * we transform the JSX return into a BlockStatement before passing it to `transformComponent()`.
+         *
+         * ```jsx
+         * const Component = () => <div></div>
+         *
+         * // becomes
+         * const Component = () => {
+         *   return <div></div>
+         * }
+         * ```
+         */
+        Component.init.body = t.blockStatement([
+          t.returnStatement(Component.init.body),
+        ]);
+      }
+
       /*
        * Variable Declaration w/ Arrow Function:
        *
