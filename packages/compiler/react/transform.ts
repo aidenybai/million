@@ -342,7 +342,7 @@ export const transformJSX = (
   const type = jsx.openingElement.name;
   /**
    * If the JSX type is Capitalized, we assume it's a component. We then turn that
-   * JSX into the raw function calls and hoist it as a dynamic with a `renderReactScope`:
+   * JSX into the raw function calls and hoist it as a dynamic with a `renderScope`:
    *
    * ```js
    * <Component foo={bar} />
