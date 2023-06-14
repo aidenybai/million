@@ -1,0 +1,8 @@
+{
+  "block": "block()",
+  "mount": "mount()",
+  "patch": "patch()",
+  "map-array": "mapArray()",
+  "render-to-template": "renderToTemplate()",
+  "string-to-dom": "stringToDOM()"
+}

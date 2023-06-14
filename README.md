@@ -16,10 +16,10 @@
           <a href="https://million.dev">📚 Read the docs</a>
         </td>
         <td>
-          <a href="https://www.youtube.com/watch?v=KgnSM9NbV2s">🎦 Watch video</a>
+          <a href="https://www.youtube.com/watch?v=VkezQMb1DHw">🎦 Watch video</a>
         </td>
         <td>
-          <a href="https://discord.gg/X9yFbcV2rF">💬 Join our Discord</a>
+          <a href="https://million.dev/chat">💬 Join our Discord</a>
         </td>
         <td>
           <a href="https://twitter.com/milliondotjs">🌐 Follow on Twitter</a>
@@ -45,7 +45,7 @@ Million works with React. Million makes creating web apps just as easy (It's jus
 
 Million.js is a library that enables you to create _blocks_. A block is a special [Higher Order Components (HOCs)](https://legacy.reactjs.org/docs/higher-order-components.html) that can be used as a React component but are hyper-optimized for rendering speed.
 
-Blocks are essentially components wrapped by `block()`. Below is an example of a React "counter" component that's been wrapped with Million.js.
+Below is an example of a React "counter" component that's been wrapped with Million.js.
 
 ```jsx
 import { useState } from 'react';

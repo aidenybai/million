@@ -4,20 +4,14 @@ import Image from 'next/image';
 import { Container } from './container';
 
 const CountUp = dynamic(() => import('react-countup'), {
-  loading: () => <span>0</span>,
+  loading: () => <span>70</span>,
   ssr: false,
 });
 
 export function Hero() {
   return (
     <div className="relative">
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 grid grid-cols-2 -space-x-52 opacity-40 dark:opacity-20"
-      >
-        <div className="blur-[106px] h-56 bg-gradient-to-br from-purple-500 to-purple-400 dark:from-purple-700"></div>
-        <div className="blur-[106px] h-32 bg-gradient-to-r from-purple-400 to-purple-300 dark:to-purple-600"></div>
-      </div>
+      <Blur />
       <Container>
         <div className="relative pt-20 md:pt-36 ml-auto">
           <div className="lg:w-2/3 text-center mx-auto">
@@ -25,7 +19,7 @@ export function Hero() {
               Make React{' '}
               <span className="gradient-text inline-block">
                 <span className="font-mono">
-                  <CountUp end={70} useEasing />
+                  <CountUp start={10} end={70} useEasing />
                 </span>
                 % faster
               </span>
@@ -33,7 +27,7 @@ export function Hero() {
             <p className="mt-8 text-xl text-zinc-700 dark:text-zinc-300 leading-8">
               The{' '}
               <span className="font-medium dark: dark:text-zinc-100">
-                virtual DOM replacement
+                Virtual DOM Replacement
               </span>{' '}
               for React. Gain big performance wins for UI and data heavy React
               apps. Dead simple to use – try it out today with just a{' '}
@@ -59,68 +53,87 @@ export function Hero() {
                   Get Started →
                 </span>
               </Link>
-              <Link
-                href="/docs/install"
+              <a
+                href="https://www.youtube.com/watch?v=VkezQMb1DHw"
+                target="_blank"
                 className="relative flex h-11 w-full items-center justify-center px-6 before:absolute before:inset-0 before:rounded-full before:border before:border-transparent before:bg-purple-600/10 before:bg-gradient-to-b before:transition before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 dark:before:border-zinc-700 dark:before:bg-zinc-800 sm:w-max"
               >
                 <span className="relative text-base font-semibold text-purple-500 dark:text-white">
-                  Install
+                  ▶️ Million.js in 100 seconds
                 </span>
-              </Link>
-            </div>
-          </div>
-        </div>
-        <div className="mt-36 text-center lg:mt-32 md:block hidden">
-          <span className="uppercase text-sm font-semibold tracking-wider text-gray-800 dark:text-white">
-            Used / sponsored by companies
-          </span>
-          <div className="mt-4 flex justify-around items-center">
-            <div className="p-4 grayscale opacity-60 hover:opacity-100 transition duration-200 hover:grayscale-0">
-              <a href="https://wyze.com" target="_blank">
-                <WyzeLogo />
-              </a>
-            </div>
-            <div className="p-4 grayscale opacity-60 hover:opacity-100 transition duration-200 hover:grayscale-0">
-              <a
-                href="https://vercel.com"
-                target="_blank"
-                className="flex items-center gap-3 text-xl font-semibold"
-              >
-                <VercelLogo />
-              </a>
-            </div>
-            <div className="p-4 grayscale opacity-60 hover:opacity-100 transition duration-200 hover:grayscale-0">
-              <a
-                href="https://dimension.dev"
-                target="_blank"
-                className="flex items-center gap-3 text-xl font-semibold"
-              >
-                <DimensionLogo />
-                Dimension
-              </a>
-            </div>
-            <div className="p-4 grayscale opacity-60 hover:opacity-100 transition duration-200 hover:grayscale-0">
-              <a
-                href="https://cerebrum.com"
-                target="_blank"
-                className="flex items-center gap-3 text-xl font-semibold"
-              >
-                <CerebrumLogo />
-                Cerebrum
-              </a>
-            </div>
-            <div className="p-4 grayscale opacity-60 hover:opacity-100 transition duration-200 hover:grayscale-0">
-              <a
-                href="https://www.theatrejs.com/"
-                target="_blank"
-                className="flex items-center gap-3 text-xl font-semibold"
-              >
-                <TheatreJSLogo />
               </a>
             </div>
           </div>
         </div>
+        <Companies />
       </Container>
+    </div>
+  );
+}
+
+export function Blur() {
+  return (
+    <div
+      aria-hidden="true"
+      className="absolute inset-0 grid grid-cols-2 -space-x-52 opacity-40 dark:opacity-20"
+    >
+      <div className="fix-safari-blur blur-[106px] h-56 bg-gradient-to-br from-purple-500 to-purple-400 dark:from-purple-700"></div>
+      <div className="fix-safari-blur blur-[106px] h-32 bg-gradient-to-r from-purple-400 to-purple-300 dark:to-purple-600"></div>
+    </div>
+  );
+}
+
+function Companies() {
+  return (
+    <div className="mt-36 text-center lg:mt-32 md:block hidden">
+      <span className="uppercase text-sm font-semibold tracking-wider text-gray-800 dark:text-white">
+        Used / sponsored by companies
+      </span>
+      <div className="mt-4 flex justify-around items-center">
+        <div className="p-4 grayscale opacity-60 hover:opacity-100 transition duration-200 hover:grayscale-0">
+          <a href="https://wyze.com" target="_blank">
+            <WyzeLogo />
+          </a>
+        </div>
+        <div className="p-4 grayscale opacity-60 hover:opacity-100 transition duration-200 hover:grayscale-0">
+          <a
+            href="https://vercel.com"
+            target="_blank"
+            className="flex items-center gap-3 text-xl font-semibold"
+          >
+            <VercelLogo />
+          </a>
+        </div>
+        <div className="p-4 grayscale opacity-60 hover:opacity-100 transition duration-200 hover:grayscale-0">
+          <a
+            href="https://dimension.dev"
+            target="_blank"
+            className="flex items-center gap-3 text-xl font-semibold"
+          >
+            <DimensionLogo />
+            Dimension
+          </a>
+        </div>
+        <div className="p-4 grayscale opacity-60 hover:opacity-100 transition duration-200 hover:grayscale-0">
+          <a
+            href="https://cerebrum.com"
+            target="_blank"
+            className="flex items-center gap-3 text-xl font-semibold"
+          >
+            <CerebrumLogo />
+            Cerebrum
+          </a>
+        </div>
+        <div className="p-4 grayscale opacity-60 hover:opacity-100 transition duration-200 hover:grayscale-0">
+          <a
+            href="https://www.theatrejs.com/"
+            target="_blank"
+            className="flex items-center gap-3 text-xl font-semibold"
+          >
+            <TheatreJSLogo />
+          </a>
+        </div>
+      </div>
     </div>
   );
 }
@@ -183,7 +196,7 @@ function DimensionLogo() {
       alt="Dimension"
       className="dark:invert"
       width={25}
-      height={100}
+      height={33.13}
     />
   );
 }

@@ -1,7 +1,7 @@
 {
   "name": "million",
-  "version": "2.4.5-beta.0",
-  "description": "<1kb compiler-augmented virtual DOM. It's fast!",
+  "version": "2.4.6-beta.2",
+  "description": "The Virtual DOM Replacement For React",
   "main": "dist/million.mjs",
   "module": "dist/million.mjs",
   "jsdelivr": "dist/million.mjs",

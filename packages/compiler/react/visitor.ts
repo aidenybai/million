@@ -144,17 +144,26 @@ export const visitor = (options: Options = {}, isReact = true) => {
      * We assume that the component is a identifier (e.g. block(Component)). If `isComponentAnonymous`
      * is true, then we know that it has been replaced with a identifier.
      */
-    if (!t.isIdentifier(RawComponent)) {
+    if (
+      !t.isIdentifier(RawComponent) &&
+      !t.isFunctionDeclaration(RawComponent) &&
+      !t.isFunctionExpression(RawComponent) &&
+      !t.isArrowFunctionExpression(RawComponent)
+    ) {
       throw createDeopt(
-        'Found unsupported argument for block. Make sure blocks consume the reference to a component function, not the direct declaration.',
+        'Found unsupported argument for block. Make sure blocks consume a reference to a component function or the direct declaration.',
         callSitePath,
       );
     }
 
-    const componentDeclarationPath = isComponentAnonymous
-      ? // we just inserted the anonymous function declaration, so we know it's the previous sibling
-        globalPath.getPrevSibling()
-      : callSitePath.scope.getBinding(RawComponent.name)!.path;
+    callSitePath.scope.crawl();
+
+    const componentDeclarationPath = callSitePath.scope.getBinding(
+      isComponentAnonymous
+        ? // We know that the component is a identifier, so we can safely cast it.
+          (callSite.arguments[0] as t.Identifier).name
+        : RawComponent.name,
+    )!.path;
 
     // We want to keep the original component declaration intact, so we clone it.
     const Component = t.cloneNode(componentDeclarationPath.node) as
@@ -186,6 +195,28 @@ export const visitor = (options: Options = {}, isReact = true) => {
       t.isVariableDeclarator(Component) &&
       t.isArrowFunctionExpression(Component.init)
     ) {
+      if (
+        !t.isBlockStatement(Component.init.body) &&
+        t.isJSXElement(Component.init.body)
+      ) {
+        /**
+         * If the function body directly returns a JSX element (i.e., not wrapped in a BlockStatement),
+         * we transform the JSX return into a BlockStatement before passing it to `transformComponent()`.
+         *
+         * ```jsx
+         * const Component = () => <div></div>
+         *
+         * // becomes
+         * const Component = () => {
+         *   return <div></div>
+         * }
+         * ```
+         */
+        Component.init.body = t.blockStatement([
+          t.returnStatement(Component.init.body),
+        ]);
+      }
+
       /*
        * Variable Declaration w/ Arrow Function:
        *

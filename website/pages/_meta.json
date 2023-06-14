@@ -20,6 +20,37 @@
     "title": "Readme",
     "theme": {
       "typesetting": "article"
+    },
+    "display": "hidden"
+  },
+  "more": {
+    "title": "More",
+    "type": "menu",
+    "items": {
+      "readme": {
+        "title": "Readme",
+        "href": "/readme"
+      },
+      "sponsor": {
+        "title": "Sponsor",
+        "href": "https://github.com/sponsors/aidenybai",
+        "newWindow": true
+      },
+      "research": {
+        "title": "Research",
+        "href": "https://dl.acm.org/doi/10.1145/3555776.3577683",
+        "newWindow": true
+      },
+      "demo": {
+        "title": "Live demo",
+        "href": "https://demo.million.dev",
+        "newWindow": true
+      },
+      "hundred": {
+        "title": "Build your own",
+        "href": "https://github.com/aidenybai/hundred",
+        "newWindow": true
+      }
     }
   }
 }

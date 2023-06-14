@@ -1,9 +1,17 @@
-import { Fragment } from 'react';
+import { Fragment, isValidElement } from 'react';
 import { createRoot } from 'react-dom/client';
 import { REACT_ROOT, RENDER_SCOPE } from './constants';
 import type { ReactNode } from 'react';
 import type { Root } from 'react-dom/client';
 import type { VNode } from '../million';
+
+export const processProps = <P extends object>(props: P) => {
+  // TODO: eventually need to handle all props, but need to analyze performance impact
+  if ('children' in props && isValidElement(props.children)) {
+    props.children = renderReactScope(props.children);
+  }
+  return props;
+};
 
 export const renderReactScope = (vnode: ReactNode) => {
   return (el: HTMLElement | null) => {

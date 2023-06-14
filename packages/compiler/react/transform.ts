@@ -342,7 +342,7 @@ export const transformJSX = (
   const type = jsx.openingElement.name;
   /**
    * If the JSX type is Capitalized, we assume it's a component. We then turn that
-   * JSX into the raw function calls and hoist it as a dynamic with a `renderReactScope`:
+   * JSX into the raw function calls and hoist it as a dynamic with a `renderScope`:
    *
    * ```js
    * <Component foo={bar} />
@@ -400,15 +400,19 @@ export const transformJSX = (
     );
 
     const renderReactScope = imports.addNamed('renderReactScope');
-
     const nestedRender = t.callExpression(renderReactScope, [jsxClone]);
 
-    const id = createDynamic(null, nestedRender, null);
-    const nestedRenderId = t.jsxIdentifier(id.name);
-    jsx.openingElement.name = nestedRenderId;
-    if (jsx.closingElement) {
-      jsx.closingElement.name = nestedRenderId;
-    }
+    jsx.openingElement = t.jsxOpeningElement(
+      t.jsxIdentifier(RENDER_SCOPE),
+      [
+        t.jsxAttribute(
+          t.jsxIdentifier('children'),
+          t.jsxExpressionContainer(nestedRender),
+        ),
+      ],
+      true,
+    );
+    // return dynamics; // something wrong with this, it splits when i remove this line of close
   }
 
   /**

@@ -41,7 +41,9 @@ Million.js is a library that enables you to create _blocks_. A block is a specia
 
 Blocks are essentially components wrapped by `block(){:jsx}`.
 
-```jsx {7}
+```jsx {3, 7}
+import { block } from "million/react";
+
 const LionBlock = block(function Lion() {
   return (
     <img src="https://million.dev/lion.svg" />
@@ -246,7 +248,9 @@ function Row({ adjective, color, noun }) {
 
 Then, we can wrap it with `block(){:jsx}` in order to optimize the `<Row />{:jsx}` component.
 
-```jsx
+```jsx {3, 14}
+import { block } from "million/react";
+
 const RowBlock = block(
   function Row({ adjective, color, noun }) {
     return (
@@ -282,11 +286,13 @@ Syntax: `<For each={array}>{(item, index) => Block}</For>{:jsx}`\
 Example: `<For each={[1, 2, 3]}>{(item, index) => myBlock({ item, index })}</For>{:jsx}`
 </Callout>
 
-It's the best way to loop over an array (uses [`mapArray(){:jsx}`](/map-array) under the hood). As the array changes, `<For />{:jsx}` updates or moves items in the DOM rather than recreating them. Let's look at an example:
+It's the best way to loop over an array (uses [`mapArray(){:jsx}`](/docs/map-array) under the hood). As the array changes, `<For />{:jsx}` updates or moves items in the DOM rather than recreating them. Let's look at an example:
 
 With this in mind, we can rewrite our table to use `<For />{:jsx}`:
 
-```jsx
+```jsx {3, 4, 5, 6, 7}
+import { For } from "million/react";
+
 <For each={data}>
   {({ adjective, color, noun }) => (
     <RowBlock adjective={adjective} color={color} noun={noun} />
