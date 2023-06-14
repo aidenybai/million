@@ -45,27 +45,23 @@ export function Hero() {
               </Link>
             </p>
             <div className="mt-16 flex flex-wrap justify-center gap-y-4 gap-x-6">
-              <div>
-                <Link
-                  href="/docs"
-                  className="relative flex h-11 w-full items-center justify-center px-6 before:absolute before:inset-0 before:rounded-full before:bg-purple-600 before:transition before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 sm:w-max"
-                >
-                  <span className="relative text-base font-semibold text-white">
-                    Get Started →
-                  </span>
-                </Link>
-              </div>
-              <div>
-                <a
-                  href="https://www.youtube.com/watch?v=VkezQMb1DHw"
-                  target="_blank"
-                  className="relative flex h-11 w-full items-center justify-center px-6 before:absolute before:inset-0 before:rounded-full before:border before:border-transparent before:bg-purple-600/10 before:bg-gradient-to-b before:transition before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 dark:before:border-zinc-700 dark:before:bg-zinc-800 sm:w-max"
-                >
-                  <span className="relative text-base font-semibold text-purple-500 dark:text-white">
-                    ▶️ Million.js in 100 seconds
-                  </span>
-                </a>
-              </div>
+              <Link
+                href="/docs"
+                className="relative flex h-11 w-full items-center justify-center px-6 before:absolute before:inset-0 before:rounded-full before:bg-purple-600 before:transition before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 sm:w-max"
+              >
+                <span className="relative text-base font-semibold text-white">
+                  Get Started →
+                </span>
+              </Link>
+              <a
+                href="https://www.youtube.com/watch?v=VkezQMb1DHw"
+                target="_blank"
+                className="relative flex h-11 w-full items-center justify-center px-6 before:absolute before:inset-0 before:rounded-full before:border before:border-transparent before:bg-purple-600/10 before:bg-gradient-to-b before:transition before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 dark:before:border-zinc-700 dark:before:bg-zinc-800 sm:w-max"
+              >
+                <span className="relative text-base font-semibold text-purple-500 dark:text-white">
+                  ▶️ Million.js in 100 seconds
+                </span>
+              </a>
             </div>
           </div>
         </div>
