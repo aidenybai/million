@@ -125,7 +125,7 @@ const config: DocsThemeConfig = {
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 212 44"
-            className='h-8'
+            className="h-8"
             width="212"
           >
             <rect width="212" height="44" fill="#000" rx="8"></rect>
@@ -222,6 +222,7 @@ const config: DocsThemeConfig = {
   },
   sidebar: {
     toggleButton: true,
+    defaultMenuCollapseLevel: 0,
   },
   toc: {
     float: true,
