@@ -35,6 +35,8 @@ const useEditController = ({
   const requestEditTimeout = useRef<NodeJS.Timeout>();
 
   const startEdit = () => {
+    // we need to flush the state update to make sure the contentEditable is set
+    // before calling onStartEdit, which focus the div
     flushSync(() => {
       setIsEditing(true);
     });
@@ -174,13 +176,14 @@ export const Tab = ({ name, isActive }: TabProps) => {
 
           if (!isEditing) {
             switch (e.key) {
-              // Start editing when hitting Enter
+              // when pressing enter, if selected start editing, otherwise select it
               case 'Enter': {
                 if (!isActive) {
                   sandpack.setActiveFile(name);
                   return;
                 }
 
+                // prevent default to avoid adding a new line to the content
                 e.preventDefault();
                 startEdit();
                 return;
