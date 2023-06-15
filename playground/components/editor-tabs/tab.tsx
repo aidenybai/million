@@ -31,18 +31,18 @@ const useEditController = ({
   onCancelEdit,
   onCompleteEdit,
 }: UseEditControllerOptions) => {
-  const [canEdit, setCanEdit] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const requestEditTimeout = useRef<NodeJS.Timeout>();
 
   const startEdit = () => {
     flushSync(() => {
-      setCanEdit(true);
+      setIsEditing(true);
     });
     onStartEdit();
   };
 
   const requestEdit = () => {
-    if (canEdit) return;
+    if (isEditing) return;
 
     if (!requestEditTimeout.current) {
       requestEditTimeout.current = setTimeout(() => {
@@ -54,16 +54,16 @@ const useEditController = ({
   };
 
   const cancelEdit = () => {
-    setCanEdit(false);
+    setIsEditing(false);
     onCancelEdit();
   };
 
   const completeEdit = (name: string) => {
-    setCanEdit(false);
+    setIsEditing(false);
     onCompleteEdit(name);
   };
 
-  return { canEdit, requestEdit, startEdit, cancelEdit, completeEdit };
+  return { isEditing, requestEdit, startEdit, cancelEdit, completeEdit };
 };
 
 export const Tab = ({ name, isActive }: TabProps) => {
@@ -103,7 +103,7 @@ export const Tab = ({ name, isActive }: TabProps) => {
     sandpack.deleteFile(name);
   };
 
-  const { canEdit, requestEdit, startEdit, completeEdit, cancelEdit } =
+  const { isEditing, requestEdit, startEdit, completeEdit, cancelEdit } =
     useEditController({
       onStartEdit: () => {
         if (!buttonContentRef.current) return;
@@ -148,10 +148,10 @@ export const Tab = ({ name, isActive }: TabProps) => {
         tabIndex={0}
         className={clsx('px-4 py-2 border-2 border-transparent rounded-sm', {
           'focus:border-blue-800 focus-visible:outline-none cursor-text':
-            canEdit,
+            isEditing,
         })}
         suppressContentEditableWarning
-        contentEditable={canEdit}
+        contentEditable={isEditing}
         ref={buttonContentRef}
         onClick={(e) => {
           e.stopPropagation();
@@ -161,7 +161,7 @@ export const Tab = ({ name, isActive }: TabProps) => {
             return;
           }
 
-          if (!canEdit) {
+          if (!isEditing) {
             requestEdit();
           }
         }}
@@ -172,7 +172,7 @@ export const Tab = ({ name, isActive }: TabProps) => {
           e.stopPropagation();
           if (!buttonContentRef.current) return;
 
-          if (!canEdit) {
+          if (!isEditing) {
             switch (e.key) {
               // Start editing when hitting Enter
               case 'Enter': {
