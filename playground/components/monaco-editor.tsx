@@ -4,7 +4,7 @@ import {
   SandpackStack,
   useSandpack,
 } from '@codesandbox/sandpack-react';
-import { FileTabs } from './file-tabs';
+import { EditorTabs } from './editor-tabs';
 
 export const MonacoEditor: React.FC<{ flex: number }> = ({ flex }) => {
   const { code, updateCode } = useActiveCode();
@@ -12,7 +12,7 @@ export const MonacoEditor: React.FC<{ flex: number }> = ({ flex }) => {
 
   return (
     <SandpackStack style={{ height: '100%', margin: 0, flex }}>
-      <FileTabs />
+      <EditorTabs />
       <div style={{ flex: 1, background: '#1e1e1e' }}>
         <Editor
           width="100%"
