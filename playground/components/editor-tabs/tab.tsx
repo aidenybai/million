@@ -176,6 +176,11 @@ export const Tab = ({ name, isActive }: TabProps) => {
             switch (e.key) {
               // Start editing when hitting Enter
               case 'Enter': {
+                if (!isActive) {
+                  sandpack.setActiveFile(name);
+                  return;
+                }
+
                 e.preventDefault();
                 startEdit();
                 return;
