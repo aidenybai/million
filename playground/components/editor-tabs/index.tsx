@@ -38,7 +38,7 @@ export const EditorTabs = () => {
   const { sandpack } = useSandpack();
 
   return (
-    <div className="flex flex-wrap items-center w-full gap-1 flex-shrink-0 bg-gray-950 min-h-10">
+    <div className="flex flex-wrap items-center w-full gap-2 flex-shrink-0 bg-gray-950 min-h-10 py-px">
       {sandpack.visibleFiles.map((file) => (
         <Tab key={file} name={file} isActive={sandpack.activeFile === file} />
       ))}

@@ -139,7 +139,7 @@ export const Tab = ({ name, isActive }: TabProps) => {
     >
       <span
         tabIndex={0}
-        className={clsx('px-4 py-2 border-2 border-transparent rounded-sm', {
+        className={clsx('px-4 py-1 border-2 border-transparent rounded-sm', {
           'focus:border-blue-800 focus-visible:outline-none cursor-text':
             isEditing,
         })}
