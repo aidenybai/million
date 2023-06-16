@@ -1,4 +1,5 @@
 import { useSandpack } from '@codesandbox/sandpack-react';
+import PlusIcon from '@heroicons/react/24/outline/PlusIcon';
 import { Tab } from './tab';
 import type { SandpackFiles } from '@codesandbox/sandpack-react';
 
@@ -24,13 +25,13 @@ const AddButton = () => {
 
   return (
     <button
-      className="hover:bg-gray-900 transition-[background-color] duration-300 border-b-2 border-transparent h-8 w-8 text-white"
+      className="hover:bg-gray-900 transition-[background-color] duration-300 p-1 rounded-sm"
       onClick={() => {
         sandpack.addFile(nextFileName, '', true);
         sandpack.openFile(nextFileName);
       }}
     >
-      +
+      <PlusIcon className="w-4 h-4 text-white" />
     </button>
   );
 };

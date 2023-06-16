@@ -2,7 +2,7 @@ import { useSandpack } from '@codesandbox/sandpack-react';
 import { useRef, useState } from 'react';
 import { clsx } from 'clsx';
 import { flushSync } from 'react-dom';
-import { CloseIcon } from '../icons/close-icon';
+import XMarkIcon from '@heroicons/react/24/outline/XMarkIcon';
 
 interface TabProps {
   name: string;
@@ -219,7 +219,7 @@ export const Tab = ({ name, isActive }: TabProps) => {
           sandpack.deleteFile(name);
         }}
       >
-        <CloseIcon className="h-4 opacity-60" />
+        <XMarkIcon className="h-4" />
       </button>
     </div>
   );
