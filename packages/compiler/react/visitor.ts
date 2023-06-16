@@ -118,8 +118,11 @@ export const visitor = (options: Options = {}, isReact = true) => {
       t.isArrowFunctionExpression(RawComponent);
 
     if (isComponentAnonymous) {
+      // If we can extract out the name for the function expression, we use that.
       const anonymousComponentId =
-        callSitePath.scope.generateUidIdentifier('anonymous$');
+        t.isFunctionExpression(RawComponent) && RawComponent.id
+          ? RawComponent.id
+          : callSitePath.scope.generateUidIdentifier('anonymous$');
 
       /**
        * const anonymous = () => <div />;

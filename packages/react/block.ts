@@ -27,7 +27,7 @@ export const block = <P extends MillionProps>(
     ? createBlock(fn as any, unwrap)
     : options.block;
 
-  function MillionBlock<P extends MillionProps>(props: P) {
+  const MillionBlock = <P extends MillionProps>(props: P) => {
     const ref = useRef<HTMLElement>(null);
     const patch = useRef<((props: P) => void) | null>(null);
     processProps(props);
@@ -63,6 +63,12 @@ export const block = <P extends MillionProps>(
     );
 
     return vnode;
+  };
+
+  const displayName = fn?.displayName || fn?.name || fn;
+
+  if (displayName) {
+    MillionBlock.displayName = `MillionBlock.${String(displayName)}`;
   }
 
   if (!MapHas$.call(REGISTRY, MillionBlock<P>)) {
