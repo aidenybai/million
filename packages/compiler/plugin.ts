@@ -10,6 +10,7 @@ export interface Options {
   optimize?: boolean;
   server?: boolean;
   mode?: 'react' | 'preact' | 'react-server' | 'preact-server' | 'vdom';
+  mute?: boolean;
 }
 
 export const unplugin = createUnplugin((options: Options = {}) => {
@@ -66,7 +67,7 @@ export const babelPlugin = declare((api, options: Options) => {
         try {
           visitor(path);
         } catch (err: unknown) {
-          if (err instanceof Error) {
+          if (err instanceof Error && !options.mute) {
             // eslint-disable-next-line no-console
             console.warn(err.message, '\n');
           }
