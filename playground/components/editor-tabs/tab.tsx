@@ -211,7 +211,7 @@ export const Tab = ({ name, isActive }: TabProps) => {
           buttonContentRef.current?.blur();
           // eslint-disable-next-line no-alert
           const response = confirm(
-            'Are you sure you want to delete this file?',
+            `Are you sure you want to delete ${nameWithoutInitialSlash}?`,
           );
 
           if (!response) return;
