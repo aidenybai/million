@@ -72,15 +72,11 @@ export const Tab = ({ name, isActive }: TabProps) => {
   const { sandpack } = useSandpack();
   const buttonContentRef = useRef<HTMLButtonElement>(null);
 
-  // the file name might have nested segments, we only show the last
-  const lastName = name.split('/').at(-1);
+  const nameWithoutInitialSlash = name.slice(1);
 
-  // remaining path, excluding initial slash and last segment
-  const filePath = name.split('/').slice(1, -1).join('/');
-
-  const onRename = (newLastName: string) => {
+  const onRename = (newName: string) => {
     const currentPosition = sandpack.visibleFiles.indexOf(name);
-    const newFile = `${filePath}/${newLastName}`;
+    const newFile = `/${newName}`;
 
     sandpack.addFile(newFile, sandpack.files[name].code, false);
 
@@ -114,12 +110,12 @@ export const Tab = ({ name, isActive }: TabProps) => {
       },
       onCancelEdit: () => {
         if (!buttonContentRef.current) return;
-        buttonContentRef.current.textContent = lastName ?? '';
+        buttonContentRef.current.textContent = nameWithoutInitialSlash;
       },
-      onCompleteEdit: (newLastName) => {
+      onCompleteEdit: (newName) => {
         if (!buttonContentRef.current) return;
-        if (newLastName !== lastName) {
-          onRename(newLastName);
+        if (newName !== nameWithoutInitialSlash) {
+          onRename(newName);
         }
 
         buttonContentRef.current.blur();
@@ -130,7 +126,7 @@ export const Tab = ({ name, isActive }: TabProps) => {
     <div
       role="button"
       className={clsx(
-        'flex relative items-center hover:bg-gray-900 hover:border-b-gray-300 transition-[background-color] duration-300 border-b-2 border-transparent h-10 text-white',
+        'flex relative items-center hover:bg-gray-900 hover:border-b-gray-300 transition-[background-color] duration-300 border-b-2 border-transparent py-1 h-10 text-white ',
         {
           'border-b-white hover:border-b-white': isActive,
         },
@@ -141,11 +137,6 @@ export const Tab = ({ name, isActive }: TabProps) => {
         }
       }}
     >
-      {filePath && (
-        <span className="text-[10px] absolute top-0 left-0 text-gray-300">
-          {filePath}/
-        </span>
-      )}
       <span
         tabIndex={0}
         className={clsx('px-4 py-2 border-2 border-transparent rounded-sm', {
@@ -211,7 +202,7 @@ export const Tab = ({ name, isActive }: TabProps) => {
           }
         }}
       >
-        {lastName}
+        {nameWithoutInitialSlash}
       </span>
       <button
         onClick={(e) => {
