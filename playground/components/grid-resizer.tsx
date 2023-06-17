@@ -1,13 +1,6 @@
-import {
-  useState,
-  type FC,
-  useEffect,
-  useRef,
-  Ref,
-  forwardRef,
-  MutableRefObject,
-} from 'react';
+import { useState, type FC, useEffect, forwardRef } from 'react';
 import { clsx } from 'clsx';
+import type { RefObject } from 'react';
 
 const Dot: FC<{ isDragging: boolean }> = (props: { isDragging: boolean }) => {
   return (
@@ -23,13 +16,13 @@ const Dot: FC<{ isDragging: boolean }> = (props: { isDragging: boolean }) => {
 };
 
 export const GridResizer = forwardRef<
-  MutableRefObject<HTMLDivElement>,
+  HTMLDivElement,
   {
     isHorizontal: boolean;
     onResize: (clientX: number, clientY: number) => void;
   }
 >((props, r) => {
-  let ref = r as unknown as MutableRefObject<HTMLDivElement>;
+  const ref = r as RefObject<HTMLDivElement> | null;
   const [isDragging, setIsDragging] = useState(false);
 
   const onResizeStart = () => setIsDragging(true);
@@ -45,7 +38,7 @@ export const GridResizer = forwardRef<
   };
 
   useEffect(() => {
-    if (!ref?.current!) {
+    if (!ref?.current) {
       return;
     }
 
@@ -55,10 +48,10 @@ export const GridResizer = forwardRef<
     });
 
     return () => {
-      ref.current.removeEventListener('mousedown', onResizeStart);
-      ref.current.removeEventListener('touchstart', onResizeStart);
+      ref.current?.removeEventListener('mousedown', onResizeStart);
+      ref.current?.removeEventListener('touchstart', onResizeStart);
     };
-  }, [ref && ref.current]);
+  }, [ref?.current]);
 
   useEffect(() => {
     if (isDragging) {

@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@codesandbox/sandpack-react": "^2.6.7",
+    "@heroicons/react": "^2.0.18",
     "@monaco-editor/react": "^4.5.1",
     "@types/node": "^18.14.1",
     "@types/react": "18.2.7",

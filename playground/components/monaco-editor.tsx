@@ -1,19 +1,19 @@
-import Editor from '@monaco-editor/react';
+import { Editor } from '@monaco-editor/react';
 import {
   useActiveCode,
   SandpackStack,
-  FileTabs,
   useSandpack,
 } from '@codesandbox/sandpack-react';
+import { EditorTabs } from './editor-tabs';
 
-export const MonacoEditor: React.FC<{ flex: number }>= (props) => {
+export const MonacoEditor: React.FC<{ flex: number }> = ({ flex }) => {
   const { code, updateCode } = useActiveCode();
   const { sandpack } = useSandpack();
 
   return (
-    <SandpackStack style={{  height: '100%', margin: 0, flex: props.flex }}>
-      <FileTabs />
-      <div style={{ flex: 1, paddingTop: 8, background: '#1e1e1e' }}>
+    <SandpackStack style={{ height: '100%', margin: 0, flex }}>
+      <EditorTabs />
+      <div style={{ flex: 1, background: '#1e1e1e' }}>
         <Editor
           width="100%"
           height="100%"

@@ -4,31 +4,29 @@ import {
   SandpackProvider,
   SandpackLayout,
   SandpackPreview,
-  SandpackConsole,
 } from '@codesandbox/sandpack-react';
-import type { Frameworks } from '@/types';
+import { useRef, useState } from 'react';
+import { useAtomValue } from 'jotai';
 import { files as reactViteFiles } from '@/configurations/react-vite';
 import { files as nextjsFiles } from '@/configurations/nextjs';
+import { frameworkAtom } from '@/atoms/framework';
 import { MonacoEditor } from './monaco-editor';
-import { GridResizer } from './gridResize';
-import { useRef, useState } from 'react';
+import { GridResizer } from './grid-resizer';
 import { FrameworkSwitcher } from './framework-switcher';
-import { useAtomValue, atom } from 'jotai';
+import type { Framework } from '@/types';
 
-export const frameworkAtom = atom<Frameworks>('react');
-
-const FRAMEWORK_TEMPLATE_MAP: Record<Frameworks, SandpackPredefinedTemplate> = {
+const FRAMEWORK_TEMPLATE_MAP: Record<Framework, SandpackPredefinedTemplate> = {
   nextjs: 'nextjs',
   react: 'vite-react',
 };
 
-const FRAMEWORK_FILES_MAP: Record<Frameworks, SandpackFiles> = {
+const FRAMEWORK_FILES_MAP: Record<Framework, SandpackFiles> = {
   react: reactViteFiles,
   nextjs: nextjsFiles,
 };
 
 export const Editor: React.FC = () => {
-  const framework = useAtomValue(frameworkAtom);
+  const framework = useAtomValue<Framework>(frameworkAtom);
 
   const template = FRAMEWORK_TEMPLATE_MAP[framework];
   const files = FRAMEWORK_FILES_MAP[framework];
@@ -36,28 +34,19 @@ export const Editor: React.FC = () => {
     million: 'latest',
   };
 
-  let resizerRef = useRef<null | HTMLDivElement>()!;
-  let gridRef = useRef<null | HTMLDivElement>()!;
+  const resizerRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
   const [left, setLeft] = useState(0.5);
-  const [isHorizontal, setIsHorizontal] = useState(false);
 
-  const changeLeft = (clientX: number, clientY: number) => {
-    let position: number;
-    let size: number;
-    let grid = gridRef?.current!;
-    let resizer = resizerRef?.current!;
-    if (!grid || !resizer) {
-      return;
-    }
+  const changeLeft = (clientX: number) => {
+    if (!resizerRef.current || !gridRef.current) return;
+    const resizer = resizerRef.current;
+    const grid = gridRef.current;
+
     const rect = grid.getBoundingClientRect();
 
-    if (isHorizontal) {
-      position = clientY - rect.top - resizer.offsetHeight / 2;
-      size = grid.offsetHeight - resizer.offsetHeight;
-    } else {
-      position = clientX - rect.left - resizer.offsetWidth / 2;
-      size = grid.offsetWidth - resizer.offsetWidth;
-    }
+    const position = clientX - rect.left - resizer.offsetWidth / 2;
+    const size = grid.offsetWidth - resizer.offsetWidth;
     const percentage = position / size;
     const percentageAdjusted = Math.min(Math.max(percentage, 0.25), 0.75);
 
@@ -74,7 +63,7 @@ export const Editor: React.FC = () => {
       >
         <FrameworkSwitcher />
         <SandpackLayout
-          ref={gridRef as any}
+          ref={gridRef}
           className="flex"
           // I want this to be dyanmic with whatever else is in the parent div but I can't figure it out
           style={{ height: 'calc(100vh - 100px)' }}
@@ -82,7 +71,7 @@ export const Editor: React.FC = () => {
           <MonacoEditor flex={left} />
 
           <GridResizer
-            ref={resizerRef as any}
+            ref={resizerRef}
             isHorizontal={true}
             onResize={changeLeft}
           />
