@@ -3,14 +3,12 @@ import {
   useActiveCode,
   SandpackStack,
   useSandpack,
-  useSandpackConsole,
 } from '@codesandbox/sandpack-react';
 import { EditorTabs } from './editor-tabs';
 
 export const MonacoEditor = () => {
   const { code, updateCode } = useActiveCode();
   const { sandpack } = useSandpack();
-  const { logs } = useSandpackConsole({});
 
   return (
     <SandpackStack className="h-full">
