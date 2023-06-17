@@ -8,4 +8,7 @@ module.exports = {
   parserOptions: {
     project,
   },
+  rules: {
+    'import/no-default-export': 'off',
+  },
 };

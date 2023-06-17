@@ -1,12 +1,12 @@
 import { useSandpack } from '@codesandbox/sandpack-react';
 import { useSetAtom } from 'jotai';
-import { frameworkAtom } from './editor';
-import type { Frameworks as Framework } from '@/types';
+import { frameworkAtom } from '@/atoms/framework';
+import type { Framework } from '@/types';
 
-type FrameworkConfig = {
+interface FrameworkConfig {
   value: Framework;
   label: string;
-};
+}
 
 const frameworks: FrameworkConfig[] = [
   { value: 'react', label: 'React' },

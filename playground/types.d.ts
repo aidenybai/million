@@ -1,1 +1,1 @@
-export type Frameworks = 'react' | 'nextjs';
+export type Framework = 'react' | 'nextjs';
