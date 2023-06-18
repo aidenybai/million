@@ -6,6 +6,9 @@ import {
   SandpackPreview,
 } from '@codesandbox/sandpack-react';
 import { useEffect, useRef, useState } from 'react';
+import { z } from 'zod';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useAtom, useAtomValue } from 'jotai';
 import { files as reactViteFiles } from '@/configurations/react-vite';
 import { files as nextjsFiles } from '@/configurations/nextjs';
 import { frameworkAtom } from '@/atoms/framework';
@@ -13,9 +16,6 @@ import { MonacoEditor } from './monaco-editor';
 import { GridResizer } from './grid-resizer';
 import { FrameworkSwitcher } from './framework-switcher';
 import type { Framework } from '@/types';
-import { atom, useAtom, useAtomValue } from 'jotai';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { z } from 'zod';
 
 const zFrameworks = z.enum(['react', 'nextjs']);
 

@@ -3,10 +3,10 @@ import { useAtom } from 'jotai';
 import { frameworkAtom } from '@/atoms/framework';
 import type { Framework } from '@/types';
 
-type FrameworkConfig = {
+interface FrameworkConfig {
   value: Framework;
   label: string;
-};
+}
 
 const frameworks: FrameworkConfig[] = [
   { value: 'react', label: 'React' },
@@ -34,13 +34,13 @@ export function FrameworkSwitcher() {
         className=" bg-white border border-gray-500 text-gray-700 h-10 pl-5 pr-10 rounded-lg text-sm focus:outline-none focus:border-indigo-500"
         value={framework}
       >
-        {frameworks.map((framework) => (
+        {frameworks.map((frameworkVal) => (
           <option
-            key={framework.value}
-            value={framework.value}
+            key={frameworkVal.value}
+            value={frameworkVal.value}
             className="py-1"
           >
-            {framework.label}
+            {frameworkVal.label}
           </option>
         ))}
       </select>
