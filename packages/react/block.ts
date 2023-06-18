@@ -23,7 +23,7 @@ export const block = <P extends MillionProps>(
   const block = MapHas$.call(REGISTRY, fn)
     ? MapGet$.call(REGISTRY, fn)
     : fn
-    ? createBlock(fn as any, unwrap)
+    ? createBlock(fn, unwrap)
     : options.block;
 
   function MillionBlock<P extends MillionProps>(props: P) {

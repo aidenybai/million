@@ -1,12 +1,12 @@
 import { createElement, memo, useEffect, useRef } from 'react';
 import { arrayMount$, arrayPatch$ } from '../million/array';
-import { mapArray, block as createBlock } from '../million';
+import { mapArray, block as createBlock, Block, VElement } from '../million';
 import { MapSet$, MapHas$, MapGet$ } from '../million/constants';
 import { queueMicrotask$ } from '../million/dom';
 import { REGISTRY } from './block';
 import { renderReactScope } from './utils';
 import { RENDER_SCOPE } from './constants';
-import type { MutableRefObject } from 'react';
+import type { MutableRefObject, ReactNode } from 'react';
 import type { ArrayCache, MillionArrayProps, MillionProps } from '../types';
 
 const MillionArray = <T>({ each, children }: MillionArrayProps<T>) => {
@@ -45,9 +45,9 @@ export const For = typedMemo(MillionArray);
 
 const createChildren = <T>(
   each: T[],
-  getComponent: any,
+  getComponent: (value: T, i: number) => VElement,
   cache: MutableRefObject<ArrayCache<T>>,
-) => {
+): Block[] => {
   const children = Array(each.length);
   const currentCache = cache.current;
   for (let i = 0, l = each.length; i < l; ++i) {
@@ -63,12 +63,11 @@ const createChildren = <T>(
       }
       children[i] = currentCache.block!(vnode.props);
     } else {
-      const block = createBlock((props?: MillionProps) => {
-        return {
-          type: RENDER_SCOPE,
-          props: { children: [props?.__scope] },
-        } as any;
-      });
+      const block = createBlock((props?: MillionProps) =>({
+        type: RENDER_SCOPE,
+        props: { children: [props?.__scope] },
+      }));
+
       const currentBlock = (props: MillionProps) => {
         return block({
           props,
