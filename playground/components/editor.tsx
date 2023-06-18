@@ -5,8 +5,7 @@ import {
   SandpackLayout,
   SandpackPreview,
 } from '@codesandbox/sandpack-react';
-import { useRef, useState } from 'react';
-import { useAtomValue } from 'jotai';
+import { useEffect, useRef, useState } from 'react';
 import { files as reactViteFiles } from '@/configurations/react-vite';
 import { files as nextjsFiles } from '@/configurations/nextjs';
 import { frameworkAtom } from '@/atoms/framework';
@@ -14,6 +13,41 @@ import { MonacoEditor } from './monaco-editor';
 import { GridResizer } from './grid-resizer';
 import { FrameworkSwitcher } from './framework-switcher';
 import type { Framework } from '@/types';
+import { atom, useAtom, useAtomValue } from 'jotai';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { z } from 'zod';
+
+const zFrameworks = z.enum(['react', 'nextjs']);
+
+export const useFrameworkSyncUrl = () => {
+  const router = useRouter();
+  const params = useSearchParams();
+  const [framework, setFramework] = useAtom(frameworkAtom);
+
+  // keep url in sync with atom
+  useEffect(() => {
+    router.push(`/?framework=${framework}`);
+  }, [framework]);
+
+  //parse url
+  const rawFrameworkParam = params.get('framework');
+  const parseResult = zFrameworks.safeParse(rawFrameworkParam);
+  let finalFrameworkParam: Framework = 'react';
+  if (!parseResult.success) {
+    router.push(`/?framework=react`);
+  } else {
+    finalFrameworkParam = parseResult.data;
+  }
+
+  // keep atom in sync with url
+  useEffect(() => {
+    if (framework !== finalFrameworkParam) {
+      setFramework(finalFrameworkParam);
+    }
+  }, [finalFrameworkParam]);
+
+  return [framework, setFramework] as const;
+};
 
 const FRAMEWORK_TEMPLATE_MAP: Record<Framework, SandpackPredefinedTemplate> = {
   nextjs: 'nextjs',
@@ -26,6 +60,7 @@ const FRAMEWORK_FILES_MAP: Record<Framework, SandpackFiles> = {
 };
 
 export const Editor: React.FC = () => {
+  useFrameworkSyncUrl();
   const framework = useAtomValue<Framework>(frameworkAtom);
 
   const template = FRAMEWORK_TEMPLATE_MAP[framework];
