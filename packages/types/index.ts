@@ -1,5 +1,4 @@
 import type { block as createBlock } from '../million';
-import type { ReactNode } from 'react';
 
 export type MillionProps = Record<
   string,
@@ -13,7 +12,7 @@ export interface Options {
 
 export interface MillionArrayProps<T> {
   each: T[];
-  children: (value: T, i: number) => ReactNode;
+  children: (value: T, i: number) => JSX.Element;
 }
 
 export interface ArrayCache<T> {
