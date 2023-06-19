@@ -370,45 +370,12 @@ export const transformJSX = (
    * handing all the edge cases.
    */
   if (t.isJSXIdentifier(type) && isComponent(type.name)) {
-    if (type.name !== 'For') {
-      const { attributes } = jsx.openingElement;
-      for (let i = 0, j = attributes.length; i < j; i++) {
-        const attribute = attributes[i]!;
-
-        if (t.isJSXSpreadAttribute(attribute)) {
-          const spreadPath = jsxPath.get(
-            `openingElement.attributes.${i}.argument`,
-          );
-          throw createDeopt(
-            'Spread attributes are not supported.',
-            callSitePath,
-            resolvePath(spreadPath),
-          );
-        }
-
-        if (t.isJSXExpressionContainer(attribute.value)) {
-          const { name: attributeId, value: attributeValue } = attribute;
-          const id = t.isIdentifier(attributeValue.expression)
-            ? createDynamic(attributeValue.expression, null, null)
-            : createDynamic(
-                null,
-                attributeValue.expression as t.Expression,
-                () => {
-                  attributeValue.expression = id;
-                },
-              );
-
-          if (!t.isJSXIdentifier(attributeId)) continue;
-          attributeValue.expression = id;
-        }
-      }
-
-      warn(
-        'Components will cause degraded performance. Ideally, you should use DOM elements instead.',
-        jsxPath,
-        options.mute,
-      );
-    }
+    // TODO: Add a warning for using components that are not block or For
+    // warn(
+    //   'Components will cause degraded performance. Ideally, you should use DOM elements instead.',
+    //   jsxPath,
+    //   options.mute,
+    // );
 
     const renderReactScope = imports.addNamed('renderReactScope');
     const nestedRender = t.callExpression(renderReactScope, [jsx]);
@@ -421,7 +388,7 @@ export const transformJSX = (
       );
     });
 
-    return dynamics; // something wrong with this, it splits when i remove this line of close
+    return dynamics;
   }
 
   /**
