@@ -38,7 +38,7 @@ const MillionArray = <T>({ each, children }: MillionArrayProps<T>) => {
 //https://github.com/DefinitelyTyped/DefinitelyTyped/issues/37087#issuecomment-542793243
 const typedMemo: <T>(
   component: T,
-  equal?: (oldProps: any, newProps: any) => boolean,
+  equal?: (oldProps: MillionProps, newProps: MillionProps) => boolean,
 ) => T = memo;
 
 export const For = typedMemo(MillionArray);

@@ -8,7 +8,7 @@ import { Map$, MapSet$, MapHas$, MapGet$ } from '../million/constants';
 import { queueMicrotask$ } from '../million/dom';
 import { processProps, unwrap } from './utils';
 import { Effect, RENDER_SCOPE } from './constants';
-import type { ReactNode, ComponentType } from 'react';
+import type { ReactNode } from 'react';
 import type { Options, MillionProps } from '../types';
 
 export const REGISTRY = new Map$<
@@ -17,7 +17,7 @@ export const REGISTRY = new Map$<
 >();
 
 export const block = <P extends MillionProps>(
-  fn: ComponentType<P> | null,
+  fn: (props: P) => JSX.Element,
   options: Options = {},
 ) => {
   const block = MapHas$.call(REGISTRY, fn)
@@ -25,7 +25,7 @@ export const block = <P extends MillionProps>(
     : fn
     ? createBlock(fn, unwrap)
     : options.block;
-
+  
   function MillionBlock<P extends MillionProps>(props: P) {
     const ref = useRef<HTMLElement>(null);
     const patch = useRef<((props: P) => void) | null>(null);
