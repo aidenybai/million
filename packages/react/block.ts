@@ -30,7 +30,8 @@ export const block = <P extends MillionProps>(
   const MillionBlock = <P extends MillionProps>(props: P) => {
     const ref = useRef<HTMLElement>(null);
     const patch = useRef<((props: P) => void) | null>(null);
-    processProps(props);
+
+    props = processProps(props);
 
     patch.current?.(props);
 
@@ -55,7 +56,7 @@ export const block = <P extends MillionProps>(
       return createElement(RENDER_SCOPE, { ref });
     }, []);
 
-    const vnode = createElement<P>(
+    const vnode = createElement(
       Fragment,
       null,
       marker,
