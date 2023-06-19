@@ -166,7 +166,9 @@ export const transformComponent = (
    * }
    * ```
    */
-  const masterComponentId = callSitePath.scope.generateUidIdentifier('master$');
+  const masterComponentId = t.isIdentifier(Component.id)
+    ? Component.id
+    : callSitePath.scope.generateUidIdentifier('master$');
   const puppetComponentId = callSitePath.scope.generateUidIdentifier('puppet$');
 
   const block = imports.addNamed('block');
@@ -248,11 +250,17 @@ export const transformComponent = (
   Component.id = masterComponentId;
   callSitePath.replaceWith(masterComponentId);
 
-  // Insert both master and puppet components into code:
-  if (t.isFunctionDeclaration(Component)) {
-    globalPath.insertBefore(Component);
-  } else {
-    globalPath.insertBefore(t.variableDeclaration('const', [Component]));
+  // Try to set the display name to something meaningful
+  if (t.isIdentifier(Component.id)) {
+    globalPath.insertBefore(
+      t.expressionStatement(
+        t.assignmentExpression(
+          '=',
+          t.memberExpression(masterComponentId, t.identifier('displayName')),
+          t.stringLiteral(Component.id.name),
+        ),
+      ),
+    );
   }
   globalPath.insertBefore(
     t.variableDeclaration('const', [
@@ -329,7 +337,7 @@ export const transformJSX = (
      * <div>{_1$}</div>
      * ```
      */
-    const id = identifier || callSitePath.scope.generateUidIdentifier('$');
+    const id = identifier || componentBodyPath.scope.generateUidIdentifier('$');
     if (!dynamics.cache.has(id.name)) {
       dynamics.data.push({ value: expression, id });
       dynamics.cache.add(id.name);
@@ -340,6 +348,7 @@ export const transformJSX = (
   };
 
   const type = jsx.openingElement.name;
+
   /**
    * If the JSX type is Capitalized, we assume it's a component. We then turn that
    * JSX into the raw function calls and hoist it as a dynamic with a `renderScope`:
@@ -361,58 +370,58 @@ export const transformJSX = (
    * handing all the edge cases.
    */
   if (t.isJSXIdentifier(type) && isComponent(type.name)) {
-    const jsxClone = t.cloneNode(jsx);
-    const { attributes } = jsxClone.openingElement;
-    for (let i = 0, j = attributes.length; i < j; i++) {
-      const attribute = attributes[i]!;
+    if (type.name !== 'For') {
+      const { attributes } = jsx.openingElement;
+      for (let i = 0, j = attributes.length; i < j; i++) {
+        const attribute = attributes[i]!;
 
-      if (t.isJSXSpreadAttribute(attribute)) {
-        const spreadPath = jsxPath.get(
-          `openingElement.attributes.${i}.argument`,
-        );
-        throw createDeopt(
-          'Spread attributes are not supported.',
-          callSitePath,
-          resolvePath(spreadPath),
-        );
+        if (t.isJSXSpreadAttribute(attribute)) {
+          const spreadPath = jsxPath.get(
+            `openingElement.attributes.${i}.argument`,
+          );
+          throw createDeopt(
+            'Spread attributes are not supported.',
+            callSitePath,
+            resolvePath(spreadPath),
+          );
+        }
+
+        if (t.isJSXExpressionContainer(attribute.value)) {
+          const { name: attributeId, value: attributeValue } = attribute;
+          const id = t.isIdentifier(attributeValue.expression)
+            ? createDynamic(attributeValue.expression, null, null)
+            : createDynamic(
+                null,
+                attributeValue.expression as t.Expression,
+                () => {
+                  attributeValue.expression = id;
+                },
+              );
+
+          if (!t.isJSXIdentifier(attributeId)) continue;
+          attributeValue.expression = id;
+        }
       }
 
-      if (t.isJSXExpressionContainer(attribute.value)) {
-        const { name: attributeId, value: attributeValue } = attribute;
-        const id = t.isIdentifier(attributeValue.expression)
-          ? createDynamic(attributeValue.expression, null, null)
-          : createDynamic(
-              null,
-              attributeValue.expression as t.Expression,
-              () => {
-                attributeValue.expression = id;
-              },
-            );
-
-        if (!t.isJSXIdentifier(attributeId)) continue;
-        attributeValue.expression = id;
-      }
+      warn(
+        'Components will cause degraded performance. Ideally, you should use DOM elements instead.',
+        jsxPath,
+        options.mute,
+      );
     }
 
-    warn(
-      'Components will cause degraded performance. Ideally, you should use DOM elements instead.',
-      jsxPath,
-    );
-
     const renderReactScope = imports.addNamed('renderReactScope');
-    const nestedRender = t.callExpression(renderReactScope, [jsxClone]);
+    const nestedRender = t.callExpression(renderReactScope, [jsx]);
 
-    jsx.openingElement = t.jsxOpeningElement(
-      t.jsxIdentifier(RENDER_SCOPE),
-      [
-        t.jsxAttribute(
-          t.jsxIdentifier('children'),
-          t.jsxExpressionContainer(nestedRender),
-        ),
-      ],
-      true,
-    );
-    // return dynamics; // something wrong with this, it splits when i remove this line of close
+    const id = createDynamic(null, nestedRender, () => {
+      jsxPath.replaceWith(
+        t.isReturnStatement(jsxPath.parent)
+          ? t.expressionStatement(id)
+          : t.jsxExpressionContainer(id),
+      );
+    });
+
+    return dynamics; // something wrong with this, it splits when i remove this line of close
   }
 
   /**
@@ -561,6 +570,7 @@ export const transformJSX = (
           warn(
             'Array.map() will degrade performance. We recommend removing the block on the current component and using a <For /> component instead.',
             resolvePath(expressionPath),
+            options.mute,
           );
 
           const renderReactScope = imports.addNamed('renderReactScope');
@@ -599,6 +609,7 @@ export const transformJSX = (
           warn(
             'Conditional expressions will degrade performance. We recommend using deterministic returns instead.',
             resolvePath(expressionPath),
+            options.mute,
           );
 
           const renderReactScope = imports.addNamed('renderReactScope');

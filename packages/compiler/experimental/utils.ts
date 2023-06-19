@@ -33,10 +33,9 @@ export const createEdit = ({
 
 export const chainOrLogic = (
   ...binaryExpressions: t.BinaryExpression[]
-): t.LogicalExpression | t.BinaryExpression => {
-  if (binaryExpressions.length === 1) {
-    return binaryExpressions[0]!;
-  }
+): t.LogicalExpression | t.BinaryExpression | t.BooleanLiteral => {
+  if (binaryExpressions.length === 0) return t.booleanLiteral(true);
+  if (binaryExpressions.length === 1) return binaryExpressions[0]!;
 
   const [first, ...rest] = binaryExpressions;
 
