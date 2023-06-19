@@ -15,22 +15,19 @@ export const renderPreactScope = (vnode: PreactNode) => {
   };
 };
 
-export const unwrap = (vnode?: ComponentChild): VNode => {
+export const unwrap = (vnode: JSX.Element): VNode => {
   if (typeof vnode !== 'object' || vnode === null || !('type' in vnode)) {
-    if (typeof vnode === 'number' || vnode === true) {
+    if (typeof vnode === 'number') {
       return String(vnode);
-    } else if (!vnode) {
-      return undefined;
     }
     return vnode as VNode;
   }
   const type = vnode.type;
   if (typeof type === 'function') {
-
-    return unwrap((type)(vnode.props ?? {}));
+    return unwrap(type(vnode.props ?? {}));
   }
   if (typeof type === 'object' && '$' in type) return type;
-
+  
   const props = { ...vnode.props };
   const children = vnode.props?.children;
   if (children !== undefined && children !== null) {
@@ -46,8 +43,8 @@ export const unwrap = (vnode?: ComponentChild): VNode => {
 };
 
 export const flatten = (
-  rawChildren?: ComponentChildren | null,
-): ComponentChild[] => {
+  rawChildren?: JSX.Element | null,
+): JSX.Element[] => {
   if (rawChildren === undefined || rawChildren === null) return [];
   if (
     typeof rawChildren === 'object' &&
@@ -63,7 +60,7 @@ export const flatten = (
     return [rawChildren];
   }
   const flattenedChildren = rawChildren.flat(Infinity);
-  const children: ComponentChildren[] = [];
+  const children = [];
   for (let i = 0, l = flattenedChildren.length; i < l; ++i) {
     children.push(...flatten(flattenedChildren[i]));
   }

@@ -19,7 +19,7 @@ export const REGISTRY = new Map$<
 >();
 
 export const block = <P extends MillionProps>(
-  fn: ComponentType<P> | null,
+  fn: (p?: P) => JSX.Element,
   options: Options = {},
 ) => {
   const block = MapHas$.call(REGISTRY, fn)

@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
 import { arrayMount$, arrayPatch$ } from '../million/array';
-import { mapArray, block as createBlock } from '../million';
+import { mapArray, block as createBlock, VElement, Block } from '../million';
 import { MapSet$, MapHas$, MapGet$ } from '../million/constants';
 import { queueMicrotask$ } from '../million/dom';
 import { RENDER_SCOPE } from '../react/constants';
@@ -31,14 +31,14 @@ export const For = <T>({ each, children }: MillionArrayProps<T>) => {
     });
   }, []);
 
-  return h(RENDER_SCOPE as any, { ref });
+  return h(RENDER_SCOPE, { ref });
 };
 
 const createChildren = <T>(
   each: T[],
-  getComponent: any,
+  getComponent: (value: T, i: number) => VElement,
   cache: { current: ArrayCache<T> },
-) => {
+): Block[] => {
   const children = Array(each.length);
   const currentCache = cache.current;
   for (let i = 0, l = each.length; i < l; ++i) {
