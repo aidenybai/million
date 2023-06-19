@@ -18,7 +18,8 @@ export const createError = (message: string, path: NodePath) => {
   return path.buildCodeFrameError(`[Million.js] ${message}`);
 };
 
-export const warn = (message: string, path: NodePath) => {
+export const warn = (message: string, path: NodePath, mute?: boolean) => {
+  if (mute) return;
   const err = createError(message, path);
   // eslint-disable-next-line no-console
   console.warn(

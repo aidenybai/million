@@ -119,10 +119,12 @@ export const visitor = (options: Options = {}, isReact = true) => {
 
     if (isComponentAnonymous) {
       // If we can extract out the name for the function expression, we use that.
-      const anonymousComponentId =
-        t.isFunctionExpression(RawComponent) && RawComponent.id
-          ? RawComponent.id
-          : callSitePath.scope.generateUidIdentifier('anonymous$');
+      const isComponentNamed =
+        t.isFunctionExpression(RawComponent) && t.isIdentifier(RawComponent.id);
+
+      const anonymousComponentId = callSitePath.scope.generateUidIdentifier(
+        isComponentNamed ? RawComponent.id!.name : 'anonymous$',
+      );
 
       /**
        * const anonymous = () => <div />;
@@ -168,8 +170,7 @@ export const visitor = (options: Options = {}, isReact = true) => {
         : RawComponent.name,
     )!.path;
 
-    // We want to keep the original component declaration intact, so we clone it.
-    const Component = t.cloneNode(componentDeclarationPath.node) as
+    const Component = componentDeclarationPath.node as
       | t.VariableDeclarator
       | t.FunctionDeclaration;
 
@@ -183,6 +184,10 @@ export const visitor = (options: Options = {}, isReact = true) => {
       imports: {
         cache: new Map<string, t.Identifier>(),
         addNamed(name: string, source: string = importSource.value) {
+          // We can't do this, as the visitor may retraverse the newly added `block` identifier.
+          // if (importedBlocks[name]) {
+          //   return t.identifier(importedBlocks[name]!);
+          // }
           if (this.cache.has(name)) return this.cache.get(name)!;
 
           const id = addNamed(callSitePath, name, source, {
