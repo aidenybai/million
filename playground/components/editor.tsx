@@ -26,7 +26,7 @@ export const useFrameworkSyncUrl = () => {
 
   // keep url in sync with atom
   useEffect(() => {
-    router.push(`/?framework=${framework}`);
+    router.push(`/${framework === 'react' ? '' : `?framework=${framework}`}`);
   }, [framework]);
 
   //parse url
@@ -34,7 +34,7 @@ export const useFrameworkSyncUrl = () => {
   const parseResult = zFrameworks.safeParse(rawFrameworkParam);
   let finalFrameworkParam: Framework = 'react';
   if (!parseResult.success) {
-    router.push(`/?framework=react`);
+    router.push(`/`);
   } else {
     finalFrameworkParam = parseResult.data;
   }
