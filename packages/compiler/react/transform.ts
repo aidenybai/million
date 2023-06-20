@@ -1,7 +1,13 @@
 import * as t from '@babel/types';
 import { RENDER_SCOPE } from '../../react/constants';
 import { createDirtyChecker } from '../experimental/utils';
-import { createDeopt, resolvePath, warn, isComponent } from './utils';
+import {
+  createDeopt,
+  resolvePath,
+  warn,
+  isComponent,
+  trimFragmentChildren,
+} from './utils';
 import { optimize } from './optimize';
 import type { Options } from '../plugin';
 import type { Dynamics, Shared } from './types';
@@ -18,7 +24,8 @@ export const transformComponent = (
   },
   SHARED: Shared,
 ) => {
-  const { callSitePath, Component, globalPath, imports } = SHARED;
+  const { callSitePath, Component, originalComponent, globalPath, imports } =
+    SHARED;
 
   /**
    * We can extract the block statement from the component function body
@@ -102,19 +109,39 @@ export const transformComponent = (
    * // becomes
    *
    * function Component() {
-   *  return <million-render-scope>
+   *  return <slot>
    *    <div />
-   *  </million-render-scope>;
+   *  </slot>;
    * }
    * ```
    */
+  const handleTopLevelFragment = (jsx: t.JSXFragment) => {
+    trimFragmentChildren(jsx);
+    if (jsx.children.length === 1) {
+      const child = jsx.children[0];
+      if (t.isJSXElement(child)) {
+        returnStatement.argument = child;
+      } else if (t.isJSXExpressionContainer(child)) {
+        if (t.isJSXEmptyExpression(child.expression)) {
+          returnStatement.argument = t.nullLiteral();
+        } else {
+          returnStatement.argument = child.expression;
+        }
+      } else if (t.isJSXFragment(child)) {
+        handleTopLevelFragment(child);
+      }
+    } else {
+      const renderScopeId = t.jsxIdentifier(RENDER_SCOPE);
+      returnStatement.argument = t.jsxElement(
+        t.jsxOpeningElement(renderScopeId, []),
+        t.jsxClosingElement(renderScopeId),
+        jsx.children,
+      );
+    }
+  };
+
   if (t.isJSXFragment(returnStatement.argument)) {
-    const renderScopeId = t.jsxIdentifier(RENDER_SCOPE);
-    returnStatement.argument = t.jsxElement(
-      t.jsxOpeningElement(renderScopeId, []),
-      t.jsxClosingElement(renderScopeId),
-      returnStatement.argument.children,
-    );
+    handleTopLevelFragment(returnStatement.argument);
   }
 
   /**
@@ -166,9 +193,11 @@ export const transformComponent = (
    * }
    * ```
    */
-  const masterComponentId = t.isIdentifier(Component.id)
-    ? Component.id
-    : callSitePath.scope.generateUidIdentifier('master$');
+  const masterComponentId = callSitePath.scope.generateUidIdentifier(
+    t.isIdentifier(originalComponent.id)
+      ? originalComponent.id.name
+      : 'master$',
+  );
   const puppetComponentId = callSitePath.scope.generateUidIdentifier('puppet$');
 
   const block = imports.addNamed('block');
@@ -192,6 +221,10 @@ export const transformComponent = (
       t.blockStatement([returnStatement]),
     ),
     t.objectExpression([
+      t.objectProperty(
+        t.identifier('originalComponent'),
+        originalComponent.id as t.Identifier,
+      ),
       t.objectProperty(t.identifier('shouldUpdate'), createDirtyChecker(holes)),
     ]),
   ]);
@@ -251,21 +284,25 @@ export const transformComponent = (
   callSitePath.replaceWith(masterComponentId);
 
   // Try to set the display name to something meaningful
-  if (t.isIdentifier(Component.id)) {
-    globalPath.insertBefore(
-      t.expressionStatement(
-        t.assignmentExpression(
-          '=',
-          t.memberExpression(masterComponentId, t.identifier('displayName')),
-          t.stringLiteral(Component.id.name),
-        ),
+  globalPath.insertBefore(
+    t.expressionStatement(
+      t.assignmentExpression(
+        '=',
+        t.memberExpression(masterComponentId, t.identifier('displayName')),
+        t.stringLiteral(masterComponentId.name),
       ),
-    );
-  }
+    ),
+  );
   globalPath.insertBefore(
     t.variableDeclaration('const', [
       t.variableDeclarator(puppetComponentId, puppetBlock),
     ]),
+  );
+  // attach the original component to the master component
+  globalPath.insertBefore(
+    t.isVariableDeclarator(originalComponent)
+      ? t.variableDeclaration('const', [originalComponent])
+      : originalComponent,
   );
 
   if (options.optimize) {

@@ -174,10 +174,14 @@ export const visitor = (options: Options = {}, isReact = true) => {
       | t.VariableDeclarator
       | t.FunctionDeclaration;
 
+    // We clone the component so we can restore it later.
+    const originalComponent = t.cloneNode(Component);
+
     const SHARED = {
       callSitePath,
       callSite,
       Component,
+      originalComponent,
       importSource,
       globalPath,
       isReact,

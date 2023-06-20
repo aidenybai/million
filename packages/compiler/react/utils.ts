@@ -53,3 +53,12 @@ export const resolvePath = (path: NodePath | NodePath[]): NodePath => {
 export const isComponent = (name: string) => {
   return name.startsWith(name[0]!.toUpperCase());
 };
+
+export const trimFragmentChildren = (jsx: t.JSXFragment) => {
+  for (let i = jsx.children.length - 1; i >= 0; i--) {
+    const child = jsx.children[i]!;
+    if (t.isJSXText(child) && child.value.trim() === '') {
+      jsx.children.splice(i, 1);
+    }
+  }
+};

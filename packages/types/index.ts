@@ -1,14 +1,12 @@
 import type { Props, block as createBlock } from '../million';
-import type { ReactNode } from 'react';
+import type { ComponentType, ReactNode } from 'react';
 
-export type MillionProps = Record<
-  string,
-  any
->;
+export type MillionProps = Record<string, any>;
 
 export interface Options {
   shouldUpdate?: (oldProps: Props, newProps: Props) => boolean;
   block?: any;
+  originalComponent?: ComponentType<any>;
 }
 
 export interface MillionArrayProps<T> {
