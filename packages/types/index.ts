@@ -6,7 +6,7 @@ export type MillionProps = Record<string, any>;
 export interface Options {
   shouldUpdate?: (oldProps: Props, newProps: Props) => boolean;
   block?: any;
-  originalComponent?: ComponentType<any>;
+  component?: ComponentType<any>;
 }
 
 export interface MillionArrayProps<T> {
