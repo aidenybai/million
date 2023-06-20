@@ -35,12 +35,11 @@ export const block = <P extends MillionProps>(
     }, []);
 
     if (!ready || !blockFactory) {
-      const v = createElement<P>(
+      return createElement<P>(
         RENDER_SCOPE,
         null,
         createElement(options.originalComponent as any, props),
       );
-      return v;
     }
 
     return createElement<P>(blockFactory, props);
