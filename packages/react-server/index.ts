@@ -1,5 +1,4 @@
 import { createElement, useEffect, useReducer, useState } from 'react';
-import { renderToString } from 'react-dom/server';
 import { RENDER_SCOPE } from '../react/constants';
 import type { ComponentType } from 'react';
 import type { MillionArrayProps, MillionProps, Options } from '../types';
@@ -30,9 +29,9 @@ export const block = <P extends MillionProps>(
         }
       }
 
-      // return () => {
-      //   blockFactory = null;
-      // };
+      return () => {
+        blockFactory = null;
+      };
     }, []);
 
     if (!ready || !blockFactory) {
@@ -41,7 +40,6 @@ export const block = <P extends MillionProps>(
         null,
         createElement(options.originalComponent as any, props),
       );
-      console.log(renderToString(v));
       return v;
     }
 
