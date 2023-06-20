@@ -210,16 +210,18 @@ export const transformComponent = (
    * ```
    */
 
-  // We want to add a __props property for the original call props
-
   const params = t.isVariableDeclarator(Component)
     ? t.isArrowFunctionExpression(Component.init)
       ? Component.init.params
       : null
-    : Component;
+    : Component.params;
+
+  // We want to add a __props property for the original call props
   dynamics.data.push({
     id: t.identifier('__props'),
-    value: params?.[0] ? (params[0] as t.Expression) : null,
+    value: params?.length
+      ? (params[0] as t.Expression)
+      : t.objectExpression([]),
   });
 
   const holes = dynamics.data.map(({ id }) => id.name);
