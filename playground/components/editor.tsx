@@ -6,18 +6,14 @@ import {
   SandpackPreview,
 } from '@codesandbox/sandpack-react';
 import { useEffect, useRef, useState } from 'react';
-import { z } from 'zod';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAtom, useAtomValue } from 'jotai';
 import { files as reactViteFiles } from '@/configurations/react-vite';
 import { files as nextjsFiles } from '@/configurations/nextjs';
-import { frameworkAtom } from '@/atoms/framework';
+import { frameworkAtom, zFrameworks, type Framework } from '@/atoms/framework';
 import { MonacoEditor } from './monaco-editor';
 import { GridResizer } from './grid-resizer';
 import { FrameworkSwitcher } from './framework-switcher';
-import type { Framework } from '@/types';
-
-const zFrameworks = z.enum(['react', 'nextjs']);
 
 export const useFrameworkSyncUrl = () => {
   const router = useRouter();
@@ -26,7 +22,9 @@ export const useFrameworkSyncUrl = () => {
 
   // keep url in sync with atom
   useEffect(() => {
-    router.push(`/${framework === 'react' ? '' : `?framework=${framework}`}`);
+    router.replace(
+      `/${framework === 'react' ? '' : `?framework=${framework}`}`,
+    );
   }, [framework]);
 
   //parse url
