@@ -1,4 +1,4 @@
-import { createElement, useEffect, useReducer, useState } from 'react';
+import { createElement, useEffect, useState } from 'react';
 import { RENDER_SCOPE } from '../react/constants';
 import type { ComponentType } from 'react';
 import type { MillionArrayProps, MillionProps, Options } from '../types';
@@ -38,7 +38,10 @@ export const block = <P extends MillionProps>(
       return createElement<P>(
         RENDER_SCOPE,
         null,
-        createElement(options.originalComponent as any, props),
+        // During compilation we will attach a .raw for the component and
+        // pass __props as the props to the component. This references
+        // the original component for SSR.
+        createElement(options.component as any, props.__props),
       );
     }
 
@@ -49,12 +52,13 @@ export const block = <P extends MillionProps>(
 };
 
 export function For<T>(props: MillionArrayProps<T>) {
-  const [_, forceUpdate] = useReducer((x: number) => x + 1, 0);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    if (millionModule) return;
     const importSource = async () => {
       millionModule = await import('../react');
-      forceUpdate();
+      setReady(true);
     };
     try {
       void importSource();
@@ -63,8 +67,9 @@ export function For<T>(props: MillionArrayProps<T>) {
     }
   }, []);
 
-  if (millionModule) {
-    return createElement(millionModule.For, props);
+  if (!ready || !millionModule) {
+    return createElement(RENDER_SCOPE, null, ...props.each.map(props.children));
   }
-  return createElement(RENDER_SCOPE, null, ...props.each.map(props.children));
+
+  return createElement(millionModule.For, props);
 }

@@ -177,6 +177,13 @@ export const visitor = (options: Options = {}, isReact = true) => {
     // We clone the component so we can restore it later.
     const originalComponent = t.cloneNode(Component);
 
+    // attach the original component to the master component
+    globalPath.insertBefore(
+      t.isVariableDeclarator(originalComponent)
+        ? t.variableDeclaration('const', [originalComponent])
+        : originalComponent,
+    );
+
     const SHARED = {
       callSitePath,
       callSite,

@@ -210,6 +210,18 @@ export const transformComponent = (
    * ```
    */
 
+  // We want to add a __props property for the original call props
+
+  const params = t.isVariableDeclarator(Component)
+    ? t.isArrowFunctionExpression(Component.init)
+      ? Component.init.params
+      : null
+    : Component;
+  dynamics.data.push({
+    id: t.identifier('__props'),
+    value: params?.[0] ? (params[0] as t.Expression) : null,
+  });
+
   const holes = dynamics.data.map(({ id }) => id.name);
   const puppetBlock = t.callExpression(block, [
     t.arrowFunctionExpression(
@@ -222,7 +234,7 @@ export const transformComponent = (
     ),
     t.objectExpression([
       t.objectProperty(
-        t.identifier('originalComponent'),
+        t.identifier('component'),
         originalComponent.id as t.Identifier,
       ),
       t.objectProperty(t.identifier('shouldUpdate'), createDirtyChecker(holes)),
@@ -297,12 +309,6 @@ export const transformComponent = (
     t.variableDeclaration('const', [
       t.variableDeclarator(puppetComponentId, puppetBlock),
     ]),
-  );
-  // attach the original component to the master component
-  globalPath.insertBefore(
-    t.isVariableDeclarator(originalComponent)
-      ? t.variableDeclaration('const', [originalComponent])
-      : originalComponent,
   );
 
   if (options.optimize) {
