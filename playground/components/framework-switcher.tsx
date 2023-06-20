@@ -1,7 +1,6 @@
 import { useSandpack } from '@codesandbox/sandpack-react';
 import { useAtom } from 'jotai';
-import { frameworkAtom } from '@/atoms/framework';
-import type { Framework } from '@/types';
+import { frameworkAtom, type Framework } from '@/atoms/framework';
 
 interface FrameworkConfig {
   value: Framework;
