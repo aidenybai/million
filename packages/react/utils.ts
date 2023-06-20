@@ -1,4 +1,4 @@
-import { Fragment, isValidElement } from 'react';
+import { Fragment, createElement, isValidElement } from 'react';
 import { createRoot } from 'react-dom/client';
 import { REACT_ROOT, RENDER_SCOPE } from './constants';
 import type { ComponentProps, ReactNode } from 'react';
@@ -22,6 +22,10 @@ export const processProps = (props: ComponentProps<any>) => {
 };
 
 export const renderReactScope = (vnode: ReactNode) => {
+  if (typeof window === 'undefined') {
+    return createElement(RENDER_SCOPE, null, vnode);
+  }
+
   return (el: HTMLElement | null) => {
     const parent = el ?? document.createElement(RENDER_SCOPE);
     const root =
