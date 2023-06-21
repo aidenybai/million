@@ -9,23 +9,23 @@ import type { Props } from '../million';
 import type { MutableRefObject } from 'react';
 import type { ArrayCache, MillionArrayProps } from '../types';
 
-const MillionArray = <T>({ each, children }: MillionArrayProps<T>) => {
+const MillionArray = <T>({ each, children, memo }: MillionArrayProps<T>) => {
   const ref = useRef<HTMLElement>(null);
   const fragmentRef = useRef<ReturnType<typeof mapArray> | null>(null);
   const cache = useRef<ArrayCache<T>>({
     each: null,
     children: null,
   });
-  if (fragmentRef.current && each !== cache.current.each) {
+  if (fragmentRef.current && (each !== cache.current.each || !memo)) {
     queueMicrotask$(() => {
-      const newChildren = createChildren<T>(each, children, cache);
+      const newChildren = createChildren<T>(each, children, cache, memo);
       arrayPatch$.call(fragmentRef.current, mapArray(newChildren));
     });
   }
   useEffect(() => {
     if (fragmentRef.current) return;
     queueMicrotask$(() => {
-      const newChildren = createChildren<T>(each, children, cache);
+      const newChildren = createChildren<T>(each, children, cache, memo);
       fragmentRef.current = mapArray(newChildren);
       arrayMount$.call(fragmentRef.current, ref.current!);
     });
@@ -47,11 +47,12 @@ const createChildren = <T>(
   each: T[],
   getComponent: any,
   cache: MutableRefObject<ArrayCache<T>>,
+  memo?: boolean,
 ) => {
   const children = Array(each.length);
   const currentCache = cache.current;
   for (let i = 0, l = each.length; i < l; ++i) {
-    if (currentCache.each && currentCache.each[i] === each[i]) {
+    if (memo && currentCache.each && currentCache.each[i] === each[i]) {
       children[i] = currentCache.children?.[i];
       continue;
     }
@@ -70,10 +71,13 @@ const createChildren = <T>(
         } as any;
       });
       const currentBlock = (props: Props) => {
-        return block({
-          props,
-          __scope: renderReactScope(createElement(vnode.type, props)),
-        });
+        return block(
+          {
+            props,
+            __scope: renderReactScope(createElement(vnode.type, props)),
+          },
+          vnode.key,
+        );
       };
 
       MapSet$.call(REGISTRY, vnode.type, currentBlock);
