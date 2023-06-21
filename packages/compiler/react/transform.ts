@@ -24,8 +24,14 @@ export const transformComponent = (
   },
   SHARED: Shared,
 ) => {
-  const { callSitePath, Component, originalComponent, globalPath, imports } =
-    SHARED;
+  const {
+    isReact,
+    callSitePath,
+    Component,
+    originalComponent,
+    globalPath,
+    imports,
+  } = SHARED;
 
   /**
    * We can extract the block statement from the component function body
@@ -217,6 +223,7 @@ export const transformComponent = (
     : Component.params;
 
   // We want to add a __props property for the original call props
+  // TODO: refactor this probably
   dynamics.data.push({
     id: t.identifier('__props'),
     value: params?.length
@@ -236,7 +243,7 @@ export const transformComponent = (
     ),
     t.objectExpression([
       t.objectProperty(
-        t.identifier('component'),
+        t.identifier('original'),
         originalComponent.id as t.Identifier,
       ),
       t.objectProperty(t.identifier('shouldUpdate'), createDirtyChecker(holes)),
@@ -267,7 +274,12 @@ export const transformComponent = (
    * ```
    */
 
-  const puppetCall = t.callExpression(puppetComponentId, [
+  const createElement = imports.addNamed(
+    'createElement',
+    isReact ? 'react' : 'preact',
+  );
+  const puppetCall = t.callExpression(createElement, [
+    puppetComponentId,
     t.objectExpression(
       // Creates an object that passes expression values down
       dynamics.data.map(({ id, value }) => t.objectProperty(id, value || id)),

@@ -23,6 +23,7 @@ import {
   ChildFlag,
   EventFlag,
   StyleAttributeFlag,
+  EVENT_PATCH,
 } from './constants';
 import type { ArrayBlock } from './array';
 import type { EditChild, Props, VElement, Hole, VNode, Edit } from './types';
@@ -148,7 +149,7 @@ export class Block extends AbstractBlock {
           );
         } else if (edit.t & EventFlag) {
           const patch = createEventListener(el, edit.n!, value);
-          edit.p = patch;
+          el[EVENT_PATCH + edit.n!] = patch;
         } else if (edit.t & AttributeFlag) {
           setAttribute(el, edit.n!, value);
         } else if (edit.t & StyleAttributeFlag) {
@@ -210,7 +211,7 @@ export class Block extends AbstractBlock {
         if (newValue === oldValue) continue;
 
         if (edit.t & EventFlag) {
-          edit.p!(newValue);
+          el[EVENT_PATCH + edit.n!]!(newValue);
           continue;
         }
         if (edit.t & ChildFlag) {

@@ -41,7 +41,7 @@ export const block = <P extends MillionProps>(
         // During compilation we will attach a .raw for the component and
         // pass __props as the props to the component. This references
         // the original component for SSR.
-        createElement(options.component as any, props.__props),
+        createElement(options.original as any, props.__props),
       );
     }
 

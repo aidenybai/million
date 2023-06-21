@@ -4,18 +4,12 @@ import {
   mount$,
   patch as patchBlock,
 } from '../million/block';
-import { Map$, MapSet$, MapHas$, MapGet$ } from '../million/constants';
+import { MapSet$, MapHas$, MapGet$ } from '../million/constants';
 import { queueMicrotask$ } from '../million/dom';
 import { processProps, unwrap } from './utils';
-import { Effect, RENDER_SCOPE } from './constants';
-import type { Props } from '../million';
-import type { ReactNode, ComponentType } from 'react';
+import { Effect, RENDER_SCOPE, REGISTRY } from './constants';
+import type { ComponentType } from 'react';
 import type { Options, MillionProps } from '../types';
-
-export const REGISTRY = new Map$<
-  (props: Props) => ReactNode,
-  ReturnType<typeof createBlock>
->();
 
 export const block = <P extends MillionProps>(
   fn: ComponentType<P> | null,
@@ -32,7 +26,6 @@ export const block = <P extends MillionProps>(
     const patch = useRef<((props: P) => void) | null>(null);
 
     props = processProps(props);
-
     patch.current?.(props);
 
     const effect = useCallback(() => {
@@ -66,14 +59,8 @@ export const block = <P extends MillionProps>(
     return vnode;
   };
 
-  const displayName = fn?.displayName || fn?.name || fn;
-
-  if (displayName) {
-    MillionBlock.displayName = `MillionBlock.${String(displayName)}`;
-  }
-
-  if (!MapHas$.call(REGISTRY, MillionBlock<P>)) {
-    MapSet$.call(REGISTRY, MillionBlock<P>, block);
+  if (!MapHas$.call(REGISTRY, fn)) {
+    MapSet$.call(REGISTRY, fn, block);
   }
 
   return MillionBlock<P>;

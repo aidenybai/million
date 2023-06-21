@@ -14,7 +14,7 @@ import {
 
 if (typeof window === 'undefined') {
   throw new Error(
-    "See http://million.dev/docs/install to install the compiler.",
+    'See http://million.dev/docs/install to install the compiler.',
   );
 }
 
@@ -62,18 +62,25 @@ export const createEventListener = (
   if (!SetHas$.call(document$[EVENTS_REGISTRY], event)) {
     // createEventListener uses a synthetic event handler to capture events
     // https://betterprogramming.pub/whats-the-difference-between-synthetic-react-events-and-javascript-events-ba7dbc742294
-    addEventListener$.call(document$, event, (nativeEventObject: Event) => {
+    addEventListener$.call(document$, event, (nativeEvent: Event) => {
+      nativeEvent.stopPropagation = () => {
+        nativeEvent.cancelBubble = true;
+        nativeEvent.stopImmediatePropagation();
+      };
+
       requestAnimationFrame(() => {
-        let el = nativeEventObject.target as Node | null;
+        let el = nativeEvent.target as Node | null;
         // Bubble up the DOM tree to find all event listeners
         while (el) {
           const handler = el[key];
           if (handler) {
-            let returnFalse = false;
-            if (handler(nativeEventObject) === false) {
-              returnFalse = true;
-            }
-            if (returnFalse) return;
+            Object.defineProperty(nativeEvent, 'currentTarget', {
+              configurable: true,
+              get() {
+                return el;
+              },
+            });
+            handler(nativeEvent);
           }
           el = el.parentNode;
         }
