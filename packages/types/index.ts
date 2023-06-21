@@ -12,6 +12,7 @@ export interface Options {
 export interface MillionArrayProps<T> {
   each: T[];
   children: (value: T, i: number) => ReactNode;
+  memo?: true;
 }
 
 export interface ArrayCache<T> {
