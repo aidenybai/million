@@ -28,3 +28,20 @@ export default LionBlock;
   There are some limitations to using blocks. Please reference the [Rules of
   Blocks](/docs/rules) for more information.
 </Callout>
+
+## Customizing wrapper type
+
+By default, blocks are rendered into `<slot>` elements. You can customize the wrapper type by a `type` option to the second argument.
+
+```jsx
+const SVGPartBlock = block(
+  function SVGPart() {
+    return (
+      <g>
+        <rect />
+      </g>
+    );
+  },
+  { type: 'g' },
+);
+```

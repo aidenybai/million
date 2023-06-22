@@ -7,6 +7,7 @@ export interface Options {
   shouldUpdate?: (oldProps: Props, newProps: Props) => boolean;
   block?: any;
   original?: ComponentType<any>;
+  type?: string;
 }
 
 export interface MillionArrayProps<T> {
