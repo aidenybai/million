@@ -13,6 +13,6 @@
     "title": "API Reference"
   },
   "block": "block()",
-  "for": "<For />",
+  "for": "<For>",
   "internals": "Internals"
 }
