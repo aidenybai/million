@@ -5,47 +5,15 @@ import {
   SandpackLayout,
   SandpackPreview,
 } from '@codesandbox/sandpack-react';
-import { useEffect, useRef, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useAtom, useAtomValue } from 'jotai';
+import { useRef, useState } from 'react';
+import { useAtomValue } from 'jotai';
 import { files as reactViteFiles } from '@/configurations/react-vite';
 import { files as nextjsFiles } from '@/configurations/nextjs';
-import { frameworkAtom, zFrameworks, type Framework } from '@/atoms/framework';
+import { frameworkAtom, type Framework } from '@/atoms/framework';
+import { useFrameworkSyncUrl } from '@/hooks';
 import { MonacoEditor } from './monaco-editor';
 import { GridResizer } from './grid-resizer';
 import { FrameworkSwitcher } from './framework-switcher';
-
-export const useFrameworkSyncUrl = () => {
-  const router = useRouter();
-  const params = useSearchParams();
-  const [framework, setFramework] = useAtom(frameworkAtom);
-
-  // keep url in sync with atom
-  useEffect(() => {
-    router.replace(
-      `/${framework === 'react' ? '' : `?framework=${framework}`}`,
-    );
-  }, [framework]);
-
-  //parse url
-  const rawFrameworkParam = params.get('framework');
-  const parseResult = zFrameworks.safeParse(rawFrameworkParam);
-  let finalFrameworkParam: Framework = 'react';
-  if (!parseResult.success) {
-    router.push(`/`);
-  } else {
-    finalFrameworkParam = parseResult.data;
-  }
-
-  // keep atom in sync with url
-  useEffect(() => {
-    if (framework !== finalFrameworkParam) {
-      setFramework(finalFrameworkParam);
-    }
-  }, [finalFrameworkParam]);
-
-  return [framework, setFramework] as const;
-};
 
 const FRAMEWORK_TEMPLATE_MAP: Record<Framework, SandpackPredefinedTemplate> = {
   nextjs: 'nextjs',
