@@ -9,11 +9,11 @@ import { useRef, useState } from 'react';
 import { useAtomValue } from 'jotai';
 import { files as reactViteFiles } from '@/configurations/react-vite';
 import { files as nextjsFiles } from '@/configurations/nextjs';
-import { frameworkAtom } from '@/atoms/framework';
+import { frameworkAtom, type Framework } from '@/atoms/framework';
+import { useFrameworkSyncUrl } from '@/hooks';
 import { MonacoEditor } from './monaco-editor';
 import { GridResizer } from './grid-resizer';
 import { FrameworkSwitcher } from './framework-switcher';
-import type { Framework } from '@/types';
 
 const FRAMEWORK_TEMPLATE_MAP: Record<Framework, SandpackPredefinedTemplate> = {
   nextjs: 'nextjs',
@@ -26,6 +26,7 @@ const FRAMEWORK_FILES_MAP: Record<Framework, SandpackFiles> = {
 };
 
 export const Editor: React.FC = () => {
+  useFrameworkSyncUrl();
   const framework = useAtomValue<Framework>(frameworkAtom);
 
   const template = FRAMEWORK_TEMPLATE_MAP[framework];

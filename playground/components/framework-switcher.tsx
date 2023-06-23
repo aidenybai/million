@@ -1,7 +1,6 @@
 import { useSandpack } from '@codesandbox/sandpack-react';
-import { useSetAtom } from 'jotai';
-import { frameworkAtom } from '@/atoms/framework';
-import type { Framework } from '@/types';
+import { useAtom } from 'jotai';
+import { frameworkAtom, type Framework } from '@/atoms/framework';
 
 interface FrameworkConfig {
   value: Framework;
@@ -15,7 +14,7 @@ const frameworks: FrameworkConfig[] = [
 
 export function FrameworkSwitcher() {
   const { dispatch } = useSandpack();
-  const setFramework = useSetAtom(frameworkAtom);
+  const [framework, setFramework] = useAtom(frameworkAtom);
 
   const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedFramework = event.target.value as Framework;
@@ -32,14 +31,15 @@ export function FrameworkSwitcher() {
       <select
         onChange={handleSelect}
         className=" bg-white border border-gray-500 text-gray-700 h-10 pl-5 pr-10 rounded-lg text-sm focus:outline-none focus:border-indigo-500"
+        value={framework}
       >
-        {frameworks.map((framework) => (
+        {frameworks.map((frameworkVal) => (
           <option
-            key={framework.value}
-            value={framework.value}
+            key={frameworkVal.value}
+            value={frameworkVal.value}
             className="py-1"
           >
-            {framework.label}
+            {frameworkVal.label}
           </option>
         ))}
       </select>
