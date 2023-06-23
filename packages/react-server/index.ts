@@ -1,4 +1,5 @@
 import { createElement, useEffect, useState } from 'react';
+import { renderToString } from 'react-dom/server';
 import { RENDER_SCOPE } from '../react/constants';
 import type { ComponentType } from 'react';
 import type { MillionArrayProps, MillionProps, Options } from '../types';
@@ -35,15 +36,27 @@ export const block = <P extends MillionProps>(
     }, []);
 
     if (!ready || !blockFactory) {
-      return createElement<P>(
+      console.log(
+        'pre',
+        renderToString(
+          createElement(
+            RENDER_SCOPE,
+            { suppressHydrationWarning: true },
+            createElement(options.original as any, props.__props),
+          ),
+        ),
+      );
+      return createElement(
         RENDER_SCOPE,
-        null,
+        { suppressHydrationWarning: true },
         // During compilation we will attach a .raw for the component and
         // pass __props as the props to the component. This references
         // the original component for SSR.
         createElement(options.original as any, props.__props),
       );
     }
+
+    console.log('block', renderToString(createElement(blockFactory, props)));
 
     return createElement<P>(blockFactory, props);
   }

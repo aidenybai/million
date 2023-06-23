@@ -46,7 +46,10 @@ export const block = <P extends MillionProps>(
     }, []);
 
     const marker = useMemo(() => {
-      return createElement(RENDER_SCOPE, { ref });
+      return createElement(RENDER_SCOPE, {
+        ref,
+        suppressHydrationWarning: true,
+      });
     }, []);
 
     const vnode = createElement(
