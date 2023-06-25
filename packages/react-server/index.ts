@@ -37,7 +37,7 @@ export const block = <P extends MillionProps>(
     if (!ready || !blockFactory) {
       return createElement(
         RENDER_SCOPE,
-        { suppressHydrationWarning: true },
+        null,
         // During compilation we will attach a .raw for the component and
         // pass __props as the props to the component. This references
         // the original component for SSR.
