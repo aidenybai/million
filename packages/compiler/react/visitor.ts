@@ -65,16 +65,31 @@ export const visitor = (options: Options = {}, isReact = true) => {
      * Here we just check if the import declaration is using the correct package
      * in case another library exports a function called "block".
      */
+    const validSpecifiers: string[] = [];
+
     if (
       !t.isImportDeclaration(importDeclaration) ||
       !importDeclaration.source.value.includes('million') ||
-      !importDeclaration.specifiers.some(
-        (specifier) =>
-          t.isImportSpecifier(specifier) &&
-          t.isIdentifier(specifier.imported) &&
-          specifier.imported.name === 'block' &&
-          importedBlocks.block === specifier.local.name,
-      )
+      !importDeclaration.specifiers.some((specifier) => {
+        if (!t.isImportSpecifier(specifier)) return false;
+        const importedSpecifier = specifier.imported;
+        if (!t.isIdentifier(importedSpecifier)) return false;
+
+        const checkValid = (validName: string) => {
+          return (
+            importedSpecifier.name === validName &&
+            specifier.local.name === importedBlocks[validName]
+          );
+        };
+
+        const isSpecifierValid = checkValid('block') || checkValid('For');
+
+        if (isSpecifierValid) {
+          validSpecifiers.push(importedSpecifier.name);
+        }
+
+        return isSpecifierValid;
+      })
     ) {
       const millionImportDeclarationPath = blockCallBinding.path.parentPath!;
       throw createDeopt(
@@ -93,6 +108,8 @@ export const visitor = (options: Options = {}, isReact = true) => {
       options,
       importSource.value,
     );
+
+    if (!validSpecifiers.includes('block')) return;
 
     const RawComponent = callSite.arguments[0];
 
