@@ -1,5 +1,5 @@
 import { createElement, useEffect, useState } from 'react';
-import { RENDER_SCOPE } from '../react/constants';
+import { RENDER_SCOPE, SVG_RENDER_SCOPE } from '../react/constants';
 import type { ComponentType } from 'react';
 import type { MillionArrayProps, MillionProps, Options } from '../types';
 
@@ -19,13 +19,13 @@ export const block = <P extends MillionProps>(
       if (!blockFactory) {
         const importSource = async () => {
           if (!millionModule) millionModule = await import('../react');
-          blockFactory = millionModule.block(Component);
+          blockFactory = millionModule.block(Component, options);
           setReady(true);
         };
         try {
           void importSource();
         } catch (e) {
-          throw new Error('Failed to load Million library');
+          throw new Error('Failed to load Million.js');
         }
       }
 
@@ -35,10 +35,11 @@ export const block = <P extends MillionProps>(
     }, []);
 
     if (!ready || !blockFactory) {
+      if (options.ssr === false) return null;
       return createElement<P>(
         RENDER_SCOPE,
         null,
-        // During compilation we will attach a .raw for the component and
+        // During compilation we will attach a .original for the component and
         // pass __props as the props to the component. This references
         // the original component for SSR.
         createElement(options.original as any, props.__props),
@@ -51,7 +52,7 @@ export const block = <P extends MillionProps>(
   return MillionBlockLoader<P>;
 };
 
-export function For<T>(props: MillionArrayProps<T>) {
+export function For<T>({ each, children, ssr, svg }: MillionArrayProps<T>) {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -63,13 +64,23 @@ export function For<T>(props: MillionArrayProps<T>) {
     try {
       void importSource();
     } catch (e) {
-      throw new Error('Failed to load Million library');
+      throw new Error('Failed to load Million.js');
     }
   }, []);
 
   if (!ready || !millionModule) {
-    return createElement(RENDER_SCOPE, null, ...props.each.map(props.children));
+    if (ssr === false) return null;
+    return createElement(
+      svg ? SVG_RENDER_SCOPE : RENDER_SCOPE,
+      null,
+      ...each.map(children),
+    );
   }
 
-  return createElement(millionModule.For, props);
+  return createElement(millionModule.For, {
+    each,
+    children,
+    ssr,
+    svg,
+  });
 }

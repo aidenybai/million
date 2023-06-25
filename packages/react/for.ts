@@ -4,12 +4,17 @@ import { mapArray, block as createBlock } from '../million';
 import { MapSet$, MapHas$, MapGet$ } from '../million/constants';
 import { queueMicrotask$ } from '../million/dom';
 import { renderReactScope } from './utils';
-import { RENDER_SCOPE, REGISTRY } from './constants';
+import { RENDER_SCOPE, REGISTRY, SVG_RENDER_SCOPE } from './constants';
 import type { Props } from '../million';
 import type { MutableRefObject } from 'react';
 import type { ArrayCache, MillionArrayProps } from '../types';
 
-const MillionArray = <T>({ each, children, memo }: MillionArrayProps<T>) => {
+const MillionArray = <T>({
+  each,
+  children,
+  memo,
+  svg,
+}: MillionArrayProps<T>) => {
   const ref = useRef<HTMLElement>(null);
   const fragmentRef = useRef<ReturnType<typeof mapArray> | null>(null);
   const cache = useRef<ArrayCache<T>>({
@@ -31,7 +36,7 @@ const MillionArray = <T>({ each, children, memo }: MillionArrayProps<T>) => {
     });
   }, []);
 
-  return createElement(RENDER_SCOPE, { ref });
+  return createElement(svg ? SVG_RENDER_SCOPE : RENDER_SCOPE, { ref });
 };
 
 // Using fix below to add type support to MillionArray

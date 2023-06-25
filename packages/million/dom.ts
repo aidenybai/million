@@ -22,6 +22,17 @@ export const document$ = document;
 export const queueMicrotask$ = queueMicrotask;
 export const template$ = document$.createElement('template');
 
+// Taken from ivi (https://github.com/localvoid/ivi/blob/43cdf6f747dc782883ca73bdb5b4e21fa9c27655/packages/ivi/src/client/core.ts#L29C1-L29C1)
+export const HTM_TEMPLATE = /**@__PURE__*/ document$.createElement('template');
+export const HTM_TEMPLATE_CONTENT = HTM_TEMPLATE.content;
+const _SVG_TEMPLATE = /**@__PURE__*/ document$.createElement('template');
+export const SVG_TEMPLATE = /**@__PURE__*/ document$.createElementNS(
+  'http://www.w3.org/2000/svg',
+  'svg',
+);
+/**@__PURE__*/ _SVG_TEMPLATE.content.appendChild(SVG_TEMPLATE);
+export const SVG_TEMPLATE_CONTENT = _SVG_TEMPLATE.content.firstChild as Element;
+
 // Caching prototypes for performance
 export const node$ = Node.prototype;
 export const element$ = Element.prototype;
@@ -39,8 +50,6 @@ export const removeAttribute$ = element$.removeAttribute;
 export const setAttribute$ = element$.setAttribute;
 export const setAttributeNS$ = element$.setAttributeNS;
 export const setTextContent$ = getOwnPropertyDescriptor$(node$, 'textContent')!
-  .set!;
-export const innerHTML$ = getOwnPropertyDescriptor$(element$, 'innerHTML')!
   .set!;
 export const firstChild$ = getOwnPropertyDescriptor$(node$, 'firstChild')!.get!;
 export const nextSibling$ = getOwnPropertyDescriptor$(node$, 'nextSibling')!

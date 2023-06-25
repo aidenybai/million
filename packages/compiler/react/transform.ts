@@ -26,6 +26,7 @@ export const transformComponent = (
 ) => {
   const {
     isReact,
+    callSite,
     callSitePath,
     Component,
     originalComponent,
@@ -232,6 +233,7 @@ export const transformComponent = (
   });
 
   const holes = dynamics.data.map(({ id }) => id.name);
+  const userOptions = callSite.arguments[1] as t.ObjectExpression;
   const puppetBlock = t.callExpression(block, [
     t.arrowFunctionExpression(
       [
@@ -242,6 +244,7 @@ export const transformComponent = (
       t.blockStatement([returnStatement]),
     ),
     t.objectExpression([
+      ...userOptions.properties,
       t.objectProperty(
         t.identifier('original'),
         originalComponent.id as t.Identifier,
@@ -468,6 +471,11 @@ export const transformJSX = (
       const attributeValue = attribute.value;
       if (t.isIdentifier(attributeValue.expression)) {
         createDynamic(attributeValue.expression, null, null);
+      } else if (t.isLiteral(attributeValue.expression)) {
+        if (t.isStringLiteral(attributeValue.expression)) {
+          attribute.value = attributeValue.expression;
+        }
+        // if other type of literal, do nothing
       } else {
         const id = createDynamic(
           null,
