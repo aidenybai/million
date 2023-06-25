@@ -28,3 +28,16 @@ export default LionBlock;
   There are some limitations to using blocks. Please reference the [Rules of
   Blocks](/docs/rules) for more information.
 </Callout>
+
+## Hydration mismatch
+
+If you are using Million.js on the server, you may encounter a hydration mismatch error. This is because Million.js uses a different algorithm for rendering on the server than it does on the client. To fix this, you can disable SSR.
+
+```jsx
+const NoSSRBlock = block(
+  function NoSSR() {
+    return <div>{Math.random()}</div>;
+  },
+  { ssr: false },
+);
+```

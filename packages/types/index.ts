@@ -7,12 +7,16 @@ export interface Options {
   shouldUpdate?: (oldProps: Props, newProps: Props) => boolean;
   block?: any;
   original?: ComponentType<any>;
+  ssr?: boolean;
+  svg?: boolean;
 }
 
 export interface MillionArrayProps<T> {
   each: T[];
   children: (value: T, i: number) => ReactNode;
   memo?: true;
+  ssr?: boolean;
+  svg?: boolean;
 }
 
 export interface ArrayCache<T> {

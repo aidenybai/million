@@ -5,14 +5,16 @@ import {
   createEventListener,
   insertBefore$,
   insertText,
-  innerHTML$,
   remove$ as removeElement$,
   setAttribute,
   setText,
   setStyleAttribute,
   setSvgAttribute,
-  template$,
+  HTM_TEMPLATE_CONTENT,
+  SVG_TEMPLATE_CONTENT,
   childAt,
+  SVG_TEMPLATE,
+  HTM_TEMPLATE,
 } from './dom';
 import { renderToTemplate } from './template';
 import { AbstractBlock } from './types';
@@ -43,6 +45,7 @@ export const block = (
   fn: (props?: Props) => VElement,
   unwrap?: (vnode: any) => VNode,
   shouldUpdate?: (oldProps: Props, newProps: Props) => boolean,
+  svg?: boolean,
 ) => {
   const vnode = fn(HOLE_PROXY);
   const edits: Edit[] = [];
@@ -51,6 +54,7 @@ export const block = (
   // Edits are instructions for how to update the DOM given some props
   const root = stringToDOM(
     renderToTemplate(unwrap ? unwrap(vnode) : vnode, edits),
+    svg,
   );
 
   return <T extends Props>(
@@ -62,8 +66,9 @@ export const block = (
       root,
       edits,
       props,
-      key ?? props?.key,
-      shouldUpdateCurrentBlock ?? shouldUpdate,
+      key ?? props?.key ?? null,
+      shouldUpdateCurrentBlock ?? shouldUpdate ?? null,
+      null,
     );
   };
 };
@@ -98,9 +103,9 @@ export class Block extends AbstractBlock {
     root: HTMLElement,
     edits: Edit[],
     props?: Props | null,
-    key?: string,
-    shouldUpdate?: (oldProps: Props, newProps: Props) => boolean,
-    getElements?: (root: HTMLElement) => HTMLElement[],
+    key?: string | null,
+    shouldUpdate?: ((oldProps: Props, newProps: Props) => boolean) | null,
+    getElements?: ((root: HTMLElement) => HTMLElement[]) | null,
   ) {
     super();
     this.r = root;
@@ -295,9 +300,11 @@ const getCurrentElement = (
   return root;
 };
 
-export const stringToDOM = (content: string) => {
-  innerHTML$.call(template$, content);
-  return template$.content.firstChild as HTMLElement;
+export const stringToDOM = (content: string, svg?: boolean) => {
+  const template = svg ? SVG_TEMPLATE : HTM_TEMPLATE;
+  template.innerHTML = content;
+  const dom = svg ? SVG_TEMPLATE_CONTENT : HTM_TEMPLATE_CONTENT;
+  return dom.firstChild as HTMLElement;
 };
 
 export const withKey = (value: any, key: string) => {

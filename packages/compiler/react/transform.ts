@@ -7,6 +7,8 @@ import {
   warn,
   isComponent,
   trimFragmentChildren,
+  normalizeProperties,
+  SVG_ELEMENTS,
 } from './utils';
 import { optimize } from './optimize';
 import type { Options } from '../plugin';
@@ -26,6 +28,7 @@ export const transformComponent = (
 ) => {
   const {
     isReact,
+    callSite,
     callSitePath,
     Component,
     originalComponent,
@@ -232,6 +235,30 @@ export const transformComponent = (
   });
 
   const holes = dynamics.data.map(({ id }) => id.name);
+  const userOptions = callSite.arguments[1] as t.ObjectExpression | undefined;
+  const compiledOptions = [
+    t.objectProperty(
+      t.identifier('svg'),
+      // we try to automatically detect if the component is an SVG
+      t.booleanLiteral(
+        t.isJSXElement(returnStatement.argument) &&
+          t.isJSXIdentifier(returnStatement.argument.openingElement.name) &&
+          SVG_ELEMENTS.includes(
+            returnStatement.argument.openingElement.name.name,
+          ),
+      ),
+    ),
+    t.objectProperty(
+      t.identifier('original'),
+      originalComponent.id as t.Identifier,
+    ),
+    t.objectProperty(t.identifier('shouldUpdate'), createDirtyChecker(holes)),
+  ];
+
+  if (userOptions) {
+    compiledOptions.push(...(userOptions.properties as t.ObjectProperty[]));
+  }
+
   const puppetBlock = t.callExpression(block, [
     t.arrowFunctionExpression(
       [
@@ -241,13 +268,7 @@ export const transformComponent = (
       ],
       t.blockStatement([returnStatement]),
     ),
-    t.objectExpression([
-      t.objectProperty(
-        t.identifier('original'),
-        originalComponent.id as t.Identifier,
-      ),
-      t.objectProperty(t.identifier('shouldUpdate'), createDirtyChecker(holes)),
-    ]),
+    t.objectExpression(normalizeProperties(compiledOptions)),
   ]);
 
   /**
@@ -468,6 +489,11 @@ export const transformJSX = (
       const attributeValue = attribute.value;
       if (t.isIdentifier(attributeValue.expression)) {
         createDynamic(attributeValue.expression, null, null);
+      } else if (t.isLiteral(attributeValue.expression)) {
+        if (t.isStringLiteral(attributeValue.expression)) {
+          attribute.value = attributeValue.expression;
+        }
+        // if other type of literal, do nothing
       } else {
         const id = createDynamic(
           null,

@@ -24,7 +24,11 @@
     "dist/**/*",
     "react.d.ts",
     "jsx-runtime.d.ts",
-    "compiler.d.ts"
+    "compiler.d.ts",
+    "react-server.d.ts",
+    "preact.d.ts",
+    "preact-server.d.ts",
+    "types.d.ts"
   ],
   "exports": {
     ".": {
