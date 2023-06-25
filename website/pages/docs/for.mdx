@@ -44,3 +44,13 @@ However, if you know that your items aren't dependent on any values except the `
   {(item) => <li>{item}</li>}
 </For>
 ```
+
+## Hydration mismatch
+
+If you are using Million.js on the server, you may encounter a hydration mismatch error. This is because Million.js uses a different algorithm for rendering on the server than it does on the client. To fix this, you can disable SSR.
+
+```jsx
+<For each={[Math.random(), Math.random(), Math.random()]} ssr={false}>
+  {(item) => <li>{item}</li>}
+</For>
+```

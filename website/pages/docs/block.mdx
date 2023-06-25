@@ -29,19 +29,32 @@ export default LionBlock;
   Blocks](/docs/rules) for more information.
 </Callout>
 
-## Customizing wrapper type
+## Configuring SVG Blocks
 
-By default, blocks are rendered into `<slot>` elements. You can customize the wrapper type by a `type` option to the second argument.
+By default, blocks are rendered into `<slot>` elements, but unfortunately SVGs do not support slots. To render pure SVG elements, you must turn on the `svg` option.
 
 ```jsx
-const SVGPartBlock = block(
-  function SVGPart() {
+const SvgBlock = block(
+  function Svg() {
     return (
       <g>
         <rect />
       </g>
     );
   },
-  { type: 'g' },
+  { svg: true },
+);
+```
+
+## Hydration mismatch
+
+If you are using Million.js on the server, you may encounter a hydration mismatch error. This is because Million.js uses a different algorithm for rendering on the server than it does on the client. To fix this, you can disable SSR.
+
+```jsx
+const NoSSRBlock = block(
+  function NoSSR() {
+    return <div>{Math.random()}</div>;
+  },
+  { ssr: false },
 );
 ```
