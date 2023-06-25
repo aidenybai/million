@@ -304,7 +304,7 @@ export const stringToDOM = (content: string, svg?: boolean) => {
   const template = svg ? SVG_TEMPLATE : HTM_TEMPLATE;
   template.innerHTML = content;
   const dom = svg ? SVG_TEMPLATE_CONTENT : HTM_TEMPLATE_CONTENT;
-  return dom as HTMLElement;
+  return dom.firstChild as HTMLElement;
 };
 
 export const withKey = (value: any, key: string) => {
