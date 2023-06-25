@@ -35,7 +35,7 @@ export const block = <P extends MillionProps>(
     }, []);
 
     if (!ready || !blockFactory) {
-      return createElement(
+      return createElement<P>(
         RENDER_SCOPE,
         null,
         // During compilation we will attach a .raw for the component and
