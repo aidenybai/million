@@ -1,5 +1,4 @@
 import { createElement, useEffect, useState } from 'react';
-import { renderToString } from 'react-dom/server';
 import { RENDER_SCOPE } from '../react/constants';
 import type { ComponentType } from 'react';
 import type { MillionArrayProps, MillionProps, Options } from '../types';
@@ -36,16 +35,6 @@ export const block = <P extends MillionProps>(
     }, []);
 
     if (!ready || !blockFactory) {
-      console.log(
-        'pre',
-        renderToString(
-          createElement(
-            RENDER_SCOPE,
-            { suppressHydrationWarning: true },
-            createElement(options.original as any, props.__props),
-          ),
-        ),
-      );
       return createElement(
         RENDER_SCOPE,
         { suppressHydrationWarning: true },
@@ -55,8 +44,6 @@ export const block = <P extends MillionProps>(
         createElement(options.original as any, props.__props),
       );
     }
-
-    console.log('block', renderToString(createElement(blockFactory, props)));
 
     return createElement<P>(blockFactory, props);
   }
