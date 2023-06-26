@@ -1,6 +1,5 @@
-import { useSandpack } from '@codesandbox/sandpack-react';
 import { useAtom } from 'jotai';
-import { frameworkAtom, type Framework } from '@/atoms/framework';
+import { frameworkAtom, type Framework } from '@/atoms';
 
 interface FrameworkConfig {
   value: Framework;
@@ -13,16 +12,11 @@ const frameworks: FrameworkConfig[] = [
 ];
 
 export function FrameworkSwitcher() {
-  const { dispatch } = useSandpack();
   const [framework, setFramework] = useAtom(frameworkAtom);
 
   const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedFramework = event.target.value as Framework;
     setFramework(selectedFramework);
-
-    setTimeout(() => {
-      dispatch({ type: 'shell/restart' });
-    }, 1000);
   };
 
   return (

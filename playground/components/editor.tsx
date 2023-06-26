@@ -4,36 +4,29 @@ import {
   SandpackProvider,
   SandpackLayout,
   SandpackPreview,
+  useSandpack,
 } from '@codesandbox/sandpack-react';
-import { useRef, useState } from 'react';
-import { useAtomValue } from 'jotai';
-import { files as reactViteFiles } from '@/configurations/react-vite';
-import { files as nextjsFiles } from '@/configurations/nextjs';
-import { frameworkAtom, type Framework } from '@/atoms/framework';
+import { useEffect, useRef, useState } from 'react';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import {
+  frameworkAtom,
+  type Framework,
+  templateAtom,
+  playgroundStateAtom,
+  serializeAtom,
+  rwFilesAtom,
+  filesAtom,
+} from '@/atoms';
 import { useFrameworkSyncUrl } from '@/hooks';
 import { MonacoEditor } from './monaco-editor';
 import { GridResizer } from './grid-resizer';
 import { FrameworkSwitcher } from './framework-switcher';
 
-const FRAMEWORK_TEMPLATE_MAP: Record<Framework, SandpackPredefinedTemplate> = {
-  nextjs: 'nextjs',
-  react: 'vite-react',
-};
-
-const FRAMEWORK_FILES_MAP: Record<Framework, SandpackFiles> = {
-  react: reactViteFiles,
-  nextjs: nextjsFiles,
-};
-
 export const Editor: React.FC = () => {
   useFrameworkSyncUrl();
-  const framework = useAtomValue<Framework>(frameworkAtom);
 
-  const template = FRAMEWORK_TEMPLATE_MAP[framework];
-  const files = FRAMEWORK_FILES_MAP[framework];
-  const dependencies = {
-    million: 'latest',
-  };
+  const template = useAtomValue(templateAtom);
+  const files = useAtomValue(filesAtom);
 
   const resizerRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
@@ -53,15 +46,22 @@ export const Editor: React.FC = () => {
 
     setLeft(percentageAdjusted);
   };
+
+  console.log('playgroundState', files);
   return (
     <div className="flex flex-col h-100vw">
       <header style={{ height: 50 }}>header</header>
       <SandpackProvider
         theme="dark"
         template={template}
-        customSetup={{ dependencies }}
+        customSetup={{
+          dependencies: {
+            million: 'latest',
+          },
+        }}
         files={files}
       >
+        <Test />
         <FrameworkSwitcher />
         <SandpackLayout
           ref={gridRef}
@@ -86,3 +86,55 @@ export const Editor: React.FC = () => {
     </div>
   );
 };
+
+function Test() {
+  const { sandpack } = useSandpack();
+
+  const dispatch = useSetAtom(serializeAtom);
+  const framework = useAtomValue(frameworkAtom);
+
+  const visableFiles = extract(sandpack.files, sandpack.visibleFiles);
+
+  const saveToLocalStorage = () => {
+    dispatch({
+      type: 'save',
+      value: { files: visableFiles, options: { framework } },
+    });
+  };
+
+  const loadFromLocalStorage = () => {
+    dispatch({ type: 'load' });
+  };
+
+  return (
+    <div className="text-black flex flex-col">
+      <button onClick={saveToLocalStorage}>save to local storage</button>
+      <button onClick={loadFromLocalStorage}>load from local storage</button>
+    </div>
+  );
+}
+
+function extract<T>(obj: Record<string, T>, keys: string[]): Record<string, T> {
+  const newObj: Record<string, T> = {};
+  keys.forEach((key) => {
+    if (key in obj) {
+      newObj[key] = obj[key];
+    }
+  });
+  return newObj;
+}
+
+// function Dummy() {
+//   // useFrameworkSyncSandpack();
+//   const { dispatch, sandpack } = useSandpack();
+//   const framework = useAtomValue(frameworkAtom);
+//   console.log('status', sandpack.clients['41e6']);
+//   return (
+//     <button
+//       onClick={() => dispatch({ type: 'shell/restart' })}
+//       className="text-black"
+//     >
+//       restart
+//     </button>
+//   );
+// }

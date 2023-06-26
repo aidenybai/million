@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAtom } from 'jotai';
-import { frameworkAtom, zFrameworks, type Framework } from '@/atoms/framework';
+import { frameworkAtom, zFrameworks, type Framework } from '@/atoms';
 
 export const useFrameworkSyncUrl = () => {
   const router = useRouter();
@@ -34,3 +34,14 @@ export const useFrameworkSyncUrl = () => {
 
   return [framework, setFramework] as const;
 };
+
+// export const useFrameworkSyncSandpack = () => {
+//   const { dispatch, sandpack } = useSandpack();
+//   const framework = useAtomValue(frameworkAtom);
+//   console.log('status', sandpack.clients['41e6']);
+//   useEffect(() => {
+//     setTimeout(() => {
+//       dispatch({ type: 'shell/restart' });
+//     }, 1000);
+//   }, [framework]);
+// };
