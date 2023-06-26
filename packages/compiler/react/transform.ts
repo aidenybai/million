@@ -227,12 +227,12 @@ export const transformComponent = (
 
   // We want to add a __props property for the original call props
   // TODO: refactor this probably
-  dynamics.data.push({
-    id: t.identifier('__props'),
-    value: params?.length
-      ? (params[0] as t.Expression)
-      : t.objectExpression([]),
-  });
+  if (params?.length) {
+    dynamics.data.push({
+      id: t.identifier('__props'),
+      value: params[0] as t.Expression,
+    });
+  }
 
   const holes = dynamics.data.map(({ id }) => id.name);
   const userOptions = callSite.arguments[1] as t.ObjectExpression | undefined;
@@ -326,9 +326,10 @@ export const transformComponent = (
    * const master = (props) => {
    * ```
    */
-
   Component.id = masterComponentId;
-  callSitePath.replaceWith(masterComponentId);
+  callSitePath.replaceWith(
+    dynamics.data.length ? masterComponentId : puppetComponentId,
+  );
 
   // Try to set the display name to something meaningful
   globalPath.insertBefore(
