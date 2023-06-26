@@ -8,7 +8,7 @@ export { renderReactScope } from '../react/utils';
 let millionModule;
 
 export const block = <P extends MillionProps>(Component: ComponentType<P>) => {
-  let blockFactory: any;
+  let blockFactory;
   function MillionBlockLoader<P extends MillionProps>(props: P) {
     const [_, forceUpdate] = useReducer((x: number) => x + 1, 0);
 
