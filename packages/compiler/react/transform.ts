@@ -227,7 +227,7 @@ export const transformComponent = (
 
   // We want to add a __props property for the original call props
   // TODO: refactor this probably
-  if (params?.length) {
+  if (params?.length && t.isExpression(params[0])) {
     dynamics.data.push({
       id: t.identifier('__props'),
       value: params[0] as t.Expression,
