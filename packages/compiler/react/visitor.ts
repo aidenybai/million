@@ -70,7 +70,7 @@ export const visitor = (options: Options = {}, isReact = true) => {
     if (
       !t.isImportDeclaration(importDeclaration) ||
       !importDeclaration.source.value.includes('million') ||
-      !importDeclaration.specifiers.some((specifier) => {
+      !importDeclaration.specifiers.every((specifier) => {
         if (!t.isImportSpecifier(specifier)) return false;
         const importedSpecifier = specifier.imported;
         if (!t.isIdentifier(importedSpecifier)) return false;
