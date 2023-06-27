@@ -1,5 +1,6 @@
-import { unplugin, babelPlugin as babel } from './plugin';
+import { unplugin, babelPlugin } from './plugin';
 
+export const raw = unplugin.raw;
 export const vite = unplugin.vite;
 export const webpack = unplugin.webpack;
 export const rollup = unplugin.rollup;
@@ -18,8 +19,10 @@ export const next = (nextConfig: Record<string, any> = {}) => {
     },
   };
 };
+export const babel = babelPlugin;
 
 export default {
+  raw,
   vite,
   webpack,
   rollup,
@@ -27,5 +30,5 @@ export default {
   esbuild,
   next,
   unplugin,
-  babel,
+  babel: babelPlugin,
 };

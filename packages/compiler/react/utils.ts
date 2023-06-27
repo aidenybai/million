@@ -1,6 +1,46 @@
+import { readFileSync } from 'fs';
 import * as t from '@babel/types';
+import { parseSync, traverse } from '@babel/core';
 import type { NodePath } from '@babel/core';
 import type { Options } from '../plugin';
+
+export const getSpecifierSource = (
+  importSpecifierPath: NodePath<t.ImportSpecifier>,
+) => {
+  // const source = resolvePath(importSpecifierPath.parentPath.get('source')).node;
+
+  // if (
+  //   !t.isStringLiteral(source) ||
+  //   !t.isIdentifier(importSpecifierPath.node.imported) ||
+  //   typeof importSpecifierPath.node.imported.name !== 'string'
+  // ) {
+  //   throw createDeopt(
+  //     'Expected source to be a string literal',
+  //     importSpecifierPath,
+  //   );
+  // }
+
+  // const sourceCode = readFileSync('./source.js', 'utf-8');
+
+  // // Parse the source code into an AST
+  // const ast = parseSync(sourceCode, {
+  //   sourceType: 'module',
+  // });
+
+  // let functionNode;
+
+  // traverse(ast, {
+  //   // This will pick up all function declarations
+  //   FunctionDeclaration(path) {
+  //     // Check if this is the function you're looking for
+  //     if (path.node.id.name === 'hello') {
+  //       functionNode = path.node;
+  //     }
+  //   },
+  // });
+
+  return ast?.program.body[0];
+};
 
 export const resolveCorrectImportSource = (
   options: Options,

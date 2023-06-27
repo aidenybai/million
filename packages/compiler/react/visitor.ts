@@ -1,8 +1,14 @@
 import * as t from '@babel/types';
 import { addNamed } from '@babel/helper-module-imports';
-import { createDeopt, resolveCorrectImportSource, resolvePath } from './utils';
+import {
+  createDeopt,
+  getSpecifierSource,
+  resolveCorrectImportSource,
+  resolvePath,
+} from './utils';
 import { transformComponent } from './transform';
 import { collectImportedBindings } from './bindings';
+import { simplifyExpressions } from './expressions';
 import type { NodePath } from '@babel/core';
 import type { Options } from '../plugin';
 
@@ -186,6 +192,7 @@ export const visitor = (options: Options = {}, isReact = true) => {
           (callSite.arguments[0] as t.Identifier).name
         : RawComponent.name,
     )!.path;
+    simplifyExpressions(componentDeclarationPath);
 
     const Component = componentDeclarationPath.node as
       | t.VariableDeclarator
