@@ -188,7 +188,10 @@ const config: DocsThemeConfig = {
         : pathname;
     const canonical = new URL(asPath, 'https://million.dev').toString();
 
-    const ogUrl = `https://million.dev/api/og?title=${title}&description=${description}&note=${note}`;
+    const ogUrl =
+      pathname === '/'
+        ? `https://million.dev/default-og.png`
+        : `https://million.dev/api/og?title=${title}&description=${description}&note=${note}`;
 
     return (
       <>
