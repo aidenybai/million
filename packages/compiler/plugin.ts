@@ -6,10 +6,11 @@ import { transformAsync } from '@babel/core';
 import { visitor as legacyVdomVisitor } from './vdom';
 import { visitor as reactVisitor } from './react';
 import type { NodePath, PluginItem } from '@babel/core';
-import type * as t from '@babel/types';
+import * as t from '@babel/types';
 
 export interface Options {
   include?: string | string[];
+  auto?: string[];
   optimize?: boolean;
   server?: boolean;
   mode?: 'react' | 'preact' | 'react-server' | 'preact-server' | 'vdom';
@@ -43,6 +44,10 @@ export const unplugin = createUnplugin((options: Options = {}) => {
       return /\.[jt]sx$/.test(id);
     },
     async transform(code: string, id: string) {
+      if (!index.has(id) && index.get(id) !== code) {
+        index.set(id, code);
+      }
+
       const isTSX = id.endsWith('.tsx');
 
       const result = await transformAsync(code, {
@@ -99,6 +104,27 @@ export const babelPlugin = declare((api, options: Options) => {
             // eslint-disable-next-line no-console
             console.warn(err.message, '\n');
           }
+        }
+      },
+      ImportDeclaration(path: NodePath<t.ImportDeclaration>) {
+        if (options.auto?.includes(path.node.source.value)) {
+          // get specifiers:
+          path.node.specifiers.forEach((specifier) => {
+            // rename specifier to _specifier
+            // and insertAfter const specifier = block(_specifier)
+            path.scope.rename(specifier.local.name, `_${specifier.local.name}`);
+            path.insertAfter(
+              t.variableDeclaration('const', [
+                t.variableDeclarator(
+                  specifier.local,
+                  t.callExpression(t.identifier('block'), [
+                    t.identifier(`_${specifier.local.name}`),
+                  ]),
+                ),
+              ]),
+            );
+
+
         }
       },
     },

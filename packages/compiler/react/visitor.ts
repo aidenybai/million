@@ -194,14 +194,15 @@ export const visitor = (options: Options = {}, isReact = true) => {
     )!.path;
 
     if (componentDeclarationPath.isImportSpecifier()) {
-      console.log('hi');
-      const specifier = getSpecifierSource(
+      const correctComponentDeclarationPath = getSpecifierSource(
         componentDeclarationPath,
-        options.id,
+        options.id!,
       );
-      componentDeclarationPath.remove();
-      globalPath.insertBefore(specifier.node);
-      componentDeclarationPath = specifier;
+      if (correctComponentDeclarationPath) {
+        componentDeclarationPath.remove();
+        globalPath.insertBefore(correctComponentDeclarationPath.node);
+        componentDeclarationPath = correctComponentDeclarationPath;
+      }
     }
 
     simplifyExpressions(componentDeclarationPath);
@@ -212,13 +213,6 @@ export const visitor = (options: Options = {}, isReact = true) => {
 
     // We clone the component so we can restore it later.
     const originalComponent = t.cloneNode(Component);
-
-    // attach the original component to the master component
-    globalPath.insertBefore(
-      t.isVariableDeclarator(originalComponent)
-        ? t.variableDeclaration('const', [originalComponent])
-        : originalComponent,
-    );
 
     const SHARED = {
       callSitePath,

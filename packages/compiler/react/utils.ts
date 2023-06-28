@@ -1,5 +1,5 @@
-import resolve from 'resolve/sync';
 import { dirname } from 'path';
+import resolve from 'resolve/sync';
 import * as t from '@babel/types';
 import { parseSync, traverse } from '@babel/core';
 import { getBasePlugins, getIndex } from '../plugin';
@@ -9,7 +9,7 @@ import type { Options } from '../plugin';
 export const getSpecifierSource = (
   importSpecifierPath: NodePath<t.ImportSpecifier>,
   id: string,
-) => {
+): NodePath<t.FunctionDeclaration | t.VariableDeclaration> | null => {
   const source = resolvePath(importSpecifierPath.parentPath.get('source')).node;
 
   if (
@@ -28,25 +28,21 @@ export const getSpecifierSource = (
   const file = resolve(source.value, { basedir: dirname(id) });
   const code = getIndex(file);
 
-  // const sourceCode = fs.readFileSync(
-  //   path.resolve('node_modules', source.value, 'dist/index.js'),
-  //   'utf-8',
-  // );
   const isTSX = source.value.endsWith('.tsx');
 
-  // Parse the source code into an AST
+  if (!code) return null;
+
   const ast = parseSync(code, {
     sourceType: 'module',
     plugins: getBasePlugins(isTSX),
   });
 
-  let target;
+  let target: NodePath<t.FunctionDeclaration | t.VariableDeclaration> | null =
+    null;
 
   traverse(ast, {
-    // This will pick up all function declarations
     FunctionDeclaration(path) {
       if (target) return;
-      // Check if this is the function you're looking for
       if (path.node.id?.name === specifierName) {
         target = path;
       }
@@ -55,7 +51,6 @@ export const getSpecifierSource = (
       if (target) return;
       const declaration = path.node.declarations[0];
       if (!declaration) return;
-      // Check if this is the function you're looking for
       if (
         t.isIdentifier(declaration.id) &&
         declaration.id.name === specifierName &&

@@ -331,6 +331,12 @@ export const transformComponent = (
     dynamics.data.length ? masterComponentId : puppetComponentId,
   );
 
+  // attach the original component to the master component
+  globalPath.insertBefore(
+    t.isVariableDeclarator(originalComponent)
+      ? t.variableDeclaration('const', [originalComponent])
+      : originalComponent,
+  );
   // Try to set the display name to something meaningful
   globalPath.insertBefore(
     t.expressionStatement(
