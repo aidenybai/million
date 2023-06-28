@@ -54,43 +54,42 @@ const createChildren = <T>(
   cache: MutableRefObject<ArrayCache<T>>,
   memo?: boolean,
 ) => {
-  const children = Array(each.length);
   const currentCache = cache.current;
-  for (let i = 0, l = each.length; i < l; ++i) {
-    if (memo && currentCache.each && currentCache.each[i] === each[i]) {
-      children[i] = currentCache.children?.[i];
-      continue;
+  const children = each.map((item, i) => {
+    if (memo && currentCache.each && currentCache.each[i] === item) {
+      return currentCache.children?.[i];
     }
-    const vnode = getComponent(each[i], i);
 
-    if (MapHas$.call(REGISTRY, vnode.type)) {
-      if (!currentCache.block) {
-        currentCache.block = MapGet$.call(REGISTRY, vnode.type)!;
-      }
-      children[i] = currentCache.block!(vnode.props);
-    } else {
-      const block = createBlock((props?: Props) => {
-        return {
-          type: RENDER_SCOPE,
-          props: { children: [props?.__scope] },
-        } as any;
-      });
-      const currentBlock = (props: Props) => {
-        return block(
-          {
-            props,
-            __scope: renderReactScope(createElement(vnode.type, props)),
-          },
-          vnode.key,
+    const vnode = getComponent(item, i);
+    const block = MapHas$.call(REGISTRY, vnode.type)
+      ? currentCache.block || MapGet$.call(REGISTRY, vnode.type)!
+      : createBlock(
+          (props?: Props) =>
+            ({
+              type: RENDER_SCOPE,
+              props: { children: [props?.__scope] },
+            } as any),
         );
-      };
 
+    const currentBlock = (props: Props) =>
+      block(
+        {
+          props,
+          __scope: renderReactScope(createElement(vnode.type, props)),
+        },
+        vnode.key,
+      );
+
+    if (!MapHas$.call(REGISTRY, vnode.type)) {
       MapSet$.call(REGISTRY, vnode.type, currentBlock);
       currentCache.block = currentBlock as ReturnType<typeof createBlock>;
-      children[i] = currentBlock(vnode.props);
     }
-  }
+
+    return (currentCache.block || currentBlock)(vnode.props);
+  });
+
   currentCache.each = each;
   currentCache.children = children;
+
   return children;
 };
