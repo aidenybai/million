@@ -1,45 +1,72 @@
-import { readFileSync } from 'fs';
+import resolve from 'resolve/sync';
+import { dirname } from 'path';
 import * as t from '@babel/types';
 import { parseSync, traverse } from '@babel/core';
+import { getBasePlugins, getIndex } from '../plugin';
 import type { NodePath } from '@babel/core';
 import type { Options } from '../plugin';
 
 export const getSpecifierSource = (
   importSpecifierPath: NodePath<t.ImportSpecifier>,
+  id: string,
 ) => {
-  // const source = resolvePath(importSpecifierPath.parentPath.get('source')).node;
+  const source = resolvePath(importSpecifierPath.parentPath.get('source')).node;
 
-  // if (
-  //   !t.isStringLiteral(source) ||
-  //   !t.isIdentifier(importSpecifierPath.node.imported) ||
-  //   typeof importSpecifierPath.node.imported.name !== 'string'
-  // ) {
-  //   throw createDeopt(
-  //     'Expected source to be a string literal',
-  //     importSpecifierPath,
-  //   );
-  // }
+  if (
+    !t.isStringLiteral(source) ||
+    !t.isIdentifier(importSpecifierPath.node.imported) ||
+    typeof importSpecifierPath.node.imported.name !== 'string'
+  ) {
+    throw createDeopt(
+      'Expected source to be a string literal',
+      importSpecifierPath,
+    );
+  }
 
-  // const sourceCode = readFileSync('./source.js', 'utf-8');
+  const specifierName = importSpecifierPath.node.imported.name;
 
-  // // Parse the source code into an AST
-  // const ast = parseSync(sourceCode, {
-  //   sourceType: 'module',
-  // });
+  const file = resolve(source.value, { basedir: dirname(id) });
+  const code = getIndex(file);
 
-  // let functionNode;
+  // const sourceCode = fs.readFileSync(
+  //   path.resolve('node_modules', source.value, 'dist/index.js'),
+  //   'utf-8',
+  // );
+  const isTSX = source.value.endsWith('.tsx');
 
-  // traverse(ast, {
-  //   // This will pick up all function declarations
-  //   FunctionDeclaration(path) {
-  //     // Check if this is the function you're looking for
-  //     if (path.node.id.name === 'hello') {
-  //       functionNode = path.node;
-  //     }
-  //   },
-  // });
+  // Parse the source code into an AST
+  const ast = parseSync(code, {
+    sourceType: 'module',
+    plugins: getBasePlugins(isTSX),
+  });
 
-  return ast?.program.body[0];
+  let target;
+
+  traverse(ast, {
+    // This will pick up all function declarations
+    FunctionDeclaration(path) {
+      if (target) return;
+      // Check if this is the function you're looking for
+      if (path.node.id?.name === specifierName) {
+        target = path;
+      }
+    },
+    VariableDeclaration(path) {
+      if (target) return;
+      const declaration = path.node.declarations[0];
+      if (!declaration) return;
+      // Check if this is the function you're looking for
+      if (
+        t.isIdentifier(declaration.id) &&
+        declaration.id.name === specifierName &&
+        t.isArrowFunctionExpression(declaration.init)
+      ) {
+        target = path;
+      }
+    },
+  });
+
+  return target;
 };
 
 export const resolveCorrectImportSource = (

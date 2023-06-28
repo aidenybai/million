@@ -186,12 +186,24 @@ export const visitor = (options: Options = {}, isReact = true) => {
 
     callSitePath.scope.crawl();
 
-    const componentDeclarationPath = callSitePath.scope.getBinding(
+    let componentDeclarationPath = callSitePath.scope.getBinding(
       isComponentAnonymous
         ? // We know that the component is a identifier, so we can safely cast it.
           (callSite.arguments[0] as t.Identifier).name
         : RawComponent.name,
     )!.path;
+
+    if (componentDeclarationPath.isImportSpecifier()) {
+      console.log('hi');
+      const specifier = getSpecifierSource(
+        componentDeclarationPath,
+        options.id,
+      );
+      componentDeclarationPath.remove();
+      globalPath.insertBefore(specifier.node);
+      componentDeclarationPath = specifier;
+    }
+
     simplifyExpressions(componentDeclarationPath);
 
     const Component = componentDeclarationPath.node as

@@ -1,3 +1,5 @@
+import { readFileSync } from 'fs';
+import { glob } from 'glob';
 import { declare } from '@babel/helper-plugin-utils';
 import { createUnplugin } from 'unplugin';
 import { transformAsync } from '@babel/core';
@@ -7,34 +9,60 @@ import type { NodePath, PluginItem } from '@babel/core';
 import type * as t from '@babel/types';
 
 export interface Options {
+  include?: string | string[];
   optimize?: boolean;
   server?: boolean;
   mode?: 'react' | 'preact' | 'react-server' | 'preact-server' | 'vdom';
   mute?: boolean;
+  id?: string;
 }
+
+const index = new Map<string, string>();
+export const getIndex = (id: string) => index.get(id);
 
 export const unplugin = createUnplugin((options: Options = {}) => {
   return {
     enforce: 'pre',
     name: 'million',
+    async buildStart() {
+      if (!options.include) {
+        (this as any).warn(
+          'You should specify `include` option in your compiler config for the files you want to transform. See https://million.dev/docs/install',
+        );
+        return;
+      }
+      const files = await glob(options.include, {
+        ignore: 'node_modules/**',
+        absolute: true,
+      });
+      for (const file of files) {
+        index.set(file, readFileSync(file, 'utf-8'));
+      }
+    },
     transformInclude(id: string) {
       return /\.[jt]sx$/.test(id);
     },
     async transform(code: string, id: string) {
       const isTSX = id.endsWith('.tsx');
 
-      const plugins = normalizePlugins([
-        '@babel/plugin-syntax-jsx',
-        isTSX && ['@babel/plugin-syntax-typescript', { isTSX: true }],
-        [babelPlugin, options],
-      ]);
-
-      const result = await transformAsync(code, { plugins });
+      const result = await transformAsync(code, {
+        plugins: [
+          ...getBasePlugins(isTSX),
+          [babelPlugin, { ...options, id, index }],
+        ],
+      });
 
       return result?.code ?? code;
     },
   };
 });
+
+export const getBasePlugins = (isTSX: boolean) => {
+  return normalizePlugins([
+    '@babel/plugin-syntax-jsx',
+    isTSX && ['@babel/plugin-syntax-typescript', { isTSX: true }],
+  ]);
+};
 
 export const babelPlugin = declare((api, options: Options) => {
   api.assertVersion(7);
