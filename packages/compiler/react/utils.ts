@@ -2,6 +2,8 @@ import * as t from '@babel/types';
 import type { NodePath } from '@babel/core';
 import type { Options } from '../plugin';
 
+export const RENDER_SCOPE = 'slot';
+
 export const resolveCorrectImportSource = (
   options: Options,
   source: string,
