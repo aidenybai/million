@@ -114,6 +114,24 @@ export const visitor = (options: Options = {}, isReact = true) => {
     const RawComponent = callSite.arguments[0];
 
     /**
+     * Replaces `export default block(Component)` with
+     * const default$ = block(Component);
+     * export default default$;
+     */
+    if (callSitePath.parentPath.isExportDefaultDeclaration()) {
+      const exportPath = callSitePath.parentPath;
+      const exportName = callSitePath.scope.generateUidIdentifier('default$');
+      exportPath.insertBefore(
+        t.variableDeclaration('const', [
+          t.variableDeclarator(exportName, callSite),
+        ]),
+      );
+
+      exportPath.node.declaration = exportName;
+      return; // this "creates" a new callSitePath, so it will be picked up again on the next visitor call. no need to continue.
+    }
+
+    /**
      * Normally, we assume the Component to be a identifier (e.g. block(Component)) that
      * references a function. However, it's possible that the user passes an anonymous
      * function (e.g. block(() => <div />)). In this case, we need to hoist the function
@@ -193,13 +211,6 @@ export const visitor = (options: Options = {}, isReact = true) => {
 
     // We clone the component so we can restore it later.
     const originalComponent = t.cloneNode(Component);
-
-    // attach the original component to the master component
-    globalPath.insertBefore(
-      t.isVariableDeclarator(originalComponent)
-        ? t.variableDeclaration('const', [originalComponent])
-        : originalComponent,
-    );
 
     const SHARED = {
       callSitePath,
@@ -289,6 +300,11 @@ export const visitor = (options: Options = {}, isReact = true) => {
           componentBodyPath: resolvePath(componentDeclarationPath.get('body')),
         },
         SHARED,
+      );
+    } else if (t.isImportSpecifier(Component)) {
+      throw createDeopt(
+        'You are using a component imported from another file. The component must be declared in the same file as the block.',
+        componentDeclarationPath,
       );
     } else {
       throw createDeopt(
