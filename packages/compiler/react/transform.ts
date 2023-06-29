@@ -1,5 +1,4 @@
 import * as t from '@babel/types';
-import { RENDER_SCOPE } from '../../react/constants';
 import { createDirtyChecker } from '../experimental/utils';
 import {
   createDeopt,
@@ -9,6 +8,7 @@ import {
   trimFragmentChildren,
   normalizeProperties,
   SVG_ELEMENTS,
+  RENDER_SCOPE,
 } from './utils';
 import { optimize } from './optimize';
 import type { Options } from '../plugin';
