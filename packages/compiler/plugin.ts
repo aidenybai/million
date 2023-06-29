@@ -3,10 +3,10 @@ import { glob } from 'glob';
 import { declare } from '@babel/helper-plugin-utils';
 import { createUnplugin } from 'unplugin';
 import { transformAsync } from '@babel/core';
+import * as t from '@babel/types';
 import { visitor as legacyVdomVisitor } from './vdom';
 import { visitor as reactVisitor } from './react';
 import type { NodePath, PluginItem } from '@babel/core';
-import * as t from '@babel/types';
 
 export interface Options {
   include?: string | string[];
@@ -123,8 +123,7 @@ export const babelPlugin = declare((api, options: Options) => {
                 ),
               ]),
             );
-
-
+          });
         }
       },
     },
