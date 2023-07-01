@@ -20,22 +20,12 @@
     "title": "Readme",
     "theme": {
       "typesetting": "article"
-    },
-    "display": "hidden"
+    }
   },
   "more": {
     "title": "More",
     "type": "menu",
     "items": {
-      "readme": {
-        "title": "Readme",
-        "href": "/readme"
-      },
-      "sponsor": {
-        "title": "Sponsor",
-        "href": "https://github.com/sponsors/aidenybai",
-        "newWindow": true
-      },
       "research": {
         "title": "Research",
         "href": "https://dl.acm.org/doi/10.1145/3555776.3577683",

@@ -1,5 +1,4 @@
 import * as t from '@babel/types';
-import { RENDER_SCOPE } from '../../react/constants';
 import { createDirtyChecker } from '../experimental/utils';
 import {
   createDeopt,
@@ -9,6 +8,7 @@ import {
   trimFragmentChildren,
   normalizeProperties,
   SVG_ELEMENTS,
+  RENDER_SCOPE,
 } from './utils';
 import { optimize } from './optimize';
 import type { Options } from '../plugin';
@@ -331,6 +331,12 @@ export const transformComponent = (
     dynamics.data.length ? masterComponentId : puppetComponentId,
   );
 
+  // attach the original component to the master component
+  globalPath.insertBefore(
+    t.isVariableDeclarator(originalComponent)
+      ? t.variableDeclaration('const', [originalComponent])
+      : originalComponent,
+  );
   // Try to set the display name to something meaningful
   globalPath.insertBefore(
     t.expressionStatement(
