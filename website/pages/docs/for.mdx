@@ -35,7 +35,7 @@ export default App;
 
 ## Optimizing `<For />`
 
-Internally, `<For />` will not reuse blocks in order to avoid unknown behavior. This means that if you have a `<For />` with 1000 items, it will rereate 1000 blocks.
+Internally, `<For />` will not reuse blocks in order to avoid unknown behavior. This means that if you have a `<For />` with 1000 items, it will recreate 1000 blocks.
 
 However, if you know that your items aren't dependent on any values except the `item` passed to the function, you can use the `memo` prop to tell Million to reuse blocks. This will improve performance and reduce memory usage.
 
