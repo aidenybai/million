@@ -34,7 +34,6 @@ export const renderToTemplate = (
     e: [], // Occur on mount + patch
     i: [], // Occur before mount
   };
-
   for (let name in vnode.props) {
     const value = vnode.props[name];
     if (name === 'key' || name === 'ref' || name === 'children') {
@@ -115,7 +114,8 @@ export const renderToTemplate = (
       if (name === 'style') {
         let style = '';
         for (const key in value) {
-          style += `${key}:${String(value[key])};`;
+          const property = insertHyphenAndLowerCase(key);
+          style += `${property}:${String(value[key])};`;
         }
         props += ` style="${style}"`;
         continue;
@@ -203,4 +203,10 @@ export const renderToTemplate = (
   if (current.i!.length || current.e.length) edits.push(current);
 
   return `<${vnode.type}${props}>${children}</${vnode.type}>`;
+};
+
+const insertHyphenAndLowerCase = (str: string) => {
+  return str.replace(/[A-Z]/g, (match) => {
+    return `-${match.toLowerCase()}`;
+  });
 };

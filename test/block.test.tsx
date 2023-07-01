@@ -13,6 +13,12 @@ const fn = (props?: Props): VElement => (
   </div>
 );
 
+const styleFn = (props?: Props): VElement => (
+  <div>
+    <h1 style={{ [props?.foo]: props?.bar }}>Hello</h1> World
+  </div>
+);
+
 describe.concurrent('block', () => {
   it('should create reusable block', ({ expect }) => {
     const block = createBlock(fn);
@@ -71,6 +77,18 @@ describe.concurrent('block', () => {
     main.p(block({ foo: false, bar: 'bar' }));
     expect(main.l?.outerHTML).toEqual(
       '<div><h1>Hello</h1> World<p title="baz" class="bar"></p></div>',
+    );
+  });
+  it('should patch style', ({ expect }) => {
+    const block = createBlock(styleFn);
+    const main = block({ foo: 'backgroundColor', bar: 'red' });
+    main.m();
+    expect(main.l?.outerHTML).toEqual(
+      '<div><h1 style="background-color: red;">Hello</h1> World</div>',
+    );
+    main.p(block({ foo: 'background', bar: 'blue' }));
+    expect(main.l?.outerHTML).toEqual(
+      '<div><h1 style="background: blue;">Hello</h1> World</div>',
     );
   });
 });
