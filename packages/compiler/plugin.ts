@@ -25,7 +25,10 @@ export const unplugin = createUnplugin((options: Options = {}) => {
 
       const plugins = normalizePlugins([
         '@babel/plugin-syntax-jsx',
-        isTSX && ['@babel/plugin-syntax-typescript', { isTSX: true }],
+        // isTSX && [
+        //   '@babel/plugin-syntax-typescript',
+        //   { allExtensions: true, isTSX: true },
+        // ],
         [babelPlugin, options],
       ]);
 
