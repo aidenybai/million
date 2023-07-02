@@ -28,40 +28,37 @@ import {
   EVENT_PATCH,
 } from './constants';
 import type { ArrayBlock } from './array';
-import type { EditChild, Props, VElement, Hole, VNode, Edit } from './types';
+import type { EditChild, Props, VElement, VNode, Edit } from './types';
 
-const HOLE_PROXY = new Proxy(
-  {},
-  {
-    // A universal getter will return a Hole instance if props[any] is accessed
-    // Allows code to identify holes in virtual nodes ("digs" them out)
-    get(_, key: string): Hole {
-      return { $: key };
-    },
+const HOLE_PROXY = new Proxy({} as Props, {
+  // A universal getter will return a Hole instance if props[any] is accessed
+  // Allows code to identify holes in virtual nodes ("digs" them out)
+  get(_, key: string): string {
+    return `abcdefg${key}`;
+    // return { $: key };
   },
-);
+});
 
-export const block = (
-  fn: (props?: Props) => VElement,
-  unwrap?: (vnode: any) => VNode,
-  shouldUpdate?: (oldProps: Props, newProps: Props) => boolean,
-  svg?: boolean,
-) => {
-  const vnode = fn(HOLE_PROXY);
-  const edits: Edit[] = [];
-
-  // Turns vnode into a string of HTML and creates an array of "edits"
-  // Edits are instructions for how to update the DOM given some props
-  const root = stringToDOM(
-    renderToTemplate(unwrap ? unwrap(vnode) : vnode, edits),
-    svg,
-  );
-
-  return <T extends Props>(
-    props?: T | null,
+export const block =
+  (
+    fn: (props?: Props) => VElement,
+    unwrap?: (vnode: any) => VNode,
+    shouldUpdate?: (oldProps: Props, newProps: Props) => boolean,
+    svg?: boolean,
+  ) =>
+  (
+    props?: Props,
     key?: string,
     shouldUpdateCurrentBlock?: (oldProps: Props, newProps: Props) => boolean,
   ) => {
+    const vnode = fn(HOLE_PROXY);
+    // Turns vnode into a string of HTML and creates an array of "edits"
+    // Edits are instructions for how to update the DOM given some props
+    const edits: Edit[] = [];
+    const root = stringToDOM(
+      renderToTemplate(unwrap ? unwrap(vnode) : vnode, props, edits),
+      svg,
+    );
     return new Block(
       root,
       edits,
@@ -71,7 +68,6 @@ export const block = (
       null,
     );
   };
-};
 
 export const mount = (block: AbstractBlock, parent?: HTMLElement) => {
   if ('b' in block && parent) {
@@ -190,6 +186,7 @@ export class Block extends AbstractBlock {
     }
 
     if (parent) {
+      console.log('root', root, 'refNode', refNode);
       insertBefore$.call(parent, root, refNode);
     }
     this.l = root;

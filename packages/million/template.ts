@@ -10,14 +10,15 @@ import {
   SetHas$,
 } from './constants';
 import { AbstractBlock } from './types';
-import type { Edit, VNode } from './types';
+import type { Edit, Props, VNode } from './types';
 
 export const renderToTemplate = (
   vnode: VNode,
+  vprops: Props = {},
   edits: Edit[] = [],
   path: number[] = [],
 ): string => {
-  if (typeof vnode === 'string') return vnode;
+  // if (typeof vnode === 'string') return vnode.replace('abcdefg', '');
   if (
     typeof vnode === 'number' ||
     typeof vnode === 'bigint' ||
@@ -27,7 +28,7 @@ export const renderToTemplate = (
   }
   if (vnode === null || vnode === undefined || vnode === false) return '';
   // TODO: refactor this so there is not an extra wrapper element
-  if (typeof vnode === 'object' && '$' in vnode) {
+  if (typeof vnode === 'string' && vnode.includes('abcdefg')) {
     edits.push({
       p: path,
       e: [
@@ -35,7 +36,7 @@ export const renderToTemplate = (
           /* type */ t: ChildFlag,
           /* name */ n: null,
           /* value */ v: null,
-          /* hole */ h: vnode.$ as 'string',
+          /* hole */ h: vnode.replace('abcdefg', ''),
           /* index */ i: 0,
           /* listener */ l: null,
           /* patch */ p: null,
@@ -47,6 +48,7 @@ export const renderToTemplate = (
 
     return '<slot/>';
   }
+  if (typeof vnode === 'string') return vnode.replace('abcdefg', '');
 
   let props = '';
   let children = '';
@@ -64,14 +66,14 @@ export const renderToTemplate = (
     if (name === 'htmlFor') name = 'for';
 
     if (name.startsWith('on')) {
-      const isValueHole = '$' in value;
+      const isValueHole = value.includes('abcdefg');
       // Make edits monomorphic
       if (isValueHole) {
         current.e.push({
           /* type */ t: EventFlag,
           /* name */ n: name.slice(2),
           /* value */ v: null,
-          /* hole */ h: value.$,
+          /* hole */ h: value.replace('abcdefg', ''),
           /* index */ i: null,
           /* listener */ l: null,
           /* patch */ p: null,
@@ -94,13 +96,13 @@ export const renderToTemplate = (
     }
 
     if (value) {
-      if (typeof value === 'object' && '$' in value) {
+      if (typeof value === 'string' && value.includes('abcdefg')) {
         if (name === 'style') {
           current.e.push({
             /* type */ t: StyleAttributeFlag,
             /* name */ n: name,
             /* value */ v: null,
-            /* hole */ h: value.$,
+            /* hole */ h: value.replace('abcdefg', ''),
             /* index */ i: null,
             /* listener */ l: null,
             /* patch */ p: null,
@@ -111,7 +113,7 @@ export const renderToTemplate = (
             /* type */ t: SvgAttributeFlag,
             /* name */ n: name,
             /* value */ v: null,
-            /* hole */ h: value.$,
+            /* hole */ h: value.replace('abcdefg', ''),
             /* index */ i: null,
             /* listener */ l: null,
             /* patch */ p: null,
@@ -122,7 +124,7 @@ export const renderToTemplate = (
             /* type */ t: AttributeFlag,
             /* name */ n: name,
             /* value */ v: null,
-            /* hole */ h: value.$,
+            /* hole */ h: value.replace('abcdefg', ''),
             /* index */ i: null,
             /* listener */ l: null,
             /* patch */ p: null,
@@ -135,8 +137,11 @@ export const renderToTemplate = (
       if (name === 'style') {
         let style = '';
         for (const key in value) {
-          const property = insertHyphenAndLowerCase(key);
-          style += `${property}:${String(value[key])};`;
+          const property = insertHyphenAndLowerCase(
+            key.replace('abcdefg', ''),
+            vprops,
+          );
+          style += `${property}:${convertStyle(String(value[key]), vprops)};`;
         }
         props += ` style="${style}"`;
         continue;
@@ -158,12 +163,12 @@ export const renderToTemplate = (
     const child = vnode.props.children?.[i];
     if (child === null || child === undefined || child === false) continue;
 
-    if (typeof child === 'object' && '$' in child) {
+    if (typeof child === 'string' && child.includes('abcdefg')) {
       current.e.push({
         /* type */ t: ChildFlag,
         /* name */ n: null,
         /* value */ v: null,
-        /* hole */ h: child.$,
+        /* hole */ h: child.replace('abcdefg', ''),
         /* index */ i,
         /* listener */ l: null,
         /* patch */ p: null,
@@ -218,7 +223,7 @@ export const renderToTemplate = (
     canMergeString = false;
     const newPath = path.slice();
     newPath.push(k++);
-    children += renderToTemplate(child, edits, newPath);
+    children += renderToTemplate(child, vprops, edits, newPath);
   }
 
   if (current.i!.length || current.e.length) edits.push(current);
@@ -226,8 +231,17 @@ export const renderToTemplate = (
   return `<${vnode.type}${props}>${children}</${vnode.type}>`;
 };
 
-const insertHyphenAndLowerCase = (str: string) => {
-  return str.replace(/[A-Z]/g, (match) => {
+const insertHyphenAndLowerCase = (str: string, props: Props) => {
+  const target: string = str in props ? props[str] : str;
+  // console.log(str, props, target);
+  return target.replace(/[A-Z]/g, (match) => {
     return `-${match.toLowerCase()}`;
   });
+};
+
+const convertStyle = (value: string, props: Props): string => {
+  const replaced = value.includes('abcdefg')
+    ? value.replace('abcdefg', '')
+    : value;
+  return replaced in props ? props[replaced] : replaced;
 };
