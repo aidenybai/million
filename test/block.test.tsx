@@ -1,4 +1,6 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+// eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { describe, it } from 'vitest';
 import { block as createBlock } from '../packages/million';
@@ -15,7 +17,8 @@ const fn = (props?: Props): VElement => (
 
 const styleFn = (props?: Props): VElement => (
   <div>
-    <h1 style={{ [props?.foo]: props?.bar }}>Hello</h1> World
+    <h1 className={`${props?.bar}_color`}>Hello</h1> World
+    <p style={{ [props?.foo]: props?.bar }}>{`${props?.zoo}abc`}</p>
   </div>
 );
 
@@ -81,14 +84,14 @@ describe.concurrent('block', () => {
   });
   it('should patch style', ({ expect }) => {
     const block = createBlock(styleFn);
-    const main = block({ foo: 'backgroundColor', bar: 'red' });
+    const main = block({ foo: 'backgroundColor', bar: 'red', zoo: 'zoo' });
     main.m();
     expect(main.l?.outerHTML).toEqual(
-      '<div><h1 style="background-color: red;">Hello</h1> World</div>',
+      '<div><h1 class="red_color">Hello</h1> World<p style="background-color: red;">zooabc</p></div>',
     );
-    main.p(block({ foo: 'background', bar: 'blue' }));
+    main.p(block({ foo: 'background', bar: 'blue', zoo: 'bazz' }));
     expect(main.l?.outerHTML).toEqual(
-      '<div><h1 style="background: blue;">Hello</h1> World</div>',
+      '<div><h1 class="blue_color">Hello</h1> World<p style="background: blue;">bazzabc</p></div>',
     );
   });
 });

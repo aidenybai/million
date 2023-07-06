@@ -9,16 +9,14 @@ import {
   BlockFlag,
   SetHas$,
 } from './constants';
-import { AbstractBlock } from './types';
-import type { Edit, Props, VNode } from './types';
+import { AbstractBlock, HOLE_STR } from './types';
+import type { Edit, VNode } from './types';
 
 export const renderToTemplate = (
   vnode: VNode,
-  vprops: Props = {},
   edits: Edit[] = [],
   path: number[] = [],
 ): string => {
-  // if (typeof vnode === 'string') return vnode.replace('abcdefg', '');
   if (
     typeof vnode === 'number' ||
     typeof vnode === 'bigint' ||
@@ -28,7 +26,7 @@ export const renderToTemplate = (
   }
   if (vnode === null || vnode === undefined || vnode === false) return '';
   // TODO: refactor this so there is not an extra wrapper element
-  if (typeof vnode === 'string' && vnode.includes('abcdefg')) {
+  if (typeof vnode === 'string' && vnode.includes(HOLE_STR)) {
     edits.push({
       p: path,
       e: [
@@ -36,7 +34,7 @@ export const renderToTemplate = (
           /* type */ t: ChildFlag,
           /* name */ n: null,
           /* value */ v: null,
-          /* hole */ h: vnode.replace('abcdefg', ''),
+          /* hole */ h: vnode.replace(HOLE_STR, ''),
           /* index */ i: 0,
           /* listener */ l: null,
           /* patch */ p: null,
@@ -48,7 +46,7 @@ export const renderToTemplate = (
 
     return '<slot/>';
   }
-  if (typeof vnode === 'string') return vnode.replace('abcdefg', '');
+  if (typeof vnode === 'string') return vnode.replace(HOLE_STR, '');
 
   let props = '';
   let children = '';
@@ -66,14 +64,14 @@ export const renderToTemplate = (
     if (name === 'htmlFor') name = 'for';
 
     if (name.startsWith('on')) {
-      const isValueHole = value.includes('abcdefg');
+      const isValueHole = value.includes(HOLE_STR);
       // Make edits monomorphic
       if (isValueHole) {
         current.e.push({
           /* type */ t: EventFlag,
           /* name */ n: name.slice(2),
           /* value */ v: null,
-          /* hole */ h: value.replace('abcdefg', ''),
+          /* hole */ h: value.replace(HOLE_STR, ''),
           /* index */ i: null,
           /* listener */ l: null,
           /* patch */ p: null,
@@ -94,15 +92,15 @@ export const renderToTemplate = (
 
       continue;
     }
-
     if (value) {
-      if (typeof value === 'string' && value.includes('abcdefg')) {
+      const keyInValue = Object.keys(value)[0];
+      if (typeof value === 'string' && value.includes(HOLE_STR)) {
         if (name === 'style') {
           current.e.push({
             /* type */ t: StyleAttributeFlag,
             /* name */ n: name,
             /* value */ v: null,
-            /* hole */ h: value.replace('abcdefg', ''),
+            /* hole */ h: value.replace(HOLE_STR, ''),
             /* index */ i: null,
             /* listener */ l: null,
             /* patch */ p: null,
@@ -113,7 +111,7 @@ export const renderToTemplate = (
             /* type */ t: SvgAttributeFlag,
             /* name */ n: name,
             /* value */ v: null,
-            /* hole */ h: value.replace('abcdefg', ''),
+            /* hole */ h: value.replace(HOLE_STR, ''),
             /* index */ i: null,
             /* listener */ l: null,
             /* patch */ p: null,
@@ -124,7 +122,7 @@ export const renderToTemplate = (
             /* type */ t: AttributeFlag,
             /* name */ n: name,
             /* value */ v: null,
-            /* hole */ h: value.replace('abcdefg', ''),
+            /* hole */ h: value.replace(HOLE_STR, ''),
             /* index */ i: null,
             /* listener */ l: null,
             /* patch */ p: null,
@@ -134,14 +132,41 @@ export const renderToTemplate = (
 
         continue;
       }
+      if (typeof value === 'object' && keyInValue?.includes(HOLE_STR)) {
+        current.e.push({
+          /* type */ t: StyleAttributeFlag,
+          /* name */ n: keyInValue.replace(HOLE_STR, ''),
+          /* value */ v: null,
+          /* hole */ h: value[keyInValue].replace(HOLE_STR, ''),
+          /* index */ i: null,
+          /* listener */ l: null,
+          /* patch */ p: null,
+          /* block */ b: null,
+        });
+        continue;
+      }
+      if (
+        typeof value === 'object' &&
+        keyInValue !== undefined &&
+        value[keyInValue].includes(HOLE_STR)
+      ) {
+        current.e.push({
+          /* type */ t: StyleAttributeFlag,
+          /* name */ n: keyInValue,
+          /* value */ v: null,
+          /* hole */ h: value[keyInValue].replace(HOLE_STR, ''),
+          /* index */ i: null,
+          /* listener */ l: null,
+          /* patch */ p: null,
+          /* block */ b: null,
+        });
+        continue;
+      }
       if (name === 'style') {
         let style = '';
         for (const key in value) {
-          const property = insertHyphenAndLowerCase(
-            key.replace('abcdefg', ''),
-            vprops,
-          );
-          style += `${property}:${convertStyle(String(value[key]), vprops)};`;
+          const property = insertHyphenAndLowerCase(key.replace(HOLE_STR, ''));
+          style += `${property}:${convertStyle(String(value[key]))};`;
         }
         props += ` style="${style}"`;
         continue;
@@ -163,12 +188,12 @@ export const renderToTemplate = (
     const child = vnode.props.children?.[i];
     if (child === null || child === undefined || child === false) continue;
 
-    if (typeof child === 'string' && child.includes('abcdefg')) {
+    if (typeof child === 'string' && child.includes(HOLE_STR)) {
       current.e.push({
         /* type */ t: ChildFlag,
         /* name */ n: null,
         /* value */ v: null,
-        /* hole */ h: child.replace('abcdefg', ''),
+        /* hole */ h: child.replace(HOLE_STR, ''),
         /* index */ i,
         /* listener */ l: null,
         /* patch */ p: null,
@@ -223,7 +248,7 @@ export const renderToTemplate = (
     canMergeString = false;
     const newPath = path.slice();
     newPath.push(k++);
-    children += renderToTemplate(child, vprops, edits, newPath);
+    children += renderToTemplate(child, edits, newPath);
   }
 
   if (current.i!.length || current.e.length) edits.push(current);
@@ -231,17 +256,12 @@ export const renderToTemplate = (
   return `<${vnode.type}${props}>${children}</${vnode.type}>`;
 };
 
-const insertHyphenAndLowerCase = (str: string, props: Props) => {
-  const target: string = str in props ? props[str] : str;
-  // console.log(str, props, target);
-  return target.replace(/[A-Z]/g, (match) => {
+const insertHyphenAndLowerCase = (str: string) => {
+  return str.replace(/[A-Z]/g, (match) => {
     return `-${match.toLowerCase()}`;
   });
 };
 
-const convertStyle = (value: string, props: Props): string => {
-  const replaced = value.includes('abcdefg')
-    ? value.replace('abcdefg', '')
-    : value;
-  return replaced in props ? props[replaced] : replaced;
+const convertStyle = (value: string): string => {
+  return value.includes(HOLE_STR) ? value.replace(HOLE_STR, '') : value;
 };

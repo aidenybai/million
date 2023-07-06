@@ -27,6 +27,8 @@ export interface Hole {
   $: string;
 }
 
+export const HOLE_STR = 'A3b7F2d9' as const;
+
 export abstract class AbstractBlock {
   /* root */ r?: HTMLElement;
   /* edits */ e?: Edit[];

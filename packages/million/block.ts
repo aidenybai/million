@@ -17,7 +17,7 @@ import {
   HTM_TEMPLATE,
 } from './dom';
 import { renderToTemplate } from './template';
-import { AbstractBlock } from './types';
+import { AbstractBlock, HOLE_STR } from './types';
 import { arrayMount$, arrayPatch$ } from './array';
 import {
   TEXT_NODE_CACHE,
@@ -34,31 +34,29 @@ const HOLE_PROXY = new Proxy({} as Props, {
   // A universal getter will return a Hole instance if props[any] is accessed
   // Allows code to identify holes in virtual nodes ("digs" them out)
   get(_, key: string): string {
-    return `abcdefg${key}`;
-    // return { $: key };
+    return `${HOLE_STR}${key}`;
   },
 });
 
-export const block =
-  (
-    fn: (props?: Props) => VElement,
-    unwrap?: (vnode: any) => VNode,
-    shouldUpdate?: (oldProps: Props, newProps: Props) => boolean,
-    svg?: boolean,
-  ) =>
-  (
+export const block = (
+  fn: (props?: Props) => VElement,
+  unwrap?: (vnode: any) => VNode,
+  shouldUpdate?: (oldProps: Props, newProps: Props) => boolean,
+  svg?: boolean,
+) => {
+  const vnode = fn(HOLE_PROXY);
+  // Turns vnode into a string of HTML and creates an array of "edits"
+  // Edits are instructions for how to update the DOM given some props
+  const edits: Edit[] = [];
+  const root = stringToDOM(
+    renderToTemplate(unwrap ? unwrap(vnode) : vnode, edits),
+    svg,
+  );
+  return (
     props?: Props,
     key?: string,
     shouldUpdateCurrentBlock?: (oldProps: Props, newProps: Props) => boolean,
   ) => {
-    const vnode = fn(HOLE_PROXY);
-    // Turns vnode into a string of HTML and creates an array of "edits"
-    // Edits are instructions for how to update the DOM given some props
-    const edits: Edit[] = [];
-    const root = stringToDOM(
-      renderToTemplate(unwrap ? unwrap(vnode) : vnode, props, edits),
-      svg,
-    );
     return new Block(
       root,
       edits,
@@ -68,6 +66,7 @@ export const block =
       null,
     );
   };
+};
 
 export const mount = (block: AbstractBlock, parent?: HTMLElement) => {
   if ('b' in block && parent) {
@@ -125,7 +124,7 @@ export class Block extends AbstractBlock {
         elements?.[i] ?? getCurrentElement(current.p!, root, this.c, i);
       for (let k = 0, l = current.e.length; k < l; ++k) {
         const edit = current.e[k]!;
-        const value = this.d![edit.h];
+        const value = getValueFromProps(edit.h, this.d!);
 
         if (edit.t & ChildFlag) {
           if (value instanceof AbstractBlock) {
@@ -154,8 +153,11 @@ export class Block extends AbstractBlock {
         } else if (edit.t & AttributeFlag) {
           setAttribute(el, edit.n!, value);
         } else if (edit.t & StyleAttributeFlag) {
+          const name = getValueFromProps(edit.n!, this.d!);
           if (typeof value === 'string') {
-            setStyleAttribute(el, edit.n!, value);
+            setStyleAttribute(el, name, value);
+          } else if (value === undefined) {
+            setStyleAttribute(el, name, edit.h);
           } else {
             for (const style in value) {
               setStyleAttribute(el, style, value[style]);
@@ -186,7 +188,7 @@ export class Block extends AbstractBlock {
     }
 
     if (parent) {
-      console.log('root', root, 'refNode', refNode);
+      // console.log('root', root, 'refNode', refNode);
       insertBefore$.call(parent, root, refNode);
     }
     this.l = root;
@@ -207,8 +209,8 @@ export class Block extends AbstractBlock {
         this.c![i] ?? getCurrentElement(current.p!, root, this.c, i);
       for (let k = 0, l = current.e.length; k < l; ++k) {
         const edit = current.e[k]!;
-        const oldValue = props[edit.h];
-        const newValue = newBlock.d[edit.h];
+        const oldValue = getValueFromProps(edit.h, props);
+        const newValue = getValueFromProps(edit.h, newBlock.d);
 
         if (newValue === oldValue) continue;
 
@@ -238,8 +240,11 @@ export class Block extends AbstractBlock {
         } else if (edit.t & AttributeFlag) {
           setAttribute(el, edit.n!, newValue);
         } else if (edit.t & StyleAttributeFlag) {
+          const name = getValueFromProps(edit.n!, this.d);
           if (typeof newValue === 'string') {
-            setStyleAttribute(el, edit.n!, newValue);
+            setStyleAttribute(el, name, newValue);
+          } else if (newValue === undefined) {
+            setStyleAttribute(el, name, edit.h);
           } else {
             for (const style in newValue) {
               if (newValue[style] !== oldValue[style]) {
@@ -295,6 +300,18 @@ const getCurrentElement = (
   }
   if (cache && key !== undefined) cache[key] = root;
   return root;
+};
+
+const getValueFromProps = (value: string, props: Props): any => {
+  if (value in props) {
+    return props[value];
+  }
+  for (const key in props) {
+    if (value.includes(key)) {
+      return value.replace(key, props[key]);
+    }
+  }
+  return value;
 };
 
 export const stringToDOM = (content: string, svg?: boolean) => {
