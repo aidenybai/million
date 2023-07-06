@@ -496,7 +496,10 @@ export const transformJSX = (
       const attributeValue = attribute.value;
       if (t.isIdentifier(attributeValue.expression)) {
         createDynamic(attributeValue.expression, null, null);
-      } else if (t.isLiteral(attributeValue.expression)) {
+      } else if (
+        t.isLiteral(attributeValue.expression) &&
+        !t.isTemplateElement(attributeValue.expression) // `${foo} test` will be a template literal
+      ) {
         if (t.isStringLiteral(attributeValue.expression)) {
           attribute.value = attributeValue.expression;
         }
