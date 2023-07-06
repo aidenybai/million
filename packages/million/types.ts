@@ -20,7 +20,6 @@ export type Props = Record<string, any>;
 export interface VElement {
   type: string;
   props: Props & { children?: (VNode | string)[] };
-  // props: Props & { children?: (VNode | Hole)[] };
 }
 
 export interface Hole {
