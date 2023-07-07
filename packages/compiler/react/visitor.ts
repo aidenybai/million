@@ -3,6 +3,7 @@ import { addNamed } from '@babel/helper-module-imports';
 import { createDeopt, resolveCorrectImportSource, resolvePath } from './utils';
 import { transformComponent } from './transform';
 import { collectImportedBindings } from './bindings';
+import { evaluate } from './evaluator';
 import type { NodePath } from '@babel/core';
 import type { Options } from '../plugin';
 
@@ -82,7 +83,8 @@ export const visitor = (options: Options = {}, isReact = true) => {
           );
         };
 
-        const isSpecifierValid = checkValid('block') || checkValid('For');
+        const isSpecifierValid =
+          checkValid('block') || checkValid('For') || checkValid('macro');
 
         if (isSpecifierValid) {
           validSpecifiers.push(importedSpecifier.name);
@@ -108,6 +110,19 @@ export const visitor = (options: Options = {}, isReact = true) => {
       options,
       importSource.value,
     );
+
+    if (validSpecifiers.includes('macro') && callSite.callee.name === 'macro') {
+      const declarator = callSitePath.parentPath.node as t.VariableDeclarator;
+      const id = declarator.id as t.Identifier;
+      const { ast, err } = evaluate(
+        callSitePath.node.arguments[0] as t.Expression,
+        callSitePath.scope,
+        ['React', id.name],
+      );
+      if (!err) callSitePath.replaceWith(ast);
+      globalPath.scope.crawl();
+      return;
+    }
 
     if (!validSpecifiers.includes('block')) return;
 

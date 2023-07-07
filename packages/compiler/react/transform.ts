@@ -11,6 +11,7 @@ import {
   RENDER_SCOPE,
 } from './utils';
 import { optimize } from './optimize';
+import { evaluate } from './evaluator';
 import type { Options } from '../plugin';
 import type { Dynamics, Shared } from './types';
 import type { NodePath } from '@babel/core';
@@ -494,24 +495,30 @@ export const transformJSX = (
 
     if (t.isJSXExpressionContainer(attribute.value)) {
       const attributeValue = attribute.value;
-      if (t.isIdentifier(attributeValue.expression)) {
-        createDynamic(attributeValue.expression, null, null);
+      const expressionPath = jsxPath.get(
+        `openingElement.attributes.${i}.value.expression`,
+      );
+      const { ast: expression, err } = evaluate(
+        attributeValue.expression,
+        resolvePath(expressionPath).scope,
+      );
+
+      if (!err) attributeValue.expression = expression;
+
+      if (t.isIdentifier(expression)) {
+        createDynamic(expression, null, null);
       } else if (
-        t.isLiteral(attributeValue.expression) &&
-        !t.isTemplateElement(attributeValue.expression) // `${foo} test` will be a template literal
+        t.isLiteral(expression) &&
+        !t.isTemplateElement(expression) // `${foo} test` will be a template literal
       ) {
-        if (t.isStringLiteral(attributeValue.expression)) {
-          attribute.value = attributeValue.expression;
+        if (t.isStringLiteral(expression)) {
+          attribute.value = expression;
         }
         // if other type of literal, do nothing
       } else {
-        const id = createDynamic(
-          null,
-          attributeValue.expression as t.Expression,
-          () => {
-            attributeValue.expression = id;
-          },
-        );
+        const id = createDynamic(null, expression as t.Expression, () => {
+          attributeValue.expression = id;
+        });
       }
     }
   }
@@ -563,7 +570,23 @@ export const transformJSX = (
     }
 
     if (t.isJSXExpressionContainer(child)) {
-      const { expression } = child;
+      const expressionPath = jsxPath.get(`children.${i}.expression`);
+      const { ast: expression, err } = evaluate(
+        child.expression,
+        resolvePath(expressionPath).scope,
+      );
+
+      if (!err) child.expression = expression;
+
+      if (
+        t.isLiteral(expression) &&
+        !t.isTemplateElement(expression) // `${foo} test` will be a template literal
+      ) {
+        if (t.isStringLiteral(expression)) {
+          child.expression = expression;
+        }
+        continue;
+      }
 
       if (t.isIdentifier(expression)) {
         createDynamic(expression, null, null);
@@ -594,6 +617,7 @@ export const transformJSX = (
       }
 
       if (t.isExpression(expression)) {
+        if (!err) child.expression = expression;
         /**
          * Handles JSX lists and converts them to optimized <For /> components:
          *
