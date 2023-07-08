@@ -22,15 +22,6 @@ export const evaluate = (
   }
 };
 
-export const getVmValue = (ast: t.Node, staticContext: Record<string, any>) => {
-  const code = generate(ast).code;
-  const script = new vm.Script(code);
-  const context = vm.createContext(staticContext);
-  const result = script.runInContext(context);
-
-  return result;
-};
-
 export const evaluateUnsafe = (
   ast: t.Node,
   scope: NodePath<t.Node>['scope'],
@@ -53,7 +44,19 @@ export const evaluateUnsafe = (
     }
   }
 
-  return getVmValue(ast, staticContext);
+  return runAstInContext(ast, staticContext);
+};
+
+export const runAstInContext = (
+  ast: t.Node,
+  staticContext: Record<string, any>,
+) => {
+  const code = generate(ast).code;
+  const script = new vm.Script(code);
+  const context = vm.createContext(staticContext);
+  const result = script.runInContext(context);
+
+  return result;
 };
 
 export const evaluateAstNode = (
@@ -154,7 +157,7 @@ export const evaluateAstNode = (
     }
   }
 
-  return getVmValue(ast, staticContext);
+  return runAstInContext(ast, staticContext);
 };
 
 export const valueToAst = (value: unknown) => {
