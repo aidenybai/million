@@ -44,9 +44,9 @@ export const block = (
   shouldUpdate?: (oldProps: Props, newProps: Props) => boolean,
   svg?: boolean,
 ) => {
-  const vnode = fn(HOLE_PROXY);
   // Turns vnode into a string of HTML and creates an array of "edits"
   // Edits are instructions for how to update the DOM given some props
+  const vnode = fn(HOLE_PROXY);
   const edits: Edit[] = [];
   const root = stringToDOM(
     renderToTemplate(unwrap ? unwrap(vnode) : vnode, edits),
