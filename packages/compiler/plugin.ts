@@ -21,7 +21,7 @@ export const unplugin = createUnplugin((options: Options = {}) => {
       return /\.[jt]sx$/.test(id);
     },
     async transform(code: string, id: string) {
-      // const isTSX = id.endsWith('.tsx');
+      const isTSX = id.endsWith('.tsx');
 
       const plugins = normalizePlugins([
         '@babel/plugin-syntax-jsx',
