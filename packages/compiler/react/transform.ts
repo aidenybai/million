@@ -1,7 +1,15 @@
 import * as t from '@babel/types';
-import { RENDER_SCOPE } from '../../react/constants';
 import { createDirtyChecker } from '../experimental/utils';
-import { createDeopt, resolvePath, warn, isComponent } from './utils';
+import {
+  createDeopt,
+  resolvePath,
+  warn,
+  isComponent,
+  trimFragmentChildren,
+  normalizeProperties,
+  SVG_ELEMENTS,
+  RENDER_SCOPE,
+} from './utils';
 import { optimize } from './optimize';
 import type { Options } from '../plugin';
 import type { Dynamics, Shared } from './types';
@@ -18,7 +26,15 @@ export const transformComponent = (
   },
   SHARED: Shared,
 ) => {
-  const { callSitePath, Component, globalPath, imports } = SHARED;
+  const {
+    isReact,
+    callSite,
+    callSitePath,
+    Component,
+    originalComponent,
+    globalPath,
+    imports,
+  } = SHARED;
 
   /**
    * We can extract the block statement from the component function body
@@ -102,19 +118,39 @@ export const transformComponent = (
    * // becomes
    *
    * function Component() {
-   *  return <million-render-scope>
+   *  return <slot>
    *    <div />
-   *  </million-render-scope>;
+   *  </slot>;
    * }
    * ```
    */
+  const handleTopLevelFragment = (jsx: t.JSXFragment) => {
+    trimFragmentChildren(jsx);
+    if (jsx.children.length === 1) {
+      const child = jsx.children[0];
+      if (t.isJSXElement(child)) {
+        returnStatement.argument = child;
+      } else if (t.isJSXExpressionContainer(child)) {
+        if (t.isJSXEmptyExpression(child.expression)) {
+          returnStatement.argument = t.nullLiteral();
+        } else {
+          returnStatement.argument = child.expression;
+        }
+      } else if (t.isJSXFragment(child)) {
+        handleTopLevelFragment(child);
+      }
+    } else {
+      const renderScopeId = t.jsxIdentifier(RENDER_SCOPE);
+      returnStatement.argument = t.jsxElement(
+        t.jsxOpeningElement(renderScopeId, []),
+        t.jsxClosingElement(renderScopeId),
+        jsx.children,
+      );
+    }
+  };
+
   if (t.isJSXFragment(returnStatement.argument)) {
-    const renderScopeId = t.jsxIdentifier(RENDER_SCOPE);
-    returnStatement.argument = t.jsxElement(
-      t.jsxOpeningElement(renderScopeId, []),
-      t.jsxClosingElement(renderScopeId),
-      returnStatement.argument.children,
-    );
+    handleTopLevelFragment(returnStatement.argument);
   }
 
   /**
@@ -166,7 +202,11 @@ export const transformComponent = (
    * }
    * ```
    */
-  const masterComponentId = callSitePath.scope.generateUidIdentifier('master$');
+  const masterComponentId = callSitePath.scope.generateUidIdentifier(
+    t.isIdentifier(originalComponent.id)
+      ? originalComponent.id.name
+      : 'master$',
+  );
   const puppetComponentId = callSitePath.scope.generateUidIdentifier('puppet$');
 
   const block = imports.addNamed('block');
@@ -179,7 +219,46 @@ export const transformComponent = (
    * ```
    */
 
+  const params = t.isVariableDeclarator(Component)
+    ? t.isArrowFunctionExpression(Component.init)
+      ? Component.init.params
+      : null
+    : Component.params;
+
+  // We want to add a __props property for the original call props
+  // TODO: refactor this probably
+  if (params?.length && t.isExpression(params[0])) {
+    dynamics.data.push({
+      id: t.identifier('__props'),
+      value: params[0] as t.Expression,
+    });
+  }
+
   const holes = dynamics.data.map(({ id }) => id.name);
+  const userOptions = callSite.arguments[1] as t.ObjectExpression | undefined;
+  const compiledOptions = [
+    t.objectProperty(
+      t.identifier('svg'),
+      // we try to automatically detect if the component is an SVG
+      t.booleanLiteral(
+        t.isJSXElement(returnStatement.argument) &&
+          t.isJSXIdentifier(returnStatement.argument.openingElement.name) &&
+          SVG_ELEMENTS.includes(
+            returnStatement.argument.openingElement.name.name,
+          ),
+      ),
+    ),
+    t.objectProperty(
+      t.identifier('original'),
+      originalComponent.id as t.Identifier,
+    ),
+    t.objectProperty(t.identifier('shouldUpdate'), createDirtyChecker(holes)),
+  ];
+
+  if (userOptions) {
+    compiledOptions.push(...(userOptions.properties as t.ObjectProperty[]));
+  }
+
   const puppetBlock = t.callExpression(block, [
     t.arrowFunctionExpression(
       [
@@ -189,9 +268,7 @@ export const transformComponent = (
       ],
       t.blockStatement([returnStatement]),
     ),
-    t.objectExpression([
-      t.objectProperty(t.identifier('shouldUpdate'), createDirtyChecker(holes)),
-    ]),
+    t.objectExpression(normalizeProperties(compiledOptions)),
   ]);
 
   /**
@@ -218,7 +295,12 @@ export const transformComponent = (
    * ```
    */
 
-  const puppetCall = t.callExpression(puppetComponentId, [
+  const createElement = imports.addNamed(
+    'createElement',
+    isReact ? 'react' : 'preact',
+  );
+  const puppetCall = t.callExpression(createElement, [
+    puppetComponentId,
     t.objectExpression(
       // Creates an object that passes expression values down
       dynamics.data.map(({ id, value }) => t.objectProperty(id, value || id)),
@@ -244,16 +326,27 @@ export const transformComponent = (
    * const master = (props) => {
    * ```
    */
-
   Component.id = masterComponentId;
-  callSitePath.replaceWith(masterComponentId);
+  callSitePath.replaceWith(
+    dynamics.data.length ? masterComponentId : puppetComponentId,
+  );
 
-  // Insert both master and puppet components into code:
-  if (t.isFunctionDeclaration(Component)) {
-    globalPath.insertBefore(Component);
-  } else {
-    globalPath.insertBefore(t.variableDeclaration('const', [Component]));
-  }
+  // attach the original component to the master component
+  globalPath.insertBefore(
+    t.isVariableDeclarator(originalComponent)
+      ? t.variableDeclaration('const', [originalComponent])
+      : originalComponent,
+  );
+  // Try to set the display name to something meaningful
+  globalPath.insertBefore(
+    t.expressionStatement(
+      t.assignmentExpression(
+        '=',
+        t.memberExpression(masterComponentId, t.identifier('displayName')),
+        t.stringLiteral(masterComponentId.name),
+      ),
+    ),
+  );
   globalPath.insertBefore(
     t.variableDeclaration('const', [
       t.variableDeclarator(puppetComponentId, puppetBlock),
@@ -329,7 +422,7 @@ export const transformJSX = (
      * <div>{_1$}</div>
      * ```
      */
-    const id = identifier || callSitePath.scope.generateUidIdentifier('$');
+    const id = identifier || componentBodyPath.scope.generateUidIdentifier('$');
     if (!dynamics.cache.has(id.name)) {
       dynamics.data.push({ value: expression, id });
       dynamics.cache.add(id.name);
@@ -340,9 +433,10 @@ export const transformJSX = (
   };
 
   const type = jsx.openingElement.name;
+
   /**
    * If the JSX type is Capitalized, we assume it's a component. We then turn that
-   * JSX into the raw function calls and hoist it as a dynamic with a `renderReactScope`:
+   * JSX into the raw function calls and hoist it as a dynamic with a `renderScope`:
    *
    * ```js
    * <Component foo={bar} />
@@ -361,54 +455,25 @@ export const transformJSX = (
    * handing all the edge cases.
    */
   if (t.isJSXIdentifier(type) && isComponent(type.name)) {
-    const jsxClone = t.cloneNode(jsx);
-    const { attributes } = jsxClone.openingElement;
-    for (let i = 0, j = attributes.length; i < j; i++) {
-      const attribute = attributes[i]!;
-
-      if (t.isJSXSpreadAttribute(attribute)) {
-        const spreadPath = jsxPath.get(
-          `openingElement.attributes.${i}.argument`,
-        );
-        throw createDeopt(
-          'Spread attributes are not supported.',
-          callSitePath,
-          resolvePath(spreadPath),
-        );
-      }
-
-      if (t.isJSXExpressionContainer(attribute.value)) {
-        const { name: attributeId, value: attributeValue } = attribute;
-        const id = t.isIdentifier(attributeValue.expression)
-          ? createDynamic(attributeValue.expression, null, null)
-          : createDynamic(
-              null,
-              attributeValue.expression as t.Expression,
-              () => {
-                attributeValue.expression = id;
-              },
-            );
-
-        if (!t.isJSXIdentifier(attributeId)) continue;
-        attributeValue.expression = id;
-      }
-    }
-
-    warn(
-      'Components will cause degraded performance. Ideally, you should use DOM elements instead.',
-      jsxPath,
-    );
+    // TODO: Add a warning for using components that are not block or For
+    // warn(
+    //   'Components will cause degraded performance. Ideally, you should use DOM elements instead.',
+    //   jsxPath,
+    //   options.mute,
+    // );
 
     const renderReactScope = imports.addNamed('renderReactScope');
+    const nestedRender = t.callExpression(renderReactScope, [jsx]);
 
-    const nestedRender = t.callExpression(renderReactScope, [jsxClone]);
+    const id = createDynamic(null, nestedRender, () => {
+      jsxPath.replaceWith(
+        t.isReturnStatement(jsxPath.parent)
+          ? t.expressionStatement(id)
+          : t.jsxExpressionContainer(id),
+      );
+    });
 
-    const id = createDynamic(null, nestedRender, null);
-    const nestedRenderId = t.jsxIdentifier(id.name);
-    jsx.openingElement.name = nestedRenderId;
-    if (jsx.closingElement) {
-      jsx.closingElement.name = nestedRenderId;
-    }
+    return dynamics;
   }
 
   /**
@@ -431,6 +496,14 @@ export const transformJSX = (
       const attributeValue = attribute.value;
       if (t.isIdentifier(attributeValue.expression)) {
         createDynamic(attributeValue.expression, null, null);
+      } else if (
+        t.isLiteral(attributeValue.expression) &&
+        !t.isTemplateElement(attributeValue.expression) // `${foo} test` will be a template literal
+      ) {
+        if (t.isStringLiteral(attributeValue.expression)) {
+          attribute.value = attributeValue.expression;
+        }
+        // if other type of literal, do nothing
       } else {
         const id = createDynamic(
           null,
@@ -557,6 +630,7 @@ export const transformJSX = (
           warn(
             'Array.map() will degrade performance. We recommend removing the block on the current component and using a <For /> component instead.',
             resolvePath(expressionPath),
+            options.mute,
           );
 
           const renderReactScope = imports.addNamed('renderReactScope');
@@ -595,6 +669,7 @@ export const transformJSX = (
           warn(
             'Conditional expressions will degrade performance. We recommend using deterministic returns instead.',
             resolvePath(expressionPath),
+            options.mute,
           );
 
           const renderReactScope = imports.addNamed('renderReactScope');

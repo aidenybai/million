@@ -93,6 +93,25 @@ const faq = [
     ),
   },
   {
+    question: <>Is this just memo?</>,
+    answer: (
+      <>
+        While React provides memoization utilities, Million.js takes a
+        drastically different approach. Instead of trying to reduce and avoid
+        rerendering, it makes the render process faster. Because fundamentally,
+        memoization is a band-aid, especially if you have a lot of dynamic data.
+        You can check out our blog article
+        <Link
+          className="nx-text-primary-600 px-1 nx-underline nx-decoration-from-font [text-underline-position:from-font]"
+          href="/blog/virtual-dom"
+        >
+          Virtual DOM: Back in Block
+        </Link>
+        to learn more about how Million works with React under the hood.
+      </>
+    ),
+  },
+  {
     question: <>What is the logo supposed to be?</>,
     answer: (
       <>
@@ -109,25 +128,6 @@ const faq = [
           className="mt-5"
           alt="Mil the lion"
         />
-      </>
-    ),
-  },
-  {
-    question: <>Can't I just use React.useMemo() to optimize my application?</>,
-    answer: (
-      <>
-        While React provides memoization utilities, 
-        Million.js takes a drastically different approach. Instead of trying to reduce and avoid rerendering, it makes the render process faster. 
-        Because fundamentally, memoization is a band-aid, especially if you have a lot of dynamic data.
-
-        You can check out our blog article 
-        <Link
-          className="nx-text-primary-600 px-1 nx-underline nx-decoration-from-font [text-underline-position:from-font]"
-          href="/docs/rules"
-        >
-          Behind The Block
-        </Link>
-        to learn more about how Million works with React under the hood
       </>
     ),
   },

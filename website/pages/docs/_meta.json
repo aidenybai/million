@@ -13,15 +13,6 @@
     "title": "API Reference"
   },
   "block": "block()",
-  "for": "<For />",
-  "-- Internal API": {
-    "type": "separator",
-    "title": "Internal API"
-  },
-  "internal-block": "block()",
-  "mount": "mount()",
-  "patch": "patch()",
-  "map-array": "mapArray()",
-  "render-to-template": "renderToTemplate()",
-  "string-to-dom": "stringToDOM()"
+  "for": "<For>",
+  "internals": "Internals"
 }

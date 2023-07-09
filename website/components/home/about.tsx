@@ -1,10 +1,13 @@
 import Tilt from 'react-parallax-tilt';
 import Link from 'next/link';
 import { useState } from 'react';
-import ReactCardFlip from 'react-card-flip';
-import { Chart } from '../chart';
-import { Showdown } from '../extra-content';
+import dynamic from 'next/dynamic';
 import { Container } from './container';
+
+const Chart = dynamic(() => import('../chart').then((mod) => mod.Chart));
+const Showdown = dynamic(() =>
+  import('../extra-content').then((mod) => mod.Showdown),
+);
 
 export function About() {
   return (
@@ -145,11 +148,8 @@ function Graphic() {
   };
 
   return (
-    <ReactCardFlip isFlipped={!showShowdown} flipDirection="vertical">
-      <GraphicWrapper onClick={handleClick} hidden={!showShowdown}>
-        <Showdown initStart amount={500} />
-      </GraphicWrapper>
-      <GraphicWrapper onClick={handleClick} hidden={showShowdown}>
+    <GraphicWrapper onClick={handleClick}>
+      {!showShowdown ? (
         <div className="bg-white p-4 pb-6 dark:bg-zinc-900 rounded-lg">
           <div className="w-full">
             <p className="font-bold text-lg">JS Framework Benchmark</p>
@@ -171,21 +171,20 @@ function Graphic() {
             (Chrome 102)
           </div>
         </div>
-      </GraphicWrapper>
-    </ReactCardFlip>
+      ) : (
+        <Showdown initStart amount={500} />
+      )}
+    </GraphicWrapper>
   );
 }
 
 function GraphicWrapper({
   children,
   onClick,
-  hidden,
 }: {
   children: JSX.Element;
   onClick: () => void;
-  hidden: boolean;
 }) {
-  if (hidden) return null;
   return (
     <Tilt
       tiltMaxAngleX={5}

@@ -1,29 +1,32 @@
-import { createElement, useEffect, useReducer } from 'react';
-import { RENDER_SCOPE } from '../react/constants';
-import type { ComponentType, ComponentClass, FunctionComponent } from 'react';
-import type { MillionArrayProps, MillionProps } from '../types';
+import { createElement, useEffect, useState } from 'react';
+import { RENDER_SCOPE, SVG_RENDER_SCOPE } from '../react/constants';
+import type { ComponentType } from 'react';
+import type { MillionArrayProps, MillionProps, Options } from '../types';
 
 export { renderReactScope } from '../react/utils';
 
-// @ts-expect-error - is defined
-// eslint-disable-next-line @typescript-eslint/consistent-type-imports
-let millionModule: typeof import('million/react') | null = null;
+let millionModule;
 
-export const block = <P extends MillionProps>(Component: ComponentType<P>) => {
-  let blockFactory: any;
+export const block = <P extends MillionProps>(
+  Component: ComponentType<P>,
+  options: Options = {},
+) => {
+  let blockFactory: any = millionModule ? millionModule.block(Component) : null;
   function MillionBlockLoader<P extends MillionProps>(props: P) {
+    const [ready, setReady] = useState(Boolean(blockFactory));
+
     useEffect(() => {
-      const importSource = async () => {
-        // @ts-expect-error - is defined
-        millionModule = await import('million/react');
-        if (!blockFactory) {
-          blockFactory = millionModule.block(Component);
+      if (!blockFactory) {
+        const importSource = async () => {
+          if (!millionModule) millionModule = await import('../react');
+          blockFactory = millionModule.block(Component, options);
+          setReady(true);
+        };
+        try {
+          void importSource();
+        } catch (e) {
+          throw new Error('Failed to load Million.js');
         }
-      };
-      try {
-        void importSource();
-      } catch (e) {
-        throw new Error('Failed to load Million library');
       }
 
       return () => {
@@ -31,15 +34,15 @@ export const block = <P extends MillionProps>(Component: ComponentType<P>) => {
       };
     }, []);
 
-    if (!blockFactory) {
-      return createElement(
+    if (!ready || !blockFactory) {
+      if (options.ssr === false) return null;
+      return createElement<P>(
         RENDER_SCOPE,
         null,
-        createElement<P>(
-          // This is valid as type ComponentType<P> is by definition FunctionComponent<P> | ComponentClass<P>
-          Component as unknown as FunctionComponent<P> | ComponentClass<P>,
-          props,
-        ),
+        // During compilation we will attach a .original for the component and
+        // pass __props as the props to the component. This references
+        // the original component for SSR.
+        createElement(options.original as any, props.__props),
       );
     }
 
@@ -49,24 +52,35 @@ export const block = <P extends MillionProps>(Component: ComponentType<P>) => {
   return MillionBlockLoader<P>;
 };
 
-export function For<T>(props: MillionArrayProps<T>) {
-  const [_, forceUpdate] = useReducer((x: number) => x + 1, 0);
+export function For<T>({ each, children, ssr, svg }: MillionArrayProps<T>) {
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    if (millionModule) return;
     const importSource = async () => {
-      // @ts-expect-error - is defined
-      millionModule = await import('million/react');
-      forceUpdate();
+      millionModule = await import('../react');
+      setReady(true);
     };
     try {
       void importSource();
     } catch (e) {
-      throw new Error('Failed to load Million library');
+      throw new Error('Failed to load Million.js');
     }
   }, []);
 
-  if (millionModule) {
-    return createElement(millionModule.For, props);
+  if (!ready || !millionModule) {
+    if (ssr === false) return null;
+    return createElement(
+      svg ? SVG_RENDER_SCOPE : RENDER_SCOPE,
+      null,
+      ...each.map(children),
+    );
   }
-  return createElement(RENDER_SCOPE, null, ...props.each.map(props.children));
+
+  return createElement(millionModule.For, {
+    each,
+    children,
+    ssr,
+    svg,
+  });
 }

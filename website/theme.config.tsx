@@ -125,7 +125,7 @@ const config: DocsThemeConfig = {
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 212 44"
-            className='h-8'
+            className="h-8"
             width="212"
           >
             <rect width="212" height="44" fill="#000" rx="8"></rect>
@@ -164,6 +164,19 @@ const config: DocsThemeConfig = {
             <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z" />
           </svg>
         </a>
+        <a
+          href="https://github.com/sponsors/aidenybai"
+          target="_blank"
+          className="hidden sm:block"
+        >
+          <iframe
+            src="https://github.com/sponsors/aidenybai/button"
+            title="Sponsor aidenybai"
+            height="32"
+            width="114"
+            className="rounded-md border-0 dark:invert invert-0"
+          ></iframe>
+        </a>
       </>
     ),
   },
@@ -188,7 +201,10 @@ const config: DocsThemeConfig = {
         : pathname;
     const canonical = new URL(asPath, 'https://million.dev').toString();
 
-    const ogUrl = `https://million.dev/api/og?title=${title}&description=${description}&note=${note}`;
+    const ogUrl =
+      pathname === '/'
+        ? `https://million.dev/default-og.png`
+        : `https://million.dev/api/og?title=${title}&description=${description}&note=${note}`;
 
     return (
       <>
@@ -222,6 +238,7 @@ const config: DocsThemeConfig = {
   },
   sidebar: {
     toggleButton: true,
+    defaultMenuCollapseLevel: 0,
   },
   toc: {
     float: true,
@@ -237,7 +254,7 @@ const config: DocsThemeConfig = {
     return { titleTemplate: `%s | Million.js` };
   },
   banner: {
-    key: '2.0.0-release',
+    key: `${packageJson.version}-release`,
     text: (
       <a href="https://github.com/aidenybai/million">
         ⭐ {packageJson.version} is released. Leave a star →

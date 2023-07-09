@@ -1,18 +1,17 @@
 import Link from 'next/link';
 import { Container } from './container';
+import { Blur } from './hero';
 
 export function CTA() {
   return (
     <div className="relative pb-16">
+      <Blur />
       <Container>
         <div className="relative">
           <div className="mt-6 m-auto space-y-6 md:w-8/12 lg:w-7/12">
             <h1 className="text-center text-4xl font-bold text-gray-800 dark:text-white md:text-5xl">
-              It's about dang time!
+              Tired of slow React?
             </h1>
-            <p className="text-center text-xl text-gray-600 dark:text-gray-300">
-              Unlock the power of performance within your React components.
-            </p>
             <div className="flex flex-wrap justify-center gap-6">
               <Link
                 href="/docs"

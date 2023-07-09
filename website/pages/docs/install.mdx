@@ -11,6 +11,10 @@ Million.js assumes that you've already initialized a React project. If you haven
 
 If you're just looking to try out Million.js, check out the [quickstart](/docs/quickstart).
 
+<Callout type="info">
+  Million.js is compatible with React 18 and above. If you're using an older version of React, [you'll need to upgrade first](https://react.dev/blog/2022/03/08/react-18-upgrade-guide).
+</Callout>
+
 <Steps>
 
 ### Install package
@@ -85,10 +89,11 @@ Then, add the compiler to your build tool of choice:
     <Tab>
     ```js filename="vite.config.js"
     import million from 'million/compiler';
+    import react from "@vitejs/plugin-react";
     import { defineConfig } from 'vite';
 
     export default defineConfig({
-      plugins: [million.vite()],
+      plugins: [million.vite(), react() }],
     });
     ```
     </Tab>
@@ -104,11 +109,12 @@ Then, add the compiler to your build tool of choice:
     </Tab>
     <Tab>
     ```js filename="webpack.config.js"
-    import million from 'million/compiler';
-
-    export default {
-      plugins: [million.webpack()],
-    };
+    const million = require('million/compiler');
+    module.exports = {
+      plugins: [
+        million.webpack(),
+      ],
+    }
     ```
     </Tab>
     <Tab>
@@ -155,11 +161,12 @@ Then, add the compiler to your build tool of choice:
     </Tab>
     <Tab>
     ```js filename="webpack.config.js"
-    import million from 'million/compiler';
-
-    export default {
-      plugins: [million.webpack({ mode: 'preact' })],
-    };
+    const million = require('million/compiler');
+    module.exports = {
+      plugins: [
+        million.webpack({ mode: 'preact' }),
+      ],
+    }
     ```
     </Tab>
     <Tab>
@@ -183,6 +190,7 @@ interface Options {
   mode: 'react' | 'preact' | 'vdom' // default: 'react'
   optimize: boolean // default: false
   server: boolean // default: false
+  mute: boolean // default: false
 }
 ```
 

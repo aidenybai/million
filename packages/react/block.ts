@@ -4,57 +4,51 @@ import {
   mount$,
   patch as patchBlock,
 } from '../million/block';
-import { Map$, MapSet$, MapHas$, MapGet$ } from '../million/constants';
+import { MapSet$, MapHas$, MapGet$ } from '../million/constants';
 import { queueMicrotask$ } from '../million/dom';
-import { unwrap } from './utils';
-import { Effect, RENDER_SCOPE } from './constants';
-import type { Props } from '../million';
-import type { ReactNode, ComponentType } from 'react';
+import { processProps, unwrap } from './utils';
+import { Effect, RENDER_SCOPE, REGISTRY, SVG_RENDER_SCOPE } from './constants';
+import type { ComponentType } from 'react';
 import type { Options, MillionProps } from '../types';
-
-export const REGISTRY = new Map$<
-  (props: Props) => ReactNode,
-  ReturnType<typeof createBlock>
->();
 
 export const block = <P extends MillionProps>(
   fn: ComponentType<P> | null,
-  options: Options = {},
+  { block: compiledBlock, shouldUpdate, svg }: Options = {},
 ) => {
   const block = MapHas$.call(REGISTRY, fn)
     ? MapGet$.call(REGISTRY, fn)
     : fn
-    ? createBlock(fn as any, unwrap)
-    : options.block;
+    ? createBlock(fn as any, unwrap, shouldUpdate, svg)
+    : compiledBlock;
 
-  function MillionBlock<P extends MillionProps>(props: P) {
+  const MillionBlock = <P extends MillionProps>(props: P) => {
     const ref = useRef<HTMLElement>(null);
     const patch = useRef<((props: P) => void) | null>(null);
 
+    props = processProps(props);
     patch.current?.(props);
 
     const effect = useCallback(() => {
-      const currentBlock = block(props, props.key, options.shouldUpdate);
+      const currentBlock = block(props, props.key);
       if (ref.current && patch.current === null) {
         queueMicrotask$(() => {
           mount$.call(currentBlock, ref.current!, null);
         });
         patch.current = (props: P) => {
           queueMicrotask$(() => {
-            patchBlock(
-              currentBlock,
-              block(props, props.key, options.shouldUpdate),
-            );
+            patchBlock(currentBlock, block(props, props.key, shouldUpdate));
           });
         };
       }
     }, []);
 
     const marker = useMemo(() => {
-      return createElement(RENDER_SCOPE, { ref });
+      return createElement(svg ? SVG_RENDER_SCOPE : RENDER_SCOPE, {
+        ref,
+      });
     }, []);
 
-    const vnode = createElement<P>(
+    const vnode = createElement(
       Fragment,
       null,
       marker,
@@ -62,10 +56,10 @@ export const block = <P extends MillionProps>(
     );
 
     return vnode;
-  }
+  };
 
-  if (!MapHas$.call(REGISTRY, MillionBlock<P>)) {
-    MapSet$.call(REGISTRY, MillionBlock<P>, block);
+  if (!MapHas$.call(REGISTRY, fn)) {
+    MapSet$.call(REGISTRY, fn, block);
   }
 
   return MillionBlock<P>;

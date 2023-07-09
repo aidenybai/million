@@ -1,11 +1,31 @@
-import { Fragment } from 'react';
+import { Fragment, createElement, isValidElement } from 'react';
 import { createRoot } from 'react-dom/client';
 import { REACT_ROOT, RENDER_SCOPE } from './constants';
-import type { ReactNode } from 'react';
+import type { ComponentProps, ReactNode } from 'react';
 import type { Root } from 'react-dom/client';
 import type { VNode } from '../million';
 
+// TODO: access perf impact of this
+export const processProps = (props: ComponentProps<any>) => {
+  const processedProps: ComponentProps<any> = {};
+
+  for (const key in props) {
+    const value = props[key];
+    if (isValidElement(value)) {
+      processedProps[key] = renderReactScope(value);
+      continue;
+    }
+    processedProps[key] = props[key];
+  }
+
+  return processedProps;
+};
+
 export const renderReactScope = (vnode: ReactNode) => {
+  if (typeof window === 'undefined') {
+    return createElement(RENDER_SCOPE, null, vnode);
+  }
+
   return (el: HTMLElement | null) => {
     const parent = el ?? document.createElement(RENDER_SCOPE);
     const root =

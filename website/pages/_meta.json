@@ -21,5 +21,26 @@
     "theme": {
       "typesetting": "article"
     }
+  },
+  "more": {
+    "title": "More",
+    "type": "menu",
+    "items": {
+      "research": {
+        "title": "Research",
+        "href": "https://dl.acm.org/doi/10.1145/3555776.3577683",
+        "newWindow": true
+      },
+      "demo": {
+        "title": "Live demo",
+        "href": "https://demo.million.dev",
+        "newWindow": true
+      },
+      "hundred": {
+        "title": "Build your own",
+        "href": "https://github.com/aidenybai/hundred",
+        "newWindow": true
+      }
+    }
   }
 }

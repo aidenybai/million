@@ -5,17 +5,17 @@ description: 'The renderToTemplate function is used to render a virtual DOM node
 
 import { Callout } from 'nextra-theme-docs';
 
-<Callout type="info">
-  This function is part of the internal API. Only use if you know what you are
-  doing and are optimizing for performance.
+<Callout type="warning">
+  **This function is part of the internal API.** You should only be using this if
+  you are making your own framework.
 </Callout>
 
 <br />
 
 # `renderToTemplate(){:jsx}`
 
-**Syntax:** `stringToDOM(vnode, edits){:jsx}`\
-**Example:** `stringToDOM(<div>Hello World</div>, []){:jsx}`
+**Syntax:** `renderToTemplate(vnode, edits){:jsx}`\
+**Example:** `renderToTemplate(<div>Hello World</div>, []){:jsx}`
 
 The `renderToTemplate()` function is used to render a virtual DOM node to a string. This is used to create the template for the block and works tangentially with [`stringToDOM(){:jsx}`](/docs/string-to-dom).
 

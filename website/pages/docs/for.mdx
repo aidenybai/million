@@ -3,7 +3,7 @@ title: '<For />'
 description: 'Learn how to render lists of blocks in Million.'
 ---
 
-# `<For />{:jsx}`
+# `<For>{:jsx}`
 
 **Syntax:** `<For each={array}>{(item, index) => Block}</For>{:jsx}`\
 **Example:** `<For each={[1, 2, 3]}>{(item) => myBlock({ item })}</For>{:jsx}`
@@ -15,22 +15,42 @@ It's the best way to loop over an array. As the array changes, `<For />{:jsx}` u
 ```jsx
 import { block } from 'million/react';
 
-const DisplayBlock = block(function Display() {
-  return <div>{this.props.item}</div>;
-});
-
 function App() {
   const [items, setItems] = useState([1, 2, 3]);
 
   return (
-    <div>
+    <>
       <button onClick={() => setItems([...items, items.length + 1])}>
         Add item
       </button>
-      <For each={items}>{(item) => <DisplayBlock item={item} />}</For>
-    </div>
+      <ul>
+        <For each={items}>{(item) => <li>{item}</li>}</For>
+      </ul>
+    </>
   );
 }
 
 export default App;
+```
+
+## Optimizing `<For />`
+
+Internally, `<For />` will not reuse blocks in order to avoid unknown behavior. This means that if you have a `<For />` with 1000 items, it will recreate 1000 blocks.
+
+However, if you know that your items aren't dependent on any values except the `item` passed to the function, you can use the `memo` prop to tell Million to reuse blocks. This will improve performance and reduce memory usage.
+
+```jsx
+<For each={items} memo>
+  {(item) => <li>{item}</li>}
+</For>
+```
+
+## Hydration mismatch
+
+If you are using Million.js on the server, you may encounter a hydration mismatch error. This is because Million.js uses a different algorithm for rendering on the server than it does on the client. To fix this, you can disable SSR.
+
+```jsx
+<For each={[Math.random(), Math.random(), Math.random()]} ssr={false}>
+  {(item) => <li>{item}</li>}
+</For>
 ```
