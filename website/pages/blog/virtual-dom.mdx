@@ -51,7 +51,7 @@ Until now.
 
 ## Origin story
 
-The virtual DOM was created to address performance issues caused by frequent manipulation of the real DOM. It is a lightweight, in-memory representation of the real DOM, which can be later used as reference to update the actual web page.
+The virtual DOM was created to address performance issues caused by frequent manipulation of the real DOM. It is a lightweight, in-memory representation of the real DOM, which can be later used as a reference to update the actual web page.
 
 When a component is rendered, the virtual DOM calculates the difference between the new state and the previous state (a process called "diffing") and makes the minimal set of changes to the real DOM to bring it in sync with the updated virtual DOM (a process called "reconciliation").
 
@@ -88,7 +88,7 @@ In 2022, [Blockdom](https://github.com/ged-odoo/blockdom) was released. Taking a
 
 The Block virtual DOM takes a different approach to diffing, and can be broken down into two parts:
 
-1. **Static Analysis**: The virtual DOM is analyzed to extract dynamic parts of the tree into a "Edit Map," or the list of the "edits" (mappings) of the dynamic parts of the virtual DOM to the state.
+1. **Static Analysis**: The virtual DOM is analyzed to extract dynamic parts of the tree into an "Edit Map," or the list of the "edits" (mappings) of the dynamic parts of the virtual DOM to the state.
 
 2. **Dirty Checking**: The state (**not** the virtual DOM tree) is diffed to determine what has changed. If the state has changed, the DOM is updated directly via the Edit Map.
 
@@ -96,7 +96,7 @@ The Block virtual DOM takes a different approach to diffing, and can be broken d
 
 **TL;DR: Diff the data, not the DOM.**
 
-Why? The size of data is generally much smaller than the size of the DOM. It also can be much simpler to diff data values than to diff full DOM nodes.
+Why? The size of the data is generally much smaller than the size of the DOM. It also can be much simpler to diff data values than to diff full DOM nodes.
 
 </Callout>
 
@@ -159,9 +159,9 @@ You can see that the dirty checking example takes much less computation than the
 
 <Chart />
 
-Million.js sports pretty high performance, and is able to outperform React in the JavaScript Framework Benchmark. But it's important understand how Million.js can be fast in this case.
+Million.js sports pretty high performance and is able to outperform React in the JavaScript Framework Benchmark. But it's important to understand how Million.js can be fast in this case.
 
-The JavaScript Framework Benchmark is a benchmark that tests the performance of frameworks by rendering a large table of rows and columns. The benchmark is designed to test the performance highly unrealistic performance tests (like adding/replacing 1000 rows), and is not necessarily representative of real world applications.
+The JavaScript Framework Benchmark is a benchmark that tests the performance of frameworks by rendering a large table of rows and columns. The benchmark is designed to test the performance of highly unrealistic performance tests (like adding/replacing 1000 rows), and is not necessarily representative of real world applications.
 
 So where can Million.js or the block virtual DOM be used?
 
@@ -234,7 +234,7 @@ function Component() {
 }
 ```
 
-Notice how there is a limitation how the application UI can be structured. "Stable" returns means that components with non-list-like dynamic shapes (like a conditional return in the same component) are not allowed.
+Notice how there is a limitation on how the application UI can be structured. "Stable" returns mean that components with non-list-like dynamic shapes (like a conditional return in the same component) are not allowed.
 
 ### Use granularly
 

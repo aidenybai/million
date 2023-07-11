@@ -1558,7 +1558,7 @@ const frames = [
 ];
 
 const descriptions = [
-  'We are give two virtual DOMs: current, which represents what our UI looks like, and new, which represents what we want.',
+  'We are given two virtual DOMs: current, which represents what our UI looks like, and new, which represents what we want.',
   'We diff the first node and find no difference, so we go next.',
   'We diff the second node and find a difference. We make the update in the DOM.',
   "We diff the third node and find that it's gone in the new virtual DOM, so we remove it in the DOM.",
