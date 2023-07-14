@@ -35,7 +35,7 @@ export const renderToTemplate = (
           /* type */ t: ChildFlag,
           /* name */ n: null,
           /* value */ v: null,
-          /* hole */ h: vnode.$ as 'string',
+          /* hole */ h: vnode.$ as string,
           /* index */ i: 0,
           /* listener */ l: null,
           /* patch */ p: null,

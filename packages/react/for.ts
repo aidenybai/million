@@ -69,17 +69,11 @@ const createChildren = <T>(
       }
       children[i] = currentCache.block!(vnode.props);
     } else {
-      const block = createBlock((props?: Props) => {
-        return {
-          type: RENDER_SCOPE,
-          props: { children: [props?.__scope] },
-        } as any;
-      });
+      const block = createBlock((props?: Props) => props?.scope);
       const currentBlock = (props: Props) => {
         return block(
           {
-            props,
-            __scope: renderReactScope(createElement(vnode.type, props)),
+            scope: renderReactScope(createElement(vnode.type, props)),
           },
           vnode.key,
         );
