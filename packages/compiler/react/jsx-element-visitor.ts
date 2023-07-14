@@ -97,16 +97,28 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
       ? t.identifier('block')
       : addNamedCache('block', importSource.value, programPath);
 
-    // We do a similar extraction process as in the call expression visitor
-    const properties = expression.params.map((id) =>
-      t.objectProperty(id as t.Identifier, id),
+    // also extract out any identifiers in the arrow function that cannot be accessed after we extract
+    // the arrow function into a variable declaration
+
+    const idNames = new Set<string>(
+      (expression.params as t.Identifier[]).map((id) => id.name),
     );
 
+    jsxElementPath.traverse({
+      Identifier(path: NodePath<t.Identifier>) {
+        if (programPath.scope.hasBinding(path.node.name)) return;
+        idNames.add(path.node.name);
+      },
+    });
+
+    const ids = [...idNames].map((id) => t.identifier(id));
+
+    // We do a similar extraction process as in the call expression visitor
     const originalComponent = t.variableDeclaration('const', [
       t.variableDeclarator(
         originalComponentId,
         t.arrowFunctionExpression(
-          [t.objectPattern(properties)],
+          [t.objectPattern(ids.map((id) => t.objectProperty(id, id)))],
           t.isBlockStatement(expression.body)
             ? expression.body
             : t.blockStatement([t.returnStatement(expression.body)]),
@@ -124,7 +136,7 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
     programPath.node.body.push(originalComponent, blockComponent);
 
     expression.body = t.callExpression(blockComponentId, [
-      t.objectExpression(properties),
+      t.objectExpression(ids.map((id) => t.objectProperty(id, id))),
     ]);
 
     const programBodyPath = programPath.get('body');
