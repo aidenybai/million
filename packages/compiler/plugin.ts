@@ -43,7 +43,7 @@ export const unplugin = createUnplugin((options: Options = {}) => {
 export const babelPlugin = declare((api, options: Options) => {
   api.assertVersion(7);
 
-  const imports = new Map<string, t.Identifier>();
+  const blockCache = new Map<string, t.Identifier>();
   let callExpressionVisitor: ReturnType<typeof reactCallExpressionVisitor>;
   let jsxElementVisitor: ReturnType<typeof reactJsxElementVisitor> | undefined;
 
@@ -78,7 +78,7 @@ export const babelPlugin = declare((api, options: Options) => {
       JSXElement(path: NodePath<t.JSXElement>) {
         if (!jsxElementVisitor) return;
         try {
-          jsxElementVisitor(path, imports);
+          jsxElementVisitor(path, blockCache);
         } catch (err: unknown) {
           if (isErrorValid(err)) {
             // eslint-disable-next-line no-console
@@ -88,7 +88,7 @@ export const babelPlugin = declare((api, options: Options) => {
       },
       CallExpression(path: NodePath<t.CallExpression>) {
         try {
-          callExpressionVisitor(path, imports);
+          callExpressionVisitor(path, blockCache);
         } catch (err: unknown) {
           if (isErrorValid(err)) {
             // eslint-disable-next-line no-console

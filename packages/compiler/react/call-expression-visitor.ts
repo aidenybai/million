@@ -20,7 +20,7 @@ export const callExpressionVisitor = (
 ) => {
   return (
     callSitePath: NodePath<t.CallExpression>,
-    imports: Map<string, t.Identifier>,
+    blockCache: Map<string, t.Identifier>,
   ) => {
     // Callsite refers to the block call (e.g. the AST node of "block(Componnent)")
     const callSite = callSitePath.node;
@@ -116,6 +116,12 @@ export const callExpressionVisitor = (
     if (!validSpecifiers.includes('block')) return;
 
     const RawComponent = callSite.arguments[0];
+
+    // If we find a duplicate block call, we replace it with the cached block.
+    if (t.isIdentifier(RawComponent) && blockCache.has(RawComponent.name)) {
+      callSitePath.replaceWith(blockCache.get(RawComponent.name)!);
+      return;
+    }
 
     /**
      * Replaces `export default block(Component)` with
@@ -220,6 +226,8 @@ export const callExpressionVisitor = (
       callSitePath,
       callSite,
       Component,
+      RawComponent,
+      blockCache,
       originalComponent,
       importSource,
       globalPath: variableDeclarationPath,
@@ -230,7 +238,7 @@ export const callExpressionVisitor = (
           if (importedBindings[name]) {
             return t.identifier(importedBindings[name]!);
           }
-          return addNamedCache(name, source, callSitePath, imports);
+          return addNamedCache(name, source, callSitePath);
         },
       },
     };

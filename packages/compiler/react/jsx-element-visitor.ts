@@ -14,7 +14,7 @@ import type { Options } from '../plugin';
 export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
   return (
     jsxElementPath: NodePath<t.JSXElement>,
-    imports: Map<string, t.Identifier>,
+    _blockCache: Map<string, t.Identifier>,
   ) => {
     const jsxElement = jsxElementPath.node;
 
@@ -95,7 +95,7 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
 
     const block = importedBindings.block
       ? t.identifier('block')
-      : addNamedCache('block', importSource.value, programPath, imports);
+      : addNamedCache('block', importSource.value, programPath);
 
     // We do a similar extraction process as in the call expression visitor
     const properties = expression.params.map((id) =>
