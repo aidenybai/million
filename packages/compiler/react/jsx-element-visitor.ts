@@ -100,13 +100,40 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
     // also extract out any identifiers in the arrow function that cannot be accessed after we extract
     // the arrow function into a variable declaration
 
-    const idNames = new Set<string>(
-      (expression.params as t.Identifier[]).map((id) => id.name),
-    );
+    const idNames = new Set<string>();
+
+    for (const id of expression.params) {
+      if (t.isIdentifier(id)) {
+        idNames.add(id.name);
+        continue;
+      }
+      if (t.isObjectPattern(id)) {
+        for (const prop of id.properties) {
+          if (t.isObjectProperty(prop)) {
+            if (t.isIdentifier(prop.key)) {
+              idNames.add(prop.key.name);
+            } else if (t.isStringLiteral(prop.key)) {
+              idNames.add(prop.key.value);
+            }
+          }
+        }
+      }
+    }
 
     jsxElementPath.traverse({
       Identifier(path: NodePath<t.Identifier>) {
         if (programPath.scope.hasBinding(path.node.name)) return;
+        if (
+          path.parentPath.isMemberExpression() ||
+          path.parentPath.isObjectProperty() ||
+          path.parentPath.isObjectMethod() ||
+          path.parentPath.isJSXAttribute() ||
+          path.parentPath.isJSXSpreadAttribute() ||
+          path.parentPath.isJSXOpeningElement() ||
+          path.parentPath.isJSXClosingElement()
+        )
+          return;
+
         idNames.add(path.node.name);
       },
     });

@@ -265,7 +265,7 @@ export const transformComponent = (
     ),
     t.objectProperty(
       t.identifier('original'),
-      originalComponent.id as t.Identifier,
+      options.server ? (originalComponent.id as t.Identifier) : t.nullLiteral(),
     ),
     t.objectProperty(t.identifier('shouldUpdate'), createDirtyChecker(holes)),
   ];
@@ -353,12 +353,14 @@ export const transformComponent = (
       : puppetComponentId;
   callSitePath.replaceWith(pointerId);
 
-  // attach the original component to the master component
-  globalPath.insertBefore(
-    t.isVariableDeclarator(originalComponent)
-      ? t.variableDeclaration('const', [originalComponent])
-      : originalComponent,
-  );
+  if (options.server) {
+    // attach the original component to the master component
+    globalPath.insertBefore(
+      t.isVariableDeclarator(originalComponent)
+        ? t.variableDeclaration('const', [originalComponent])
+        : originalComponent,
+    );
+  }
   // Try to set the display name to something meaningful
   globalPath.insertBefore(
     t.expressionStatement(
