@@ -10,7 +10,6 @@ export interface Shared {
   globalPath: NodePath;
   isReact: boolean;
   imports: {
-    cache: Map<string, t.Identifier>;
     addNamed: (name: string, source?: string) => t.Identifier;
   };
 }
@@ -22,4 +21,5 @@ export interface Dynamics {
     value: t.Expression | null;
   }[];
   deferred: (() => void)[];
+  unoptimizable: boolean;
 }

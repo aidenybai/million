@@ -4,7 +4,7 @@ import {
   mount$,
   patch as patchBlock,
 } from '../million/block';
-import { MapSet$, MapHas$, MapGet$ } from '../million/constants';
+import { MapSet$, MapHas$, } from '../million/constants';
 import { queueMicrotask$ } from '../million/dom';
 import { processProps, unwrap } from './utils';
 import { Effect, RENDER_SCOPE, REGISTRY, SVG_RENDER_SCOPE } from './constants';
@@ -13,11 +13,9 @@ import type { Options, MillionProps } from '../types';
 
 export const block = <P extends MillionProps>(
   fn: ComponentType<P> | null,
-  { block: compiledBlock, shouldUpdate, svg }: Options = {},
+  { block: compiledBlock, shouldUpdate, svg, original }: Options = {},
 ) => {
-  const block = MapHas$.call(REGISTRY, fn)
-    ? MapGet$.call(REGISTRY, fn)
-    : fn
+  const block = fn
     ? createBlock(fn as any, unwrap, shouldUpdate, svg)
     : compiledBlock;
 
@@ -58,9 +56,11 @@ export const block = <P extends MillionProps>(
     return vnode;
   };
 
-  if (!MapHas$.call(REGISTRY, fn)) {
-    MapSet$.call(REGISTRY, fn, block);
+  if (!MapHas$.call(REGISTRY, MillionBlock)) {
+    MapSet$.call(REGISTRY, MillionBlock, block);
   }
 
-  return MillionBlock<P>;
+  const hoc = MillionBlock<P>;
+  (hoc as any).original = original;
+  return hoc;
 };

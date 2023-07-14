@@ -97,6 +97,7 @@
   "prettier": "@vercel/style-guide/prettier",
   "dependencies": {
     "@babel/core": "^7.21.0",
+    "@babel/generator": "^7.22.7",
     "@babel/plugin-syntax-jsx": "^7.21.4",
     "@babel/plugin-syntax-typescript": "^7.21.4",
     "@babel/types": "^7.21.3",
