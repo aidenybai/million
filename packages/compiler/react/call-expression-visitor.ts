@@ -1,30 +1,50 @@
 import * as t from '@babel/types';
-import { addNamed } from '@babel/helper-module-imports';
-import { createDeopt, resolveCorrectImportSource, resolvePath } from './utils';
+import {
+  addNamedCache,
+  getValidSpecifiers,
+  createDeopt,
+  resolveCorrectImportSource,
+  resolvePath,
+  IGNORE_ANNOTATION,
+} from './utils';
 import { transformComponent } from './transform';
 import { collectImportedBindings } from './bindings';
 import { evaluate } from './evaluator';
+import type { Shared } from './types';
 import type { NodePath } from '@babel/core';
 import type { Options } from '../plugin';
 
-export const visitor = (options: Options = {}, isReact = true) => {
-  return (callSitePath: NodePath<t.CallExpression>) => {
+export const callExpressionVisitor = (
+  options: Options = {},
+  isReact = true,
+) => {
+  return (
+    callSitePath: NodePath<t.CallExpression>,
+    imports: Map<string, t.Identifier>,
+  ) => {
     // Callsite refers to the block call (e.g. the AST node of "block(Componnent)")
     const callSite = callSitePath.node;
+    if (
+      callSite.leadingComments?.some(
+        (comment) => comment.value === IGNORE_ANNOTATION,
+      )
+    )
+      return;
 
     // We assume that two parent paths up is the top level path, since the we also
     // assume the block call is on the global scope path.
-    const globalPath = callSitePath.parentPath.parentPath!;
+    const variableDeclarationPath = callSitePath.parentPath.parentPath!;
 
     // We only want to optimize block calls.
     // check if the block is aliased (e.g. import { block as createBlock } ...)
     const programPath = callSitePath.findParent((path) =>
       path.isProgram(),
     ) as NodePath<t.Program>;
-    const importedBlocks = collectImportedBindings(programPath);
+    const importedBindings = collectImportedBindings(programPath);
+
     if (
       !t.isIdentifier(callSite.callee) ||
-      !importedBlocks[callSite.callee.name]
+      !importedBindings[callSite.callee.name]
     )
       return;
 
@@ -60,45 +80,14 @@ export const visitor = (options: Options = {}, isReact = true) => {
       );
     }
 
-    const importDeclaration = blockCallBinding.path.parent;
+    const importDeclarationPath = blockCallBinding.path
+      .parentPath as NodePath<t.ImportDeclaration>;
+    const importDeclaration = importDeclarationPath.node;
 
-    /**
-     * Here we just check if the import declaration is using the correct package
-     * in case another library exports a function called "block".
-     */
-    const validSpecifiers: string[] = [];
-
-    if (
-      !t.isImportDeclaration(importDeclaration) ||
-      !importDeclaration.source.value.includes('million') ||
-      !importDeclaration.specifiers.every((specifier) => {
-        if (!t.isImportSpecifier(specifier)) return false;
-        const importedSpecifier = specifier.imported;
-        if (!t.isIdentifier(importedSpecifier)) return false;
-
-        const checkValid = (validName: string) => {
-          return (
-            importedSpecifier.name === validName &&
-            specifier.local.name === importedBlocks[validName]
-          );
-        };
-
-        const isSpecifierValid =
-          checkValid('block') || checkValid('For') || checkValid('macro');
-
-        if (isSpecifierValid) {
-          validSpecifiers.push(importedSpecifier.name);
-        }
-
-        return isSpecifierValid;
-      })
-    ) {
-      const millionImportDeclarationPath = blockCallBinding.path.parentPath!;
-      throw createDeopt(
-        'Found unsupported import for block. Make sure blocks are imported from correctly.',
-        millionImportDeclarationPath,
-      );
-    }
+    const validSpecifiers = getValidSpecifiers(
+      importDeclarationPath,
+      importedBindings,
+    );
 
     const importSource = importDeclaration.source;
     /**
@@ -120,7 +109,7 @@ export const visitor = (options: Options = {}, isReact = true) => {
         ['React', id.name],
       );
       if (!err) callSitePath.replaceWith(ast);
-      globalPath.scope.crawl();
+      variableDeclarationPath.scope.crawl();
       return;
     }
 
@@ -179,7 +168,7 @@ export const visitor = (options: Options = {}, isReact = true) => {
       /**
        * const anonymous = () => <div />;
        */
-      globalPath.insertBefore(
+      variableDeclarationPath.insertBefore(
         t.variableDeclaration('const', [
           t.variableDeclarator(
             anonymousComponentId,
@@ -227,28 +216,21 @@ export const visitor = (options: Options = {}, isReact = true) => {
     // We clone the component so we can restore it later.
     const originalComponent = t.cloneNode(Component);
 
-    const SHARED = {
+    const SHARED: Shared = {
       callSitePath,
       callSite,
       Component,
       originalComponent,
       importSource,
-      globalPath,
+      globalPath: variableDeclarationPath,
       isReact,
       imports: {
-        cache: new Map<string, t.Identifier>(),
         addNamed(name: string, source: string = importSource.value) {
           // We can't do this, as the visitor may retraverse the newly added `block` identifier.
-          // if (importedBlocks[name]) {
-          //   return t.identifier(importedBlocks[name]!);
-          // }
-          if (this.cache.has(name)) return this.cache.get(name)!;
-
-          const id = addNamed(callSitePath, name, source, {
-            nameHint: `${name}$`,
-          });
-          this.cache.set(name, id);
-          return id;
+          if (importedBindings[name]) {
+            return t.identifier(importedBindings[name]!);
+          }
+          return addNamedCache(name, source, callSitePath, imports);
         },
       },
     };

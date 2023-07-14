@@ -33,7 +33,8 @@ export const evaluateUnsafe = (
     try {
       if (excludeIds.includes(key)) continue;
       const node = bindings[key].path.node;
-      if (bindings[key].kind === 'const' || bindings[key].kind === 'let') {
+      const declarationKind = bindings[key].kind;
+      if (declarationKind === 'const' || declarationKind === 'let') {
         staticContext[key] = evaluateAstNode(node.init, staticContext);
       }
       if (t.isFunctionDeclaration(node) || t.isClassDeclaration(node)) {
