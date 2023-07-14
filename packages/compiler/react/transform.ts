@@ -32,6 +32,8 @@ export const transformComponent = (
     callSite,
     callSitePath,
     Component,
+    RawComponent,
+    blockCache,
     originalComponent,
     globalPath,
     imports,
@@ -345,11 +347,11 @@ export const transformComponent = (
    * ```
    */
   Component.id = masterComponentId;
-  callSitePath.replaceWith(
-    dynamics.data.length && statementsInBody > 1
+  const pointerId =
+    dynamics.data.length || statementsInBody > 1
       ? masterComponentId
-      : puppetComponentId,
-  );
+      : puppetComponentId;
+  callSitePath.replaceWith(pointerId);
 
   // attach the original component to the master component
   globalPath.insertBefore(
@@ -372,6 +374,10 @@ export const transformComponent = (
       t.variableDeclarator(puppetComponentId, puppetBlock),
     ]),
   );
+
+  if (t.isIdentifier(RawComponent)) {
+    blockCache.set(RawComponent.name, pointerId);
+  }
 
   if (options.optimize) {
     const { variables, blockFactory } = optimize(

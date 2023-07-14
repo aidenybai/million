@@ -139,14 +139,16 @@ export const addNamedCache = (
   name: string,
   source: string,
   path: NodePath,
-  cache: Map<string, t.Identifier>,
+  // cache: Map<string, t.Identifier>,
 ) => {
-  if (cache.has(name)) return cache.get(name)!;
+  // We no longer cache since it causes issues with HMR
+  // TODO: Fix HMR
+  // if (cache.has(name)) return cache.get(name)!;
 
   const id = addNamed(path, name, source, {
     nameHint: `${name}$`,
   });
-  cache.set(name, id);
+  // cache.set(name, id);
   return id;
 };
 
