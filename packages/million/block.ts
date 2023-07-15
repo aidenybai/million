@@ -43,16 +43,10 @@ const HOLE_PROXY = new Proxy(
 );
 
 export const block = (
-<<<<<<< HEAD
   fn: (props?: MillionProps) => VElement,
   unwrap?: (vnode: VElement) => VNode,
   shouldUpdate?: (oldProps: MillionProps, newProps: MillionProps) => boolean,
-=======
-  fn: (props?: Props) => VElement,
-  unwrap?: (vnode: any) => VNode,
-  shouldUpdate?: (oldProps: Props, newProps: Props) => boolean,
   svg?: boolean,
->>>>>>> main
 ) => {
   const vnode = fn(HOLE_PROXY);
   const edits: Edit[] = [];
@@ -109,17 +103,10 @@ export class Block extends AbstractBlock {
   constructor(
     root: HTMLElement,
     edits: Edit[],
-<<<<<<< HEAD
     props?: MillionProps | null,
-    key?: string,
-    shouldUpdate?: (oldProps: MillionProps, newProps: MillionProps) => boolean,
-    getElements?: (root: HTMLElement) => HTMLElement[],
-=======
-    props?: Props | null,
     key?: string | null,
-    shouldUpdate?: ((oldProps: Props, newProps: Props) => boolean) | null,
-    getElements?: ((root: HTMLElement) => HTMLElement[]) | null,
->>>>>>> main
+    shouldUpdate?: (oldProps: MillionProps, newProps: MillionProps) => boolean,
+    getElements?: (root: HTMLElement) => HTMLElement[] | null,
   ) {
     super();
     this.r = root;
