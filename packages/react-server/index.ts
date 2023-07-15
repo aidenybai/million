@@ -1,29 +1,32 @@
-import { createElement, useEffect, useReducer } from 'react';
-import { RENDER_SCOPE } from '../react/constants';
+import { createElement, useEffect, useState } from 'react';
+import { RENDER_SCOPE, SVG_RENDER_SCOPE } from '../react/constants';
 import type { ComponentType } from 'react';
-import type { MillionArrayProps, MillionProps } from '../types';
+import type { MillionArrayProps, MillionProps, Options } from '../types';
 
 export { renderReactScope } from '../react/utils';
 
 let millionModule;
 
-export const block = <P extends MillionProps>(Component: ComponentType<P>) => {
-  let blockFactory;
+export const block = <P extends MillionProps>(
+  Component: ComponentType<P>,
+  options: Options = {},
+) => {
+  let blockFactory = millionModule ? millionModule.block(Component) : null;
   function MillionBlockLoader<P extends MillionProps>(props: P) {
-    const [_, forceUpdate] = useReducer((x: number) => x + 1, 0);
+    const [ready, setReady] = useState(Boolean(blockFactory));
 
     useEffect(() => {
-      const importSource = async () => {
-        millionModule = await import('../react');
-        if (!blockFactory) {
-          blockFactory = millionModule.block(Component);
+      if (!blockFactory) {
+        const importSource = async () => {
+          if (!millionModule) millionModule = await import('../react');
+          blockFactory = millionModule.block(Component, options);
+          setReady(true);
+        };
+        try {
+          void importSource();
+        } catch (e) {
+          throw new Error('Failed to load Million.js');
         }
-        forceUpdate();
-      };
-      try {
-        void importSource();
-      } catch (e) {
-        throw new Error('Failed to load Million library');
       }
 
       return () => {
@@ -31,8 +34,16 @@ export const block = <P extends MillionProps>(Component: ComponentType<P>) => {
       };
     }, []);
 
-    if (!blockFactory) {
-      return createElement(RENDER_SCOPE, null);
+    if (!ready || !blockFactory) {
+      if (options.ssr === false) return null;
+      return createElement<P>(
+        RENDER_SCOPE,
+        null,
+        // During compilation we will attach a .original for the component and
+        // pass __props as the props to the component. This references
+        // the original component for SSR.
+        createElement(options.original as any, props.__props),
+      );
     }
 
     return createElement<P>(blockFactory, props);
@@ -41,23 +52,35 @@ export const block = <P extends MillionProps>(Component: ComponentType<P>) => {
   return MillionBlockLoader<P>;
 };
 
-export function For<T>(props: MillionArrayProps<T>) {
-  const [_, forceUpdate] = useReducer((x: number) => x + 1, 0);
+export function For<T>({ each, children, ssr, svg }: MillionArrayProps<T>) {
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    if (millionModule) return;
     const importSource = async () => {
       millionModule = await import('../react');
-      forceUpdate();
+      setReady(true);
     };
     try {
       void importSource();
     } catch (e) {
-      throw new Error('Failed to load Million library');
+      throw new Error('Failed to load Million.js');
     }
   }, []);
 
-  if (millionModule) {
-    return createElement(millionModule.For, props);
+  if (!ready || !millionModule) {
+    if (ssr === false) return null;
+    return createElement(
+      svg ? SVG_RENDER_SCOPE : RENDER_SCOPE,
+      null,
+      ...each.map(children),
+    );
   }
-  return createElement(RENDER_SCOPE, null, ...props.each.map(props.children));
+
+  return createElement(millionModule.For, {
+    each,
+    children,
+    ssr,
+    svg,
+  });
 }

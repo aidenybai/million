@@ -26,6 +26,27 @@ export const renderToTemplate = (
     return String(vnode);
   }
   if (vnode === null || vnode === undefined || vnode === false) return '';
+  // TODO: refactor this so there is not an extra wrapper element
+  if (typeof vnode === 'object' && '$' in vnode) {
+    edits.push({
+      p: path,
+      e: [
+        {
+          /* type */ t: ChildFlag,
+          /* name */ n: null,
+          /* value */ v: null,
+          /* hole */ h: vnode.$ as string,
+          /* index */ i: 0,
+          /* listener */ l: null,
+          /* patch */ p: null,
+          /* block */ b: null,
+        },
+      ],
+      i: [],
+    });
+
+    return '<slot/>';
+  }
 
   let props = '';
   let children = '';

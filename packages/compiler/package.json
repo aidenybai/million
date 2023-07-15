@@ -17,6 +17,8 @@
     "@types/babel__core": "^7.20.0",
     "@types/babel__generator": "^7.6.4",
     "@types/babel__helper-module-imports": "^7.18.0",
-    "@types/babel__helper-plugin-utils": "^7.10.0"
+    "@types/babel__helper-plugin-utils": "^7.10.0",
+    "@babel/preset-typescript": "^7.21.4",
+    "@babel/preset-react": "^7.18.6"
   }
 }

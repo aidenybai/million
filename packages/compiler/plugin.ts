@@ -2,7 +2,8 @@ import { declare } from '@babel/helper-plugin-utils';
 import { createUnplugin } from 'unplugin';
 import { transformAsync } from '@babel/core';
 import { visitor as legacyVdomVisitor } from './vdom';
-import { visitor as reactVisitor } from './react';
+import { callExpressionVisitor as reactCallExpressionVisitor } from './react';
+import { jsxElementVisitor as reactJsxElementVisitor } from './react/jsx-element-visitor';
 import type { NodePath, PluginItem } from '@babel/core';
 import type * as t from '@babel/types';
 
@@ -10,6 +11,7 @@ export interface Options {
   optimize?: boolean;
   server?: boolean;
   mode?: 'react' | 'preact' | 'react-server' | 'preact-server' | 'vdom';
+  mute?: boolean;
 }
 
 export const unplugin = createUnplugin((options: Options = {}) => {
@@ -24,7 +26,10 @@ export const unplugin = createUnplugin((options: Options = {}) => {
 
       const plugins = normalizePlugins([
         '@babel/plugin-syntax-jsx',
-        isTSX && ['@babel/plugin-syntax-typescript', { isTSX: true }],
+        isTSX && [
+          '@babel/plugin-syntax-typescript',
+          { allExtensions: true, isTSX: true },
+        ],
         [babelPlugin, options],
       ]);
 
@@ -38,7 +43,9 @@ export const unplugin = createUnplugin((options: Options = {}) => {
 export const babelPlugin = declare((api, options: Options) => {
   api.assertVersion(7);
 
-  let visitor: (path: NodePath<t.CallExpression>) => void;
+  const blockCache = new Map<string, t.Identifier>();
+  let callExpressionVisitor: ReturnType<typeof reactCallExpressionVisitor>;
+  let jsxElementVisitor: ReturnType<typeof reactJsxElementVisitor> | undefined;
 
   // Backwards compatibility for `mode: 'react-server'`
   if (options.mode?.endsWith('-server')) {
@@ -48,27 +55,44 @@ export const babelPlugin = declare((api, options: Options) => {
 
   switch (options.mode) {
     case 'vdom':
-      visitor = legacyVdomVisitor(options);
+      callExpressionVisitor = legacyVdomVisitor(options);
       break;
     case 'preact':
-      visitor = reactVisitor(options, false);
+      callExpressionVisitor = reactCallExpressionVisitor(options, false);
+      jsxElementVisitor = reactJsxElementVisitor(options, false);
       break;
     case 'react':
     default:
-      visitor = reactVisitor(options, true);
+      callExpressionVisitor = reactCallExpressionVisitor(options, true);
+      jsxElementVisitor = reactJsxElementVisitor(options, true);
       break;
   }
+
+  const isErrorValid = (err: unknown) => {
+    return err instanceof Error && err.message && !options.mute;
+  };
 
   return {
     name: 'million',
     visitor: {
+      JSXElement(path: NodePath<t.JSXElement>) {
+        if (!jsxElementVisitor) return;
+        try {
+          jsxElementVisitor(path, blockCache);
+        } catch (err: unknown) {
+          if (isErrorValid(err)) {
+            // eslint-disable-next-line no-console
+            console.warn((err as Error).message, '\n');
+          }
+        }
+      },
       CallExpression(path: NodePath<t.CallExpression>) {
         try {
-          visitor(path);
+          callExpressionVisitor(path, blockCache);
         } catch (err: unknown) {
-          if (err instanceof Error) {
+          if (isErrorValid(err)) {
             // eslint-disable-next-line no-console
-            console.warn(err.message, '\n');
+            console.warn((err as Error).message, '\n');
           }
         }
       },

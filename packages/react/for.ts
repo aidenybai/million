@@ -3,35 +3,46 @@ import { arrayMount$, arrayPatch$ } from '../million/array';
 import { mapArray, block as createBlock, Block, VElement } from '../million';
 import { MapSet$, MapHas$, MapGet$ } from '../million/constants';
 import { queueMicrotask$ } from '../million/dom';
-import { REGISTRY } from './block';
 import { renderReactScope } from './utils';
+<<<<<<< HEAD
 import { RENDER_SCOPE } from './constants';
 import type { MutableRefObject, ReactNode } from 'react';
 import type { ArrayCache, MillionArrayProps, MillionProps } from '../types';
+=======
+import { RENDER_SCOPE, REGISTRY, SVG_RENDER_SCOPE } from './constants';
+import type { Props } from '../million';
+import type { MutableRefObject } from 'react';
+import type { ArrayCache, MillionArrayProps } from '../types';
+>>>>>>> main
 
-const MillionArray = <T>({ each, children }: MillionArrayProps<T>) => {
+const MillionArray = <T>({
+  each,
+  children,
+  memo,
+  svg,
+}: MillionArrayProps<T>) => {
   const ref = useRef<HTMLElement>(null);
   const fragmentRef = useRef<ReturnType<typeof mapArray> | null>(null);
   const cache = useRef<ArrayCache<T>>({
     each: null,
     children: null,
   });
-  if (fragmentRef.current && each !== cache.current.each) {
+  if (fragmentRef.current && (each !== cache.current.each || !memo)) {
     queueMicrotask$(() => {
-      const newChildren = createChildren<T>(each, children, cache);
+      const newChildren = createChildren<T>(each, children, cache, memo);
       arrayPatch$.call(fragmentRef.current, mapArray(newChildren));
     });
   }
   useEffect(() => {
     if (fragmentRef.current) return;
     queueMicrotask$(() => {
-      const newChildren = createChildren<T>(each, children, cache);
+      const newChildren = createChildren<T>(each, children, cache, memo);
       fragmentRef.current = mapArray(newChildren);
       arrayMount$.call(fragmentRef.current, ref.current!);
     });
   }, []);
 
-  return createElement(RENDER_SCOPE, { ref });
+  return createElement(svg ? SVG_RENDER_SCOPE : RENDER_SCOPE, { ref });
 };
 
 // Using fix below to add type support to MillionArray
@@ -47,11 +58,16 @@ const createChildren = <T>(
   each: T[],
   getComponent: (value: T, i: number) => VElement,
   cache: MutableRefObject<ArrayCache<T>>,
+<<<<<<< HEAD
 ): Block[] => {
+=======
+  memo?: boolean,
+) => {
+>>>>>>> main
   const children = Array(each.length);
   const currentCache = cache.current;
   for (let i = 0, l = each.length; i < l; ++i) {
-    if (currentCache.each && currentCache.each[i] === each[i]) {
+    if (memo && currentCache.each && currentCache.each[i] === each[i]) {
       children[i] = currentCache.children?.[i];
       continue;
     }
@@ -63,6 +79,7 @@ const createChildren = <T>(
       }
       children[i] = currentCache.block!(vnode.props);
     } else {
+<<<<<<< HEAD
       const block = createBlock((props?: MillionProps) =>({
         type: RENDER_SCOPE,
         props: { children: [props?.__scope] },
@@ -73,6 +90,16 @@ const createChildren = <T>(
           props,
           __scope: renderReactScope(createElement(vnode.type, props)),
         });
+=======
+      const block = createBlock((props?: Props) => props?.scope);
+      const currentBlock = (props: Props) => {
+        return block(
+          {
+            scope: renderReactScope(createElement(vnode.type, props)),
+          },
+          vnode.key,
+        );
+>>>>>>> main
       };
 
       MapSet$.call(REGISTRY, vnode.type, currentBlock);

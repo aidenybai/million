@@ -5,14 +5,16 @@ import {
   createEventListener,
   insertBefore$,
   insertText,
-  innerHTML$,
   remove$ as removeElement$,
   setAttribute,
   setText,
   setStyleAttribute,
   setSvgAttribute,
-  template$,
+  HTM_TEMPLATE_CONTENT,
+  SVG_TEMPLATE_CONTENT,
   childAt,
+  SVG_TEMPLATE,
+  HTM_TEMPLATE,
 } from './dom';
 import { renderToTemplate } from './template';
 import { AbstractBlock } from './types';
@@ -23,6 +25,7 @@ import {
   ChildFlag,
   EventFlag,
   StyleAttributeFlag,
+  EVENT_PATCH,
 } from './constants';
 import type { ArrayBlock } from './array';
 import type { EditChild, VElement, Hole, VNode, Edit } from './types';
@@ -40,9 +43,16 @@ const HOLE_PROXY = new Proxy(
 );
 
 export const block = (
+<<<<<<< HEAD
   fn: (props?: MillionProps) => VElement,
   unwrap?: (vnode: VElement) => VNode,
   shouldUpdate?: (oldProps: MillionProps, newProps: MillionProps) => boolean,
+=======
+  fn: (props?: Props) => VElement,
+  unwrap?: (vnode: any) => VNode,
+  shouldUpdate?: (oldProps: Props, newProps: Props) => boolean,
+  svg?: boolean,
+>>>>>>> main
 ) => {
   const vnode = fn(HOLE_PROXY);
   const edits: Edit[] = [];
@@ -51,6 +61,7 @@ export const block = (
   // Edits are instructions for how to update the DOM given some props
   const root = stringToDOM(
     renderToTemplate(unwrap ? unwrap(vnode) : vnode, edits),
+    svg,
   );
 
   return <T extends MillionProps>(
@@ -62,8 +73,9 @@ export const block = (
       root,
       edits,
       props,
-      key ?? props?.key,
-      shouldUpdateCurrentBlock ?? shouldUpdate,
+      key ?? props?.key ?? null,
+      shouldUpdateCurrentBlock ?? shouldUpdate ?? null,
+      null,
     );
   };
 };
@@ -97,10 +109,17 @@ export class Block extends AbstractBlock {
   constructor(
     root: HTMLElement,
     edits: Edit[],
+<<<<<<< HEAD
     props?: MillionProps | null,
     key?: string,
     shouldUpdate?: (oldProps: MillionProps, newProps: MillionProps) => boolean,
     getElements?: (root: HTMLElement) => HTMLElement[],
+=======
+    props?: Props | null,
+    key?: string | null,
+    shouldUpdate?: ((oldProps: Props, newProps: Props) => boolean) | null,
+    getElements?: ((root: HTMLElement) => HTMLElement[]) | null,
+>>>>>>> main
   ) {
     super();
     this.r = root;
@@ -149,7 +168,7 @@ export class Block extends AbstractBlock {
           );
         } else if (edit.t & EventFlag) {
           const patch = createEventListener(el, edit.n!, value);
-          edit.p = patch;
+          el[EVENT_PATCH + edit.n!] = patch;
         } else if (edit.t & AttributeFlag) {
           setAttribute(el, edit.n!, value);
         } else if (edit.t & StyleAttributeFlag) {
@@ -211,7 +230,7 @@ export class Block extends AbstractBlock {
         if (newValue === oldValue) continue;
 
         if (edit.t & EventFlag) {
-          edit.p!(newValue);
+          el[EVENT_PATCH + edit.n!]!(newValue);
           continue;
         }
         if (edit.t & ChildFlag) {
@@ -295,9 +314,11 @@ const getCurrentElement = (
   return root;
 };
 
-export const stringToDOM = (content: string) => {
-  innerHTML$.call(template$, content);
-  return template$.content.firstChild as HTMLElement;
+export const stringToDOM = (content: string, svg?: boolean) => {
+  const template = svg ? SVG_TEMPLATE : HTM_TEMPLATE;
+  template.innerHTML = content;
+  const dom = svg ? SVG_TEMPLATE_CONTENT : HTM_TEMPLATE_CONTENT;
+  return dom.firstChild as HTMLElement;
 };
 
 export const withKey = (value: any, key: string) => {

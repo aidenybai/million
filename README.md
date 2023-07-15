@@ -13,7 +13,7 @@
     <tbody>
       <tr>
         <td>
-          <a href="https://million.dev">📚 Read the docs</a>
+          <a href="https://million.dev/docs">📚 Read the docs</a>
         </td>
         <td>
           <a href="https://www.youtube.com/watch?v=VkezQMb1DHw">🎦 Watch video</a>
@@ -72,14 +72,14 @@ This repo is a "mono-repo" with modules. Million ships as one NPM package, but h
 
 You can also track our progress through our [Roadmap](https://github.com/users/aidenybai/projects/5/views/1?layout=roadmap).
 
-| Module                                                                                                                                                                  | Description                                      |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| [`million`](https://github.com/aidenybai/million/tree/main/packages/million)                                                                                            | The main Virtual DOM with all of Million's core. |
-| [`react`](https://github.com/aidenybai/million/tree/main/packages/react) / [`react-server`](https://github.com/aidenybai/million/tree/main/packages/react-server) /     | React compatibility for Million.                 |
-| [`preact`](https://github.com/aidenybai/million/tree/main/packages/preact) / [`preact-server`](https://github.com/aidenybai/million/tree/main/packages/preact-server) / | Preact compatibility for Million.                |
-| [`compiler`](https://github.com/aidenybai/million/tree/main/packages/compiler)                                                                                          | The compiler for Million in React.               |
-| [`jsx-runtime`](https://github.com/aidenybai/million/tree/main/packages/jsx-runtime)                                                                                    | A simple JSX runtime for Million core.           |
-| [`types`](https://github.com/aidenybai/million/tree/main/packages/types)                                                                                                | Shared types between packages                    |
+| Module                                                                                                                                                                | Description                                      |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| [`million`](https://github.com/aidenybai/million/tree/main/packages/million)                                                                                          | The main Virtual DOM with all of Million's core. |
+| [`react`](https://github.com/aidenybai/million/tree/main/packages/react) / [`react-server`](https://github.com/aidenybai/million/tree/main/packages/react-server)     | React compatibility for Million.                 |
+| [`preact`](https://github.com/aidenybai/million/tree/main/packages/preact) / [`preact-server`](https://github.com/aidenybai/million/tree/main/packages/preact-server) | Preact compatibility for Million.                |
+| [`compiler`](https://github.com/aidenybai/million/tree/main/packages/compiler)                                                                                        | The compiler for Million in React.               |
+| [`jsx-runtime`](https://github.com/aidenybai/million/tree/main/packages/jsx-runtime)                                                                                  | A simple JSX runtime for Million core.           |
+| [`types`](https://github.com/aidenybai/million/tree/main/packages/types)                                                                                              | Shared types between packages                    |
 
 ## Resources & Contributing Back
 
