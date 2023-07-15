@@ -4,16 +4,9 @@ import { mapArray, block as createBlock, Block, VElement } from '../million';
 import { MapSet$, MapHas$, MapGet$ } from '../million/constants';
 import { queueMicrotask$ } from '../million/dom';
 import { renderReactScope } from './utils';
-<<<<<<< HEAD
-import { RENDER_SCOPE } from './constants';
-import type { MutableRefObject, ReactNode } from 'react';
-import type { ArrayCache, MillionArrayProps, MillionProps } from '../types';
-=======
 import { RENDER_SCOPE, REGISTRY, SVG_RENDER_SCOPE } from './constants';
-import type { Props } from '../million';
 import type { MutableRefObject } from 'react';
-import type { ArrayCache, MillionArrayProps } from '../types';
->>>>>>> main
+import type { ArrayCache, MillionArrayProps, MillionProps } from '../types';
 
 const MillionArray = <T>({
   each,
@@ -58,12 +51,8 @@ const createChildren = <T>(
   each: T[],
   getComponent: (value: T, i: number) => VElement,
   cache: MutableRefObject<ArrayCache<T>>,
-<<<<<<< HEAD
-): Block[] => {
-=======
   memo?: boolean,
-) => {
->>>>>>> main
+): Block[] => {
   const children = Array(each.length);
   const currentCache = cache.current;
   for (let i = 0, l = each.length; i < l; ++i) {
@@ -79,27 +68,14 @@ const createChildren = <T>(
       }
       children[i] = currentCache.block!(vnode.props);
     } else {
-<<<<<<< HEAD
-      const block = createBlock((props?: MillionProps) =>({
-        type: RENDER_SCOPE,
-        props: { children: [props?.__scope] },
-      }));
-
+      const block = createBlock((props?: MillionProps) => props?.scope);
       const currentBlock = (props: MillionProps) => {
-        return block({
-          props,
-          __scope: renderReactScope(createElement(vnode.type, props)),
-        });
-=======
-      const block = createBlock((props?: Props) => props?.scope);
-      const currentBlock = (props: Props) => {
         return block(
           {
             scope: renderReactScope(createElement(vnode.type, props)),
           },
           vnode.key,
         );
->>>>>>> main
       };
 
       MapSet$.call(REGISTRY, vnode.type, currentBlock);
