@@ -32,7 +32,7 @@ export const For = <T>({ each, children }: MillionArrayProps<T>) => {
     });
   }, []);
 
-  return h(RENDER_SCOPE as any, { ref });
+  return h(RENDER_SCOPE, { ref });
 };
 
 const createChildren = <T>(
@@ -61,7 +61,7 @@ const createChildren = <T>(
         return {
           type: RENDER_SCOPE,
           props: { children: [props?.__scope] },
-        } as any;
+        };
       });
       const currentBlock = (props: Props) => {
         return block({

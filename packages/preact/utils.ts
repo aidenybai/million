@@ -26,7 +26,6 @@ export const unwrap = (vnode?: ComponentChild): VNode => {
   }
   const type = vnode.type;
   if (typeof type === 'function') {
-
     return unwrap((type as any)(vnode.props ?? {}));
   }
   if (typeof type === 'object' && '$' in type) return type;
