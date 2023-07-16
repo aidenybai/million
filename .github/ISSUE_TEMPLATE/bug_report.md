@@ -3,7 +3,7 @@ name: Bug report
 about: Create a report to help us improve
 title: 'bug: '
 labels: bug
-assignees: aidenybai
+assignees: ''
 
 ---
 
@@ -30,3 +30,5 @@ If applicable, add screenshots to help explain your problem.
 
 **Additional context**
 Add any other context about the problem here.
+
+Please ensure to provide a reproduction. See why [Reproductions are required](https://antfu.me/posts/why-reproductions-are-required)
