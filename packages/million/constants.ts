@@ -5,7 +5,6 @@ export const Set$ = Set;
 
 export const SetHas$ = Set$.prototype.has;
 export const SetAdd$ = Set$.prototype.add;
-export const SetDelete$ = Set$.prototype.delete;
 
 export const MapHas$ = Map$.prototype.has;
 export const MapGet$ = Map$.prototype.get;

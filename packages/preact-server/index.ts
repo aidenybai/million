@@ -1,14 +1,15 @@
 import { h } from 'preact';
 import { useEffect, useReducer } from 'preact/hooks';
 import { RENDER_SCOPE } from '../react/constants';
-import type { ComponentProps, ComponentType } from 'preact';
+import type { ComponentProps, ComponentType, VNode } from 'preact';
+import type * as MillionModule from '../preact';
 
 export { renderPreactScope } from '../preact/utils';
 
-let millionModule;
+let millionModule: typeof MillionModule | undefined;
 
 export const block = (Component: ComponentType<any>) => {
-  let blockFactory: any;
+  let blockFactory: ((props: any) => VNode<any>) | null;
   function MillionBlockLoader(props: ComponentProps<any>) {
     useEffect(() => {
       const importSource = async () => {

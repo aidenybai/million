@@ -4,7 +4,7 @@ import {
   mount$,
   patch as patchBlock,
 } from '../million/block';
-import { MapSet$, MapHas$, } from '../million/constants';
+import { MapSet$, MapHas$ } from '../million/constants';
 import { queueMicrotask$ } from '../million/dom';
 import { processProps, unwrap } from './utils';
 import { Effect, RENDER_SCOPE, REGISTRY, SVG_RENDER_SCOPE } from './constants';

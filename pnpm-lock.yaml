@@ -77,9 +77,6 @@ importers:
       tslib:
         specifier: ^2.5.0
         version: 2.5.0
-      turbo:
-        specifier: ^1.8.2
-        version: 1.8.2
       typescript:
         specifier: ^5.1.3
         version: 5.1.3
@@ -7281,67 +7278,6 @@ packages:
     dependencies:
       tslib: 1.14.1
       typescript: 5.1.3
-    dev: true
-
-  /turbo-darwin-64@1.8.2:
-    resolution: {integrity: sha512-j77U0uOeppENexFsIvvzExADSqMBEeCHnm+6LSNQfaajHSrbUVSTsuD6ZMYHamT6bslc+ZZm21jdecWkwZFBbw==}
-    cpu: [x64]
-    os: [darwin]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /turbo-darwin-arm64@1.8.2:
-    resolution: {integrity: sha512-1NoAvjlwt2wycsAFJouauy9epn9DptSMy6BoGqxJVc4jiibsLepp9qYc4f1/ln0zjd3FR1IvhGOiBfdpqMN7hg==}
-    cpu: [arm64]
-    os: [darwin]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /turbo-linux-64@1.8.2:
-    resolution: {integrity: sha512-TcT3CRYnBYA46kLGGbGC2jDyCEAvMgVpUdpIZGTmod48EKpZaEfVgTkpa4GJde8W68yRFogPZjPVL3yJHFpXSA==}
-    cpu: [x64]
-    os: [linux]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /turbo-linux-arm64@1.8.2:
-    resolution: {integrity: sha512-Mb9+KBy4YJzPMZ6WGoMzMVZ6EtueCSvOvgmNpVFgkwbtabfBuaBOvN+irtg4RRSWvJQTDTziLABieocEEXZImQ==}
-    cpu: [arm64]
-    os: [linux]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /turbo-windows-64@1.8.2:
-    resolution: {integrity: sha512-/+R5ikRrw2w2w38JtNPubGLIQHgUC70m783DI9aPgaM5c8P5D/Y0k6HgjuC/uXgiaz2h3R7p7YWlr+2/E0bqyA==}
-    cpu: [x64]
-    os: [win32]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /turbo-windows-arm64@1.8.2:
-    resolution: {integrity: sha512-s07viz5nXSx4kyiksuPM4FGLRkoaGMaw0BpwFjdRQsl1p+WclUN1IPdokVPKOmFpu5pNCVYlG/raP/mXAEzDCg==}
-    cpu: [arm64]
-    os: [win32]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /turbo@1.8.2:
-    resolution: {integrity: sha512-G/uJx6bZK5RwTWHsRN/MP0MvXFznmCaL3MQXdSf+OG/q0o8GE7+yivyyWEplWI1Asc8AEN909A/wlIkoz2FKTg==}
-    hasBin: true
-    requiresBuild: true
-    optionalDependencies:
-      turbo-darwin-64: 1.8.2
-      turbo-darwin-arm64: 1.8.2
-      turbo-linux-64: 1.8.2
-      turbo-linux-arm64: 1.8.2
-      turbo-windows-64: 1.8.2
-      turbo-windows-arm64: 1.8.2
     dev: true
 
   /type-check@0.3.2:
