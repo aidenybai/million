@@ -7,6 +7,8 @@ import generate from '@babel/generator';
 import * as t from '@babel/types';
 import type { NodePath } from '@babel/core';
 
+type StaticContext = Record<string, any>;
+
 export const evaluate = (
   ast: t.Node,
   scope: NodePath<t.Node>['scope'],
@@ -27,8 +29,8 @@ export const evaluateUnsafe = (
   scope: NodePath<t.Node>['scope'],
   excludeIds: string[] = [],
 ) => {
-  const bindings: Record<string, any> = scope.getAllBindings() as any;
-  const staticContext: Record<string, any> = {};
+  const bindings = scope.getAllBindings();
+  const staticContext: StaticContext = {};
   for (const key in bindings) {
     try {
       if (excludeIds.includes(key)) continue;
@@ -48,10 +50,7 @@ export const evaluateUnsafe = (
   return runAstInContext(ast, staticContext);
 };
 
-export const runAstInContext = (
-  ast: t.Node,
-  staticContext: Record<string, any>,
-) => {
+export const runAstInContext = (ast: t.Node, staticContext: StaticContext) => {
   const code = generate(ast).code;
   const script = new vm.Script(code);
   const context = vm.createContext(staticContext);
@@ -62,7 +61,7 @@ export const runAstInContext = (
 
 export const evaluateAstNode = (
   ast: t.Node | undefined | null,
-  staticContext: Record<string, any> = {},
+  staticContext: StaticContext = {},
 ): any => {
   if (!ast) return undefined;
 
@@ -71,7 +70,7 @@ export const evaluateAstNode = (
   }
 
   if (t.isObjectExpression(ast)) {
-    const ret: Record<string, any> = {};
+    const ret: StaticContext = {};
     for (let i = -1, len = ast.properties.length; ++i < len; ) {
       const value = ast.properties[i];
 
@@ -100,7 +99,7 @@ export const evaluateAstNode = (
 
   if (t.isArrayExpression(ast)) {
     return ast.elements.map((x) => {
-      return evaluateAstNode(x as any, staticContext);
+      return evaluateAstNode(x, staticContext);
     });
   }
 
