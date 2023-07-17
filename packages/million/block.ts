@@ -134,7 +134,7 @@ export class Block extends AbstractBlock {
 
         if (edit.t & ChildFlag) {
           if (value instanceof AbstractBlock) {
-            value.m(el);
+            value.m(el, childAt(el, edit.i!));
             continue;
           }
           if (!el[TEXT_NODE_CACHE]) el[TEXT_NODE_CACHE] = new Array(l);

@@ -76,14 +76,12 @@ const createChildren = <T>(
       continue;
     }
 
-    if (memo && typeof vnode.type === 'function') {
+    if (typeof vnode.type === 'function' && 'callable' in vnode.type) {
       const puppetComponent = vnode.type(vnode.props);
       if (MapHas$.call(REGISTRY, puppetComponent.type)) {
         const puppetBlock = MapGet$.call(REGISTRY, puppetComponent.type)!;
         if (typeof puppetBlock === 'function') {
-          children[i] = MapGet$.call(REGISTRY, puppetComponent.type)!(
-            puppetComponent.props,
-          );
+          children[i] = puppetBlock(puppetComponent.props);
           continue;
         }
       }

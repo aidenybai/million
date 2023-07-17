@@ -382,13 +382,7 @@ export const transformComponent = (
    */
   Component.id = masterComponentId;
 
-  const pointerId =
-    dynamics.data.filter(({ value, id }) => value && id.name !== '__props')
-      .length || statementsInBody > 1
-      ? masterComponentId
-      : puppetComponentId;
-
-  callSitePath.replaceWith(pointerId);
+  callSitePath.replaceWith(masterComponentId);
 
   if (options.server) {
     // attach the original component to the master component
@@ -398,24 +392,26 @@ export const transformComponent = (
         : originalComponent,
     );
   }
-  // Try to set the display name to something meaningful
-  globalPath.insertBefore(
-    t.expressionStatement(
-      t.assignmentExpression(
-        '=',
-        t.memberExpression(masterComponentId, t.identifier('displayName')),
-        t.stringLiteral(masterComponentId.name),
-      ),
-    ),
-  );
   globalPath.insertBefore(
     t.variableDeclaration('const', [
       t.variableDeclarator(puppetComponentId, puppetBlock),
     ]),
   );
 
+  if (statementsInBody === 1) {
+    globalPath.insertBefore(
+      t.expressionStatement(
+        t.assignmentExpression(
+          '=',
+          t.memberExpression(masterComponentId, t.identifier('callable')),
+          t.booleanLiteral(true),
+        ),
+      ),
+    );
+  }
+
   if (t.isIdentifier(RawComponent)) {
-    blockCache.set(RawComponent.name, pointerId);
+    blockCache.set(RawComponent.name, masterComponentId);
   }
 
   if (options.optimize) {
