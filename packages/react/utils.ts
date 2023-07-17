@@ -1,19 +1,9 @@
-import {
-  Fragment,
-  createElement,
-  forwardRef,
-  isValidElement,
-  useCallback,
-  useEffect,
-  useRef,
-} from 'react';
+import { Fragment, createElement, isValidElement } from 'react';
 import { createRoot } from 'react-dom/client';
-import { Effect, REACT_ROOT, RENDER_SCOPE } from './constants';
+import { REACT_ROOT, RENDER_SCOPE } from './constants';
 import type { ComponentProps, ReactNode } from 'react';
 import type { Root } from 'react-dom/client';
 import type { VNode } from '../million';
-
-const RENDER_SCOPE_UPPERCASE = RENDER_SCOPE.toUpperCase();
 
 // TODO: access perf impact of this
 export const processProps = (props: ComponentProps<any>) => {
