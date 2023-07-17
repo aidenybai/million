@@ -1,3 +1,5 @@
+const isBlockImport = require("../utils/isBlockImport.js");
+
 /**
  * @fileoverview This makes sure that the block function is being imported from the million/react package
  * @author Drex
@@ -25,16 +27,8 @@ module.exports = {
     // Helpers
     //----------------------------------------------------------------------
 
-    function isBlockImport(node) {
-      return (
-        node.type === "ImportSpecifier" &&
-        node.imported.name === "block" &&
-        node.parent.source.value !== "million/react"
-      );
-    }
-
     function checkCorrectBlockImport(node) {
-      if (isBlockImport(node)) {
+      if (node.imported.name === 'block' &&!isBlockImport(node)) {
         context.report({
           node,
           message:
