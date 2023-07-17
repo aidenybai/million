@@ -99,9 +99,6 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
       programPath.scope.generateUidIdentifier('original');
     const blockComponentId = programPath.scope.generateUidIdentifier();
 
-    // also extract out any identifiers in the arrow function that cannot be accessed after we extract
-    // the arrow function into a variable declaration
-
     const idNames = new Set<string>();
 
     for (const id of expression.params) {

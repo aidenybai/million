@@ -73,21 +73,35 @@ const createChildren = <T>(
         currentCache.block = MapGet$.call(REGISTRY, vnode.type)!;
       }
       children[i] = currentCache.block!(vnode.props);
-    } else {
-      const block = createBlock((props?: Props) => props?.scope);
-      const currentBlock = (props: Props) => {
-        return block(
-          {
-            scope: renderReactScope(createElement(vnode.type, props)),
-          },
-          vnode.key,
-        );
-      };
-
-      MapSet$.call(REGISTRY, vnode.type, currentBlock);
-      currentCache.block = currentBlock as ReturnType<typeof createBlock>;
-      children[i] = currentBlock(vnode.props);
+      continue;
     }
+
+    if (memo && typeof vnode.type === 'function') {
+      const puppetComponent = vnode.type(vnode.props);
+      if (MapHas$.call(REGISTRY, puppetComponent.type)) {
+        const puppetBlock = MapGet$.call(REGISTRY, puppetComponent.type)!;
+        if (typeof puppetBlock === 'function') {
+          children[i] = MapGet$.call(REGISTRY, puppetComponent.type)!(
+            puppetComponent.props,
+          );
+          continue;
+        }
+      }
+    }
+
+    const block = createBlock((props?: Props) => props?.scope);
+    const currentBlock = (props: Props) => {
+      return block(
+        {
+          scope: renderReactScope(createElement(vnode.type, props)),
+        },
+        vnode.key,
+      );
+    };
+
+    MapSet$.call(REGISTRY, vnode.type, currentBlock);
+    currentCache.block = currentBlock as ReturnType<typeof createBlock>;
+    children[i] = currentBlock(vnode.props);
   }
   currentCache.each = each;
   currentCache.children = children;

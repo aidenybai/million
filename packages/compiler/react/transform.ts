@@ -387,6 +387,7 @@ export const transformComponent = (
       .length || statementsInBody > 1
       ? masterComponentId
       : puppetComponentId;
+
   callSitePath.replaceWith(pointerId);
 
   if (options.server) {
