@@ -2,7 +2,7 @@
 
 module.exports = {
   root: true,
-  rules:{},
+  rules: {},
   extends: [
     "eslint:recommended",
     "plugin:eslint-plugin/recommended",
@@ -11,7 +11,7 @@ module.exports = {
   env: {
     node: true,
   },
-  
+
   overrides: [
     {
       files: ["tests/**/*.js"],
