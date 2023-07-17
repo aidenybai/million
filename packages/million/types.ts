@@ -50,17 +50,6 @@ export abstract class AbstractBlock {
   /* parent */ abstract t(): HTMLElement | null | undefined;
 }
 
-export interface EditBase {
-  /* type */ t: Flags;
-  /* name */ n: string | null;
-  /* value */ v: string | null;
-  /* hole */ h: string | null;
-  /* index */ i: number | null;
-  /* listener */ l: EventListener | null;
-  /* patch */ p: ((listener: EventListener) => void) | null;
-  /* block */ b: AbstractBlock | null;
-}
-
 export interface EditAttribute {
   /* type */ t: Flags.Attribute;
   /* name */ n: string;
