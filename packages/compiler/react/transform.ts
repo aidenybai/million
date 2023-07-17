@@ -594,8 +594,7 @@ export const transformJSX = (
           if (t.isBooleanLiteral(value) || t.isNullLiteral(value)) {
             if (t.isNullLiteral(value) || !value.value) {
               properties.splice(i, 1);
-              i--;
-              j--;
+              i -= 2;
               // checked={true} -> checked="checked"
             } else if (t.isIdentifier(property.key)) {
               property.value = t.stringLiteral(property.key.name);
