@@ -5,7 +5,7 @@ import {
   createDeopt,
   resolveCorrectImportSource,
   resolvePath,
-  IGNORE_ANNOTATION,
+  TRANSFORM_ANNOTATION,
 } from './utils';
 import { transformComponent } from './transform';
 import { collectImportedBindings } from './bindings';
@@ -25,8 +25,8 @@ export const callExpressionVisitor = (
     // Callsite refers to the block call (e.g. the AST node of "block(Componnent)")
     const callSite = callSitePath.node;
     if (
-      callSite.leadingComments?.some(
-        (comment) => comment.value === IGNORE_ANNOTATION,
+      callSite.leadingComments?.some((comment) =>
+        comment.value.startsWith(TRANSFORM_ANNOTATION),
       )
     )
       return;

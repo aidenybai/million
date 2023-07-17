@@ -9,12 +9,13 @@ import {
   normalizeProperties,
   SVG_ELEMENTS,
   RENDER_SCOPE,
-  IGNORE_ANNOTATION,
+  TRANSFORM_ANNOTATION,
 } from './utils';
 import { optimize } from './optimize';
 import { evaluate } from './evaluator';
 import type { Options } from '../plugin';
 import type { Dynamics, Shared } from './types';
+import type { Analytics } from '../../types';
 import type { NodePath } from '@babel/core';
 
 export const transformComponent = (
@@ -75,6 +76,7 @@ export const transformComponent = (
 
   for (let i = 0; i < statementsInBody; ++i) {
     const node = componentBody.body[i];
+
     if (!t.isIfStatement(node)) continue;
     if (
       t.isReturnStatement(node.consequent) ||
@@ -164,6 +166,14 @@ export const transformComponent = (
     unoptimizable: false,
   };
 
+  const analytics: Analytics = {
+    elements: 0,
+    components: 0,
+    attributes: 0,
+    data: 0,
+    traversals: 0,
+  };
+
   // This function will automatically populate the `dynamics` for us:
   transformJSX(
     options,
@@ -174,6 +184,7 @@ export const transformComponent = (
       componentBodyPath,
       dynamics,
       isRoot: true,
+      analytics,
     },
     SHARED,
   );
@@ -229,6 +240,7 @@ export const transformComponent = (
   // We want to add a __props property for the original call props
   // TODO: refactor this probably
   if (
+    options.server &&
     params?.length &&
     (t.isIdentifier(params[0]) || t.isObjectPattern(params[0]))
   ) {
@@ -249,30 +261,52 @@ export const transformComponent = (
   }
 
   const holes = dynamics.data.map(({ id }) => id.name);
-  const userOptions = callSite.arguments[1] as t.ObjectExpression | undefined;
+
+  const originalObjectExpression = callSite.arguments[1] as
+    | t.ObjectExpression
+    | undefined;
+
+  const originalOptions: Record<string, any> = {};
+
+  if (originalObjectExpression) {
+    for (const prop of originalObjectExpression.properties) {
+      if (t.isObjectProperty(prop) && t.isIdentifier(prop.key)) {
+        originalOptions[prop.key.name] = prop.value;
+      }
+    }
+  }
 
   const compiledOptions = [
     t.objectProperty(
       t.identifier('svg'),
       // we try to automatically detect if the component is an SVG
       t.booleanLiteral(
-        t.isJSXElement(returnStatement.argument) &&
-          t.isJSXIdentifier(returnStatement.argument.openingElement.name) &&
-          SVG_ELEMENTS.includes(
-            returnStatement.argument.openingElement.name.name,
-          ),
+        originalOptions.svg ??
+          (t.isJSXElement(returnStatement.argument) &&
+            t.isJSXIdentifier(returnStatement.argument.openingElement.name) &&
+            SVG_ELEMENTS.includes(
+              returnStatement.argument.openingElement.name.name,
+            )),
       ),
     ),
     t.objectProperty(
       t.identifier('original'),
       options.server ? (originalComponent.id as t.Identifier) : t.nullLiteral(),
     ),
+    t.objectProperty(
+      t.identifier('analytics'),
+      t.isArrowFunctionExpression(originalOptions.analytics)
+        ? t.callExpression(originalOptions.analytics, [
+            t.objectExpression(
+              Object.entries(analytics).map(([key, value]) =>
+                t.objectProperty(t.identifier(key), t.numericLiteral(value)),
+              ),
+            ),
+          ])
+        : t.nullLiteral(),
+    ),
     t.objectProperty(t.identifier('shouldUpdate'), createDirtyChecker(holes)),
   ];
-
-  if (userOptions) {
-    compiledOptions.push(...(userOptions.properties as t.ObjectProperty[]));
-  }
 
   const puppetFn = t.arrowFunctionExpression(
     [t.objectPattern(dynamics.data.map(({ id }) => t.objectProperty(id, id)))],
@@ -285,7 +319,7 @@ export const transformComponent = (
         puppetFn,
         t.objectExpression(normalizeProperties(compiledOptions)),
       ]);
-  t.addComment(puppetBlock, 'leading', IGNORE_ANNOTATION);
+  t.addComment(puppetBlock, 'leading', TRANSFORM_ANNOTATION);
 
   /**
    * We want to change the Component's return from our original JSX
@@ -347,8 +381,10 @@ export const transformComponent = (
    * ```
    */
   Component.id = masterComponentId;
+
   const pointerId =
-    dynamics.data.length || statementsInBody > 1
+    dynamics.data.filter(({ value, id }) => value && id.name !== '__props')
+      .length || statementsInBody > 1
       ? masterComponentId
       : puppetComponentId;
   callSitePath.replaceWith(pointerId);
@@ -411,6 +447,7 @@ export const transformJSX = (
     componentBodyPath,
     dynamics,
     isRoot,
+    analytics,
   }: {
     jsx: t.JSXElement;
     jsxPath: NodePath<t.JSXElement>;
@@ -418,6 +455,7 @@ export const transformJSX = (
     componentBodyPath: NodePath<t.Node>;
     dynamics: Dynamics;
     isRoot: boolean;
+    analytics: Analytics;
   },
   SHARED: Shared,
 ) => {
@@ -456,12 +494,14 @@ export const transformJSX = (
      * ```
      */
     const id = identifier || componentBodyPath.scope.generateUidIdentifier('$');
+
     if (!dynamics.cache.has(id.name)) {
       dynamics.data.push({ value: expression, id });
       dynamics.cache.add(id.name);
     }
     // Sometimes, we require a mutation to the JSX. We defer this for later use.
     dynamics.deferred.push(callback!);
+    analytics.data++;
     return id;
   };
 
@@ -496,6 +536,7 @@ export const transformJSX = (
       throw createDeopt(null, callSitePath);
     }
 
+    analytics.components++;
     // TODO: Add a warning for using components that are not block or For
     // warn(
     //   'Components will cause degraded performance. Ideally, you should use DOM elements instead.',
@@ -511,20 +552,109 @@ export const transformJSX = (
 
     return dynamics;
   }
+
+  analytics.elements++;
+
   /**
    * Now, it's time to handle the DOM element case.
    */
   const { attributes } = jsx.openingElement;
   for (let i = 0, j = attributes.length; i < j; i++) {
     const attribute = attributes[i]!;
+    analytics.attributes++;
 
     if (t.isJSXSpreadAttribute(attribute)) {
       const spreadPath = jsxPath.get(`openingElement.attributes.${i}.argument`);
-      throw createDeopt(
-        'Spread attributes are not supported.',
-        callSitePath,
+      warn(
+        'Spread attributes are not fully supported.',
         resolvePath(spreadPath),
       );
+      continue;
+    }
+
+    if (
+      t.isJSXIdentifier(attribute.name) &&
+      attribute.name.name === 'style' &&
+      t.isJSXExpressionContainer(attribute.value) &&
+      t.isObjectExpression(attribute.value.expression)
+    ) {
+      const styleObject = attribute.value.expression;
+      const properties = styleObject.properties;
+
+      let hasDynamic = false;
+      for (let i = 0, j = properties.length; i < j; i++) {
+        const property = properties[i]!;
+        if (t.isObjectProperty(property)) {
+          if (property.computed) {
+            // TODO: possibly explore style object extraction in the future.
+            throw createDeopt(
+              'Computed properties are not supported in style objects.',
+              jsxPath,
+            );
+          }
+
+          const value = property.value;
+          if (t.isBooleanLiteral(value) || t.isNullLiteral(value)) {
+            if (t.isNullLiteral(value) || !value.value) {
+              properties.splice(i, 1);
+              i--;
+              j--;
+              // checked={true} -> checked="checked"
+            } else if (t.isIdentifier(property.key)) {
+              property.value = t.stringLiteral(property.key.name);
+            }
+          }
+
+          if (t.isIdentifier(value)) {
+            createDynamic(value, null, null);
+            hasDynamic = true;
+          } else if (t.isLiteral(value) && !t.isTemplateLiteral(value)) {
+            if (t.isStringLiteral(value)) {
+              property.value = value;
+            }
+          } else {
+            const id = createDynamic(null, value as t.Expression, () => {
+              property.value = id;
+            });
+            hasDynamic = true;
+          }
+        } else {
+          hasDynamic = true;
+        }
+      }
+      if (!hasDynamic) {
+        attribute.value = t.stringLiteral(
+          styleObject.properties
+            .map((property) => {
+              if (t.isObjectProperty(property)) {
+                const value = property.value;
+                const key = property.key;
+                if (t.isIdentifier(key) && t.isLiteral(value)) {
+                  let kebabKey = '';
+                  for (let i = 0, j = key.name.length; i < j; ++i) {
+                    const char = key.name.charCodeAt(i);
+                    if (char < 97) {
+                      kebabKey += `-${String.fromCharCode(char + 32)}`;
+                    } else {
+                      kebabKey += key.name[i];
+                    }
+                  }
+                  if (
+                    t.isNullLiteral(value) ||
+                    t.isRegExpLiteral(value) ||
+                    t.isTemplateLiteral(value)
+                  )
+                    return '';
+                  return `${kebabKey}:${String(value.value)}`;
+                }
+              }
+              return null;
+            })
+            .filter((property) => property)
+            .join('; '),
+        );
+      }
+      continue;
     }
 
     if (t.isJSXExpressionContainer(attribute.value)) {
@@ -540,6 +670,14 @@ export const transformJSX = (
       if (!err) attributeValue.expression = expression;
 
       if (t.isIdentifier(expression)) {
+        if (attribute.name.name === 'ref') {
+          const renderReactScope = imports.addNamed('renderReactScope');
+          const nestedRender = t.callExpression(renderReactScope, [jsx]);
+          const id = createDynamic(null, nestedRender, () => {
+            jsxPath.replaceWith(t.jsxExpressionContainer(id));
+          });
+          return dynamics;
+        }
         createDynamic(expression, null, null);
       } else if (
         t.isLiteral(expression) &&
@@ -560,15 +698,14 @@ export const transformJSX = (
   for (let i = 0; i < jsx.children.length; i++) {
     const child = jsx.children[i]!;
 
+    analytics.traversals++;
+
     if (t.isJSXText(child)) continue;
 
     if (t.isJSXSpreadChild(child)) {
       const spreadPath = jsxPath.get(`children.${i}`);
-      throw createDeopt(
-        'Spread children are not supported.',
-        callSitePath,
-        resolvePath(spreadPath),
-      );
+      warn('Spread children are not fully supported.', resolvePath(spreadPath));
+      continue;
     }
 
     if (t.isJSXFragment(child)) {
@@ -644,6 +781,7 @@ export const transformJSX = (
             componentBodyPath,
             dynamics,
             isRoot: false,
+            analytics,
           },
           SHARED,
         );
@@ -762,6 +900,7 @@ export const transformJSX = (
         componentBodyPath,
         dynamics,
         isRoot: false,
+        analytics,
       },
       SHARED,
     );

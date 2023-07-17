@@ -4,7 +4,7 @@ import { addNamed } from '@babel/helper-module-imports';
 import type { Options } from '../plugin';
 
 export const RENDER_SCOPE = 'slot';
-export const IGNORE_ANNOTATION = '@ignore';
+export const TRANSFORM_ANNOTATION = 'million:transform';
 
 export const getValidSpecifiers = (
   importDeclarationPath: NodePath<t.ImportDeclaration>,

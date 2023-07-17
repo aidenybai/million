@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 /* eslint-disable no-bitwise */
 /* eslint-disable @typescript-eslint/unbound-method */
 import {
@@ -147,9 +148,7 @@ export class Block extends AbstractBlock {
           // insertText() on mount, setText() on patch
           el[TEXT_NODE_CACHE][k] = insertText(
             el,
-            value === null || value === undefined || value === false
-              ? ''
-              : String(value),
+            value == null || value === false ? '' : String(value),
             edit.i!,
           );
         } else if (edit.t & EventFlag) {
@@ -234,9 +233,7 @@ export class Block extends AbstractBlock {
           }
           setText(
             el[TEXT_NODE_CACHE][k],
-            newValue === null || newValue === undefined || newValue === false
-              ? ''
-              : String(newValue),
+            newValue == null || newValue === false ? '' : String(newValue),
           );
         } else if (edit.t & AttributeFlag) {
           setAttribute(el, edit.n!, newValue);
