@@ -34,7 +34,12 @@ Then configure the rules you want to use under the rules section.
 ```json
 {
     "rules": {
-        "million/rule-name": 2
+        "million/warn-block-import": "error",
+        "million/warn-block-declaration": "error",
+        "million/warn-block-call": "error",
+        "million/warn-array-map": "error",
+        "million/warn-conditional-expression": "error",
+        "million/warn-ui-components": "error",
     }
 }
 ```
