@@ -15,6 +15,7 @@ const MillionArray = <T>({
   memo,
   svg,
   as,
+  ...rest
 }: MillionArrayProps<T>) => {
   const ref = useRef<HTMLElement>(null);
   const fragmentRef = useRef<ReturnType<typeof mapArray> | null>(null);
@@ -41,7 +42,7 @@ const MillionArray = <T>({
   }, [ref.current]);
 
   const defaultType = svg ? SVG_RENDER_SCOPE : RENDER_SCOPE;
-  return createElement(as ?? defaultType, { ref });
+  return createElement(as ?? defaultType, { ...rest, ref });
 };
 
 // Using fix below to add type support to MillionArray

@@ -631,6 +631,7 @@ export const transformJSX = (
                   for (let i = 0, j = key.name.length; i < j; ++i) {
                     const char = key.name.charCodeAt(i);
                     if (char < 97) {
+                      // If letter is uppercase
                       kebabKey += `-${String.fromCharCode(char + 32)}`;
                     } else {
                       kebabKey += key.name[i];

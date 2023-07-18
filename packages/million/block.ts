@@ -1,4 +1,3 @@
-/* eslint-disable eqeqeq */
 /* eslint-disable no-bitwise */
 /* eslint-disable @typescript-eslint/unbound-method */
 import {
@@ -16,6 +15,7 @@ import {
   childAt,
   SVG_TEMPLATE,
   HTM_TEMPLATE,
+  replaceChild$,
 } from './dom';
 import { renderToTemplate } from './template';
 import { AbstractBlock } from './types';
@@ -148,6 +148,7 @@ export class Block extends AbstractBlock {
           // insertText() on mount, setText() on patch
           el[TEXT_NODE_CACHE][k] = insertText(
             el,
+            // eslint-disable-next-line eqeqeq
             value == null || value === false ? '' : String(value),
             edit.i!,
           );
@@ -228,11 +229,20 @@ export class Block extends AbstractBlock {
             continue;
           }
           if (typeof newValue === 'function') {
-            newValue(el[TEXT_NODE_CACHE][k]);
+            const scopeEl = el[TEXT_NODE_CACHE][k];
+            if (oldValue !== newValue) {
+              const newScopeEl = newValue(null);
+              el[TEXT_NODE_CACHE][k] = newScopeEl;
+              replaceChild$.call(el, newScopeEl, scopeEl);
+            } else {
+              newValue(scopeEl);
+            }
+
             continue;
           }
           setText(
             el[TEXT_NODE_CACHE][k],
+            // eslint-disable-next-line eqeqeq
             newValue == null || newValue === false ? '' : String(newValue),
           );
         } else if (edit.t & AttributeFlag) {
