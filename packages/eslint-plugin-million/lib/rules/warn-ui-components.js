@@ -1,10 +1,10 @@
 module.exports = {
   meta: {
-    type: "suggestion",
+    type: 'suggestion',
     docs: {
       description:
-        "Components will cause degraded performance. Ideally, you should use DOM elements instead.",
-      category: "Best Practices",
+        'Components will cause degraded performance. Ideally, you should use DOM elements instead.',
+      category: 'Best Practices',
       recommended: true,
     },
     schema: [],
@@ -13,12 +13,11 @@ module.exports = {
     return {
       JSXElement(node) {
         context.report({
-            node,
-            message:
+          node,
+          message:
             '[Million.js] Components will cause degraded performance. Ideally, you should use DOM elements instead.',
-              });
-        },
+        });
+      },
     };
-  }
+  },
 };
-

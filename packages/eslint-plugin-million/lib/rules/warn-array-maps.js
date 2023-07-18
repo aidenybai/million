@@ -1,10 +1,10 @@
 module.exports = {
   meta: {
-    type: "suggestion",
+    type: 'suggestion',
     docs: {
       description:
-        "Array.map() will degrade performance. We recommend removing the block on the current component and using a <For /> component instead.",
-      category: "Best Practices",
+        'Array.map() will degrade performance. We recommend removing the block on the current component and using a <For /> component instead.',
+      category: 'Best Practices',
       recommended: true,
     },
     schema: [],
@@ -17,15 +17,14 @@ module.exports = {
           type === 'MemberExpression' &&
           property.name === 'map' &&
           object.type === 'Identifier'
-      ){
+        ) {
           context.report({
-          node: node,
-          message:
+            node: node,
+            message:
               '[Million.js] Array.map() will degrade performance. We recommend removing the block on the current component and using a <For /> component instead.',
           });
         }
       },
     };
-  }
+  },
 };
-

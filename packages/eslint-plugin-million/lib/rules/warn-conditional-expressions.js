@@ -1,10 +1,10 @@
 module.exports = {
   meta: {
-    type: "suggestion",
+    type: 'suggestion',
     docs: {
       description:
-        "Conditional expressions will degrade performance. We recommend using deterministic returns instead.",
-      category: "Best Practices",
+        'Conditional expressions will degrade performance. We recommend using deterministic returns instead.',
+      category: 'Best Practices',
       recommended: true,
     },
     schema: [],
@@ -13,11 +13,11 @@ module.exports = {
     return {
       ConditionalExpression(node) {
         context.report({
-            node,
-            message: '[Million.js] Conditional expressions will degrade performance. We recommend using deterministic returns instead.',
+          node,
+          message:
+            '[Million.js] Conditional expressions will degrade performance. We recommend using deterministic returns instead.',
         });
       },
     };
-  }
+  },
 };
-
