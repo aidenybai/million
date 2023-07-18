@@ -1,6 +1,5 @@
 const path = require("path");
 const fs = require("fs");
-const checkImports = require("../utils/checkImports");
 
 module.exports = {
   meta: {
@@ -32,14 +31,12 @@ module.exports = {
 
     function checkCompilerSetup(filePath) {
       const configContent = fs.readFileSync(filePath, "utf8");
-      const { imports, commentedImports, uncommentedImports } =
-        checkImports(configContent);
 
       // Regular expression to match the import statement
       const importRegex =
         /import\s+million\s+from\s+['"]million\/compiler['"];/g;
 
-      console.log(imports, commentedImports, uncommentedImports);
+      // console.log(imports, commentedImports, uncommentedImports);
 
       return importRegex.test(configContent);
     }
