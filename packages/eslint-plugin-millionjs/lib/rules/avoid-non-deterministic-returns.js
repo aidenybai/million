@@ -58,7 +58,7 @@ module.exports = {
           context.report({
             node: blockFunctionBody,
             message:
-              "Inside the block function, there should only be one non-conditional return statement.",
+            "[Million.js] Conditional expressions will degrade performance. We recommend using deterministic returns instead.",
           });
         }
       }
@@ -70,6 +70,13 @@ module.exports = {
 
     return {
       CallExpression: checkSingleReturnStatement,
+      ConditionalExpression(node) {
+        context.report({
+          node,
+          message:
+            "[Million.js] Conditional expressions will degrade performance. We recommend using deterministic returns instead.",
+        });
+      },
     };
   },
 };

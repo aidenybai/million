@@ -25,11 +25,8 @@ module.exports = {
     // Helpers
     //----------------------------------------------------------------------
     const checkAvoidSpreadAttributes = (node) => {
-      // console.log(node, "check avoid");
       let currentNode = node;
-      // console.log(currentNode)
       while (currentNode.parent) {
-        console.log(currentNode.parent.type, currentNode);
         if (
           currentNode.parent.type === "CallExpression" &&
           currentNode.parent.callee.name === "block"
