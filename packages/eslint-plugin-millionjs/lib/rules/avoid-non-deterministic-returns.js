@@ -29,25 +29,25 @@ module.exports = {
 
     function checkSingleReturnStatement(node) {
       if (isBlockFunction(node)) {
-        const blockFunctionBody = node.arguments[0].body;
+        const blockFunctionBody = node.arguments[0]?.body;
 
         let returnCount = 0;
         let hasConditionalReturn = false;
 
         const traverse = (currentNode) => {
-          if (currentNode.type === "ReturnStatement") {
+          if (currentNode?.type === "ReturnStatement") {
             returnCount++;
           } else if (
-            currentNode.type === "ConditionalExpression" ||
-            currentNode.type === "IfStatement" ||
-            currentNode.type === "SwitchStatement"
+            currentNode?.type === "ConditionalExpression" ||
+            currentNode?.type === "IfStatement" ||
+            currentNode?.type === "SwitchStatement"
           ) {
             hasConditionalReturn = true;
-          } else if (currentNode.body) {
+          } else if (currentNode?.body) {
             if (Array.isArray(currentNode.body)) {
-              currentNode.body.forEach(traverse);
+              currentNode?.body.forEach(traverse);
             } else {
-              traverse(currentNode.body);
+              traverse(currentNode?.body);
             }
           }
         };

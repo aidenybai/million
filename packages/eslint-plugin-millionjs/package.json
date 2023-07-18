@@ -29,7 +29,7 @@
     "eslint": ">=6"
   },
   "engines": {
-    "node": "12.x || 14.x || >= 16"
+    "node": "14.x || >= 18"
   },
   "directories": {
     "doc": "docs",
