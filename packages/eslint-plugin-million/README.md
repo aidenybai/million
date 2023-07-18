@@ -44,6 +44,14 @@ Then configure the rules you want to use under the rules section.
 }
 ```
 
+Or automatically import million recommended rules.
+
+```json
+{
+    "extends": ["plugin:million/recommended"]
+}
+```
+
 ## Rules
 
 <!-- begin auto-generated rules list -->
