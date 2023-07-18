@@ -17,6 +17,7 @@ import type { Options } from '../plugin';
 export const callExpressionVisitor = (
   options: Options = {},
   isReact = true,
+  unstable = false,
 ) => {
   return (
     callSitePath: NodePath<t.CallExpression>,
@@ -232,6 +233,7 @@ export const callExpressionVisitor = (
       importSource,
       globalPath: variableDeclarationPath,
       isReact,
+      unstable,
       imports: {
         addNamed(name: string, source: string = importSource.value) {
           // We can't do this, as the visitor may retraverse the newly added `block` identifier.

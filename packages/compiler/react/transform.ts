@@ -456,7 +456,7 @@ export const transformJSX = (
   },
   SHARED: Shared,
 ) => {
-  const { callSitePath, imports } = SHARED;
+  const { callSitePath, imports, unstable } = SHARED;
 
   /**
    * Populates `dynamics` with a new entry.
@@ -542,7 +542,10 @@ export const transformJSX = (
     // );
 
     const renderReactScope = imports.addNamed('renderReactScope');
-    const nestedRender = t.callExpression(renderReactScope, [jsx]);
+    const nestedRender = t.callExpression(renderReactScope, [
+      jsx,
+      t.booleanLiteral(unstable),
+    ]);
     const id = createDynamic(null, nestedRender, () => {
       jsxPath.replaceWith(t.jsxExpressionContainer(id));
     });
@@ -669,7 +672,10 @@ export const transformJSX = (
       if (t.isIdentifier(expression)) {
         if (attribute.name.name === 'ref') {
           const renderReactScope = imports.addNamed('renderReactScope');
-          const nestedRender = t.callExpression(renderReactScope, [jsx]);
+          const nestedRender = t.callExpression(renderReactScope, [
+            jsx,
+            t.booleanLiteral(unstable),
+          ]);
           const id = createDynamic(null, nestedRender, () => {
             jsxPath.replaceWith(t.jsxExpressionContainer(id));
           });
@@ -831,6 +837,7 @@ export const transformJSX = (
 
           const nestedRender = t.callExpression(renderReactScope, [
             newJsxArrayIterator,
+            t.booleanLiteral(unstable),
           ]);
 
           const id = createDynamic(null, nestedRender, () => {
@@ -870,7 +877,10 @@ export const transformJSX = (
 
           const id = createDynamic(
             null,
-            t.callExpression(renderReactScope, [expression]),
+            t.callExpression(renderReactScope, [
+              expression,
+              t.booleanLiteral(unstable),
+            ]),
             () => {
               jsx.children[i] = t.jsxExpressionContainer(id);
             },

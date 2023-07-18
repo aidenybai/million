@@ -21,7 +21,7 @@ export const processProps = (props: ComponentProps<any>) => {
   return processedProps;
 };
 
-export const renderReactScope = (vnode: ReactNode) => {
+export const renderReactScope = (vnode: ReactNode, unstable?: boolean) => {
   if (typeof window === 'undefined') {
     return createElement(RENDER_SCOPE, null, vnode);
   }
@@ -40,7 +40,7 @@ export const renderReactScope = (vnode: ReactNode) => {
     }
   }
 
-  return (el: HTMLElement | null) => {
+  const scope = (el: HTMLElement | null) => {
     const parent = el ?? document.createElement(RENDER_SCOPE);
     const root =
       REACT_ROOT in parent
@@ -49,6 +49,10 @@ export const renderReactScope = (vnode: ReactNode) => {
     root.render(vnode);
     return parent;
   };
+
+  if (unstable) scope.unstable = true;
+
+  return scope;
 };
 
 export const unwrap = (vnode?: ReactNode): VNode => {

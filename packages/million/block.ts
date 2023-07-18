@@ -230,7 +230,7 @@ export class Block extends AbstractBlock {
           }
           if (typeof newValue === 'function') {
             const scopeEl = el[TEXT_NODE_CACHE][k];
-            if (oldValue !== newValue) {
+            if ('unstable' in newValue && oldValue !== newValue) {
               const newScopeEl = newValue(null);
               el[TEXT_NODE_CACHE][k] = newScopeEl;
               replaceChild$.call(el, newScopeEl, scopeEl);

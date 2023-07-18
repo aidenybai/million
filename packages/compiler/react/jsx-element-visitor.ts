@@ -185,7 +185,7 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
       programBodyPath.length - 1
     ] as NodePath<t.VariableDeclaration>;
 
-    const visitor = callExpressionVisitor(options, isReact);
+    const visitor = callExpressionVisitor(options, isReact, true);
 
     const callSitePath = originalComponentPath
       .get('declarations')[0]!
