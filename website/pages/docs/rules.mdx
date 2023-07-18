@@ -173,19 +173,24 @@ Million.js requires that you use DOM elements instead of components. This is bec
 </div>
 ```
 
-### Spread attributes
+### Spread attributes/children
 
 <Callout type="warning">
   <code>
   <strong>[Million.js]</strong>
-  Spread attributes aren't supported.
+  Spread attributes/children are not fully supported
   </code>
 </Callout>
 
-You can't use spread attributes in Million.js, as they can introduce non-deterministic returns.
+You can't use spread attributes/children that change safely or reference a binding within the component inside Million.js, as they can introduce non-deterministic returns.
 
 ```jsx
-<div {...props} /> // ❌ Wrong
+const arr = ['Hello'];
+
+<div>{...arr}</div> // Ok if arr never changes
+
+// ❌ Bad
+arr.push('World');
 ```
 
 ### Unsupported import

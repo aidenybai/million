@@ -7,8 +7,10 @@ export interface Options {
   shouldUpdate?: (oldProps: Props, newProps: Props) => boolean;
   block?: any;
   original?: ComponentType<any>;
+  analytics?: (analytics: Analytics) => void;
   ssr?: boolean;
   svg?: boolean;
+  as?: string;
 }
 
 export interface MillionArrayProps<T> {
@@ -17,10 +19,21 @@ export interface MillionArrayProps<T> {
   memo?: true;
   ssr?: boolean;
   svg?: boolean;
+  as?: string;
+  [key: string]: any;
 }
 
 export interface ArrayCache<T> {
   each: T[] | null;
   children: T[] | null;
+  mounted?: boolean;
   block?: ReturnType<typeof createBlock>;
+}
+
+export interface Analytics {
+  elements: number;
+  components: number;
+  attributes: number;
+  data: number;
+  traversals: number;
 }

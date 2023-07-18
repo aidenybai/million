@@ -14,5 +14,6 @@
   },
   "block": "block()",
   "for": "<For>",
+  "macro": "macro()",
   "internals": "Internals"
 }

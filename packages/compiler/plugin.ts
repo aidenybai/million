@@ -25,6 +25,7 @@ export const unplugin = createUnplugin((options: Options = {}) => {
       const isTSX = id.endsWith('.tsx');
 
       const plugins = normalizePlugins([
+        'babel-plugin-transform-react-createelement-to-jsx',
         '@babel/plugin-syntax-jsx',
         isTSX && [
           '@babel/plugin-syntax-typescript',
@@ -33,7 +34,7 @@ export const unplugin = createUnplugin((options: Options = {}) => {
         [babelPlugin, options],
       ]);
 
-      const result = await transformAsync(code, { plugins });
+      const result = await transformAsync(code, { plugins, filename: id });
 
       return result?.code ?? code;
     },
