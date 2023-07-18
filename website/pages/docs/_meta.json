@@ -7,6 +7,7 @@
   "quickstart": "Quick Start",
   "install": "Installation",
   "rules": "Rules of Blocks",
+  "virtualization": "Virtualization",
   "typescript": "Usage with TypeScript",
   "-- API Reference": {
     "type": "separator",
