@@ -217,6 +217,8 @@ const config: DocsThemeConfig = {
         <meta name="twitter:creator" content={`@${ogConfig.author.twitter}`} />
         <meta name="twitter:card" content="summary_large_image" />
         <meta property="twitter:image" content={ogUrl} />
+        <meta property="twitter:title" content={title} />
+        <meta property="twitter:description" content={description} />
         <meta property="og:image" content={ogUrl} />
 
         <link rel="shortcut icon" href={favicon} type="image/svg+xml" />
