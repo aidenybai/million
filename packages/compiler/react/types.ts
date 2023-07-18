@@ -11,6 +11,7 @@ export interface Shared {
   importSource: t.StringLiteral;
   globalPath: NodePath;
   isReact: boolean;
+  unstable: boolean;
   imports: {
     addNamed: (name: string, source?: string) => t.Identifier;
   };

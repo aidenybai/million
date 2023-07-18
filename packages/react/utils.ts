@@ -1,6 +1,6 @@
 import { Fragment, createElement, isValidElement } from 'react';
 import { createRoot } from 'react-dom/client';
-import { REACT_ROOT, RENDER_SCOPE } from './constants';
+import { REACT_ROOT, REGISTRY, RENDER_SCOPE } from './constants';
 import type { ComponentProps, ReactNode } from 'react';
 import type { Root } from 'react-dom/client';
 import type { VNode } from '../million';
@@ -21,12 +21,26 @@ export const processProps = (props: ComponentProps<any>) => {
   return processedProps;
 };
 
-export const renderReactScope = (vnode: ReactNode) => {
+export const renderReactScope = (vnode: ReactNode, unstable?: boolean) => {
   if (typeof window === 'undefined') {
     return createElement(RENDER_SCOPE, null, vnode);
   }
 
-  return (el: HTMLElement | null) => {
+  if (
+    isValidElement(vnode) &&
+    typeof vnode.type === 'function' &&
+    'callable' in vnode.type
+  ) {
+    const puppetComponent = (vnode.type as any)(vnode.props);
+    if (REGISTRY.has(puppetComponent.type)) {
+      const puppetBlock = REGISTRY.get(puppetComponent.type)!;
+      if (typeof puppetBlock === 'function') {
+        return puppetBlock(puppetComponent.props);
+      }
+    }
+  }
+
+  const scope = (el: HTMLElement | null) => {
     const parent = el ?? document.createElement(RENDER_SCOPE);
     const root =
       REACT_ROOT in parent
@@ -35,6 +49,10 @@ export const renderReactScope = (vnode: ReactNode) => {
     root.render(vnode);
     return parent;
   };
+
+  if (unstable) scope.unstable = true;
+
+  return scope;
 };
 
 export const unwrap = (vnode?: ReactNode): VNode => {

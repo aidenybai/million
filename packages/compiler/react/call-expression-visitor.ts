@@ -5,7 +5,7 @@ import {
   createDeopt,
   resolveCorrectImportSource,
   resolvePath,
-  IGNORE_ANNOTATION,
+  TRANSFORM_ANNOTATION,
 } from './utils';
 import { transformComponent } from './transform';
 import { collectImportedBindings } from './bindings';
@@ -17,6 +17,7 @@ import type { Options } from '../plugin';
 export const callExpressionVisitor = (
   options: Options = {},
   isReact = true,
+  unstable = false,
 ) => {
   return (
     callSitePath: NodePath<t.CallExpression>,
@@ -25,8 +26,8 @@ export const callExpressionVisitor = (
     // Callsite refers to the block call (e.g. the AST node of "block(Componnent)")
     const callSite = callSitePath.node;
     if (
-      callSite.leadingComments?.some(
-        (comment) => comment.value === IGNORE_ANNOTATION,
+      callSite.leadingComments?.some((comment) =>
+        comment.value.startsWith(TRANSFORM_ANNOTATION),
       )
     )
       return;
@@ -232,6 +233,7 @@ export const callExpressionVisitor = (
       importSource,
       globalPath: variableDeclarationPath,
       isReact,
+      unstable,
       imports: {
         addNamed(name: string, source: string = importSource.value) {
           // We can't do this, as the visitor may retraverse the newly added `block` identifier.

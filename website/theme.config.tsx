@@ -240,6 +240,9 @@ const config: DocsThemeConfig = {
     toggleButton: true,
     defaultMenuCollapseLevel: 0,
   },
+  search: {
+    placeholder: 'Search website...',
+  },
   toc: {
     float: true,
     extraContent: ExtraContent,

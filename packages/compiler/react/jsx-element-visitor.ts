@@ -1,10 +1,10 @@
 import * as t from '@babel/types';
 import { collectImportedBindings } from './bindings';
 import {
-  addNamedCache,
   createDeopt,
   getValidSpecifiers,
   resolveCorrectImportSource,
+  resolvePath,
   trimJsxChildren,
 } from './utils';
 import { callExpressionVisitor } from './call-expression-visitor';
@@ -61,6 +61,11 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
       importSource.value,
     );
 
+    const block = t.identifier(importedBindings.block ?? 'block');
+    if (!importedBindings.block) {
+      importDeclaration.specifiers.push(t.importSpecifier(block, block));
+    }
+
     if (!validSpecifiers.includes('For')) return;
 
     trimJsxChildren(jsxElement);
@@ -89,16 +94,10 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
         jsxElementPath,
       );
     }
+
     const originalComponentId =
       programPath.scope.generateUidIdentifier('original');
     const blockComponentId = programPath.scope.generateUidIdentifier();
-
-    const block = importedBindings.block
-      ? t.identifier('block')
-      : addNamedCache('block', importSource.value, programPath);
-
-    // also extract out any identifiers in the arrow function that cannot be accessed after we extract
-    // the arrow function into a variable declaration
 
     const idNames = new Set<string>();
 
@@ -133,6 +132,21 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
           path.parentPath.isJSXClosingElement()
         )
           return;
+
+        if (
+          path.parentPath.isFunctionExpression() ||
+          path.parentPath.isArrowFunctionExpression()
+        ) {
+          const functionPath = resolvePath(path.parentPath) as NodePath<
+            t.ArrowFunctionExpression | t.FunctionExpression
+          >;
+
+          if (functionPath.node.params.some((param) => param === path.node)) {
+            return;
+          }
+        }
+
+        if (!jsxElementPath.scope.hasBinding(path.node.name)) return;
 
         idNames.add(path.node.name);
       },
@@ -171,12 +185,13 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
       programBodyPath.length - 1
     ] as NodePath<t.VariableDeclaration>;
 
-    const visitor = callExpressionVisitor(options, isReact);
+    const visitor = callExpressionVisitor(options, isReact, true);
 
     const callSitePath = originalComponentPath
       .get('declarations')[0]!
       .get('init') as NodePath<t.CallExpression>;
 
+    callSitePath.scope.crawl();
     visitor(callSitePath, new Map());
   };
 };

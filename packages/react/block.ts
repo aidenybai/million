@@ -13,11 +13,12 @@ import type { Options, MillionProps } from '../types';
 
 export const block = <P extends MillionProps>(
   fn: ComponentType<P> | null,
-  { block: compiledBlock, shouldUpdate, svg, original }: Options = {},
+  { block: compiledBlock, shouldUpdate, svg, as }: Options = {},
 ) => {
   const block = fn
     ? createBlock(fn as any, unwrap, shouldUpdate, svg)
     : compiledBlock;
+  const defaultType = svg ? SVG_RENDER_SCOPE : RENDER_SCOPE;
 
   const MillionBlock = <P extends MillionProps>(props: P) => {
     const ref = useRef<HTMLElement>(null);
@@ -41,9 +42,7 @@ export const block = <P extends MillionProps>(
     }, []);
 
     const marker = useMemo(() => {
-      return createElement(svg ? SVG_RENDER_SCOPE : RENDER_SCOPE, {
-        ref,
-      });
+      return createElement(as ?? defaultType, { ref });
     }, []);
 
     const vnode = createElement(
@@ -60,7 +59,5 @@ export const block = <P extends MillionProps>(
     MapSet$.call(REGISTRY, MillionBlock, block);
   }
 
-  const hoc = MillionBlock<P>;
-  (hoc as any).original = original;
-  return hoc;
+  return MillionBlock<P>;
 };
