@@ -1,11 +1,27 @@
-import { render, Fragment } from 'preact';
-import { RENDER_SCOPE } from '../react/constants';
+import { render, Fragment, isValidElement } from 'preact';
+import { RENDER_SCOPE } from './constants';
 import type {
   VNode as PreactNode,
   ComponentChild,
+  ComponentProps,
   ComponentChildren,
 } from 'preact';
 import type { VNode } from '../million';
+
+export const processProps = (props: ComponentProps<any>) => {
+  const processedProps: ComponentProps<any> = {};
+
+  for (const key in props) {
+    const value = props[key];
+    if (isValidElement(value)) {
+      processedProps[key] = renderPreactScope(value);
+      continue;
+    }
+    processedProps[key] = props[key];
+  }
+
+  return processedProps;
+};
 
 export const renderPreactScope = (vnode: PreactNode) => {
   return (el: HTMLElement | null) => {

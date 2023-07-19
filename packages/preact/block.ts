@@ -7,9 +7,8 @@ import {
 } from '../million/block';
 import { Map$, MapGet$, MapHas$, MapSet$ } from '../million/constants';
 import { queueMicrotask$ } from '../million/dom';
-import { Effect, RENDER_SCOPE } from '../react/constants';
-import { processProps } from '../react/utils';
-import { unwrap } from './utils';
+import { Effect, RENDER_SCOPE } from './constants';
+import { unwrap, processProps } from './utils';
 import type { MillionProps, Options } from '../types';
 import type { Props } from '../million';
 import type { ComponentType, VNode } from 'preact';
