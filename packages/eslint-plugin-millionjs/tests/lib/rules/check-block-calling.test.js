@@ -10,7 +10,6 @@
 
 const RuleTester = require('eslint').RuleTester;
 const rule = require('../../../lib/rules/check-block-calling');
-require('/Users/drex/Desktop/OpenSource/drex-million/packages/eslint-plugin-millionjs/node_modules/@typescript-eslint/parser/dist/index')
 const parsers = require('../helpers/parsers');
 
 const parserOptions = {
