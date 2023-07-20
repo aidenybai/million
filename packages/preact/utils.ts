@@ -22,11 +22,7 @@ export const unwrap = (vnode: JSX.Element): VNode => {
   }
   const type = vnode.type;
   if (typeof type === 'function') {
-<<<<<<< HEAD
     return unwrap(type(vnode.props ?? {}));
-=======
-    return unwrap((type as any)(vnode.props ?? {}));
->>>>>>> main
   }
   if (typeof type === 'object' && '$' in type) return type;
   
