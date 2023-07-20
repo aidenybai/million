@@ -9,7 +9,29 @@ This rule aims to...
 Examples of **incorrect** code for this rule:
 
 ```js
-<div {...props} />
+ const Item = () => {}
+const App = block((props) => {
+    return (
+        <>
+            <Item {...props} />
+        </>
+    )
+})
+
+```
+
+Examples of **correct** code for this rule:
+
+```js
+const Item = block(() => {})
+
+const App = (props) => {
+    return (
+        <>
+            <Item {...props} />
+        </>
+    )
+}
 ```
 
 ## Further Reading

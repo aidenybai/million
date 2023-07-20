@@ -45,7 +45,8 @@
     "eslint": ">=6"
   },
   "engines": {
-    "node": "14.x || >= 18"
+    "node": "v16.20.0",
+    "pnpm":"8.6.9"
   },
   "directories": {
     "doc": "docs",
