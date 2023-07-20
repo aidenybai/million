@@ -11,7 +11,7 @@ import { Effect, RENDER_SCOPE } from '../react/constants';
 import { processProps } from '../react/utils';
 import { unwrap } from './utils';
 import type { MillionProps, Options } from '../types';
-import type { ComponentType, VNode } from 'preact';
+import type { VNode } from 'preact';
 
 export const REGISTRY = new Map$<
   (props: MillionProps) => VNode,

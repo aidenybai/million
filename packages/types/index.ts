@@ -1,5 +1,5 @@
 import type { block as createBlock } from '../million';
-import type { ComponentType, ReactNode } from 'react';
+import type { ComponentType } from 'react';
 
 export type MillionProps = Record<string, any>;
 

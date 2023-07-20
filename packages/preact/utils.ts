@@ -2,8 +2,6 @@ import { render, Fragment } from 'preact';
 import { RENDER_SCOPE } from '../react/constants';
 import type {
   VNode as PreactNode,
-  ComponentChild,
-  ComponentChildren,
 } from 'preact';
 import type { VNode } from '../million';
 
