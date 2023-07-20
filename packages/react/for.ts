@@ -73,21 +73,8 @@ const createChildren = <T>(
         currentCache.block = MapGet$.call(REGISTRY, vnode.type)!;
       }
       children[i] = currentCache.block!(vnode.props);
-<<<<<<< HEAD
-    } else {
-      const block = createBlock((props?: MillionProps) => props?.scope);
-      const currentBlock = (props: MillionProps) => {
-        return block(
-          {
-            scope: renderReactScope(createElement(vnode.type, props)),
-          },
-          vnode.key.toString(),
-        );
-      };
-=======
       continue;
     }
->>>>>>> main
 
     if (typeof vnode.type === 'function' && 'callable' in vnode.type) {
       const puppetComponent = vnode.type(vnode.props);
@@ -100,13 +87,13 @@ const createChildren = <T>(
       }
     }
 
-    const block = createBlock((props?: Props) => props?.scope);
-    const currentBlock = (props: Props) => {
+    const block = createBlock((props?: MillionProps) => props?.scope);
+    const currentBlock = (props: MillionProps) => {
       return block(
         {
           scope: renderReactScope(createElement(vnode.type, props)),
         },
-        vnode.key,
+        vnode.key.toString(),
       );
     };
 
