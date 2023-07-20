@@ -18,7 +18,7 @@ export class ArrayBlock extends AbstractBlock {
     /**/
   }
   p(fragment: ArrayBlock) {
-    const oldChildren = this.b;
+    const oldChildren: (AbstractBlock | null)[] = this.b;
     const newChildren = fragment.b;
     const oldChildrenLength = oldChildren.length;
     const newChildrenLength = newChildren.length;

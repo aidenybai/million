@@ -33,6 +33,7 @@
     "react-lag-radar": "^1.0.0",
     "react-markdown": "^8.0.6",
     "react-parallax-tilt": "^1.7.110",
+    "react-tweet": "^3.0.3",
     "tailwindcss": "^3.2.7"
   },
   "devDependencies": {

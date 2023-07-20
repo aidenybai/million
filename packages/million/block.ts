@@ -15,6 +15,7 @@ import {
   childAt,
   SVG_TEMPLATE,
   HTM_TEMPLATE,
+  replaceChild$,
 } from './dom';
 import { renderToTemplate } from './template';
 import { AbstractBlock } from './types';
@@ -134,7 +135,7 @@ export class Block extends AbstractBlock {
 
         if (edit.t & ChildFlag) {
           if (value instanceof AbstractBlock) {
-            value.m(el);
+            value.m(el, childAt(el, edit.i!));
             continue;
           }
           if (!el[TEXT_NODE_CACHE]) el[TEXT_NODE_CACHE] = new Array(l);
@@ -148,9 +149,8 @@ export class Block extends AbstractBlock {
           // insertText() on mount, setText() on patch
           el[TEXT_NODE_CACHE][k] = insertText(
             el,
-            value === null || value === undefined || value === false
-              ? ''
-              : String(value),
+            // eslint-disable-next-line eqeqeq
+            value == null || value === false ? '' : String(value),
             edit.i!,
           );
         } else if (edit.t & EventFlag) {
@@ -230,14 +230,21 @@ export class Block extends AbstractBlock {
             continue;
           }
           if (typeof newValue === 'function') {
-            newValue(el[TEXT_NODE_CACHE][k]);
+            const scopeEl = el[TEXT_NODE_CACHE][k];
+            if ('unstable' in newValue && oldValue !== newValue) {
+              const newScopeEl = newValue(null);
+              el[TEXT_NODE_CACHE][k] = newScopeEl;
+              replaceChild$.call(el, newScopeEl, scopeEl);
+            } else {
+              newValue(scopeEl);
+            }
+
             continue;
           }
           setText(
             el[TEXT_NODE_CACHE][k],
-            newValue === null || newValue === undefined || newValue === false
-              ? ''
-              : String(newValue),
+            // eslint-disable-next-line eqeqeq
+            newValue == null || newValue === false ? '' : String(newValue),
           );
         } else if (edit.t & AttributeFlag) {
           setAttribute(el, edit.n!, newValue);
