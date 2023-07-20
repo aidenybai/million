@@ -1,19 +1,22 @@
----
-name: Feature request
-about: Suggest an idea for this project
-title: 'feat: '
-labels: enhancement
----
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
-
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
-
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
-
-**Additional context**
-Add any other context or screenshots about the feature request here.
-
-Please ensure to provide a reproduction. See why [Reproductions are required](https://antfu.me/posts/why-reproductions-are-required)
+name: "🚀 Feature Request"
+description: Suggest a Feature or an Improvement
+labels: ["pending triage"]
+body:
+  - type: markdown
+    attributes:
+      value: Thank you for taking the time to fill out this feature request!
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: Describe the feature
+      description: A clear and concise description of what you think would be a helpful addition, including the possible use cases and alternatives you have considered. If you have a working prototype or module that implements it, please include a link.
+      placeholder: Feature description
+    validations:
+      required: true
+  - type: checkboxes
+    id: additional-info
+    attributes:
+      label: Additional information
+      description: Additional information that helps us decide how to proceed.
+      options:
+        - label: Would you be willing to help implement this feature?
