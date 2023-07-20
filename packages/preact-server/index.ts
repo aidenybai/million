@@ -10,7 +10,7 @@ export { renderPreactScope } from '../preact/utils';
 let millionModule: typeof MillionModule | undefined;
 
 export const block =  <P extends MillionProps>(Component: ComponentType<P>) => {
-  let blockFactory: ((props: P) => VNode<P>) | null;;
+  let blockFactory: ((props: P) => VNode<P>) | null;
   function MillionBlockLoader(props: ComponentProps<P>) {
     useEffect(() => {
       const importSource = async () => {
