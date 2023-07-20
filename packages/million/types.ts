@@ -21,6 +21,10 @@ export type VNode =
 export interface VElement {
   type: string;
   props: MillionProps & { children?: (VNode | Hole)[] };
+  // Note: VElement is not supposed to accept number, however,
+  // to preserve type compatibility with React, we accept a number, but that gets converted to a string
+  // whenever it gets converted to a block
+  key?: string | number;
 }
 
 export interface Hole {

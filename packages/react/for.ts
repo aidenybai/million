@@ -74,7 +74,7 @@ const createChildren = <T>(
           {
             scope: renderReactScope(createElement(vnode.type, props)),
           },
-          vnode.key,
+          vnode.key.toString(),
         );
       };
 

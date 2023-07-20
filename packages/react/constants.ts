@@ -1,8 +1,5 @@
 import { useEffect } from 'react';
-<<<<<<< HEAD
-=======
 import type { ComponentType, FC } from 'react';
->>>>>>> main
 
 export const RENDER_SCOPE = 'slot';
 export const SVG_RENDER_SCOPE = 'g';
