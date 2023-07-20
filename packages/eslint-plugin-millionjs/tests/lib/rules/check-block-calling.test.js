@@ -1,5 +1,5 @@
 /**
- * @fileoverview Tests for check-block-declaration
+ * @fileoverview Tests for check-block-calling
  */
 
 'use strict';
@@ -9,8 +9,8 @@
 // -----------------------------------------------------------------------------
 
 const RuleTester = require('eslint').RuleTester;
-const rule = require('../../../lib/rules/check-block-declaration');
-
+const rule = require('../../../lib/rules/check-block-calling');
+require('/Users/drex/Desktop/OpenSource/drex-million/packages/eslint-plugin-millionjs/node_modules/@typescript-eslint/parser/dist/index')
 const parsers = require('../helpers/parsers');
 
 const parserOptions = {
@@ -27,38 +27,21 @@ const parserOptions = {
 
 const ruleTester = new RuleTester({ parserOptions });
 const expectedError =  {
-    message: "block must be used in a variable declaration.",
+    message: "Found unsupported argument for block. Make sure blocks consume a reference to a component function or the direct declaration.",
     type: "CallExpression",
 }
 
 ruleTester.run('check-block-declaration', rule, {
   valid: parsers.all([
     {
-        code: "const Block = block(() => <div />);",
+        code: "const GoodBlock = block(App)",
     },
-    {
-        code: "const Block = block(() => { return <div />; });",
-    },
-    {
-        code: "const Block = () => { return <div />; };",
-    },
-   
-   
   ]),
 
   invalid: parsers.all([
     {
-        code: "block(() => <div />);",
+        code: "const BadBlock = block(<Component />);",
         errors: [expectedError],
     },
-    {
-        code: "block(() => { return <div />; });",
-        errors: [expectedError],
-    },
-    {
-        code: "console.log(block(() => <div />));",
-        errors: [expectedError],
-    },
-   
   ]),
 });
