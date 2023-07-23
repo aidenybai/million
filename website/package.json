@@ -8,7 +8,7 @@
     "lint:fix": "pnpm lint --fix"
   },
   "dependencies": {
-    "@algora/sdk": "^0.1.1",
+    "@algora/sdk": "^0.1.2",
     "@babel/parser": "^7.21.9",
     "@babel/traverse": "^7.21.5",
     "@codesandbox/sandpack-react": "^2.6.7",

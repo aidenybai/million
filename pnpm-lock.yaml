@@ -210,8 +210,8 @@ importers:
   website:
     dependencies:
       '@algora/sdk':
-        specifier: ^0.1.1
-        version: 0.1.1
+        specifier: ^0.1.2
+        version: 0.1.2
       '@babel/parser':
         specifier: ^7.21.9
         version: 7.21.9
@@ -315,8 +315,8 @@ importers:
 
 packages:
 
-  /@algora/sdk@0.1.1:
-    resolution: {integrity: sha512-xEq+uCsVfqf03j5o41vB2bUlSGEIUqE54glAuTZe7ZI1Fw3I9I80dncN0jhB8Kz1SiPG5wt7sgfxncReDZ1KMQ==}
+  /@algora/sdk@0.1.2:
+    resolution: {integrity: sha512-NgApYU88IaS8PSgTBV9PsqRWU+y6lNNgCV9vav1wTJVP/UdX9ToTIY7dNP+glGKQd+7MzAq3QCMLHCZEhta8GQ==}
     dependencies:
       '@trpc/client': 10.35.0(@trpc/server@10.35.0)
       '@trpc/server': 10.35.0
