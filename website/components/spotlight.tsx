@@ -24,7 +24,7 @@ export function Spotlight(props: {
   const style = { maskImage, WebkitMaskImage: maskImage };
 
   return (
-    <div onMouseMove={onMouseMove} className="relative">
+    <div onMouseMove={onMouseMove} className="relative h-full">
       <div className="pointer-events-none">
         <div className="absolute inset-0 z-0 opacity-0 transition-opacity [mask-image:linear-gradient(black,transparent)] group-hover:opacity-100" />
         <motion.div

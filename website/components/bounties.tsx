@@ -61,7 +61,7 @@ function BountyCard(props: { bounty: Bounty }) {
       className="block group relative h-full rounded-lg border border-zinc-400/50 dark:border-purple-500/50 bg-gradient-to-br from-zinc-300/30 via-zinc-300/40 to-zinc-300/50 dark:from-purple-600/20 dark:via-purple-600/30 dark:to-purple-600/40 md:gap-8 transition-colors hover:border-zinc-400 hover:dark:border-purple-500 hover:bg-zinc-300/10 hover:dark:bg-zinc-600/5 !no-underline"
     >
       <Spotlight className="bg-zinc-300/30 dark:bg-purple-600/20">
-        <div className="h-full p-4">
+        <div className="p-4">
           <div className="text-2xl font-bold text-green-500 group-hover:text-green-600 dark:text-green-400 dark:group-hover:text-green-300 transition-colors">
             {props.bounty.reward_formatted}
           </div>
