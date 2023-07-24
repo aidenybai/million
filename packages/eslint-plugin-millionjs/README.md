@@ -59,9 +59,19 @@ module.exports = {
 
 `eslint-plugin-millionjs` provides the following rules:
 
-- `millionjs/no-unused-components`: This rule helps identify unused components in your MillionJS project, ensuring you remove any unnecessary components that might increase the bundle size.
+- `millionjs/check-block-declaration`: This rule enforces a specific pattern when using the block() function from the Million.js library.
 
-- `millionjs/strict-import-order`: This rule enforces a strict import order within your MillionJS application, ensuring a consistent and organized import structure.
+- `millionjs/check-block-calling`: This rule enforces a specific pattern when calling a component that has been wrapped with the block() function from the Million.js library.
+
+- `millionjs/avoid-array-map-in-block`: This rule aims to enforce a specific best practice when using the block() function in conjunction with array mapping inside a component which is to use the For or the map function.
+
+- `millionjs/avoid-spread-attributes`: This rule aims to enforce a specific best practice when using spread attributes ({...props}) in JSX elements.
+
+- `millionjs/validate-block-import`: This rule is designed to validate and enforce proper imports of the block function from the million/react module.
+
+- `millionjs/ensure-complier-is-being-used`: This rule is designed to ensure that the block function from Million.js is used with the appropriate compiler setup. The block function requires the million compiler setup to work correctly, and using it without the proper configuration can lead to unexpected behavior and issues.
+
+- `millionjs/avoid-non-deterministic-returns`: This rule enforces the use of deterministic return statements in components or functions wrapped with the block function in Million.js.
 
 ## Running ESLint
 
