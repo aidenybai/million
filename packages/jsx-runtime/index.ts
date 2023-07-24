@@ -1,8 +1,9 @@
-import type { Props, VNode } from '../million';
+import { MillionProps } from 'packages/types';
+import type { VNode } from '../million';
 
 export const h = (
   type: string,
-  props: Props | null = {},
+  props: MillionProps | null = {},
   ...children: VNode[]
 ): VNode => {
   if (props === null) props = {};

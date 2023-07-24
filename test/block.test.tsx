@@ -2,9 +2,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { describe, it } from 'vitest';
 import { block as createBlock } from '../packages/million';
-import type { Props, VElement } from '../packages/million';
+import type { VElement } from '../packages/million';
+import { MillionProps } from 'packages/types';
 
-const fn = (props?: Props): VElement => (
+const fn = (props?: MillionProps): VElement => (
   <div>
     <h1>Hello</h1> World
     <p title="baz" className={props?.bar}>

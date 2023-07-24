@@ -1,13 +1,12 @@
 import { createElement, memo, useEffect, useRef } from 'react';
 import { arrayMount$, arrayPatch$ } from '../million/array';
-import { mapArray, block as createBlock } from '../million';
+import { mapArray, block as createBlock, Block, VElement } from '../million';
 import { MapSet$, MapHas$, MapGet$ } from '../million/constants';
 import { queueMicrotask$ } from '../million/dom';
 import { renderReactScope } from './utils';
 import { RENDER_SCOPE, REGISTRY, SVG_RENDER_SCOPE } from './constants';
-import type { Props } from '../million';
 import type { MutableRefObject } from 'react';
-import type { ArrayCache, MillionArrayProps } from '../types';
+import type { ArrayCache, MillionArrayProps, MillionProps } from '../types';
 
 const MillionArray = <T>({
   each,
@@ -49,17 +48,17 @@ const MillionArray = <T>({
 //https://github.com/DefinitelyTyped/DefinitelyTyped/issues/37087#issuecomment-542793243
 const typedMemo: <T>(
   component: T,
-  equal?: (oldProps: any, newProps: any) => boolean,
+  equal?: (oldProps: MillionProps, newProps: MillionProps) => boolean,
 ) => T = memo;
 
 export const For = typedMemo(MillionArray);
 
 const createChildren = <T>(
   each: T[],
-  getComponent: any,
+  getComponent: (value: T, i: number) => VElement,
   cache: MutableRefObject<ArrayCache<T>>,
   memo?: boolean,
-) => {
+): Block[] => {
   const children = Array(each.length);
   const currentCache = cache.current;
   for (let i = 0, l = each.length; i < l; ++i) {
@@ -88,13 +87,13 @@ const createChildren = <T>(
       }
     }
 
-    const block = createBlock((props?: Props) => props?.scope);
-    const currentBlock = (props: Props) => {
+    const block = createBlock((props?: MillionProps) => props?.scope);
+    const currentBlock = (props: MillionProps) => {
       return block(
         {
           scope: renderReactScope(createElement(vnode.type, props)),
         },
-        vnode.key,
+        vnode.key.toString(),
       );
     };
 
