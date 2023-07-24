@@ -95,49 +95,40 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
       );
     }
 
-    // const jsxElementParent = jsxElementPath.parent;
+    const jsxElementParent = jsxElementPath.parent;
 
-    // if (t.isJSXElement(jsxElementParent)) {
-    //   const type = jsxElementParent.openingElement.name;
+    if (t.isJSXElement(jsxElementParent)) {
+      const type = jsxElementParent.openingElement.name;
 
-    //   trimJsxChildren(jsxElementParent);
-    //   if (
-    //     t.isJSXIdentifier(type) &&
-    //     type.name.toLowerCase() === type.name &&
-    //     jsxElementParent.children.length === 1
-    //   ) {
-    //     const attributes = jsxElement.openingElement.attributes;
+      trimJsxChildren(jsxElementParent);
+      if (
+        t.isJSXIdentifier(type) &&
+        type.name.toLowerCase() === type.name &&
+        jsxElementParent.children.length === 1
+      ) {
+        if (
+          !jsxElement.openingElement.attributes.some((attr) => {
+            if (t.isJSXAttribute(attr) && attr.name.name === 'as') {
+              return true;
+            }
+            return false;
+          })
+        ) {
+          const jsxElementClone = t.cloneNode(jsxElement);
 
-    //     if (
-    //       !attributes.some((attr) => {
-    //         if (t.isJSXAttribute(attr) && attr.name.name === 'as') {
-    //           return true;
-    //         }
-    //         return false;
-    //       })
-    //     ) {
-    //       const componentBodyPath = jsxElementPath.find(
-    //         (path) =>
-    //           path.isFunctionExpression() ||
-    //           path.isArrowFunctionExpression() ||
-    //           path.isFunctionDeclaration(),
-    //       );
+          jsxElementClone.openingElement.attributes =
+            removeDuplicateJSXAttributes([
+              ...jsxElementClone.openingElement.attributes,
+              ...jsxElementParent.openingElement.attributes,
+              t.jsxAttribute(t.jsxIdentifier('as'), t.stringLiteral(type.name)),
+            ]);
 
-    //       componentBodyPath?.traverse({});
-    //       componentBodyPath?.scope.crawl();
+          jsxElementPath.parent = jsxElementClone;
 
-    //       attributes.unshift(
-    //         ...jsxElementParent.openingElement.attributes,
-    //         t.jsxAttribute(t.jsxIdentifier('as'), t.stringLiteral(type.name)),
-    //       );
-    //       removeDuplicateJSXAttributes(attributes);
-
-    //       jsxElementPath.parentPath.replaceWith(jsxElement);
-
-    //       return jsxElementPath.skip();
-    //     }
-    //   }
-    // }
+          return;
+        }
+      }
+    }
 
     const callbackComponentId =
       programPath.scope.generateUidIdentifier('callback$');
