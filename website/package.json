@@ -8,10 +8,12 @@
     "lint:fix": "pnpm lint --fix"
   },
   "dependencies": {
+    "@algora/sdk": "^0.1.2",
     "@babel/parser": "^7.21.9",
     "@babel/traverse": "^7.21.5",
     "@codesandbox/sandpack-react": "^2.6.7",
     "@headlessui/react": "^1.7.13",
+    "@tailwindcss/line-clamp": "^0.4.4",
     "@vercel/analytics": "^1.0.0",
     "@vercel/og": "^0.5.6",
     "autoprefixer": "^10.4.13",

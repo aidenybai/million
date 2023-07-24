@@ -209,6 +209,9 @@ importers:
 
   website:
     dependencies:
+      '@algora/sdk':
+        specifier: ^0.1.2
+        version: 0.1.2
       '@babel/parser':
         specifier: ^7.21.9
         version: 7.21.9
@@ -221,6 +224,9 @@ importers:
       '@headlessui/react':
         specifier: ^1.7.13
         version: 1.7.13(react-dom@18.2.0)(react@18.2.0)
+      '@tailwindcss/line-clamp':
+        specifier: ^0.4.4
+        version: 0.4.4(tailwindcss@3.2.7)
       '@vercel/analytics':
         specifier: ^1.0.0
         version: 1.0.0(react@18.2.0)
@@ -265,7 +271,7 @@ importers:
         version: 5.2.0(chart.js@4.2.1)(react@18.2.0)
       react-countup:
         specifier: ^6.4.1
-        version: 6.4.1(@babel/core@7.21.4)(@types/babel__core@7.20.0)(react@18.2.0)(rollup@2.79.1)
+        version: 6.4.1(@babel/core@7.21.4)(react@18.2.0)
       react-device-detect:
         specifier: ^2.2.3
         version: 2.2.3(react-dom@18.2.0)(react@18.2.0)
@@ -308,6 +314,14 @@ importers:
         version: 4.9.5
 
 packages:
+
+  /@algora/sdk@0.1.2:
+    resolution: {integrity: sha512-NgApYU88IaS8PSgTBV9PsqRWU+y6lNNgCV9vav1wTJVP/UdX9ToTIY7dNP+glGKQd+7MzAq3QCMLHCZEhta8GQ==}
+    dependencies:
+      '@trpc/client': 10.35.0(@trpc/server@10.35.0)
+      '@trpc/server': 10.35.0
+      superjson: 1.13.1
+    dev: false
 
   /@ampproject/remapping@2.2.0:
     resolution: {integrity: sha512-qRmjj8nj9qmLTQXXmaR1cck3UXSRMPrbsLJAasZpF+t3riI71BXed5ebIOYwQntykeZuhjsdweEc9BxH5Jc26w==}
@@ -1549,7 +1563,7 @@ packages:
       slash: 3.0.0
     dev: true
 
-  /@rollup/plugin-babel@6.0.3(@babel/core@7.21.4)(@types/babel__core@7.20.0)(rollup@2.79.1):
+  /@rollup/plugin-babel@6.0.3(@babel/core@7.21.4):
     resolution: {integrity: sha512-fKImZKppa1A/gX73eg4JGo+8kQr/q1HBQaCGKECZ0v4YBBv3lFqi14+7xyApECzvkLTHCifx+7ntcrvtBIRcpg==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -1564,9 +1578,7 @@ packages:
     dependencies:
       '@babel/core': 7.21.4
       '@babel/helper-module-imports': 7.22.5
-      '@rollup/pluginutils': 5.0.2(rollup@2.79.1)
-      '@types/babel__core': 7.20.0
-      rollup: 2.79.1
+      '@rollup/pluginutils': 5.0.2
     dev: false
 
   /@rollup/plugin-commonjs@22.0.2(rollup@2.79.1):
@@ -1639,7 +1651,7 @@ packages:
       picomatch: 2.3.1
     dev: true
 
-  /@rollup/pluginutils@5.0.2(rollup@2.79.1):
+  /@rollup/pluginutils@5.0.2:
     resolution: {integrity: sha512-pTd9rIsP92h+B6wWwFbW8RkZv4hiR/xKsqre4SIuAOaOEQRxi0lqLke9k2/7WegC85GgUs9pjmOjCUi3In4vwA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -1651,7 +1663,6 @@ packages:
       '@types/estree': 1.0.0
       estree-walker: 2.0.2
       picomatch: 2.3.1
-      rollup: 2.79.1
     dev: false
 
   /@rushstack/eslint-patch@1.1.1:
@@ -1677,10 +1688,30 @@ packages:
       tslib: 2.5.0
     dev: false
 
+  /@tailwindcss/line-clamp@0.4.4(tailwindcss@3.2.7):
+    resolution: {integrity: sha512-5U6SY5z8N42VtrCrKlsTAA35gy2VSyYtHWCsg1H87NU1SXnEfekTVlrga9fzUDrrHcGi2Lb5KenUWb4lRQT5/g==}
+    peerDependencies:
+      tailwindcss: '>=2.0.0 || >=3.0.0 || >=3.0.0-alpha.1'
+    dependencies:
+      tailwindcss: 3.2.7(postcss@8.4.21)
+    dev: false
+
   /@tootallnate/once@2.0.0:
     resolution: {integrity: sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==}
     engines: {node: '>= 10'}
     dev: true
+
+  /@trpc/client@10.35.0(@trpc/server@10.35.0):
+    resolution: {integrity: sha512-FyVNQGLLsNourpYq7bojvvvpM63woCPL9c+lJo9x1Yheop5fng2GEyiVcVjCmBNk5tVARHjG9bTG1UeNF5t8OQ==}
+    peerDependencies:
+      '@trpc/server': 10.35.0
+    dependencies:
+      '@trpc/server': 10.35.0
+    dev: false
+
+  /@trpc/server@10.35.0:
+    resolution: {integrity: sha512-UntbE9gG+kB2nEwuJ0hw7AmQuRWw67voKaVBPBA7Ow6+aGZc00gva7015Ey5BT7Qf1wq7xJMLUdgw4QiVU+VpQ==}
+    dev: false
 
   /@types/acorn@4.0.6:
     resolution: {integrity: sha512-veQTnWP+1D/xbxVrPC3zHnCZRjSrKfhbMUlEA43iMZLu7EsnTtkJklIuwrCPbOi8YkvDQAiW05VQQFvvz9oieQ==}
@@ -1700,11 +1731,13 @@ packages:
       '@types/babel__generator': 7.6.4
       '@types/babel__template': 7.4.1
       '@types/babel__traverse': 7.18.3
+    dev: true
 
   /@types/babel__generator@7.6.4:
     resolution: {integrity: sha512-tFkciB9j2K755yrTALxD44McOrk+gfpIpvC3sxHjRawj6PfnQxrse4Clq5y/Rq+G3mrBurMax/lG8Qn2t9mSsg==}
     dependencies:
       '@babel/types': 7.21.2
+    dev: true
 
   /@types/babel__helper-module-imports@7.18.0:
     resolution: {integrity: sha512-bXrjmO0EhInafHtFIaimws2rDf8Sp0E6T3cstzSL4lUAPtzZ2GhoV48U6n4IHyBIBsd88r4JIw2UPTqlyWwXcg==}
@@ -1724,11 +1757,13 @@ packages:
     dependencies:
       '@babel/parser': 7.21.9
       '@babel/types': 7.21.5
+    dev: true
 
   /@types/babel__traverse@7.18.3:
     resolution: {integrity: sha512-1kbcJ40lLB7MHsj39U4Sh1uTd2E7rLEa79kmDpI6cy+XiXsteB3POdQomoq4FxszMrO3ZYchkhYJw7A2862b3w==}
     dependencies:
       '@babel/types': 7.21.5
+    dev: true
 
   /@types/chai-subset@1.3.3:
     resolution: {integrity: sha512-frBecisrNGz+F4T6bcc+NLeolfiojh5FxW2klu669+8BARtyQv2C/GkNW6FUodVe4BroGMP/wER/YDGc7rEllw==}
@@ -2815,6 +2850,13 @@ packages:
 
   /convert-source-map@1.9.0:
     resolution: {integrity: sha512-ASFBup0Mz1uyiIjANan1jzLQami9z1PoYSZCiiYW2FczPbenXc45FZdBZLzOT+r6+iciuEModtmCti+hjaAk0A==}
+
+  /copy-anything@3.0.5:
+    resolution: {integrity: sha512-yCEafptTtb4bk7GLEQoM8KVJpxAfdBJYaXyzQEgQQQgYrZiDp8SJmGKlYza6CYjEDNstAdNdKA3UuoULlEbS6w==}
+    engines: {node: '>=12.13'}
+    dependencies:
+      is-what: 4.1.15
+    dev: false
 
   /core-js-pure@3.28.0:
     resolution: {integrity: sha512-DSOVleA9/v3LNj/vFxAPfUHttKTzrB2RXhAPvR5TPXn4vrra3Z2ssytvRyt8eruJwAfwAiFADEbrjcRdcvPLQQ==}
@@ -4703,6 +4745,11 @@ packages:
       call-bind: 1.0.2
     dev: true
 
+  /is-what@4.1.15:
+    resolution: {integrity: sha512-uKua1wfy3Yt+YqsD6mTUEa2zSi3G1oPlqTflgaPJ7z63vUGN5pxFpnQfeSLMFnJDEsdvOtkp1rUWkYjB4YfhgA==}
+    engines: {node: '>=12.13'}
+    dev: false
+
   /isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
 
@@ -6405,12 +6452,12 @@ packages:
       react: 18.2.0
     dev: false
 
-  /react-countup@6.4.1(@babel/core@7.21.4)(@types/babel__core@7.20.0)(react@18.2.0)(rollup@2.79.1):
+  /react-countup@6.4.1(@babel/core@7.21.4)(react@18.2.0):
     resolution: {integrity: sha512-FxQ7qaNnnbA+Px9RebOZY4Tbawa1bhgpVPlUqRemZb90mh3f3OqyHVgr1SZqnJgaRxR3uEYqgkszgkDgFVCeEw==}
     peerDependencies:
       react: '>= 16.3.0'
     dependencies:
-      '@rollup/plugin-babel': 6.0.3(@babel/core@7.21.4)(@types/babel__core@7.20.0)(rollup@2.79.1)
+      '@rollup/plugin-babel': 6.0.3(@babel/core@7.21.4)
       countup.js: 2.5.0
       react: 18.2.0
     transitivePeerDependencies:
@@ -6764,6 +6811,7 @@ packages:
     hasBin: true
     optionalDependencies:
       fsevents: 2.3.2
+    dev: true
 
   /run-parallel@1.2.0:
     resolution: {integrity: sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==}
@@ -7119,6 +7167,13 @@ packages:
       '@babel/core': 7.21.4
       client-only: 0.0.1
       react: 18.2.0
+    dev: false
+
+  /superjson@1.13.1:
+    resolution: {integrity: sha512-AVH2eknm9DEd3qvxM4Sq+LTCkSXE2ssfh1t11MHMXyYXFQyQ1HLgVvV+guLTsaQnJU3gnaVo34TohHPulY/wLg==}
+    engines: {node: '>=10'}
+    dependencies:
+      copy-anything: 3.0.5
     dev: false
 
   /supports-color@4.5.0:
