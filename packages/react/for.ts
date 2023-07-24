@@ -31,18 +31,27 @@ const MillionArray = <T>({
     });
   }
 
+  const defaultType = svg ? SVG_RENDER_SCOPE : RENDER_SCOPE;
+  const MillionFor = createElement(as ?? defaultType, { ...rest, ref });
+
+  // const newChildren = createChildren<T>(each, children, cache, memo);
+  // MillionFor.block = mapArray(newChildren);
+
   useEffect(() => {
     if (!ref.current || fragmentRef.current) return;
 
     queueMicrotask$(() => {
       const newChildren = createChildren<T>(each, children, cache, memo);
       fragmentRef.current = mapArray(newChildren);
+      // reevaluate whether this is necessray DONOTMERGE
+      if (!MapHas$.call(REGISTRY, MillionFor)) {
+        MapSet$.call(REGISTRY, MillionFor, fragmentRef.current);
+      }
       arrayMount$.call(fragmentRef.current, ref.current!);
     });
   }, [ref.current]);
 
-  const defaultType = svg ? SVG_RENDER_SCOPE : RENDER_SCOPE;
-  return createElement(as ?? defaultType, { ...rest, ref });
+  return MillionFor;
 };
 
 // Using fix below to add type support to MillionArray

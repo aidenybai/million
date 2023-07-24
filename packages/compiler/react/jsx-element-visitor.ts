@@ -3,6 +3,8 @@ import { collectImportedBindings } from './bindings';
 import {
   createDeopt,
   getValidSpecifiers,
+  handleVisitorError,
+  removeDuplicateJSXAttributes,
   resolveCorrectImportSource,
   resolvePath,
   trimJsxChildren,
@@ -12,10 +14,8 @@ import type { NodePath } from '@babel/core';
 import type { Options } from '../plugin';
 
 export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
-  return (
-    jsxElementPath: NodePath<t.JSXElement>,
-    _blockCache: Map<string, t.Identifier>,
-  ) => {
+  return (jsxElementPath: NodePath<t.JSXElement>, isNested = false) => {
+    if (!isReact) return; // doesn't support Preact yet
     const jsxElement = jsxElementPath.node;
 
     const programPath = jsxElementPath.findParent((path) =>
@@ -95,8 +95,52 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
       );
     }
 
-    const originalComponentId =
-      programPath.scope.generateUidIdentifier('original');
+    // const jsxElementParent = jsxElementPath.parent;
+
+    // if (t.isJSXElement(jsxElementParent)) {
+    //   const type = jsxElementParent.openingElement.name;
+
+    //   trimJsxChildren(jsxElementParent);
+    //   if (
+    //     t.isJSXIdentifier(type) &&
+    //     type.name.toLowerCase() === type.name &&
+    //     jsxElementParent.children.length === 1
+    //   ) {
+    //     const attributes = jsxElement.openingElement.attributes;
+
+    //     if (
+    //       !attributes.some((attr) => {
+    //         if (t.isJSXAttribute(attr) && attr.name.name === 'as') {
+    //           return true;
+    //         }
+    //         return false;
+    //       })
+    //     ) {
+    //       const componentBodyPath = jsxElementPath.find(
+    //         (path) =>
+    //           path.isFunctionExpression() ||
+    //           path.isArrowFunctionExpression() ||
+    //           path.isFunctionDeclaration(),
+    //       );
+
+    //       componentBodyPath?.traverse({});
+    //       componentBodyPath?.scope.crawl();
+
+    //       attributes.unshift(
+    //         ...jsxElementParent.openingElement.attributes,
+    //         t.jsxAttribute(t.jsxIdentifier('as'), t.stringLiteral(type.name)),
+    //       );
+    //       removeDuplicateJSXAttributes(attributes);
+
+    //       jsxElementPath.parentPath.replaceWith(jsxElement);
+
+    //       return jsxElementPath.skip();
+    //     }
+    //   }
+    // }
+
+    const callbackComponentId =
+      programPath.scope.generateUidIdentifier('callback$');
     const blockComponentId = programPath.scope.generateUidIdentifier();
 
     const idNames = new Set<string>();
@@ -122,22 +166,36 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
     jsxElementPath.traverse({
       Identifier(path: NodePath<t.Identifier>) {
         if (programPath.scope.hasBinding(path.node.name)) return;
-        if (
-          path.parentPath.isMemberExpression() ||
-          path.parentPath.isObjectProperty() ||
-          path.parentPath.isObjectMethod() ||
-          path.parentPath.isJSXAttribute() ||
-          path.parentPath.isJSXSpreadAttribute() ||
-          path.parentPath.isJSXOpeningElement() ||
-          path.parentPath.isJSXClosingElement()
-        )
-          return;
+        const targetPath = path.parentPath;
+
+        if (targetPath.isMemberExpression()) {
+          if (!targetPath.node.computed && targetPath.node.object !== path.node)
+            return;
+
+          if (targetPath.parentPath.isCallExpression()) {
+            if (targetPath.parentPath.node.callee !== targetPath.node) return;
+          }
+        }
+
+        if (targetPath.isObjectProperty() && !targetPath.node.computed) {
+          if (targetPath.node.key !== path.node) return;
+        }
 
         if (
-          path.parentPath.isFunctionExpression() ||
-          path.parentPath.isArrowFunctionExpression()
+          targetPath.isObjectMethod() ||
+          targetPath.isJSXAttribute() ||
+          targetPath.isJSXSpreadAttribute() ||
+          targetPath.isJSXOpeningElement() ||
+          targetPath.isJSXClosingElement()
         ) {
-          const functionPath = resolvePath(path.parentPath) as NodePath<
+          return;
+        }
+
+        if (
+          targetPath.isFunctionExpression() ||
+          targetPath.isArrowFunctionExpression()
+        ) {
+          const functionPath = resolvePath(targetPath) as NodePath<
             t.ArrowFunctionExpression | t.FunctionExpression
           >;
 
@@ -157,9 +215,13 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
     // We do a similar extraction process as in the call expression visitor
     const originalComponent = t.variableDeclaration('const', [
       t.variableDeclarator(
-        originalComponentId,
+        callbackComponentId,
         t.arrowFunctionExpression(
-          [t.objectPattern(ids.map((id) => t.objectProperty(id, id)))],
+          [
+            t.objectPattern(
+              ids.map((id) => t.objectProperty(id, id, false, true)),
+            ),
+          ],
           t.isBlockStatement(expression.body)
             ? expression.body
             : t.blockStatement([t.returnStatement(expression.body)]),
@@ -170,7 +232,7 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
     const blockComponent = t.variableDeclaration('const', [
       t.variableDeclarator(
         blockComponentId,
-        t.callExpression(block, [originalComponentId]),
+        t.callExpression(block, [callbackComponentId]),
       ),
     ]);
 
@@ -181,17 +243,23 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
     ]);
 
     const programBodyPath = programPath.get('body');
-    const originalComponentPath = programBodyPath[
-      programBodyPath.length - 1
-    ] as NodePath<t.VariableDeclaration>;
+    const originalComponentPath = programBodyPath[programBodyPath.length - 1];
+
+    if (
+      !originalComponentPath ||
+      !resolvePath(originalComponentPath).isVariableDeclaration()
+    )
+      return;
 
     const visitor = callExpressionVisitor(options, isReact, true);
 
     const callSitePath = originalComponentPath
       .get('declarations')[0]!
-      .get('init') as NodePath<t.CallExpression>;
+      .get('init');
 
-    callSitePath.scope.crawl();
-    visitor(callSitePath, new Map());
+    if (callSitePath.isCallExpression()) {
+      callSitePath.scope.crawl();
+      handleVisitorError(() => visitor(callSitePath, new Map()), options.mute);
+    }
   };
 };
