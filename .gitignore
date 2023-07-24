@@ -11,3 +11,4 @@ coverage
 .next
 .turbo
 .eslintcache
+pnpm-lock.yaml
