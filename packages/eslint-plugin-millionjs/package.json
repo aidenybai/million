@@ -2,7 +2,7 @@
   "name": "eslint-plugin-millionjs",
   "version": "0.0.0-semantically-released",
   "description": "Eslint Plugin Rules for Million Js",
-  "main": "lib/index.js",
+  "main": "lib/rules/index.js",
   "keywords": [
     "eslint",
     "eslintplugin",
@@ -11,7 +11,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint .",
-    "test": "mocha tests --recursive",
+    "test": "npm run unit-test",
     "validate": "npm run lint && npm run test",
     "unit-test": "istanbul cover node_modules/mocha/bin/_mocha tests/lib/**/*.js  tests/index.js",
     "tests": "npm run unit-test"

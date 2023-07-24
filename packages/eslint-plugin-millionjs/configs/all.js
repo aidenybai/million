@@ -2,7 +2,7 @@
 
 const fromEntries = require('object.fromentries');
 
-const allRules = require('../lib');
+const allRules = require('../lib/rules/index');
 
 
 function configureAsError(rules) {

@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 
 const plugin = require('../index');
-const index = require('../lib/rules');
+const index = require('../lib/rules/index');
 
 const ruleFiles = fs.readdirSync(path.resolve(__dirname, '../lib/rules/'))
   .map((f) => path.basename(f, '.js'))
