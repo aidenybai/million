@@ -14,6 +14,10 @@
     {
       "source": "/fork",
       "destination": "https://github.com/aidenybai/hundred"
+    },
+    {
+      "source": "/readme",
+      "destination": "/foundation"
     }
   ]
 }

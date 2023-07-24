@@ -15,9 +15,9 @@
     "type": "page",
     "title": "Blog"
   },
-  "readme": {
+  "foundation": {
     "type": "page",
-    "title": "Readme",
+    "title": "Foundation",
     "theme": {
       "typesetting": "article"
     }
