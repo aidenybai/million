@@ -78,6 +78,9 @@ importers:
       react:
         specifier: ^18.2.0
         version: 18.2.0
+      rollup-plugin-banner2:
+        specifier: ^1.2.2
+        version: 1.2.2
       source-map:
         specifier: ^0.7.4
         version: 0.7.4
@@ -6771,6 +6774,13 @@ packages:
     hasBin: true
     dependencies:
       glob: 7.2.3
+    dev: true
+
+  /rollup-plugin-banner2@1.2.2:
+    resolution: {integrity: sha512-ShlyRFlJfh7fxHT0rkmIxBv+lIWfdvaWcZmra7xAQFGAHHnd7f93zoa0wdDWHrguR9vR+BxWKToabR6DJQHC9g==}
+    engines: {node: '>=12.13.0'}
+    dependencies:
+      magic-string: 0.25.9
     dev: true
 
   /rollup-plugin-dts@4.2.3(rollup@2.79.1)(typescript@4.9.5):

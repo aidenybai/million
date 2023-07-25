@@ -1,4 +1,5 @@
 import { defineBuildConfig } from 'unbuild';
+import banner from 'rollup-plugin-banner2';
 
 export default defineBuildConfig({
   entries: [
@@ -16,6 +17,11 @@ export default defineBuildConfig({
   rollup: {
     emitCJS: true,
     inlineDependencies: true,
+  },
+  hooks: {
+    'rollup:options'(_ctx, options) {
+      options?.plugins?.push(banner(() => `'use client';\n`));
+    },
   },
   externals: ['react', 'react-dom', 'preact', 'million', 'vite', 'esbuild'],
 });
