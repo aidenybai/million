@@ -30,7 +30,6 @@ export const block = <P extends MillionProps>(
           throw new Error('Failed to load Million.js');
         }
       }
-
       return () => {
         blockFactory = null;
       };
