@@ -1,3 +1,5 @@
+'use client';
+
 import { createElement, useEffect, useState } from 'react';
 import { RENDER_SCOPE, SVG_RENDER_SCOPE } from '../react/constants';
 import type { ComponentType } from 'react';
@@ -28,7 +30,6 @@ export const block = <P extends MillionProps>(
           throw new Error('Failed to load Million.js');
         }
       }
-
       return () => {
         blockFactory = null;
       };
@@ -72,7 +73,7 @@ export function For<T>({ each, children, ssr, svg }: MillionArrayProps<T>) {
     if (ssr === false) return null;
     return createElement(
       svg ? SVG_RENDER_SCOPE : RENDER_SCOPE,
-      null,
+      { suppressHydrationWarning: true },
       ...each.map(children),
     );
   }

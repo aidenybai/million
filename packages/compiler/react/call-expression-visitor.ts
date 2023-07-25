@@ -116,13 +116,13 @@ export const callExpressionVisitor = (
 
     if (!validSpecifiers.includes('block')) return;
 
-    const RawComponent = callSite.arguments[0];
+    const RawComponent: any = callSite.arguments[0];
 
-    // If we find a duplicate block call, we replace it with the cached block.
-    if (t.isIdentifier(RawComponent) && blockCache.has(RawComponent.name)) {
-      callSitePath.replaceWith(blockCache.get(RawComponent.name)!);
-      return;
-    }
+    // // If we find a duplicate block call, we replace it with the cached block.
+    // if (t.isIdentifier(RawComponent) && blockCache.has(RawComponent.name)) {
+    //   callSitePath.replaceWith(blockCache.get(RawComponent.name)!);
+    //   return;
+    // }
 
     /**
      * Replaces `export default block(Component)` with
@@ -201,10 +201,19 @@ export const callExpressionVisitor = (
       !t.isFunctionExpression(RawComponent) &&
       !t.isArrowFunctionExpression(RawComponent)
     ) {
+      // if (
+      //   t.isJSXElement(RawComponent) &&
+      //   t.isJSXIdentifier(RawComponent.openingElement.name)
+      // ) {
+      //   RawComponent = t.identifier(RawComponent.openingElement.name.name);
+      //   callSite.arguments[0] = RawComponent;
+      //   callSitePath.scope.crawl();
+      // } else {
       throw createDeopt(
         'Found unsupported argument for block. Make sure blocks consume a reference to a component function or the direct declaration.',
         callSitePath,
       );
+      // }
     }
 
     callSitePath.scope.crawl();
