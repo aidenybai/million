@@ -14,7 +14,7 @@ import type { NodePath } from '@babel/core';
 import type { Options } from '../plugin';
 
 export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
-  return (jsxElementPath: NodePath<t.JSXElement>, isNested = false) => {
+  return (jsxElementPath: NodePath<t.JSXElement>) => {
     if (!isReact) return; // doesn't support Preact yet
     const jsxElement = jsxElementPath.node;
 

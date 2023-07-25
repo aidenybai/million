@@ -23,7 +23,11 @@ export const processProps = (props: ComponentProps<any>) => {
 
 export const renderReactScope = (vnode: ReactNode, unstable?: boolean) => {
   if (typeof window === 'undefined') {
-    return createElement(RENDER_SCOPE, null, vnode);
+    return createElement(
+      RENDER_SCOPE,
+      { suppressHydrationWarning: true },
+      vnode,
+    );
   }
 
   if (

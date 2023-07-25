@@ -1,3 +1,5 @@
+'use client';
+
 import { createElement, useEffect, useState } from 'react';
 import { RENDER_SCOPE, SVG_RENDER_SCOPE } from '../react/constants';
 import type { ComponentType } from 'react';
@@ -69,14 +71,16 @@ export function For<T>({ each, children, ssr, svg }: MillionArrayProps<T>) {
   }, []);
 
   if (!ready || !millionModule) {
+    console.log('ssr', each);
     if (ssr === false) return null;
     return createElement(
       svg ? SVG_RENDER_SCOPE : RENDER_SCOPE,
-      null,
+      { suppressHydrationWarning: true },
       ...each.map(children),
     );
   }
 
+  console.log('csr', each);
   return createElement(millionModule.For, {
     each,
     children,

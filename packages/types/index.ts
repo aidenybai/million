@@ -26,7 +26,7 @@ export interface MillionArrayProps<T> {
 export interface ArrayCache<T> {
   each: T[] | null;
   children: T[] | null;
-  mounted?: boolean;
+  mounted?: boolean | null;
   block?: ReturnType<typeof createBlock>;
 }
 

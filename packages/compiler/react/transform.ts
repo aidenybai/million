@@ -484,7 +484,7 @@ export const transformJSX = (
   },
   SHARED: Shared,
 ) => {
-  const { callSitePath, imports, unstable, isReact } = SHARED;
+  const { imports, unstable, isReact } = SHARED;
 
   /**
    * Populates `dynamics` with a new entry.
@@ -637,7 +637,7 @@ export const transformJSX = (
           }
         }
       }
-      handleVisitorError(() => visitor(jsxPath, true), options.mute);
+      handleVisitorError(() => visitor(jsxPath), options.mute);
       jsxPath.scope.crawl();
     }
 

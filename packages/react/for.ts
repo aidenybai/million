@@ -22,6 +22,7 @@ const MillionArray = <T>({
   const cache = useRef<ArrayCache<T>>({
     each: null,
     children: null,
+    mounted: null,
   });
 
   if (fragmentRef.current && (each !== cache.current.each || !memo)) {
@@ -34,20 +35,19 @@ const MillionArray = <T>({
   const defaultType = svg ? SVG_RENDER_SCOPE : RENDER_SCOPE;
   const MillionFor = createElement(as ?? defaultType, { ...rest, ref });
 
-  // const newChildren = createChildren<T>(each, children, cache, memo);
-  // MillionFor.block = mapArray(newChildren);
-
   useEffect(() => {
     if (!ref.current || fragmentRef.current) return;
 
     queueMicrotask$(() => {
+      if (cache.current.mounted) ref.current!.textContent = '';
+
       const newChildren = createChildren<T>(each, children, cache, memo);
       fragmentRef.current = mapArray(newChildren);
-      // reevaluate whether this is necessray DONOTMERGE
       if (!MapHas$.call(REGISTRY, MillionFor)) {
         MapSet$.call(REGISTRY, MillionFor, fragmentRef.current);
       }
       arrayMount$.call(fragmentRef.current, ref.current!);
+      cache.current.mounted = true;
     });
   }, [ref.current]);
 
