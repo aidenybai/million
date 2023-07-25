@@ -15,6 +15,7 @@ import {
   childAt,
   SVG_TEMPLATE,
   HTM_TEMPLATE,
+  replaceChild$,
 } from './dom';
 import { renderToTemplate } from './template';
 import { AbstractBlock } from './types';
@@ -28,7 +29,8 @@ import {
   EVENT_PATCH,
 } from './constants';
 import type { ArrayBlock } from './array';
-import type { EditChild, Props, VElement, Hole, VNode, Edit } from './types';
+import type { EditChild, VElement, Hole, VNode, Edit } from './types';
+import { MillionProps } from 'packages/types';
 
 const HOLE_PROXY = new Proxy(
   {},
@@ -42,9 +44,9 @@ const HOLE_PROXY = new Proxy(
 );
 
 export const block = (
-  fn: (props?: Props) => VElement,
-  unwrap?: (vnode: any) => VNode,
-  shouldUpdate?: (oldProps: Props, newProps: Props) => boolean,
+  fn: (props?: MillionProps) => VElement,
+  unwrap?: (vnode: VElement) => VNode,
+  shouldUpdate?: (oldProps: MillionProps, newProps: MillionProps) => boolean,
   svg?: boolean,
 ) => {
   const vnode = fn(HOLE_PROXY);
@@ -57,10 +59,10 @@ export const block = (
     svg,
   );
 
-  return <T extends Props>(
+  return <T extends MillionProps>(
     props?: T | null,
     key?: string,
-    shouldUpdateCurrentBlock?: (oldProps: Props, newProps: Props) => boolean,
+    shouldUpdateCurrentBlock?: (oldProps: MillionProps, newProps: MillionProps) => boolean,
   ) => {
     return new Block(
       root,
@@ -102,10 +104,10 @@ export class Block extends AbstractBlock {
   constructor(
     root: HTMLElement,
     edits: Edit[],
-    props?: Props | null,
+    props?: MillionProps | null,
     key?: string | null,
-    shouldUpdate?: ((oldProps: Props, newProps: Props) => boolean) | null,
-    getElements?: ((root: HTMLElement) => HTMLElement[]) | null,
+    shouldUpdate?: (oldProps: MillionProps, newProps: MillionProps) => boolean,
+    getElements?: (root: HTMLElement) => HTMLElement[] | null,
   ) {
     super();
     this.r = root;
@@ -133,7 +135,7 @@ export class Block extends AbstractBlock {
 
         if (edit.t & ChildFlag) {
           if (value instanceof AbstractBlock) {
-            value.m(el);
+            value.m(el, childAt(el, edit.i!));
             continue;
           }
           if (!el[TEXT_NODE_CACHE]) el[TEXT_NODE_CACHE] = new Array(l);
@@ -147,9 +149,8 @@ export class Block extends AbstractBlock {
           // insertText() on mount, setText() on patch
           el[TEXT_NODE_CACHE][k] = insertText(
             el,
-            value === null || value === undefined || value === false
-              ? ''
-              : String(value),
+            // eslint-disable-next-line eqeqeq
+            value == null || value === false ? '' : String(value),
             edit.i!,
           );
         } else if (edit.t & EventFlag) {
@@ -229,14 +230,21 @@ export class Block extends AbstractBlock {
             continue;
           }
           if (typeof newValue === 'function') {
-            newValue(el[TEXT_NODE_CACHE][k]);
+            const scopeEl = el[TEXT_NODE_CACHE][k];
+            if ('unstable' in newValue && oldValue !== newValue) {
+              const newScopeEl = newValue(null);
+              el[TEXT_NODE_CACHE][k] = newScopeEl;
+              replaceChild$.call(el, newScopeEl, scopeEl);
+            } else {
+              newValue(scopeEl);
+            }
+
             continue;
           }
           setText(
             el[TEXT_NODE_CACHE][k],
-            newValue === null || newValue === undefined || newValue === false
-              ? ''
-              : String(newValue),
+            // eslint-disable-next-line eqeqeq
+            newValue == null || newValue === false ? '' : String(newValue),
           );
         } else if (edit.t & AttributeFlag) {
           setAttribute(el, edit.n!, newValue);
@@ -265,7 +273,7 @@ export class Block extends AbstractBlock {
     removeElement$.call(this.l);
     this.l = null;
   }
-  u(_oldProps: Props, _newProps: Props): boolean {
+  u(_oldProps: MillionProps, _newProps: MillionProps): boolean {
     return true;
   }
   s() {

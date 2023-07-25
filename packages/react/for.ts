@@ -1,19 +1,20 @@
 import { createElement, memo, useEffect, useRef } from 'react';
 import { arrayMount$, arrayPatch$ } from '../million/array';
-import { mapArray, block as createBlock } from '../million';
+import { mapArray, block as createBlock, Block, VElement } from '../million';
 import { MapSet$, MapHas$, MapGet$ } from '../million/constants';
 import { queueMicrotask$ } from '../million/dom';
 import { renderReactScope } from './utils';
 import { RENDER_SCOPE, REGISTRY, SVG_RENDER_SCOPE } from './constants';
-import type { Props } from '../million';
 import type { MutableRefObject } from 'react';
-import type { ArrayCache, MillionArrayProps } from '../types';
+import type { ArrayCache, MillionArrayProps, MillionProps } from '../types';
 
 const MillionArray = <T>({
   each,
   children,
   memo,
   svg,
+  as,
+  ...rest
 }: MillionArrayProps<T>) => {
   const ref = useRef<HTMLElement>(null);
   const fragmentRef = useRef<ReturnType<typeof mapArray> | null>(null);
@@ -21,39 +22,43 @@ const MillionArray = <T>({
     each: null,
     children: null,
   });
+
   if (fragmentRef.current && (each !== cache.current.each || !memo)) {
     queueMicrotask$(() => {
       const newChildren = createChildren<T>(each, children, cache, memo);
       arrayPatch$.call(fragmentRef.current, mapArray(newChildren));
     });
   }
+
   useEffect(() => {
-    if (fragmentRef.current) return;
+    if (!ref.current || fragmentRef.current) return;
+
     queueMicrotask$(() => {
       const newChildren = createChildren<T>(each, children, cache, memo);
       fragmentRef.current = mapArray(newChildren);
       arrayMount$.call(fragmentRef.current, ref.current!);
     });
-  }, []);
+  }, [ref.current]);
 
-  return createElement(svg ? SVG_RENDER_SCOPE : RENDER_SCOPE, { ref });
+  const defaultType = svg ? SVG_RENDER_SCOPE : RENDER_SCOPE;
+  return createElement(as ?? defaultType, { ...rest, ref });
 };
 
 // Using fix below to add type support to MillionArray
 //https://github.com/DefinitelyTyped/DefinitelyTyped/issues/37087#issuecomment-542793243
 const typedMemo: <T>(
   component: T,
-  equal?: (oldProps: any, newProps: any) => boolean,
+  equal?: (oldProps: MillionProps, newProps: MillionProps) => boolean,
 ) => T = memo;
 
 export const For = typedMemo(MillionArray);
 
 const createChildren = <T>(
   each: T[],
-  getComponent: any,
+  getComponent: (value: T, i: number) => VElement,
   cache: MutableRefObject<ArrayCache<T>>,
   memo?: boolean,
-) => {
+): Block[] => {
   const children = Array(each.length);
   const currentCache = cache.current;
   for (let i = 0, l = each.length; i < l; ++i) {
@@ -68,21 +73,33 @@ const createChildren = <T>(
         currentCache.block = MapGet$.call(REGISTRY, vnode.type)!;
       }
       children[i] = currentCache.block!(vnode.props);
-    } else {
-      const block = createBlock((props?: Props) => props?.scope);
-      const currentBlock = (props: Props) => {
-        return block(
-          {
-            scope: renderReactScope(createElement(vnode.type, props)),
-          },
-          vnode.key,
-        );
-      };
-
-      MapSet$.call(REGISTRY, vnode.type, currentBlock);
-      currentCache.block = currentBlock as ReturnType<typeof createBlock>;
-      children[i] = currentBlock(vnode.props);
+      continue;
     }
+
+    if (typeof vnode.type === 'function' && 'callable' in vnode.type) {
+      const puppetComponent = vnode.type(vnode.props);
+      if (MapHas$.call(REGISTRY, puppetComponent.type)) {
+        const puppetBlock = MapGet$.call(REGISTRY, puppetComponent.type)!;
+        if (typeof puppetBlock === 'function') {
+          children[i] = puppetBlock(puppetComponent.props);
+          continue;
+        }
+      }
+    }
+
+    const block = createBlock((props?: MillionProps) => props?.scope);
+    const currentBlock = (props: MillionProps) => {
+      return block(
+        {
+          scope: renderReactScope(createElement(vnode.type, props)),
+        },
+        vnode.key.toString(),
+      );
+    };
+
+    MapSet$.call(REGISTRY, vnode.type, currentBlock);
+    currentCache.block = currentBlock as ReturnType<typeof createBlock>;
+    children[i] = currentBlock(vnode.props);
   }
   currentCache.each = each;
   currentCache.children = children;

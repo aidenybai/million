@@ -133,10 +133,34 @@ export const renderToTemplate = (
 
         continue;
       }
-      if (name === 'style') {
+      if (name === 'style' && typeof value === 'object') {
         let style = '';
         for (const key in value) {
-          style += `${key}:${String(value[key])};`;
+          if (typeof value[key] === 'object') {
+            current.e.push({
+              /* type */ t: StyleAttributeFlag,
+              /* name */ n: key,
+              /* value */ v: null,
+              /* hole */ h: value[key].$,
+              /* index */ i: null,
+              /* listener */ l: null,
+              /* patch */ p: null,
+              /* block */ b: null,
+            });
+            continue;
+          }
+
+          let kebabKey = '';
+          for (let i = 0, j = key.length; i < j; ++i) {
+            const char = key.charCodeAt(i);
+            if (char < 97) {
+              // If letter is uppercase
+              kebabKey += `-${String.fromCharCode(char + 32)}`;
+            } else {
+              kebabKey += key[i];
+            }
+          }
+          style += `${kebabKey}:${String(value[key])};`;
         }
         props += ` style="${style}"`;
         continue;
