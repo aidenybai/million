@@ -71,7 +71,6 @@ export function For<T>({ each, children, ssr, svg }: MillionArrayProps<T>) {
   }, []);
 
   if (!ready || !millionModule) {
-    console.log('ssr', each);
     if (ssr === false) return null;
     return createElement(
       svg ? SVG_RENDER_SCOPE : RENDER_SCOPE,
@@ -80,7 +79,6 @@ export function For<T>({ each, children, ssr, svg }: MillionArrayProps<T>) {
     );
   }
 
-  console.log('csr', each);
   return createElement(millionModule.For, {
     each,
     children,
