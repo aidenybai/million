@@ -1,12 +1,13 @@
 import { h } from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
 import { arrayMount$, arrayPatch$ } from '../million/array';
-import { mapArray, block as createBlock, VElement, Block } from '../million';
+import { mapArray, block as createBlock } from '../million';
 import { MapSet$, MapHas$, MapGet$ } from '../million/constants';
 import { queueMicrotask$ } from '../million/dom';
 import { RENDER_SCOPE } from '../react/constants';
 import { REGISTRY } from './block';
 import { renderPreactScope } from './utils';
+import type { Block } from '../million';
 import type { ArrayCache, MillionArrayProps, MillionProps } from '../types';
 
 export const For = <T>({ each, children }: MillionArrayProps<T>) => {
@@ -36,7 +37,7 @@ export const For = <T>({ each, children }: MillionArrayProps<T>) => {
 
 const createChildren = <T>(
   each: T[],
-  getComponent: (value: T, i: number) => VElement,
+  getComponent: (value: T, i: number) => JSX.Element,
   cache: { current: ArrayCache<T> },
 ): Block[] => {
   const children = Array(each.length);
@@ -46,7 +47,7 @@ const createChildren = <T>(
       children[i] = currentCache.children?.[i];
       continue;
     }
-    const vnode = getComponent(each[i], i);
+    const vnode = getComponent(each[i]!, i);
 
     if (MapHas$.call(REGISTRY, vnode.type)) {
       if (!currentCache.block) {

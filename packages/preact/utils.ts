@@ -1,8 +1,6 @@
 import { render, Fragment } from 'preact';
 import { RENDER_SCOPE } from '../react/constants';
-import type {
-  VNode as PreactNode,
-} from 'preact';
+import type { VNode as PreactNode } from 'preact';
 import type { VNode } from '../million';
 
 export const renderPreactScope = (vnode: PreactNode) => {
@@ -25,7 +23,7 @@ export const unwrap = (vnode: JSX.Element): VNode => {
     return unwrap(type(vnode.props ?? {}));
   }
   if (typeof type === 'object' && '$' in type) return type;
-  
+
   const props = { ...vnode.props };
   const children = vnode.props?.children;
   if (children !== undefined && children !== null) {
@@ -40,9 +38,7 @@ export const unwrap = (vnode: JSX.Element): VNode => {
   };
 };
 
-export const flatten = (
-  rawChildren?: JSX.Element | null,
-): JSX.Element[] => {
+export const flatten = (rawChildren?: JSX.Element | null): JSX.Element[] => {
   if (rawChildren === undefined || rawChildren === null) return [];
   if (
     typeof rawChildren === 'object' &&
@@ -58,7 +54,7 @@ export const flatten = (
     return [rawChildren];
   }
   const flattenedChildren = rawChildren.flat(Infinity);
-  const children = [];
+  const children: JSX.Element[] = [];
   for (let i = 0, l = flattenedChildren.length; i < l; ++i) {
     children.push(...flatten(flattenedChildren[i]));
   }
