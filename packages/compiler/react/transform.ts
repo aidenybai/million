@@ -778,7 +778,6 @@ export const transformJSX = (
 
     if (t.isJSXExpressionContainer(attribute.value)) {
       const attributeValue = attribute.value;
-
       const expressionPath = jsxPath.get(
         `openingElement.attributes.${i}.value.expression`,
       );
@@ -786,6 +785,20 @@ export const transformJSX = (
         attributeValue.expression,
         resolvePath(expressionPath).scope,
       );
+
+      if (t.isJSXIdentifier(attribute.name) && attribute.name.name === 'css') {
+        const renderReactScope = imports.addNamed('renderReactScope');
+        const nestedRender = t.callExpression(renderReactScope, [
+          jsx,
+          t.booleanLiteral(unstable),
+        ]);
+        const id = createDynamic(null, nestedRender, null, () => {
+          jsxPath.replaceWith(
+            isRoot ? t.expressionStatement(id!) : t.jsxExpressionContainer(id!),
+          );
+        });
+        return dynamics;
+      }
 
       if (!err) attributeValue.expression = expression;
 
