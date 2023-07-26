@@ -1,3 +1,5 @@
+import type { MillionProps } from 'packages/types';
+
 declare const enum Flags {
   Child = 1,
   Attribute = 2,
@@ -16,10 +18,13 @@ export type VNode =
   | undefined
   | null;
 
-export type Props = Record<string, any>;
 export interface VElement {
   type: string;
-  props: Props & { children?: (VNode | Hole)[] };
+  props: MillionProps & { children?: (VNode | Hole)[] };
+  // Note: VElement is not supposed to accept number, however,
+  // to preserve type compatibility with React, we accept a number, but that gets converted to a string
+  // whenever it gets converted to a block
+  key?: string | number;
 }
 
 export interface Hole {
@@ -30,9 +35,9 @@ export abstract class AbstractBlock {
   /* root */ r?: HTMLElement;
   /* edits */ e?: Edit[];
   /* el */ l?: HTMLElement | null;
-  /* getElements */ g?: (root: HTMLElement) => HTMLElement[];
+  /* getElements */ g?: ((root: HTMLElement) => HTMLElement[]) | null;
   /* _parent */ _t?: HTMLElement | null;
-  /* props */ d?: Props | null;
+  /* props */ d?: MillionProps | null;
   /* key */ k?: string | null;
   /* cache */ c?: HTMLElement[];
   /* patch */ abstract p(block: AbstractBlock): HTMLElement;
@@ -46,7 +51,10 @@ export abstract class AbstractBlock {
   ): void;
   /* remove */ abstract x(): void;
   /* toString */ abstract s(): string;
-  /* shouldUpdate */ abstract u(oldProps: Props, newProps: Props): boolean;
+  /* shouldUpdate */ abstract u(
+    oldProps: MillionProps,
+    newProps: MillionProps,
+  ): boolean;
   /* parent */ abstract t(): HTMLElement | null | undefined;
 }
 

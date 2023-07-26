@@ -6,6 +6,7 @@ description: So how does block() really work with React?
 
 import Image from 'next/image';
 import { Steps, Callout } from 'nextra-theme-docs';
+import { CarbonAds } from '../../components/ad';
 
 <div className="flex justify-center">
   <Image src="/behind-the-block.png" width={350} height={130} />
@@ -36,6 +37,8 @@ export default function App() {
 Wrapping a React component with `block(){:jsx}` creates a block. A block is a special [**Higher Order Component (HOC)**](https://legacy.reactjs.org/docs/higher-order-components.html) that can be used as a React component but are hyper-optimized for rendering speed by rendering using Million.js.
 
 But how can this be? How can we use blocks _**inside**_ of React? Isn't Million.js a completely different virtual DOM?
+
+<CarbonAds />
 
 ## Anatomy of `block(){:jsx}`
 

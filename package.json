@@ -1,6 +1,6 @@
 {
   "name": "million",
-  "version": "2.5.1",
+  "version": "2.5.2-beta.0",
   "description": "The Virtual DOM Replacement For React",
   "main": "dist/million.mjs",
   "module": "dist/million.mjs",
@@ -121,6 +121,7 @@
     "prettier": "^2.8.4",
     "publint": "^0.1.12",
     "react": "^18.2.0",
+    "rollup-plugin-banner2": "^1.2.2",
     "source-map": "^0.7.4",
     "tslib": "^2.5.0",
     "typescript": "^5.1.3",

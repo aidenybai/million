@@ -96,6 +96,17 @@ export const createDeopt = (
   return createError(message, path ?? callSitePath);
 };
 
+export const isStatic = (node: t.Node) => {
+  if (
+    t.isTaggedTemplateExpression(node) &&
+    t.isIdentifier(node.tag) &&
+    node.tag.name === 'css'
+  ) {
+    return true;
+  }
+  return t.isLiteral(node) && !t.isTemplateLiteral(node);
+};
+
 export const resolvePath = (path: NodePath | NodePath[]): NodePath => {
   return Array.isArray(path) ? path[0]! : path;
 };
@@ -104,10 +115,50 @@ export const isComponent = (name: string) => {
   return name.startsWith(name[0]!.toUpperCase());
 };
 
+export const handleVisitorError = (
+  ctx: () => void,
+  mute: boolean | undefined | null,
+) => {
+  try {
+    ctx();
+  } catch (err: unknown) {
+    if (err instanceof Error && err.message && !mute) {
+      // eslint-disable-next-line no-console
+      console.warn(err.message, '\n');
+    }
+  }
+};
+
+export const removeDuplicateJSXAttributes = (
+  attributes: (t.JSXAttribute | t.JSXSpreadAttribute)[],
+) => {
+  const seen = new Set<string>();
+  for (let i = attributes.length - 1; i >= 0; i--) {
+    const attr = attributes[i]!;
+    if (
+      t.isJSXAttribute(attr) &&
+      t.isJSXIdentifier(attr.name) &&
+      seen.has(attr.name.name)
+    ) {
+      attributes.splice(i, 1);
+    }
+
+    if (t.isJSXAttribute(attr) && t.isJSXIdentifier(attr.name)) {
+      seen.add(attr.name.name);
+    }
+  }
+  return attributes;
+};
+
 export const trimJsxChildren = (jsx: t.JSXElement | t.JSXFragment) => {
   for (let i = jsx.children.length - 1; i >= 0; i--) {
     const child = jsx.children[i]!;
-    if (t.isJSXText(child) && child.value.trim() === '') {
+    const isEmptyText = t.isJSXText(child) && child.value.trim() === '';
+    const isEmptyExpression =
+      t.isJSXExpressionContainer(child) &&
+      t.isJSXEmptyExpression(child.expression);
+
+    if (isEmptyText || isEmptyExpression) {
       jsx.children.splice(i, 1);
     }
   }

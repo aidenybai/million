@@ -4,6 +4,7 @@ import { transformAsync } from '@babel/core';
 import { visitor as legacyVdomVisitor } from './vdom';
 import { callExpressionVisitor as reactCallExpressionVisitor } from './react';
 import { jsxElementVisitor as reactJsxElementVisitor } from './react/jsx-element-visitor';
+import { handleVisitorError } from './react/utils';
 import type { NodePath, PluginItem } from '@babel/core';
 import type * as t from '@babel/types';
 
@@ -69,33 +70,19 @@ export const babelPlugin = declare((api, options: Options) => {
       break;
   }
 
-  const isErrorValid = (err: unknown) => {
-    return err instanceof Error && err.message && !options.mute;
-  };
-
   return {
     name: 'million',
     visitor: {
       JSXElement(path: NodePath<t.JSXElement>) {
-        if (!jsxElementVisitor) return;
-        try {
-          jsxElementVisitor(path, blockCache);
-        } catch (err: unknown) {
-          if (isErrorValid(err)) {
-            // eslint-disable-next-line no-console
-            console.warn((err as Error).message, '\n');
-          }
-        }
+        handleVisitorError(() => {
+          if (!jsxElementVisitor) return;
+          jsxElementVisitor(path);
+        }, options.mute);
       },
       CallExpression(path: NodePath<t.CallExpression>) {
-        try {
+        handleVisitorError(() => {
           callExpressionVisitor(path, blockCache);
-        } catch (err: unknown) {
-          if (isErrorValid(err)) {
-            // eslint-disable-next-line no-console
-            console.warn((err as Error).message, '\n');
-          }
-        }
+        }, options.mute);
       },
     },
   };

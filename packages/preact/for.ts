@@ -7,8 +7,8 @@ import { queueMicrotask$ } from '../million/dom';
 import { REGISTRY } from './block';
 import { renderPreactScope } from './utils';
 import { RENDER_SCOPE } from './constants';
-import type { Props } from '../million';
-import type { ArrayCache, MillionArrayProps } from '../types';
+import type { Props, Block } from '../million';
+import type { ArrayCache, MillionArrayProps, MillionProps } from '../types';
 
 export const For = <T>({ each, children }: MillionArrayProps<T>) => {
   const ref = useRef<HTMLElement>(null);
@@ -37,9 +37,9 @@ export const For = <T>({ each, children }: MillionArrayProps<T>) => {
 
 const createChildren = <T>(
   each: T[],
-  getComponent: any,
+  getComponent: (value: T, i: number) => JSX.Element,
   cache: { current: ArrayCache<T> },
-) => {
+): Block[] => {
   const children = Array(each.length);
   const currentCache = cache.current;
   for (let i = 0, l = each.length; i < l; ++i) {
@@ -47,7 +47,7 @@ const createChildren = <T>(
       children[i] = currentCache.children?.[i];
       continue;
     }
-    const vnode = getComponent(each[i], i);
+    const vnode = getComponent(each[i]!, i);
 
     if (MapHas$.call(REGISTRY, vnode.type)) {
       if (!currentCache.block) {
@@ -57,13 +57,13 @@ const createChildren = <T>(
         children[i] = cache.current.block(vnode.props);
       }
     } else {
-      const block = createBlock((props?: Props) => {
+      const block = createBlock((props?: MillionProps) => {
         return {
           type: RENDER_SCOPE,
           props: { children: [props?.__scope] },
         };
       });
-      const currentBlock = (props: Props) => {
+      const currentBlock = (props: MillionProps) => {
         return block({
           props,
           __scope: renderPreactScope(h(vnode.type, props)),

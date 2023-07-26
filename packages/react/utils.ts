@@ -23,7 +23,11 @@ export const processProps = (props: ComponentProps<any>) => {
 
 export const renderReactScope = (vnode: ReactNode, unstable?: boolean) => {
   if (typeof window === 'undefined') {
-    return createElement(RENDER_SCOPE, null, vnode);
+    return createElement(
+      RENDER_SCOPE,
+      { suppressHydrationWarning: true },
+      vnode,
+    );
   }
 
   if (
@@ -55,22 +59,28 @@ export const renderReactScope = (vnode: ReactNode, unstable?: boolean) => {
   return scope;
 };
 
-export const unwrap = (vnode?: ReactNode): VNode => {
+export const unwrap = (vnode: JSX.Element | null): VNode => {
   if (typeof vnode !== 'object' || vnode === null || !('type' in vnode)) {
-    if (typeof vnode === 'number' || vnode === true) {
+    if (typeof vnode === 'number') {
       return String(vnode);
-    } else if (!vnode) {
-      return undefined;
     }
-    return vnode as VNode;
+    return vnode;
   }
-  const type = vnode.type as any;
+
+  let type = vnode.type;
   if (typeof type === 'function') {
     return unwrap(type(vnode.props ?? {}));
   }
   if (typeof type === 'object' && '$' in type) return type;
 
   const props = { ...vnode.props };
+  // emotion support
+  if ('css' in props && '__EMOTION_TYPE_PLEASE_DO_NOT_USE__' in props) {
+    props.style = props.css.styles;
+    type = props.__EMOTION_TYPE_PLEASE_DO_NOT_USE__;
+    delete props.__EMOTION_TYPE_PLEASE_DO_NOT_USE__;
+    delete props.css;
+  }
   const children = vnode.props?.children;
   if (children !== undefined && children !== null) {
     props.children = flatten(vnode.props.children).map((child) =>
@@ -84,9 +94,7 @@ export const unwrap = (vnode?: ReactNode): VNode => {
   };
 };
 
-export const flatten = (
-  rawChildren?: ReactNode | ReactNode[] | null,
-): ReactNode[] => {
+export const flatten = (rawChildren?: JSX.Element | null): JSX.Element[] => {
   if (rawChildren === undefined || rawChildren === null) return [];
   if (
     typeof rawChildren === 'object' &&
@@ -102,9 +110,9 @@ export const flatten = (
     return [rawChildren];
   }
   const flattenedChildren = rawChildren.flat(Infinity);
-  const children: (ReactNode | ReactNode[])[] = [];
+  const children: JSX.Element[] = [];
   for (let i = 0, l = flattenedChildren.length; i < l; ++i) {
-    children.push(...flatten(flattenedChildren[i] as any));
+    children.push(...flatten(flattenedChildren[i]));
   }
   return children;
 };

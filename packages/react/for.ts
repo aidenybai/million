@@ -5,9 +5,9 @@ import { MapSet$, MapHas$, MapGet$ } from '../million/constants';
 import { queueMicrotask$ } from '../million/dom';
 import { renderReactScope } from './utils';
 import { RENDER_SCOPE, REGISTRY, SVG_RENDER_SCOPE } from './constants';
-import type { Props } from '../million';
+import type { Block } from '../million';
 import type { MutableRefObject } from 'react';
-import type { ArrayCache, MillionArrayProps } from '../types';
+import type { ArrayCache, MillionArrayProps, MillionProps } from '../types';
 
 const MillionArray = <T>({
   each,
@@ -22,6 +22,7 @@ const MillionArray = <T>({
   const cache = useRef<ArrayCache<T>>({
     each: null,
     children: null,
+    mounted: null,
   });
 
   if (fragmentRef.current && (each !== cache.current.each || !memo)) {
@@ -31,35 +32,43 @@ const MillionArray = <T>({
     });
   }
 
+  const defaultType = svg ? SVG_RENDER_SCOPE : RENDER_SCOPE;
+  const MillionFor = createElement(as ?? defaultType, { ...rest, ref });
+
   useEffect(() => {
     if (!ref.current || fragmentRef.current) return;
 
     queueMicrotask$(() => {
+      if (cache.current.mounted) ref.current!.textContent = '';
+
       const newChildren = createChildren<T>(each, children, cache, memo);
       fragmentRef.current = mapArray(newChildren);
+      if (!MapHas$.call(REGISTRY, MillionFor)) {
+        MapSet$.call(REGISTRY, MillionFor, fragmentRef.current);
+      }
       arrayMount$.call(fragmentRef.current, ref.current!);
+      cache.current.mounted = true;
     });
   }, [ref.current]);
 
-  const defaultType = svg ? SVG_RENDER_SCOPE : RENDER_SCOPE;
-  return createElement(as ?? defaultType, { ...rest, ref });
+  return MillionFor;
 };
 
 // Using fix below to add type support to MillionArray
 //https://github.com/DefinitelyTyped/DefinitelyTyped/issues/37087#issuecomment-542793243
 const typedMemo: <T>(
   component: T,
-  equal?: (oldProps: any, newProps: any) => boolean,
+  equal?: (oldProps: MillionProps, newProps: MillionProps) => boolean,
 ) => T = memo;
 
 export const For = typedMemo(MillionArray);
 
 const createChildren = <T>(
   each: T[],
-  getComponent: any,
+  getComponent: (value: T, i: number) => JSX.Element,
   cache: MutableRefObject<ArrayCache<T>>,
   memo?: boolean,
-) => {
+): Block[] => {
   const children = Array(each.length);
   const currentCache = cache.current;
   for (let i = 0, l = each.length; i < l; ++i) {
@@ -67,7 +76,7 @@ const createChildren = <T>(
       children[i] = currentCache.children?.[i];
       continue;
     }
-    const vnode = getComponent(each[i], i);
+    const vnode = getComponent(each[i]!, i);
 
     if (MapHas$.call(REGISTRY, vnode.type)) {
       if (!currentCache.block) {
@@ -88,13 +97,13 @@ const createChildren = <T>(
       }
     }
 
-    const block = createBlock((props?: Props) => props?.scope);
-    const currentBlock = (props: Props) => {
+    const block = createBlock((props?: MillionProps) => props?.scope);
+    const currentBlock = (props: MillionProps) => {
       return block(
         {
           scope: renderReactScope(createElement(vnode.type, props)),
         },
-        vnode.key,
+        vnode.key ? String(vnode.key) : undefined,
       );
     };
 

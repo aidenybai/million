@@ -10,22 +10,21 @@ import { queueMicrotask$ } from '../million/dom';
 import { Effect, RENDER_SCOPE } from './constants';
 import { unwrap, processProps } from './utils';
 import type { MillionProps, Options } from '../types';
-import type { Props } from '../million';
-import type { ComponentType, VNode } from 'preact';
+import type { VNode } from 'preact';
 
 export const REGISTRY = new Map$<
-  (props: Props) => VNode,
+  (props: MillionProps) => VNode,
   ReturnType<typeof createBlock>
 >();
 
 export const block = <P extends MillionProps>(
-  fn: ComponentType<P> | null,
+  fn: ((p?: P) => JSX.Element) | null,
   options: Options = {},
 ) => {
   const block = MapHas$.call(REGISTRY, fn)
     ? MapGet$.call(REGISTRY, fn)
     : fn
-    ? createBlock(fn as any, unwrap)
+    ? createBlock(fn as any, unwrap as any, options.shouldUpdate)
     : options.block;
 
   function MillionBlock<P extends MillionProps>(props: P) {
