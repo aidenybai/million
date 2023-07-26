@@ -1,4 +1,4 @@
-import { MillionProps } from 'packages/types';
+import type { MillionProps } from '../types';
 import type { VNode } from '../million';
 
 export const h = (

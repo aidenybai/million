@@ -19,13 +19,13 @@ export const REGISTRY = new Map$<
 >();
 
 export const block = <P extends MillionProps>(
-  fn: (p?: P) => JSX.Element,
+  fn: ((p?: P) => JSX.Element) | null,
   options: Options = {},
 ) => {
   const block = MapHas$.call(REGISTRY, fn)
     ? MapGet$.call(REGISTRY, fn)
     : fn
-    ? createBlock(fn, unwrap)
+    ? createBlock(fn as any, unwrap as any, options.shouldUpdate)
     : options.block;
 
   function MillionBlock<P extends MillionProps>(props: P) {
