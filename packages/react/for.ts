@@ -1,10 +1,11 @@
 import { createElement, memo, useEffect, useRef } from 'react';
 import { arrayMount$, arrayPatch$ } from '../million/array';
-import { mapArray, block as createBlock, Block, VElement } from '../million';
+import { mapArray, block as createBlock } from '../million';
 import { MapSet$, MapHas$, MapGet$ } from '../million/constants';
 import { queueMicrotask$ } from '../million/dom';
 import { renderReactScope } from './utils';
 import { RENDER_SCOPE, REGISTRY, SVG_RENDER_SCOPE } from './constants';
+import type { Block } from '../million';
 import type { MutableRefObject } from 'react';
 import type { ArrayCache, MillionArrayProps, MillionProps } from '../types';
 
@@ -64,7 +65,7 @@ export const For = typedMemo(MillionArray);
 
 const createChildren = <T>(
   each: T[],
-  getComponent: (value: T, i: number) => VElement,
+  getComponent: (value: T, i: number) => JSX.Element,
   cache: MutableRefObject<ArrayCache<T>>,
   memo?: boolean,
 ): Block[] => {
@@ -75,7 +76,7 @@ const createChildren = <T>(
       children[i] = currentCache.children?.[i];
       continue;
     }
-    const vnode = getComponent(each[i], i);
+    const vnode = getComponent(each[i]!, i);
 
     if (MapHas$.call(REGISTRY, vnode.type)) {
       if (!currentCache.block) {
@@ -102,7 +103,7 @@ const createChildren = <T>(
         {
           scope: renderReactScope(createElement(vnode.type, props)),
         },
-        vnode.key.toString(),
+        vnode.key ? String(vnode.key) : undefined,
       );
     };
 

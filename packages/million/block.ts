@@ -28,9 +28,9 @@ import {
   StyleAttributeFlag,
   EVENT_PATCH,
 } from './constants';
+import type { MillionProps } from 'packages/types';
 import type { ArrayBlock } from './array';
 import type { EditChild, VElement, Hole, VNode, Edit } from './types';
-import { MillionProps } from 'packages/types';
 
 const HOLE_PROXY = new Proxy(
   {},
@@ -62,7 +62,10 @@ export const block = (
   return <T extends MillionProps>(
     props?: T | null,
     key?: string,
-    shouldUpdateCurrentBlock?: (oldProps: MillionProps, newProps: MillionProps) => boolean,
+    shouldUpdateCurrentBlock?: (
+      oldProps: MillionProps,
+      newProps: MillionProps,
+    ) => boolean,
   ) => {
     return new Block(
       root,
@@ -106,8 +109,10 @@ export class Block extends AbstractBlock {
     edits: Edit[],
     props?: MillionProps | null,
     key?: string | null,
-    shouldUpdate?: (oldProps: MillionProps, newProps: MillionProps) => boolean,
-    getElements?: (root: HTMLElement) => HTMLElement[] | null,
+    shouldUpdate?:
+      | ((oldProps: MillionProps, newProps: MillionProps) => boolean)
+      | null,
+    getElements?: ((root: HTMLElement) => HTMLElement[]) | null,
   ) {
     super();
     this.r = root;
@@ -181,7 +186,7 @@ export class Block extends AbstractBlock {
           // put into a template, they can be merged. For example,
           // ["hello", "world"] becomes "helloworld" in the DOM.
           // Inserts text nodes into the DOM at the correct position.
-          insertText(el, init.v, init.i!);
+          if (init.v) insertText(el, init.v, init.i);
         } else if (init.t & EventFlag) {
           createEventListener(el, init.n!, init.l!);
         } else {

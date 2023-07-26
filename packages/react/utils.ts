@@ -59,21 +59,28 @@ export const renderReactScope = (vnode: ReactNode, unstable?: boolean) => {
   return scope;
 };
 
-export const unwrap = (vnode: JSX.Element): VNode => {
+export const unwrap = (vnode: JSX.Element | null): VNode => {
   if (typeof vnode !== 'object' || vnode === null || !('type' in vnode)) {
     if (typeof vnode === 'number') {
       return String(vnode);
     }
     return vnode;
   }
-  
-  const type = vnode.type;
+
+  let type = vnode.type;
   if (typeof type === 'function') {
     return unwrap(type(vnode.props ?? {}));
   }
   if (typeof type === 'object' && '$' in type) return type;
 
   const props = { ...vnode.props };
+  // emotion support
+  if ('css' in props && '__EMOTION_TYPE_PLEASE_DO_NOT_USE__' in props) {
+    props.style = props.css.styles;
+    type = props.__EMOTION_TYPE_PLEASE_DO_NOT_USE__;
+    delete props.__EMOTION_TYPE_PLEASE_DO_NOT_USE__;
+    delete props.css;
+  }
   const children = vnode.props?.children;
   if (children !== undefined && children !== null) {
     props.children = flatten(vnode.props.children).map((child) =>
@@ -87,9 +94,7 @@ export const unwrap = (vnode: JSX.Element): VNode => {
   };
 };
 
-export const flatten = (
-  rawChildren?: JSX.Element,
-): JSX.Element[] => {
+export const flatten = (rawChildren?: JSX.Element | null): JSX.Element[] => {
   if (rawChildren === undefined || rawChildren === null) return [];
   if (
     typeof rawChildren === 'object' &&

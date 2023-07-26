@@ -96,6 +96,17 @@ export const createDeopt = (
   return createError(message, path ?? callSitePath);
 };
 
+export const isStatic = (node: t.Node) => {
+  if (
+    t.isTaggedTemplateExpression(node) &&
+    t.isIdentifier(node.tag) &&
+    node.tag.name === 'css'
+  ) {
+    return true;
+  }
+  return t.isLiteral(node) && !t.isTemplateLiteral(node);
+};
+
 export const resolvePath = (path: NodePath | NodePath[]): NodePath => {
   return Array.isArray(path) ? path[0]! : path;
 };

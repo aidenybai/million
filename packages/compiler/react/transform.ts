@@ -11,6 +11,7 @@ import {
   RENDER_SCOPE,
   TRANSFORM_ANNOTATION,
   handleVisitorError,
+  isStatic,
 } from './utils';
 import { optimize } from './optimize';
 import { evaluate } from './evaluator';
@@ -617,10 +618,7 @@ export const transformJSX = (
               return dynamics;
             }
             createDynamic(expression, null, null, null);
-          } else if (
-            t.isLiteral(expression) &&
-            !t.isTemplateLiteral(expression) // `${foo} test` will be a template literal
-          ) {
+          } else if (isStatic(expression)) {
             if (t.isStringLiteral(expression)) {
               attribute.value = expression;
             }
@@ -780,6 +778,7 @@ export const transformJSX = (
 
     if (t.isJSXExpressionContainer(attribute.value)) {
       const attributeValue = attribute.value;
+
       const expressionPath = jsxPath.get(
         `openingElement.attributes.${i}.value.expression`,
       );
@@ -803,10 +802,7 @@ export const transformJSX = (
           return dynamics;
         }
         createDynamic(expression, null, null, null);
-      } else if (
-        t.isLiteral(expression) &&
-        !t.isTemplateLiteral(expression) // `${foo} test` will be a template literal
-      ) {
+      } else if (isStatic(expression)) {
         if (t.isStringLiteral(expression)) {
           attribute.value = expression;
         }
