@@ -122,7 +122,7 @@ export const childAt = (el: HTMLElement, index: number) => {
 
 export const insertText = (
   el: HTMLElement,
-  value: string,
+  value: string | null,
   index: number,
 ): Text => {
   const node = document$.createTextNode(value);

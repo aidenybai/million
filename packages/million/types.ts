@@ -1,4 +1,4 @@
-import { MillionProps } from "packages/types";
+import type { MillionProps } from 'packages/types';
 
 declare const enum Flags {
   Child = 1,
@@ -35,10 +35,10 @@ export abstract class AbstractBlock {
   /* root */ r?: HTMLElement;
   /* edits */ e?: Edit[];
   /* el */ l?: HTMLElement | null;
-  /* getElements */ g?: (root: HTMLElement) => HTMLElement[];
+  /* getElements */ g?: ((root: HTMLElement) => HTMLElement[]) | null;
   /* _parent */ _t?: HTMLElement | null;
   /* props */ d?: MillionProps | null;
-  /* key */ k?: string;
+  /* key */ k?: string | null;
   /* cache */ c?: HTMLElement[];
   /* patch */ abstract p(block: AbstractBlock): HTMLElement;
   /* mount */ abstract m(
@@ -51,7 +51,10 @@ export abstract class AbstractBlock {
   ): void;
   /* remove */ abstract x(): void;
   /* toString */ abstract s(): string;
-  /* shouldUpdate */ abstract u(oldProps: MillionProps, newProps: MillionProps): boolean;
+  /* shouldUpdate */ abstract u(
+    oldProps: MillionProps,
+    newProps: MillionProps,
+  ): boolean;
   /* parent */ abstract t(): HTMLElement | null | undefined;
 }
 

@@ -16,7 +16,7 @@ export const block = <P extends MillionProps>(
   { block: compiledBlock, shouldUpdate, svg, as }: Options = {},
 ) => {
   const block = fn
-    ? createBlock(fn as any, unwrap, shouldUpdate, svg)
+    ? createBlock(fn as any, unwrap as any, shouldUpdate, svg)
     : compiledBlock;
   const defaultType = svg ? SVG_RENDER_SCOPE : RENDER_SCOPE;
 
