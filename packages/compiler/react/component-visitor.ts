@@ -1,12 +1,12 @@
 import * as t from '@babel/types';
-import { green, underline } from 'kleur/colors';
+import { dim, green, red, underline, yellow } from 'kleur/colors';
 import {
   addNamedCache,
+  handleVisitorError,
   isComponent,
   resolveCorrectImportSource,
   resolvePath,
-  styleCommentMessage,
-  stylePrimaryMessage,
+  styleSecondaryMessage,
 } from './utils';
 import { callExpressionVisitor } from './call-expression-visitor';
 import type { NodePath } from '@babel/core';
@@ -15,13 +15,14 @@ import type { Options } from '../plugin';
 export const componentVisitor = (options: Options = {}, isReact = true) => {
   return (
     componentPath: NodePath<t.FunctionDeclaration | t.VariableDeclarator>,
+    file: string,
   ) => {
     if (!isReact || !options.auto) return; // doesn't support Preact yet
-    if (componentPath.parentPath.isExportNamedDeclaration()) return;
-    if (componentPath.parentPath.isExportDefaultDeclaration()) return;
+
+    // bail out if it's already wrapped in a block
     if (componentPath.parentPath.isCallExpression()) return;
 
-    let functionPath: NodePath<
+    let actualFunctionPath: NodePath<
       t.FunctionDeclaration | t.FunctionExpression | t.ArrowFunctionExpression
     >;
     const component = componentPath.node;
@@ -34,18 +35,17 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
         return;
       }
       if (t.isCallExpression(component.init)) return;
-      // get path to function node
-      functionPath = componentPath.get('init') as NodePath<
+      actualFunctionPath = componentPath.get('init') as NodePath<
         t.FunctionExpression | t.ArrowFunctionExpression
       >;
     } else {
-      functionPath = componentPath as NodePath<t.FunctionDeclaration>;
+      actualFunctionPath = componentPath as NodePath<t.FunctionDeclaration>;
     }
 
     if (!t.isIdentifier(component.id)) return;
     if (!isComponent(component.id.name)) return;
 
-    const returnStatementPath = functionPath
+    const returnStatementPath = actualFunctionPath
       .get('body')
       .get('body')
       .find((path) => {
@@ -69,7 +69,6 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
       components: 0,
       text: 0,
       expressions: 0,
-      fragments: 0,
     };
     returnStatementPath?.traverse({
       JSXElement(path) {
@@ -89,9 +88,6 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
         }
         info.elements++;
       },
-      JSXFragment() {
-        info.fragments++;
-      },
       JSXExpressionContainer(path) {
         if (!t.isLiteral(path.node.expression)) info.expressions++;
       },
@@ -103,10 +99,15 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
     if (info.bailout) return;
 
     const good = info.elements + info.attributes + info.text;
-    const bad = info.components + info.expressions + info.fragments;
+    const bad = info.components + info.expressions;
     const improvement = (good - bad) / (good + bad);
 
-    if (isNaN(improvement) || improvement < 0.1) return;
+    const threshold =
+      typeof options.auto === 'object' && options.auto.threshold
+        ? options.auto.threshold
+        : 0.1;
+
+    if (isNaN(improvement) || improvement < threshold) return;
 
     const improvementFormatted = isFinite(improvement)
       ? (improvement * 100).toFixed(0)
@@ -115,15 +116,23 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
     if (!options.mute) {
       // eslint-disable-next-line no-console
       console.log(
-        stylePrimaryMessage(
-          `<${
-            component.id.name
-          }> was automatically optimized. We estimate reconciliation to be ${green(
+        styleSecondaryMessage(
+          `${yellow(
+            `<${component.id.name}>`,
+          )} was automatically optimized. We estimate reconciliation to be ${green(
             underline(`~${improvementFormatted}%`),
-          )} faster.\n            ${styleCommentMessage(
-            'Set the "mute" option to true to disable this message.',
+          )} faster.\n${dim(
+            `Found ${green(info.elements)} nodes, ${green(
+              info.attributes,
+            )} attributes, ${green(info.text)} texts, ${red(
+              info.components,
+            )} components, and ${red(info.expressions)} expressions. (${green(
+              good,
+            )} - ${red(bad)}) / (${green(good)} + ${red(bad)}) = ~${green(
+              improvementFormatted,
+            )}%`,
           )}`,
-          'ⓘ',
+          '⚡',
         ),
       );
     }
@@ -131,6 +140,14 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
     const programPath = componentPath.findParent((path) =>
       path.isProgram(),
     ) as NodePath<t.Program>;
+
+    // RSC support
+    if (options.server) {
+      programPath.unshiftContainer(
+        'directives',
+        t.directive(t.directiveLiteral('use client')),
+      );
+    }
 
     const block = programPath.scope.hasBinding('block')
       ? t.identifier('block')
@@ -144,13 +161,13 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
       t.variableDeclarator(
         component.id,
         t.callExpression(block, [
-          t.isFunctionDeclaration(functionPath.node)
+          t.isFunctionDeclaration(actualFunctionPath.node)
             ? t.functionExpression(
                 component.id,
-                functionPath.node.params,
-                functionPath.node.body,
+                actualFunctionPath.node.params,
+                actualFunctionPath.node.body,
               )
-            : functionPath.node,
+            : actualFunctionPath.node,
         ]),
       ),
     ]);
@@ -166,7 +183,10 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
 
     rewrittenComponentPath.scope.crawl();
     const visitor = callExpressionVisitor(options, isReact);
-    visitor(rewrittenComponentPath, new Map());
+    handleVisitorError(
+      () => visitor(rewrittenComponentPath, new Map(), file),
+      options.mute,
+    );
     rewrittenComponentPath.skip();
   };
 };

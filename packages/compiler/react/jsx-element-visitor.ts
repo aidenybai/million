@@ -14,7 +14,7 @@ import type { NodePath } from '@babel/core';
 import type { Options } from '../plugin';
 
 export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
-  return (jsxElementPath: NodePath<t.JSXElement>) => {
+  return (jsxElementPath: NodePath<t.JSXElement>, file: string) => {
     if (!isReact) return; // doesn't support Preact yet
     const jsxElement = jsxElementPath.node;
 
@@ -37,6 +37,7 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
        */
       throw createDeopt(
         'Unable to find AST binding for For. Check that the For component is imported correctly.',
+        file,
         programPath,
       );
     }
@@ -48,6 +49,7 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
     const validSpecifiers = getValidSpecifiers(
       importDeclarationPath,
       importedBindings,
+      file,
     );
 
     const importSource = importDeclaration.source;
@@ -73,6 +75,7 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
     if (jsxElement.children.length !== 1) {
       throw createDeopt(
         'For component must have exactly one child',
+        file,
         jsxElementPath,
       );
     }
@@ -82,6 +85,7 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
     if (!t.isJSXExpressionContainer(child)) {
       throw createDeopt(
         'For component must have exactly one child',
+        file,
         jsxElementPath,
       );
     }
@@ -91,6 +95,7 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
     if (!t.isArrowFunctionExpression(expression)) {
       throw createDeopt(
         'For component must consume a reference to an arrow function',
+        file,
         jsxElementPath,
       );
     }
@@ -250,7 +255,10 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
 
     if (callSitePath.isCallExpression()) {
       callSitePath.scope.crawl();
-      handleVisitorError(() => visitor(callSitePath, new Map()), options.mute);
+      handleVisitorError(
+        () => visitor(callSitePath, new Map(), file),
+        options.mute,
+      );
     }
   };
 };

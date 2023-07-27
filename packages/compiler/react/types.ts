@@ -2,6 +2,7 @@ import type * as t from '@babel/types';
 import type { NodePath } from '@babel/core';
 
 export interface Shared {
+  file: string;
   callSitePath: NodePath<t.CallExpression>;
   callSite: t.CallExpression;
   Component: t.VariableDeclarator | t.FunctionDeclaration;

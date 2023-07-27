@@ -10,6 +10,7 @@ import {
 import {
   handleVisitorError,
   styleCommentMessage,
+  styleLinks,
   stylePrimaryMessage,
 } from './react/utils';
 import type { NodePath, PluginItem } from '@babel/core';
@@ -20,42 +21,21 @@ export interface Options {
   server?: boolean;
   mode?: 'react' | 'preact' | 'react-server' | 'preact-server' | 'vdom';
   mute?: boolean;
-  auto?: boolean;
+  auto?: boolean | { threshold?: number };
+  _file?: string;
 }
 
 export const unplugin = createUnplugin((options: Options = {}) => {
   return {
     enforce: 'pre',
     name: 'million',
-    buildStart() {
-      const comment = styleCommentMessage(
-        'Schedule a call if you need help: https://million.dev/hotline',
-      );
-
-      if (options.optimize) {
-        // eslint-disable-next-line no-console
-        console.log(
-          stylePrimaryMessage(
-            `Optimizing compiler is enabled. ${comment}`,
-            '✓ [beta]',
-          ),
-        );
-      }
-      if (options.auto) {
-        // eslint-disable-next-line no-console
-        console.log(
-          stylePrimaryMessage(
-            `Automatic mode is enabled. ${comment}`,
-            '✓ [beta]',
-          ),
-        );
-      }
-    },
     transformInclude(id: string) {
       return /\.[jt]sx$/.test(id);
     },
     async transform(code: string, id: string) {
       const isTSX = id.endsWith('.tsx');
+
+      options._file = id;
 
       const plugins = normalizePlugins([
         'babel-plugin-transform-react-createelement-to-jsx',
@@ -76,6 +56,27 @@ export const unplugin = createUnplugin((options: Options = {}) => {
 
 export const babelPlugin = declare((api, options: Options) => {
   api.assertVersion(7);
+
+  const comment =
+    styleLinks(
+      'Schedule a call if you need help: https://million.dev/hotline. To disable help messages, set the "mute" option to true.',
+    ) +
+    styleCommentMessage(
+      '\nThere is no guarantee that features in beta will be completely production ready, so here be dragons.',
+    );
+
+  if (options.optimize) {
+    // eslint-disable-next-line no-console
+    console.log(
+      stylePrimaryMessage(`Optimizing compiler is enabled ✓ (beta)`, comment),
+    );
+  }
+  if (options.auto) {
+    // eslint-disable-next-line no-console
+    console.log(
+      stylePrimaryMessage(`Automatic mode is enabled ✓ (beta)`, comment),
+    );
+  }
 
   let callExpressionVisitor: ReturnType<typeof reactCallExpressionVisitor>;
   let jsxElementVisitor: ReturnType<typeof reactJsxElementVisitor> | undefined;
@@ -112,24 +113,24 @@ export const babelPlugin = declare((api, options: Options) => {
       JSXElement(path: NodePath<t.JSXElement>) {
         handleVisitorError(() => {
           if (!jsxElementVisitor) return;
-          jsxElementVisitor(path);
+          jsxElementVisitor(path, options._file!);
         }, options.mute);
       },
       CallExpression(path: NodePath<t.CallExpression>) {
         handleVisitorError(() => {
-          callExpressionVisitor(path, blockCache);
+          callExpressionVisitor(path, blockCache, options._file!);
         }, options.mute);
       },
       FunctionDeclaration(path: NodePath<t.FunctionDeclaration>) {
         handleVisitorError(() => {
           if (!componentVisitor) return;
-          componentVisitor(path);
+          componentVisitor(path, options._file!);
         }, options.mute);
       },
       VariableDeclarator(path: NodePath<t.VariableDeclarator>) {
         handleVisitorError(() => {
           if (!componentVisitor) return;
-          componentVisitor(path);
+          componentVisitor(path, options._file!);
         }, options.mute);
       },
     },

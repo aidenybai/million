@@ -22,6 +22,7 @@ export const callExpressionVisitor = (
   return (
     callSitePath: NodePath<t.CallExpression>,
     blockCache: Map<string, t.Identifier>,
+    file: string,
   ) => {
     // Callsite refers to the block call (e.g. the AST node of "block(Componnent)")
     const callSite = callSitePath.node;
@@ -78,6 +79,7 @@ export const callExpressionVisitor = (
     const validSpecifiers = getValidSpecifiers(
       importDeclarationPath,
       importedBindings,
+      file,
     );
 
     const importSource = importDeclaration.source;
@@ -111,6 +113,7 @@ export const callExpressionVisitor = (
     if (t.isIdentifier(RawComponent) && blockCache.has(RawComponent.name)) {
       throw createDeopt(
         'Found duplicate block call. Make sure you are not calling block() more than once with the same component.',
+        file,
         callSitePath,
       );
     }
@@ -202,6 +205,7 @@ export const callExpressionVisitor = (
       } else {
         throw createDeopt(
           'Found unsupported argument for block. Make sure blocks consume a reference to a component function or the direct declaration.',
+          file,
           callSitePath,
         );
       }
@@ -224,6 +228,7 @@ export const callExpressionVisitor = (
     const originalComponent = t.cloneNode(Component);
 
     const SHARED: Shared = {
+      file,
       callSitePath,
       callSite,
       Component,
@@ -311,11 +316,13 @@ export const callExpressionVisitor = (
     } else if (t.isImportSpecifier(Component)) {
       throw createDeopt(
         'You are using a component imported from another file. The component must be declared in the same file as the block.',
+        file,
         componentDeclarationPath,
       );
     } else {
       throw createDeopt(
         'You can only use block() with a function declaration or arrow function.',
+        file,
         callSitePath,
       );
     }

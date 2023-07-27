@@ -28,7 +28,7 @@ import {
   StyleAttributeFlag,
   EVENT_PATCH,
 } from './constants';
-import type { MillionProps } from 'packages/types';
+import type { MillionProps } from '../types';
 import type { ArrayBlock } from './array';
 import type { EditChild, VElement, Hole, VNode, Edit } from './types';
 
