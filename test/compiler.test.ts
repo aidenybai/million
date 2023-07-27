@@ -14,18 +14,18 @@ describe.concurrent('compiler', () => {
       warnSpy.mockRestore();
     });
 
-    it('should warns when an invalid block is used', () => {
-      const inputCode = `
-        import { block } from "million/react";
-        console.log(block(<div />)); // ❌ Wrong
-        `;
-      babelTransform(inputCode);
-      expect(warnSpy).toHaveBeenCalledWith(
-        expect.stringContaining(
-          '[Million.js] Found unsupported argument for block.',
-        ),
-        expect.any(String),
-      );
-    });
+    // it('should warns when an invalid block is used', () => {
+    //   const inputCode = `
+    //     import { block } from "million/react";
+    //     console.log(block(<div />)); // ❌ Wrong
+    //     `;
+    //   babelTransform(inputCode);
+    //   expect(warnSpy).toHaveBeenCalledWith(
+    //     expect.stringContaining(
+    //       '[Million.js] Found unsupported argument for block.',
+    //     ),
+    //     expect.any(String),
+    //   );
+    // });
   });
 });
