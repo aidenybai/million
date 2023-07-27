@@ -32,6 +32,7 @@ export const transformComponent = (
   SHARED: Shared,
 ) => {
   const {
+    file,
     callSite,
     callSitePath,
     Component,
@@ -57,6 +58,7 @@ export const transformComponent = (
   if (!t.isBlockStatement(componentBody)) {
     throw createDeopt(
       'Expected a block statement for the component function body. Make sure you are using a function declaration or arrow function.',
+      file,
       callSitePath,
     );
   }
@@ -90,6 +92,7 @@ export const transformComponent = (
 
       throw createDeopt(
         'You cannot use multiple returns in blocks. There can only be one return statement at the end of the block.',
+        file,
         callSitePath,
         resolvePath(ifStatementPath),
       );
@@ -98,6 +101,7 @@ export const transformComponent = (
     if (statementsInBody === i - 1 && !t.isReturnStatement(node)) {
       throw createDeopt(
         'There must be a return statement at the end of the block.',
+        file,
         callSitePath,
         resolvePath(componentBodyPath.get(`body.${i}`)),
       );
@@ -169,7 +173,7 @@ export const transformComponent = (
   };
 
   if (!t.isJSXElement(returnStatement.argument)) {
-    throw createDeopt(null, callSitePath);
+    throw createDeopt(null, file, callSitePath);
   }
 
   // This function will automatically populate the `dynamics` for us:
@@ -461,7 +465,7 @@ export const transformJSX = (
   },
   SHARED: Shared,
 ) => {
-  const { imports, unstable, isReact } = SHARED;
+  const { file, imports, unstable, isReact } = SHARED;
 
   /**
    * Populates `dynamics` with a new entry.
@@ -562,6 +566,7 @@ export const transformJSX = (
           );
           warn(
             'Spread attributes are not fully supported.',
+            file,
             resolvePath(spreadPath),
           );
           continue;
@@ -609,7 +614,7 @@ export const transformJSX = (
           }
         }
       }
-      handleVisitorError(() => visitor(jsxPath), options.mute);
+      handleVisitorError(() => visitor(jsxPath, file), options.mute);
       jsxPath.scope.crawl();
     }
 
@@ -647,6 +652,7 @@ export const transformJSX = (
       const spreadPath = jsxPath.get(`openingElement.attributes.${i}.argument`);
       warn(
         'Spread attributes are not fully supported.',
+        file,
         resolvePath(spreadPath),
       );
       continue;
@@ -669,6 +675,7 @@ export const transformJSX = (
             // TODO: possibly explore style object extraction in the future.
             throw createDeopt(
               'Computed properties are not supported in style objects.',
+              file,
               jsxPath,
             );
           }
@@ -810,7 +817,11 @@ export const transformJSX = (
 
     if (t.isJSXSpreadChild(child)) {
       const spreadPath = jsxPath.get(`children.${i}`);
-      warn('Spread children are not fully supported.', resolvePath(spreadPath));
+      warn(
+        'Spread children are not fully supported.',
+        file,
+        resolvePath(spreadPath),
+      );
       continue;
     }
 
@@ -931,6 +942,7 @@ export const transformJSX = (
 
           warn(
             'Array.map() will degrade performance. We recommend removing the block on the current component and using a <For /> component instead.',
+            file,
             resolvePath(expressionPath),
             options.mute,
           );
@@ -971,6 +983,7 @@ export const transformJSX = (
 
           warn(
             'Conditional expressions will degrade performance. We recommend using deterministic returns instead.',
+            file,
             resolvePath(expressionPath),
             options.mute,
           );

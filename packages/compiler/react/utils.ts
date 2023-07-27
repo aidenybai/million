@@ -10,6 +10,7 @@ export const TRANSFORM_ANNOTATION = 'million:transform';
 export const getValidSpecifiers = (
   importDeclarationPath: NodePath<t.ImportDeclaration>,
   importedBindings: Record<string, string>,
+  file: string,
 ): string[] => {
   const importDeclaration = importDeclarationPath.node;
   /**
@@ -45,6 +46,7 @@ export const getValidSpecifiers = (
   ) {
     throw createDeopt(
       'Found unsupported import for block. Make sure blocks are imported from correctly.',
+      file,
       importDeclarationPath,
     );
   }
@@ -64,30 +66,47 @@ export const resolveCorrectImportSource = (
   return `million/${mode}`;
 };
 
-export const createError = (message: string, path: NodePath) => {
-  return path.buildCodeFrameError(`${stylePrimaryMessage(message, '⚠')}\n`);
+export const createError = (message: string, path: NodePath, file: string) => {
+  return path.buildCodeFrameError(
+    `\n${styleSecondaryMessage(message, '⚠')} ${styleCommentMessage(
+      String(file),
+    )}`,
+  );
 };
 
-export const stylePrimaryMessage = (message: string, symbol: string) => {
-  return `${bgMagenta(' million ')} ${magenta(symbol)} ${message}`;
+export const stylePrimaryMessage = (message: string, comment: string) => {
+  return `\n🦁 ${bgMagenta(' million ')} ${magenta(message)} \n${comment}\n`;
 };
 
-export const styleCommentMessage = (message: string) => {
+export const styleSecondaryMessage = (message: string, emoticon: string) => {
+  return `${magenta(emoticon)} ${message}`;
+};
+
+export const styleLinks = (message: string) => {
   const parsedMessage = message.replaceAll(/https?:\/\/[^\s]+/g, (match) => {
     return cyan(match);
   });
-  return dim(parsedMessage);
+  return parsedMessage;
 };
 
-export const warn = (message: string, path: NodePath, mute?: boolean) => {
+export const styleCommentMessage = (message: string) => {
+  return dim(styleLinks(message));
+};
+
+export const warn = (
+  message: string,
+  file: string,
+  path: NodePath,
+  mute?: boolean,
+) => {
   if (mute) return;
-  const err = createError(message, path);
+  const err = createError(message, path, file);
   // eslint-disable-next-line no-console
   console.warn(
     err.message,
-    '\n\n',
+    '\n',
     styleCommentMessage(
-      `Check out the Rules of Blocks: https://million.dev/docs/rules. Set the "mute" option to true to disable this message.`,
+      `Check out the Rules of Blocks: https://million.dev/docs/rules. Enable the "mute" option to disable this message.`,
     ),
     '\n',
   );
@@ -95,8 +114,9 @@ export const warn = (message: string, path: NodePath, mute?: boolean) => {
 
 export const createDeopt = (
   message: string | null,
+  file: string,
   callSitePath: NodePath,
-  path?: NodePath,
+  path?: NodePath | null,
 ) => {
   const { parent, node } = callSitePath;
   if (
@@ -107,7 +127,7 @@ export const createDeopt = (
     parent.init = node.arguments[0];
   }
   if (message === null) return new Error('');
-  return createError(message, path ?? callSitePath);
+  return createError(message, path ?? callSitePath, file);
 };
 
 export const isStatic = (node: t.Node) => {

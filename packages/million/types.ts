@@ -1,4 +1,4 @@
-import type { MillionProps } from 'packages/types';
+import type { MillionProps } from '../types';
 
 declare const enum Flags {
   Child = 1,
