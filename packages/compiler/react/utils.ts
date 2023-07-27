@@ -1,6 +1,7 @@
 import * as t from '@babel/types';
 import { type NodePath } from '@babel/core';
 import { addNamed } from '@babel/helper-module-imports';
+import { bgMagenta, cyan, magenta, dim } from 'kleur/colors';
 import type { Options } from '../plugin';
 
 export const RENDER_SCOPE = 'slot';
@@ -64,7 +65,18 @@ export const resolveCorrectImportSource = (
 };
 
 export const createError = (message: string, path: NodePath) => {
-  return path.buildCodeFrameError(`[Million.js] ${message}`);
+  return path.buildCodeFrameError(`${stylePrimaryMessage(message, '⚠')}\n`);
+};
+
+export const stylePrimaryMessage = (message: string, symbol: string) => {
+  return `${bgMagenta(' million ')} ${magenta(symbol)} ${message}`;
+};
+
+export const styleCommentMessage = (message: string) => {
+  const parsedMessage = message.replaceAll(/https?:\/\/[^\s]+/g, (match) => {
+    return cyan(match);
+  });
+  return dim(parsedMessage);
 };
 
 export const warn = (message: string, path: NodePath, mute?: boolean) => {
@@ -73,8 +85,10 @@ export const warn = (message: string, path: NodePath, mute?: boolean) => {
   // eslint-disable-next-line no-console
   console.warn(
     err.message,
-    '\n',
-    'You may want to reference the Rules of Blocks (https://million.dev/docs/rules)',
+    '\n\n',
+    styleCommentMessage(
+      `Check out the Rules of Blocks: https://million.dev/docs/rules. Set the "mute" option to true to disable this message.`,
+    ),
     '\n',
   );
 };

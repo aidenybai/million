@@ -45,7 +45,7 @@ export const callExpressionVisitor = (
 
     if (
       !t.isIdentifier(callSite.callee) ||
-      !importedBindings[callSite.callee.name]
+      !Object.values(importedBindings).includes(callSite.callee.name)
     )
       return;
 
@@ -69,17 +69,7 @@ export const callExpressionVisitor = (
     const blockCallBinding = callSitePath.scope.getBinding(
       callSite.callee.name,
     ); // callee.name = 'block'
-    if (!blockCallBinding) {
-      /**
-       * Deoptimization errors are thrown when the compiler is unable to optimize the code.
-       * They are catched globally and logged as warnings, but the code is not compiled.
-       * This is to prevent the compiler from generating invalid code.
-       */
-      throw createDeopt(
-        'Unable to find AST binding for block. Check that the block function is imported correctly.',
-        callSitePath,
-      );
-    }
+    if (!blockCallBinding) return;
 
     const importDeclarationPath = blockCallBinding.path
       .parentPath as NodePath<t.ImportDeclaration>;
@@ -116,13 +106,14 @@ export const callExpressionVisitor = (
 
     if (!validSpecifiers.includes('block')) return;
 
-    const RawComponent: any = callSite.arguments[0];
+    let RawComponent: any = callSite.arguments[0];
 
-    // // If we find a duplicate block call, we replace it with the cached block.
-    // if (t.isIdentifier(RawComponent) && blockCache.has(RawComponent.name)) {
-    //   callSitePath.replaceWith(blockCache.get(RawComponent.name)!);
-    //   return;
-    // }
+    if (t.isIdentifier(RawComponent) && blockCache.has(RawComponent.name)) {
+      throw createDeopt(
+        'Found duplicate block call. Make sure you are not calling block() more than once with the same component.',
+        callSitePath,
+      );
+    }
 
     /**
      * Replaces `export default block(Component)` with
@@ -201,19 +192,19 @@ export const callExpressionVisitor = (
       !t.isFunctionExpression(RawComponent) &&
       !t.isArrowFunctionExpression(RawComponent)
     ) {
-      // if (
-      //   t.isJSXElement(RawComponent) &&
-      //   t.isJSXIdentifier(RawComponent.openingElement.name)
-      // ) {
-      //   RawComponent = t.identifier(RawComponent.openingElement.name.name);
-      //   callSite.arguments[0] = RawComponent;
-      //   callSitePath.scope.crawl();
-      // } else {
-      throw createDeopt(
-        'Found unsupported argument for block. Make sure blocks consume a reference to a component function or the direct declaration.',
-        callSitePath,
-      );
-      // }
+      if (
+        t.isJSXElement(RawComponent) &&
+        t.isJSXIdentifier(RawComponent.openingElement.name)
+      ) {
+        RawComponent = t.identifier(RawComponent.openingElement.name.name);
+        callSite.arguments[0] = RawComponent;
+        callSitePath.scope.crawl();
+      } else {
+        throw createDeopt(
+          'Found unsupported argument for block. Make sure blocks consume a reference to a component function or the direct declaration.',
+          callSitePath,
+        );
+      }
     }
 
     callSitePath.scope.crawl();
