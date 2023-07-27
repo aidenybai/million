@@ -18,7 +18,6 @@ import { evaluate } from './evaluator';
 import { jsxElementVisitor } from './jsx-element-visitor';
 import type { Options } from '../plugin';
 import type { Dynamics, Shared } from './types';
-import type { Analytics } from '../../types';
 import type { NodePath } from '@babel/core';
 
 export const transformComponent = (
@@ -169,14 +168,6 @@ export const transformComponent = (
     unoptimizable: false,
   };
 
-  const analytics: Analytics = {
-    elements: 0,
-    components: 0,
-    attributes: 0,
-    data: 0,
-    traversals: 0,
-  };
-
   if (!t.isJSXElement(returnStatement.argument)) {
     throw createDeopt(null, callSitePath);
   }
@@ -191,7 +182,6 @@ export const transformComponent = (
       componentBodyPath,
       dynamics,
       isRoot: true,
-      analytics,
     },
     SHARED,
   );
@@ -300,18 +290,6 @@ export const transformComponent = (
     t.objectProperty(
       t.identifier('original'),
       options.server ? (originalComponent.id as t.Identifier) : t.nullLiteral(),
-    ),
-    t.objectProperty(
-      t.identifier('analytics'),
-      t.isArrowFunctionExpression(originalOptions.analytics)
-        ? t.callExpression(originalOptions.analytics, [
-            t.objectExpression(
-              Object.entries(analytics).map(([key, value]) =>
-                t.objectProperty(t.identifier(key), t.numericLiteral(value)),
-              ),
-            ),
-          ])
-        : t.nullLiteral(),
     ),
     t.objectProperty(t.identifier('shouldUpdate'), createDirtyChecker(holes)),
   ];
@@ -473,7 +451,6 @@ export const transformJSX = (
     componentBodyPath,
     dynamics,
     isRoot,
-    analytics,
   }: {
     jsx: t.JSXElement;
     jsxPath: NodePath<t.JSXElement>;
@@ -481,7 +458,6 @@ export const transformJSX = (
     componentBodyPath: NodePath<t.Node>;
     dynamics: Dynamics;
     isRoot: boolean;
-    analytics: Analytics;
   },
   SHARED: Shared,
 ) => {
@@ -543,7 +519,6 @@ export const transformJSX = (
     }
     // Sometimes, we require a mutation to the JSX. We defer this for later use.
     dynamics.deferred.push(callback!);
-    analytics.data++;
     return id;
   };
 
@@ -580,7 +555,6 @@ export const transformJSX = (
       const { attributes } = jsx.openingElement;
       for (let i = 0, j = attributes.length; i < j; i++) {
         const attribute = attributes[i]!;
-        analytics.attributes++;
 
         if (t.isJSXSpreadAttribute(attribute)) {
           const spreadPath = jsxPath.get(
@@ -639,7 +613,6 @@ export const transformJSX = (
       jsxPath.scope.crawl();
     }
 
-    analytics.components++;
     // TODO: Add a warning for using components that are not block or For
     // warn(
     //   'Components will cause degraded performance. Ideally, you should use DOM elements instead.',
@@ -663,15 +636,12 @@ export const transformJSX = (
     return dynamics;
   }
 
-  analytics.elements++;
-
   /**
    * Now, it's time to handle the DOM element case.
    */
   const { attributes } = jsx.openingElement;
   for (let i = 0, j = attributes.length; i < j; i++) {
     const attribute = attributes[i]!;
-    analytics.attributes++;
 
     if (t.isJSXSpreadAttribute(attribute)) {
       const spreadPath = jsxPath.get(`openingElement.attributes.${i}.argument`);
@@ -836,8 +806,6 @@ export const transformJSX = (
   for (let i = 0; i < jsx.children.length; i++) {
     const child = jsx.children[i]!;
 
-    analytics.traversals++;
-
     if (t.isJSXText(child)) continue;
 
     if (t.isJSXSpreadChild(child)) {
@@ -919,7 +887,6 @@ export const transformJSX = (
             componentBodyPath,
             dynamics,
             isRoot: false,
-            analytics,
           },
           SHARED,
         );
@@ -1048,7 +1015,6 @@ export const transformJSX = (
         componentBodyPath,
         dynamics,
         isRoot: false,
-        analytics,
       },
       SHARED,
     );

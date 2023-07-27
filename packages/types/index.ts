@@ -7,7 +7,6 @@ export interface Options {
   shouldUpdate?: (oldProps: MillionProps, newProps: MillionProps) => boolean;
   block?: any;
   original?: ComponentType<any>;
-  analytics?: (analytics: Analytics) => void;
   ssr?: boolean;
   svg?: boolean;
   as?: string;
@@ -28,12 +27,4 @@ export interface ArrayCache<T> {
   children: T[] | null;
   mounted?: boolean | null;
   block?: ReturnType<typeof createBlock>;
-}
-
-export interface Analytics {
-  elements: number;
-  components: number;
-  attributes: number;
-  data: number;
-  traversals: number;
 }
