@@ -4,6 +4,7 @@ import {
   createDeopt,
   getValidSpecifiers,
   handleVisitorError,
+  isComponent,
   removeDuplicateJSXAttributes,
   resolveCorrectImportSource,
   resolvePath,
@@ -159,7 +160,15 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
       }
     }
 
+    let bailout = false;
     jsxElementPath.traverse({
+      JSXElement(path) {
+        const jsxId = path.node.openingElement.name;
+        if (t.isJSXIdentifier(jsxId) && isComponent(jsxId.name)) {
+          path.stop();
+          bailout = true;
+        }
+      },
       Identifier(path: NodePath<t.Identifier>) {
         if (programPath.scope.hasBinding(path.node.name)) return;
         const targetPath = path.parentPath;
@@ -205,6 +214,9 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
         idNames.add(path.node.name);
       },
     });
+
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (bailout) return jsxElementPath.stop();
 
     const ids = [...idNames].map((id) => t.identifier(id));
 

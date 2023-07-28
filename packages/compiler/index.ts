@@ -1,15 +1,21 @@
 import { unplugin, babelPlugin as babel } from './plugin';
+import type { Options } from './plugin';
 
 export const vite = unplugin.vite;
 export const webpack = unplugin.webpack;
 export const rollup = unplugin.rollup;
 export const rspack = unplugin.rspack;
 export const esbuild = unplugin.esbuild;
-export const next = (nextConfig: Record<string, any> = {}) => {
+export const next = (
+  nextConfig: Record<string, any> = {},
+  overrideOptions: Options = {},
+) => {
   return {
     ...nextConfig,
     webpack(config: Record<string, any>, options: Record<string, any>) {
-      config.plugins.unshift(webpack({ mode: 'react', server: true }));
+      config.plugins.unshift(
+        webpack({ mode: 'react', server: true, ...overrideOptions }),
+      );
 
       if (typeof nextConfig.webpack === 'function') {
         return nextConfig.webpack(config, options);
