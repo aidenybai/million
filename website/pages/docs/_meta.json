@@ -6,6 +6,7 @@
   },
   "quickstart": "Quick Start",
   "install": "Installation",
+  "automatic": "Automatic Mode",
   "rules": "Rules of Blocks",
   "virtualization": "Virtualization",
   "typescript": "Usage with TypeScript",
