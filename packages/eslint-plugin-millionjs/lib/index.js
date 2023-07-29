@@ -1,6 +1,6 @@
 /**
- * @fileoverview Custom rules for Kent
- * @author Kent
+ * @fileoverview Custom rules for Eslint Plugin
+ * @author Drex
  */
 "use strict";
 
