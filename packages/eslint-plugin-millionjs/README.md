@@ -14,9 +14,8 @@ To run it Locally
 npm i file:<PLUGIN_DIRECTORY> -D
 ```
 
-```bash
-npm install eslint-plugin-millionjs eslint@^7.0.0 --save-dev
-```
+<!-- To run it from the NPM Registry
+
 
 ```bash
 npm install eslint-plugin-millionjs eslint@^7.0.0 --save-dev
@@ -26,7 +25,7 @@ Or, if you prefer using Yarn:
 
 ```bash
 yarn add eslint-plugin-millionjs eslint@^7.0.0 --dev
-```
+``` -->
 
 ## Configuration
 
