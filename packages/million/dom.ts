@@ -138,7 +138,7 @@ export const setText = (el: Text, value: string) => {
 export const setStyleAttribute = (
   el: HTMLElement,
   name: string,
-  value?: string | boolean | null,
+  value?: string | boolean | number | null,
 ) => {
   if (typeof value !== 'number' || IS_NON_DIMENSIONAL.test(name)) {
     el.style[name] = value;
