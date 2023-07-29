@@ -1,12 +1,12 @@
-# eslint-plugin-millionjs
+# eslint-plugin-millionjs-drex
 
 ## Overview
 
-`eslint-plugin-millionjs` is an ESLint plugin specifically designed for the MillionJS Library. This plugin provides a set of rules to help you maintain consistent and error-free code when working with projects integrated with Million. It can automatically detect potential issues, enforce best practices, and improve code quality in your MillionJS applications.
+`eslint-plugin-millionjs-drex` is an ESLint plugin specifically designed for the MillionJS Library. This plugin provides a set of rules to help you maintain consistent and error-free code when working with projects integrated with Million. It can automatically detect potential issues, enforce best practices, and improve code quality in your MillionJS applications.
 
 ## Installation
 
-To use `eslint-plugin-millionjs` in your MillionJS project, you'll need to install it along with its peer dependencies:
+To use `eslint-plugin-millionjs-drex` in your MillionJS project, you'll need to install it along with its peer dependencies:
 
 To run it from the NPM Registry
 
@@ -31,12 +31,17 @@ module.exports = {
 };
 ```
 
-If you're using react, make sure you add `eslint:recommended` and `plugin:react/recommended` to the `extends` section of your ESLint configuration file (e.g., `.eslintrc.js`):
+If you're using react, make sure you add `eslint:recommended`,`plugin:react/jsx-runtime` and `plugin:react/recommended` to the `extends` section of your ESLint configuration file (e.g., `.eslintrc.js`):
 
 ```javascript
 module.exports = {
-  extends: ['eslint:recommended', 'plugin:react/recommended'],
+  extends: [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:react/jsx-runtime",
+  ],
   plugins: ['millionjs-drex'],
+
   // Other ESLint configurations...
 };
 ```
@@ -59,7 +64,7 @@ Here's an example of how to enable the `avoid-spread-attributes` rule from `esli
 module.exports = {
   plugins: ['millionjs-drex'],
   rules: {
-    'millionjs/avoid-spread-attributes': 'error',
+    'millionjs-drex/avoid-spread-attributes': 'error',
   },
   // Other ESLint configurations...
 };
@@ -67,7 +72,7 @@ module.exports = {
 
 ## Rules
 
-`eslint-plugin-millionjs` provides the following rules:
+`eslint-plugin-millionjs-drex` provides the following rules:
 
 - `millionjs-drex/check-block-declaration`: This rule enforces a specific pattern when using the block() function from the Million.js library.
 
