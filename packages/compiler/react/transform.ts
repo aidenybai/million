@@ -8,6 +8,7 @@ import {
   trimJsxChildren,
   normalizeProperties,
   SVG_ELEMENTS,
+  NO_PX_PROPERTIES,
   RENDER_SCOPE,
   TRANSFORM_ANNOTATION,
   handleVisitorError,
@@ -689,6 +690,14 @@ export const transformJSX = (
             } else if (t.isIdentifier(property.key)) {
               property.value = t.stringLiteral(property.key.name);
             }
+          }
+
+          if (
+            t.isNumericLiteral(value) &&
+            t.isIdentifier(property.key) &&
+            !NO_PX_PROPERTIES.includes(property.key.name)
+          ) {
+            property.value = t.stringLiteral(`${value.value}px`);
           }
 
           if (t.isIdentifier(value)) {
