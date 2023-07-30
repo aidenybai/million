@@ -43,15 +43,17 @@ export const chainOrLogic = (
 };
 
 export const createDirtyChecker = (holes: string[]) => {
+  const oldProps = t.identifier('_');
+  const newProps = t.identifier('$');
   return t.arrowFunctionExpression(
-    [t.identifier('oldProps'), t.identifier('newProps')],
+    [oldProps, newProps],
     chainOrLogic(
       ...holes.map((hole) => {
         const id = t.identifier(hole);
         return t.binaryExpression(
           '!==',
-          t.optionalMemberExpression(t.identifier('oldProps'), id, false, true),
-          t.optionalMemberExpression(t.identifier('newProps'), id, false, true),
+          t.optionalMemberExpression(oldProps, id, false, true),
+          t.optionalMemberExpression(newProps, id, false, true),
         );
       }),
     ),

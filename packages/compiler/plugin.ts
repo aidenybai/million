@@ -78,6 +78,7 @@ export const babelPlugin = declare((api, options: Options) => {
     );
   }
 
+  const file = options._file as string;
   let callExpressionVisitor: ReturnType<typeof reactCallExpressionVisitor>;
   let jsxElementVisitor: ReturnType<typeof reactJsxElementVisitor> | undefined;
   let componentVisitor: ReturnType<typeof reactComponentVisitor> | undefined;
@@ -113,24 +114,24 @@ export const babelPlugin = declare((api, options: Options) => {
       JSXElement(path: NodePath<t.JSXElement>) {
         handleVisitorError(() => {
           if (!jsxElementVisitor) return;
-          jsxElementVisitor(path, options._file!);
+          jsxElementVisitor(path, file);
         }, options.mute);
       },
       CallExpression(path: NodePath<t.CallExpression>) {
         handleVisitorError(() => {
-          callExpressionVisitor(path, blockCache, options._file!);
+          callExpressionVisitor(path, blockCache, file);
         }, options.mute);
       },
       FunctionDeclaration(path: NodePath<t.FunctionDeclaration>) {
         handleVisitorError(() => {
           if (!componentVisitor) return;
-          componentVisitor(path, options._file!);
+          componentVisitor(path, file);
         }, options.mute);
       },
       VariableDeclarator(path: NodePath<t.VariableDeclarator>) {
         handleVisitorError(() => {
           if (!componentVisitor) return;
-          componentVisitor(path, options._file!);
+          componentVisitor(path, file);
         }, options.mute);
       },
     },
