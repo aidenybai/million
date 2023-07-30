@@ -73,14 +73,16 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
     returnStatementPath?.traverse({
       JSXElement(path) {
         const type = path.node.openingElement.name;
-        if (
-          t.isJSXMemberExpression(type) &&
-          isComponent(type.property.name) &&
-          t.isJSXIdentifier(type.object) &&
-          type.object.name === 'Provider'
-        ) {
-          info.bailout = true;
-          return;
+        if (t.isJSXMemberExpression(type) && isComponent(type.property.name)) {
+          const isContext =
+            t.isJSXIdentifier(type.object) && type.property.name === 'Provider';
+          const isStyledComponent =
+            t.isJSXIdentifier(type.object) && type.object.name === 'styled';
+
+          if (isContext || isStyledComponent) {
+            info.bailout = true;
+            return;
+          }
         }
         if (t.isJSXIdentifier(type) && isComponent(type.name)) {
           info.components++;
@@ -92,7 +94,16 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
         if (!t.isLiteral(path.node.expression)) info.expressions++;
       },
       JSXAttribute(path) {
-        if (!t.isLiteral(path.node.value)) info.attributes++;
+        const attribute = path.node;
+        // twin.macro + styled-components / emotion support
+        if (attribute.name.name === 'tw' || attribute.name.name === 'css') {
+          info.bailout = true;
+          return;
+        }
+        if (!t.isLiteral(attribute.value)) info.attributes++;
+      },
+      JSXText(path) {
+        if (path.node.value.trim() !== '') info.text++;
       },
     });
 
