@@ -7,7 +7,7 @@ import { queueMicrotask$ } from '../million/dom';
 import { REGISTRY } from './block';
 import { renderPreactScope } from './utils';
 import { RENDER_SCOPE } from './constants';
-import type { Props, Block } from '../million';
+import type { Block } from '../million';
 import type { ArrayCache, MillionArrayProps, MillionProps } from '../types';
 
 export const For = <T>({ each, children }: MillionArrayProps<T>) => {
