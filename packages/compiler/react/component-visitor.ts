@@ -172,14 +172,30 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
       ),
     ]);
 
-    (componentPath.isVariableDeclarator()
-      ? componentPath.parentPath
-      : componentPath
-    ).replaceWith(rewrittenComponentNode);
+    const componentParentPath = componentPath.parentPath;
+    let rewrittenVariableDeclarationPath: NodePath<t.VariableDeclaration>;
 
-    const rewrittenComponentPath = componentPath.get(
-      'declarations.0.init',
-    ) as NodePath<t.CallExpression>;
+    if (
+      componentParentPath.isExportNamedDeclaration() ||
+      componentParentPath.isExportDefaultDeclaration()
+    ) {
+      rewrittenVariableDeclarationPath = componentParentPath.insertBefore(
+        rewrittenComponentNode,
+      )[0];
+      componentPath.replaceWith(component.id);
+    } else if (componentPath.isVariableDeclarator()) {
+      rewrittenVariableDeclarationPath = componentParentPath.replaceWith(
+        rewrittenComponentNode,
+      )[0];
+    } else {
+      rewrittenVariableDeclarationPath = componentPath.replaceWith(
+        rewrittenComponentNode,
+      )[0];
+    }
+
+    const rewrittenComponentPath = resolvePath(
+      rewrittenVariableDeclarationPath,
+    ).get('declarations.0.init') as NodePath<t.CallExpression>;
 
     rewrittenComponentPath.scope.crawl();
     const visitor = callExpressionVisitor(options, isReact);
