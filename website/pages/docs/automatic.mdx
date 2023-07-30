@@ -3,11 +3,15 @@ title: 'Automatic Mode'
 description: 'Automatically optimizes React components'
 ---
 
-import { Callout, Tabs, Tab, Steps } from 'nextra-theme-docs';
+import { Callout, Tabs, Tab } from 'nextra-theme-docs';
 
 # Automatic Mode `beta`
 
-Automatic mode allows you to use Million.js without any configuration. It will automatically optimize your React components.
+Automatic mode allows you to use Million.js without any configuration. It will automatically determine which components are slow and optimize them.
+
+<Callout type="warning">
+  Automatic mode is currently in beta. Here be dragons 🐉
+</Callout>
 
 ## Installation
 
@@ -92,3 +96,16 @@ To enable automatic mode, you need to pass the `auto` option to the compiler.
   ```
   </Tab>
 </Tabs>
+
+That's literally all you have to do.
+
+## Muting help messages
+
+If you don't want to see the help messages, you can pass the `mute` option to the compiler.
+
+```js
+{
+  mute: true,
+  auto: true
+}
+```
