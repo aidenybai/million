@@ -164,7 +164,7 @@ export class Block extends AbstractBlock {
         } else if (edit.t & AttributeFlag) {
           setAttribute(el, edit.n!, value);
         } else if (edit.t & StyleAttributeFlag) {
-          if (typeof value === 'string') {
+          if (typeof value === 'string' || typeof value === 'number') {
             setStyleAttribute(el, edit.n!, value);
           } else {
             for (const style in value) {
@@ -254,7 +254,7 @@ export class Block extends AbstractBlock {
         } else if (edit.t & AttributeFlag) {
           setAttribute(el, edit.n!, newValue);
         } else if (edit.t & StyleAttributeFlag) {
-          if (typeof newValue === 'string') {
+          if (typeof newValue === 'string' || typeof newValue === 'number') {
             setStyleAttribute(el, edit.n!, newValue);
           } else {
             for (const style in newValue) {
