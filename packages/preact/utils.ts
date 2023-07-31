@@ -2,9 +2,7 @@ import { render, Fragment, isValidElement } from 'preact';
 import { RENDER_SCOPE } from './constants';
 import type {
   VNode as PreactNode,
-  ComponentChild,
   ComponentProps,
-  ComponentChildren,
 } from 'preact';
 import type { VNode } from '../million';
 
