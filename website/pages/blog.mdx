@@ -30,15 +30,15 @@ export function BlogIndex() {
           tabIndex="0"
         >
           {page.meta?.title || page.frontMatter?.title || page.name}
-          <p className="opacity-80" style={{ marginTop: '.5rem' }}>
-            {page.frontMatter?.description}{' '}
-            <span className="inline-block nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font] font-bold">
-              <Link href={page.route} tabIndex="-1">
-                {'Read more →'}
-              </Link>
-            </span>
-          </p>
         </Link>
+        <p className="opacity-80" style={{ marginTop: '.5rem' }}>
+          {page.frontMatter?.description}{' '}
+          <span className="inline-block nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font] font-bold">
+            <Link href={page.route} tabIndex="-1">
+              {'Read more →'}
+            </Link>
+          </span>
+        </p>
         {page.frontMatter?.date ? (
           <p className="opacity-50 text-sm mt-2">{page.frontMatter.date}</p>
         ) : null}
