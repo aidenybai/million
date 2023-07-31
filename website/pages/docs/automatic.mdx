@@ -109,3 +109,14 @@ If you don't want to see the help messages, you can pass the `mute` option to th
   auto: true
 }
 ```
+
+## Ignoring components
+
+If a certain component conficts with the Million.js runtime, it's possible to skip over them via the `// million-ignore` comment.
+
+```js
+// million-ignore
+function App() {
+  return ...
+}
+```
