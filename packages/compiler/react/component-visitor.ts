@@ -26,6 +26,20 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
       t.FunctionDeclaration | t.FunctionExpression | t.ArrowFunctionExpression
     >;
     const component = componentPath.node;
+    const programPath = componentPath.findParent((path) =>
+      path.isProgram(),
+    ) as NodePath<t.Program>;
+
+    if (typeof options.auto === 'object' && options.auto.rsc) {
+      // Check if there is a "use client" directive at the top of the file
+      if (programPath.node.directives.length) {
+        const directives = programPath.node.directives;
+        const hasUseClientDirective = directives.some((directive) => {
+          return directive.value.value === 'use client';
+        });
+        if (!hasUseClientDirective) return;
+      }
+    }
 
     if (t.isVariableDeclarator(component)) {
       if (
@@ -170,18 +184,6 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
           )}`,
           '⚡',
         ),
-      );
-    }
-
-    const programPath = componentPath.findParent((path) =>
-      path.isProgram(),
-    ) as NodePath<t.Program>;
-
-    // RSC support
-    if (options.server) {
-      programPath.unshiftContainer(
-        'directives',
-        t.directive(t.directiveLiteral('use client')),
       );
     }
 

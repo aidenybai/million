@@ -99,17 +99,6 @@ To enable automatic mode, you need to pass the `auto` option to the compiler.
 
 That's literally all you have to do.
 
-## Muting help messages
-
-If you don't want to see the help messages, you can pass the `mute` option to the compiler.
-
-```js
-{
-  mute: true,
-  auto: true
-}
-```
-
 ## Ignoring components
 
 If a certain component conficts with the Million.js runtime, it's possible to skip over them via the `// million-ignore` comment.
@@ -118,5 +107,26 @@ If a certain component conficts with the Million.js runtime, it's possible to sk
 // million-ignore
 function App() {
   return ...
+}
+```
+
+## React Server Components support
+
+React Server Components require a bit of extra configuration to work with Million.js. You need to pass the `rsc` option into the `auto` option in order to enable it.
+
+```js
+{
+  auto: { rsc: true }
+}
+```
+
+## Muting help messages
+
+If you don't want to see the help messages, you can pass the `mute` option to the compiler.
+
+```js
+{
+  mute: true,
+  auto: true
 }
 ```
