@@ -22,7 +22,7 @@ export interface Options {
   server?: boolean;
   mode?: 'react' | 'preact' | 'react-server' | 'preact-server' | 'vdom';
   mute?: boolean;
-  auto?: boolean | { threshold?: number };
+  auto?: boolean | { threshold?: number; rsc?: boolean };
   _file?: string;
 }
 
