@@ -134,6 +134,7 @@ export const isStatic = (node: t.Node) => {
   if (
     t.isTaggedTemplateExpression(node) &&
     t.isIdentifier(node.tag) &&
+    node.quasi.expressions.length === 0 &&
     node.tag.name === 'css'
   ) {
     return true;
