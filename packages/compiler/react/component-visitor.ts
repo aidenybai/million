@@ -35,6 +35,7 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
         return;
       }
       if (t.isCallExpression(component.init)) return;
+      if (component.init.async) return; // RSC
       actualFunctionPath = componentPath.get('init') as NodePath<
         t.FunctionExpression | t.ArrowFunctionExpression
       >;
@@ -69,6 +70,7 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
       components: 0,
       text: 0,
       expressions: 0,
+      depth: 0,
     };
     returnStatementPath?.traverse({
       JSXElement(path) {
@@ -88,6 +90,7 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
           info.components++;
           return;
         }
+
         info.elements++;
       },
       JSXExpressionContainer(path) {
@@ -217,3 +220,37 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
     rewrittenComponentPath.skip();
   };
 };
+
+function isDeep(
+  jsx:
+    | t.JSXElement
+    | t.JSXFragment
+    | t.JSXText
+    | t.JSXExpressionContainer
+    | t.JSXSpreadChild,
+  threshold: number,
+  stack: { node: typeof jsx; depth: number }[] = [{ node: jsx, depth: 0 }],
+  depths: number[] = [],
+) {
+  if (t.isJSXText(jsx) || t.isJSXSpreadChild(jsx)) return false;
+
+  while (stack.length > 0) {
+    const current = stack.pop()!;
+    const node = current.node;
+    const depth = current.depth;
+
+    if (t.isJSXExpressionContainer(node)) {
+      depths.push(depth);
+    } else {
+      for (let i = 0; i < node.children.length; i++) {
+        const child = node.children[i]!;
+        isDeep(child, threshold);
+      }
+    }
+  }
+
+  const sum = depths.reduce((a, b) => a + b, 0);
+  const average = sum / depths.length;
+
+  return average > threshold ? 'Deep' : 'Not Deep';
+}
