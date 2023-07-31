@@ -1,6 +1,7 @@
 import { declare } from '@babel/helper-plugin-utils';
 import { createUnplugin } from 'unplugin';
 import { transformAsync } from '@babel/core';
+import { yellow } from 'kleur/colors';
 import { visitor as legacyVdomVisitor } from './vdom';
 import {
   callExpressionVisitor as reactCallExpressionVisitor,
@@ -57,13 +58,16 @@ export const unplugin = createUnplugin((options: Options = {}) => {
 export const babelPlugin = declare((api, options: Options) => {
   api.assertVersion(7);
 
-  const comment =
+  const comment = `${
     styleLinks(
       'Schedule a call if you need help: https://million.dev/hotline. To disable help messages, set the "mute" option to true.',
     ) +
     styleCommentMessage(
       '\nThere is no guarantee that features in beta will be completely production ready, so here be dragons.',
-    );
+    )
+  }\n\n${yellow('💡 TIP')}: Use ${styleCommentMessage(
+    '// million-ignore',
+  )} to skip over problematic components.`;
 
   if (options.optimize) {
     // eslint-disable-next-line no-console

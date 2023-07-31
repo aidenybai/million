@@ -35,6 +35,7 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
         return;
       }
       if (t.isCallExpression(component.init)) return;
+      if (component.init.async) return; // RSC
       actualFunctionPath = componentPath.get('init') as NodePath<
         t.FunctionExpression | t.ArrowFunctionExpression
       >;
@@ -44,6 +45,13 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
 
     if (!t.isIdentifier(component.id)) return;
     if (!isComponent(component.id.name)) return;
+
+    const comment = componentPath.get('leadingComments')[0];
+    if (comment?.node.value.includes('million-ignore')) {
+      // eslint-disable-next-line no-console
+      console.log(dim(`⚡ ${yellow(`<${component.id.name}>`)} was ignored.`));
+      return;
+    }
 
     const returnStatementPath = actualFunctionPath
       .get('body')
@@ -69,49 +77,75 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
       components: 0,
       text: 0,
       expressions: 0,
+      depth: 0,
     };
     returnStatementPath?.traverse({
       JSXElement(path) {
         const type = path.node.openingElement.name;
-        if (
-          t.isJSXMemberExpression(type) &&
-          isComponent(type.property.name) &&
-          t.isJSXIdentifier(type.object) &&
-          type.object.name === 'Provider'
-        ) {
-          info.bailout = true;
-          return;
+        if (t.isJSXMemberExpression(type) && isComponent(type.property.name)) {
+          const isContext =
+            t.isJSXIdentifier(type.object) && type.property.name === 'Provider';
+          const isStyledComponent =
+            t.isJSXIdentifier(type.object) && type.object.name === 'styled';
+
+          if (isContext || isStyledComponent) {
+            info.bailout = true;
+            return;
+          }
         }
         if (t.isJSXIdentifier(type) && isComponent(type.name)) {
           info.components++;
           return;
         }
+
         info.elements++;
       },
       JSXExpressionContainer(path) {
         if (!t.isLiteral(path.node.expression)) info.expressions++;
       },
       JSXAttribute(path) {
-        if (!t.isLiteral(path.node.value)) info.attributes++;
+        const attribute = path.node;
+        // twin.macro + styled-components / emotion support
+        if (attribute.name.name === 'tw' || attribute.name.name === 'css') {
+          info.bailout = true;
+          return;
+        }
+        if (!t.isLiteral(attribute.value)) info.attributes++;
+      },
+      JSXText(path) {
+        if (path.node.value.trim() !== '') info.text++;
       },
     });
+
+    const averageDepth = calcAverageTreeDepth(
+      resolvePath(argumentPath).node as
+        | t.JSXElement
+        | t.JSXFragment
+        | t.JSXText
+        | t.JSXExpressionContainer
+        | t.JSXSpreadChild,
+    );
+    const depthFactor = 0.01; // average depth factor is probably not correct yet
 
     if (info.bailout) return;
 
     const good = info.elements + info.attributes + info.text;
     const bad = info.components + info.expressions;
-    const improvement = (good - bad) / (good + bad);
+    const improvement =
+      (good - bad) / (good + bad) + averageDepth * depthFactor;
 
     const threshold =
       typeof options.auto === 'object' && options.auto.threshold
         ? options.auto.threshold
         : 0.1;
 
-    if (isNaN(improvement) || improvement < threshold) return;
+    if (isNaN(improvement) || improvement <= threshold) return;
 
     const improvementFormatted = isFinite(improvement)
       ? (improvement * 100).toFixed(0)
       : '∞';
+
+    const depthFormatted = Number(averageDepth.toFixed(2));
 
     if (!options.mute) {
       // eslint-disable-next-line no-console
@@ -126,11 +160,13 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
               info.attributes,
             )} attributes, ${green(info.text)} texts, ${red(
               info.components,
-            )} components, and ${red(info.expressions)} expressions. (${green(
+            )} components, and ${red(
+              info.expressions,
+            )} expressions. Average depth is ${green(depthFormatted)}. (${green(
               good,
-            )} - ${red(bad)}) / (${green(good)} + ${red(bad)}) = ~${green(
-              improvementFormatted,
-            )}%`,
+            )} - ${red(bad)}) / (${green(good)} + ${red(bad)}) + ${
+              depthFormatted * depthFactor
+            } = ~${green(improvementFormatted)}%.`,
           )}`,
           '⚡',
         ),
@@ -205,4 +241,42 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
     );
     rewrittenComponentPath.skip();
   };
+};
+
+export const calcAverageTreeDepth = (
+  jsx:
+    | t.JSXElement
+    | t.JSXFragment
+    | t.JSXText
+    | t.JSXExpressionContainer
+    | t.JSXSpreadChild,
+  stack: { node: typeof jsx; depth: number }[] = [{ node: jsx, depth: 0 }],
+  depths: number[] = [],
+): number => {
+  if (t.isJSXText(jsx) || t.isJSXSpreadChild(jsx)) return depths.length;
+
+  while (stack.length > 0) {
+    const current = stack.pop()!;
+    const node = current.node;
+    const depth = current.depth;
+
+    if (t.isJSXText(node) || t.isJSXSpreadChild(node)) continue;
+
+    if (t.isJSXExpressionContainer(node)) {
+      depths.push(depth);
+    } else {
+      for (let i = 0; i < node.children.length; i++) {
+        const child = node.children[i]!;
+        calcAverageTreeDepth(child, stack, depths);
+        stack.push({ node: child, depth: depth + 1 });
+      }
+    }
+  }
+
+  if (depths.length === 0) return 0;
+  if (depths.length === 1) return depths[0]!;
+
+  const sum = depths.reduce((a, b) => a + b, 0);
+
+  return sum / depths.length;
 };
