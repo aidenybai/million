@@ -213,14 +213,20 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
     const componentParentPath = componentPath.parentPath;
     let rewrittenVariableDeclarationPath: NodePath<t.VariableDeclaration>;
 
-    if (
-      componentParentPath.isExportNamedDeclaration() ||
-      componentParentPath.isExportDefaultDeclaration()
-    ) {
+    if (componentParentPath.isExportNamedDeclaration()) {
+      componentParentPath.replaceWith(
+        t.objectPattern([
+          t.objectProperty(component.id, component.id, false, true),
+        ]),
+      );
       rewrittenVariableDeclarationPath = componentParentPath.insertBefore(
         rewrittenComponentNode,
       )[0];
-      componentPath.replaceWith(component.id);
+    } else if (componentParentPath.isExportDefaultDeclaration()) {
+      componentPath.replaceWith(t.expressionStatement(component.id));
+      rewrittenVariableDeclarationPath = componentParentPath.insertBefore(
+        rewrittenComponentNode,
+      )[0];
     } else if (componentPath.isVariableDeclarator()) {
       rewrittenVariableDeclarationPath = componentParentPath.replaceWith(
         rewrittenComponentNode,
