@@ -81,7 +81,6 @@ export const babelPlugin = declare((api, options: Options) => {
       stylePrimaryMessage(`Automatic mode is enabled ✓ (beta)`, comment),
     );
   }
-
   const file = options._file as string;
   let callExpressionVisitor: ReturnType<typeof reactCallExpressionVisitor>;
   let jsxElementVisitor: ReturnType<typeof reactJsxElementVisitor> | undefined;

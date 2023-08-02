@@ -32,13 +32,12 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
 
     if (typeof options.auto === 'object' && options.auto.rsc) {
       // Check if there is a "use client" directive at the top of the file
-      if (programPath.node.directives.length) {
-        const directives = programPath.node.directives;
-        const hasUseClientDirective = directives.some((directive) => {
-          return directive.value.value === 'use client';
-        });
-        if (!hasUseClientDirective) return;
-      }
+      if (!programPath.node.directives.length) return;
+      const directives = programPath.node.directives;
+      const hasUseClientDirective = directives.some((directive) => {
+        return directive.value.value === 'use client';
+      });
+      if (!hasUseClientDirective) return;
     }
 
     if (t.isVariableDeclarator(component)) {
@@ -60,7 +59,10 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
     if (!t.isIdentifier(component.id)) return;
     if (!isComponent(component.id.name)) return;
 
-    const comment = componentPath.get('leadingComments')[0];
+    const comment =
+      componentPath.get('leadingComments')[0] ??
+      componentPath.parentPath.get('leadingComments')[0];
+
     if (comment?.node.value.includes('million-ignore')) {
       // eslint-disable-next-line no-console
       console.log(dim(`⚡ ${yellow(`<${component.id.name}>`)} was ignored.`));
@@ -139,14 +141,12 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
         | t.JSXExpressionContainer
         | t.JSXSpreadChild,
     );
-    const depthFactor = 0.01; // average depth factor is probably not correct yet
 
     if (info.bailout) return;
 
     const good = info.elements + info.attributes + info.text;
     const bad = info.components + info.expressions;
-    const improvement =
-      (good - bad) / (good + bad) + averageDepth * depthFactor;
+    const improvement = (good - bad) / (good + bad);
 
     const threshold =
       typeof options.auto === 'object' && options.auto.threshold
@@ -178,9 +178,9 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
               info.expressions,
             )} expressions. Average depth is ${green(depthFormatted)}. (${green(
               good,
-            )} - ${red(bad)}) / (${green(good)} + ${red(bad)}) + ${
-              depthFormatted * depthFactor
-            } = ~${green(improvementFormatted)}%.`,
+            )} - ${red(bad)}) / (${green(good)} + ${red(bad)}) = ~${green(
+              improvementFormatted,
+            )}%.`,
           )}`,
           '⚡',
         ),

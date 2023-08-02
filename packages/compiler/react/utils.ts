@@ -147,7 +147,7 @@ export const resolvePath = (path: NodePath | NodePath[]): NodePath => {
 };
 
 export const isComponent = (name: string) => {
-  return name.startsWith(name[0]!.toUpperCase());
+  return name.startsWith(name[0]!.toUpperCase()) && !name.startsWith('_');
 };
 
 export const handleVisitorError = (
