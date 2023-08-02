@@ -1,6 +1,6 @@
 {
   "name": "million",
-  "version": "2.5.4-beta.1",
+  "version": "2.5.4-beta.2",
   "description": "The Virtual DOM Replacement For React",
   "main": "dist/million.mjs",
   "module": "dist/million.mjs",
