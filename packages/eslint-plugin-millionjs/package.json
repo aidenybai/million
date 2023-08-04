@@ -1,5 +1,5 @@
 {
-  "name": "eslint-plugin-millionjs-drex",
+  "name": "eslint-plugin-millionjs",
   "version": "0.0.0-semantically-released",
   "description": "Eslint Plugin Rules for Million Js",
   "main": "lib/index.js",

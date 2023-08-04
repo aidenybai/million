@@ -29,6 +29,7 @@ module.exports = {
     function checkBlockDeclaration(node) {
       if (isBlockFunction(node)) {
         const parent = node.parent;
+        console.log(node, 'nodeeeee', parent, 'parenttt')
 
         if (!parent || parent.type !== "VariableDeclarator") {
           context.report({
