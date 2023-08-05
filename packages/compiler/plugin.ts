@@ -1,7 +1,7 @@
 import { declare } from '@babel/helper-plugin-utils';
 import { createUnplugin } from 'unplugin';
 import { transformAsync } from '@babel/core';
-import { yellow } from 'kleur/colors';
+import { blue } from 'kleur/colors';
 import { visitor as legacyVdomVisitor } from './vdom';
 import {
   callExpressionVisitor as reactCallExpressionVisitor,
@@ -65,7 +65,7 @@ export const babelPlugin = declare((api, options: Options) => {
     styleCommentMessage(
       '\nThere is no guarantee that features in beta will be completely production ready, so here be dragons.',
     )
-  }\n\n${yellow('💡 TIP')}: Use ${styleCommentMessage(
+  }\n\n${blue('💡 TIP')}: Use ${styleCommentMessage(
     '// million-ignore',
   )} to skip over problematic components.`;
 

@@ -14,75 +14,76 @@ import type { Options } from '../plugin';
 
 export const componentVisitor = (options: Options = {}, isReact = true) => {
   return (
-    componentPath: NodePath<t.FunctionDeclaration | t.VariableDeclarator>,
+    rawComponentPath: NodePath<t.FunctionDeclaration | t.VariableDeclarator>,
     file: string,
   ) => {
     if (!isReact || !options.auto) return; // doesn't support Preact yet
 
-    // bail out if it's already wrapped in a block
-    if (componentPath.parentPath.isCallExpression()) return;
+    const rawComponentParentPath = rawComponentPath.parentPath;
+    const rawComponent = rawComponentPath.node;
 
-    let actualFunctionPath: NodePath<
-      t.FunctionDeclaration | t.FunctionExpression | t.ArrowFunctionExpression
-    >;
-    const component = componentPath.node;
-    const programPath = componentPath.findParent((path) =>
+    // bail out if it's already wrapped in a block
+    if (rawComponentParentPath.isCallExpression()) return;
+
+    const programPath = rawComponentPath.findParent((path) =>
       path.isProgram(),
     ) as NodePath<t.Program>;
+    let componentPath: NodePath<
+      t.FunctionDeclaration | t.FunctionExpression | t.ArrowFunctionExpression
+    >;
 
+    // Next.js React Server Components support
     if (typeof options.auto === 'object' && options.auto.rsc) {
-      // Check if there is a "use client" directive at the top of the file
-      if (!programPath.node.directives.length) return;
       const directives = programPath.node.directives;
+      if (!directives.length) return; // we assume it's server component only
       const hasUseClientDirective = directives.some((directive) => {
         return directive.value.value === 'use client';
       });
       if (!hasUseClientDirective) return;
     }
 
-    if (t.isVariableDeclarator(component)) {
+    if (t.isVariableDeclarator(rawComponent)) {
       if (
-        !t.isArrowFunctionExpression(component.init) &&
-        !t.isFunctionExpression(component.init)
+        !t.isArrowFunctionExpression(rawComponent.init) &&
+        !t.isFunctionExpression(rawComponent.init)
       ) {
         return;
       }
-      if (t.isCallExpression(component.init)) return;
-      if (component.init.async) return; // RSC
-      actualFunctionPath = componentPath.get('init') as NodePath<
+      // it's possible that the component is a block
+      if (t.isCallExpression(rawComponent.init)) return;
+      if (rawComponent.init.async) return; // RSC / Loader
+
+      componentPath = rawComponentPath.get('init') as NodePath<
         t.FunctionExpression | t.ArrowFunctionExpression
       >;
     } else {
-      actualFunctionPath = componentPath as NodePath<t.FunctionDeclaration>;
+      componentPath = rawComponentPath as NodePath<t.FunctionDeclaration>;
     }
 
-    if (!t.isIdentifier(component.id)) return;
-    if (!isComponent(component.id.name)) return;
+    if (!t.isIdentifier(rawComponent.id)) return;
+    if (!isComponent(rawComponent.id.name)) return;
 
     const comment =
-      componentPath.get('leadingComments')[0] ??
-      componentPath.parentPath.get('leadingComments')[0];
+      rawComponent.leadingComments?.[0] ??
+      rawComponentParentPath.node.leadingComments?.[0]; // for VariableDeclarators
 
-    if (comment?.node.value.includes('million-ignore')) {
+    if (comment?.value.includes('million-ignore')) {
       // eslint-disable-next-line no-console
-      console.log(dim(`⚡ ${yellow(`<${component.id.name}>`)} was ignored.`));
+      console.log(
+        dim(`⚡ ${yellow(`<${rawComponent.id.name}>`)} was ignored.`),
+      );
       return;
     }
 
-    const returnStatementPath = actualFunctionPath
+    const returnStatementPath = componentPath
       .get('body')
       .get('body')
-      .find((path) => {
-        return path.isReturnStatement();
-      });
-    const argumentPath = returnStatementPath?.get('argument');
-    if (!argumentPath) return;
-    const resolvedArgumentPath = resolvePath(argumentPath);
+      .find((path) => path.isReturnStatement());
 
-    if (
-      !resolvedArgumentPath.isJSXElement() &&
-      !resolvedArgumentPath.isJSXFragment()
-    ) {
+    if (!returnStatementPath?.has('argument')) return;
+    const argumentPath = resolvePath(returnStatementPath.get('argument'));
+
+    if (!argumentPath.isJSXElement() && !argumentPath.isJSXFragment()) {
       return;
     }
 
@@ -95,7 +96,7 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
       expressions: 0,
       depth: 0,
     };
-    returnStatementPath?.traverse({
+    returnStatementPath.traverse({
       JSXElement(path) {
         const type = path.node.openingElement.name;
         if (t.isJSXMemberExpression(type) && isComponent(type.property.name)) {
@@ -166,7 +167,7 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
       console.log(
         styleSecondaryMessage(
           `${yellow(
-            `<${component.id.name}>`,
+            `<${rawComponent.id.name}>`,
           )} was automatically optimized. We estimate reconciliation to be ${green(
             underline(`~${improvementFormatted}%`),
           )} faster.\n${dim(
@@ -192,47 +193,46 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
       : addNamedCache(
           'block',
           resolveCorrectImportSource(options, 'million/react'),
-          componentPath,
+          rawComponentPath,
         );
 
     const rewrittenComponentNode = t.variableDeclaration('const', [
       t.variableDeclarator(
-        component.id,
+        rawComponent.id,
         t.callExpression(block, [
-          t.isFunctionDeclaration(actualFunctionPath.node)
+          t.isFunctionDeclaration(componentPath.node)
             ? t.functionExpression(
-                component.id,
-                actualFunctionPath.node.params,
-                actualFunctionPath.node.body,
+                rawComponent.id,
+                componentPath.node.params,
+                componentPath.node.body,
               )
-            : actualFunctionPath.node,
+            : componentPath.node,
         ]),
       ),
     ]);
 
-    const componentParentPath = componentPath.parentPath;
     let rewrittenVariableDeclarationPath: NodePath<t.VariableDeclaration>;
 
-    if (componentParentPath.isExportNamedDeclaration()) {
-      componentParentPath.replaceWith(
+    if (rawComponentParentPath.isExportNamedDeclaration()) {
+      rawComponentParentPath.replaceWith(
         t.objectPattern([
-          t.objectProperty(component.id, component.id, false, true),
+          t.objectProperty(rawComponent.id, rawComponent.id, false, true),
         ]),
       );
-      rewrittenVariableDeclarationPath = componentParentPath.insertBefore(
+      rewrittenVariableDeclarationPath = rawComponentParentPath.insertBefore(
         rewrittenComponentNode,
       )[0];
-    } else if (componentParentPath.isExportDefaultDeclaration()) {
-      componentPath.replaceWith(t.expressionStatement(component.id));
-      rewrittenVariableDeclarationPath = componentParentPath.insertBefore(
+    } else if (rawComponentParentPath.isExportDefaultDeclaration()) {
+      rawComponentPath.replaceWith(t.expressionStatement(rawComponent.id));
+      rewrittenVariableDeclarationPath = rawComponentParentPath.insertBefore(
         rewrittenComponentNode,
       )[0];
-    } else if (componentPath.isVariableDeclarator()) {
-      rewrittenVariableDeclarationPath = componentParentPath.replaceWith(
+    } else if (rawComponentPath.isVariableDeclarator()) {
+      rewrittenVariableDeclarationPath = rawComponentParentPath.replaceWith(
         rewrittenComponentNode,
       )[0];
     } else {
-      rewrittenVariableDeclarationPath = componentPath.replaceWith(
+      rewrittenVariableDeclarationPath = rawComponentPath.replaceWith(
         rewrittenComponentNode,
       )[0];
     }
