@@ -139,7 +139,7 @@ export function Showdown({ initStart = false, amount = 1000 }) {
         <div>
           <button
             onClick={() => setStart(true)}
-            className="w-full bg-[#f0e1ff] text-[#5200a3] dark:bg-[#17262f] dark:text-[#038ae6] px-2 py-2 font-bold rounded"
+            className="w-full bg-[#f0e1ff] text-[#5200a3] dark:bg-[#24182f] dark:text-[#9580ff] px-2 py-2 font-bold rounded"
           >
             {initStart ? 'Booting up demo...' : 'Begin'}
           </button>

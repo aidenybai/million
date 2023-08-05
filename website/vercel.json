@@ -18,6 +18,10 @@
     {
       "source": "/readme",
       "destination": "/foundation"
+    },
+    {
+      "source": "/docs/automatic",
+      "destination": "/docs"
     }
   ]
 }

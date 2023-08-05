@@ -1,37 +1,30 @@
-import { Callout, Card, Cards } from 'nextra-theme-docs';
+import { Callout, Card, Cards, Tab, Tabs } from 'nextra-theme-docs';
 import { Disclosures } from '../../components/home/faq';
 
 # Million.js
 
-**Million.js** is an extremely fast and lightweight (`<4kb`) virtual DOM that makes [React components](https://react.dev) up to [**70% faster**](https://krausest.github.io/js-framework-benchmark/current.html).
+**Million.js** is an extremely fast and lightweight `<4kb` virtual DOM that makes [React](https://react.dev) up to [70% faster](https://krausest.github.io/js-framework-benchmark/current.html). By using a fine-tuned, optimized virtual DOM, Million.js reduces the overhead of React. [Try it out here](https://demo.million.dev).
 
-> Oh man... Another [`/virtual dom|javascript/gi`](https://regexr.com/6mr5f) framework? I'm fine with React already, why do I need this?
+Imagine React components running at the speed of raw JavaScript.
 
-Million works with React. Million makes creating web apps just as easy (It's just wrapping a React component!), but with faster rendering and loading speeds. By using a fine-tuned, optimized virtual DOM, Million.js reduces the overhead of React ([_try it out here_](https://demo.million.dev))
+## Configure your mode ⚠️
 
-<Callout type="info">
-  **TL;DR:** Imagine React components running at the speed
-  of raw JavaScript.
-</Callout>
+Million.js offers two modes of operation: **Automatic** and **Manual**. Automatic mode is the default and is the easiest to use. Manual mode is more complex, but offers more control and flexibility.
 
-## Choose Your Own Adventure
+<Tabs items={['Automatic', 'Manual']} storageKey="mode">
+  <Tab>You are using: **Automatic Mode**</Tab>
+  <Tab>You are using: **Manual Mode**</Tab>
+</Tabs>
 
-If you're just looking into trying out Million.js, you can follow guided examples with the Quickstart. If you know what you're doing, jump right into the Installation Guide.
+## Getting Started
+
+If you're just looking into trying out Million.js, you should jump right into the Installation Guide. If you want to learn more, follow guided examples with the Tutorial.
 
 <Cards num={2}>
-  <Card image arrow title="Quick Start" href="/docs/quickstart">
-    <>![Quickstart Preview](/card-1.svg)</>
-  </Card>
   <Card image arrow title="Installation Guide" href="/docs/install">
     <>![Install Preview](/card-2.svg)</>
   </Card>
+  <Card image arrow title="Tutorial" href="/docs/quickstart">
+    <>![Tutorial Preview](/card-1.svg)</>
+  </Card>
 </Cards>
-
-If you're confused about an error message, you can check out the [rules of blocks](/docs/rules) to see what's allowed and what's not.
-
-## Frequently asked questions
-
-You can find more specific information about the library by digging into the documentation and reading our blog articles.
-
-<br />
-<Disclosures full />
