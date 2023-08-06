@@ -1,23 +1,10 @@
 ---
-title: Dcos
-description: Million.js Docs.
+title: Docs
+description: Million.js Official Documentation.
 ---
 
 import { getPagesUnderRoute } from 'nextra/context';
 import Link from 'next/link';
-
-export function DocsHeader() {
-  return (
-    <div className="max-w-screen-lg mx-auto pt-4 pb-8 mb-16 border-b border-gray-400 border-opacity-20 text-center">
-      <h1>
-        <span className="font-bold leading-tight lg:text-5xl">Docs</span>
-      </h1>
-      <p className="text-center text-gray-500 dark:text-gray-400 font-space-grotesk">
-        Million.js Docs.
-      </p>
-    </div>
-  );
-}
 
 export function DocsIndex() {
   return getPagesUnderRoute('/docs').map((page) => {
@@ -47,5 +34,4 @@ export function DocsIndex() {
   });
 }
 
-{/* <DocsHeader /> */}
 <DocsIndex />
