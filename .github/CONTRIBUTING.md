@@ -110,7 +110,7 @@ git push origin your-branch-name
 
 ## Prerequites
 
-This project uses [pnpm](https://pnpm.io/) as its package manager. If you had [NodeJS](https://nodejs.org/en) installed, this is how you can install [pnpm](https://pnpm.io/) globally:
+This project uses [pnpm](https://pnpm.io/) as its package manager. If you had [NodeJS](https://nodejs.org/en) (make sure you are on version 19.x) installed, this is how you can install [pnpm](https://pnpm.io/) globally:
 
 ```
 npm i -g pnpm
