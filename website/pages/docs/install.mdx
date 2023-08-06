@@ -136,7 +136,7 @@ Then, add the compiler to your build tool of choice:
   </Tab>
 </Tabs>
 
-### Customizing automatic mode
+### Ignoring components
 
 If a certain component conficts with the Million.js runtime, it's possible to skip over them via the `// million-ignore` comment.
 
@@ -146,6 +146,8 @@ function App() {
   return ...
 }
 ```
+
+### Muting help messages
 
 If you don't want to see the help messages, you can pass the `{ mute: true }{:js}` option to the compiler.
 

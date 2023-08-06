@@ -223,7 +223,7 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
         rewrittenComponentNode,
       )[0];
     } else if (rawComponentParentPath.isExportDefaultDeclaration()) {
-      rawComponentPath.replaceWith(t.expressionStatement(rawComponent.id));
+      rawComponentPath.replaceWith(rawComponent.id);
       rewrittenVariableDeclarationPath = rawComponentParentPath.insertBefore(
         rewrittenComponentNode,
       )[0];
