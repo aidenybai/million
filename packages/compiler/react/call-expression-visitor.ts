@@ -220,6 +220,48 @@ export const callExpressionVisitor = (
         : RawComponent.name,
     )!.path;
 
+    if (componentDeclarationPath.isVariableDeclarator()) {
+      const init = componentDeclarationPath.node.init;
+      if (
+        t.isCallExpression(init) &&
+        ((t.isIdentifier(init.callee) && init.callee.name === 'forwardRef') ||
+          (t.isMemberExpression(init.callee) &&
+            t.isIdentifier(init.callee.property) &&
+            init.callee.property.name === 'forwardRef'))
+      ) {
+        const forwardRefComponent = init.arguments[0];
+        if (
+          t.isIdentifier(forwardRefComponent) ||
+          t.isFunctionExpression(forwardRefComponent) ||
+          t.isArrowFunctionExpression(forwardRefComponent)
+        ) {
+          const anonymousComponentId =
+            componentDeclarationPath.scope.generateUidIdentifier('anonymous$');
+          componentDeclarationPath.parentPath.insertBefore(
+            t.variableDeclaration('const', [
+              t.variableDeclarator(
+                anonymousComponentId,
+                t.callExpression(t.identifier(importedBindings.block!), [
+                  forwardRefComponent,
+                ]),
+              ),
+            ]),
+          );
+          init.arguments[0] = anonymousComponentId;
+          const { parent, node } = callSitePath;
+          if (
+            t.isVariableDeclarator(parent) &&
+            'arguments' in node &&
+            t.isIdentifier(node.arguments[0])
+          ) {
+            parent.init = node.arguments[0];
+          }
+          callSitePath.scope.crawl();
+          return;
+        }
+      }
+    }
+
     const Component = componentDeclarationPath.node as
       | t.VariableDeclarator
       | t.FunctionDeclaration;
@@ -241,7 +283,6 @@ export const callExpressionVisitor = (
       unstable,
       imports: {
         addNamed(name: string, source: string = importSource.value) {
-          // We can't do this, as the visitor may retraverse the newly added `block` identifier.
           if (importedBindings[name]) {
             return t.identifier(importedBindings[name]!);
           }

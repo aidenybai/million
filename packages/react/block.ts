@@ -8,7 +8,7 @@ import { MapSet$, MapHas$ } from '../million/constants';
 import { queueMicrotask$ } from '../million/dom';
 import { processProps, unwrap } from './utils';
 import { Effect, RENDER_SCOPE, REGISTRY, SVG_RENDER_SCOPE } from './constants';
-import type { ComponentType } from 'react';
+import type { ComponentType, Ref } from 'react';
 import type { Options, MillionProps } from '../types';
 
 export const block = <P extends MillionProps>(
@@ -20,11 +20,11 @@ export const block = <P extends MillionProps>(
     : compiledBlock;
   const defaultType = svg ? SVG_RENDER_SCOPE : RENDER_SCOPE;
 
-  const MillionBlock = <P extends MillionProps>(props: P) => {
+  const MillionBlock = <P extends MillionProps>(props: P, forwardedRef: Ref<any>) => {
     const ref = useRef<HTMLElement>(null);
     const patch = useRef<((props: P) => void) | null>(null);
 
-    props = processProps(props);
+    props = processProps(props, forwardedRef);
     patch.current?.(props);
 
     const effect = useCallback(() => {

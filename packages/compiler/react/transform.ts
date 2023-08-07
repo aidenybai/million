@@ -13,6 +13,7 @@ import {
   TRANSFORM_ANNOTATION,
   handleVisitorError,
   isStatic,
+  isJSXFragment,
 } from './utils';
 import { optimize } from './optimize';
 import { evaluate } from './evaluator';
@@ -132,7 +133,7 @@ export const transformComponent = (
    * }
    * ```
    */
-  const handleTopLevelFragment = (jsx: t.JSXFragment) => {
+  const handleTopLevelFragment = (jsx: t.JSXFragment | t.JSXElement) => {
     trimJsxChildren(jsx);
     if (jsx.children.length === 1) {
       const child = jsx.children[0];
@@ -144,7 +145,7 @@ export const transformComponent = (
         } else {
           returnStatement.argument = child.expression;
         }
-      } else if (t.isJSXFragment(child)) {
+      } else if (isJSXFragment(child)) {
         handleTopLevelFragment(child);
       }
     } else {
@@ -157,7 +158,7 @@ export const transformComponent = (
     }
   };
 
-  if (t.isJSXFragment(returnStatement.argument)) {
+  if (isJSXFragment(returnStatement.argument)) {
     handleTopLevelFragment(returnStatement.argument);
   }
 
@@ -834,7 +835,7 @@ export const transformJSX = (
       continue;
     }
 
-    if (t.isJSXFragment(child)) {
+    if (isJSXFragment(child)) {
       /**
        * Removes fragment and "spreads out" children at that index:
        *
