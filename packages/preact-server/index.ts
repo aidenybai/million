@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { useEffect, useReducer } from 'preact/hooks';
-import { RENDER_SCOPE } from '../react/constants';
+import { RENDER_SCOPE } from '../preact/constants';
 import type { MillionProps } from '../types';
 import type { ComponentProps, ComponentType, VNode } from 'preact';
 import type * as MillionModule from '../preact';
