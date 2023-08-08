@@ -258,10 +258,7 @@ export const transformComponent = (
         )
       : params[0];
 
-    dynamics.data.push({
-      id: t.identifier('__props'),
-      value: props,
-    });
+    dynamics.props = props;
   }
 
   const holes = dynamics.data.map(({ id }) => id.name);
@@ -360,12 +357,23 @@ export const transformComponent = (
     );
   }
 
+  const puppetJsxAttributes = dynamics.data.map(({ id }) =>
+    t.jsxAttribute(t.jsxIdentifier(id.name), t.jsxExpressionContainer(id)),
+  );
+
+  if (dynamics.props) {
+    puppetJsxAttributes.push(
+      t.jsxAttribute(
+        t.jsxIdentifier('__props'),
+        t.jsxExpressionContainer(dynamics.props),
+      ),
+    );
+  }
+
   const puppetCall = t.jsxElement(
     t.jsxOpeningElement(
       t.jsxIdentifier(puppetComponentId.name),
-      dynamics.data.map(({ id }) =>
-        t.jsxAttribute(t.jsxIdentifier(id.name), t.jsxExpressionContainer(id)),
-      ),
+      puppetJsxAttributes,
       true,
     ),
     null,
