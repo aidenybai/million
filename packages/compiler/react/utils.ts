@@ -221,6 +221,19 @@ export const normalizeProperties = (properties: t.ObjectProperty[]) => {
   return properties;
 };
 
+export const isJSXFragment = (
+  node: t.Node | null | undefined,
+): node is t.JSXFragment | t.JSXElement => {
+  if (t.isJSXElement(node)) {
+    const type = node.openingElement.name;
+    if (t.isJSXMemberExpression(type) && type.property.name === 'Fragment')
+      return true;
+    if (t.isJSXIdentifier(type) && type.name === 'Fragment') return true;
+  }
+
+  return t.isJSXFragment(node);
+};
+
 export const addNamedCache = (
   name: string,
   source: string,

@@ -22,8 +22,11 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
     const rawComponentParentPath = rawComponentPath.parentPath;
     const rawComponent = rawComponentPath.node;
 
-    // bail out if it's already wrapped in a block
-    if (rawComponentParentPath.isCallExpression()) return;
+    if (
+      rawComponentParentPath.isCallExpression() &&
+      t.isIdentifier(rawComponentParentPath.node.callee, { name: 'block' }) // probably need a import level check later
+    )
+      return;
 
     const programPath = rawComponentPath.findParent((path) =>
       path.isProgram(),
@@ -50,7 +53,12 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
         return;
       }
       // it's possible that the component is a block
-      if (t.isCallExpression(rawComponent.init)) return;
+      // probably need a import level check later)
+      if (
+        t.isCallExpression(rawComponent.init) &&
+        t.isIdentifier(rawComponent.init, { name: 'block' })
+      )
+        return;
       if (rawComponent.init.async) return; // RSC / Loader
 
       componentPath = rawComponentPath.get('init') as NodePath<

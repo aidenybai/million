@@ -20,6 +20,7 @@ export interface Shared {
 
 export interface Dynamics {
   cache: Set<string>;
+  props?: t.Expression;
   data: {
     id: t.Identifier;
     value: t.Expression | null;

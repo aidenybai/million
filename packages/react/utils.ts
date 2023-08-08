@@ -1,13 +1,13 @@
 import { Fragment, createElement, isValidElement } from 'react';
 import { createRoot } from 'react-dom/client';
 import { REACT_ROOT, REGISTRY, RENDER_SCOPE } from './constants';
-import type { ComponentProps, ReactNode } from 'react';
+import type { ComponentProps, ReactNode, Ref } from 'react';
 import type { Root } from 'react-dom/client';
 import type { VNode } from '../million';
 
 // TODO: access perf impact of this
-export const processProps = (props: ComponentProps<any>) => {
-  const processedProps: ComponentProps<any> = {};
+export const processProps = (props: ComponentProps<any>, ref: Ref<any>) => {
+  const processedProps: ComponentProps<any> = { ref };
 
   for (const key in props) {
     const value = props[key];
