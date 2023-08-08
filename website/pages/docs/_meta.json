@@ -1,8 +1,4 @@
 {
-  "-- Essentials": {
-    "type": "separator",
-    "title": "Essentials"
-  },
   "index": "Introduction",
   "install": "Installation",
   "quickstart": "Tutorial",
