@@ -156,7 +156,6 @@ export const callExpressionVisitor = (
     const isComponentAnonymous =
       t.isFunctionExpression(RawComponent) ||
       t.isArrowFunctionExpression(RawComponent);
-    console.log(globalPath.node.type);
 
     if (isComponentAnonymous) {
       // If we can extract out the name for the function expression, we use that.

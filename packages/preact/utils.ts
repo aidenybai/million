@@ -30,6 +30,7 @@ export const renderPreactScope = (vnode: PreactNode) => {
 };
 
 export const unwrap = (vnode: JSX.Element): VNode => {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (typeof vnode !== 'object' || vnode === null || !('type' in vnode)) {
     if (typeof vnode === 'number') {
       return String(vnode);
