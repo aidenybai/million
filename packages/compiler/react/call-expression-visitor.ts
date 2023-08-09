@@ -33,9 +33,9 @@ export const callExpressionVisitor = (
     )
       return;
 
-    // We assume that two parent paths up is the top level path, since the we also
-    // assume the block call is on the global scope path.
-    const variableDeclarationPath = callSitePath.parentPath.parentPath!;
+    const globalPath = callSitePath.findParent(
+      (path) => path.parentPath?.isProgram() || path.isProgram(),
+    )!;
 
     // We only want to optimize block calls.
     // check if the block is aliased (e.g. import { block as createBlock } ...)
@@ -102,7 +102,7 @@ export const callExpressionVisitor = (
         ['React', id.name],
       );
       if (!err) callSitePath.replaceWith(ast);
-      variableDeclarationPath.scope.crawl();
+      globalPath.scope.crawl();
       return;
     }
 
@@ -156,6 +156,7 @@ export const callExpressionVisitor = (
     const isComponentAnonymous =
       t.isFunctionExpression(RawComponent) ||
       t.isArrowFunctionExpression(RawComponent);
+    console.log(globalPath.node.type);
 
     if (isComponentAnonymous) {
       // If we can extract out the name for the function expression, we use that.
@@ -169,7 +170,7 @@ export const callExpressionVisitor = (
       /**
        * const anonymous = () => <div />;
        */
-      variableDeclarationPath.insertBefore(
+      globalPath.insertBefore(
         t.variableDeclaration('const', [
           t.variableDeclarator(
             anonymousComponentId,
@@ -278,7 +279,7 @@ export const callExpressionVisitor = (
       blockCache,
       originalComponent,
       importSource,
-      globalPath: variableDeclarationPath,
+      globalPath,
       isReact,
       unstable,
       imports: {
