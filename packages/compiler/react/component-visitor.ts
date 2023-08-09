@@ -139,9 +139,13 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
       JSXAttribute(path) {
         const attribute = path.node;
         // twin.macro + styled-components / emotion support
-        if (attribute.name.name === 'tw' || attribute.name.name === 'css') {
-          info.bailout = true;
-          return;
+        if (
+          attribute.name.name === 'tw' ||
+          attribute.name.name === 'css' ||
+          attribute.name.name === 'ref'
+        ) {
+          info.components++;
+          return path.skip();
         }
         if (!t.isLiteral(attribute.value)) info.attributes++;
       },
