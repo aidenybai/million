@@ -1,6 +1,18 @@
 import '../styles/global.css';
 import { Analytics } from '@vercel/analytics/react';
+import Loglib from '@loglib/tracker/react';
 
 export default function App({ Component, pageProps }) {
-  return <><Component {...pageProps} /><Analytics /></>;
+  return (
+    <>
+      <Component {...pageProps} />
+      <Analytics />
+      <Loglib
+        config={{
+          id: 'million',
+          host: 'https://www.loglib.io',
+        }}
+      />
+    </>
+  );
 }
