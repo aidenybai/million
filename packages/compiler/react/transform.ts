@@ -602,7 +602,11 @@ export const transformJSX = (
                 t.booleanLiteral(unstable),
               ]);
               const id = createDynamic(null, nestedRender, null, () => {
-                jsxPath.replaceWith(t.jsxExpressionContainer(id!));
+                jsxPath.replaceWith(
+                  isRoot
+                    ? t.expressionStatement(id!)
+                    : t.jsxExpressionContainer(id!),
+                );
               });
               return dynamics;
             }
@@ -805,7 +809,11 @@ export const transformJSX = (
             t.booleanLiteral(unstable),
           ]);
           const id = createDynamic(null, nestedRender, null, () => {
-            jsxPath.replaceWith(t.jsxExpressionContainer(id!));
+            jsxPath.replaceWith(
+              isRoot
+                ? t.expressionStatement(id!)
+                : t.jsxExpressionContainer(id!),
+            );
           });
           return dynamics;
         }

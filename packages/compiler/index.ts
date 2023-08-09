@@ -1,5 +1,4 @@
-import { unplugin, babelPlugin as babel } from './plugin';
-import type { Options } from './plugin';
+import { unplugin, babelPlugin as babel, type Options } from './plugin';
 
 export const vite = unplugin.vite;
 export const webpack = unplugin.webpack;
@@ -10,15 +9,20 @@ export const next = (
   nextConfig: Record<string, any> = {},
   overrideOptions: Options = {},
 ) => {
+  const millionOptions: Options = {
+    mode: 'react',
+    server: true,
+    ...overrideOptions,
+  };
   return {
     ...nextConfig,
-    webpack(config: Record<string, any>, options: Record<string, any>) {
-      config.plugins.unshift(
-        webpack({ mode: 'react', server: true, ...overrideOptions }),
-      );
+    webpack(config: Record<string, any>, webpackOptions: Record<string, any>) {
+      if (!webpackOptions.isServer) {
+        config.plugins.unshift(webpack(millionOptions));
+      }
 
       if (typeof nextConfig.webpack === 'function') {
-        return nextConfig.webpack(config, options);
+        return nextConfig.webpack(config, webpackOptions);
       }
       return config;
     },

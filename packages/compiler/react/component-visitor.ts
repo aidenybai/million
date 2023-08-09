@@ -4,7 +4,6 @@ import {
   addNamedCache,
   handleVisitorError,
   isComponent,
-  resolveCorrectImportSource,
   resolvePath,
   styleSecondaryMessage,
 } from './utils';
@@ -17,10 +16,18 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
     rawComponentPath: NodePath<t.FunctionDeclaration | t.VariableDeclarator>,
     file: string,
   ) => {
-    if (!isReact || !options.auto) return; // doesn't support Preact yet
+    const rawComponent = rawComponentPath.node;
+    const programPath = rawComponentPath.findParent((path) =>
+      path.isProgram(),
+    ) as NodePath<t.Program>;
+
+    const isRawComponentPathInProgramScope =
+      t.isIdentifier(rawComponent.id) &&
+      programPath.scope.hasOwnBinding(rawComponent.id.name);
+
+    if (!isReact || !options.auto || !isRawComponentPathInProgramScope) return; // doesn't support Preact yet
 
     const rawComponentParentPath = rawComponentPath.parentPath;
-    const rawComponent = rawComponentPath.node;
 
     if (
       rawComponentParentPath.isCallExpression() &&
@@ -28,9 +35,6 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
     )
       return;
 
-    const programPath = rawComponentPath.findParent((path) =>
-      path.isProgram(),
-    ) as NodePath<t.Program>;
     let componentPath: NodePath<
       t.FunctionDeclaration | t.FunctionExpression | t.ArrowFunctionExpression
     >;
@@ -71,9 +75,13 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
     if (!t.isIdentifier(rawComponent.id)) return;
     if (!isComponent(rawComponent.id.name)) return;
 
+    const globalPath = rawComponentPath.findParent(
+      (path) => path.parentPath?.isProgram() || path.isProgram(),
+    )!;
     const comment =
-      rawComponent.leadingComments?.[0] ??
-      rawComponentParentPath.node.leadingComments?.[0]; // for VariableDeclarators
+      rawComponent.leadingComments?.[0] ||
+      rawComponentParentPath.node.leadingComments?.[0] ||
+      globalPath.node.leadingComments?.[0];
 
     if (comment?.value.includes('million-ignore')) {
       // eslint-disable-next-line no-console
@@ -200,7 +208,7 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
       ? t.identifier('block')
       : addNamedCache(
           'block',
-          resolveCorrectImportSource(options, 'million/react'),
+          options.server ? 'million/react-server' : 'million/react',
           rawComponentPath,
         );
 
