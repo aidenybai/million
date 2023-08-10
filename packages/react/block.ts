@@ -20,7 +20,10 @@ export const block = <P extends MillionProps>(
     : compiledBlock;
   const defaultType = svg ? SVG_RENDER_SCOPE : RENDER_SCOPE;
 
-  const MillionBlock = <P extends MillionProps>(props: P, forwardedRef: Ref<any>) => {
+  const MillionBlock = <P extends MillionProps>(
+    props: P,
+    forwardedRef: Ref<any>,
+  ) => {
     const ref = useRef<HTMLElement>(null);
     const patch = useRef<((props: P) => void) | null>(null);
 

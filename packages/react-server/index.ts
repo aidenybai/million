@@ -35,7 +35,7 @@ export const block = <P extends MillionProps>(
       };
     }, []);
 
-    if (!ready || !blockFactory || !Object.keys(props.__props).length) {
+    if (!ready || !blockFactory || !props.__props) {
       if (options.ssr === false) return null;
       return createElement<P>(
         RENDER_SCOPE,
