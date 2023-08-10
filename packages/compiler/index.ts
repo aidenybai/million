@@ -17,9 +17,12 @@ export const next = (
   return {
     ...nextConfig,
     webpack(config: Record<string, any>, webpackOptions: Record<string, any>) {
-      if (!webpackOptions.isServer) {
-        config.plugins.unshift(webpack(millionOptions));
-      }
+      config.plugins.unshift(
+        webpack({
+          mute: webpackOptions.isServer,
+          ...millionOptions,
+        }),
+      );
 
       if (typeof nextConfig.webpack === 'function') {
         return nextConfig.webpack(config, webpackOptions);
