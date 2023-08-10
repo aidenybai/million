@@ -1,14 +1,16 @@
 # ✨ Contributing Guide
 
-First of all, thanks for taking the time to contribute! 🎉👍
+First of all, thank you for taking the time to contribute! 🎉👍
 
 ## 💣 Reporting Bugs
 
 This section guides you through submitting a bug report. Following these guidelines helps maintainers and the community understand your report 📝, reproduce the behavior 💻, and find related reports. 🔎
 
-Since the new GitHub Issue forms, we only suggest you include the most information possible. But you can also **Perform a [cursory search](https://github.com/FrancescoXX/4c-site/issues)** to see if the report/request has already been raised. If it has, adds a comment to the existing issue instead of opening a new one.
+Before creating a new issue, **Perform a [cursory search](https://github.com/aidenybai/million/issues)** to see if the report/request has already been raised. If it has, add a comment to the existing issue instead of opening a new one.
 
 > **Note:** If you find a **Closed** issue that seems like it is the same thing that you're experiencing, open a new issue and include a link to the original issue in the body of your new one.
+
+If you are unable to find an open or closed issue addressing the problem, [open a new one](https://github.com/aidenybai/million/issues). Be sure to include a **title and clear description**, as much relevant information as possible, and a **code sample** or an **executable test case** demonstrating the expected behavior that is not occurring.
 
 ### How Do I Submit A (Good) Bug Report?
 
@@ -32,7 +34,7 @@ Feature requests are tracked as [GitHub issues](https://guides.github.com/featur
 
 ### Fork the repository.
 
-Click on the fork button on the top of the page. This will create a copy of this repository in your account. Instead click [here](https://github.com/aidenybai/million/fork) to fork the repository.
+Click on the fork button on the top of the page. This will create a copy of this repository in your account. Or click [here](https://github.com/aidenybai/million/fork).
 
 ### Clone the forked repository.
 
