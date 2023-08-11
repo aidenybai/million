@@ -112,7 +112,17 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
       expressions: 0,
       depth: 0,
     };
+
     returnStatementPath.traverse({
+      Identifier(path) {
+        if (
+          path.node.name === 'useRouter' ||
+          (path.node.name.startsWith('use') && path.node.name.endsWith('Store'))
+        ) {
+          info.bailout = true;
+          return path.stop();
+        }
+      },
       JSXElement(path) {
         const type = path.node.openingElement.name;
         if (t.isJSXMemberExpression(type) && isComponent(type.property.name)) {
@@ -123,7 +133,7 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
 
           if (isContext || isStyledComponent) {
             info.bailout = true;
-            return;
+            return path.stop();
           }
         }
         if (t.isJSXIdentifier(type) && isComponent(type.name)) {
