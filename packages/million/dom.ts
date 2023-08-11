@@ -59,6 +59,13 @@ export const characterDataSet$ = getOwnPropertyDescriptor$(
   'data',
 )!.set!;
 
+export const stringToDOM = (content: string, svg?: boolean) => {
+  const template = svg ? SVG_TEMPLATE : HTM_TEMPLATE;
+  template.innerHTML = content;
+  const dom = svg ? SVG_TEMPLATE_CONTENT : HTM_TEMPLATE_CONTENT;
+  return dom.firstChild as HTMLElement;
+};
+
 document$[EVENTS_REGISTRY] = new Set$();
 
 export const createEventListener = (
