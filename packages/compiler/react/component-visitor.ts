@@ -114,7 +114,7 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
       returns: 0,
     };
 
-    const skipIds = ['useRouter', /^use.*Store$/];
+    const skipIds: (string | RegExp)[] = [];
 
     if (typeof options.auto === 'object' && options.auto.skip) {
       skipIds.push(...options.auto.skip);
