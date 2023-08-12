@@ -9,12 +9,12 @@ body:
         ##  Quick Checklist
         Thank you for taking the time to file a bug report! Please fill out this form as completely as possible.
 
-        ✅ I am using the **latest version of Astro** and all plugins.
+        ✅ I am using the **latest version of Million.js** and all plugins.
         ✅ I am using a version of Node that supports ESM (`v14.18.0+`, or `v16.12.0+`)
   - type: input
-    id: astro-version
+    id: million-version
     attributes:
-      label: What version of `astro` are you using?
+      label: What version of `million` are you using?
       placeholder: 0.0.0
     validations:
       required: true
@@ -64,7 +64,7 @@ body:
     id: bug-reproduction
     attributes:
       label: Link to Minimal Reproducible Example
-      description: 'Use [astro.new](https://astro.new) to create a minimal reproduction of the problem. **A minimal reproduction is required** so that others can help debug your issue. If a report is vague (e.g. just a generic error message) and has no reproduction, it may be auto-closed. Not sure how to create a minimal example? [Read our guide](https://docs.astro.build/en/guides/troubleshooting/#creating-minimal-reproductions)'
+      description: '**A minimal reproduction is required** so that others can help debug your issue. If a report is vague (e.g. just a generic error message) and has no reproduction, it may be auto-closed.'
       placeholder: 'https://stackblitz.com/abcd1234'
     validations:
       required: true
