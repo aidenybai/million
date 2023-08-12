@@ -1,7 +1,7 @@
 name: "\U0001F41E Bug Report"
 description: Report an Issue or a Bug
 
-# Labels must be prepared in advance, otherwise no labels are applied
+# Labels must be prepared in advance, otherwise, no labels are applied
 
 labels: ["pending triage"]
 body:
@@ -34,7 +34,7 @@ body:
   validations:
   required: true
 - type: textarea
-  id: additonal
+  id: additional
   attributes:
   label: Additional context
   description: If applicable, add any other context about the problem here.
@@ -42,5 +42,5 @@ body:
   id: logs
   attributes:
   label: Logs
-  description: Optional if provided reproduction. Please try not to insert an image but copy paste the log text.
+  description: Optional if provided reproduction. Please try not to insert an image but copy and paste the log text.
   render: sh
