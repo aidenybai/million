@@ -91,8 +91,8 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
       return;
     }
 
-    const returnStatementPath = componentPath
-      .get('body')
+    const blockStatementPath = resolvePath(componentPath.get('body'));
+    const returnStatementPath = blockStatementPath
       .get('body')
       .find((path) => path.isReturnStatement());
 
@@ -111,13 +111,23 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
       text: 0,
       expressions: 0,
       depth: 0,
+      returns: 0,
     };
 
-    returnStatementPath.traverse({
+    const skipIds = ['useRouter', /^use.*Store$/];
+
+    if (typeof options.auto === 'object' && options.auto.skip) {
+      skipIds.push(...options.auto.skip);
+    }
+
+    blockStatementPath.traverse({
       Identifier(path) {
         if (
-          path.node.name === 'useRouter' ||
-          (path.node.name.startsWith('use') && path.node.name.endsWith('Store'))
+          skipIds.some((id) =>
+            typeof id === 'string'
+              ? path.node.name === id
+              : id.test(path.node.name),
+          )
         ) {
           info.bailout = true;
           return path.stop();
@@ -125,26 +135,43 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
       },
       JSXElement(path) {
         const type = path.node.openingElement.name;
-        if (t.isJSXMemberExpression(type) && isComponent(type.property.name)) {
+        if (t.isJSXMemberExpression(type)) {
           const isContext =
-            t.isJSXIdentifier(type.object) && type.property.name === 'Provider';
-          const isStyledComponent =
-            t.isJSXIdentifier(type.object) && type.object.name === 'styled';
+            t.isJSXIdentifier(type.object) &&
+            isComponent(type.property.name) &&
+            type.property.name === 'Provider';
+          const isSpecialElement = t.isJSXIdentifier(type.object);
 
-          if (isContext || isStyledComponent) {
+          if (isContext) {
             info.bailout = true;
             return path.stop();
+          }
+
+          if (isSpecialElement) {
+            info.components++;
+            return path.skip();
           }
         }
         if (t.isJSXIdentifier(type) && isComponent(type.name)) {
           info.components++;
-          return;
+          return path.skip();
         }
 
         info.elements++;
       },
+      JSXSpreadChild(path) {
+        info.components++;
+        path.skip();
+      },
       JSXExpressionContainer(path) {
+        if (t.isJSXEmptyExpression(path.node.expression)) return;
+
         if (!t.isLiteral(path.node.expression)) info.expressions++;
+        if (!t.isJSXAttribute(path.parent)) path.skip();
+      },
+      JSXSpreadAttribute(path) {
+        info.components++;
+        path.skip();
       },
       JSXAttribute(path) {
         const attribute = path.node;
@@ -161,6 +188,13 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
       },
       JSXText(path) {
         if (path.node.value.trim() !== '') info.text++;
+      },
+      ReturnStatement(path) {
+        info.returns++;
+        if (info.returns > 1) {
+          info.bailout = true;
+          return path.stop();
+        }
       },
     });
 
