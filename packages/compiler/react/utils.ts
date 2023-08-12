@@ -97,7 +97,7 @@ export const warn = (
   message: string,
   file: string,
   path: NodePath,
-  mute?: boolean,
+  mute?: boolean | string | null,
 ) => {
   if (mute) return;
   const err = createError(message, path, file);
@@ -152,7 +152,7 @@ export const isComponent = (name: string) => {
 
 export const handleVisitorError = (
   ctx: () => void,
-  mute: boolean | undefined | null,
+  mute: boolean | string | undefined | null,
 ) => {
   try {
     ctx();

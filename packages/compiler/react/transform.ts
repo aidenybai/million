@@ -907,7 +907,11 @@ export const transformJSX = (
         continue;
       }
 
-      if (t.isJSXElement(expression)) {
+      if (
+        t.isJSXElement(expression) &&
+        t.isJSXIdentifier(expression.openingElement.name) &&
+        !isComponent(expression.openingElement.name.name)
+      ) {
         /**
          * Handles raw JSX elements as expressions:
          *
