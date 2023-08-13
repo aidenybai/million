@@ -1,6 +1,5 @@
 import dynamic from 'next/dynamic';
 import { startTransition, useEffect, useRef, useState } from 'react';
-import GitHubButton from 'react-github-btn';
 import { CarbonAds } from './ad';
 
 const LagRadar = dynamic(() => import('react-lag-radar'), { ssr: false });
@@ -8,17 +7,6 @@ const LagRadar = dynamic(() => import('react-lag-radar'), { ssr: false });
 export function ExtraContent() {
   return (
     <>
-      <div className="flex justify-center">
-        <GitHubButton
-          href="https://github.com/aidenybai/million"
-          data-color-scheme="no-preference: light; light: light; dark: dark;"
-          data-size="large"
-          data-show-count="true"
-          aria-label="Star aidenybai/million on GitHub"
-        >
-          Star
-        </GitHubButton>
-      </div>
       <Showdown />
       <CarbonAds />
     </>

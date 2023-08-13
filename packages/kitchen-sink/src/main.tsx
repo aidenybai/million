@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { StrictMode, useState, type ComponentType } from 'react';
 import { createRoot } from 'react-dom/client';
 import './style.css';
@@ -34,7 +33,6 @@ function App() {
         }}
       >
         {modules.map(([key], index) => {
-          console.log(index);
           return (
             <button
               onClick={() => setSelected(index)}
