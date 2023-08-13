@@ -9,12 +9,10 @@ import {
 import axios from 'axios';
 import { block } from 'million/react';
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
 const queryClient = new QueryClient();
 
 function TanstackQuery() {
   return (
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     <QueryClientProvider client={queryClient}>
       <Example />
     </QueryClientProvider>
@@ -22,11 +20,10 @@ function TanstackQuery() {
 }
 
 const Example = block(() => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { isLoading, error, data, isFetching } = useQuery({
     queryKey: ['repoData'],
     queryFn: () =>
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
       axios
         .get('https://api.github.com/repos/tannerlinsley/react-query')
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return
