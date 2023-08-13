@@ -8,5 +8,4 @@ const Counter = block(() => {
   return <button onClick={() => ++state.count}>{snap.count}</button>;
 });
 
-// eslint-disable-next-line import/no-default-export
 export default Counter;

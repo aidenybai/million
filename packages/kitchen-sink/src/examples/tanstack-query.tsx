@@ -1,6 +1,3 @@
-/* eslint-disable eslint-comments/disable-enable-pair */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-
 import {
   QueryClient,
   QueryClientProvider,
@@ -20,13 +17,11 @@ function TanstackQuery() {
 }
 
 const Example = block(() => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { isLoading, error, data, isFetching } = useQuery({
     queryKey: ['repoData'],
     queryFn: () =>
       axios
         .get('https://api.github.com/repos/tannerlinsley/react-query')
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         .then((res) => res.data),
   });
 
@@ -46,5 +41,4 @@ const Example = block(() => {
   );
 });
 
-// eslint-disable-next-line import/no-default-export
 export default TanstackQuery;

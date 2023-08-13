@@ -14,5 +14,4 @@ const Counter = block(() => {
   return <button onClick={inc}>{count}</button>;
 });
 
-// eslint-disable-next-line import/no-default-export
 export default Counter;
