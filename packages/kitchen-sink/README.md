@@ -7,6 +7,7 @@ Hey! We're actively recruiting cooks 🧑‍🍳 to help assemble a list of exam
 To get started with the Million.js Kitchen Sink, follow these steps:
 
 1. Clone the Million.js repository:
+
 ```bash
 git clone https://github.com/aidenybai/million.git
 cd million
@@ -19,10 +20,10 @@ pnpm install
 ```
 
 3. Navigate to the Kitchen Sink directory:
+
 ```bash
 cd packages/kitchen-sink
 ```
-
 
 ## Running the Kitchen Sink
 
@@ -31,7 +32,6 @@ You can run the Kitchen Sink application to explore the various scenarios and ex
 ```bash
 pnpm dev
 ```
-
 
 This command will start the development server and open the Kitchen Sink application in your default web browser.
 
@@ -48,7 +48,6 @@ Each example comes with its own code and resources, demonstrating how Million.js
 ## Adding a New Example
 
 Just create a new file in `packages/kitchen-sink/src/examples` with the name of your example (e.g. `super-epic.tsx`). Make sure you `export default` a React component.
-
 
 ## Contributing
 
