@@ -2,3 +2,4 @@
 /*.ts
 dist/
 node_modules/
+packages/kitchen-sink

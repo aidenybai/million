@@ -22,6 +22,10 @@
     {
       "source": "/docs/automatic",
       "destination": "/docs"
+    },
+    {
+      "source": "/kitchen-sink",
+      "destination": "https://github.com/aidenybai/million/blob/main/packages/kitchen-sink/README.md"
     }
   ]
 }
