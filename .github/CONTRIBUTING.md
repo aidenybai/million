@@ -6,7 +6,7 @@ The following is a set of guidelines for contributing to Million.js. These are j
 
 Before contributing, we encourage you to read our [Code of Conduct](https://github.com/aidenybai/million/blob/main/.github/CODE_OF_CONDUCT.md).
 
-## Table of Content
+## Table of Contents
 
 - [Reporting Bugs](#reporting-bugs)
   - [How Do I Submit A Good Bug Report?](#good-bug-report)
