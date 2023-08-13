@@ -1,41 +1,50 @@
 import { StrictMode, useState, type ComponentType } from 'react';
 import { createRoot } from 'react-dom/client';
 import './style.css';
+import { ErrorBoundary } from 'react-error-boundary';
 
-const modules = Object.entries(
-  import.meta.glob('./examples/*.tsx', { eager: true }),
-).map(
-  ([key, mod]) =>
-    [
-      key.replace('./examples/', '').replace('.tsx', ''),
-      mod as Record<string, ComponentType>,
-    ] as const,
+type Module = Record<string, ComponentType>;
+
+const modules = await Promise.all(
+  Object.entries(import.meta.glob('./examples/*.tsx')).map(
+    async ([key, mod]) =>
+      [
+        key.replace('./examples/', '').replace('.tsx', ''),
+        mod as () => Promise<Module>,
+      ] as const,
+  ),
 );
+const loadedModules: Module[] = [];
 
 function App() {
   const [selected, setSelected] = useState<number>(-1);
   const hasSelected = selected >= 0;
 
-  const Mod = hasSelected ? modules[selected][1].default : null;
+  const Mod = hasSelected ? loadedModules[selected]!.default : null;
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '1rem',
-      }}
-    >
+    <div>
+      <h1>Million.js Kitchen Sink</h1>
+      <p>
+        Hey! We're actively recruiting cooks 🧑‍🍳 to help assemble a list of
+        examples of Million + your favorite React library. Go to{' '}
+        <a href="https://million.dev/kitchen-sink">million.dev/kitchen-sink</a>{' '}
+        for details.
+      </p>
       <div
         style={{
           display: 'flex',
           gap: '0.5rem',
+          flexWrap: 'wrap',
         }}
       >
         {modules.map(([key], index) => {
           return (
             <button
-              onClick={() => setSelected(index)}
+              onClick={async () => {
+                loadedModules[index] = await modules[index]![1]();
+                setSelected(index);
+              }}
               key={key}
               disabled={hasSelected && selected === index}
             >
@@ -44,19 +53,31 @@ function App() {
           );
         })}{' '}
       </div>
-      <p>
-        Currently Selected:{' '}
-        <strong>{hasSelected ? modules[selected][0] : 'None'}</strong>
-      </p>
-      <div
-        style={{
-          border: '1px solid black',
-          padding: '1rem',
-          height: '100%',
-        }}
-      >
-        {hasSelected && Mod && <Mod />}
-      </div>
+      <details open>
+        <summary>
+          Currently Selected:{' '}
+          <strong>{hasSelected ? modules[selected]![0] : 'None'}</strong>
+        </summary>
+        <div style={{ padding: '1rem' }}>
+          <ErrorBoundary
+            fallbackRender={({ error }) => (
+              <div
+                style={{
+                  color: '#ff8080',
+                  background: '#290000',
+                  padding: '1rem',
+                  borderRadius: '1rem',
+                }}
+              >
+                <h2>💥 {error.message}</h2>
+                <pre>{error.stack}</pre>
+              </div>
+            )}
+          >
+            {hasSelected && Mod && <Mod />}
+          </ErrorBoundary>
+        </div>
+      </details>
     </div>
   );
 }
