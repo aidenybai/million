@@ -91,8 +91,8 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
       return;
     }
 
-    const returnStatementPath = componentPath
-      .get('body')
+    const blockStatementPath = resolvePath(componentPath.get('body'));
+    const returnStatementPath = blockStatementPath
       .get('body')
       .find((path) => path.isReturnStatement());
 
@@ -111,30 +111,72 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
       text: 0,
       expressions: 0,
       depth: 0,
+      returns: 0,
     };
-    returnStatementPath.traverse({
+
+    const skipIds: (string | RegExp)[] = [];
+
+    if (typeof options.auto === 'object' && options.auto.skip) {
+      skipIds.push(...options.auto.skip);
+    }
+
+    blockStatementPath.traverse({
+      Identifier(path) {
+        if (
+          skipIds.some((id) =>
+            typeof id === 'string'
+              ? path.node.name === id
+              : id.test(path.node.name),
+          )
+        ) {
+          info.bailout = true;
+          return path.stop();
+        }
+      },
       JSXElement(path) {
         const type = path.node.openingElement.name;
-        if (t.isJSXMemberExpression(type) && isComponent(type.property.name)) {
+        if (t.isJSXMemberExpression(type)) {
           const isContext =
-            t.isJSXIdentifier(type.object) && type.property.name === 'Provider';
-          const isStyledComponent =
-            t.isJSXIdentifier(type.object) && type.object.name === 'styled';
+            t.isJSXIdentifier(type.object) &&
+            isComponent(type.property.name) &&
+            type.property.name === 'Provider';
+          const isSpecialElement = t.isJSXIdentifier(type.object);
 
-          if (isContext || isStyledComponent) {
+          if (isContext) {
             info.bailout = true;
-            return;
+            return path.stop();
+          }
+
+          if (isSpecialElement) {
+            info.components++;
+            return path.skip();
           }
         }
         if (t.isJSXIdentifier(type) && isComponent(type.name)) {
           info.components++;
-          return;
+          return path.skip();
         }
 
         info.elements++;
       },
+      JSXSpreadChild(path) {
+        info.components++;
+        path.skip();
+      },
       JSXExpressionContainer(path) {
+        if (t.isJSXEmptyExpression(path.node.expression)) return;
+
+        if (t.isConditionalExpression(path.node.expression)) {
+          info.components++;
+          return path.skip();
+        }
+
         if (!t.isLiteral(path.node.expression)) info.expressions++;
+        if (!t.isJSXAttribute(path.parent)) path.skip();
+      },
+      JSXSpreadAttribute(path) {
+        info.components++;
+        path.skip();
       },
       JSXAttribute(path) {
         const attribute = path.node;
@@ -152,6 +194,13 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
       JSXText(path) {
         if (path.node.value.trim() !== '') info.text++;
       },
+      ReturnStatement(path) {
+        info.returns++;
+        if (info.returns > 1) {
+          info.bailout = true;
+          return path.stop();
+        }
+      },
     });
 
     const averageDepth = calcAverageTreeDepth(
@@ -163,8 +212,6 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
         | t.JSXSpreadChild,
     );
 
-    if (info.bailout) return;
-
     const good = info.elements + info.attributes + info.text;
     const bad = info.components + info.expressions;
     const improvement = (good - bad) / (good + bad);
@@ -172,9 +219,11 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
     const threshold =
       typeof options.auto === 'object' && options.auto.threshold
         ? options.auto.threshold
-        : 0.1;
+        : 0.1 - averageDepth * 0.01;
 
-    if (isNaN(improvement) || improvement <= threshold) return;
+    if (isNaN(improvement) || improvement <= threshold || info.bailout) {
+      return;
+    }
 
     const improvementFormatted = isFinite(improvement)
       ? (improvement * 100).toFixed(0)
@@ -182,27 +231,29 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
 
     const depthFormatted = Number(averageDepth.toFixed(2));
 
-    if (!options.mute) {
+    if (!options.mute || options.mute === 'info') {
+      const calculationNote = dim(
+        `   ${green(info.elements)} nodes, ${green(
+          info.attributes,
+        )} attributes, ${green(info.text)} texts, ${red(
+          info.components,
+        )} components, and ${red(
+          info.expressions,
+        )} expressions. Average depth = ${green(depthFormatted)}. (${green(
+          good,
+        )} - ${red(bad)}) / (${green(good)} + ${red(bad)}) = ${green(
+          improvementFormatted,
+        )}%.`,
+      );
+
       // eslint-disable-next-line no-console
       console.log(
         styleSecondaryMessage(
           `${yellow(
             `<${rawComponent.id.name}>`,
-          )} was automatically optimized. We estimate reconciliation to be ${green(
+          )} was optimized. Estimated reconciliation improvement: ${green(
             underline(`~${improvementFormatted}%`),
-          )} faster.\n${dim(
-            `Found ${green(info.elements)} nodes, ${green(
-              info.attributes,
-            )} attributes, ${green(info.text)} texts, ${red(
-              info.components,
-            )} components, and ${red(
-              info.expressions,
-            )} expressions. Average depth is ${green(depthFormatted)}. (${green(
-              good,
-            )} - ${red(bad)}) / (${green(good)} + ${red(bad)}) = ~${green(
-              improvementFormatted,
-            )}%.`,
-          )}`,
+          )} faster.\n${calculationNote}`,
           '⚡',
         ),
       );
@@ -262,10 +313,13 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
     ).get('declarations.0.init') as NodePath<t.CallExpression>;
 
     rewrittenComponentPath.scope.crawl();
-    const visitor = callExpressionVisitor(options, isReact);
+    const visitor = callExpressionVisitor(
+      { mute: 'info', ...options },
+      isReact,
+    );
     handleVisitorError(
       () => visitor(rewrittenComponentPath, new Map(), file),
-      options.mute,
+      'info',
     );
     rewrittenComponentPath.skip();
   };

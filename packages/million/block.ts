@@ -10,12 +10,9 @@ import {
   setText,
   setStyleAttribute,
   setSvgAttribute,
-  HTM_TEMPLATE_CONTENT,
-  SVG_TEMPLATE_CONTENT,
   childAt,
-  SVG_TEMPLATE,
-  HTM_TEMPLATE,
   replaceChild$,
+  stringToDOM,
 } from './dom';
 import { renderToTemplate } from './template';
 import { AbstractBlock } from './types';
@@ -311,13 +308,6 @@ const getCurrentElement = (
   }
   if (cache && key !== undefined) cache[key] = root;
   return root;
-};
-
-export const stringToDOM = (content: string, svg?: boolean) => {
-  const template = svg ? SVG_TEMPLATE : HTM_TEMPLATE;
-  template.innerHTML = content;
-  const dom = svg ? SVG_TEMPLATE_CONTENT : HTM_TEMPLATE_CONTENT;
-  return dom.firstChild as HTMLElement;
 };
 
 export const withKey = (value: any, key: string) => {

@@ -252,9 +252,11 @@ export const transformComponent = (
     const props = t.isObjectPattern(params[0])
       ? t.objectExpression(
           params[0].properties.map((prop) => {
-            const key = (prop as t.ObjectProperty).key;
-            return t.objectProperty(key, key as t.Expression);
-          }),
+            if (t.isObjectProperty(prop) || t.isObjectMethod(prop)) {
+              return t.objectProperty(prop.key, prop.key as t.Expression);
+            }
+            return t.spreadElement(prop.argument as t.Expression);
+          }) as any,
         )
       : params[0];
 
@@ -579,7 +581,15 @@ export const transformJSX = (
             file,
             resolvePath(spreadPath),
           );
-          continue;
+          const renderReactScope = imports.addNamed('renderReactScope');
+          const nestedRender = t.callExpression(renderReactScope, [
+            jsx,
+            t.booleanLiteral(unstable),
+          ]);
+          const id = createDynamic(null, nestedRender, null, () => {
+            jsxPath.replaceWith(t.jsxExpressionContainer(id!));
+          });
+          return dynamics;
         }
 
         if (t.isJSXExpressionContainer(attribute.value)) {
@@ -669,7 +679,15 @@ export const transformJSX = (
         file,
         resolvePath(spreadPath),
       );
-      continue;
+      const renderReactScope = imports.addNamed('renderReactScope');
+      const nestedRender = t.callExpression(renderReactScope, [
+        jsx,
+        t.booleanLiteral(unstable),
+      ]);
+      const id = createDynamic(null, nestedRender, null, () => {
+        jsxPath.replaceWith(t.jsxExpressionContainer(id!));
+      });
+      return dynamics;
     }
 
     if (
@@ -848,7 +866,15 @@ export const transformJSX = (
         file,
         resolvePath(spreadPath),
       );
-      continue;
+      const renderReactScope = imports.addNamed('renderReactScope');
+      const nestedRender = t.callExpression(renderReactScope, [
+        jsx,
+        t.booleanLiteral(unstable),
+      ]);
+      const id = createDynamic(null, nestedRender, null, () => {
+        jsxPath.replaceWith(t.jsxExpressionContainer(id!));
+      });
+      return dynamics;
     }
 
     if (isJSXFragment(child)) {
@@ -907,7 +933,11 @@ export const transformJSX = (
         continue;
       }
 
-      if (t.isJSXElement(expression)) {
+      if (
+        t.isJSXElement(expression) &&
+        t.isJSXIdentifier(expression.openingElement.name) &&
+        !isComponent(expression.openingElement.name.name)
+      ) {
         /**
          * Handles raw JSX elements as expressions:
          *
