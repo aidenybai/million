@@ -65,8 +65,8 @@ Please make sure to follow our contribution guidelines and code of conduct when 
 
 If you have questions, need help, or want to discuss anything related to Million.js or the Kitchen Sink, you can:
 
-- Join our [Discord community](million.dev/chat).
-- Check out the [Million.js documentation](million.dev/docs) for more information and resources.
+- Join our [Discord community](https://million.dev/chat).
+- Check out the [Million.js documentation](https://million.dev/docs) for more information and resources.
 
 ## License
 
