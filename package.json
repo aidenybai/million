@@ -101,7 +101,6 @@
     "@babel/plugin-syntax-jsx": "^7.21.4",
     "@babel/plugin-syntax-typescript": "^7.21.4",
     "@babel/types": "^7.21.3",
-    "babel-plugin-transform-react-createelement-to-jsx": "^1.1.0",
     "kleur": "^4.1.5",
     "unplugin": "^1.3.1"
   },
