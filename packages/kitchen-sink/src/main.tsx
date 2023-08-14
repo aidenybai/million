@@ -56,7 +56,7 @@ type Module = Record<string, ComponentType>;
             );
           })}{' '}
         </div>
-        <details open>
+        <details open={hasSelected}>
           <summary>
             Currently Selected:{' '}
             <strong>{hasSelected ? modules[selected]![0] : 'None'}</strong>

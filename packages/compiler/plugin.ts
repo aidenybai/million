@@ -70,7 +70,6 @@ export const unplugin = createUnplugin((options: Options = {}) => {
       options._file = id;
 
       const plugins = normalizePlugins([
-        'babel-plugin-transform-react-createelement-to-jsx',
         '@babel/plugin-syntax-jsx',
         isTSX && [
           '@babel/plugin-syntax-typescript',
