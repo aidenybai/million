@@ -55,7 +55,7 @@ const MillionArray = <T>({
 };
 
 // Using fix below to add type support to MillionArray
-//https://github.com/DefinitelyTyped/DefinitelyTyped/issues/37087#issuecomment-542793243
+// https://github.com/DefinitelyTyped/DefinitelyTyped/issues/37087#issuecomment-542793243
 const typedMemo: <T>(
   component: T,
   equal?: (oldProps: MillionProps, newProps: MillionProps) => boolean,
