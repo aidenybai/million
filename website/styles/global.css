@@ -7,6 +7,14 @@ body {
   font-family: Space Grotesk, -apple-system, BlinkMacSystemFont, avenir next,
     avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto,
     arial, sans-serif;
+  color: #000;
+  background: #fff;
+}
+
+[data-theme='dark'],
+[data-theme='dark'] body {
+  color: #fff;
+  background: #000;
 }
 
 #hero {
