@@ -46,16 +46,22 @@ export const renderReactScope = (vnode: ReactNode, unstable?: boolean) => {
     let root;
     const parent = el ?? document.createElement(RENDER_SCOPE);
     if (version.startsWith('18')) {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const { createRoot } = require('react-dom/client');
-      root =
-        REACT_ROOT in parent
-          ? parent[REACT_ROOT]
-          : (parent[REACT_ROOT] = createRoot(parent));
+      import('react-dom/client')
+        .then((res) => {
+          root =
+            REACT_ROOT in parent
+              ? parent[REACT_ROOT]
+              : (parent[REACT_ROOT] = res.createRoot(parent));
+          root.render(vnode);
+        })
+        .catch((e) => {
+          // eslint-disable-next-line no-console
+          console.error(e);
+        });
     } else {
       root = parent[REACT_ROOT];
+      root.render(vnode);
     }
-    root.render(vnode);
     return parent;
   };
 

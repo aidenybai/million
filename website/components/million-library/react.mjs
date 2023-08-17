@@ -30,18 +30,25 @@ const RENDER_SCOPE = 'million-render-scope';
 const renderReactScope = (jsx) => {
   return (el) => {
     const parent = el ?? document$.createElement(RENDER_SCOPE);
+
     let root;
     if (version.startsWith('18')) {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const { createRoot } = require('react-dom/client');
-      root =
-        REACT_ROOT in parent
-          ? parent[REACT_ROOT]
-          : (parent[REACT_ROOT] = createRoot(parent));
+      import('react-dom/client')
+        .then((res) => {
+          root =
+            REACT_ROOT in parent
+              ? parent[REACT_ROOT]
+              : (parent[REACT_ROOT] = res.createRoot(parent));
+          root.render(jsx);
+        })
+        .catch((e) => {
+          // eslint-disable-next-line no-console
+          console.error(e);
+        });
     } else {
       root = parent[REACT_ROOT];
+      root.render(jsx);
     }
-    root.render(jsx);
     return parent;
   };
 };
