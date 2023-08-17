@@ -1,7 +1,16 @@
-import { StrictMode, useState, type ComponentType } from 'react';
-import { createRoot } from 'react-dom/client';
+import { version, StrictMode, useState, type ComponentType } from 'react';
 import './style.css';
 import { ErrorBoundary } from 'react-error-boundary';
+
+let createRootElement;
+if (version.startsWith('18')) {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { createRoot } = require('react-dom/client');
+  createRootElement = createRoot;
+} else {
+  const ReactDOM = require('react-dom/client');
+  createRootElement = ReactDOM.render;
+}
 
 type Module = Record<string, ComponentType>;
 
@@ -85,9 +94,16 @@ type Module = Record<string, ComponentType>;
     );
   }
 
-  createRoot(document.getElementById('root')!).render(
-    <StrictMode>
-      <App />
-    </StrictMode>,
-  );
+  version.startsWith('18')
+    ? createRootElement(document.getElementById('root')!).render(
+        <StrictMode>
+          <App />
+        </StrictMode>,
+      )
+    : createRootElement(
+        <StrictMode>
+          <App />
+        </StrictMode>,
+        document.getElementById('root')!,
+      );
 })();
