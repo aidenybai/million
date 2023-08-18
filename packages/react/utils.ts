@@ -1,8 +1,6 @@
-import { Fragment, createElement, isValidElement } from 'react';
-import { createRoot } from 'react-dom/client';
+import { Fragment, createElement, isValidElement, version } from 'react';
 import { REACT_ROOT, REGISTRY, RENDER_SCOPE } from './constants';
 import type { ComponentProps, ReactNode, Ref } from 'react';
-import type { Root } from 'react-dom/client';
 import type { VNode } from '../million';
 
 // TODO: access perf impact of this
@@ -45,12 +43,25 @@ export const renderReactScope = (vnode: ReactNode, unstable?: boolean) => {
   }
 
   const scope = (el: HTMLElement | null) => {
+    let root;
     const parent = el ?? document.createElement(RENDER_SCOPE);
-    const root =
-      REACT_ROOT in parent
-        ? (parent[REACT_ROOT] as Root)
-        : (parent[REACT_ROOT] = createRoot(parent));
-    root.render(vnode);
+    if (version.startsWith('18')) {
+      import('react-dom/client')
+        .then((res) => {
+          root =
+            REACT_ROOT in parent
+              ? parent[REACT_ROOT]
+              : (parent[REACT_ROOT] = res.createRoot(parent));
+          root.render(vnode);
+        })
+        .catch((e) => {
+          // eslint-disable-next-line no-console
+          console.error(e);
+        });
+    } else {
+      root = parent[REACT_ROOT];
+      root.render(vnode);
+    }
     return parent;
   };
 
