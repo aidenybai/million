@@ -1,5 +1,5 @@
 import type { block as createBlock } from '../million';
-import type { ComponentType } from 'react';
+import type { ComponentType, ReactPortal } from 'react';
 
 export type MillionProps = Record<string, any>;
 
@@ -27,4 +27,11 @@ export interface ArrayCache<T> {
   children: T[] | null;
   mounted?: boolean | null;
   block?: ReturnType<typeof createBlock>;
+}
+
+export interface MillionPortal {
+  foreign: true;
+  current: HTMLElement;
+  portal: ReactPortal;
+  unstable?: boolean;
 }

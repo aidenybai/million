@@ -27,4 +27,8 @@ export interface Dynamics {
   }[];
   deferred: (() => void)[];
   unoptimizable: boolean;
+  portalInfo: {
+    index: number;
+    id: t.Identifier;
+  };
 }
