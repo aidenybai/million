@@ -41,7 +41,8 @@ export const renderReactScope = (
   currentIndex: number,
   server: boolean,
 ) => {
-  if (typeof window === 'undefined' || (server && !portals[currentIndex]?.current)) {
+  const el = portals[currentIndex]?.current;
+  if (typeof window === 'undefined' || (server && !el)) {
     return createElement(
       RENDER_SCOPE,
       { suppressHydrationWarning: true },
@@ -63,8 +64,7 @@ export const renderReactScope = (
     }
   }
 
-  const current =
-    portals[currentIndex]?.current ?? document.createElement(RENDER_SCOPE);
+  const current = el ?? document.createElement(RENDER_SCOPE);
   const reactPortal = createPortal(vnode, current);
   const millionPortal = {
     foreign: true as const,

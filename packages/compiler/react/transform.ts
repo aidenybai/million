@@ -255,34 +255,6 @@ export const transformComponent = (
    * ```
    */
 
-  const params = t.isVariableDeclarator(Component)
-    ? t.isArrowFunctionExpression(Component.init)
-      ? Component.init.params
-      : null
-    : Component.params;
-
-  // We want to add a __props property for the original call props
-  // TODO: refactor this probably
-  if (
-    options.server &&
-    params?.length &&
-    (t.isIdentifier(params[0]) || t.isObjectPattern(params[0]))
-  ) {
-    // turn params[0] object pattern into an object expression
-    const props = t.isObjectPattern(params[0])
-      ? t.objectExpression(
-          params[0].properties.map((prop) => {
-            if (t.isObjectProperty(prop) || t.isObjectMethod(prop)) {
-              return t.objectProperty(prop.key, prop.key as t.Expression);
-            }
-            return t.spreadElement(prop.argument as t.Expression);
-          }) as any,
-        )
-      : params[0];
-
-    dynamics.props = props;
-  }
-
   const holes = dynamics.data.map(({ id }) => id.name);
 
   const originalObjectExpression = callSite.arguments[1] as
@@ -382,15 +354,6 @@ export const transformComponent = (
   const puppetJsxAttributes = dynamics.data.map(({ id }) =>
     t.jsxAttribute(t.jsxIdentifier(id.name), t.jsxExpressionContainer(id)),
   );
-
-  if (dynamics.props) {
-    puppetJsxAttributes.push(
-      t.jsxAttribute(
-        t.jsxIdentifier('__props'),
-        t.jsxExpressionContainer(dynamics.props),
-      ),
-    );
-  }
 
   let puppetCall: any = t.jsxElement(
     t.jsxOpeningElement(
@@ -696,7 +659,7 @@ export const transformJSX = (
       ..._arguments,
       refCurrent,
       t.numericLiteral(index),
-      t.booleanLiteral(options.server),
+      t.booleanLiteral(Boolean(options.server)),
     ]);
     const id = createDynamic(null, nestedRender, null, callback);
     return id;

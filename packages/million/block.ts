@@ -142,7 +142,7 @@ export class Block extends AbstractBlock {
           }
           if (!el[TEXT_NODE_CACHE]) el[TEXT_NODE_CACHE] = new Array(l);
 
-          if (typeof value === 'object' && 'foreign' in value) {
+          if (value && typeof value === 'object' && 'foreign' in value) {
             const scopeEl = value.current;
             el[TEXT_NODE_CACHE][k] = scopeEl;
             insertBefore$.call(el, scopeEl, childAt(el, edit.i!));
@@ -231,7 +231,11 @@ export class Block extends AbstractBlock {
             oldValue.p(newChildBlock);
             continue;
           }
-          if (typeof newValue === 'object' && 'foreign' in newValue) {
+          if (
+            newValue &&
+            typeof newValue === 'object' &&
+            'foreign' in newValue
+          ) {
             const scopeEl = el[TEXT_NODE_CACHE][k];
             if ('unstable' in newValue && oldValue !== newValue) {
               const newScopeEl = newValue.current;
