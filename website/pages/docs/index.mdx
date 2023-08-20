@@ -3,9 +3,14 @@ import { Disclosures } from '../../components/home/faq';
 
 # Million.js
 
-**Million.js** is an extremely fast and lightweight `<4kb` virtual DOM that makes [React](https://react.dev) up to [70% faster](https://krausest.github.io/js-framework-benchmark/current.html). By using a fine-tuned, optimized virtual DOM, Million.js reduces the overhead of React. [Try it out here](https://demo.million.dev).
+**Million.js** is a framework that allows you to create a faster and more powerful virtual **DOM** (Document Object Model) for React. It is less than 4kb making it lightweight. And it makes React up to [70% faster](https://krausest.github.io/js-framework-benchmark/current.html). You can [try it out here](https://demo.million.dev) if you don't believe.
 
-Imagine React components running at the speed of raw JavaScript.
+## So what is a virtual DOM?
+
+For those of you who don't know, a virtual DOM a representation of JavaScript's DOM. It is lightweight, and helps frameworks like React and Vue with rendering elements to the frontend. Manipulating a virtual DOM is faster than manipulating the actual DOM because there is no direct access or changes made to the actual DOM.
+
+{/* I'm commenting this out for now. In my opinion, it is more confusing to leave this here when there's no information about this yet.
+
 
 ## Configure your mode ⚠️
 
@@ -14,11 +19,11 @@ Million.js offers two modes of operation: **Automatic** and **Manual**. Automati
 <Tabs items={['Automatic', 'Manual']} storageKey="mode">
   <Tab>You are using: **Automatic Mode**</Tab>
   <Tab>You are using: **Manual Mode**</Tab>
-</Tabs>
+</Tabs> */}
 
-## Getting Started
+## What's next?
 
-If you're just looking into trying out Million.js, you should jump right into the Installation Guide. If you want to learn more, follow guided examples with the Tutorial.
+To try out Million.js in your project now, jump right into the Installation Guide. Then follow our quickstart tutorial to see how you can use it.
 
 <Cards num={2}>
   <Card image arrow title="Installation Guide" href="/docs/install">
