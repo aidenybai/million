@@ -22,6 +22,14 @@
       "typesetting": "article"
     }
   },
+  "showcase": {
+    "type": "page",
+    "title": "Showcase",
+    "theme": {
+      "typesetting": "article",
+      "layout": "full"
+    }
+  },
   "more": {
     "title": "More",
     "type": "menu",
