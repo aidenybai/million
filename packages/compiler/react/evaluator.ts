@@ -179,6 +179,48 @@ export const evaluateAstNode = (
         evaluateAstNode(ast.left, staticContext) /
         evaluateAstNode(ast.right, staticContext)
       );
+    } else if (ast.operator === '<') {
+      return (
+        evaluateAstNode(ast.left, staticContext) <
+        evaluateAstNode(ast.right, staticContext)
+      );
+    } else if (ast.operator === '>') {
+      return (
+        evaluateAstNode(ast.left, staticContext) >
+        evaluateAstNode(ast.right, staticContext)
+      );
+    } else if (ast.operator === '<=') {
+      return (
+        evaluateAstNode(ast.left, staticContext) <=
+        evaluateAstNode(ast.right, staticContext)
+      );
+    } else if (ast.operator === '>=') {
+      return (
+        evaluateAstNode(ast.left, staticContext) >=
+        evaluateAstNode(ast.right, staticContext)
+      );
+    } else if (ast.operator === '==') {
+      return (
+        // eslint-disable-next-line eqeqeq
+        evaluateAstNode(ast.left, staticContext) ==
+        evaluateAstNode(ast.right, staticContext)
+      );
+    } else if (ast.operator === '!=') {
+      return (
+        // eslint-disable-next-line eqeqeq
+        evaluateAstNode(ast.left, staticContext) !=
+        evaluateAstNode(ast.right, staticContext)
+      );
+    } else if (ast.operator === '===') {
+      return (
+        evaluateAstNode(ast.left, staticContext) ===
+        evaluateAstNode(ast.right, staticContext)
+      );
+    } else if (ast.operator === '!==') {
+      return (
+        evaluateAstNode(ast.left, staticContext) !==
+        evaluateAstNode(ast.right, staticContext)
+      );
     }
   }
 
