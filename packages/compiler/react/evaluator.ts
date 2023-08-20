@@ -160,67 +160,10 @@ export const evaluateAstNode = (
   }
 
   if (t.isBinaryExpression(ast)) {
-    if (ast.operator === '+') {
-      const left = evaluateAstNode(ast.left, staticContext) as number;
-      const right = evaluateAstNode(ast.right, staticContext) as number;
-      return left + right;
-    } else if (ast.operator === '-') {
-      return (
-        evaluateAstNode(ast.left, staticContext) -
-        evaluateAstNode(ast.right, staticContext)
-      );
-    } else if (ast.operator === '*') {
-      return (
-        evaluateAstNode(ast.left, staticContext) *
-        evaluateAstNode(ast.right, staticContext)
-      );
-    } else if (ast.operator === '/') {
-      return (
-        evaluateAstNode(ast.left, staticContext) /
-        evaluateAstNode(ast.right, staticContext)
-      );
-    } else if (ast.operator === '<') {
-      return (
-        evaluateAstNode(ast.left, staticContext) <
-        evaluateAstNode(ast.right, staticContext)
-      );
-    } else if (ast.operator === '>') {
-      return (
-        evaluateAstNode(ast.left, staticContext) >
-        evaluateAstNode(ast.right, staticContext)
-      );
-    } else if (ast.operator === '<=') {
-      return (
-        evaluateAstNode(ast.left, staticContext) <=
-        evaluateAstNode(ast.right, staticContext)
-      );
-    } else if (ast.operator === '>=') {
-      return (
-        evaluateAstNode(ast.left, staticContext) >=
-        evaluateAstNode(ast.right, staticContext)
-      );
-    } else if (ast.operator === '==') {
-      return (
-        // eslint-disable-next-line eqeqeq
-        evaluateAstNode(ast.left, staticContext) ==
-        evaluateAstNode(ast.right, staticContext)
-      );
-    } else if (ast.operator === '!=') {
-      return (
-        // eslint-disable-next-line eqeqeq
-        evaluateAstNode(ast.left, staticContext) !=
-        evaluateAstNode(ast.right, staticContext)
-      );
-    } else if (ast.operator === '===') {
-      return (
-        evaluateAstNode(ast.left, staticContext) ===
-        evaluateAstNode(ast.right, staticContext)
-      );
-    } else if (ast.operator === '!==') {
-      return (
-        evaluateAstNode(ast.left, staticContext) !==
-        evaluateAstNode(ast.right, staticContext)
-      );
+    const left = evaluateAstNode(ast.left, staticContext);
+    const right = evaluateAstNode(ast.right, staticContext);
+    if (typeof left === 'number' && typeof right === 'number') {
+      return evaluateBinaryExpression(left, right, ast.operator);
     }
   }
 
@@ -252,3 +195,40 @@ export const valueToAst = (value: unknown) => {
       throw new Error(`Cannot convert value to AST: ${String(value)}`);
   }
 };
+
+function evaluateBinaryExpression(
+  left: number,
+  right: number,
+  operator: t.BinaryExpression['operator'],
+): any {
+  switch (operator) {
+    case '+':
+      return left + right;
+    case '-':
+      return left - right;
+    case '*':
+      return left * right;
+    case '/':
+      return left / right;
+    case '<':
+      return left < right;
+    case '>':
+      return left > right;
+    case '<=':
+      return left <= right;
+    case '>=':
+      return left >= right;
+    case '==':
+      // eslint-disable-next-line eqeqeq
+      return left == right;
+    case '!=':
+      // eslint-disable-next-line eqeqeq
+      return left != right;
+    case '===':
+      return left === right;
+    case '!==':
+      return left !== right;
+    default:
+      return undefined;
+  }
+}
