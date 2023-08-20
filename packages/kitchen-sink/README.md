@@ -13,7 +13,7 @@ git clone https://github.com/aidenybai/million.git
 cd million
 ```
 
-2. Install project dependencies using pnpm (pnpm is a package manager similar to npm and yarn, used for Million.js projects):
+2. Install project dependencies using pnpm (pnpm is a package manager similar to npm and yarn, used for the Million.js project):
 
 ```bash
 pnpm install
