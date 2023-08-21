@@ -20,11 +20,14 @@ export interface Shared {
 
 export interface Dynamics {
   cache: Set<string>;
-  props?: t.Expression;
   data: {
     id: t.Identifier;
     value: t.Expression | null;
   }[];
   deferred: (() => void)[];
   unoptimizable: boolean;
+  portalInfo: {
+    index: number;
+    id: t.Identifier;
+  };
 }
