@@ -46,7 +46,6 @@ export const block = (
   shouldUpdate?: (oldProps: MillionProps, newProps: MillionProps) => boolean,
   svg?: boolean,
 ) => {
-  console.log(fn);
   const vnode =
     typeof fn === 'function' && !!fn.prototype
       ? new (fn as any)(HOLE_PROXY).render()
