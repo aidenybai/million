@@ -106,9 +106,12 @@
     "unplugin": "^1.3.1"
   },
   "devDependencies": {
-    "@types/babel-types": "^7.0.11",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.14.5",
     "@types/babel__core": "^7.20.0",
     "@types/babel__generator": "^7.6.4",
+    "@types/babel-types": "^7.0.11",
     "@types/node": "^18.14.1",
     "@typescript-eslint/eslint-plugin": "^5.53.0",
     "@typescript-eslint/parser": "^5.53.0",

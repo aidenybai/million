@@ -46,7 +46,17 @@ export const block = (
   shouldUpdate?: (oldProps: MillionProps, newProps: MillionProps) => boolean,
   svg?: boolean,
 ) => {
-  const vnode = fn(HOLE_PROXY);
+  console.log(fn);
+  const vnode =
+    typeof fn === 'function' && !!fn.prototype
+      ? new (fn as any)(HOLE_PROXY).render()
+      : typeof fn === 'object'
+      ? new Proxy(fn, {
+          get(_, key: string): Hole {
+            return { $: key };
+          },
+        })
+      : fn(HOLE_PROXY);
   const edits: Edit[] = [];
 
   // Turns vnode into a string of HTML and creates an array of "edits"
