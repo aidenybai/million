@@ -7,7 +7,12 @@ import { renderReactScope } from './utils';
 import { RENDER_SCOPE, REGISTRY, SVG_RENDER_SCOPE } from './constants';
 import type { Block } from '../million';
 import type { MutableRefObject } from 'react';
-import type { ArrayCache, MillionArrayProps, MillionProps } from '../types';
+import type {
+  ArrayCache,
+  MillionArrayProps,
+  MillionPortal,
+  MillionProps,
+} from '../types';
 
 const MillionArray = <T>({
   each,
@@ -70,6 +75,7 @@ const createChildren = <T>(
   memo?: boolean,
 ): Block[] => {
   const children = Array(each.length);
+  const portalRef = useRef<MillionPortal[]>([]);
   const currentCache = cache.current;
   for (let i = 0, l = each.length; i < l; ++i) {
     if (memo && currentCache.each && currentCache.each[i] === each[i]) {
@@ -101,7 +107,13 @@ const createChildren = <T>(
     const currentBlock = (props: MillionProps) => {
       return block(
         {
-          scope: renderReactScope(createElement(vnode.type, props)),
+          scope: renderReactScope(
+            createElement(vnode.type, props),
+            false,
+            portalRef.current,
+            i,
+            false,
+          ),
         },
         vnode.key ? String(vnode.key) : undefined,
       );

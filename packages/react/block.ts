@@ -9,7 +9,7 @@ import { queueMicrotask$ } from '../million/dom';
 import { processProps, unwrap } from './utils';
 import { Effect, RENDER_SCOPE, REGISTRY, SVG_RENDER_SCOPE } from './constants';
 import type { ComponentType, Ref } from 'react';
-import type { Options, MillionProps } from '../types';
+import type { Options, MillionProps, MillionPortal } from '../types';
 
 export const block = <P extends MillionProps>(
   fn: ComponentType<P> | null,
@@ -26,8 +26,9 @@ export const block = <P extends MillionProps>(
   ) => {
     const ref = useRef<HTMLElement>(null);
     const patch = useRef<((props: P) => void) | null>(null);
+    const portalRef = useRef<MillionPortal[]>([]);
 
-    props = processProps(props, forwardedRef);
+    props = processProps(props, forwardedRef, portalRef.current);
     patch.current?.(props);
 
     const effect = useCallback(() => {
@@ -53,6 +54,7 @@ export const block = <P extends MillionProps>(
       null,
       marker,
       createElement(Effect, { effect }),
+      ...portalRef.current.map((p) => p.portal),
     );
 
     return vnode;
