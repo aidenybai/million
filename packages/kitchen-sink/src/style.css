@@ -35,3 +35,25 @@ pre {
   white-space: -o-pre-wrap; /* Opera 7 */
   word-wrap: break-word; /* Internet Explorer 5.5+ */
 }
+
+/* Required styling for carousel */
+.carousel {
+  display: flex;
+  overflow: hidden;
+}
+
+.carousel img {
+  width: 75%;
+  margin-right: 10px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.carousel-inner {
+  display: flex;
+  width: 75%;
+  height: auto;
+  margin: 0 10px 20px 0;
+  transition: transform 0.3s ease-in-out;
+}
+
+
