@@ -231,10 +231,6 @@ export const transformComponent = (
     },
     SHARED,
   );
-  const isCallable =
-    statementsInBody === 1 &&
-    layers.length === 0 &&
-    dynamics.portalInfo.index === -1;
 
   // This function will automatically populate the `dynamics` for us:
   transformJSX(
@@ -249,6 +245,11 @@ export const transformComponent = (
     },
     SHARED,
   );
+
+  const isCallable =
+    statementsInBody === 1 &&
+    layers.length === 0 &&
+    dynamics.portalInfo.index === -1;
 
   /**
    * ```js

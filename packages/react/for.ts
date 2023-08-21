@@ -23,6 +23,7 @@ const MillionArray = <T>({
   ...rest
 }: MillionArrayProps<T>) => {
   const ref = useRef<HTMLElement>(null);
+  const portalRef = useRef<MillionPortal[]>(Array(each.length));
   const fragmentRef = useRef<ReturnType<typeof mapArray> | null>(null);
   const cache = useRef<ArrayCache<T>>({
     each: null,
@@ -32,7 +33,13 @@ const MillionArray = <T>({
 
   if (fragmentRef.current && (each !== cache.current.each || !memo)) {
     queueMicrotask$(() => {
-      const newChildren = createChildren<T>(each, children, cache, memo);
+      const newChildren = createChildren<T>(
+        each,
+        children,
+        cache,
+        portalRef,
+        memo,
+      );
       arrayPatch$.call(fragmentRef.current, mapArray(newChildren));
     });
   }
@@ -46,7 +53,13 @@ const MillionArray = <T>({
     queueMicrotask$(() => {
       if (cache.current.mounted) ref.current!.textContent = '';
 
-      const newChildren = createChildren<T>(each, children, cache, memo);
+      const newChildren = createChildren<T>(
+        each,
+        children,
+        cache,
+        portalRef,
+        memo,
+      );
       fragmentRef.current = mapArray(newChildren);
       if (!MapHas$.call(REGISTRY, MillionFor)) {
         MapSet$.call(REGISTRY, MillionFor, fragmentRef.current);
@@ -72,10 +85,10 @@ const createChildren = <T>(
   each: T[],
   getComponent: (value: T, i: number) => JSX.Element,
   cache: MutableRefObject<ArrayCache<T>>,
+  portalRef: MutableRefObject<MillionPortal[]>,
   memo?: boolean,
 ): Block[] => {
   const children = Array(each.length);
-  const portalRef = useRef<MillionPortal[]>([]);
   const currentCache = cache.current;
   for (let i = 0, l = each.length; i < l; ++i) {
     if (memo && currentCache.each && currentCache.each[i] === each[i]) {
