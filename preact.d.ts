@@ -1,1 +1,1 @@
-export * from './dist/preact';
+export * from './dist/packages/preact';
