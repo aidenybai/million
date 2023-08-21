@@ -43,8 +43,8 @@ export const chainOrLogic = (
 };
 
 export const createDirtyChecker = (holes: string[]) => {
-  const oldProps = t.identifier('_');
-  const newProps = t.identifier('$');
+  const oldProps = t.identifier('a');
+  const newProps = t.identifier('b');
   return t.arrowFunctionExpression(
     [oldProps, newProps],
     chainOrLogic(

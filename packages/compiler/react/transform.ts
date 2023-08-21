@@ -34,6 +34,7 @@ export const transformComponent = (
   SHARED: Shared,
 ) => {
   const {
+    isReact,
     file,
     callSite,
     callSitePath,
@@ -114,7 +115,7 @@ export const transformComponent = (
   const returnStatement = jsxPath.node as t.ReturnStatement;
 
   /**
-   * Turns top-level JSX fragmentsinto a render scope. This is because
+   * Turns top-level JSX fragments into a render scope. This is because
    * the runtime API does not currently handle fragments. We will deal with
    * nested fragments later.
    *
@@ -172,25 +173,15 @@ export const transformComponent = (
     cache: new Set(), // cache to check if id already exists to prevent dupes
     deferred: [], // callback (() => void) functions that run mutations on the JSX
     unoptimizable: false,
+    portalInfo: {
+      index: -1,
+      id: componentBodyPath.scope.generateUidIdentifier(''),
+    },
   };
 
   if (!t.isJSXElement(returnStatement.argument)) {
     throw createDeopt(null, file, callSitePath);
   }
-
-  // This function will automatically populate the `dynamics` for us:
-  transformJSX(
-    options,
-    {
-      jsx: returnStatement.argument,
-      jsxPath: jsxPath.get('argument') as NodePath<t.JSXElement>,
-      componentBody,
-      componentBodyPath,
-      dynamics,
-      isRoot: true,
-    },
-    SHARED,
-  );
 
   /**
    * The compiler splits the original Component into two, in order to conform to the runtime API:
@@ -223,9 +214,38 @@ export const transformComponent = (
       : 'master$',
   );
   const puppetComponentId = callSitePath.scope.generateUidIdentifier('puppet$');
-  const isCallable = statementsInBody === 1;
 
   const block = imports.addNamed('block');
+
+  const layers: t.JSXElement[] = extractLayers(
+    options,
+    {
+      returnStatement,
+      originalComponent,
+      jsx: returnStatement.argument,
+      jsxPath: jsxPath.get('argument') as NodePath<t.JSXElement>,
+      layers: [],
+    },
+    SHARED,
+  );
+  const isCallable =
+    statementsInBody === 1 &&
+    layers.length === 0 &&
+    dynamics.portalInfo.index === -1;
+
+  // This function will automatically populate the `dynamics` for us:
+  transformJSX(
+    options,
+    {
+      jsx: returnStatement.argument,
+      jsxPath: jsxPath.get('argument') as NodePath<t.JSXElement>,
+      componentBody,
+      componentBodyPath,
+      dynamics,
+      isRoot: true,
+    },
+    SHARED,
+  );
 
   /**
    * ```js
@@ -234,34 +254,6 @@ export const transformComponent = (
    * }, { shouldUpdate: (oldProps, newProps) => oldProps.foo !== newProps.foo })
    * ```
    */
-
-  const params = t.isVariableDeclarator(Component)
-    ? t.isArrowFunctionExpression(Component.init)
-      ? Component.init.params
-      : null
-    : Component.params;
-
-  // We want to add a __props property for the original call props
-  // TODO: refactor this probably
-  if (
-    options.server &&
-    params?.length &&
-    (t.isIdentifier(params[0]) || t.isObjectPattern(params[0]))
-  ) {
-    // turn params[0] object pattern into an object expression
-    const props = t.isObjectPattern(params[0])
-      ? t.objectExpression(
-          params[0].properties.map((prop) => {
-            if (t.isObjectProperty(prop) || t.isObjectMethod(prop)) {
-              return t.objectProperty(prop.key, prop.key as t.Expression);
-            }
-            return t.spreadElement(prop.argument as t.Expression);
-          }) as any,
-        )
-      : params[0];
-
-    dynamics.props = props;
-  }
 
   const holes = dynamics.data.map(({ id }) => id.name);
 
@@ -292,10 +284,6 @@ export const transformComponent = (
             )),
       ),
     ),
-    t.objectProperty(
-      t.identifier('original'),
-      options.server ? (originalComponent.id as t.Identifier) : t.nullLiteral(),
-    ),
     t.objectProperty(t.identifier('shouldUpdate'), createDirtyChecker(holes)),
   ];
 
@@ -315,6 +303,55 @@ export const transformComponent = (
         t.objectExpression(normalizeProperties(compiledOptions)),
       ]);
   t.addComment(puppetBlock, 'leading', TRANSFORM_ANNOTATION);
+
+  const data: (typeof dynamics)['data'] = [];
+
+  if (dynamics.portalInfo.index !== -1) {
+    const useState = imports.addNamed(
+      'useState',
+      isReact ? 'react' : 'preact/hooks',
+    );
+    data.push({
+      id: dynamics.portalInfo.id,
+      value: t.memberExpression(
+        t.callExpression(useState, [
+          t.arrowFunctionExpression(
+            [],
+            t.objectExpression([
+              t.objectProperty(
+                t.identifier('$'),
+                t.newExpression(t.identifier('Array'), [
+                  t.numericLiteral(dynamics.portalInfo.index + 1),
+                ]),
+              ),
+            ]),
+          ),
+        ]),
+        t.numericLiteral(0),
+        true,
+      ),
+    });
+  }
+
+  for (const { id, value } of dynamics.data) {
+    if (!value) continue;
+
+    data.push({ id, value });
+  }
+
+  if (data.length) {
+    jsxPath.insertBefore(
+      t.variableDeclaration('const', [
+        ...data.map(({ id, value }) => {
+          return t.variableDeclarator(id, value);
+        }),
+      ]),
+    );
+  }
+
+  const puppetJsxAttributes = dynamics.data.map(({ id }) =>
+    t.jsxAttribute(t.jsxIdentifier(id.name), t.jsxExpressionContainer(id)),
+  );
 
   /**
    * We want to change the Component's return from our original JSX
@@ -339,40 +376,7 @@ export const transformComponent = (
    * }
    * ```
    */
-
-  const data: (typeof dynamics)['data'] = [];
-
-  for (const { id, value } of dynamics.data) {
-    if (!value) continue;
-
-    data.push({ id, value });
-  }
-
-  if (data.length) {
-    jsxPath.insertBefore(
-      t.variableDeclaration(
-        'const',
-        data.map(({ id, value }) => {
-          return t.variableDeclarator(id, value);
-        }),
-      ),
-    );
-  }
-
-  const puppetJsxAttributes = dynamics.data.map(({ id }) =>
-    t.jsxAttribute(t.jsxIdentifier(id.name), t.jsxExpressionContainer(id)),
-  );
-
-  if (dynamics.props) {
-    puppetJsxAttributes.push(
-      t.jsxAttribute(
-        t.jsxIdentifier('__props'),
-        t.jsxExpressionContainer(dynamics.props),
-      ),
-    );
-  }
-
-  const puppetCall = t.jsxElement(
+  let puppetCall: any = t.jsxElement(
     t.jsxOpeningElement(
       t.jsxIdentifier(puppetComponentId.name),
       puppetJsxAttributes,
@@ -381,6 +385,43 @@ export const transformComponent = (
     null,
     [],
   );
+
+  if (dynamics.portalInfo.index !== -1) {
+    puppetCall = t.jsxFragment(t.jsxOpeningFragment(), t.jsxClosingFragment(), [
+      puppetCall,
+      t.jsxSpreadChild(
+        t.callExpression(
+          t.memberExpression(
+            t.memberExpression(dynamics.portalInfo.id, t.identifier('$')),
+            t.identifier('map'),
+          ),
+          [
+            t.arrowFunctionExpression(
+              [t.identifier('p')],
+              t.memberExpression(t.identifier('p'), t.identifier('portal')),
+            ),
+          ],
+        ),
+      ),
+    ]);
+  }
+
+  if (layers.length) {
+    let parent: t.JSXElement | t.JSXFragment | undefined;
+    let current: t.JSXElement | t.JSXFragment | undefined;
+    for (let i = 0; i < layers.length; ++i) {
+      const layer = layers[i]!;
+      if (!current) {
+        current = layer;
+        parent = current;
+        continue;
+      }
+      current.children = [layer];
+      current = layer;
+    }
+    current!.children = [puppetCall];
+    puppetCall = parent;
+  }
 
   componentBody.body[data.length ? statementsInBody : statementsInBody - 1] =
     t.returnStatement(puppetCall);
@@ -407,14 +448,6 @@ export const transformComponent = (
 
   callSitePath.replaceWith(masterComponentId);
 
-  if (options.server) {
-    // attach the original component to the master component
-    globalPath.insertBefore(
-      t.isVariableDeclarator(originalComponent)
-        ? t.variableDeclaration('const', [originalComponent])
-        : originalComponent,
-    );
-  }
   globalPath.insertBefore(
     t.variableDeclaration('const', [
       t.variableDeclarator(puppetComponentId, puppetBlock),
@@ -456,6 +489,52 @@ export const transformComponent = (
       t.objectProperty(t.identifier('block'), blockFactory),
     ]);
   }
+};
+
+export const extractLayers = (
+  options: Options,
+  {
+    returnStatement,
+    originalComponent,
+    jsx,
+    jsxPath,
+    layers,
+  }: {
+    returnStatement: t.ReturnStatement;
+    originalComponent: t.FunctionDeclaration | t.VariableDeclarator;
+    jsx: t.JSXElement;
+    jsxPath: NodePath<t.JSXElement>;
+    layers: t.JSXElement[];
+  },
+  SHARED: Shared,
+): t.JSXElement[] => {
+  const type = jsx.openingElement.name;
+  if (
+    (t.isJSXIdentifier(type) && isComponent(type.name)) ||
+    t.isJSXMemberExpression(type)
+  ) {
+    trimJsxChildren(jsx);
+    const firstChild = jsx.children[0];
+    if (jsx.children.length === 1 && t.isJSXElement(firstChild)) {
+      jsxPath.replaceWith(firstChild);
+      returnStatement.argument = firstChild;
+      jsx.children = [];
+      layers.push(jsx);
+
+      return extractLayers(
+        options,
+        {
+          returnStatement,
+          originalComponent,
+          jsx: firstChild,
+          jsxPath,
+          layers,
+        },
+        SHARED,
+      );
+    }
+  }
+  return layers;
 };
 
 export const transformJSX = (
@@ -527,7 +606,7 @@ export const transformJSX = (
      * <div>{_1$}</div>
      * ```
      */
-    const id = identifier || componentBodyPath.scope.generateUidIdentifier('$');
+    const id = identifier || componentBodyPath.scope.generateUidIdentifier('');
 
     if (!dynamics.cache.has(id.name)) {
       dynamics.data.push({ value: expression, id });
@@ -535,6 +614,33 @@ export const transformJSX = (
     }
     // Sometimes, we require a mutation to the JSX. We defer this for later use.
     dynamics.deferred.push(callback!);
+    return id;
+  };
+
+  let renderReactScope: t.Identifier | null = null;
+  const createPortal = (
+    callback: () => void,
+    _arguments: (
+      | t.Expression
+      | t.ArgumentPlaceholder
+      | t.JSXNamespacedName
+      | t.SpreadElement
+    )[],
+  ) => {
+    renderReactScope ??= imports.addNamed('renderReactScope');
+    const index = ++dynamics.portalInfo.index;
+
+    const refCurrent = t.memberExpression(
+      dynamics.portalInfo.id,
+      t.identifier('$'),
+    );
+    const nestedRender = t.callExpression(renderReactScope, [
+      ..._arguments,
+      refCurrent,
+      t.numericLiteral(index),
+      t.booleanLiteral(Boolean(options.server)),
+    ]);
+    const id = createDynamic(null, nestedRender, null, callback);
     return id;
   };
 
@@ -581,14 +687,11 @@ export const transformJSX = (
             file,
             resolvePath(spreadPath),
           );
-          const renderReactScope = imports.addNamed('renderReactScope');
-          const nestedRender = t.callExpression(renderReactScope, [
-            jsx,
-            t.booleanLiteral(unstable),
-          ]);
-          const id = createDynamic(null, nestedRender, null, () => {
+
+          const id = createPortal(() => {
             jsxPath.replaceWith(t.jsxExpressionContainer(id!));
-          });
+          }, [jsx, t.booleanLiteral(unstable)]);
+
           return dynamics;
         }
 
@@ -606,18 +709,14 @@ export const transformJSX = (
 
           if (t.isIdentifier(expression)) {
             if (attribute.name.name === 'ref') {
-              const renderReactScope = imports.addNamed('renderReactScope');
-              const nestedRender = t.callExpression(renderReactScope, [
-                jsx,
-                t.booleanLiteral(unstable),
-              ]);
-              const id = createDynamic(null, nestedRender, null, () => {
+              const id = createPortal(() => {
                 jsxPath.replaceWith(
                   isRoot
                     ? t.expressionStatement(id!)
                     : t.jsxExpressionContainer(id!),
                 );
-              });
+              }, [jsx, t.booleanLiteral(unstable)]);
+
               return dynamics;
             }
             createDynamic(expression, null, null, null);
@@ -649,18 +748,25 @@ export const transformJSX = (
     //   options.mute,
     // );
 
-    const renderReactScope = imports.addNamed('renderReactScope');
-    const nestedRender = t.callExpression(renderReactScope, [
+    const id = createPortal(() => {
+      jsxPath.replaceWith(
+        isRoot ? t.expressionStatement(id!) : t.jsxExpressionContainer(id!),
+      );
+    }, [
       jsx,
       type.name === 'For'
         ? t.booleanLiteral(false)
         : t.booleanLiteral(unstable),
     ]);
-    const id = createDynamic(null, nestedRender, null, () => {
+
+    return dynamics;
+  }
+  if (t.isJSXMemberExpression(type)) {
+    const id = createPortal(() => {
       jsxPath.replaceWith(
         isRoot ? t.expressionStatement(id!) : t.jsxExpressionContainer(id!),
       );
-    });
+    }, [jsx, t.booleanLiteral(unstable)]);
 
     return dynamics;
   }
@@ -679,14 +785,11 @@ export const transformJSX = (
         file,
         resolvePath(spreadPath),
       );
-      const renderReactScope = imports.addNamed('renderReactScope');
-      const nestedRender = t.callExpression(renderReactScope, [
-        jsx,
-        t.booleanLiteral(unstable),
-      ]);
-      const id = createDynamic(null, nestedRender, null, () => {
+
+      const id = createPortal(() => {
         jsxPath.replaceWith(t.jsxExpressionContainer(id!));
-      });
+      }, [jsx, t.booleanLiteral(unstable)]);
+
       return dynamics;
     }
 
@@ -804,16 +907,12 @@ export const transformJSX = (
       );
 
       if (t.isJSXIdentifier(attribute.name) && attribute.name.name === 'css') {
-        const renderReactScope = imports.addNamed('renderReactScope');
-        const nestedRender = t.callExpression(renderReactScope, [
-          jsx,
-          t.booleanLiteral(unstable),
-        ]);
-        const id = createDynamic(null, nestedRender, null, () => {
+        const id = createPortal(() => {
           jsxPath.replaceWith(
             isRoot ? t.expressionStatement(id!) : t.jsxExpressionContainer(id!),
           );
-        });
+        }, [jsx, t.booleanLiteral(unstable)]);
+
         return dynamics;
       }
 
@@ -821,18 +920,14 @@ export const transformJSX = (
 
       if (t.isIdentifier(expression)) {
         if (attribute.name.name === 'ref') {
-          const renderReactScope = imports.addNamed('renderReactScope');
-          const nestedRender = t.callExpression(renderReactScope, [
-            jsx,
-            t.booleanLiteral(unstable),
-          ]);
-          const id = createDynamic(null, nestedRender, null, () => {
+          const id = createPortal(() => {
             jsxPath.replaceWith(
               isRoot
                 ? t.expressionStatement(id!)
                 : t.jsxExpressionContainer(id!),
             );
-          });
+          }, [jsx, t.booleanLiteral(unstable)]);
+
           return dynamics;
         }
         createDynamic(expression, null, null, null);
@@ -866,14 +961,10 @@ export const transformJSX = (
         file,
         resolvePath(spreadPath),
       );
-      const renderReactScope = imports.addNamed('renderReactScope');
-      const nestedRender = t.callExpression(renderReactScope, [
-        jsx,
-        t.booleanLiteral(unstable),
-      ]);
-      const id = createDynamic(null, nestedRender, null, () => {
+      const id = createPortal(() => {
         jsxPath.replaceWith(t.jsxExpressionContainer(id!));
-      });
+      }, [jsx, t.booleanLiteral(unstable)]);
+
       return dynamics;
     }
 
@@ -933,32 +1024,38 @@ export const transformJSX = (
         continue;
       }
 
-      if (
-        t.isJSXElement(expression) &&
-        t.isJSXIdentifier(expression.openingElement.name) &&
-        !isComponent(expression.openingElement.name.name)
-      ) {
-        /**
-         * Handles raw JSX elements as expressions:
-         *
-         * ```js
-         * <div>{<nested />}</div>
-         * ```
-         */
-        transformJSX(
-          options,
-          {
-            jsx: expression,
-            jsxPath: jsxPath.get(`children.${i}`) as NodePath<t.JSXElement>,
-            componentBody,
-            componentBodyPath,
-            dynamics,
-            isRoot: false,
-          },
-          SHARED,
-        );
-        jsx.children[i] = expression;
-        continue;
+      if (t.isJSXElement(expression)) {
+        const type = expression.openingElement.name;
+        if (t.isJSXIdentifier(type) && !isComponent(type.name)) {
+          /**
+           * Handles raw JSX elements as expressions:
+           *
+           * ```js
+           * <div>{<nested />}</div>
+           * ```
+           */
+          transformJSX(
+            options,
+            {
+              jsx: expression,
+              jsxPath: jsxPath.get(`children.${i}`) as NodePath<t.JSXElement>,
+              componentBody,
+              componentBodyPath,
+              dynamics,
+              isRoot: false,
+            },
+            SHARED,
+          );
+          jsx.children[i] = expression;
+          continue;
+        }
+        if (t.isJSXMemberExpression(type)) {
+          const id = createPortal(() => {
+            jsx.children[i] = t.jsxExpressionContainer(id!);
+          }, [expression, t.booleanLiteral(unstable)]);
+
+          continue;
+        }
       }
 
       if (t.isExpression(expression)) {
@@ -1003,16 +1100,10 @@ export const transformJSX = (
             options.mute,
           );
 
-          const renderReactScope = imports.addNamed('renderReactScope');
-
-          const nestedRender = t.callExpression(renderReactScope, [
-            newJsxArrayIterator,
-            t.booleanLiteral(unstable),
-          ]);
-
-          const id = createDynamic(null, nestedRender, null, () => {
+          const id = createPortal(() => {
             jsx.children[i] = t.jsxExpressionContainer(id!);
-          });
+          }, [newJsxArrayIterator, t.booleanLiteral(unstable)]);
+
           continue;
         }
 

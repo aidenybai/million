@@ -1,11 +1,19 @@
-import { StrictMode, useState, type ComponentType } from 'react';
-import { createRoot } from 'react-dom/client';
+import { version, StrictMode, useState, type ComponentType } from 'react';
 import './style.css';
 import { ErrorBoundary } from 'react-error-boundary';
 
 type Module = Record<string, ComponentType>;
 
 (async () => {
+  let createRootElement;
+  if (version.startsWith('18')) {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const { createRoot } = await import('react-dom/client');
+    createRootElement = createRoot;
+  } else {
+    const ReactDOM = await import('react-dom');
+    createRootElement = ReactDOM.render;
+  }
   const modules = await Promise.all(
     Object.entries(import.meta.glob('./examples/*.tsx')).map(
       async ([key, mod]) =>
@@ -85,9 +93,16 @@ type Module = Record<string, ComponentType>;
     );
   }
 
-  createRoot(document.getElementById('root')!).render(
-    <StrictMode>
-      <App />
-    </StrictMode>,
-  );
+  version.startsWith('18')
+    ? createRootElement(document.getElementById('root')!).render(
+        <StrictMode>
+          <App />
+        </StrictMode>,
+      )
+    : createRootElement(
+        <StrictMode>
+          <App />
+        </StrictMode>,
+        document.getElementById('root')!,
+      );
 })();
