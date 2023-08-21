@@ -1,6 +1,6 @@
 # Million.js Kitchen Sink 🧑‍🍳
 
-Hey! We're actively recruiting cooks 🧑‍🍳 to help assemble a list of examples of Million + your favorite React library.
+Hey! We're actively recruiting cooks 🧑‍🍳 to help assemble a list of examples of Million + your favorite React library. [View it live at sink.million.dev](https://sink.million.dev)
 
 ## Getting Started
 

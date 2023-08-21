@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Capa_1" data-name="Capa 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 500 100">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+      }
+
+      .cls-2 {
+        clip-path: url(#clippath);
+      }
+
+      .cls-3 {
+        fill: #ffa0a2;
+      }
+
+      .cls-4 {
+        fill: #ffbfc1;
+      }
+
+      .cls-5 {
+        fill: #ff8083;
+      }
+
+      .cls-6 {
+        fill: url(#pattern-circles_7);
+      }
+
+      .cls-7 {
+        fill: #ff6064;
+        stroke: #fff;
+        stroke-miterlimit: 10;
+        stroke-width: .5px;
+      }
+
+      .cls-8, .cls-9 {
+        opacity: .5;
+      }
+
+      .cls-9, .cls-10 {
+        fill: #fff;
+      }
+
+      .cls-10 {
+        opacity: .3;
+      }
+    </style>
+    <clipPath id="clippath">
+      <rect class="cls-1" x="0" y="0" width="5" height="5"/>
+    </clipPath>
+    <pattern id="pattern-circles_7" data-name="pattern-circles 7" x="0" y="0" width="5" height="5" patternUnits="userSpaceOnUse" viewBox="0 0 5 5">
+      <g>
+        <rect class="cls-1" width="5" height="5"/>
+        <g class="cls-2">
+          <circle id="pattern-circle" class="cls-9" cx="1.25" cy="3.75" r=".5"/>
+          <circle id="pattern-circle-2" data-name="pattern-circle" class="cls-10" cx="3.74" cy="1.25" r=".5"/>
+        </g>
+      </g>
+    </pattern>
+  </defs>
+  <rect id="rect" class="cls-6" width="500" height="100"/>
+  <g id="ISO-COMPOSED">
+    <path id="C-BODY" class="cls-7" d="m281.25,34.59s-7.75,4.48-11.22,6.48c-.89.51-2.02.25-2.62-.59-4.54-6.28-13.01-9.53-21.82-6.06-4.07,1.6-7.38,4.73-9.1,8.75-5.63,13.16,3.87,25.83,16.34,25.83,4.31,0,8.26-1.51,11.36-4.04.81-.65,1.97-.62,2.71.11l9.92,9.93c.82.81.78,2.15-.08,2.92-9.71,8.63-24.13,12.09-38.92,6.04-11.62-4.75-20.99-19.26-20.99-31.82V19c0-2.21,1.79-4,4-4h32c12.56,0,23.6,6.44,30.04,16.19.63.97.33,2.27-1.62,3.4Z"/>
+    <g id="C-MASK" class="cls-8">
+      <path class="cls-4" d="m234.82,15v18h-17.99v-14c0-2.21,1.79-4,4-4h13.99Z"/>
+      <rect class="cls-3" x="234.82" y="15" width="18" height="18"/>
+      <path class="cls-5" d="m270.82,19.84c-5.23-3.03-11.29-4.79-17.76-4.84h-.24v18h16c1.1,0,2-.9,2-2,0,0,0-11.16,0-11.16Z"/>
+      <rect class="cls-3" x="216.83" y="32.96" width="18" height="18"/>
+      <path class="cls-5" d="m234.82,50.96h-17.99v1.18c0,5.57,1.84,11.51,4.9,16.82h11.09c1.1,0,2-.9,2-2v-16Z"/>
+      <path class="cls-5" d="m236.49,43.16c1.72-4.02,5.03-7.15,9.1-8.75,2.47-.97,4.9-1.4,7.24-1.4v-.05h-18v18h.02c0-2.51.52-5.14,1.65-7.8h-.01Z"/>
+    </g>
+  </g>
+</svg>

@@ -1,16 +1,31 @@
-import { Fragment, createElement, isValidElement, version } from 'react';
-import { REACT_ROOT, REGISTRY, RENDER_SCOPE } from './constants';
+import { Fragment, createElement, isValidElement } from 'react';
+import { createPortal } from 'react-dom';
+import { REGISTRY, RENDER_SCOPE } from './constants';
 import type { ComponentProps, ReactNode, Ref } from 'react';
 import type { VNode } from '../million';
+import type { MillionPortal } from '../types';
 
 // TODO: access perf impact of this
-export const processProps = (props: ComponentProps<any>, ref: Ref<any>) => {
+export const processProps = (
+  props: ComponentProps<any>,
+  ref: Ref<any>,
+  portals: MillionPortal[],
+) => {
   const processedProps: ComponentProps<any> = { ref };
+
+  let currentIndex = 0;
 
   for (const key in props) {
     const value = props[key];
     if (isValidElement(value)) {
-      processedProps[key] = renderReactScope(value);
+      processedProps[key] = renderReactScope(
+        value,
+        false,
+        portals,
+        currentIndex++,
+        false,
+      );
+
       continue;
     }
     processedProps[key] = props[key];
@@ -19,8 +34,15 @@ export const processProps = (props: ComponentProps<any>, ref: Ref<any>) => {
   return processedProps;
 };
 
-export const renderReactScope = (vnode: ReactNode, unstable?: boolean) => {
-  if (typeof window === 'undefined') {
+export const renderReactScope = (
+  vnode: ReactNode,
+  unstable: boolean,
+  portals: MillionPortal[],
+  currentIndex: number,
+  server: boolean,
+) => {
+  const el = portals[currentIndex]?.current;
+  if (typeof window === 'undefined' || (server && !el)) {
     return createElement(
       RENDER_SCOPE,
       { suppressHydrationWarning: true },
@@ -42,32 +64,17 @@ export const renderReactScope = (vnode: ReactNode, unstable?: boolean) => {
     }
   }
 
-  const scope = (el: HTMLElement | null) => {
-    let root;
-    const parent = el ?? document.createElement(RENDER_SCOPE);
-    if (version.startsWith('18')) {
-      import('react-dom/client')
-        .then((res) => {
-          root =
-            REACT_ROOT in parent
-              ? parent[REACT_ROOT]
-              : (parent[REACT_ROOT] = res.createRoot(parent));
-          root.render(vnode);
-        })
-        .catch((e) => {
-          // eslint-disable-next-line no-console
-          console.error(e);
-        });
-    } else {
-      root = parent[REACT_ROOT];
-      root.render(vnode);
-    }
-    return parent;
+  const current = el ?? document.createElement(RENDER_SCOPE);
+  const reactPortal = createPortal(vnode, current);
+  const millionPortal = {
+    foreign: true as const,
+    current,
+    portal: reactPortal,
+    unstable,
   };
+  portals[currentIndex] = millionPortal;
 
-  if (unstable) scope.unstable = true;
-
-  return scope;
+  return millionPortal;
 };
 
 export const unwrap = (vnode: JSX.Element | null): VNode => {
