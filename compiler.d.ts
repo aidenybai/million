@@ -1,3 +1,3 @@
-import unplugin from './dist/compiler';
-export * from './dist/compiler';
+import unplugin from './dist/packages/compiler';
+export * from './dist/packages/compiler';
 export default unplugin;

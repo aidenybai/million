@@ -36,7 +36,7 @@ type StaticContext = Record<string, any>;
 
 export const evaluate = (
   ast: t.Node,
-  scope: NodePath<t.Node>['scope'],
+  scope: NodePath['scope'],
   excludeIds?: string[],
 ) => {
   try {
@@ -51,7 +51,7 @@ export const evaluate = (
 
 export const evaluateUnsafe = (
   ast: t.Node,
-  scope: NodePath<t.Node>['scope'],
+  scope: NodePath['scope'],
   excludeIds: string[] = [],
 ) => {
   const bindings = scope.getAllBindings();

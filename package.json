@@ -2,11 +2,11 @@
   "name": "million",
   "version": "2.6.0-beta.0",
   "description": "The Virtual DOM Replacement For React",
-  "main": "dist/million.mjs",
-  "module": "dist/million.mjs",
-  "jsdelivr": "dist/million.mjs",
-  "unpkg": "dist/million.mjs",
-  "types": "dist/million.d.ts",
+  "main": "dist/packages/million.mjs",
+  "module": "dist/packages/million.mjs",
+  "jsdelivr": "dist/packages/million.mjs",
+  "unpkg": "dist/packages/million.mjs",
+  "types": "dist/packages/million.d.ts",
   "scripts": {
     "build": "unbuild",
     "cleanup": "prettier --write ./**/*.{ts,tsx}",
@@ -32,44 +32,44 @@
   ],
   "exports": {
     ".": {
-      "types": "./dist/million.d.ts",
-      "import": "./dist/million.mjs",
-      "require": "./dist/million.cjs"
+      "types": "./dist/packages/million.d.ts",
+      "import": "./dist/packages/million.mjs",
+      "require": "./dist/packages/million.cjs"
     },
     "./jsx-runtime": {
-      "types": "./dist/jsx-runtime.d.ts",
-      "import": "./dist/jsx-runtime.mjs",
-      "require": "./dist/jsx-runtime.cjs"
+      "types": "./dist/packages/jsx-runtime.d.ts",
+      "import": "./dist/packages/jsx-runtime.mjs",
+      "require": "./dist/packages/jsx-runtime.cjs"
     },
     "./compiler": {
-      "types": "./dist/compiler.d.ts",
-      "import": "./dist/compiler.mjs",
-      "require": "./dist/compiler.cjs"
+      "types": "./dist/packages/compiler.d.ts",
+      "import": "./dist/packages/compiler.mjs",
+      "require": "./dist/packages/compiler.cjs"
     },
     "./react": {
-      "types": "./dist/react.d.ts",
-      "import": "./dist/react.mjs",
-      "require": "./dist/react.cjs"
+      "types": "./dist/packages/react.d.ts",
+      "import": "./dist/packages/react.mjs",
+      "require": "./dist/packages/react.cjs"
     },
     "./react-server": {
-      "types": "./dist/react-server.d.ts",
-      "import": "./dist/react-server.mjs",
-      "require": "./dist/react-server.cjs"
+      "types": "./dist/packages/react-server.d.ts",
+      "import": "./dist/packages/react-server.mjs",
+      "require": "./dist/packages/react-server.cjs"
     },
     "./preact": {
-      "types": "./dist/preact.d.ts",
-      "import": "./dist/preact.mjs",
-      "require": "./dist/preact.cjs"
+      "types": "./dist/packages/preact.d.ts",
+      "import": "./dist/packages/preact.mjs",
+      "require": "./dist/packages/preact.cjs"
     },
     "./preact-server": {
-      "types": "./dist/preact-server.d.ts",
-      "import": "./dist/preact-server.mjs",
-      "require": "./dist/preact-server.cjs"
+      "types": "./dist/packages/preact-server.d.ts",
+      "import": "./dist/packages/preact-server.mjs",
+      "require": "./dist/packages/preact-server.cjs"
     },
     "./types": {
-      "types": "./dist/types.d.ts",
-      "import": "./dist/types.mjs",
-      "require": "./dist/types.cjs"
+      "types": "./dist/packages/types.d.ts",
+      "import": "./dist/packages/types.mjs",
+      "require": "./dist/packages/types.cjs"
     }
   },
   "packageManager": "pnpm@8.1.1",
