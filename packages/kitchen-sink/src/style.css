@@ -7,6 +7,22 @@
   }
 }
 
+.spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 0.25rem solid #56c7ff;
+  border-bottom: 0.25rem solid rgba(0, 0, 0, 0);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  z-index: 9999;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 button:disabled {
   opacity: 0.2 !important;
   cursor: not-allowed !important;
