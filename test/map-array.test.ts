@@ -2,17 +2,33 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { describe, it } from 'vitest';
 import { block as createBlock, mapArray } from '../packages/million';
+import type { MillionProps } from '../packages/types';
 import type { VElement } from '../packages/million';
-import { MillionProps } from 'packages/types';
 
-const fn = (props?: MillionProps): VElement => (
-  <div>
-    <h1>Hello</h1> World
-    <p title="baz" className={props?.bar}>
-      {props?.foo}
-    </p>
-  </div>
-);
+const fn = (props?: MillionProps): VElement => {
+  return {
+    type: 'div',
+    props: {
+      children: [
+        {
+          type: 'h1',
+          props: {
+            children: ['Hello'],
+          },
+        },
+        ' World',
+        {
+          type: 'p',
+          props: {
+            title: 'baz',
+            className: props?.bar,
+            children: [props?.foo],
+          },
+        },
+      ],
+    },
+  };
+};
 
 describe.concurrent('block', () => {
   it('should mount block', ({ expect }) => {
