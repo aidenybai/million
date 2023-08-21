@@ -1,12 +1,11 @@
 import type { block as createBlock } from '../million';
-import type { ComponentType, ReactPortal } from 'react';
+import type { ReactPortal } from 'react';
 
 export type MillionProps = Record<string, any>;
 
 export interface Options {
   shouldUpdate?: (oldProps: MillionProps, newProps: MillionProps) => boolean;
   block?: any;
-  original?: ComponentType<any>;
   ssr?: boolean;
   svg?: boolean;
   as?: string;

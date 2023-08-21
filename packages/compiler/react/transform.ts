@@ -175,7 +175,7 @@ export const transformComponent = (
     unoptimizable: false,
     portalInfo: {
       index: -1,
-      id: jsxPath.scope.generateUidIdentifier(''),
+      id: componentBodyPath.scope.generateUidIdentifier(''),
     },
   };
 
@@ -284,10 +284,6 @@ export const transformComponent = (
             )),
       ),
     ),
-    t.objectProperty(
-      t.identifier('original'),
-      options.server ? (originalComponent.id as t.Identifier) : t.nullLiteral(),
-    ),
     t.objectProperty(t.identifier('shouldUpdate'), createDirtyChecker(holes)),
   ];
 
@@ -307,6 +303,55 @@ export const transformComponent = (
         t.objectExpression(normalizeProperties(compiledOptions)),
       ]);
   t.addComment(puppetBlock, 'leading', TRANSFORM_ANNOTATION);
+
+  const data: (typeof dynamics)['data'] = [];
+
+  if (dynamics.portalInfo.index !== -1) {
+    const useState = imports.addNamed(
+      'useState',
+      isReact ? 'react' : 'preact/hooks',
+    );
+    data.push({
+      id: dynamics.portalInfo.id,
+      value: t.memberExpression(
+        t.callExpression(useState, [
+          t.arrowFunctionExpression(
+            [],
+            t.objectExpression([
+              t.objectProperty(
+                t.identifier('$'),
+                t.newExpression(t.identifier('Array'), [
+                  t.numericLiteral(dynamics.portalInfo.index + 1),
+                ]),
+              ),
+            ]),
+          ),
+        ]),
+        t.numericLiteral(0),
+        true,
+      ),
+    });
+  }
+
+  for (const { id, value } of dynamics.data) {
+    if (!value) continue;
+
+    data.push({ id, value });
+  }
+
+  if (data.length) {
+    jsxPath.insertBefore(
+      t.variableDeclaration('const', [
+        ...data.map(({ id, value }) => {
+          return t.variableDeclarator(id, value);
+        }),
+      ]),
+    );
+  }
+
+  const puppetJsxAttributes = dynamics.data.map(({ id }) =>
+    t.jsxAttribute(t.jsxIdentifier(id.name), t.jsxExpressionContainer(id)),
+  );
 
   /**
    * We want to change the Component's return from our original JSX
@@ -331,30 +376,6 @@ export const transformComponent = (
    * }
    * ```
    */
-
-  const data: (typeof dynamics)['data'] = [];
-
-  for (const { id, value } of dynamics.data) {
-    if (!value) continue;
-
-    data.push({ id, value });
-  }
-
-  if (data.length) {
-    jsxPath.insertBefore(
-      t.variableDeclaration(
-        'const',
-        data.map(({ id, value }) => {
-          return t.variableDeclarator(id, value);
-        }),
-      ),
-    );
-  }
-
-  const puppetJsxAttributes = dynamics.data.map(({ id }) =>
-    t.jsxAttribute(t.jsxIdentifier(id.name), t.jsxExpressionContainer(id)),
-  );
-
   let puppetCall: any = t.jsxElement(
     t.jsxOpeningElement(
       t.jsxIdentifier(puppetComponentId.name),
@@ -371,7 +392,7 @@ export const transformComponent = (
       t.jsxSpreadChild(
         t.callExpression(
           t.memberExpression(
-            t.memberExpression(dynamics.portalInfo.id, t.identifier('current')),
+            t.memberExpression(dynamics.portalInfo.id, t.identifier('$')),
             t.identifier('map'),
           ),
           [
@@ -386,11 +407,11 @@ export const transformComponent = (
   }
 
   if (layers.length) {
-    let parent;
-    let current;
+    let parent: t.JSXElement | t.JSXFragment | undefined;
+    let current: t.JSXElement | t.JSXFragment | undefined;
     for (let i = 0; i < layers.length; ++i) {
       const layer = layers[i]!;
-      if (i === 0) {
+      if (!current) {
         current = layer;
         parent = current;
         continue;
@@ -398,46 +419,12 @@ export const transformComponent = (
       current.children = [layer];
       current = layer;
     }
-    current.children = [puppetCall];
+    current!.children = [puppetCall];
     puppetCall = parent;
   }
 
   componentBody.body[data.length ? statementsInBody : statementsInBody - 1] =
     t.returnStatement(puppetCall);
-
-  if (dynamics.portalInfo.index !== -1) {
-    const useRef = imports.addNamed(
-      'useRef',
-      isReact ? 'react' : 'preact/hooks',
-    );
-    const useMemo = imports.addNamed(
-      'useMemo',
-      isReact ? 'react' : 'preact/hooks',
-    );
-    const memoizedValueId = componentBodyPath.scope.generateUidIdentifier('');
-
-    componentBody.body = [
-      t.variableDeclaration('const', [
-        t.variableDeclarator(
-          memoizedValueId,
-          t.callExpression(useMemo, [
-            t.arrowFunctionExpression(
-              [],
-              t.newExpression(t.identifier('Array'), [
-                t.numericLiteral(dynamics.portalInfo.index + 1),
-              ]),
-            ),
-            t.arrayExpression([]),
-          ]),
-        ),
-        t.variableDeclarator(
-          dynamics.portalInfo.id,
-          t.callExpression(useRef, [memoizedValueId]),
-        ),
-      ]),
-      ...componentBody.body,
-    ];
-  }
 
   // We run these later to mutate the JSX
   for (let i = 0; i < dynamics.deferred.length; ++i) {
@@ -461,14 +448,6 @@ export const transformComponent = (
 
   callSitePath.replaceWith(masterComponentId);
 
-  if (options.server) {
-    // attach the original component to the master component
-    globalPath.insertBefore(
-      t.isVariableDeclarator(originalComponent)
-        ? t.variableDeclaration('const', [originalComponent])
-        : originalComponent,
-    );
-  }
   globalPath.insertBefore(
     t.variableDeclaration('const', [
       t.variableDeclarator(puppetComponentId, puppetBlock),
@@ -627,7 +606,7 @@ export const transformJSX = (
      * <div>{_1$}</div>
      * ```
      */
-    const id = identifier || componentBodyPath.scope.generateUidIdentifier('$');
+    const id = identifier || componentBodyPath.scope.generateUidIdentifier('');
 
     if (!dynamics.cache.has(id.name)) {
       dynamics.data.push({ value: expression, id });
@@ -653,7 +632,7 @@ export const transformJSX = (
 
     const refCurrent = t.memberExpression(
       dynamics.portalInfo.id,
-      t.identifier('current'),
+      t.identifier('$'),
     );
     const nestedRender = t.callExpression(renderReactScope, [
       ..._arguments,

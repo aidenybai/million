@@ -40,9 +40,6 @@ export const block = <P extends MillionProps>(
       return createElement<P>(
         RENDER_SCOPE,
         null,
-        // During compilation we will attach a .original for the component and
-        // pass __props as the props to the component. This references
-        // the original component for SSR.
         createElement(Component, props as any),
       );
     }
