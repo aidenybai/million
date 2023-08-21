@@ -59,13 +59,18 @@ export const evaluateUnsafe = (
   for (const key in bindings) {
     try {
       if (excludeIds.includes(key)) continue;
-      const node = bindings[key].path.node;
-      const declarationKind = bindings[key].kind;
-      if (declarationKind === 'const' || declarationKind === 'let') {
-        staticContext[key] = evaluateAstNode(node.init, staticContext);
+      const { path, kind } = bindings[key]!;
+      if (
+        (kind === 'const' || kind === 'let') &&
+        t.isVariableDeclarator(path.node)
+      ) {
+        staticContext[key] = evaluateAstNode(path.node.init, staticContext);
       }
-      if (t.isFunctionDeclaration(node) || t.isClassDeclaration(node)) {
-        staticContext[key] = evaluateAstNode(node.body, staticContext);
+      if (
+        t.isFunctionDeclaration(path.node) ||
+        t.isClassDeclaration(path.node)
+      ) {
+        staticContext[key] = evaluateAstNode(path.node.body, staticContext);
       }
     } catch (_err) {
       /**/

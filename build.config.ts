@@ -14,13 +14,16 @@ export default defineBuildConfig({
   ],
   declaration: true,
   clean: true,
+  failOnWarn: false,
   rollup: {
     emitCJS: true,
     inlineDependencies: true,
   },
   hooks: {
     'rollup:options'(_ctx, options) {
-      options?.plugins?.push(banner(() => `'use client';\n`));
+      if (Array.isArray(options?.plugins)) {
+        options.plugins.push(banner(() => `'use client';\n`));
+      }
     },
   },
   externals: ['react', 'react-dom', 'preact', 'million', 'vite', 'esbuild'],

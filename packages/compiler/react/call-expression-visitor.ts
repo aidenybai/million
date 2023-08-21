@@ -332,7 +332,7 @@ export const callExpressionVisitor = (
           componentBody: Component.init.body as t.BlockStatement,
           componentBodyPath: resolvePath(
             componentDeclarationPath.get('init.body'),
-          ),
+          ) as NodePath<t.BlockStatement>,
         },
         SHARED,
       );
@@ -350,7 +350,9 @@ export const callExpressionVisitor = (
         options,
         {
           componentBody: Component.body,
-          componentBodyPath: resolvePath(componentDeclarationPath.get('body')),
+          componentBodyPath: resolvePath(
+            componentDeclarationPath.get('body'),
+          ) as NodePath<t.BlockStatement>,
         },
         SHARED,
       );
