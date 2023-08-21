@@ -1,8 +1,16 @@
-import { version, StrictMode, useState, type ComponentType } from 'react';
+import {
+  version,
+  StrictMode,
+  useState,
+  type ComponentType,
+  lazy,
+  Suspense,
+  LazyExoticComponent,
+} from 'react';
 import './style.css';
 import { ErrorBoundary } from 'react-error-boundary';
 
-type Module = Record<string, ComponentType>;
+type Module = { default: ComponentType<any> };
 
 (async () => {
   let createRootElement;
@@ -23,13 +31,13 @@ type Module = Record<string, ComponentType>;
         ] as const,
     ),
   );
-  const loadedModules: Module[] = [];
+  const loadedModules: LazyExoticComponent<ComponentType<any>>[] = [];
 
   function App() {
     const [selected, setSelected] = useState<number>(-1);
     const hasSelected = selected >= 0;
 
-    const Mod = hasSelected ? loadedModules[selected]!.default : null;
+    const Mod = hasSelected ? loadedModules[selected]! : null;
 
     return (
       <div>
@@ -53,8 +61,8 @@ type Module = Record<string, ComponentType>;
             return (
               <button
                 onClick={async () => {
-                  loadedModules[index] = await modules[index]![1]();
                   setSelected(index);
+                  loadedModules[index] = lazy(() => modules[index]![1]());
                 }}
                 key={key}
                 disabled={hasSelected && selected === index}
@@ -85,7 +93,22 @@ type Module = Record<string, ComponentType>;
                 </div>
               )}
             >
-              {hasSelected && Mod && <Mod />}
+              {hasSelected && Mod && (
+                <Suspense
+                  fallback={
+                    <div
+                      style={{
+                        opacity: 0.5,
+                      }}
+                    >
+                      <p className="spinner"></p>
+                      Loading module...
+                    </div>
+                  }
+                >
+                  <Mod />
+                </Suspense>
+              )}
             </ErrorBoundary>
           </div>
         </details>

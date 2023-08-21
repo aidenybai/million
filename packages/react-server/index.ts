@@ -1,5 +1,3 @@
-'use client';
-
 import { createElement, useEffect, useState } from 'react';
 import { RENDER_SCOPE, SVG_RENDER_SCOPE } from '../react/constants';
 import type { ComponentType } from 'react';
