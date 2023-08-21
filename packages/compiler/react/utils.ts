@@ -54,6 +54,10 @@ export const getValidSpecifiers = (
   return validSpecifiers;
 };
 
+export const hasStyledAttributes = (attribute: t.JSXAttribute) => {
+  return attribute.name.name === 'tw' || attribute.name.name === 'css';
+};
+
 export const resolveCorrectImportSource = (
   options: Options,
   source: string,

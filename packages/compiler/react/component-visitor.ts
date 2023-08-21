@@ -3,6 +3,7 @@ import { dim, green, red, underline, yellow } from 'kleur/colors';
 import {
   addNamedCache,
   handleVisitorError,
+  hasStyledAttributes,
   isComponent,
   resolvePath,
   styleSecondaryMessage,
@@ -181,11 +182,7 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
       JSXAttribute(path) {
         const attribute = path.node;
         // twin.macro + styled-components / emotion support
-        if (
-          attribute.name.name === 'tw' ||
-          attribute.name.name === 'css' ||
-          attribute.name.name === 'ref'
-        ) {
+        if (hasStyledAttributes(attribute) || attribute.name.name === 'ref') {
           info.components++;
           return path.skip();
         }

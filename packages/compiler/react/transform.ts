@@ -14,6 +14,7 @@ import {
   handleVisitorError,
   isStatic,
   isJSXFragment,
+  hasStyledAttributes,
 } from './utils';
 import { optimize } from './optimize';
 import { evaluate } from './evaluator';
@@ -29,7 +30,7 @@ export const transformComponent = (
     componentBodyPath,
   }: {
     componentBody: t.BlockStatement;
-    componentBodyPath: NodePath<t.Node>;
+    componentBodyPath: NodePath<t.BlockStatement>;
   },
   SHARED: Shared,
 ) => {
@@ -111,7 +112,9 @@ export const transformComponent = (
     }
   }
 
-  const jsxPath = componentBodyPath.get('body').find(t.isReturnStatement)!;
+  const jsxPath = componentBodyPath
+    .get('body')
+    .find((path) => path.isReturnStatement())!;
   const returnStatement = jsxPath.node as t.ReturnStatement;
 
   /**
@@ -550,7 +553,7 @@ export const transformJSX = (
     jsx: t.JSXElement;
     jsxPath: NodePath<t.JSXElement>;
     componentBody: t.BlockStatement;
-    componentBodyPath: NodePath<t.Node>;
+    componentBodyPath: NodePath<t.BlockStatement>;
     dynamics: Dynamics;
     isRoot: boolean;
   },
@@ -690,6 +693,18 @@ export const transformJSX = (
 
           const id = createPortal(() => {
             jsxPath.replaceWith(t.jsxExpressionContainer(id!));
+          }, [jsx, t.booleanLiteral(unstable)]);
+
+          return dynamics;
+        }
+
+        if (hasStyledAttributes(attribute)) {
+          const id = createPortal(() => {
+            jsxPath.replaceWith(
+              isRoot
+                ? t.expressionStatement(id!)
+                : t.jsxExpressionContainer(id!),
+            );
           }, [jsx, t.booleanLiteral(unstable)]);
 
           return dynamics;
