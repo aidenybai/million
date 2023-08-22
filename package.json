@@ -32,44 +32,84 @@
   ],
   "exports": {
     ".": {
-      "types": "./dist/packages/million.d.ts",
-      "import": "./dist/packages/million.mjs",
-      "require": "./dist/packages/million.cjs"
+      "import": {
+        "types": "./dist/packages/million.d.mts",
+        "default": "./dist/packages/million.mjs"
+      },
+      "require": {
+        "types": "./dist/packages/million.d.ts",
+        "default": "./dist/packages/million.cjs"
+      }
     },
     "./jsx-runtime": {
-      "types": "./dist/packages/jsx-runtime.d.ts",
-      "import": "./dist/packages/jsx-runtime.mjs",
-      "require": "./dist/packages/jsx-runtime.cjs"
+      "import": {
+        "types": "./dist/packages/jsx-runtime.d.mts",
+        "default": "./dist/packages/jsx-runtime.mjs"
+      },
+      "require": {
+        "types": "./dist/packages/jsx-runtime.d.ts",
+        "default": "./dist/packages/jsx-runtime.cjs"
+      }
     },
     "./compiler": {
-      "types": "./dist/packages/compiler.d.ts",
-      "import": "./dist/packages/compiler.mjs",
-      "require": "./dist/packages/compiler.cjs"
+      "import": {
+        "types": "./dist/packages/compiler.d.mts",
+        "default": "./dist/packages/compiler.mjs"
+      },
+      "require": {
+        "types": "./dist/packages/compiler.d.ts",
+        "default": "./dist/packages/compiler.cjs"
+      }
     },
     "./react": {
-      "types": "./dist/packages/react.d.ts",
-      "import": "./dist/packages/react.mjs",
-      "require": "./dist/packages/react.cjs"
+      "import": {
+        "types": "./dist/packages/react.d.mts",
+        "default": "./dist/packages/react.mjs"
+      },
+      "require": {
+        "types": "./dist/packages/react.d.ts",
+        "default": "./dist/packages/react.cjs"
+      }
     },
     "./react-server": {
-      "types": "./dist/packages/react-server.d.ts",
-      "import": "./dist/packages/react-server.mjs",
-      "require": "./dist/packages/react-server.cjs"
+      "import": {
+        "types": "./dist/packages/react-server.d.mts",
+        "default": "./dist/packages/react-server.mjs"
+      },
+      "require": {
+        "types": "./dist/packages/react-server.d.ts",
+        "default": "./dist/packages/react-server.cjs"
+      }
     },
     "./preact": {
-      "types": "./dist/packages/preact.d.ts",
-      "import": "./dist/packages/preact.mjs",
-      "require": "./dist/packages/preact.cjs"
+      "import": {
+        "types": "./dist/packages/preact.d.mts",
+        "default": "./dist/packages/preact.mjs"
+      },
+      "require": {
+        "types": "./dist/packages/preact.d.ts",
+        "default": "./dist/packages/preact.cjs"
+      }
     },
     "./preact-server": {
-      "types": "./dist/packages/preact-server.d.ts",
-      "import": "./dist/packages/preact-server.mjs",
-      "require": "./dist/packages/preact-server.cjs"
+      "import": {
+        "types": "./dist/packages/preact-server.d.mts",
+        "default": "./dist/packages/preact-server.mjs"
+      },
+      "require": {
+        "types": "./dist/packages/preact-server.d.ts",
+        "default": "./dist/packages/preact-server.cjs"
+      }
     },
     "./types": {
-      "types": "./dist/packages/types.d.ts",
-      "import": "./dist/packages/types.mjs",
-      "require": "./dist/packages/types.cjs"
+      "import": {
+        "types": "./dist/packages/types.d.mts",
+        "default": "./dist/packages/types.mjs"
+      },
+      "require": {
+        "types": "./dist/packages/types.d.ts",
+        "default": "./dist/packages/types.cjs"
+      }
     }
   },
   "packageManager": "pnpm@8.1.1",
