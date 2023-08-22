@@ -6,7 +6,7 @@ const BABEL_CONFIG = {
   plugins: ['@babel/plugin-syntax-jsx', million.babel],
 };
 
-describe.concurrent('react-compiler', () => {
+describe('react-compiler', () => {
   it('should compile hooks', async ({ expect }) => {
     const ast = await parseAsync(
       `
