@@ -393,7 +393,7 @@ export const transformComponent = (
   if (dynamics.portalInfo.index !== -1) {
     puppetCall = t.jsxFragment(t.jsxOpeningFragment(), t.jsxClosingFragment(), [
       puppetCall,
-      t.jsxSpreadChild(
+      t.jsxExpressionContainer(
         t.callExpression(
           t.memberExpression(
             t.memberExpression(dynamics.portalInfo.id, t.identifier('$')),
