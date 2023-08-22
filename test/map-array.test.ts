@@ -1,5 +1,3 @@
-// eslint-disable-next-line eslint-comments/disable-enable-pair
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { describe, it } from 'vitest';
 import { block as createBlock, mapArray } from '../packages/million';
 import type { MillionProps } from '../packages/types';
