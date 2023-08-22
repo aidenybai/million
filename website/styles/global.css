@@ -152,3 +152,48 @@ html[class~='dark'] .gradient-text {
   --carbon-bg-secondary: hsl(0, 0%, 15%);
   --carbon-text-color: hsl(0, 0%, 90%);
 }
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-12rem * 5));
+  }
+}
+.slider {
+  position: relative;
+  overflow: hidden;
+}
+.slider::before,
+.slider::after {
+  background: linear-gradient(
+    to right,
+    rgba(9, 14, 26, 1) 0%,
+    rgba(9, 14, 26, 0) 100%
+  );
+  content: '';
+  z-index: 2;
+  position: absolute;
+  height: 100%;
+  width: 10rem;
+  pointer-events: none;
+}
+.slider::after {
+  right: 0;
+  top: 0;
+  transform: rotateZ(180deg);
+}
+.slider::before {
+  left: 0;
+  top: 0;
+}
+.slider .slide-track {
+  animation: scroll 30s linear infinite;
+  display: flex;
+  width: calc(12rem * 5 * 2);
+}
+.slide {
+  width: 12rem;
+  position: relative;
+}

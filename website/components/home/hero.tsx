@@ -65,7 +65,9 @@ export function Hero() {
             </div>
           </div>
         </div>
-        <Companies />
+        <div className="lg:w-2/3 text-center mx-auto">
+          <Companies />
+        </div>
       </Container>
     </div>
   );
@@ -84,54 +86,51 @@ export function Blur() {
 }
 
 function Companies() {
+  const entries = [
+    {
+      url: 'https://wyze.com',
+      component: <WyzeLogo />,
+    },
+    {
+      url: 'https://vercel.com',
+      component: <VercelLogo />,
+    },
+    {
+      url: 'https://dimension.dev',
+      component: (
+        <div className="flex items-center gap-3 text-xl font-semibold">
+          <DimensionLogo /> Dimension
+        </div>
+      ),
+    },
+    {
+      url: 'https://cerebrum.com',
+      component: (
+        <div className="flex items-center gap-3 text-xl font-semibold">
+          <CerebrumLogo /> Cerebrum
+        </div>
+      ),
+    },
+    {
+      url: 'https://www.theatrejs.com/',
+      component: <TheatreJSLogo />,
+    },
+  ];
+
   return (
     <div className="mt-36 text-center lg:mt-32 md:block hidden">
       <span className="uppercase text-sm font-semibold tracking-wider text-gray-800 dark:text-white">
         Used / sponsored by companies
       </span>
-      <div className="mt-4 flex justify-around items-center">
-        <div className="p-4 grayscale opacity-60 hover:opacity-100 transition duration-200 hover:grayscale-0">
-          <a href="https://wyze.com" target="_blank">
-            <WyzeLogo />
-          </a>
-        </div>
-        <div className="p-4 grayscale opacity-60 hover:opacity-100 transition duration-200 hover:grayscale-0">
-          <a
-            href="https://vercel.com"
-            target="_blank"
-            className="flex items-center gap-3 text-xl font-semibold"
-          >
-            <VercelLogo />
-          </a>
-        </div>
-        <div className="p-4 grayscale opacity-60 hover:opacity-100 transition duration-200 hover:grayscale-0">
-          <a
-            href="https://dimension.dev"
-            target="_blank"
-            className="flex items-center gap-3 text-xl font-semibold"
-          >
-            <DimensionLogo />
-            Dimension
-          </a>
-        </div>
-        <div className="p-4 grayscale opacity-60 hover:opacity-100 transition duration-200 hover:grayscale-0">
-          <a
-            href="https://cerebrum.com"
-            target="_blank"
-            className="flex items-center gap-3 text-xl font-semibold"
-          >
-            <CerebrumLogo />
-            Cerebrum
-          </a>
-        </div>
-        <div className="p-4 grayscale opacity-60 hover:opacity-100 transition duration-200 hover:grayscale-0">
-          <a
-            href="https://www.theatrejs.com/"
-            target="_blank"
-            className="flex items-center gap-3 text-xl font-semibold"
-          >
-            <TheatreJSLogo />
-          </a>
+      <div className="slider">
+        <div className="slide-track mt-6 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 justify-around items-center">
+          {[...entries, ...entries].map(({ component, url }) => (
+            <div className="slide grayscale opacity-60 hover:opacity-100 transition duration-200 hover:grayscale-0">
+              <a href={url} target="_blank">
+                {component}
+              </a>
+            </div>
+          ))}
         </div>
       </div>
     </div>
