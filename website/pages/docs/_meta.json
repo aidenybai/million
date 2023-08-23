@@ -2,6 +2,7 @@
   "index": "Introduction",
   "install": "Installation",
   "quickstart": "Tutorial",
+  "faq": "FAQ",
   "-- API Reference": {
     "type": "separator",
     "title": "API Reference"

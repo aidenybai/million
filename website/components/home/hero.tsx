@@ -15,7 +15,7 @@ export function Hero() {
       <Container>
         <div className="relative pt-20 md:pt-36 ml-auto">
           <div className="lg:w-2/3 text-center mx-auto">
-            <h1 className="text-zinc-900 dark:text-white font-bold text-5xl md:text-6xl xl:text-7xl">
+            <h1 className="text-zinc-900 dark:text-white font-extrabold text-5xl md:text-6xl xl:text-7xl">
               Make React{' '}
               <span className="gradient-text inline-block">
                 <span className="font-mono">
@@ -24,25 +24,17 @@ export function Hero() {
                 % faster
               </span>
             </h1>
-            <p className="mt-8 text-xl text-zinc-700 dark:text-zinc-300 leading-8">
+            <p className="mt-8 text-xl text-zinc-600 dark:text-zinc-400 leading-8">
               The{' '}
-              <span className="font-medium dark: dark:text-zinc-100">
+              <span className="font-medium dark:text-zinc-100">
                 Virtual DOM Replacement
               </span>{' '}
               for React. Gain big performance wins for UI and data heavy React
-              apps. Dead simple to use – try it out today with just a{' '}
-              <Link href="/docs/quickstart">
-                <span data-rehype-pretty-code-fragment="">
-                  <code
-                    className="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10"
-                    dir="ltr"
-                    data-language="jsx"
-                    data-theme="default"
-                  >
-                    <span className="line">block()</span>
-                  </code>
-                </span>
+              apps. Dead simple to use – try it out with{' '}
+              <Link href="/docs" className="font-medium hover:underline">
+                just one plugin
               </Link>
+              .
             </p>
             <div className="mt-16 flex flex-wrap justify-center gap-y-4 gap-x-6">
               <Link

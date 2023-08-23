@@ -23,16 +23,21 @@
       "layout": "full"
     }
   },
+  "foundation": {
+    "display": "hidden",
+    "type": "page",
+    "title": "Foundation",
+    "theme": {
+      "typesetting": "article"
+    }
+  },
   "more": {
     "title": "More",
     "type": "menu",
     "items": {
       "foundation": {
-        "type": "page",
         "title": "Foundation",
-        "theme": {
-          "typesetting": "article"
-        }
+        "href": "/foundation"
       },
       "research": {
         "title": "Research",

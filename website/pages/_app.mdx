@@ -1,18 +1,14 @@
 import '../styles/global.css';
 import { Analytics } from '@vercel/analytics/react';
-import Loglib from '@loglib/tracker/react';
+import { Inter } from 'next/font/google';
+
+export const inter = Inter({ subsets: ['latin'] });
 
 export default function App({ Component, pageProps }) {
   return (
-    <>
+    <main className={inter.className}>
       <Component {...pageProps} />
       <Analytics />
-      <Loglib
-        config={{
-          id: 'million',
-          host: 'https://www.loglib.io',
-        }}
-      />
-    </>
+    </main>
   );
 }
