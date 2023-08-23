@@ -1,6 +1,8 @@
 import { declare } from '@babel/helper-plugin-utils';
 import { createUnplugin } from 'unplugin';
 import { transformAsync } from '@babel/core';
+import pluginSyntaxJsx from '@babel/plugin-syntax-jsx';
+import pluginSyntaxTypescript from '@babel/plugin-syntax-typescript';
 import { blue } from 'kleur/colors';
 import { visitor as legacyVdomVisitor } from './vdom';
 import {
@@ -65,18 +67,19 @@ export const unplugin = createUnplugin((options: Options = {}) => {
       return /\.[jt]sx$/.test(id);
     },
     async transform(code: string, id: string) {
-      const isTSX = id.endsWith('.tsx');
-
       options._file = id;
 
-      const plugins = normalizePlugins([
-        '@babel/plugin-syntax-jsx',
-        isTSX && [
-          '@babel/plugin-syntax-typescript',
+      const plugins: PluginItem[] = [[pluginSyntaxJsx]];
+
+      const isTSX = id.endsWith('.tsx');
+      if (isTSX) {
+        plugins.push([
+          pluginSyntaxTypescript,
           { allExtensions: true, isTSX: true },
-        ],
-        [babelPlugin, options],
-      ]);
+        ]);
+      }
+
+      plugins.push([babelPlugin, options]);
 
       const result = await transformAsync(code, { plugins, filename: id });
 
