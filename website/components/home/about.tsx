@@ -22,10 +22,9 @@ export function About() {
               <h2 className="text-3xl font-bold text-zinc-900 md:text-4xl dark:text-white">
                 React at the speed of raw JS
               </h2>
-              <p className="text-lg my-8 text-zinc-600 dark:text-zinc-300">
-                Million.js can run on the same React API you know and love, but
-                uses a hyper-optimized virtual DOM. It's one of the top
-                performers in the{' '}
+              <p className="text-lg my-8 text-zinc-600 dark:text-zinc-400">
+                Million.js runs on the same React API you know and love, but
+                runs way faster. It's one of the top performers in the{' '}
                 <a
                   href="https://krausest.github.io/js-framework-benchmark/2023/table_chrome_112.0.5615.49.html"
                   target="_blank"
@@ -43,11 +42,10 @@ export function About() {
                   </div>
                   <div className="w-5/6">
                     <h4 className="font-semibold text-lg text-zinc-700 dark:text-purple-300">
-                      Up to 70% faster than React.
+                      Up to 70% faster* than React.
                     </h4>
                     <p className="text-zinc-500 dark:text-zinc-400">
-                      Note that benchmarks may not represent real-world
-                      performance.
+                      * - Benchmarks may not represent real-world performance.
                     </p>
                   </div>
                 </div>
@@ -57,7 +55,7 @@ export function About() {
                   </div>
                   <div className="w-5/6">
                     <h4 className="font-semibold text-lg text-zinc-700 dark:text-purple-300">
-                      Integrate and ship fast.
+                      Integrate and ship in minutes.
                     </h4>
                     <p className="text-zinc-500 dark:text-zinc-400">
                       No need to learn a new framework. Works with your existing
@@ -66,7 +64,7 @@ export function About() {
                   </div>
                 </div>
               </div>
-              <div className="mt-10 text-xs dark:text-zinc-300 text-zinc-600 opacity-50 hover:opacity-90 transition-opacity">
+              <div className="mt-10 text-xs bg-gradient-to-b dark:from-zinc-500 dark:to-[#111] dark:hover:to-zinc-500 inline-block text-transparent bg-clip-text from-zinc-500 to-white hover:to-zinc-500 opacity-40 hover:opacity-50 transition-opacity">
                 Note: It's important to note that benchmarks (via JS Framework
                 Benchmark) do not represent real-life performance. Million.js
                 does include some limitations. You may see more performance
@@ -79,8 +77,11 @@ export function About() {
       <div>
         <Container>
           <h3 className="text-2xl text-center font-bold text-zinc-900 dark:text-white md:text-3xl lg:text-4xl">
-            Novel architecture to make your web apps faster
+            What's in Million.js?
           </h3>
+          <p className="mt-3 text-center text-zinc-400 dark:text-zinc-600 md:text-md lg:text-lg">
+            All the tools to make React faster, automatically.
+          </p>
           <div className="relative mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             <Card
               title="Block Virtual DOM"
@@ -117,7 +118,7 @@ export function About() {
               }
             />
             <Card
-              title="Powerful APIs"
+              title="Automatic Mode"
               icon={<ThumbsUpIcon />}
               description={
                 <>
@@ -127,9 +128,9 @@ export function About() {
                     href="/docs/quickstart"
                     className="underline nx-text-primary-600"
                   >
-                    powerful APIs
+                    an drop-in automatic mode
                   </Link>{' '}
-                  that you can use to optimize any component.
+                  to make your React apps faster, without any code changes.
                 </>
               }
             />

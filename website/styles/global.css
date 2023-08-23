@@ -4,9 +4,9 @@
 
 html,
 body {
-  font-family: Space Grotesk, -apple-system, BlinkMacSystemFont, avenir next,
-    avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto,
-    arial, sans-serif;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, avenir next, avenir,
+    segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial,
+    sans-serif;
   color: #111;
   background: #fff;
 }
@@ -160,7 +160,7 @@ html[class~='dark'] .gradient-text {
   overflow: hidden;
 }
 .slider::before,
- .slider::after {
+.slider::after {
   background: linear-gradient(to right, #fff 0%, #ffffff00 100%);
   content: '';
   z-index: 2;

@@ -4,13 +4,13 @@ import { Blur } from './hero';
 
 export function CTA() {
   return (
-    <div className="relative pb-16">
+    <div className="relative">
       <Blur />
       <Container>
         <div className="relative">
-          <div className="mt-6 m-auto space-y-6 md:w-8/12 lg:w-7/12">
+          <div className="mt-64 m-auto space-y-6 md:w-8/12 lg:w-7/12">
             <h1 className="text-center text-4xl font-bold text-gray-800 dark:text-white md:text-5xl">
-              Tired of slow React?
+              Get started in seconds
             </h1>
             <div className="flex flex-wrap justify-center gap-6">
               <Link

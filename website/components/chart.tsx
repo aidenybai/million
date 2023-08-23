@@ -54,7 +54,7 @@ export function Chart() {
   defaults.borderColor = isDarkMode ? '#2b2b2d' : '#e1e3eb';
   defaults.color = isDarkMode ? '#e1e3eb' : '#545864';
   defaults.font.size = 16;
-  defaults.font.family = 'Space Grotesk';
+  defaults.font.family = 'Inter, sans-serif';
 
   const color = isDarkMode ? '#54527b' : '#dcc9e8';
   const backgroundColor = ['#b073d9', color, color];
