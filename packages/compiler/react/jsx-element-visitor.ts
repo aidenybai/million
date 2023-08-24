@@ -25,9 +25,12 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
     const { bindings, aliases } = collectImportedBindings(programPath);
 
     const jsxId = jsxElement.openingElement.name;
-    if (!t.isJSXIdentifier(jsxId) || !bindings[jsxId.name]) {
+    if (!t.isJSXIdentifier(jsxId) || !aliases[jsxId.name]) {
       return;
     }
+
+    // update bindings if generated via call expression visitor
+    programPath.scope.crawl();
 
     const forComponentBinding = programPath.scope.getBinding(jsxId.name); // jsxId.name = 'For'
     if (!forComponentBinding) {

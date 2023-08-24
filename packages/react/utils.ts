@@ -59,6 +59,7 @@ export const renderReactScope = (
     if (REGISTRY.has(puppetComponent.type)) {
       const puppetBlock = REGISTRY.get(puppetComponent.type)!;
       if (typeof puppetBlock === 'function') {
+        console.log('here');
         return puppetBlock(puppetComponent.props);
       }
     }

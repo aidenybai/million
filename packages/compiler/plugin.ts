@@ -16,7 +16,7 @@ import {
   styleLinks,
   stylePrimaryMessage,
 } from './react/utils';
-import type { NodePath, PluginItem } from '@babel/core';
+import type { PluginObj, PluginItem } from '@babel/core';
 import type * as t from '@babel/types';
 
 export interface Options {
@@ -59,7 +59,8 @@ export const intro = (options: Options) => {
   }
 };
 
-export const unplugin = createUnplugin((options: Options = {}) => {
+export const unplugin = createUnplugin((options: Options) => {
+  options ??= {};
   return {
     enforce: 'pre',
     name: 'million',
@@ -85,6 +86,17 @@ export const unplugin = createUnplugin((options: Options = {}) => {
 
       return result?.code || null;
     },
+    vite: {
+      config() {
+        return {
+          optimizeDeps: {
+            include: [
+              options.server ? 'million/react-server' : 'million/react',
+            ],
+          },
+        };
+      },
+    },
   };
 });
 
@@ -93,7 +105,7 @@ export const babelPlugin = declare((api, options: Options) => {
 
   intro(options);
 
-  const file = options._file as string;
+  const file = options._file!;
   let callExpressionVisitor: ReturnType<typeof reactCallExpressionVisitor>;
   let jsxElementVisitor: ReturnType<typeof reactJsxElementVisitor> | undefined;
   let componentVisitor: ReturnType<typeof reactComponentVisitor> | undefined;
@@ -123,27 +135,27 @@ export const babelPlugin = declare((api, options: Options) => {
 
   const blockCache = new Map<string, t.Identifier>();
 
-  const plugin = {
+  const plugin: PluginObj = {
     name: 'million',
     visitor: {
-      JSXElement(path: NodePath<t.JSXElement>) {
+      JSXElement(path) {
         handleVisitorError(() => {
           if (!jsxElementVisitor) return;
           jsxElementVisitor(path, file);
         }, options.mute);
       },
-      CallExpression(path: NodePath<t.CallExpression>) {
+      CallExpression(path) {
         handleVisitorError(() => {
           callExpressionVisitor(path, blockCache, file);
         }, options.mute);
       },
-      FunctionDeclaration(path: NodePath<t.FunctionDeclaration>) {
+      FunctionDeclaration(path) {
         handleVisitorError(() => {
           if (!componentVisitor) return;
           componentVisitor(path, file);
         }, options.mute);
       },
-      VariableDeclarator(path: NodePath<t.VariableDeclarator>) {
+      VariableDeclarator(path) {
         handleVisitorError(() => {
           if (!componentVisitor) return;
           componentVisitor(path, file);
