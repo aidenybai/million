@@ -282,7 +282,7 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
     let rewrittenVariableDeclarationPath: NodePath<t.VariableDeclaration>;
 
     if (rawComponentParentPath.isExportNamedDeclaration()) {
-      rawComponentParentPath.replaceWith(
+      rawComponentPath.replaceWith(
         t.objectPattern([
           t.objectProperty(rawComponent.id, rawComponent.id, false, true),
         ]),
@@ -313,12 +313,14 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
     const visitor = callExpressionVisitor(
       { mute: 'info', ...options },
       isReact,
+      false,
+      true,
     );
     handleVisitorError(
       () => visitor(rewrittenComponentPath, new Map(), file),
       'info',
     );
-    rewrittenComponentPath.skip();
+    // rewrittenComponentPath.skip();
   };
 };
 

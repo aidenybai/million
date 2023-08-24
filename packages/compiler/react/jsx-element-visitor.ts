@@ -259,7 +259,7 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
     )
       return;
 
-    const visitor = callExpressionVisitor(options, isReact, true);
+    const visitor = callExpressionVisitor(options, isReact, true, true);
 
     const callSitePath = originalComponentPath
       .get('declarations')[0]!
