@@ -22,10 +22,10 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
     const programPath = jsxElementPath.findParent((path) =>
       path.isProgram(),
     ) as NodePath<t.Program>;
-    const importedBindings = collectImportedBindings(programPath);
+    const { bindings, aliases } = collectImportedBindings(programPath);
 
     const jsxId = jsxElement.openingElement.name;
-    if (!t.isJSXIdentifier(jsxId) || !importedBindings[jsxId.name]) {
+    if (!t.isJSXIdentifier(jsxId) || !bindings[jsxId.name]) {
       return;
     }
 
@@ -49,7 +49,7 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
 
     const validSpecifiers = getValidSpecifiers(
       importDeclarationPath,
-      importedBindings,
+      aliases,
       file,
     );
 
@@ -64,8 +64,8 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
       importSource.value,
     );
 
-    const block = t.identifier(importedBindings.block ?? 'block');
-    if (!importedBindings.block) {
+    const block = t.identifier(bindings.block ?? 'block');
+    if (!bindings.block) {
       importDeclaration.specifiers.push(t.importSpecifier(block, block));
     }
 
