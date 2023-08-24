@@ -35,7 +35,11 @@ export const getValidSpecifiers = (
       };
 
       const isSpecifierValid =
-        checkValid('block') || checkValid('For') || checkValid('macro');
+        checkValid('block') ||
+        checkValid('For') ||
+        checkValid('macro') ||
+        checkValid('renderReactScope') ||
+        checkValid('renderPreactScope');
 
       if (isSpecifierValid) {
         validSpecifiers.push(importedSpecifier.name);

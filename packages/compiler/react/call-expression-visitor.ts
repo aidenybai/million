@@ -18,6 +18,7 @@ export const callExpressionVisitor = (
   options: Options = {},
   isReact = true,
   unstable = false,
+  valid = false,
 ) => {
   return (
     callSitePath: NodePath<t.CallExpression>,
@@ -106,7 +107,8 @@ export const callExpressionVisitor = (
       return;
     }
 
-    if (!validSpecifiers.includes('block')) return;
+    console.log(validSpecifiers, valid);
+    if (!validSpecifiers.includes('block') && !valid) return;
 
     let RawComponent: any = callSite.arguments[0];
 

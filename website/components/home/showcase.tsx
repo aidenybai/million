@@ -40,7 +40,7 @@ export function Showcase() {
       <Container>
         <div className="mb-16">
           <h2 className="mb-4 text-center text-2xl font-bold text-gray-800 dark:text-white md:text-4xl">
-            Faster than the competition.
+            Faster than the rest
           </h2>
           <p className="mt-3 text-center text-zinc-600 dark:text-zinc-300 md:text-md lg:text-lg">
             Real companies and projects use Million.js in production to deliver

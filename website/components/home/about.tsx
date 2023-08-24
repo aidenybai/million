@@ -129,7 +129,7 @@ export function About() {
                     href="/docs/quickstart"
                     className="underline nx-text-primary-600"
                   >
-                    an drop-in automatic mode
+                    a drop-in automatic mode
                   </Link>{' '}
                   to make your React apps faster, without any code changes.
                 </>
