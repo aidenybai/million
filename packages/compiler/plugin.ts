@@ -83,7 +83,7 @@ export const unplugin = createUnplugin((options: Options = {}) => {
 
       const result = await transformAsync(code, { plugins, filename: id });
 
-      return result?.code ?? code;
+      return result?.code || null;
     },
   };
 });

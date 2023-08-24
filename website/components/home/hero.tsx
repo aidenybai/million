@@ -18,13 +18,10 @@ export function Hero() {
             <h1 className="text-zinc-900 dark:text-white font-extrabold text-5xl md:text-6xl xl:text-7xl">
               Make React{' '}
               <span className="gradient-text inline-block">
-                <span className="font-mono">
-                  <CountUp start={10} end={70} useEasing />
-                </span>
-                % faster
+                <CountUp start={10} end={70} useEasing />% faster
               </span>
             </h1>
-            <p className="mt-8 text-xl text-zinc-600 dark:text-zinc-400 leading-8">
+            <p className="mt-8 text-xl text-zinc-600 dark:text-zinc-300 leading-8">
               The{' '}
               <span className="font-medium dark:text-zinc-100">
                 Virtual DOM Replacement
@@ -69,15 +66,15 @@ export function Blur() {
   return (
     <div
       aria-hidden="true"
-      className="absolute inset-0 grid grid-cols-2 -space-x-52 opacity-40 dark:opacity-20"
+      className="absolute inset-0 grid grid-cols-2 -space-x-52 opacity-40 dark:opacity-20 pointer-events-none"
     >
-      <div className="fix-safari-blur blur-[106px] h-56 bg-gradient-to-br from-purple-500 to-purple-400 dark:from-purple-700"></div>
-      <div className="fix-safari-blur blur-[106px] h-32 bg-gradient-to-r from-purple-400 to-purple-300 dark:to-purple-600"></div>
+      <div className="fix-safari-blur blur-[106px] h-56 bg-gradient-to-br from-violet-500 to-purple-400 dark:from-fuchsia-700"></div>
+      <div className="fix-safari-blur blur-[106px] h-32 bg-gradient-to-r from-fuchsia-400 to-purple-300 dark:to-violet-600"></div>
     </div>
   );
 }
 
-function Companies() {
+export function Companies() {
   const entries = [
     {
       url: 'https://wyze.com',
@@ -110,12 +107,12 @@ function Companies() {
   ];
 
   return (
-    <div className="mt-36 text-center lg:mt-32 md:block hidden">
+    <div className="mt-36 text-center lg:mt-32">
       <span className="uppercase text-sm font-semibold tracking-wider text-gray-800 dark:text-white">
         Used / sponsored by companies
       </span>
       <div className="slider">
-        <div className="slide-track mt-6 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 justify-around items-center">
+        <div className="slide-track-5 mt-6 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 justify-around items-center">
           {[...entries, ...entries].map(({ component, url }) => (
             <div className="slide grayscale opacity-60 hover:opacity-100 transition duration-200 hover:grayscale-0">
               <a href={url} target="_blank">
