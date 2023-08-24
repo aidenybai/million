@@ -2,6 +2,7 @@ import * as t from '@babel/types';
 import { type NodePath } from '@babel/core';
 import { addNamed } from '@babel/helper-module-imports';
 import { bgMagenta, cyan, magenta, dim } from 'kleur/colors';
+import { collectImportedBindings } from './bindings';
 import type { Options } from '../plugin';
 
 export const RENDER_SCOPE = 'slot';
@@ -9,7 +10,7 @@ export const TRANSFORM_ANNOTATION = 'million:transform';
 
 export const getValidSpecifiers = (
   importDeclarationPath: NodePath<t.ImportDeclaration>,
-  importedBindings: Record<string, string>,
+  aliases: Record<string, string>,
   file: string,
 ): string[] => {
   const importDeclaration = importDeclarationPath.node;
@@ -29,8 +30,7 @@ export const getValidSpecifiers = (
 
       const checkValid = (validName: string) => {
         return (
-          importedSpecifier.name === validName &&
-          specifier.local.name === importedBindings[validName]
+          importedSpecifier.name === validName && aliases[specifier.local.name]
         );
       };
 
@@ -246,16 +246,17 @@ export const addNamedCache = (
   name: string,
   source: string,
   path: NodePath,
-  // cache: Map<string, t.Identifier>,
+  programPath: NodePath<t.Program>,
 ) => {
-  // We no longer cache since it causes issues with HMR
-  // TODO: Fix HMR
-  // if (cache.has(name)) return cache.get(name)!;
+  const { bindings } = collectImportedBindings(programPath);
+  if (bindings[name]) {
+    return t.identifier(bindings[name]!);
+  }
 
   const id = addNamed(path, name, source, {
     nameHint: `${name}$`,
   });
-  // cache.set(name, id);
+
   return id;
 };
 

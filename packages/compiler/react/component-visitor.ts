@@ -262,6 +262,7 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
           'block',
           options.server ? 'million/react-server' : 'million/react',
           rawComponentPath,
+          programPath,
         );
 
     const rewrittenComponentNode = t.variableDeclaration('const', [
@@ -282,9 +283,9 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
     let rewrittenVariableDeclarationPath: NodePath<t.VariableDeclaration>;
 
     if (rawComponentParentPath.isExportNamedDeclaration()) {
-      rawComponentPath.replaceWith(
-        t.objectPattern([
-          t.objectProperty(rawComponent.id, rawComponent.id, false, true),
+      rawComponentParentPath.replaceWith(
+        t.exportNamedDeclaration(null, [
+          t.exportSpecifier(rawComponent.id, rawComponent.id),
         ]),
       );
       rewrittenVariableDeclarationPath = rawComponentParentPath.insertBefore(

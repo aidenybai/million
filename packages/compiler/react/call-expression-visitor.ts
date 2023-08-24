@@ -43,12 +43,9 @@ export const callExpressionVisitor = (
     const programPath = callSitePath.findParent((path) =>
       path.isProgram(),
     ) as NodePath<t.Program>;
-    const importedBindings = collectImportedBindings(programPath);
+    const { bindings, aliases } = collectImportedBindings(programPath);
 
-    if (
-      !t.isIdentifier(callSite.callee) ||
-      !Object.values(importedBindings).includes(callSite.callee.name)
-    )
+    if (!t.isIdentifier(callSite.callee) || !aliases[callSite.callee.name])
       return;
 
     // Allow the user to opt into experimental optimization by adding a /* @optimize */
@@ -79,7 +76,7 @@ export const callExpressionVisitor = (
 
     const validSpecifiers = getValidSpecifiers(
       importDeclarationPath,
-      importedBindings,
+      aliases,
       file,
     );
 
@@ -242,7 +239,7 @@ export const callExpressionVisitor = (
             t.variableDeclaration('const', [
               t.variableDeclarator(
                 anonymousComponentId,
-                t.callExpression(t.identifier(importedBindings.block!), [
+                t.callExpression(t.identifier(bindings.block!), [
                   forwardRefComponent,
                 ]),
               ),
@@ -284,10 +281,10 @@ export const callExpressionVisitor = (
       unstable,
       imports: {
         addNamed(name: string, source: string = importSource.value) {
-          if (importedBindings[name]) {
-            return t.identifier(importedBindings[name]!);
+          if (bindings[name]) {
+            return t.identifier(bindings[name]!);
           }
-          return addNamedCache(name, source, callSitePath);
+          return addNamedCache(name, source, callSitePath, programPath);
         },
       },
     };
