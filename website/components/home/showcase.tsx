@@ -52,7 +52,7 @@ export function Showcase() {
             {[...entries, ...entries, ...entries].map(
               ({ image, name, url }) => (
                 <a
-                  href={url}
+                  href={`https://${url}`}
                   target="_blank"
                   className=" pr-10 space-y-6 text-center slide grayscale-[50%] opacity-90 hover:opacity-100 transition duration-200 hover:grayscale-0"
                 >
