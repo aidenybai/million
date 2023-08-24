@@ -9,7 +9,9 @@ const Wouter = block(() => (
     &nbsp;
     <Link href="/about">About</Link>&nbsp;
     <Link href="/inbox">Inbox</Link>
-    <Route path="/about">About Us</Route>
+    <Route path="/about">
+      <h1>About Us</h1>
+    </Route>
     <Route path="/users/:name">
       {(params) => <div>Hello, {params.name}!</div>}
     </Route>
@@ -17,10 +19,6 @@ const Wouter = block(() => (
   </div>
 ));
 
-const InboxPage = block(() => (
-  <div>
-    <h1>Inbox</h1>
-  </div>
-));
+const InboxPage = block(() => <h1>Inbox</h1>);
 
 export default Wouter;

@@ -560,7 +560,7 @@ export const transformJSX = (
   },
   SHARED: Shared,
 ) => {
-  const { file, imports, unstable, isReact } = SHARED;
+  const { file, imports, unstable, isReact, globalPath } = SHARED;
 
   /**
    * Populates `dynamics` with a new entry.
