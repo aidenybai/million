@@ -25,6 +25,7 @@
     "styled-components": "^6.0.7",
     "swr": "^2.2.1",
     "valtio": "^1.11.2",
+    "wouter": "^2.11.0",
     "zustand": "^4.4.1"
   }
 }
