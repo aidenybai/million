@@ -107,7 +107,6 @@ export const callExpressionVisitor = (
       return;
     }
 
-    console.log(validSpecifiers, valid);
     if (!validSpecifiers.includes('block') && !valid) return;
 
     let RawComponent: any = callSite.arguments[0];
