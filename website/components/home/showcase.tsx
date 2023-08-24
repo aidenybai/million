@@ -36,7 +36,7 @@ export function Showcase() {
     },
   ];
   return (
-    <div className="my-32 relative">
+    <div className="my-42 relative">
       <Container>
         <div className="mb-16">
           <h2 className="mb-4 text-center text-2xl font-bold text-gray-800 dark:text-white md:text-4xl">
