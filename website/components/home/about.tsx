@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { Container } from './container';
+import { Blur } from './hero';
 
 const Chart = dynamic(() => import('../chart').then((mod) => mod.Chart));
 const Showdown = dynamic(() =>
@@ -14,7 +15,7 @@ export function About() {
     <>
       <div>
         <Container>
-          <div className="lg:p-16 space-y-6 md:flex md:gap-20 justify-center md:space-y-0 lg:items-center">
+          <div className="lg:p-4 space-y-6 md:flex md:gap-20 justify-center md:space-y-0 lg:items-center">
             <div className="md:w-7/12 lg:w-1/2">
               <Graphic />
             </div>
@@ -22,7 +23,7 @@ export function About() {
               <h2 className="text-3xl font-bold text-zinc-900 md:text-4xl dark:text-white">
                 React at the speed of raw JS
               </h2>
-              <p className="text-lg my-8 text-zinc-600 dark:text-zinc-400">
+              <p className="text-lg my-8 text-zinc-600 dark:text-zinc-300">
                 Million.js runs on the same React API you know and love, but
                 runs way faster. It's one of the top performers in the{' '}
                 <a
@@ -74,12 +75,12 @@ export function About() {
           </div>
         </Container>
       </div>
-      <div>
+      <div className="relative">
         <Container>
           <h3 className="text-2xl text-center font-bold text-zinc-900 dark:text-white md:text-3xl lg:text-4xl">
             What's in Million.js?
           </h3>
-          <p className="mt-3 text-center text-zinc-400 dark:text-zinc-600 md:text-md lg:text-lg">
+          <p className="mt-3 text-center text-zinc-600 dark:text-zinc-300 md:text-md lg:text-lg">
             All the tools to make React faster, automatically.
           </p>
           <div className="relative mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -136,6 +137,7 @@ export function About() {
             />
           </div>
         </Container>
+        <Blur />
       </div>
     </>
   );

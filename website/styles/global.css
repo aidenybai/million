@@ -9,6 +9,7 @@ body {
     sans-serif;
   color: #111;
   background: #fff;
+  font-variant-numeric: tabular-nums;
 }
 
 #hero {
@@ -147,7 +148,7 @@ html[class~='dark'] .gradient-text {
   --carbon-text-color: hsl(0, 0%, 90%);
 }
 
-@keyframes scroll {
+@keyframes scroll-5 {
   0% {
     transform: translateX(0);
   }
@@ -188,10 +189,15 @@ html[class~='dark'] .gradient-text {
   left: 0;
   top: 0;
 }
-.slider .slide-track {
-  animation: scroll 30s linear infinite;
+.slider .slide-track-5 {
+  animation: scroll-5 30s linear infinite;
   display: flex;
   width: calc(12rem * 5 * 2);
+}
+.slider .slide-track-10 {
+  animation: scroll-5 30s linear infinite;
+  display: flex;
+  width: calc(12rem * 10 * 2);
 }
 .slide {
   width: 12rem;
