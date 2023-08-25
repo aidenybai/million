@@ -86,17 +86,6 @@ export const unplugin = createUnplugin((options: Options) => {
 
       return result?.code || null;
     },
-    vite: {
-      config() {
-        return {
-          optimizeDeps: {
-            include: [
-              options.server ? 'million/react-server' : 'million/react',
-            ],
-          },
-        };
-      },
-    },
   };
 });
 
