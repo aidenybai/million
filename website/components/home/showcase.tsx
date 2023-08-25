@@ -48,7 +48,7 @@ export function Showcase() {
           </p>
         </div>
         <div className="slider">
-          <div className="slide-track-10 mt-6 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5">
+          <div className="slide-track-10 hover:pause mt-6 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5">
             {[...entries, ...entries, ...entries].map(
               ({ image, name, url }) => (
                 <a

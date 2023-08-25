@@ -43,12 +43,12 @@ export function Hero() {
                 </span>
               </Link>
               <a
-                href="https://www.youtube.com/watch?v=VkezQMb1DHw"
+                href="https://youtu.be/VkezQMb1DHw?t=73"
                 target="_blank"
                 className="relative flex h-11 w-full items-center justify-center px-6 before:absolute before:inset-0 before:rounded-full before:border before:border-transparent before:bg-purple-600/10 before:bg-gradient-to-b before:transition before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 dark:before:border-zinc-700 dark:before:bg-zinc-800 sm:w-max"
               >
                 <span className="relative text-base font-semibold text-purple-600 dark:text-white">
-                  ▶️ Million.js in 100 seconds
+                  How?
                 </span>
               </a>
             </div>
@@ -112,7 +112,7 @@ export function Companies() {
         Used / sponsored by companies
       </span>
       <div className="slider">
-        <div className="slide-track-5 mt-6 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 justify-around items-center">
+        <div className="slide-track-5 hover:pause mt-6 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 justify-around items-center">
           {[...entries, ...entries].map(({ component, url }) => (
             <div className="slide grayscale opacity-60 hover:opacity-100 transition duration-200 hover:grayscale-0">
               <a href={url} target="_blank">

@@ -112,6 +112,12 @@ importers:
         specifier: 0.32.0
         version: 0.32.0(jsdom@21.1.0)
 
+  packages/cli:
+    dependencies:
+      '@antfu/ni':
+        specifier: ^0.21.6
+        version: 0.21.6
+
   packages/compiler:
     dependencies:
       '@babel/helper-module-imports':
@@ -383,6 +389,11 @@ packages:
     dependencies:
       '@jridgewell/gen-mapping': 0.3.3
       '@jridgewell/trace-mapping': 0.3.19
+
+  /@antfu/ni@0.21.6:
+    resolution: {integrity: sha512-Hj0BKIOspbo+OsPT5mjONeqpuVb4bxp9jdJ4p/b5GxgYNIqJjBcJdp0DEON7CJflKoWuHf7I52wO5kOJJ4DveQ==}
+    hasBin: true
+    dev: false
 
   /@antfu/utils@0.7.6:
     resolution: {integrity: sha512-pvFiLP2BeOKA/ZOS6jxx4XhKzdVLHDhGlFEaZ2flWWYf2xOqVniqpk38I04DFRyz+L0ASggl7SkItTc+ZLju4w==}
