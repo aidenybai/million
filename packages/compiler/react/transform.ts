@@ -888,7 +888,6 @@ export const transformJSX = (
         }
       }
       if (!hasDynamic) {
-        console.log('hit');
         dynamics.deferred.push(() => {
           attribute.value = t.stringLiteral(
             styleObject.properties
