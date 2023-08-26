@@ -791,6 +791,17 @@ export const transformJSX = (
    * Now, it's time to handle the DOM element case.
    */
   const { attributes } = jsx.openingElement;
+  attributes.sort((a, b) => {
+    // move spread attribute to the front
+    if (t.isJSXSpreadAttribute(a)) return -1;
+    if (t.isJSXSpreadAttribute(b)) return 1;
+
+    // move style to the back
+    if (t.isJSXIdentifier(a.name) && a.name.name === 'style') return 1;
+    if (t.isJSXIdentifier(b.name) && b.name.name === 'style') return -1;
+
+    return 0;
+  });
   for (let i = 0, j = attributes.length; i < j; i++) {
     const attribute = attributes[i]!;
 
@@ -877,37 +888,40 @@ export const transformJSX = (
         }
       }
       if (!hasDynamic) {
-        attribute.value = t.stringLiteral(
-          styleObject.properties
-            .map((property) => {
-              if (t.isObjectProperty(property)) {
-                const value = property.value;
-                const key = property.key;
-                if (t.isIdentifier(key) && t.isLiteral(value)) {
-                  let kebabKey = '';
-                  for (let i = 0, j = key.name.length; i < j; ++i) {
-                    const char = key.name.charCodeAt(i);
-                    if (char < 97) {
-                      // If letter is uppercase
-                      kebabKey += `-${String.fromCharCode(char + 32)}`;
-                    } else {
-                      kebabKey += key.name[i];
+        console.log('hit');
+        dynamics.deferred.push(() => {
+          attribute.value = t.stringLiteral(
+            styleObject.properties
+              .map((property) => {
+                if (t.isObjectProperty(property)) {
+                  const value = property.value;
+                  const key = property.key;
+                  if (t.isIdentifier(key) && t.isLiteral(value)) {
+                    let kebabKey = '';
+                    for (let i = 0, j = key.name.length; i < j; ++i) {
+                      const char = key.name.charCodeAt(i);
+                      if (char < 97) {
+                        // If letter is uppercase
+                        kebabKey += `-${String.fromCharCode(char + 32)}`;
+                      } else {
+                        kebabKey += key.name[i];
+                      }
                     }
+                    if (
+                      t.isNullLiteral(value) ||
+                      t.isRegExpLiteral(value) ||
+                      t.isTemplateLiteral(value)
+                    )
+                      return '';
+                    return `${kebabKey}:${String(value.value)}`;
                   }
-                  if (
-                    t.isNullLiteral(value) ||
-                    t.isRegExpLiteral(value) ||
-                    t.isTemplateLiteral(value)
-                  )
-                    return '';
-                  return `${kebabKey}:${String(value.value)}`;
                 }
-              }
-              return null;
-            })
-            .filter((property) => property)
-            .join('; '),
-        );
+                return null;
+              })
+              .filter((property) => property)
+              .join(';'),
+          );
+        });
       }
       continue;
     }

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Wyze from '../../pages/showcase/wyze.png';
 import DonaAI from '../../pages/showcase/dona-ai.jpeg';
 import T4Stack from '../../pages/showcase/t4stack.png';
+import LLMReport from '../../pages/showcase/llm-report.png';
 import VeganCheck from '../../pages/showcase/vegancheck.png';
 import Windows11Web from '../../pages/showcase/windows-11-web.jpeg';
 import { Container } from './container';
@@ -23,6 +24,11 @@ export function Showcase() {
       image: T4Stack,
       name: 'T4 Stack',
       url: 't4stack.com',
+    },
+    {
+      image: LLMReport,
+      name: 'LLM Report',
+      url: 'llm.report',
     },
     {
       image: VeganCheck,
