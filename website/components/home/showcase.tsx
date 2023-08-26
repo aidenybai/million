@@ -6,6 +6,7 @@ import T4Stack from '../../pages/showcase/t4stack.png';
 import LLMReport from '../../pages/showcase/llm-report.png';
 import VeganCheck from '../../pages/showcase/vegancheck.png';
 import Windows11Web from '../../pages/showcase/windows-11-web.jpeg';
+import StudioFreight from '../../pages/showcase/studio-freight.jpeg';
 import { Container } from './container';
 
 export function Showcase() {
@@ -29,6 +30,11 @@ export function Showcase() {
       image: LLMReport,
       name: 'LLM Report',
       url: 'llm.report',
+    },
+    {
+      image: StudioFreight,
+      name: 'Studio Freight',
+      url: 'studiofreight.com',
     },
     {
       image: VeganCheck,

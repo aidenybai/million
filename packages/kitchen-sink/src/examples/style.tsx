@@ -36,7 +36,13 @@ const Style = block(() => {
       >
         Randomize Everything
       </button>
-      <div style={{ color, fontWeight, fontSize }}>Hello World</div>
+      <div
+        style={{ color: 'red', fontWeight: 10, fontSize: 10 }}
+        title="hi"
+        {...{ test: 1 }}
+      >
+        Hello World
+      </div>
     </div>
   );
 });

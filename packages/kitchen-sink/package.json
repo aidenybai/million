@@ -18,8 +18,6 @@
     "@tanstack/react-virtual": "3.0.0-beta.54",
     "axios": "^1.4.0",
     "jotai": "^2.3.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
     "react-error-boundary": "^4.0.11",
     "react-router-dom": "^6.15.0",
     "styled-components": "^6.0.7",
