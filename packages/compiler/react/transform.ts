@@ -175,7 +175,6 @@ export const transformComponent = (
     data: [], // expression value and id
     cache: new Set(), // cache to check if id already exists to prevent dupes
     deferred: [], // callback (() => void) functions that run mutations on the JSX
-    unoptimizable: false,
     portalInfo: {
       index: -1,
       id: componentBodyPath.scope.generateUidIdentifier('portal'),
@@ -300,12 +299,10 @@ export const transformComponent = (
     t.blockStatement([returnStatement]),
   );
 
-  const puppetBlock = dynamics.unoptimizable
-    ? puppetFn
-    : t.callExpression(block, [
-        puppetFn,
-        t.objectExpression(normalizeProperties(compiledOptions)),
-      ]);
+  const puppetBlock = t.callExpression(block, [
+    puppetFn,
+    t.objectExpression(normalizeProperties(compiledOptions)),
+  ]);
   t.addComment(puppetBlock, 'leading', TRANSFORM_ANNOTATION);
 
   const data: (typeof dynamics)['data'] = [];
@@ -486,7 +483,7 @@ export const transformComponent = (
 
     globalPath.insertBefore(variables);
 
-    const puppetBlockArguments = (puppetBlock as t.CallExpression).arguments;
+    const puppetBlockArguments = puppetBlock.arguments;
 
     puppetBlockArguments[0] = t.nullLiteral();
     puppetBlockArguments[1] = t.objectExpression([
@@ -791,17 +788,7 @@ export const transformJSX = (
    * Now, it's time to handle the DOM element case.
    */
   const { attributes } = jsx.openingElement;
-  attributes.sort((a, b) => {
-    // move spread attribute to the front
-    if (t.isJSXSpreadAttribute(a)) return -1;
-    if (t.isJSXSpreadAttribute(b)) return 1;
 
-    // move style to the back
-    if (t.isJSXIdentifier(a.name) && a.name.name === 'style') return 1;
-    if (t.isJSXIdentifier(b.name) && b.name.name === 'style') return -1;
-
-    return 0;
-  });
   for (let i = 0, j = attributes.length; i < j; i++) {
     const attribute = attributes[i]!;
 
@@ -889,6 +876,7 @@ export const transformJSX = (
       }
       if (!hasDynamic) {
         dynamics.deferred.push(() => {
+          if (dynamics.portalInfo.index !== -1) return;
           attribute.value = t.stringLiteral(
             styleObject.properties
               .map((property) => {
