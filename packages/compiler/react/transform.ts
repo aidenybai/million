@@ -178,7 +178,7 @@ export const transformComponent = (
     unoptimizable: false,
     portalInfo: {
       index: -1,
-      id: componentBodyPath.scope.generateUidIdentifier(''),
+      id: componentBodyPath.scope.generateUidIdentifier('portal'),
     },
   };
 
