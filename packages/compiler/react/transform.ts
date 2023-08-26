@@ -875,40 +875,40 @@ export const transformJSX = (
         }
       }
       if (!hasDynamic) {
-        // dynamics.deferred.push(() => {
-        //   if (dynamics.portalInfo.index !== -1) return;
-        //   attribute.value = t.stringLiteral(
-        //     styleObject.properties
-        //       .map((property) => {
-        //         if (t.isObjectProperty(property)) {
-        //           const value = property.value;
-        //           const key = property.key;
-        //           if (t.isIdentifier(key) && t.isLiteral(value)) {
-        //             let kebabKey = '';
-        //             for (let i = 0, j = key.name.length; i < j; ++i) {
-        //               const char = key.name.charCodeAt(i);
-        //               if (char < 97) {
-        //                 // If letter is uppercase
-        //                 kebabKey += `-${String.fromCharCode(char + 32)}`;
-        //               } else {
-        //                 kebabKey += key.name[i];
-        //               }
-        //             }
-        //             if (
-        //               t.isNullLiteral(value) ||
-        //               t.isRegExpLiteral(value) ||
-        //               t.isTemplateLiteral(value)
-        //             )
-        //               return '';
-        //             return `${kebabKey}:${String(value.value)}`;
-        //           }
-        //         }
-        //         return null;
-        //       })
-        //       .filter((property) => property)
-        //       .join(';'),
-        //   );
-        // });
+        dynamics.deferred.push(() => {
+          if (dynamics.portalInfo.index !== -1) return;
+          attribute.value = t.stringLiteral(
+            styleObject.properties
+              .map((property) => {
+                if (t.isObjectProperty(property)) {
+                  const value = property.value;
+                  const key = property.key;
+                  if (t.isIdentifier(key) && t.isLiteral(value)) {
+                    let kebabKey = '';
+                    for (let i = 0, j = key.name.length; i < j; ++i) {
+                      const char = key.name.charCodeAt(i);
+                      if (char < 97) {
+                        // If letter is uppercase
+                        kebabKey += `-${String.fromCharCode(char + 32)}`;
+                      } else {
+                        kebabKey += key.name[i];
+                      }
+                    }
+                    if (
+                      t.isNullLiteral(value) ||
+                      t.isRegExpLiteral(value) ||
+                      t.isTemplateLiteral(value)
+                    )
+                      return '';
+                    return `${kebabKey}:${String(value.value)}`;
+                  }
+                }
+                return null;
+              })
+              .filter((property) => property)
+              .join(';'),
+          );
+        });
       }
       continue;
     }
@@ -1106,15 +1106,6 @@ export const transformJSX = (
             ]),
             t.jsxClosingElement(jsxFor),
             [t.jsxExpressionContainer(expression.arguments[0] as t.Expression)],
-          );
-
-          const expressionPath = jsxPath.get(`children.${i}.expression`);
-
-          warn(
-            'Array.map() will degrade performance. We recommend removing the block on the current component and using a <For /> component instead.',
-            file,
-            resolvePath(expressionPath),
-            options.mute,
           );
 
           const id = createPortal(() => {
