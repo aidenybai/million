@@ -37,11 +37,11 @@ export const processProps = (
 export const renderReactScope = (
   vnode: ReactNode,
   unstable: boolean,
-  portals: MillionPortal[],
+  portals: MillionPortal[] | undefined,
   currentIndex: number,
   server: boolean,
 ) => {
-  const el = portals[currentIndex]?.current;
+  const el = portals?.[currentIndex]?.current;
   if (typeof window === 'undefined' || (server && !el)) {
     return createElement(
       RENDER_SCOPE,
@@ -72,7 +72,7 @@ export const renderReactScope = (
     portal: reactPortal,
     unstable,
   };
-  portals[currentIndex] = millionPortal;
+  if (portals) portals[currentIndex] = millionPortal;
 
   return millionPortal;
 };
