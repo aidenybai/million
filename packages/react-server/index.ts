@@ -11,7 +11,9 @@ export const block = <P extends MillionProps>(
   Component: ComponentType<P>,
   options: Options = {},
 ) => {
-  let blockFactory = millionModule ? millionModule.block(Component) : null;
+  let blockFactory = millionModule
+    ? millionModule.block(Component, options)
+    : null;
   function MillionBlockLoader<P extends MillionProps>(props: P) {
     const [ready, setReady] = useState(Boolean(blockFactory));
 

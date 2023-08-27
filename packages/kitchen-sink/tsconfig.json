@@ -22,7 +22,8 @@
 
     "paths": {
       "million/react": ["../react"],
-    },
+      "million/react-server": ["../react-server"]
+    }
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
