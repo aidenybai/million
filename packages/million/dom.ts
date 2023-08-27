@@ -53,7 +53,6 @@ export const SVG_TEMPLATE = /**@__PURE__*/ document$.createElementNS(
   'svg',
 );
 /**@__PURE__*/ _SVG_TEMPLATE.content.appendChild(SVG_TEMPLATE);
-export const SVG_TEMPLATE_CONTENT = _SVG_TEMPLATE.content.firstChild as Element;
 
 // Caching prototypes for performance
 export const node$ = Node.prototype;
@@ -84,7 +83,7 @@ export const characterDataSet$ = getOwnPropertyDescriptor$(
 export const stringToDOM = (content: string, svg?: boolean) => {
   const template = svg ? SVG_TEMPLATE : HTM_TEMPLATE;
   template.innerHTML = content;
-  const dom = svg ? SVG_TEMPLATE_CONTENT : HTM_TEMPLATE_CONTENT;
+  const dom = svg ? SVG_TEMPLATE : HTM_TEMPLATE_CONTENT;
   return dom.firstChild as HTMLElement;
 };
 
