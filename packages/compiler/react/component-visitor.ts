@@ -167,6 +167,14 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
       JSXExpressionContainer(path) {
         if (t.isJSXEmptyExpression(path.node.expression)) return;
 
+        if (
+          t.isCallExpression(path.node.expression) &&
+          t.isMemberExpression(path.node.expression.callee) &&
+          t.isIdentifier(path.node.expression.callee.property, { name: 'map' })
+        ) {
+          return;
+        }
+
         if (t.isConditionalExpression(path.node.expression)) {
           info.components++;
           return path.skip();
@@ -192,6 +200,7 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
         if (path.node.value.trim() !== '') info.text++;
       },
       ReturnStatement(path) {
+        if (path.scope !== returnStatementPath.scope) return;
         info.returns++;
         if (info.returns > 1) {
           info.bailout = true;

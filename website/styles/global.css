@@ -204,7 +204,3 @@ html[class~='dark'] .gradient-text {
   display: flex;
   width: calc(12rem * 10 * 2);
 }
-.slide {
-  width: 12rem;
-  position: relative;
-}

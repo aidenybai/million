@@ -5,6 +5,7 @@ description: A deep dive into the block virtual DOM and how Million.js uses it.
 ---
 
 import Image from 'next/image';
+import YouTube from 'react-youtube';
 import { VDomExample } from '../../components/back-in-block/vdom';
 import { StaticAnalysisExample } from '../../components/back-in-block/static-analysis';
 import { BlockVDomExample } from '../../components/back-in-block/block-vdom';
@@ -28,13 +29,17 @@ import { CarbonAds } from '../../components/ad';
 ---
 
 <Callout type="info">
-  **This is a deep dive — THIS IS NOT a beginner-friendly post.** If you're
-  looking to learn Million.js, try the
-  [quickstart](https://million.dev/docs/quickstart) instead.
-
-This post is aimed at experienced programmers that want to deep dive into React and Million.js internals.
-
+  Want to watch a 30 second summary by Fireship? [**Watch it
+  here**](https://youtu.be/VkezQMb1DHw?t=73">).
 </Callout>
+
+<br />
+
+<div className="flex justify-center">
+  <YouTube videoId="VkezQMb1DHw" opts={{ start: 73 }} />
+</div>
+
+---
 
 A little over four years ago, Rich Harris released [Virtual DOM is pure overhead](https://svelte.dev/blog/virtual-dom-is-pure-overhead), analyzing the performance of traditional virtual DOM manipulation.<a href="#0"><sup>[0]</sup></a>
 
