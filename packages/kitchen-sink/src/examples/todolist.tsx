@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { block, For } from 'million/react';
+import { block } from 'million/react';
 
 const TodoList = block(() => {
   const [tasks, setTasks] = useState<any[]>([]);
@@ -22,8 +22,6 @@ const TodoList = block(() => {
     updatedTasks.splice(index, 1);
     setTasks(updatedTasks);
   };
-
-  //TODO: Implement a <For /> component
 
   return (
     <div>
