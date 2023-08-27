@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { block, For } from 'million/react';
+import { block } from 'million/react';
 
 type ICalculator = {
   value: number;
@@ -16,7 +16,7 @@ type IControls = {
   setOperator: Function;
 };
 
-const Calculator = block(() => {
+function Calculator() {
   const [value, setValue] = useState<number>(0);
   const [newValue, setNewValue] = useState<number | null>(null);
   const [operator, setOperator] = useState<string>('');
@@ -34,9 +34,9 @@ const Calculator = block(() => {
       />
     </>
   );
-});
+}
 
-function Screen({ value, newValue, operator }: ICalculator) {
+const Screen = block(({ value, newValue, operator }: ICalculator) => {
   return (
     <div
       style={{
@@ -70,11 +70,11 @@ function Screen({ value, newValue, operator }: ICalculator) {
           textAlign: 'right',
         }}
       >
-        {value} {operator} {newValue !== null ? newValue : null}
+        {value} {operator} {newValue}
       </p>
     </div>
   );
-}
+});
 
 function Controls({
   value,
@@ -97,7 +97,7 @@ function Controls({
       // Perform the previous calculation before setting the new operator
       let result = calculateResult(value, newValue, operator);
       setValue(result);
-      setNewValue(null); // Clear newValue
+      setNewValue(null);
     }
     setOperator(type);
   };
@@ -106,12 +106,11 @@ function Controls({
     if (operator) {
       let result = calculateResult(value, newValue, operator);
       setValue(result);
-      setNewValue(null); // Clear newValue
+      setNewValue(null);
       setOperator('');
     }
   };
 
-  // Function to calculate the result based on the operator
   const calculateResult = (
     firstNumber: number,
     secondNumber: number | null,
