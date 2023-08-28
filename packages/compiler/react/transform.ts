@@ -47,6 +47,21 @@ export const transformComponent = (
     imports,
   } = SHARED;
 
+  if (options.server) {
+    const functionDeclarationNoParams =
+      t.isFunctionDeclaration(originalComponent) &&
+      !originalComponent.params.length;
+
+    const variableDeclaratorNoParams =
+      t.isVariableDeclarator(originalComponent) &&
+      t.isFunctionExpression(originalComponent.init) &&
+      !originalComponent.init.params.length;
+
+    if (functionDeclarationNoParams || variableDeclaratorNoParams) {
+      throw createDeopt(null, file, callSitePath);
+    }
+  }
+
   /**
    * We can extract the block statement from the component function body
    * by accessing the `body` property of the function declaration / variable declarator:
