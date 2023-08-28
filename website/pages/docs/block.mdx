@@ -32,6 +32,21 @@ export default LionBlock;
   Blocks](/docs/rules) for more information.
 </Callout>
 
+## `as` prop
+
+The `as` prop can be used to specify the tag name of the For. By default, it is `slot`.
+
+```jsx
+import { block } from 'million/react';
+
+const LionBlock = block(
+  function Lion() {
+    return <img src="https://million.dev/lion.svg" />;
+  },
+  { as: 'div' },
+);
+```
+
 ## Hydration mismatch
 
 If you are using Million.js on the server, you may encounter a hydration mismatch error. This is because Million.js uses a different algorithm for rendering on the server than it does on the client. To fix this, you can disable SSR.
