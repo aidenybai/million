@@ -65,7 +65,7 @@ const MillionArray = <T>({
     if (!ref.current || fragmentRef.current) return;
 
     queueMicrotask$(() => {
-      // if (mounted) ref.current!.textContent = '';
+      if (mounted) ref.current!.textContent = '';
 
       const newChildren = createChildren<T>(
         each,
