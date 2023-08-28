@@ -35,7 +35,7 @@ export const ShimmerButton = ({
         } as CSSProperties
       }
       className={`
-        flex text-white dark:text-black group relative cursor-pointer overflow-hidden whitespace-nowrap h-11 px-6  [background:var(--bg)] [border-radius:var(--radius)] transition-all hover:scale-105 hover:shadow-[0_0_0_3px_rgba(255,255,255,0.3)_inset] duration-300 shadow-[0_0_0_1px_rgba(255,255,255,0.3)_inset] ${
+        flex text-white dark:text-black group relative cursor-pointer overflow-hidden whitespace-nowrap h-11 px-6  [background:var(--bg)] [border-radius:var(--radius)] transition-all shadow-[0_0_0_3px_rgba(255,255,255,0.3)_inset] hover:scale-105 duration-300 ${
           className || ''
         }
       `}
