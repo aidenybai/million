@@ -227,7 +227,12 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
         ? options.auto.threshold
         : 0.1 - averageDepth * 0.01;
 
-    if (isNaN(improvement) || improvement <= threshold || info.bailout) {
+    if (
+      isNaN(improvement) ||
+      improvement <= threshold ||
+      info.bailout ||
+      good < 5
+    ) {
       return;
     }
 
