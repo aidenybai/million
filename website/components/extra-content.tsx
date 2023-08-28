@@ -13,6 +13,7 @@ export function ExtraContent() {
   );
 }
 
+// million-ignore
 export function Showdown({ initStart = false, amount = 1000 }) {
   const [start, setStart] = useState<boolean>(false);
   const [renders, setRenders] = useState<number>(0);

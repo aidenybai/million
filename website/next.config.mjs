@@ -1,4 +1,5 @@
 import nextra from 'nextra';
+import million from 'million/compiler';
 
 const withNextra = nextra({
   theme: 'nextra-theme-docs',
@@ -14,4 +15,4 @@ const nextConfig = {
 };
 
 // eslint-disable-next-line import/no-default-export
-export default withNextra(nextConfig);
+export default million.next(withNextra(nextConfig), { auto: true });

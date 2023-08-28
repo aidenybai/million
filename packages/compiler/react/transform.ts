@@ -1147,20 +1147,11 @@ export const transformJSX = (
             options.mute,
           );
 
-          const renderReactScope = imports.addNamed('renderReactScope');
+          const id = createPortal(() => {
+            jsx.children[i] = t.jsxExpressionContainer(id!);
+          }, [expression, t.booleanLiteral(unstable)]);
 
-          const id = createDynamic(
-            null,
-            t.callExpression(renderReactScope, [
-              expression,
-              t.booleanLiteral(unstable),
-            ]),
-            null,
-            () => {
-              jsx.children[i] = t.jsxExpressionContainer(id!);
-            },
-          );
-          continue;
+          return dynamics;
         }
 
         const id = createDynamic(
