@@ -32,10 +32,24 @@ html[class~='dark'] #hero {
 }
 
 .gradient-text {
-  background: linear-gradient(#efa0a5, #a788ec);
+  --bg-size: 400%;
+  background: linear-gradient(90deg, #efa0a5, #a788ec, #efa0a5) 0 0 /
+    var(--bg-size) 100%;
   background-clip: text;
+  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0px 3.5px #c0beea8f);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .gradient-text {
+    animation: move-bg 16s linear infinite;
+  }
+  @keyframes move-bg {
+    to {
+      background-position: var(--bg-size) 0;
+    }
+  }
 }
 
 html[class~='dark'] .gradient-text {
