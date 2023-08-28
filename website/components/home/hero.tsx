@@ -38,7 +38,7 @@ export function Hero() {
             <div className="mt-16 flex flex-wrap justify-center gap-y-4 gap-x-6">
               <Link href="/docs" className="w-full sm:w-max">
                 <ShimmerButton
-                  className="relative w-full sm:w-max flex items-center justify-center shadow-2xl transition-all hover:shadow-[0_0_40px_8px_rgba(185,28,28,0.5)]"
+                  className="relative w-full sm:w-max flex items-center justify-center transition-all hover:shadow-[0_0_0_3px_rgba(255,255,255,0.3)_inset]"
                   background="radial-gradient(ellipse 80% 70% at 50% 120%, #b28ce2, #892fda)"
                 >
                   <span className="relative whitespace-pre text-center text-base font-semibold leading-none tracking-tight text-white z-10">
