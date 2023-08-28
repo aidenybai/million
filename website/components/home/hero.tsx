@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import TextsLogo from '../../public/texts.webp';
 import { Container } from './container';
+import { ShimmerButton } from './shimmer-button';
 
 const CountUp = dynamic(() => import('react-countup'), {
   loading: () => <span>70</span>,
@@ -35,13 +36,15 @@ export function Hero() {
               .
             </p>
             <div className="mt-16 flex flex-wrap justify-center gap-y-4 gap-x-6">
-              <Link
-                href="/docs"
-                className="relative flex h-11 w-full items-center justify-center px-6 before:absolute before:inset-0 before:rounded-full before:bg-purple-600 before:transition before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 sm:w-max"
-              >
-                <span className="relative text-base font-semibold text-white">
-                  Get Started →
-                </span>
+              <Link href="/docs" className="w-full sm:w-max">
+                <ShimmerButton
+                  className="relative w-full sm:w-max flex items-center justify-center shadow-2xl transition-all hover:shadow-[0_0_40px_8px_rgba(185,28,28,0.5)]"
+                  background="radial-gradient(ellipse 80% 70% at 50% 120%, #b28ce2, #892fda)"
+                >
+                  <span className="relative whitespace-pre text-center text-base font-semibold leading-none tracking-tight text-white z-10">
+                    Get started →
+                  </span>
+                </ShimmerButton>
               </Link>
               <Link
                 href="/blog/virtual-dom"
