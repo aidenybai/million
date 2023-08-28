@@ -14,7 +14,7 @@ interface ShimmerButtonProps {
 
 export const ShimmerButton = ({
   shimmerColor = '#ffffff',
-  shimmerSize = '0.1em',
+  shimmerSize = '1px',
   shimmerDuration = '1.5s',
   borderRadius = '100px',
   background = 'radial-gradient(ellipse 80% 50% at 50% 120%,rgba(62, 61, 117),rgba(18, 18, 38))',
@@ -35,7 +35,7 @@ export const ShimmerButton = ({
         } as CSSProperties
       }
       className={`
-        flex text-white dark:text-black group relative cursor-pointer overflow-hidden whitespace-nowrap h-11 px-6  [background:var(--bg)] [border-radius:var(--radius)] transition-all hover:scale-105 hover:shadow-[0_0_40px_8px_rgba(62,61,117,0.7)] duration-300 ${
+        flex text-white dark:text-black group relative cursor-pointer overflow-hidden whitespace-nowrap h-11 px-6  [background:var(--bg)] [border-radius:var(--radius)] transition-all hover:scale-105 hover:shadow-[0_0_0_3px_rgba(255,255,255,0.3)_inset] duration-300 shadow-[0_0_0_1px_rgba(255,255,255,0.3)_inset] ${
           className || ''
         }
       `}
