@@ -1,4 +1,11 @@
-import { createElement, memo, useEffect, useRef } from 'react';
+import {
+  Fragment,
+  createElement,
+  memo,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { arrayMount$, arrayPatch$ } from '../million/array';
 import { mapArray, block as createBlock } from '../million';
 import { MapSet$, MapHas$, MapGet$ } from '../million/constants';
@@ -23,13 +30,15 @@ const MillionArray = <T>({
   ...rest
 }: MillionArrayProps<T>) => {
   const ref = useRef<HTMLElement>(null);
-  const portalRef = useRef<MillionPortal[]>(Array(each.length));
+  const [portals] = useState<{ current: MillionPortal[] }>(() => ({
+    current: Array(each.length),
+  }));
   const fragmentRef = useRef<ReturnType<typeof mapArray> | null>(null);
   const cache = useRef<ArrayCache<T>>({
     each: null,
     children: null,
-    mounted: null,
   });
+  const [mounted, setMounted] = useState(false);
 
   if (fragmentRef.current && (each !== cache.current.each || !memo)) {
     queueMicrotask$(() => {
@@ -37,7 +46,7 @@ const MillionArray = <T>({
         each,
         children,
         cache,
-        portalRef,
+        portals,
         memo,
       );
       arrayPatch$.call(fragmentRef.current, mapArray(newChildren));
@@ -45,19 +54,24 @@ const MillionArray = <T>({
   }
 
   const defaultType = svg ? SVG_RENDER_SCOPE : RENDER_SCOPE;
-  const MillionFor = createElement(as ?? defaultType, { ...rest, ref });
+  const MillionFor = createElement(
+    Fragment,
+    null,
+    createElement(as ?? defaultType, { ...rest, ref }),
+    ...portals.current.map((p) => p.portal),
+  );
 
   useEffect(() => {
     if (!ref.current || fragmentRef.current) return;
 
     queueMicrotask$(() => {
-      if (cache.current.mounted) ref.current!.textContent = '';
+      // if (mounted) ref.current!.textContent = '';
 
       const newChildren = createChildren<T>(
         each,
         children,
         cache,
-        portalRef,
+        portals,
         memo,
       );
       fragmentRef.current = mapArray(newChildren);
@@ -65,7 +79,7 @@ const MillionArray = <T>({
         MapSet$.call(REGISTRY, MillionFor, fragmentRef.current);
       }
       arrayMount$.call(fragmentRef.current, ref.current!);
-      cache.current.mounted = true;
+      setMounted(true);
     });
   }, [ref.current]);
 
@@ -85,11 +99,11 @@ const createChildren = <T>(
   each: T[],
   getComponent: (value: T, i: number) => JSX.Element,
   cache: MutableRefObject<ArrayCache<T>>,
-  portalRef: MutableRefObject<MillionPortal[]>,
+  portals: { current: MillionPortal[] },
   memo?: boolean,
 ): Block[] => {
   const children = Array(each.length);
-  const currentCache = cache.current;
+  const currentCache = cache.current as any;
   for (let i = 0, l = each.length; i < l; ++i) {
     if (memo && currentCache.each && currentCache.each[i] === each[i]) {
       children[i] = currentCache.children?.[i];
@@ -101,7 +115,7 @@ const createChildren = <T>(
       if (!currentCache.block) {
         currentCache.block = MapGet$.call(REGISTRY, vnode.type)!;
       }
-      children[i] = currentCache.block!(vnode.props);
+      children[i] = currentCache.block!(vnode.props, i);
       continue;
     }
 
@@ -117,14 +131,14 @@ const createChildren = <T>(
     }
 
     const block = createBlock((props?: MillionProps) => props?.scope);
-    const currentBlock = (props: MillionProps) => {
+    const currentBlock = (props: MillionProps, index: number) => {
       return block(
         {
           scope: renderReactScope(
             createElement(vnode.type, props),
             false,
-            portalRef.current,
-            i,
+            portals.current,
+            index,
             false,
           ),
         },
@@ -133,8 +147,8 @@ const createChildren = <T>(
     };
 
     MapSet$.call(REGISTRY, vnode.type, currentBlock);
-    currentCache.block = currentBlock as ReturnType<typeof createBlock>;
-    children[i] = currentBlock(vnode.props);
+    currentCache.block = currentBlock as any;
+    children[i] = currentBlock(vnode.props, i);
   }
   currentCache.each = each;
   currentCache.children = children;
