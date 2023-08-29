@@ -33,24 +33,9 @@ export function Showcase() {
       url: 'llm.report',
     },
     {
-      image: StudioFreight,
-      name: 'Studio Freight',
-      url: 'studiofreight.com',
-    },
-    {
       image: Texts,
       name: 'Texts',
       url: 'texts.com',
-    },
-    {
-      image: VeganCheck,
-      name: 'Vegan Check',
-      url: 'vegancheck.me',
-    },
-    {
-      image: Windows11Web,
-      name: 'Windows 11',
-      url: 'windows11web.com',
     },
   ];
   return (
