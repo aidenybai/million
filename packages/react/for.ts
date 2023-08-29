@@ -37,8 +37,9 @@ const MillionArray = <T>({
   const cache = useRef<ArrayCache<T>>({
     each: null,
     children: null,
+    mounted: false,
   });
-  const [mounted, setMounted] = useState(false);
+  const [, setMountPortals] = useState(false);
 
   if (fragmentRef.current && (each !== cache.current.each || !memo)) {
     queueMicrotask$(() => {
@@ -65,7 +66,7 @@ const MillionArray = <T>({
     if (!ref.current || fragmentRef.current) return;
 
     queueMicrotask$(() => {
-      if (mounted) ref.current!.textContent = '';
+      if (cache.current.mounted) return;
 
       const newChildren = createChildren<T>(
         each,
@@ -79,7 +80,8 @@ const MillionArray = <T>({
         MapSet$.call(REGISTRY, MillionFor, fragmentRef.current);
       }
       arrayMount$.call(fragmentRef.current, ref.current!);
-      setMounted(true);
+      cache.current.mounted = true;
+      setMountPortals(true);
     });
   }, [ref.current]);
 
