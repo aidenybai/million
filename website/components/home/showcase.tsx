@@ -4,9 +4,6 @@ import Wyze from '../../pages/showcase/wyze.png';
 import DonaAI from '../../pages/showcase/dona-ai.jpeg';
 import T4Stack from '../../pages/showcase/t4stack.png';
 import LLMReport from '../../pages/showcase/llm-report.png';
-import VeganCheck from '../../pages/showcase/vegancheck.png';
-import Windows11Web from '../../pages/showcase/windows-11-web.jpeg';
-import StudioFreight from '../../pages/showcase/studio-freight.jpeg';
 import Texts from '../../pages/showcase/texts.png';
 import { Container } from './container';
 
