@@ -13,6 +13,8 @@ export const processProps = (
 ) => {
   const processedProps: ComponentProps<any> = { ref };
 
+  console.log(props, ref, portals);
+
   let currentIndex = 0;
 
   for (const key in props) {
@@ -55,13 +57,19 @@ export const renderReactScope = (
     typeof vnode.type === 'function' &&
     'callable' in vnode.type
   ) {
-    const puppetComponent = (vnode.type as any)(vnode.props);
-    if (REGISTRY.has(puppetComponent.type)) {
-      const puppetBlock = REGISTRY.get(puppetComponent.type)!;
-      if (typeof puppetBlock === 'function') {
-        return puppetBlock(puppetComponent.props);
+    if ('callable' in vnode.type) {
+      const puppetComponent = (vnode.type as any)(vnode.props);
+      if (REGISTRY.has(puppetComponent.type)) {
+        const puppetBlock = REGISTRY.get(puppetComponent.type)!;
+        if (typeof puppetBlock === 'function') {
+          return puppetBlock(puppetComponent.props);
+        }
       }
     }
+
+    // if (vnode.type === MillionArray) {
+
+    // }
   }
 
   const current = el ?? document.createElement(RENDER_SCOPE);

@@ -38,11 +38,14 @@ export const block = <P extends MillionProps>(
 
     if (!ready || !blockFactory) {
       if (options.ssr === false) return null;
-      return createElement<P>(
-        RENDER_SCOPE,
-        null,
-        createElement(Component, props as any),
-      );
+      const ssrProps =
+        typeof window === 'undefined'
+          ? { dangerouslySetInnerHTML: { __html: options.html } }
+          : {};
+      return createElement(RENDER_SCOPE, {
+        suppressHydrationWarning: true,
+        ...ssrProps,
+      });
     }
 
     return createElement<P>(blockFactory, props);

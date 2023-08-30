@@ -231,10 +231,14 @@ export const transformComponent = (
     SHARED,
   );
 
+  // eslint-disable-next-line prefer-const
+  let html = '';
+
   // This function will automatically populate the `dynamics` for us:
   transformJSX(
     options,
     {
+      html,
       jsx: returnStatement.argument,
       jsxPath: jsxPath.get('argument') as NodePath<t.JSXElement>,
       componentBody,
@@ -545,6 +549,7 @@ export const extractLayers = (
 export const transformJSX = (
   options: Options,
   {
+    html,
     jsx,
     jsxPath,
     componentBody,
@@ -552,6 +557,7 @@ export const transformJSX = (
     dynamics,
     isRoot,
   }: {
+    html: string;
     jsx: t.JSXElement;
     jsxPath: NodePath<t.JSXElement>;
     componentBody: t.BlockStatement;
