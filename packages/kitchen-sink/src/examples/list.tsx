@@ -9,15 +9,14 @@ const Comp = block(function Comp({ item, children }) {
 });
 
 const List = block(() => {
+  const items = { id: 'test' };
   return (
     <ul>
-      <For each={[1, 2, 3, 4, 5]} id="test">
+      <For each={[1, 2, 3, 4, 5]}>
         {(item) => (
-          <Comp item={item}>
-            <div>
-              Item <p>{item}</p>
-            </div>
-          </Comp>
+          <li key={item} {...items}>
+            Item {item}
+          </li>
         )}
       </For>
     </ul>

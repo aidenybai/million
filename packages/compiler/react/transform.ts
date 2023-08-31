@@ -11,14 +11,12 @@ import {
   NO_PX_PROPERTIES,
   RENDER_SCOPE,
   TRANSFORM_ANNOTATION,
-  handleVisitorError,
   isStatic,
   isJSXFragment,
   hasStyledAttributes,
 } from './utils';
 import { optimize } from './optimize';
 import { evaluate } from './evaluator';
-import { jsxElementVisitor } from './jsx-element-visitor';
 import type { Options } from '../plugin';
 import type { Dynamics, Shared } from './types';
 import type { NodePath } from '@babel/core';
@@ -567,7 +565,7 @@ export const transformJSX = (
   },
   SHARED: Shared,
 ) => {
-  const { file, imports, unstable, isReact } = SHARED;
+  const { file, imports, unstable } = SHARED;
 
   /**
    * Populates `dynamics` with a new entry.
@@ -682,88 +680,6 @@ export const transformJSX = (
    * handing all the edge cases.
    */
   if (t.isJSXIdentifier(type) && isComponent(type.name)) {
-    if (type.name === 'For') {
-      const visitor = jsxElementVisitor(options, isReact);
-
-      const { attributes } = jsx.openingElement;
-      for (let i = 0, j = attributes.length; i < j; i++) {
-        const attribute = attributes[i]!;
-
-        if (t.isJSXSpreadAttribute(attribute)) {
-          const spreadPath = jsxPath.get(
-            `openingElement.attributes.${i}.argument`,
-          );
-          warn(
-            'Spread attributes are not fully supported.',
-            file,
-            resolvePath(spreadPath),
-          );
-
-          const id = createPortal(() => {
-            jsxPath.replaceWith(t.jsxExpressionContainer(id!));
-          }, [jsx, t.booleanLiteral(unstable)]);
-
-          return dynamics;
-        }
-
-        if (hasStyledAttributes(attribute)) {
-          const id = createPortal(() => {
-            jsxPath.replaceWith(
-              isRoot
-                ? t.expressionStatement(id!)
-                : t.jsxExpressionContainer(id!),
-            );
-          }, [jsx, t.booleanLiteral(unstable)]);
-
-          return dynamics;
-        }
-
-        if (t.isJSXExpressionContainer(attribute.value)) {
-          const attributeValue = attribute.value;
-          const expressionPath = jsxPath.get(
-            `openingElement.attributes.${i}.value.expression`,
-          );
-          const { ast: expression, err } = evaluate(
-            attributeValue.expression,
-            resolvePath(expressionPath).scope,
-          );
-
-          if (!err) attributeValue.expression = expression;
-
-          if (t.isIdentifier(expression)) {
-            if (attribute.name.name === 'ref') {
-              const id = createPortal(() => {
-                jsxPath.replaceWith(
-                  isRoot
-                    ? t.expressionStatement(id!)
-                    : t.jsxExpressionContainer(id!),
-                );
-              }, [jsx, t.booleanLiteral(unstable)]);
-
-              return dynamics;
-            }
-            createDynamic(expression, null, null, null);
-          } else if (isStatic(expression)) {
-            if (t.isStringLiteral(expression)) {
-              attribute.value = expression;
-            }
-            // if other type of literal, do nothing
-          } else {
-            const id = createDynamic(
-              null,
-              expression as t.Expression,
-              resolvePath(expressionPath),
-              () => {
-                if (id) attributeValue.expression = id;
-              },
-            );
-          }
-        }
-      }
-      handleVisitorError(() => visitor(jsxPath, file), options.mute);
-      jsxPath.scope.crawl();
-    }
-
     // TODO: Add a warning for using components that are not block or For
     // warn(
     //   'Components will cause degraded performance. Ideally, you should use DOM elements instead.',
@@ -811,7 +727,9 @@ export const transformJSX = (
       );
 
       const id = createPortal(() => {
-        jsxPath.replaceWith(t.jsxExpressionContainer(id!));
+        jsxPath.replaceWith(
+          isRoot ? t.expressionStatement(id!) : t.jsxExpressionContainer(id!),
+        );
       }, [jsx, t.booleanLiteral(unstable)]);
 
       return dynamics;
@@ -933,7 +851,7 @@ export const transformJSX = (
         resolvePath(expressionPath).scope,
       );
 
-      if (t.isJSXIdentifier(attribute.name) && attribute.name.name === 'css') {
+      if (t.isJSXIdentifier(attribute.name) && hasStyledAttributes(attribute)) {
         const id = createPortal(() => {
           jsxPath.replaceWith(
             isRoot ? t.expressionStatement(id!) : t.jsxExpressionContainer(id!),
