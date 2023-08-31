@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Wyze from '../../pages/showcase/wyze.png';
 import DonaAI from '../../pages/showcase/dona-ai.jpeg';
-import T4Stack from '../../pages/showcase/t4stack.png';
+import Supabox from '../../pages/showcase/supabox.png';
 import LLMReport from '../../pages/showcase/llm-report.png';
 import Texts from '../../pages/showcase/texts.png';
 import { Container } from './container';
@@ -20,9 +20,9 @@ export function Showcase() {
       url: 'dona.ai',
     },
     {
-      image: T4Stack,
-      name: 'T4 Stack',
-      url: 't4stack.com',
+      image: Supabox,
+      name: 'Supabox',
+      url: 'supaboxai.com',
     },
     {
       image: LLMReport,
