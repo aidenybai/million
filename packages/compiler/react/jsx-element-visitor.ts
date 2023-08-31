@@ -4,6 +4,7 @@ import {
   createDeopt,
   getValidSpecifiers,
   handleVisitorError,
+  hasStyledAttributes,
   isComponent,
   removeDuplicateJSXAttributes,
   resolveCorrectImportSource,
@@ -95,7 +96,6 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
     }
 
     const expression = child.expression;
-
     if (!t.isArrowFunctionExpression(expression)) {
       throw createDeopt(
         'For component must consume a reference to an arrow function',
@@ -172,6 +172,23 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
           bailout = true;
         }
       },
+      JSXAttribute(path) {
+        const jsxId = path.node.name;
+        if (!t.isJSXIdentifier(jsxId)) return;
+
+        if (jsxId.name === 'ref' || hasStyledAttributes(path.node)) {
+          path.stop();
+          bailout = true;
+        }
+      },
+      JSXSpreadAttribute(path) {
+        path.stop();
+        bailout = true;
+      },
+      JSXSpreadChild(path) {
+        path.stop();
+        bailout = true;
+      },
       Identifier(path: NodePath<t.Identifier>) {
         if (programPath.scope.hasBinding(path.node.name)) return;
         const targetPath = path.parentPath;
@@ -192,7 +209,6 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
         if (
           targetPath.isObjectMethod() ||
           targetPath.isJSXAttribute() ||
-          targetPath.isJSXSpreadAttribute() ||
           targetPath.isJSXOpeningElement() ||
           targetPath.isJSXClosingElement()
         ) {
