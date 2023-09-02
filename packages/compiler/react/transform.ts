@@ -904,7 +904,7 @@ export const transformJSX = (
         jsxPath.replaceWith(t.jsxExpressionContainer(id!));
       }, [jsx, t.booleanLiteral(unstable)]);
 
-      return dynamics;
+      continue;
     }
 
     if (isJSXFragment(child)) {
@@ -1069,7 +1069,7 @@ export const transformJSX = (
             jsx.children[i] = t.jsxExpressionContainer(id!);
           }, [expression, t.booleanLiteral(unstable)]);
 
-          return dynamics;
+          continue;
         }
 
         const id = createDynamic(
