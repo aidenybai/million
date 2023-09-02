@@ -22,7 +22,7 @@
     "classnames": "^2.3.2",
     "dedent": "^0.7.0",
     "framer-motion": "^10.12.4",
-    "million": "workspace:2.6.0-beta.8",
+    "million": "workspace:*",
     "next": "^13.4.10",
     "nextra": "^2.10.0",
     "nextra-theme-docs": "^2.10.0",
