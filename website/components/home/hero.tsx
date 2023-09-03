@@ -131,9 +131,10 @@ export function Companies() {
 
   return (
     <div className="mt-36 text-center lg:mt-32">
-      <span className="uppercase text-sm font-semibold tracking-wider text-gray-800 dark:text-white">
-        Used / sponsored by companies
-      </span>
+      <div className="uppercase text-sm font-semibold tracking-wider text-zinc-600 dark:text-zinc-400">
+        Trusted by companies who ship to{' '}
+        <span className="dark:text-white text-black semibold">3M+</span> users
+      </div>
       <div className="slider">
         <div className="slide-track-5 hover:pause mt-6 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 justify-around items-center">
           {[...entries, ...entries].map(({ component, url }) => (
