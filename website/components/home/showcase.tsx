@@ -1,8 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import Wyze from '../../pages/showcase/wyze.png';
-import DonaAI from '../../pages/showcase/dona-ai.jpeg';
-import Supabox from '../../pages/showcase/supabox.png';
+import HackClub from '../../pages/showcase/hackclub.jpeg';
+import Metamask from '../../pages/showcase/metamask.png';
 import LLMReport from '../../pages/showcase/llm-report.png';
 import Texts from '../../pages/showcase/texts.png';
 import { Container } from './container';
@@ -15,14 +15,14 @@ export function Showcase() {
       url: 'wyze.com',
     },
     {
-      image: DonaAI,
-      name: 'Dona AI',
-      url: 'dona.ai',
+      image: HackClub,
+      name: 'Hack Club',
+      url: 'hackclub.com',
     },
     {
-      image: Supabox,
-      name: 'Supabox',
-      url: 'supaboxai.com',
+      image: Metamask,
+      name: 'Metamask',
+      url: 'metamask.io',
     },
     {
       image: LLMReport,
