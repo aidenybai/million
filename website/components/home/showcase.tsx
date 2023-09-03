@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Wyze from '../../pages/showcase/wyze.png';
 import HackClub from '../../pages/showcase/hackclub.jpeg';
-import Metamask from '../../pages/showcase/metamask.png';
+import DonaAI from '../../pages/showcase/dona-ai.jpeg';
 import LLMReport from '../../pages/showcase/llm-report.png';
 import Texts from '../../pages/showcase/texts.png';
 import { Container } from './container';
@@ -20,9 +20,9 @@ export function Showcase() {
       url: 'hackclub.com',
     },
     {
-      image: Metamask,
-      name: 'Metamask',
-      url: 'metamask.io',
+      image: DonaAI,
+      name: 'Dona AI',
+      url: 'dona.ai',
     },
     {
       image: LLMReport,
