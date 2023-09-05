@@ -1043,6 +1043,7 @@ export const transformJSX = (
           continue;
         }
 
+        const expressionPath = jsxPath.get(`children.${i}.expression`);
         /**
          * Handles JSX conditionals and shoves them into a render scope:
          *
@@ -1062,8 +1063,6 @@ export const transformJSX = (
           t.isConditionalExpression(expression) ||
           t.isLogicalExpression(expression)
         ) {
-          const expressionPath = jsxPath.get(`children.${i}.expression`);
-
           warn(
             'Conditional expressions will degrade performance. We recommend using deterministic returns instead.',
             file,
@@ -1071,6 +1070,18 @@ export const transformJSX = (
             options.mute,
           );
 
+          const id = createPortal(() => {
+            jsx.children[i] = t.jsxExpressionContainer(id!);
+          }, [expression, t.booleanLiteral(unstable)]);
+
+          continue;
+        }
+
+        if (
+          expressionPath.find(
+            (path) => path.isJSXElement() || path.isJSXFragment(),
+          )
+        ) {
           const id = createPortal(() => {
             jsx.children[i] = t.jsxExpressionContainer(id!);
           }, [expression, t.booleanLiteral(unstable)]);

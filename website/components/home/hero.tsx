@@ -3,7 +3,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import TextsLogo from '../../public/texts.webp';
 import HackClubLogo from '../../public/hackclub.svg';
-import MetamaskLogo from '../../public/dona.svg';
 import { Container } from './container';
 import { ShimmerButton } from './shimmer-button';
 
