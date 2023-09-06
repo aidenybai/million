@@ -4913,7 +4913,7 @@ packages:
       has: 1.0.3
       has-property-descriptors: 1.0has 1.0.1
       has-symbols: 1.0.3
-    
+      internal-slot: 1.0.5
       is-array-buffer: 3.0.2
       is-callable: 1.2.7
       is-negative-zero: 2.0.2

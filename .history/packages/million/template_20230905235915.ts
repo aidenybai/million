@@ -1,13 +1,13 @@
 import {
-  AttributeFlag,
-  BlockFlag,
-  ChildFlag,
+  X_CHAR,
+  VOID_ELEMENTS,
   EventFlag,
-  SetHas$,
   StyleAttributeFlag,
   SvgAttributeFlag,
-  VOID_ELEMENTS,
-  X_CHAR,
+  AttributeFlag,
+  ChildFlag,
+  BlockFlag,
+  SetHas$,
 } from './constants';
 import { AbstractBlock } from './types';
 import type { Edit, VNode } from './types';
@@ -45,7 +45,7 @@ export const renderToTemplate = (
       i: [],
     });
 
-   
+    return '<slot/>';
   }
 
   let props = '';

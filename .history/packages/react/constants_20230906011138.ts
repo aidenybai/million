@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
 import type { ComponentType } from 'react';
+import { useEffect } from 'react';
 
 
 export const SVG_RENDER_SCOPE = 'g';

@@ -9,8 +9,8 @@ import {
   VOID_ELEMENTS,
   X_CHAR,
 } from './constants';
-import { AbstractBlock } from './types';
 import type { Edit, VNode } from './types';
+import { AbstractBlock } from './types';
 
 export const renderToTemplate = (
   vnode: VNode,

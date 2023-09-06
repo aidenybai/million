@@ -2,8 +2,8 @@ import { type NodePath } from '@babel/core';
 import { addNamed } from '@babel/helper-module-imports';
 import * as t from '@babel/types';
 import { bgMagenta, cyan, dim, magenta } from 'kleur/colors';
-import { collectImportedBindings } from './bindings';
 import type { Options } from '../plugin';
+import { collectImportedBindings } from './bindings';
 
 
 export const TRANSFORM_ANNOTATION = 'million:transform';

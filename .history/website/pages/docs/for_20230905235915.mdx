@@ -37,6 +37,10 @@ function App() {
 export default App;
 ```
 
+## `as` prop
+
+The `as` prop can be used to specify the tag name of the For. By default, it is `slot`.
+
 ```jsx
 <For each={items} as="div">
   {(item) => <li>{item}</li>}

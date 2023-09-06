@@ -1,7 +1,10 @@
+import type { NodePath } from '@babel/core';
 import * as t from '@babel/types';
 import { createDirtyChecker } from '../experimental/utils';
+import type { Options } from '../plugin';
 import { evaluate } from './evaluator';
 import { optimize } from './optimize';
+import type { Dynamics, Shared } from './types';
 import {
   NO_PX_PROPERTIES,
   SVG_ELEMENTS,
@@ -16,9 +19,6 @@ import {
   trimJsxChildren,
   warn
 } from './utils';
-import type { Dynamics, Shared } from './types';
-import type { Options } from '../plugin';
-import type { NodePath } from '@babel/core';
 
 export const transformComponent = (
   options: Options,

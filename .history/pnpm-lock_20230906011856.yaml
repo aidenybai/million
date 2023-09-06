@@ -4913,7 +4913,7 @@ packages:
       has: 1.0.3
       has-property-descriptors: 1.0has 1.0.1
       has-symbols: 1.0.3
-    
+      internal-slot: 1.0.5
       is-array-buffer: 3.0.2
       is-callable: 1.2.7
       is-negative-zero: 2.0.2
@@ -9240,7 +9240,7 @@ packages:
     dependencies:
       call-bind: 1.0.2
       define-properties: 1.2.0
-      es-abstract: 1.22
+      es-abstract: 1.22.
       regexp.prototype.flags: 1.5.0
       side-channel: 1.0.4
     dev: true

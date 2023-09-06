@@ -1,23 +1,24 @@
 import * as t from '@babel/types';
 import { createDirtyChecker } from '../experimental/utils';
-import { evaluate } from './evaluator';
-import { optimize } from './optimize';
 import {
-  NO_PX_PROPERTIES,
-  SVG_ELEMENTS,
-  TRANSFORM_ANNOTATION,
   createDeopt,
-  hasStyledAttributes,
-  isComponent,
-  isJSXFragment,
-  isStatic,
-  normalizeProperties,
   resolvePath,
+  warn,
+  isComponent,
   trimJsxChildren,
-  warn
+  normalizeProperties,
+  SVG_ELEMENTS,
+  NO_PX_PROPERTIES,
+  RENDER_SCOPE,
+  TRANSFORM_ANNOTATION,
+  isStatic,
+  isJSXFragment,
+  hasStyledAttributes,
 } from './utils';
-import type { Dynamics, Shared } from './types';
+import { optimize } from './optimize';
+import { evaluate } from './evaluator';
 import type { Options } from '../plugin';
+import type { Dynamics, Shared } from './types';
 import type { NodePath } from '@babel/core';
 
 export const transformComponent = (
@@ -127,7 +128,13 @@ export const transformComponent = (
    *
    * // becomes
    *
-   
+   * function Component() {
+   *  return <slot>
+   *    <div />
+   *  </slot>;
+   * }
+   * ```
+   */
   const handleTopLevelFragment = (jsx: t.JSXFragment | t.JSXElement) => {
     trimJsxChildren(jsx);
     if (jsx.children.length === 1) {

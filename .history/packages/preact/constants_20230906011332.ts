@@ -1,7 +1,6 @@
-import { useEffect } from 'react';
-import type { ComponentType } from 'react';
+import { useEffect } from 'preact/hooks';
 
-
+export const RENDER_SCOPE = newFunction();
 export const SVG_RENDER_SCOPE = 'g';
 export const REACT_ROOT = '__react_root';
 
@@ -10,4 +9,6 @@ export const Effect = ({ effect }: { effect: () => void }): null => {
   return null;
 };
 
-export const REGISTRY = new Map<ComponentType, any>();
+function newFunction() {
+  return 'slot';
+}
