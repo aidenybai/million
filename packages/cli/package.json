@@ -1,0 +1,35 @@
+{
+  "name": "million",
+  "version": "0.0.1",
+  "description": "Million.js is an extremely fast and lightweight <4kb virtual DOM that makes React up to 70% faster. By using a fine-tuned, optimized virtual DOM, Million.js reduces the overhead of React.",
+  "keywords": [
+    "cli",
+    "million.js",
+    "fast",
+    "react"
+  ],
+  "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aidenybai/million.git",
+    "directory": "packages/cli"
+  },
+  "homepage": "https://million.dev/",
+  "author": "Aiden Bai",
+  "bugs": "https://github.com/aidenybai/million/issues",
+  "license": "MIT",
+  "files": [
+    "README.md",
+    "dist"
+  ],
+  "devDependencies": {
+    "prettier": "^2.8.4",
+    "typescript": "^5.1.6"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc && node dist/index.js",
+    "prepublishOnly": "pnpm run build",
+    "clean": "rm -r dist node_modules"
+  }
+}
