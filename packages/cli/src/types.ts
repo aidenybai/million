@@ -8,7 +8,6 @@ export type PackageManager = {
   label: string
   lockFile: string
   installCommand: string
-  buildCommand: string
 }
 
 export type BuildTool = {

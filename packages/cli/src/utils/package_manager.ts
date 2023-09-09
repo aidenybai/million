@@ -12,21 +12,18 @@ const yarn: PackageManager = {
   label: 'Yarn',
   lockFile: 'yarn.lock',
   installCommand: 'yarn add',
-  buildCommand: 'yarn build',
 }
 const pnpm: PackageManager = {
   name: 'pnpm',
   label: 'PNPM',
   lockFile: 'pnpm-lock.yaml',
   installCommand: 'pnpm install',
-  buildCommand: 'pnpm build',
 }
 const npm: PackageManager = {
   name: 'npm',
   label: 'NPM',
   lockFile: 'package-lock.json',
   installCommand: 'npm install',
-  buildCommand: 'npm run build',
 }
 
 export const packageManagers = [yarn, pnpm, npm]
