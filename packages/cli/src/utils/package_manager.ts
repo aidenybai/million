@@ -6,27 +6,7 @@ import { PackageManager } from '../types'
 import { abort, abortIfCancelled } from './clack_utils'
 import chalk from 'chalk'
 import { setTimeout as sleep } from 'node:timers/promises'
-
-const yarn: PackageManager = {
-  name: 'yarn',
-  label: 'Yarn',
-  lockFile: 'yarn.lock',
-  installCommand: 'yarn add',
-}
-const pnpm: PackageManager = {
-  name: 'pnpm',
-  label: 'PNPM',
-  lockFile: 'pnpm-lock.yaml',
-  installCommand: 'pnpm install',
-}
-const npm: PackageManager = {
-  name: 'npm',
-  label: 'NPM',
-  lockFile: 'package-lock.json',
-  installCommand: 'npm install',
-}
-
-export const packageManagers = [yarn, pnpm, npm]
+import { packageManagers } from './constants'
 
 export function detectPackageManger(): PackageManager | null {
   for (const packageManager of packageManagers) {
@@ -41,7 +21,7 @@ export async function installPackageWithPackageManager(
   packageManager: PackageManager,
   packageName: string,
 ): Promise<void> {
-  await exec(`${packageManager.installCommand} ${packageName}`)
+  await exec(`${packageManager.installCommand} ${packageName}@latest`)
 }
 
 async function getPackageManager(): Promise<PackageManager> {
@@ -103,8 +83,8 @@ export async function installPackage({
 
   try {
     await installPackageWithPackageManager(packageManager, packageName)
-
     await sleep(1000)
+
     s.stop(
       `${alreadyInstalled ? 'Updated' : 'Installed'} ${chalk.bold.cyan(packageName)} with ${chalk.bold(
         packageManager.label,

@@ -2,109 +2,9 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as clack from '@clack/prompts'
 import { BuildTool } from '../types'
-import { abortIfCancelled } from './clack_utils'
-
-const next: BuildTool = {
-  name: 'next',
-  label: 'Next.js',
-  configFilePath: 'next.config.mjs',
-  configFileContent: `import million from 'million/compiler';
-
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
-};
-  
-const millionConfig = {
-  auto: true,
-}
-  
-export default million.next(nextConfig, millionConfig);`,
-  configFileContentRSC: `import million from 'million/compiler';
-
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
-};
-
-const millionConfig = {
-  auto: { rsc: true },
-}
-
-export default million.next(nextConfig, millionConfig);
-`,
-}
-const astro: BuildTool = {
-  name: 'astro',
-  label: 'Astro',
-  configFilePath: 'astro.config.mjs',
-  configFileContent: `import { defineConfig } from 'astro/config';
-import million from 'million/compiler';
-
-export default defineConfig({
-  vite: {
-    plugins: [million.vite({ mode: 'react', server: true, auto: true })]
-  }
-});`,
-}
-const gatsby: BuildTool = {
-  name: 'gatsby',
-  label: 'Gatsby',
-  configFilePath: 'gatsby-node.js',
-  configFileContent: `const million = require('million/compiler');
- 
-exports.onCreateWebpackConfig = ({ actions }) => {
-  actions.setWebpackConfig({
-    plugins: [million.webpack({ mode: 'react', server: true, auto: true })],
-  })
-}`,
-}
-const vite: BuildTool = {
-  name: 'vite',
-  label: 'Vite',
-  configFilePath: 'vite.config.js',
-  configFileContent: `import million from 'million/compiler';
-import react from "@vitejs/plugin-react";
-import { defineConfig } from 'vite';
-
-export default defineConfig({
-  plugins: [million.vite({ auto: true }), react()],
-});`,
-}
-const craco: BuildTool = {
-  name: 'craco',
-  label: 'Create React App',
-  configFilePath: 'craco.config.js',
-  configFileContent: `const million = require('million/compiler');
-module.exports = {
-  webpack: {
-    plugins: { add: [million.webpack({ auto: true })] }
-  }
-};`,
-}
-const webpack: BuildTool = {
-  name: 'webpack',
-  label: 'Webpack',
-  configFilePath: 'webpack.config.js',
-  configFileContent: `const million = require('million/compiler');
-module.exports = {
-  plugins: [
-    million.webpack({ auto: true }),
-  ],
-}`,
-}
-const rollup: BuildTool = {
-  name: 'rollup',
-  label: 'Rollup',
-  configFilePath: 'rollup.config.js',
-  configFileContent: `import million from 'million/compiler';
-
-export default {
-  plugins: [million.rollup({ auto: true })],
-};`,
-}
-
-const buildTools: BuildTool[] = [next, astro, gatsby, vite, craco, webpack, rollup]
+import { abortIfCancelled, getNextRouter } from './clack_utils'
+import chalk from 'chalk'
+import { buildTools } from './constants'
 
 export function detectBuildTool(): BuildTool | null {
   for (const buildTool of buildTools) {
@@ -139,26 +39,21 @@ export async function getBuildTool(): Promise<BuildTool> {
 export async function createConfigFile(): Promise<void> {
   const detectedBuildTool = detectBuildTool()
 
-  let buildTool: BuildTool | undefined = undefined
-
   if (detectedBuildTool) {
-    clack.log.info(`Found existing ${detectedBuildTool.configFilePath} file. Skipping creation...`)
+    clack.note(`Found existing ${detectedBuildTool.configFilePath} file...`, `Skip creating config file`)
     return
-  } else {
-    buildTool = await getBuildTool()
   }
 
+  let buildTool: BuildTool = await getBuildTool()
+
   const targetFilePath = path.join(process.cwd(), buildTool.configFilePath)
+
   if (buildTool.name === 'next') {
-    if (fs.existsSync('src/app') || fs.existsSync('app')) {
-      clack.log.info(`Creating ${buildTool.configFilePath} file...`)
-      await fs.promises.writeFile(targetFilePath, next.configFileContentRSC!)
-    } else if (fs.existsSync('src/pages') || fs.existsSync('pages')) {
-      clack.log.info(`Creating ${buildTool.configFilePath} file...`)
-      await fs.promises.writeFile(targetFilePath, next.configFileContent)
-    } else {
-      // both pages and app router not found. ask user to select one
-      const selectedRouter = await abortIfCancelled(
+    // check next router for rsc configuration (App router uses React Server Components)
+    let nextRouter: 'app' | 'pages' | undefined = getNextRouter()
+
+    if (nextRouter === undefined) {
+      const selectedRouter: 'app' | 'pages' = await abortIfCancelled(
         clack.select({
           message: 'Will you use app Router or pages Router?',
           options: [
@@ -173,15 +68,19 @@ export async function createConfigFile(): Promise<void> {
           ],
         }),
       )
-      clack.log.info(`Creating ${buildTool.configFilePath} file...`)
-      if (selectedRouter === 'app') {
-        await fs.promises.writeFile(targetFilePath, next.configFileContentRSC!)
-      } else {
-        await fs.promises.writeFile(targetFilePath, next.configFileContent)
-      }
+      nextRouter = selectedRouter
     }
+
+    clack.note(`at ${chalk.green(targetFilePath)}`, `Created ${chalk.green(buildTool.configFilePath)} file`)
+
+    nextRouter === 'app'
+      ? await fs.promises.writeFile(targetFilePath, buildTool.configFileContentRSC!)
+      : await fs.promises.writeFile(targetFilePath, buildTool.configFileContent)
+
+    return
   } else {
-    clack.log.info(`Creating ${buildTool.configFilePath} file...`)
+    clack.note(`at ${chalk.green(targetFilePath)}`, `Created ${chalk.green(buildTool.configFilePath)} file`)
     await fs.promises.writeFile(targetFilePath, buildTool.configFileContent)
+    return
   }
 }

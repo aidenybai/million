@@ -10,7 +10,7 @@ import { isPackageInstalled } from './utils/package_json.js'
 
 async function runMillionWizard(): Promise<void> {
   const isMillionAlreadyInstalled = await isPackageInstalled()
-  await installPackage({ packageName: 'million@latest', alreadyInstalled: isMillionAlreadyInstalled })
+  await installPackage({ packageName: 'million', alreadyInstalled: isMillionAlreadyInstalled })
   await createConfigFile()
 }
 
@@ -19,7 +19,7 @@ async function main() {
 
   intro(showWelcomeScreen())
   await runMillionWizard()
-  outro("That's it! You're all set up.")
+  outro(chalk.bold.green('✓ ') + "You're all set!")
 }
 
 main().catch((err) => {
