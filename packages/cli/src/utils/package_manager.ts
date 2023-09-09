@@ -5,6 +5,7 @@ import * as clack from '@clack/prompts'
 import { PackageManager } from '../types'
 import { abort, abortIfCancelled } from './clack_utils'
 import chalk from 'chalk'
+import { setTimeout as sleep } from 'node:timers/promises'
 
 const yarn: PackageManager = {
   name: 'yarn',
@@ -47,7 +48,12 @@ export async function installPackageWithPackageManager(
 }
 
 async function getPackageManager(): Promise<PackageManager> {
+  const s = clack.spinner()
+  s.start('Detecting package manager.')
+
   const detectedPackageManager = detectPackageManger()
+  await sleep(1000)
+  s.stop(chalk.bold(detectedPackageManager?.label || 'Nothing') + ' detected.')
 
   if (detectedPackageManager) {
     return detectedPackageManager
@@ -66,52 +72,24 @@ async function getPackageManager(): Promise<PackageManager> {
   return selectedPackageManager
 }
 
-export async function installPackage({
-  packageName,
-  alreadyInstalled,
-  askBeforeUpdating = true,
-}: {
-  packageName: string
-  alreadyInstalled: boolean
-  askBeforeUpdating?: boolean
-}): Promise<void> {
-  if (alreadyInstalled && askBeforeUpdating) {
-    const shouldUpdatePackage = await clack.confirm({
-      message: `The ${chalk.bold.cyan(
-        packageName,
-      )} package is already installed. Do you want to update it to the latest version?`,
-    })
-
-    if (shouldUpdatePackage == false) {
-      return
-    }
-  }
-
-  const pkgInstallSpinner = clack.spinner()
-
+export async function installPackage(packageName: string): Promise<void> {
   const packageManager = await getPackageManager()
 
-  pkgInstallSpinner.start(
-    `${alreadyInstalled ? 'Updating' : 'Installing'} ${chalk.bold.cyan(packageName)} with ${chalk.bold(
-      packageManager.label,
-    )}.`,
-  )
+  const s = clack.spinner()
+  s.start(`Installing ${chalk.bold.cyan(packageName)} with ${chalk.bold(packageManager.label)}.`)
 
   try {
     await installPackageWithPackageManager(packageManager, packageName)
+
+    await sleep(1000)
+    s.stop(`Installed ${chalk.bold.cyan(packageName)} with ${chalk.bold(packageManager.label)}.`)
   } catch (e) {
-    pkgInstallSpinner.stop('Installation failed.')
     clack.log.error(
       `${chalk.red('Encountered the following error during installation:')}\n\n${e}\n\n${chalk.dim(
-        'If you think this issue is caused by the Sentry wizard, let us know here:\nhttps://github.com/getsentry/sentry-wizard/issues',
+        'Please try again and refer https://million.dev/docs/install#use-the-compiler',
       )}`,
     )
+    s.stop('Installation failed.')
     await abort()
   }
-
-  pkgInstallSpinner.stop(
-    `${alreadyInstalled ? 'Updated' : 'Installed'} ${chalk.bold.cyan(packageName)} with ${chalk.bold(
-      packageManager.label,
-    )}.`,
-  )
 }
