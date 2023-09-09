@@ -1,16 +1,15 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "ES2020",
-    "moduleResolution": "bundler",
-    "outDir": "./dist",
-    "rootDir": "./src",
+    "target": "es2016",
+    "lib": [],
+    "module": "commonjs",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true
-  },
-  "include": ["src/**/**.ts"],
-  "exclude": ["node_modules", "dist"]
+  }
 }

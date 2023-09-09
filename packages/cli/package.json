@@ -8,8 +8,7 @@
     "fast",
     "react"
   ],
-  "main": "index.mjs",
-  "type": "module",
+  "main": "dist/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/aidenybai/million.git",
@@ -24,21 +23,24 @@
     "dist"
   ],
   "bin": {
-    "million": "index.mjs"
+    "million": "./dist/index.js"
   },
   "dependencies": {
     "@clack/prompts": "^0.7.0",
-    "@types/gradient-string": "^1.1.2",
     "chalk": "^5.3.0",
     "gradient-string": "^2.0.2"
   },
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc && node index.mjs",
+    "prepare": "esbuild --bundle src/index.ts --platform=node --outfile=dist/index.js",
+    "link": "yarn unlink --global && chmod +x dist/index.js && yarn link",
+    "dev": "node ./dist/index.js",
     "prepublishOnly": "pnpm run build",
     "clean": "rm -r dist node_modules"
   },
   "devDependencies": {
+    "@types/gradient-string": "^1.1.2",
+    "@types/node": "^18.14.1",
+    "esbuild": "^0.14.54",
     "prettier": "^2.8.4",
     "typescript": "^5.1.6"
   }
