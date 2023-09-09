@@ -1,13 +1,17 @@
 #! /usr/bin/env node
 
-import { intro } from '@clack/prompts'
+import { intro, outro } from '@clack/prompts'
 import chalk from 'chalk'
 import gradient from 'gradient-string'
 import { installPackage } from './utils/package_manager.js'
 import { abort } from './utils/clack_utils.js'
+import { createConfigFile } from './utils/config.js'
+import { isPackageInstalled } from './utils/package_json.js'
 
 async function runMillionWizard(): Promise<void> {
-  await installPackage('million')
+  const isMillionAlreadyInstalled = await isPackageInstalled()
+  await installPackage({ packageName: 'million@latest', alreadyInstalled: isMillionAlreadyInstalled })
+  await createConfigFile()
 }
 
 async function main() {
@@ -15,11 +19,12 @@ async function main() {
 
   intro(showWelcomeScreen())
   await runMillionWizard()
+  outro("That's it! You're all set up.")
 }
 
 main().catch((err) => {
   console.log(err)
-  abort()
+  abort('Failed to setup million: refer docs https://million.dev/docs/install#use-the-compiler')
 })
 
 function showWelcomeScreen() {

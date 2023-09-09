@@ -23,3 +23,12 @@ export async function getPackageDotJson(): Promise<PackageDotJson> {
 
   return packageJson || {}
 }
+
+export async function isPackageInstalled(): Promise<boolean> {
+  const packageJson = await getPackageDotJson()
+  if (packageJson && packageJson.dependencies && packageJson.dependencies['million']) {
+    return true
+  } else {
+    return false
+  }
+}
