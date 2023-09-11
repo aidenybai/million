@@ -108,7 +108,7 @@ function detectModuleType(fileContent: string): 'cjs' | 'esm' | 'unknown' {
 }
 
 async function wrapExportCode(buildtool: BuildTool, oldExportExpression: string): Promise<string> {
-  let [firstPart, rest]: string[] = []
+  let [firstPart, ...rest]: string[] = []
   let newExportExpression: string
 
   switch (buildtool.name) {
@@ -126,8 +126,8 @@ async function wrapExportCode(buildtool: BuildTool, oldExportExpression: string)
        *   plugins: [million.vite({ auto: true }), react(), ],
        * });
        */
-      ;[firstPart, rest] = oldExportExpression.split('plugins: [')
-      return newExportExpression = firstPart + `plugins: [million.vite({ auto: true }), ` + rest
+      ;[firstPart, ...rest] = oldExportExpression.split('plugins: [')
+      return newExportExpression = firstPart + `plugins: [million.vite({ auto: true }), ` + rest.join('plugins: [')
        
     case 'astro':
       /**
@@ -137,8 +137,8 @@ async function wrapExportCode(buildtool: BuildTool, oldExportExpression: string)
        *   }
        * });
        */
-      ;[firstPart, rest] = oldExportExpression.split('plugins: [')
-      return newExportExpression = firstPart + `plugins: [million.vite({ mode: 'react', server: true, auto: true }), ` + rest
+      ;[firstPart, ...rest] = oldExportExpression.split('plugins: [')
+      return newExportExpression = firstPart + `plugins: [million.vite({ mode: 'react', server: true, auto: true }), ` + rest.join('plugins: [')
       
     case 'gatsby':
       /**
@@ -148,9 +148,9 @@ async function wrapExportCode(buildtool: BuildTool, oldExportExpression: string)
        *   })
        * }
        */
-      ;[firstPart, rest] = oldExportExpression.split('plugins: [')
+      ;[firstPart, ...rest] = oldExportExpression.split('plugins: [')
       return newExportExpression =
-        firstPart + `[plugins: million.webpack({ mode: 'react', server: true, auto: true }), ` + rest
+        firstPart + `[plugins: million.webpack({ mode: 'react', server: true, auto: true }), ` + rest.join('plugins: [')
     case 'craco':
       /**
        * {
@@ -159,8 +159,8 @@ async function wrapExportCode(buildtool: BuildTool, oldExportExpression: string)
        *   },
        * }
        */
-      ;[firstPart, rest] = oldExportExpression.split('plugins: [')
-      return newExportExpression = firstPart + `plugins: [million.webpack({ auto: true }), ` + rest
+      ;[firstPart, ...rest] = oldExportExpression.split('plugins: [')
+      return newExportExpression = firstPart + `plugins: [million.webpack({ auto: true }), ` + rest.join('plugins: [')
       
     case 'webpack':
       /**
@@ -168,8 +168,8 @@ async function wrapExportCode(buildtool: BuildTool, oldExportExpression: string)
        *   plugins: [million.webpack({ auto: true }), ],
        * }
        */
-      ;[firstPart, rest] = oldExportExpression.split('plugins: [')
-      return newExportExpression = firstPart + `plugins: [million.webpack({ auto: true }), ` + rest
+      ;[firstPart, ...rest] = oldExportExpression.split('plugins: [')
+      return newExportExpression = firstPart + `plugins: [million.webpack({ auto: true }), ` + rest.join('plugins: [')
 
     case 'rollup':
       /**
@@ -177,8 +177,8 @@ async function wrapExportCode(buildtool: BuildTool, oldExportExpression: string)
        *   plugins: [million.rollup({ auto: true }), ],
        * }
        */
-      ;[firstPart, rest] = oldExportExpression.split('plugins: [')
-      return newExportExpression = firstPart + `plugins: [million.rollup({ auto: true }), ` + rest
+      ;[firstPart, ...rest] = oldExportExpression.split('plugins: [')
+      return newExportExpression = firstPart + `plugins: [million.rollup({ auto: true }), ` + rest.join('plugins: [')
     default:
       return ''
   }
