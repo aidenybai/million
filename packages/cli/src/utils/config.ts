@@ -1,12 +1,16 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import * as clack from '@clack/prompts'
+import chalk from 'chalk'
 import { BuildTool } from '../types'
 import { abortIfCancelled, getNextRouter } from './clack_utils'
-import chalk from 'chalk'
 import { buildTools } from './constants'
+import { modifyConfigFile } from './modify_config'
 
 export function detectBuildTool(): BuildTool | null {
+  /**
+   * Detect build tool by checking names of config files if they exist
+   */
   for (const buildTool of buildTools) {
     if (fs.existsSync(path.join(process.cwd(), buildTool.configFilePath))) {
       return buildTool
@@ -23,6 +27,9 @@ export function detectBuildTool(): BuildTool | null {
 }
 
 export async function getBuildTool(): Promise<BuildTool> {
+  /**
+   * Ask user to select a build tool
+   */
   const selectedBuildTool: BuildTool | symbol = await abortIfCancelled(
     clack.select({
       message: 'Please select your build tool.',
@@ -36,20 +43,32 @@ export async function getBuildTool(): Promise<BuildTool> {
   return selectedBuildTool
 }
 
-export async function createConfigFile(): Promise<void> {
+export async function handleConfigFile(): Promise<void> {
+  // Create or Modify config file
   const detectedBuildTool = detectBuildTool()
 
   if (detectedBuildTool) {
-    clack.note(`Found existing ${detectedBuildTool.configFilePath} file...`, `Skip creating config file`)
+    // Modify existing config file
+    clack.note(
+      `found existing ${detectedBuildTool.configFilePath} file.`,
+      `Transforming ${chalk.green(detectedBuildTool.configFilePath)}`,
+    )
+    await modifyConfigFile(detectedBuildTool)
     return
   }
 
+  /**
+   * Create a new config file
+   */
   let buildTool: BuildTool = await getBuildTool()
 
   const targetFilePath = path.join(process.cwd(), buildTool.configFilePath)
 
   if (buildTool.name === 'next') {
-    // check next router for rsc configuration (App router uses React Server Components)
+    /**
+     * Create config file for 'next' project
+     * Check next router for rsc configuration (App router uses React Server Components)
+     */
     let nextRouter: 'app' | 'pages' | undefined = getNextRouter()
 
     if (nextRouter === undefined) {
@@ -79,6 +98,9 @@ export async function createConfigFile(): Promise<void> {
 
     return
   } else {
+    /**
+     * Create config file for build tools other than 'next'
+     */
     clack.note(`at ${chalk.green(targetFilePath)}`, `Created ${chalk.green(buildTool.configFilePath)} file`)
     await fs.promises.writeFile(targetFilePath, buildTool.configFileContent)
     return

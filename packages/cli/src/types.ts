@@ -13,6 +13,7 @@ export type PackageManager = {
 export type BuildTool = {
   name: string
   label: string
+  bundler: string
   configFilePath: string
   configFileContent: string
   configFileContentRSC?: string

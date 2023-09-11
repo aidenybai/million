@@ -92,11 +92,11 @@ export async function installPackage({
     )
   } catch (e) {
     clack.log.error(
-      `${chalk.red('Encountered the following error during installation:')}\n\n${e}\n\n${chalk.dim(
-        'Please try again and refer https://million.dev/docs/install#use-the-compiler',
+      `${chalk.red('Error during installation:')}\n\n${e}\n\n${chalk.dim(
+        'Please try again or refer https://million.dev/docs/install for manual installation.',
       )}`,
     )
     s.stop('Installation failed.')
-    await abort()
+    return abort()
   }
 }

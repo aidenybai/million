@@ -41,6 +41,7 @@
     "@types/gradient-string": "^1.1.2",
     "@types/node": "^18.14.1",
     "esbuild": "^0.14.54",
+    "magicast": "^0.2.10",
     "prettier": "^2.8.4",
     "typescript": "^5.1.6"
   }

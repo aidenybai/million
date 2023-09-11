@@ -12,7 +12,10 @@ export async function abortIfCancelled<T>(input: T | Promise<T>): Promise<Exclud
 }
 
 export async function abort(message?: string, status?: number): Promise<never> {
-  clack.outro(message ?? chalk.red('setup cancelled.'))
+  clack.outro(
+    message ??
+      chalk.red('Setup failed.') + `\nReport a bug at ${chalk.cyan('https://github.com/aidenybai/million/issues')}`,
+  )
   return process.exit(status ?? 1)
 }
 

@@ -31,6 +31,7 @@ export const packageManagers = [yarn, pnpm, npm]
 const next: BuildTool = {
   name: 'next',
   label: 'Next.js',
+  bundler: 'next',
   configFilePath: 'next.config.mjs',
   configFileContent: `import million from 'million/compiler';
   
@@ -61,6 +62,7 @@ const next: BuildTool = {
 const astro: BuildTool = {
   name: 'astro',
   label: 'Astro',
+  bundler: 'vite',
   configFilePath: 'astro.config.mjs',
   configFileContent: `import { defineConfig } from 'astro/config';
   import million from 'million/compiler';
@@ -74,6 +76,7 @@ const astro: BuildTool = {
 const gatsby: BuildTool = {
   name: 'gatsby',
   label: 'Gatsby',
+  bundler: 'webpack',
   configFilePath: 'gatsby-node.js',
   configFileContent: `const million = require('million/compiler');
    
@@ -86,6 +89,7 @@ const gatsby: BuildTool = {
 const vite: BuildTool = {
   name: 'vite',
   label: 'Vite',
+  bundler: 'vite',
   configFilePath: 'vite.config.js',
   configFileContent: `import million from 'million/compiler';
   import react from "@vitejs/plugin-react";
@@ -98,6 +102,7 @@ const vite: BuildTool = {
 const craco: BuildTool = {
   name: 'craco',
   label: 'Create React App',
+  bundler: 'webpack',
   configFilePath: 'craco.config.js',
   configFileContent: `const million = require('million/compiler');
   module.exports = {
@@ -109,6 +114,7 @@ const craco: BuildTool = {
 const webpack: BuildTool = {
   name: 'webpack',
   label: 'Webpack',
+  bundler: 'webpack',
   configFilePath: 'webpack.config.js',
   configFileContent: `const million = require('million/compiler');
   module.exports = {
@@ -120,6 +126,7 @@ const webpack: BuildTool = {
 const rollup: BuildTool = {
   name: 'rollup',
   label: 'Rollup',
+  bundler: 'rollup',
   configFilePath: 'rollup.config.js',
   configFileContent: `import million from 'million/compiler';
   
