@@ -13,12 +13,14 @@ export function detectBuildTool(): BuildTool | null {
    */
   for (const buildTool of buildTools) {
     if (fs.existsSync(path.join(process.cwd(), buildTool.configFilePath))) {
+      clack.log.success(`Detected ${chalk.bold(buildTool.name)} project.`)
       return buildTool
     } else if (
       buildTool.name == 'next' &&
       fs.existsSync(path.join(process.cwd(), buildTool.configFilePath.replace('.mjs', '.js')))
     ) {
       let xbuildTool = { ...buildTool, configFilePath: buildTool.configFilePath.replace('.mjs', '.js') }
+      clack.log.success(`Detected ${chalk.bold('next')} project.`)
       return xbuildTool
     }
   }

@@ -14,7 +14,7 @@ export async function modifyConfigFile(detectedBuildTool: BuildTool) {
     configFileContent.includes('million') || configFileContent.includes('million/compiler')
       ? await abort(
           chalk.red(`Million js already configured in ${detectedBuildTool.configFilePath}.`) +
-            '\nPlease refer docs: https://million.dev/docs/install#use-the-compiler if facing any errors.',
+            `\n Please refer docs: https://million.dev/docs/install#use-the-compiler if facing any errors.`,
         )
       : ''
 

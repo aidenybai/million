@@ -4,6 +4,9 @@ import * as clack from '@clack/prompts'
 import { PackageDotJson } from '../types'
 import { abort } from './clack_utils'
 
+/**
+ * Get the package.json dependencies and devDependencies
+ */
 export async function getPackageDotJson(): Promise<PackageDotJson> {
   const packageJsonFileContents = await fs.promises
     .readFile(path.join(process.cwd(), 'package.json'), 'utf8')
@@ -24,6 +27,9 @@ export async function getPackageDotJson(): Promise<PackageDotJson> {
   return packageJson || {}
 }
 
+/**
+ * Check if the million package is installed (either present in dependencies or devDependencies)
+ */
 export async function isPackageInstalled(): Promise<boolean> {
   const packageJson = await getPackageDotJson()
   if (packageJson && packageJson.dependencies && packageJson.dependencies['million']) {

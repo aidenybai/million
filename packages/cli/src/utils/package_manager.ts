@@ -8,6 +8,9 @@ import chalk from 'chalk'
 import { setTimeout as sleep } from 'node:timers/promises'
 import { packageManagers } from './constants'
 
+/**
+ * Detect package manager by checking if the lock file exists.
+ */
 export function detectPackageManger(): PackageManager | null {
   for (const packageManager of packageManagers) {
     if (fs.existsSync(path.join(process.cwd(), packageManager.lockFile))) {
@@ -17,6 +20,9 @@ export function detectPackageManger(): PackageManager | null {
   return null
 }
 
+/**
+ * Install package with package manager. (execute install command)
+ */
 export async function installPackageWithPackageManager(
   packageManager: PackageManager,
   packageName: string,
@@ -24,6 +30,10 @@ export async function installPackageWithPackageManager(
   await exec(`${packageManager.installCommand} ${packageName}@latest`)
 }
 
+/**
+ * Get the package manager to use. 
+ * If the package manager is not detected, ask the user to select one.
+ */
 async function getPackageManager(): Promise<PackageManager> {
   const s = clack.spinner()
   s.start('Detecting package manager.')
@@ -50,6 +60,10 @@ async function getPackageManager(): Promise<PackageManager> {
   return selectedPackageManager
 }
 
+/**
+ * Install package with package manager.
+ * If the package is already installed, ask the user if they want to update it.
+ */
 export async function installPackage({
   packageName,
   alreadyInstalled,
