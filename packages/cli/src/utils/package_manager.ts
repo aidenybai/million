@@ -42,6 +42,7 @@ async function getPackageManager(): Promise<PackageManager> {
       options: packageManagers.map((packageManager) => ({
         value: packageManager,
         label: packageManager.label,
+        hint: 'Be sure you have ' + chalk.bold(packageManager.label) + ' installed.',
       })),
     }),
   )

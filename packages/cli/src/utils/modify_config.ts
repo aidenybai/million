@@ -19,7 +19,6 @@ export async function modifyConfigFile(detectedBuildTool: BuildTool) {
       : ''
 
     const detectedModuleType:'esm' | 'cjs' | 'unknown' = detectModuleType(configFileContent)
-      console.log('detected module type: ', detectedModuleType)
     /**
      * 1. Add import or require command for million to the top of the file
      * 2. Update 'export default' or 'module.exports'
@@ -39,7 +38,7 @@ export async function modifyConfigFile(detectedBuildTool: BuildTool) {
         const newExportExpression = await wrapExportCode(detectedBuildTool, oldExportExpression!)
 
         // 3.
-        const newGenertedCode = configFileContent.replace(regex, `\nmodule.exports = ${newExportExpression};`)
+        const newGenertedCode = configFileContent.replace(regex, `module.exports = ${newExportExpression}`)
 
         await fs.promises.writeFile(filePath, newGenertedCode, {
           encoding: 'utf-8',
@@ -60,7 +59,7 @@ export async function modifyConfigFile(detectedBuildTool: BuildTool) {
         const newExportExpression = await wrapExportCode(detectedBuildTool, oldExportExpression!)
 
         // 3.
-        const newGenertedCode = configFileContent.replace(regex, `\nexport default ${newExportExpression};`)
+        const newGenertedCode = configFileContent.replace(regex, `export default ${newExportExpression}`)
 
         await fs.promises.writeFile(filePath, newGenertedCode, {
           encoding: 'utf-8',
