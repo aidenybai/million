@@ -3,7 +3,7 @@ import * as fs from 'fs'
 import chalk from 'chalk'
 
 /**
- * Abort the process if the user cancels the input prompt. 
+ * Abort the process if the user cancels the input prompt.
  */
 export async function abortIfCancelled<T>(input: T | Promise<T>): Promise<Exclude<T, symbol>> {
   if (clack.isCancel(await input)) {
@@ -49,8 +49,8 @@ export async function getNextRouter(): Promise<'app' | 'pages'> {
         ],
       }),
     )
+
+    clack.log.success(`Detected ${chalk.bold.cyan(selectedRouter)} router for next project.`)
     return selectedRouter
   }
 }
-
-
