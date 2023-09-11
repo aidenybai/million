@@ -38,6 +38,7 @@ const next: BuildTool = {
   label: 'Next.js',
   bundler: 'next',
   configFilePath: 'next.config.mjs',
+  possibleFileNames: ['next.config.js', 'next.config.mjs'],
   configFileContent: `import million from 'million/compiler';
 
 /** @type {import('next').NextConfig} */
@@ -69,6 +70,7 @@ const astro: BuildTool = {
   label: 'Astro',
   bundler: 'vite',
   configFilePath: 'astro.config.mjs',
+  possibleFileNames: ['astro.config.js', 'astro.config.mjs', 'astro.config.ts'],
   configFileContent: `import { defineConfig } from 'astro/config';
 import million from 'million/compiler';
 
@@ -83,6 +85,7 @@ const gatsby: BuildTool = {
   label: 'Gatsby',
   bundler: 'webpack',
   configFilePath: 'gatsby-node.js',
+  possibleFileNames: ['gatsby-node.js'],
   configFileContent: `const million = require('million/compiler');
    
 exports.onCreateWebpackConfig = ({ actions }) => {
@@ -96,6 +99,7 @@ const vite: BuildTool = {
   label: 'Vite',
   bundler: 'vite',
   configFilePath: 'vite.config.js',
+  possibleFileNames: ['vite.config.js', 'vite.config.mjs', 'vite.config.ts', 'vite.config.cjs'],
   configFileContent: `import million from 'million/compiler';
 import react from "@vitejs/plugin-react";
 import { defineConfig } from 'vite';
@@ -109,6 +113,7 @@ const craco: BuildTool = {
   label: 'Create React App',
   bundler: 'webpack',
   configFilePath: 'craco.config.js',
+  possibleFileNames: ['craco.config.js', 'craco.config.mjs', 'craco.config.ts', 'craco.config.cjs'],
   configFileContent: `const million = require('million/compiler');
 module.exports = {
   webpack: {
@@ -121,6 +126,7 @@ const webpack: BuildTool = {
   label: 'Webpack',
   bundler: 'webpack',
   configFilePath: 'webpack.config.js',
+  possibleFileNames: ['webpack.config.js'],
   configFileContent: `const million = require('million/compiler');
 module.exports = {
   plugins: [
@@ -133,6 +139,7 @@ const rollup: BuildTool = {
   label: 'Rollup',
   bundler: 'rollup',
   configFilePath: 'rollup.config.js',
+  possibleFileNames: ['rollup.config.js', 'rollup.config.mjs', 'rollup.config.ts', 'rollup.config.cjs'],
   configFileContent: `import million from 'million/compiler';
   
 export default {

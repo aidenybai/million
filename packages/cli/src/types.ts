@@ -15,6 +15,7 @@ export type BuildTool = {
   label: string
   bundler: string
   configFilePath: string
+  possibleFileNames: string[]
   configFileContent: string
   configFileContentRSC?: string
 }

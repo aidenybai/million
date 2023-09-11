@@ -12,16 +12,15 @@ export function detectBuildTool(): BuildTool | null {
    * Detect build tool by checking names of config files if they exist
    */
   for (const buildTool of buildTools) {
-    if (fs.existsSync(path.join(process.cwd(), buildTool.configFilePath))) {
-      clack.log.success(`Detected ${chalk.bold(buildTool.name)} project.`)
-      return buildTool
-    } else if (
-      buildTool.name == 'next' &&
-      fs.existsSync(path.join(process.cwd(), buildTool.configFilePath.replace('.mjs', '.js')))
-    ) {
-      let xbuildTool = { ...buildTool, configFilePath: buildTool.configFilePath.replace('.mjs', '.js') }
-      clack.log.success(`Detected ${chalk.bold('next')} project.`)
-      return xbuildTool
+    for (const fileName of buildTool.possibleFileNames) {
+      /**
+       * Check for all extentions
+       */
+      if (fs.existsSync(path.join(process.cwd(), fileName))) {
+        let xbuildTool = { ...buildTool, configFilePath: fileName }
+        clack.log.success(`Detected ${chalk.bold(buildTool.name)} project.`)
+        return xbuildTool
+      }
     }
   }
   // No build tool detected using config files
@@ -71,7 +70,7 @@ export async function handleConfigFile(): Promise<void> {
      * Create config file for 'next' project
      * Check next router for rsc configuration (App router uses React Server Components)
      */
-    const nextRouter: 'app' | 'pages'  = await getNextRouter()
+    const nextRouter: 'app' | 'pages' = await getNextRouter()
 
     clack.note(`at ${chalk.green(targetFilePath)}`, `Created ${chalk.green(buildTool.configFilePath)} file`)
 
