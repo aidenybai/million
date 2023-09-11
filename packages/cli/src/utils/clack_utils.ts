@@ -19,12 +19,28 @@ export async function abort(message?: string, status?: number): Promise<never> {
   return process.exit(status ?? 1)
 }
 
-export function getNextRouter() {
+export async function getNextRouter(): Promise<'app' | 'pages'> {
   if (fs.existsSync('src/app') || fs.existsSync('app')) {
     return 'app'
   } else if (fs.existsSync('src/pages') || fs.existsSync('pages')) {
     return 'pages'
   } else {
-    return undefined
+      const selectedRouter: 'app' | 'pages' = await abortIfCancelled(
+        clack.select({
+          message: 'Will you use app Router or pages Router?',
+          options: [
+            {
+              label: 'App Router',
+              value: 'app',
+            },
+            {
+              label: 'Pages Router',
+              value: 'pages',
+            },
+          ],
+        }),
+      )
+      return selectedRouter
+    }
   }
-}
+

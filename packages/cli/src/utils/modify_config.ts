@@ -1,14 +1,13 @@
-import { builders, generateCode, parseModule } from 'magicast'
 import { BuildTool } from '../types'
 import * as path from 'path'
 import * as fs from 'fs'
-import { abort } from './clack_utils'
+import { abort, getNextRouter } from './clack_utils'
 import chalk from 'chalk'
 
 export async function modifyConfigFile(detectedBuildTool: BuildTool) {
   try {
-    const configFileContent = await getExistingConfigContent(detectedBuildTool)
-
+    let configFileContent = await getExistingConfigContent(detectedBuildTool)
+    const filePath = path.join(process.cwd(), detectedBuildTool.configFilePath)
     /**
      * If the config file already has million js configured, abort
      */
@@ -19,32 +18,55 @@ export async function modifyConfigFile(detectedBuildTool: BuildTool) {
         )
       : ''
 
+    const detectedModuleType:'esm' | 'cjs' | 'unknown' = detectModuleType(configFileContent)
+      console.log('detected module type: ', detectedModuleType)
     /**
      * 1. Add import or require command for million to the top of the file
      * 2. Update 'export default' or 'module.exports'
      * 3. Update file with new code
      */
-    if (detectModuleType(configFileContent) === 'cjs') {
-    } else if (detectModuleType(configFileContent) === 'esm') {
-      const mod = parseModule(configFileContent)
-
+    if (detectedModuleType === 'cjs') {
       // 1.
-      mod.imports.$add({
-        from: 'million/compiler',
-        imported: 'million',
-      })
+      const importStatement = `const million = require('million/compiler')\n`
+      configFileContent = importStatement + configFileContent
 
       // 2.
-      const oldExportExpression = generateCode(mod.exports.default.$ast).code
-      mod.exports.default = builders.raw(wrapExportCode(detectedBuildTool, oldExportExpression))
+      const regex = /module\.exports\s*=\s*([^;]+)/
+      const match = configFileContent.match(regex)
+      console.log(match)
+      if (match) {
+        const oldExportExpression = match[1]
+        const newExportExpression = await wrapExportCode(detectedBuildTool, oldExportExpression!)
 
-      // 3.
-      const newGenertedCode = mod.generate().code.replace('{million}', 'million')
+        // 3.
+        const newGenertedCode = configFileContent.replace(regex, `\nmodule.exports = ${newExportExpression};`)
 
-      await fs.promises.writeFile(path.join(process.cwd(), detectedBuildTool.configFilePath), newGenertedCode, {
-        encoding: 'utf-8',
-        flag: 'w',
-      })
+        await fs.promises.writeFile(filePath, newGenertedCode, {
+          encoding: 'utf-8',
+          flag: 'w'
+        })
+      }
+    } else if (detectedModuleType === 'esm') {
+      // 1.
+      const importStatement = `import million from 'million/compiler'\n`
+      configFileContent = importStatement + configFileContent
+
+      // 2.
+      const regex = /export\s+default\s+([^;]+)/
+      const match = configFileContent.match(regex)
+
+      if (match) {
+        const oldExportExpression = match[1]
+        const newExportExpression = await wrapExportCode(detectedBuildTool, oldExportExpression!)
+
+        // 3.
+        const newGenertedCode = configFileContent.replace(regex, `\nexport default ${newExportExpression};`)
+
+        await fs.promises.writeFile(filePath, newGenertedCode, {
+          encoding: 'utf-8',
+          flag: 'w',
+        })
+      }
     } else {
       /**
        *  If we can't detect the module type, we can't modify the config file
@@ -72,22 +94,22 @@ export async function getExistingConfigContent(detectedBuildTool: BuildTool): Pr
   return configContent
 }
 
-function detectModuleType(configContent: string): 'cjs' | 'esm' | 'unknown' {
+function detectModuleType(fileContent: string): 'cjs' | 'esm' | 'unknown' {
   // Check for ESM import/export statements
-  if (configContent.includes('import ') || configContent.includes('export default')) {
+  if (fileContent.includes('export default')) {
     return 'esm'
   }
 
   // Check for CommonJS require/module.exports patterns
-  if (configContent.includes('require(') || configContent.includes('module.exports = ')) {
+  if (fileContent.includes('module.exports =')) {
     return 'cjs'
   }
 
   return 'unknown'
 }
 
-function wrapExportCode(buildtool: BuildTool, oldExportExpression: string): string {
-  let [firstPart, ...rest]: string[] = ['']
+async function wrapExportCode(buildtool: BuildTool, oldExportExpression: string): Promise<string> {
+  let [firstPart, rest]: string[] = []
   let newExportExpression: string
 
   switch (buildtool.name) {
@@ -95,18 +117,19 @@ function wrapExportCode(buildtool: BuildTool, oldExportExpression: string): stri
       /**
        * million.next(nextConfig, millionConfig);
        * */
-      return `million.${buildtool.bundler}(
-        ${oldExportExpression}, { auto: ${buildtool.configFileContentRSC ? '{ rsc: true }' : 'true'}}
-      )`
+      const nextRouter: 'app' | 'pages' = await getNextRouter()
+      return newExportExpression = `million.${buildtool.bundler}(
+  ${oldExportExpression}, { auto: ${nextRouter == 'app' ? '{ rsc: true }' : 'true'}}
+)`
     case 'vite':
       /**
        * defineConfig({
        *   plugins: [million.vite({ auto: true }), react(), ],
        * });
        */
-      ;[firstPart, ...rest] = oldExportExpression.split('[')
-      newExportExpression = firstPart + `[million.vite({ auto: true }), ` + rest.join('[')
-      return newExportExpression
+      ;[firstPart, rest] = oldExportExpression.split('plugins: [')
+      return newExportExpression = firstPart + `plugins: [million.vite({ auto: true }), ` + rest
+       
     case 'astro':
       /**
        * defineConfig({
@@ -115,9 +138,9 @@ function wrapExportCode(buildtool: BuildTool, oldExportExpression: string): stri
        *   }
        * });
        */
-      ;[firstPart, ...rest] = oldExportExpression.split('[')
-      newExportExpression = firstPart + `[million.vite({ mode: 'react', server: true, auto: true }), ` + rest.join('[')
-      return newExportExpression
+      ;[firstPart, rest] = oldExportExpression.split('plugins: [')
+      return newExportExpression = firstPart + `plugins: [million.vite({ mode: 'react', server: true, auto: true }), ` + rest
+      
     case 'gatsby':
       /**
        * ({ actions }) => {
@@ -126,10 +149,9 @@ function wrapExportCode(buildtool: BuildTool, oldExportExpression: string): stri
        *   })
        * }
        */
-      ;[firstPart, ...rest] = oldExportExpression.split('[')
-      newExportExpression =
-        firstPart + `[million.webpack({ mode: 'react', server: true, auto: true }), ` + rest.join('[')
-      return newExportExpression
+      ;[firstPart, rest] = oldExportExpression.split('plugins: [')
+      return newExportExpression =
+        firstPart + `[plugins: million.webpack({ mode: 'react', server: true, auto: true }), ` + rest
     case 'craco':
       /**
        * {
@@ -138,27 +160,26 @@ function wrapExportCode(buildtool: BuildTool, oldExportExpression: string): stri
        *   },
        * }
        */
-      ;[firstPart, ...rest] = oldExportExpression.split('[')
-      newExportExpression = firstPart + `[million.webpack({ auto: true }), ` + rest.join('[')
-      return newExportExpression
+      ;[firstPart, rest] = oldExportExpression.split('plugins: [')
+      return newExportExpression = firstPart + `plugins: [million.webpack({ auto: true }), ` + rest
+      
     case 'webpack':
       /**
        * {
        *   plugins: [million.webpack({ auto: true }), ],
        * }
        */
-      ;[firstPart, ...rest] = oldExportExpression.split('[')
-      newExportExpression = firstPart + `[million.webpack({ auto: true }), ` + rest.join('[')
-      return newExportExpression
+      ;[firstPart, rest] = oldExportExpression.split('plugins: [')
+      return newExportExpression = firstPart + `plugins: [million.webpack({ auto: true }), ` + rest
+
     case 'rollup':
       /**
        * {
        *   plugins: [million.rollup({ auto: true }), ],
        * }
        */
-      ;[firstPart, ...rest] = oldExportExpression.split('[')
-      newExportExpression = firstPart + `[million.rollup({ auto: true }), ` + rest.join('[')
-      return newExportExpression
+      ;[firstPart, rest] = oldExportExpression.split('plugins: [')
+      return newExportExpression = firstPart + `plugins: [million.rollup({ auto: true }), ` + rest
     default:
       return ''
   }

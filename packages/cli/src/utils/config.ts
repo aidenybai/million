@@ -69,26 +69,7 @@ export async function handleConfigFile(): Promise<void> {
      * Create config file for 'next' project
      * Check next router for rsc configuration (App router uses React Server Components)
      */
-    let nextRouter: 'app' | 'pages' | undefined = getNextRouter()
-
-    if (nextRouter === undefined) {
-      const selectedRouter: 'app' | 'pages' = await abortIfCancelled(
-        clack.select({
-          message: 'Will you use app Router or pages Router?',
-          options: [
-            {
-              label: 'App Router',
-              value: 'app',
-            },
-            {
-              label: 'Pages Router',
-              value: 'pages',
-            },
-          ],
-        }),
-      )
-      nextRouter = selectedRouter
-    }
+    const nextRouter: 'app' | 'pages'  = await getNextRouter()
 
     clack.note(`at ${chalk.green(targetFilePath)}`, `Created ${chalk.green(buildTool.configFilePath)} file`)
 

@@ -1,10 +1,10 @@
 {
-  "name": "million",
+  "name": "million_js_wizard",
   "version": "0.0.1",
   "description": "Million.js is an extremely fast and lightweight <4kb virtual DOM that makes React up to 70% faster. By using a fine-tuned, optimized virtual DOM, Million.js reduces the overhead of React.",
   "keywords": [
     "cli",
-    "million.js",
+    "million js",
     "fast",
     "react"
   ],
@@ -41,7 +41,6 @@
     "@types/gradient-string": "^1.1.2",
     "@types/node": "^18.14.1",
     "esbuild": "^0.14.54",
-    "magicast": "^0.2.10",
     "prettier": "^2.8.4",
     "typescript": "^5.1.6"
   }
