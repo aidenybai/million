@@ -1,4 +1,4 @@
-import { BuildTool, PackageManager } from '../types';
+import type { BuildTool, PackageManager } from '../types';
 
 /**
  * Package managers

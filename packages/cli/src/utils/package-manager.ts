@@ -1,12 +1,12 @@
 import { exec } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as clack from '@clack/prompts';
-import { PackageManager } from '../types';
-import { abort, abortIfCancelled } from './utils';
-import chalk from 'chalk';
 import { setTimeout as sleep } from 'node:timers/promises';
+import * as clack from '@clack/prompts';
+import chalk from 'chalk';
+import { abort, abortIfCancelled } from './utils';
 import { packageManagers } from './constants';
+import type { PackageManager } from '../types';
 
 /**
  * Detect package manager by checking if the lock file exists.
@@ -23,11 +23,11 @@ export function detectPackageManger(): PackageManager | null {
 /**
  * Install package with package manager. (execute install command)
  */
-export async function installPackageWithPackageManager(
+export function installPackageWithPackageManager(
   packageManager: PackageManager,
   packageName: string,
-): Promise<void> {
-  await exec(`${packageManager.installCommand} ${packageName}@latest`);
+): void {
+  exec(`${packageManager.installCommand} ${packageName}@latest`);
 }
 
 /**
@@ -41,8 +41,9 @@ async function getPackageManager(): Promise<PackageManager> {
   const detectedPackageManager = detectPackageManger();
   await sleep(1000);
   s.stop(
-    chalk.bold(detectedPackageManager?.label || 'No package manager') +
-      ' detected.',
+    `${chalk.bold(
+      detectedPackageManager?.label || 'No package manager',
+    )} detected.`,
   );
 
   if (detectedPackageManager) {
@@ -56,10 +57,9 @@ async function getPackageManager(): Promise<PackageManager> {
         options: packageManagers.map((packageManager) => ({
           value: packageManager,
           label: packageManager.label,
-          hint:
-            'Be sure you have ' +
-            chalk.bold(packageManager.label) +
-            ' installed.',
+          hint: `Be sure you have ${chalk.bold(
+            packageManager.label,
+          )} installed.`,
         })),
       }),
     );
@@ -104,7 +104,7 @@ export async function installPackage({
   );
 
   try {
-    await installPackageWithPackageManager(packageManager, packageName);
+    installPackageWithPackageManager(packageManager, packageName);
     await sleep(1000);
 
     s.stop(
@@ -114,8 +114,8 @@ export async function installPackage({
     );
   } catch (e) {
     clack.log.error(
-      `${chalk.red('Error during installation:')}\n\n${e}\n\n${chalk.dim(
-        'Please try again or refer https://million.dev/docs/install for manual installation.',
+      `${chalk.red('Error during installation.')}\n\n${chalk.dim(
+        'Please try again or refer docs to install manually: https://million.dev/docs/install',
       )}`,
     );
     s.stop('Installation failed.');

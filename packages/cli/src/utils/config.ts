@@ -2,10 +2,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as clack from '@clack/prompts';
 import chalk from 'chalk';
-import { BuildTool } from '../types';
-import { abortIfCancelled, getNextRouter } from './utils';
 import { buildTools } from './constants';
-import { modifyConfigFile } from './modify_config';
+import { modifyConfigFile } from './modify-config';
+import { abortIfCancelled, getNextRouter } from './utils';
+import type { BuildTool } from '../types';
 
 export function detectBuildTool(): BuildTool | null {
   /**
@@ -63,7 +63,7 @@ export async function handleConfigFile(): Promise<void> {
   /**
    * Create a new config file
    */
-  let buildTool: BuildTool = await getBuildTool();
+  const buildTool: BuildTool = await getBuildTool();
 
   const targetFilePath = path.join(process.cwd(), buildTool.configFilePath);
 
@@ -88,8 +88,6 @@ export async function handleConfigFile(): Promise<void> {
           targetFilePath,
           buildTool.configFileContent,
         );
-
-    return;
   } else {
     /**
      * Create config file for build tools other than 'next'
@@ -99,6 +97,5 @@ export async function handleConfigFile(): Promise<void> {
       `Created ${chalk.green(buildTool.configFilePath)} file`,
     );
     await fs.promises.writeFile(targetFilePath, buildTool.configFileContent);
-    return;
   }
 }
