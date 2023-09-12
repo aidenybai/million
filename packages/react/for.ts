@@ -5,11 +5,11 @@ import {
   useEffect,
   useRef,
   useState,
+  startTransition
 } from 'react';
 import { arrayMount$, arrayPatch$ } from '../million/array';
 import { mapArray, block as createBlock } from '../million';
 import { MapSet$, MapHas$, MapGet$ } from '../million/constants';
-import { queueMicrotask$ } from '../million/dom';
 import { renderReactScope } from './utils';
 import { RENDER_SCOPE, REGISTRY, SVG_RENDER_SCOPE } from './constants';
 import type { Block } from '../million';
@@ -42,7 +42,7 @@ const MillionArray = <T>({
   const [, setMountPortals] = useState(false);
 
   if (fragmentRef.current && (each !== cache.current.each || !memo)) {
-    queueMicrotask$(() => {
+    startTransition(() => {
       const newChildren = createChildren<T>(
         each,
         children,
@@ -65,7 +65,7 @@ const MillionArray = <T>({
   useEffect(() => {
     if (!ref.current || fragmentRef.current) return;
 
-    queueMicrotask$(() => {
+    startTransition(() => {
       if (cache.current.mounted) return;
 
       const newChildren = createChildren<T>(

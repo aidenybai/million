@@ -15,6 +15,7 @@ body {
   color: #111;
   background: #fff;
   font-variant-numeric: tabular-nums;
+  scroll-behavior: smooth;
 }
 
 #hero {

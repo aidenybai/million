@@ -1,11 +1,10 @@
-import { createElement, Fragment, useCallback, useMemo, useRef } from 'react';
+import { createElement, Fragment, useCallback, useMemo, useRef, startTransition } from 'react';
 import {
   block as createBlock,
   mount$,
   patch as patchBlock,
 } from '../million/block';
 import { MapSet$, MapHas$ } from '../million/constants';
-import { queueMicrotask$ } from '../million/dom';
 import { processProps, unwrap } from './utils';
 import { Effect, RENDER_SCOPE, REGISTRY, SVG_RENDER_SCOPE } from './constants';
 import type { ComponentType, Ref } from 'react';
@@ -34,11 +33,11 @@ export const block = <P extends MillionProps>(
     const effect = useCallback(() => {
       const currentBlock = block(props, props.key);
       if (ref.current && patch.current === null) {
-        queueMicrotask$(() => {
+        startTransition(() => {
           mount$.call(currentBlock, ref.current!, null);
         });
         patch.current = (props: P) => {
-          queueMicrotask$(() => {
+          startTransition(() => {
             patchBlock(currentBlock, block(props, props.key, shouldUpdate));
           });
         };
