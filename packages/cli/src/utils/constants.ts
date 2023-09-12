@@ -1,4 +1,4 @@
-import { BuildTool, PackageManager } from '../types'
+import { BuildTool, PackageManager } from '../types';
 
 /**
  * Package managers
@@ -9,26 +9,26 @@ const yarn: PackageManager = {
   label: 'Yarn',
   lockFile: 'yarn.lock',
   installCommand: 'yarn add',
-}
+};
 const pnpm: PackageManager = {
   name: 'pnpm',
-  label: 'PNPM',
+  label: 'pnpm',
   lockFile: 'pnpm-lock.yaml',
   installCommand: 'pnpm install',
-}
+};
 const npm: PackageManager = {
   name: 'npm',
-  label: 'NPM',
+  label: 'npm',
   lockFile: 'package-lock.json',
   installCommand: 'npm install',
-}
+};
 const bun: PackageManager = {
   name: 'bun',
-  label: 'BUN',
+  label: 'bun',
   lockFile: 'bun.lockb',
   installCommand: 'bun add',
-}
-export const packageManagers = [pnpm, yarn, bun, npm]
+};
+export const packageManagers = [pnpm, yarn, bun, npm];
 
 /**
  * Build tools
@@ -64,7 +64,7 @@ const millionConfig = {
 
 export default million.next(nextConfig, millionConfig);
 `,
-}
+};
 const astro: BuildTool = {
   name: 'astro',
   label: 'Astro',
@@ -79,7 +79,7 @@ export default defineConfig({
     plugins: [million.vite({ mode: 'react', server: true, auto: true })]
   }
 });`,
-}
+};
 const gatsby: BuildTool = {
   name: 'gatsby',
   label: 'Gatsby',
@@ -93,13 +93,18 @@ exports.onCreateWebpackConfig = ({ actions }) => {
     plugins: [million.webpack({ mode: 'react', server: true, auto: true })],
   })
 }`,
-}
+};
 const vite: BuildTool = {
   name: 'vite',
   label: 'Vite',
   bundler: 'vite',
   configFilePath: 'vite.config.js',
-  possibleFileNames: ['vite.config.js', 'vite.config.mjs', 'vite.config.ts', 'vite.config.cjs'],
+  possibleFileNames: [
+    'vite.config.js',
+    'vite.config.mjs',
+    'vite.config.ts',
+    'vite.config.cjs',
+  ],
   configFileContent: `import million from 'million/compiler';
 import react from "@vitejs/plugin-react";
 import { defineConfig } from 'vite';
@@ -107,20 +112,25 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   plugins: [million.vite({ auto: true }), react()],
 });`,
-}
+};
 const craco: BuildTool = {
   name: 'craco',
   label: 'Create React App',
   bundler: 'webpack',
   configFilePath: 'craco.config.js',
-  possibleFileNames: ['craco.config.js', 'craco.config.mjs', 'craco.config.ts', 'craco.config.cjs'],
+  possibleFileNames: [
+    'craco.config.js',
+    'craco.config.mjs',
+    'craco.config.ts',
+    'craco.config.cjs',
+  ],
   configFileContent: `const million = require('million/compiler');
 module.exports = {
   webpack: {
     plugins: { add: [million.webpack({ auto: true })] }
   }
 };`,
-}
+};
 const webpack: BuildTool = {
   name: 'webpack',
   label: 'Webpack',
@@ -133,18 +143,31 @@ module.exports = {
     million.webpack({ auto: true }),
   ],
 }`,
-}
+};
 const rollup: BuildTool = {
   name: 'rollup',
   label: 'Rollup',
   bundler: 'rollup',
   configFilePath: 'rollup.config.js',
-  possibleFileNames: ['rollup.config.js', 'rollup.config.mjs', 'rollup.config.ts', 'rollup.config.cjs'],
+  possibleFileNames: [
+    'rollup.config.js',
+    'rollup.config.mjs',
+    'rollup.config.ts',
+    'rollup.config.cjs',
+  ],
   configFileContent: `import million from 'million/compiler';
   
 export default {
   plugins: [million.rollup({ auto: true })],
 };`,
-}
+};
 
-export const buildTools: BuildTool[] = [next, astro, gatsby, vite, craco, webpack, rollup]
+export const buildTools: BuildTool[] = [
+  next,
+  astro,
+  gatsby,
+  vite,
+  craco,
+  webpack,
+  rollup,
+];

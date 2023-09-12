@@ -1,11 +1,11 @@
-import * as fs from 'fs'
-import * as path from 'path'
-import * as clack from '@clack/prompts'
-import chalk from 'chalk'
-import { BuildTool } from '../types'
-import { abortIfCancelled, getNextRouter } from './utils'
-import { buildTools } from './constants'
-import { modifyConfigFile } from './modify_config'
+import * as fs from 'fs';
+import * as path from 'path';
+import * as clack from '@clack/prompts';
+import chalk from 'chalk';
+import { BuildTool } from '../types';
+import { abortIfCancelled, getNextRouter } from './utils';
+import { buildTools } from './constants';
+import { modifyConfigFile } from './modify_config';
 
 export function detectBuildTool(): BuildTool | null {
   /**
@@ -17,14 +17,16 @@ export function detectBuildTool(): BuildTool | null {
        * Check for all extentions
        */
       if (fs.existsSync(path.join(process.cwd(), fileName))) {
-        let xbuildTool = { ...buildTool, configFilePath: fileName }
-        clack.log.success(`Detected ${chalk.bold(buildTool.name)} project.`)
-        return xbuildTool
+        const currentbuildTool = { ...buildTool, configFilePath: fileName };
+        clack.log.success(
+          `Detected ${chalk.bold(currentbuildTool.name)} project.`,
+        );
+        return currentbuildTool;
       }
     }
   }
   // No build tool detected using config files
-  return null
+  return null;
 }
 
 export async function getBuildTool(): Promise<BuildTool> {
@@ -39,52 +41,64 @@ export async function getBuildTool(): Promise<BuildTool> {
         label: buildTool.label,
       })),
     }),
-  )
+  );
 
-  return selectedBuildTool
+  return selectedBuildTool;
 }
 
 export async function handleConfigFile(): Promise<void> {
   // Create or Modify config file
-  const detectedBuildTool = detectBuildTool()
+  const detectedBuildTool = detectBuildTool();
 
   if (detectedBuildTool) {
     // Modify existing config file
     clack.note(
       `found existing ${detectedBuildTool.configFilePath} file.`,
       `Transforming ${chalk.cyan(detectedBuildTool.configFilePath)}`,
-    )
-    await modifyConfigFile(detectedBuildTool)
-    return
+    );
+    await modifyConfigFile(detectedBuildTool);
+    return;
   }
 
   /**
    * Create a new config file
    */
-  let buildTool: BuildTool = await getBuildTool()
+  let buildTool: BuildTool = await getBuildTool();
 
-  const targetFilePath = path.join(process.cwd(), buildTool.configFilePath)
+  const targetFilePath = path.join(process.cwd(), buildTool.configFilePath);
 
   if (buildTool.name === 'next') {
     /**
      * Create config file for 'next' project
      * Check next router for rsc configuration (App router uses React Server Components)
      */
-    const nextRouter: 'app' | 'pages' = await getNextRouter()
+    const nextRouter: 'app' | 'pages' = await getNextRouter();
 
-    clack.note(`at ${chalk.green(targetFilePath)}`, `Created ${chalk.green(buildTool.configFilePath)} file`)
+    clack.note(
+      `at ${chalk.green(targetFilePath)}`,
+      `Created ${chalk.green(buildTool.configFilePath)} file`,
+    );
 
     nextRouter === 'app'
-      ? await fs.promises.writeFile(targetFilePath, buildTool.configFileContentRSC!)
-      : await fs.promises.writeFile(targetFilePath, buildTool.configFileContent)
+      ? await fs.promises.writeFile(
+          targetFilePath,
+          buildTool.configFileContentRSC!,
+        )
+      : await fs.promises.writeFile(
+          targetFilePath,
+          buildTool.configFileContent,
+        );
 
-    return
+    return;
   } else {
     /**
      * Create config file for build tools other than 'next'
      */
-    clack.note(`at ${chalk.green(targetFilePath)}`, `Created ${chalk.green(buildTool.configFilePath)} file`)
-    await fs.promises.writeFile(targetFilePath, buildTool.configFileContent)
-    return
+    clack.note(
+      `at ${chalk.green(targetFilePath)}`,
+      `Created ${chalk.green(buildTool.configFilePath)} file`,
+    );
+    await fs.promises.writeFile(targetFilePath, buildTool.configFileContent);
+    return;
   }
 }
