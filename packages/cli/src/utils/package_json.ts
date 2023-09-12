@@ -2,7 +2,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as clack from '@clack/prompts'
 import { PackageDotJson } from '../types'
-import { abort } from './clack_utils'
+import { abort } from './utils'
 
 /**
  * Get the package.json dependencies and devDependencies

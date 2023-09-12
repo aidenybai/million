@@ -3,7 +3,7 @@ import * as path from 'path'
 import * as clack from '@clack/prompts'
 import chalk from 'chalk'
 import { BuildTool } from '../types'
-import { abortIfCancelled, getNextRouter } from './clack_utils'
+import { abortIfCancelled, getNextRouter } from './utils'
 import { buildTools } from './constants'
 import { modifyConfigFile } from './modify_config'
 
@@ -52,7 +52,7 @@ export async function handleConfigFile(): Promise<void> {
     // Modify existing config file
     clack.note(
       `found existing ${detectedBuildTool.configFilePath} file.`,
-      `Transforming ${chalk.green(detectedBuildTool.configFilePath)}`,
+      `Transforming ${chalk.cyan(detectedBuildTool.configFilePath)}`,
     )
     await modifyConfigFile(detectedBuildTool)
     return

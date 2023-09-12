@@ -1,12 +1,13 @@
 import { BuildTool } from '../types'
 import * as path from 'path'
 import * as fs from 'fs'
-import { abort, getNextRouter } from './clack_utils'
+import { abort, getNextRouter, highlightCodeDifferences } from './utils'
 import chalk from 'chalk'
 
 export async function modifyConfigFile(detectedBuildTool: BuildTool) {
   try {
     let configFileContent = await getExistingConfigContent(detectedBuildTool)
+    const oldCode = configFileContent
     const filePath = path.join(process.cwd(), detectedBuildTool.configFilePath)
     /**
      * If the config file already has million js configured, abort
@@ -38,12 +39,14 @@ export async function modifyConfigFile(detectedBuildTool: BuildTool) {
         const newExportExpression = await wrapExportCode(detectedBuildTool, oldExportExpression!)
 
         // 3.
-        const newGenertedCode = configFileContent.replace(regex, `module.exports = ${newExportExpression}`)
+        const newCode = configFileContent.replace(regex, `module.exports = ${newExportExpression}`)
 
-        await fs.promises.writeFile(filePath, newGenertedCode, {
+        await fs.promises.writeFile(filePath, newCode, {
           encoding: 'utf-8',
           flag: 'w',
         })
+
+        highlightCodeDifferences(oldCode, newCode, detectedBuildTool)
       }
     } else if (detectedModuleType === 'esm') {
       // 1.
@@ -59,12 +62,14 @@ export async function modifyConfigFile(detectedBuildTool: BuildTool) {
         const newExportExpression = await wrapExportCode(detectedBuildTool, oldExportExpression!)
 
         // 3.
-        const newGenertedCode = configFileContent.replace(regex, `export default ${newExportExpression}`)
+        const newCode = configFileContent.replace(regex, `export default ${newExportExpression}`)
 
-        await fs.promises.writeFile(filePath, newGenertedCode, {
+        await fs.promises.writeFile(filePath, newCode, {
           encoding: 'utf-8',
           flag: 'w',
         })
+
+        highlightCodeDifferences(oldCode, newCode, detectedBuildTool)
       }
     } else {
       /**
@@ -109,7 +114,7 @@ function detectModuleType(fileContent: string): 'cjs' | 'esm' | 'unknown' {
 
 async function wrapExportCode(buildtool: BuildTool, oldExportExpression: string): Promise<string> {
   let [firstPart, ...rest]: string[] = []
-  let newExportExpression: string
+  let newExportExpression: string = ''
 
   switch (buildtool.name) {
     case 'next':

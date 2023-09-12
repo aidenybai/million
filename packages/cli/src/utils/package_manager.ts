@@ -3,7 +3,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as clack from '@clack/prompts'
 import { PackageManager } from '../types'
-import { abort, abortIfCancelled } from './clack_utils'
+import { abort, abortIfCancelled } from './utils'
 import chalk from 'chalk'
 import { setTimeout as sleep } from 'node:timers/promises'
 import { packageManagers } from './constants'
@@ -31,7 +31,7 @@ export async function installPackageWithPackageManager(
 }
 
 /**
- * Get the package manager to use. 
+ * Get the package manager to use.
  * If the package manager is not detected, ask the user to select one.
  */
 async function getPackageManager(): Promise<PackageManager> {

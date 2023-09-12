@@ -117,10 +117,16 @@ importers:
       chalk:
         specifier: ^5.3.0
         version: 5.3.0
+      diff:
+        specifier: ^5.1.0
+        version: 5.1.0
       gradient-string:
         specifier: ^2.0.2
         version: 2.0.2
     devDependencies:
+      '@types/diff':
+        specifier: ^5.0.3
+        version: 5.0.3
       '@types/gradient-string':
         specifier: ^1.1.2
         version: 1.1.2
@@ -3055,6 +3061,10 @@ packages:
 
   /@types/dedent@0.7.0:
     resolution: {integrity: sha512-EGlKlgMhnLt/cM4DbUSafFdrkeJoC9Mvnj0PUCU7tFmTjMjNRT957kXCx0wYm3JuEq4o4ZsS5vG+NlkM2DMd2A==}
+    dev: true
+
+  /@types/diff@5.0.3:
+    resolution: {integrity: sha512-amrLbRqTU9bXMCc6uX0sWpxsQzRIo9z6MJPkH1pkez/qOxuqSZVuryJAWoBRq94CeG8JxY+VK4Le9HtjQR5T9A==}
     dev: true
 
   /@types/estree-jsx@1.0.0:

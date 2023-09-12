@@ -4,7 +4,7 @@ import { intro, outro } from '@clack/prompts'
 import chalk from 'chalk'
 import gradient from 'gradient-string'
 import { installPackage } from './utils/package_manager.js'
-import { abort } from './utils/clack_utils.js'
+import { abort } from './utils/utils.js'
 import { handleConfigFile } from './utils/config.js'
 import { isPackageInstalled } from './utils/package_json.js'
 
