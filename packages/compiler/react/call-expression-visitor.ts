@@ -277,6 +277,7 @@ export const callExpressionVisitor = (
       originalComponent,
       importSource,
       globalPath,
+      programPath,
       isReact,
       unstable,
       imports: {

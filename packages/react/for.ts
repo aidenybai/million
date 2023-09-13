@@ -121,7 +121,11 @@ const createChildren = <T>(
       continue;
     }
 
-    if (typeof vnode.type === 'function' && 'callable' in vnode.type) {
+    if (
+      typeof vnode.type === 'function' &&
+      '__block_callable__' in vnode.type &&
+      vnode.type.__block_callable__
+    ) {
       const puppetComponent = vnode.type(vnode.props);
       if (MapHas$.call(REGISTRY, puppetComponent.type)) {
         const puppetBlock = MapGet$.call(REGISTRY, puppetComponent.type)!;

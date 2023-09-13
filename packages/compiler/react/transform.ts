@@ -42,6 +42,7 @@ export const transformComponent = (
     blockCache,
     originalComponent,
     globalPath,
+    programPath,
     imports,
   } = SHARED;
 
@@ -229,14 +230,10 @@ export const transformComponent = (
     SHARED,
   );
 
-  // eslint-disable-next-line prefer-const
-  let html = '';
-
   // This function will automatically populate the `dynamics` for us:
   transformJSX(
     options,
     {
-      html,
       jsx: returnStatement.argument,
       jsxPath: jsxPath.get('argument') as NodePath<t.JSXElement>,
       componentBody,
@@ -280,6 +277,11 @@ export const transformComponent = (
     }
   }
 
+  const directives = programPath.node.directives;
+  const hasUseClientDirective = directives.some((directive) => {
+    return directive.value.value === 'use client';
+  });
+
   const compiledOptions = [
     t.objectProperty(
       t.identifier('svg'),
@@ -293,8 +295,11 @@ export const transformComponent = (
             )),
       ),
     ),
+    options.server &&
+      hasUseClientDirective &&
+      t.objectProperty(t.identifier('rsc'), t.booleanLiteral(true)),
     t.objectProperty(t.identifier('shouldUpdate'), createDirtyChecker(holes)),
-  ];
+  ].filter(Boolean) as t.ObjectProperty[];
 
   const puppetFn = t.arrowFunctionExpression(
     [
@@ -348,7 +353,7 @@ export const transformComponent = (
 
   if (data.length) {
     jsxPath.insertBefore(
-      t.variableDeclaration('const', [
+      t.variableDeclaration('let', [
         ...data.map(({ id, value }) => {
           return t.variableDeclarator(id, value);
         }),
@@ -456,22 +461,23 @@ export const transformComponent = (
   callSitePath.replaceWith(masterComponentId);
 
   globalPath.insertBefore(
-    t.variableDeclaration('const', [
+    t.variableDeclaration('let', [
       t.variableDeclarator(puppetComponentId, puppetBlock),
     ]),
   );
 
-  if (isCallable) {
-    globalPath.insertBefore(
-      t.expressionStatement(
-        t.assignmentExpression(
-          '=',
-          t.memberExpression(masterComponentId, t.identifier('callable')),
-          t.booleanLiteral(true),
+  globalPath.insertBefore(
+    t.expressionStatement(
+      t.assignmentExpression(
+        '=',
+        t.memberExpression(
+          masterComponentId,
+          t.identifier('__block_callable__'),
         ),
+        t.booleanLiteral(isCallable),
       ),
-    );
-  }
+    ),
+  );
 
   if (t.isIdentifier(RawComponent)) {
     blockCache.set(RawComponent.name, masterComponentId);
@@ -547,7 +553,6 @@ export const extractLayers = (
 export const transformJSX = (
   options: Options,
   {
-    html,
     jsx,
     jsxPath,
     componentBody,
@@ -555,7 +560,6 @@ export const transformJSX = (
     dynamics,
     isRoot,
   }: {
-    html: string;
     jsx: t.JSXElement;
     jsxPath: NodePath<t.JSXElement>;
     componentBody: t.BlockStatement;

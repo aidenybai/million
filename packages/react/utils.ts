@@ -1,5 +1,7 @@
 import { Fragment, createElement, isValidElement } from 'react';
 import { createPortal } from 'react-dom';
+import { createRoot, hydrateRoot } from 'react-dom/client';
+import { useContextBridge, FiberProvider } from 'its-fine';
 import { REGISTRY, RENDER_SCOPE } from './constants';
 import type { ComponentProps, ReactNode, Ref } from 'react';
 import type { VNode } from '../million';
@@ -12,8 +14,6 @@ export const processProps = (
   portals: MillionPortal[],
 ) => {
   const processedProps: ComponentProps<any> = { ref };
-
-  console.log(props, ref, portals);
 
   let currentIndex = 0;
 
@@ -36,6 +36,10 @@ export const processProps = (
   return processedProps;
 };
 
+const wrap = (vnode: ReactNode): ReactNode => {
+  return createElement(RENDER_SCOPE, { suppressHydrationWarning: true }, vnode);
+};
+
 export const renderReactScope = (
   vnode: ReactNode,
   unstable: boolean,
@@ -44,43 +48,73 @@ export const renderReactScope = (
   server: boolean,
 ) => {
   const el = portals?.[currentIndex]?.current;
-  if (typeof window === 'undefined' || (server && !el)) {
-    return createElement(
-      RENDER_SCOPE,
-      { suppressHydrationWarning: true },
-      vnode,
-    );
-  }
-
-  if (
+  const isBlock =
     isValidElement(vnode) &&
     typeof vnode.type === 'function' &&
-    'callable' in vnode.type
-  ) {
-    if ('callable' in vnode.type) {
-      const puppetComponent = (vnode.type as any)(vnode.props);
-      if (REGISTRY.has(puppetComponent.type)) {
-        const puppetBlock = REGISTRY.get(puppetComponent.type)!;
-        if (typeof puppetBlock === 'function') {
-          return puppetBlock(puppetComponent.props);
-        }
+    '__block_callable__' in vnode.type;
+  const isCallable = isBlock && (vnode.type as any).__block_callable__;
+
+  if (typeof window === 'undefined') {
+    if (isBlock) {
+      if (isCallable) {
+        return vnode;
+      }
+      return wrap(wrap(vnode));
+    }
+    return wrap(vnode);
+  }
+
+  if (isCallable) {
+    const puppetComponent = (vnode.type as any)(vnode.props);
+    if (REGISTRY.has(puppetComponent.type)) {
+      const puppetBlock = REGISTRY.get(puppetComponent.type)!;
+      if (typeof puppetBlock === 'function') {
+        return puppetBlock(puppetComponent.props);
       }
     }
-
-    // if (vnode.type === MillionArray) {
-
-    // }
   }
 
   const current = el ?? document.createElement(RENDER_SCOPE);
   const reactPortal = createPortal(vnode, current);
+
   const millionPortal = {
     foreign: true as const,
     current,
     portal: reactPortal,
     unstable,
+    reset(newEl: HTMLElement) {
+      millionPortal.current = newEl;
+      millionPortal.portal = createPortal(vnode, newEl);
+    },
+    root: null,
+    render() {
+      const doRoot = server ? hydrateRoot : createRoot;
+
+      if (!millionPortal.root) {
+        console.log(doRoot);
+        // @ts-expect-error boo
+        millionPortal.root = doRoot(millionPortal.current);
+      }
+
+      function Wrapper() {
+        const Bridge = useContextBridge();
+        return createElement(Bridge, null, vnode);
+      }
+
+      // @ts-expect-error boo
+      millionPortal.root?.render(
+        createElement(
+          FiberProvider,
+          null,
+          createElement(Wrapper, null, vnode as any),
+        ),
+      );
+    },
   };
-  if (portals) portals[currentIndex] = millionPortal;
+
+  if (portals) {
+    // portals[currentIndex] = millionPortal;
+  }
 
   return millionPortal;
 };

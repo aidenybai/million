@@ -1,5 +1,4 @@
 import {
-  version,
   StrictMode,
   useState,
   type ComponentType,
@@ -9,19 +8,12 @@ import {
 } from 'react';
 import './style.css';
 import { ErrorBoundary } from 'react-error-boundary';
+import { FiberProvider } from 'its-fine';
+import { createRoot } from 'react-dom/client';
 
 type Module = { default: ComponentType<any> };
 
 (async () => {
-  let createRootElement;
-  if (version.startsWith('18')) {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const { createRoot } = await import('react-dom/client');
-    createRootElement = createRoot;
-  } else {
-    const ReactDOM = await import('react-dom');
-    createRootElement = ReactDOM.render;
-  }
   const modules = await Promise.all(
     Object.entries(import.meta.glob('./examples/*.tsx')).map(
       async ([key, mod]) =>
@@ -116,16 +108,11 @@ type Module = { default: ComponentType<any> };
     );
   }
 
-  version.startsWith('18')
-    ? createRootElement(document.getElementById('root')!).render(
-        <StrictMode>
-          <App />
-        </StrictMode>,
-      )
-    : createRootElement(
-        <StrictMode>
-          <App />
-        </StrictMode>,
-        document.getElementById('root')!,
-      );
+  createRoot(document.getElementById('root')!).render(
+    <StrictMode>
+      <FiberProvider>
+        <App />
+      </FiberProvider>
+    </StrictMode>,
+  );
 })();

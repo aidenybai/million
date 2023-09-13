@@ -10,6 +10,7 @@ export interface Options {
   svg?: boolean;
   as?: string;
   html?: string;
+  rsc?: boolean;
 }
 
 export interface MillionArrayProps<T> {

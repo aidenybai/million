@@ -1,4 +1,12 @@
-import { createElement, Fragment, useCallback, useMemo, useRef } from 'react';
+import {
+  createElement,
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
+import { useNearestParent, useContainer } from 'its-fine';
 import {
   block as createBlock,
   mount$,
@@ -24,18 +32,20 @@ export const block = <P extends MillionProps>(
     props: P,
     forwardedRef: Ref<any>,
   ) => {
-    const ref = useRef<HTMLElement>(null);
+    const ref = useNearestParent();
+    const container = useContainer();
     const patch = useRef<((props: P) => void) | null>(null);
     const portalRef = useRef<MillionPortal[]>([]);
 
     props = processProps(props, forwardedRef, portalRef.current);
     patch.current?.(props);
 
-    const effect = useCallback(() => {
+    useEffect(() => {
+      const parentEl = ref.current ?? container;
       const currentBlock = block(props, props.key);
-      if (ref.current && patch.current === null) {
+      if (parentEl && patch.current === null) {
         queueMicrotask$(() => {
-          mount$.call(currentBlock, ref.current!, null);
+          mount$.call(currentBlock, parentEl, null);
         });
         patch.current = (props: P) => {
           queueMicrotask$(() => {
@@ -45,15 +55,9 @@ export const block = <P extends MillionProps>(
       }
     }, []);
 
-    const marker = useMemo(() => {
-      return createElement(as ?? defaultType, { ref });
-    }, []);
-
     const vnode = createElement(
       Fragment,
       null,
-      marker,
-      createElement(Effect, { effect }),
       ...portalRef.current.map((p) => p.portal),
     );
 

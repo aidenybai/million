@@ -44,6 +44,7 @@ export abstract class AbstractBlock {
   /* mount */ abstract m(
     parent?: HTMLElement,
     refNode?: Node | null,
+    hydrateNode?: HTMLElement | null,
   ): HTMLElement;
   /* move */ abstract v(
     block: AbstractBlock | null,

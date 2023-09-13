@@ -11,6 +11,7 @@ export interface Shared {
   originalComponent: t.VariableDeclarator | t.FunctionDeclaration;
   importSource: t.StringLiteral;
   globalPath: NodePath;
+  programPath: NodePath<t.Program>;
   isReact: boolean;
   unstable: boolean;
   imports: {
