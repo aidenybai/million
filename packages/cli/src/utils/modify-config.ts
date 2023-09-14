@@ -36,6 +36,7 @@ export async function modifyConfigFile(detectedBuildTool: BuildTool) {
      */
     if (detectedModuleType === 'cjs') {
       // 1.
+
       const importStatement = `const million = require('million/compiler')\n`;
       configFileContent = importStatement + configFileContent;
 
@@ -66,6 +67,7 @@ export async function modifyConfigFile(detectedBuildTool: BuildTool) {
     } else if (detectedModuleType === 'esm') {
       // 1.
       const importStatement = `import million from 'million/compiler'\n`;
+
       configFileContent = importStatement + configFileContent;
 
       // 2.

@@ -4,24 +4,28 @@ import type { BuildTool, PackageManager } from '../types';
  * Package managers
  */
 
+
 export const yarn: PackageManager = {
   name: 'yarn',
   label: 'Yarn',
   lockFile: 'yarn.lock',
   installCommand: 'yarn add',
 };
+
 export const pnpm: PackageManager = {
   name: 'pnpm',
   label: 'pnpm',
   lockFile: 'pnpm-lock.yaml',
   installCommand: 'pnpm install',
 };
+
 export const npm: PackageManager = {
   name: 'npm',
   label: 'npm',
   lockFile: 'package-lock.json',
   installCommand: 'npm install',
 };
+
 export const bun: PackageManager = {
   name: 'bun',
   label: 'bun',
