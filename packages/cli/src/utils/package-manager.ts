@@ -1,23 +1,34 @@
 import { exec } from 'child_process';
-import * as fs from 'fs';
 import * as path from 'path';
 import { setTimeout as sleep } from 'node:timers/promises';
+import { detect } from '@antfu/ni';
 import * as clack from '@clack/prompts';
 import chalk from 'chalk';
 import { abort, abortIfCancelled } from './utils';
-import { packageManagers } from './constants';
+import { npm, pnpm, yarn, bun, packageManagers } from './constants';
 import type { PackageManager } from '../types';
 
 /**
  * Detect package manager by checking if the lock file exists.
  */
-export function detectPackageManger(): PackageManager | null {
-  for (const packageManager of packageManagers) {
-    if (fs.existsSync(path.join(process.cwd(), packageManager.lockFile))) {
-      return packageManager;
-    }
+export async function detectPackageManger(): Promise<PackageManager | null> {
+  const packageManager = await detect({
+    programmatic: true,
+    cwd: path.join(process.cwd()),
+  });
+
+  switch (packageManager) {
+    case 'yarn':
+      return yarn;
+    case 'pnpm':
+      return pnpm;
+    case 'npm':
+      return npm;
+    case 'bun':
+      return bun;
+    default:
+      return null;
   }
-  return null;
 }
 
 /**
@@ -38,7 +49,7 @@ async function getPackageManager(): Promise<PackageManager> {
   const s = clack.spinner();
   s.start('Detecting package manager.');
 
-  const detectedPackageManager = detectPackageManger();
+  const detectedPackageManager = await detectPackageManger();
   await sleep(1000);
   s.stop(
     `${chalk.bold(
