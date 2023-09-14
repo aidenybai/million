@@ -37,7 +37,7 @@ export async function modifyConfigFile(detectedBuildTool: BuildTool) {
     if (detectedModuleType === 'cjs') {
       // 1.
 
-      const importStatement = `const million = require('million/compiler')\n`;
+      const importStatement = `const million = require('million/compiler');\n`;
       configFileContent = importStatement + configFileContent;
 
       // 2.
@@ -66,7 +66,7 @@ export async function modifyConfigFile(detectedBuildTool: BuildTool) {
       }
     } else if (detectedModuleType === 'esm') {
       // 1.
-      const importStatement = `import million from 'million/compiler'\n`;
+      const importStatement = `import million from 'million/compiler';\n`;
 
       configFileContent = importStatement + configFileContent;
 
@@ -253,6 +253,6 @@ async function handleNextCase(oldExportExpression: string): Promise<string> {
   return `million.next(
   ${oldExportExpression}, { auto: ${
     nextRouter === 'app' ? '{ rsc: true }' : 'true'
-  }}
+  } }
 )`;
 }
