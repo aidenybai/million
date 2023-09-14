@@ -1,6 +1,6 @@
 {
   "name": "million",
-  "version": "2.6.0-beta.13",
+  "version": "2.6.0-beta.14",
   "description": "The Virtual DOM Replacement For React",
   "main": "dist/packages/million.mjs",
   "module": "dist/packages/million.mjs",
@@ -22,6 +22,7 @@
   },
   "files": [
     "dist/**/*",
+    "packages/cli/dist/index.js",
     "react.d.ts",
     "jsx-runtime.d.ts",
     "compiler.d.ts",
@@ -30,6 +31,9 @@
     "preact-server.d.ts",
     "types.d.ts"
   ],
+  "bin": {
+    "million": "./packages/cli/dist/index.js"
+  },
   "exports": {
     ".": {
       "import": {
