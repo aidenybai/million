@@ -1,3 +1,4 @@
+import million from 'million/compiler'
 import nextra from 'nextra';
 
 const withNextra = nextra({
@@ -14,4 +15,6 @@ const nextConfig = {
 };
 
 // eslint-disable-next-line import/no-default-export
-export default withNextra(nextConfig);
+export default million.next(
+  withNextra(nextConfig), { auto: true}
+);
