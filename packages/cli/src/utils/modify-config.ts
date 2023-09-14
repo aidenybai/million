@@ -1,7 +1,13 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import chalk from 'chalk';
-import { abort, getNextRouter, highlightCodeDifferences } from './utils';
+import * as clack from '@clack/prompts';
+import {
+  abort,
+  abortIfCancelled,
+  getNextRouter,
+  highlightCodeDifferences,
+} from './utils';
 import type { BuildTool } from '../types';
 
 export async function modifyConfigFile(detectedBuildTool: BuildTool) {
@@ -30,6 +36,7 @@ export async function modifyConfigFile(detectedBuildTool: BuildTool) {
      */
     if (detectedModuleType === 'cjs') {
       // 1.
+
       const importStatement = `const million = require('million/compiler');\n`;
       configFileContent = importStatement + configFileContent;
 
@@ -60,6 +67,7 @@ export async function modifyConfigFile(detectedBuildTool: BuildTool) {
     } else if (detectedModuleType === 'esm') {
       // 1.
       const importStatement = `import million from 'million/compiler';\n`;
+
       configFileContent = importStatement + configFileContent;
 
       // 2.
@@ -92,12 +100,31 @@ export async function modifyConfigFile(detectedBuildTool: BuildTool) {
        *  Refer user to read installation docs
        * */
 
-      abort(
+      return abort(
         `${chalk.yellow(
           `Could not detect module type for ${detectedBuildTool.configFilePath}.`,
-        )}\nPlease refer docs:${chalk.cyan(
+        )}\nPlease refer docs to setup manually:${chalk.cyan(
           'https://million.dev/docs/install#use-the-compiler',
-        )} to setup manually.`,
+        )} `,
+      );
+    }
+
+    const confirmation = await abortIfCancelled(
+      clack.confirm({
+        message: 'Do these changes to your config file cause errors?',
+        initialValue: false,
+      }),
+    );
+    if (confirmation) {
+      await fs.promises.writeFile(filePath, oldCode, {
+        encoding: 'utf-8',
+        flag: 'w',
+      });
+
+      return abort(
+        `Reverted the changes. \nPlease refer docs for manual setup: ${chalk.cyan(
+          `https://million.dev/docs/install#use-the-compiler`,
+        )}`,
       );
     }
   } catch (e) {
