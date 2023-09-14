@@ -9,11 +9,45 @@ import { Callout, Tabs, Tab, Steps } from 'nextra-theme-docs';
 
 Million.js assumes that you've already initialized a React project. If you haven't, we recommend checking out [react.dev](https://react.dev) first.
 
-If you're just looking to try out Million.js, check out the [quickstart](/docs/quickstart).
-
 <Callout type="info">
   Million.js is compatible with React 16 and above. If you're using an older version of React, you'll need to upgrade first.
 </Callout>
+
+## Run the CLI
+
+The Million.js CLI will automatically install the package and configure your project for you.
+
+<Tabs items={['npm', 'pnpm', 'yarn', 'bun']} storageKey="selected-pkg-manager">
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  npx million@latest
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  pnpx million@latest
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  yarn create million@latest
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  bunx million@latest
+  ```
+  </Tab>
+</Tabs>
+
+
+## Manual installation
+
+In the case you want more granular control over the installation process, you can follow the steps below.
 
 <Tabs items={['Automatic', 'Manual']} storageKey="mode">
 
