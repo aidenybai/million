@@ -15,6 +15,7 @@
   },
   "rules": "Rules of Blocks",
   "virtualization": "Virtualization",
+  "common-errors": "Common Errors",
   "typescript": "Usage with TypeScript",
   "internals": "Internals"
 }
