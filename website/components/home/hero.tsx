@@ -148,7 +148,7 @@ export function Companies() {
           src={OpenSaucedLogo as string}
           width={150}
           height={25}
-          className="invert"
+          className="invert dark:invert-0"
           alt="OpenSauced"
         />
       ),
