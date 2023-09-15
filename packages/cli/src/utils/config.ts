@@ -16,7 +16,7 @@ export function detectBuildTool(): BuildTool | null {
   for (const buildTool of buildTools) {
     for (const fileName of buildTool.possibleFileNames) {
       /**
-       * Check for all extentions
+       * Check for all extensions
        */
       if (fs.existsSync(path.join(process.cwd(), fileName))) {
         const currentbuildTool = { ...buildTool, configFilePath: fileName };
