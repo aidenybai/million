@@ -111,11 +111,11 @@ export async function modifyConfigFile(detectedBuildTool: BuildTool) {
 
     const confirmation = await abortIfCancelled(
       clack.confirm({
-        message: 'Do these changes to your config file cause errors?',
-        initialValue: false,
+        message: 'Does the config file look good?',
+        initialValue: true,
       }),
     );
-    if (confirmation) {
+    if (!confirmation) {
       await fs.promises.writeFile(filePath, oldCode, {
         encoding: 'utf-8',
         flag: 'w',

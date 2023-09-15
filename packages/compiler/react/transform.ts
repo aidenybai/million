@@ -14,6 +14,7 @@ import {
   isStatic,
   isJSXFragment,
   hasStyledAttributes,
+  isSensitiveElement,
 } from './utils';
 import { optimize } from './optimize';
 import { evaluate } from './evaluator';
@@ -1012,10 +1013,19 @@ export const transformJSX = (
          * <div><For each={[1, 2, 3]}>{i => <div>{i}</div>}</For></div>
          * ```
          */
+        const expressionPath = resolvePath(
+          jsxPath.get(`children.${i}.expression`),
+        );
+        const hasSensitive =
+          expressionPath.parentPath?.isJSXExpressionContainer() &&
+          t.isJSXElement(expressionPath.parentPath.parent) &&
+          isSensitiveElement(expressionPath.parentPath.parent);
+
         if (
           t.isCallExpression(expression) &&
           t.isMemberExpression(expression.callee) &&
-          t.isIdentifier(expression.callee.property, { name: 'map' })
+          t.isIdentifier(expression.callee.property, { name: 'map' }) &&
+          !hasSensitive
         ) {
           const For = imports.addNamed('For');
           const jsxFor = t.jsxIdentifier(For.name);
@@ -1037,7 +1047,6 @@ export const transformJSX = (
           continue;
         }
 
-        const expressionPath = jsxPath.get(`children.${i}.expression`);
         /**
          * Handles JSX conditionals and shoves them into a render scope:
          *
@@ -1071,14 +1080,29 @@ export const transformJSX = (
           continue;
         }
 
-        if (
-          expressionPath.find(
-            (path) => path.isJSXElement() || path.isJSXFragment(),
-          )
-        ) {
+        let foundJsxInExpression = false;
+        expressionPath.traverse({
+          JSXElement(path) {
+            foundJsxInExpression = true;
+            path.stop();
+          },
+          JSXFragment(path) {
+            foundJsxInExpression = true;
+            path.stop();
+          },
+        });
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        if (foundJsxInExpression) {
           const id = createPortal(() => {
+            if (hasSensitive) {
+              return jsxPath.replaceWith(
+                isRoot
+                  ? t.expressionStatement(id!)
+                  : t.jsxExpressionContainer(id!),
+              );
+            }
             jsx.children[i] = t.jsxExpressionContainer(id!);
-          }, [expression, t.booleanLiteral(unstable)]);
+          }, [hasSensitive ? jsx : expression, t.booleanLiteral(unstable)]);
 
           continue;
         }
