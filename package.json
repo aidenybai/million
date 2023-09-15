@@ -145,6 +145,7 @@
     "@babel/plugin-syntax-jsx": "^7.21.4",
     "@babel/plugin-syntax-typescript": "^7.21.4",
     "@babel/types": "^7.21.3",
+    "@sentry/integrations": "^7.69.0",
     "@sentry/node": "^7.69.0",
     "kleur": "^4.1.5",
     "rollup": "^3.28.0",

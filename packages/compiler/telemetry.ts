@@ -32,6 +32,7 @@ import {
   runWithAsyncContext,
   startSpan,
 } from '@sentry/node';
+import { CaptureConsole } from '@sentry/integrations';
 
 export async function withTelemetry<F>(
   options: {
@@ -80,7 +81,7 @@ function createSentryInstance(enabled: boolean, integration: string) {
     tracesSampleRate: 1,
     sampleRate: 1,
 
-    integrations: [new Integrations.Http()],
+    integrations: [new Integrations.Http(), new CaptureConsole()],
 
     stackParser: defaultStackParser,
 
