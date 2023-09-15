@@ -12,6 +12,13 @@ import type { BuildTool } from '../types';
 
 export async function modifyConfigFile(detectedBuildTool: BuildTool) {
   try {
+    const auto = await abortIfCancelled(
+      clack.confirm({
+        message: 'Do you want to enable automatic mode?',
+        initialValue: true,
+      }),
+    );
+
     let configFileContent = await getExistingConfigContent(detectedBuildTool);
     const oldCode = configFileContent;
     const filePath = path.join(process.cwd(), detectedBuildTool.configFilePath);
@@ -49,6 +56,7 @@ export async function modifyConfigFile(detectedBuildTool: BuildTool) {
         const newExportExpression = await wrapExportCode(
           detectedBuildTool,
           oldExportExpression!,
+          auto,
         );
 
         // 3.
@@ -164,6 +172,7 @@ function detectModuleType(fileContent: string): 'cjs' | 'esm' | 'unknown' {
 async function wrapExportCode(
   buildtool: BuildTool,
   oldExportExpression: string,
+  auto = true,
 ): Promise<string> {
   let [firstPart, ...rest]: string[] = [];
 
@@ -172,7 +181,7 @@ async function wrapExportCode(
       /**
        * million.next(nextConfig, millionConfig);
        * */
-      return handleNextCase(oldExportExpression);
+      return handleNextCase(oldExportExpression, auto);
     case 'vite':
       /**
        * defineConfig({
@@ -180,9 +189,9 @@ async function wrapExportCode(
        * });
        */
       [firstPart, ...rest] = oldExportExpression.split('plugins: [');
-      return `${firstPart!}plugins: [million.vite({ auto: true }), ${rest.join(
-        'plugins: [',
-      )}`;
+      return `${firstPart!}plugins: [million.vite({ auto: ${String(
+        auto,
+      )} }), ${rest.join('plugins: [')}`;
 
     case 'astro':
       /**
@@ -193,9 +202,9 @@ async function wrapExportCode(
        * });
        */
       [firstPart, ...rest] = oldExportExpression.split('plugins: [');
-      return `${firstPart!}plugins: [million.vite({ mode: 'react', server: true, auto: true }), ${rest.join(
-        'plugins: [',
-      )}`;
+      return `${firstPart!}plugins: [million.vite({ mode: 'react', server: true, auto: ${String(
+        auto,
+      )} }), ${rest.join('plugins: [')}`;
 
     case 'gatsby':
       /**
@@ -206,9 +215,9 @@ async function wrapExportCode(
        * }
        */
       [firstPart, ...rest] = oldExportExpression.split('plugins: [');
-      return `${firstPart!}[plugins: million.webpack({ mode: 'react', server: true, auto: true }), ${rest.join(
-        'plugins: [',
-      )}`;
+      return `${firstPart!}[plugins: million.webpack({ mode: 'react', server: true, auto: ${String(
+        auto,
+      )} }), ${rest.join('plugins: [')}`;
     case 'craco':
       /**
        * {
@@ -218,9 +227,9 @@ async function wrapExportCode(
        * }
        */
       [firstPart, ...rest] = oldExportExpression.split('plugins: [');
-      return `${firstPart!}plugins: [million.webpack({ auto: true }), ${rest.join(
-        'plugins: [',
-      )}`;
+      return `${firstPart!}plugins: [million.webpack({ auto: ${String(
+        auto,
+      )} }), ${rest.join('plugins: [')}`;
 
     case 'webpack':
       /**
@@ -229,9 +238,9 @@ async function wrapExportCode(
        * }
        */
       [firstPart, ...rest] = oldExportExpression.split('plugins: [');
-      return `${firstPart!}plugins: [million.webpack({ auto: true }), ${rest.join(
-        'plugins: [',
-      )}`;
+      return `${firstPart!}plugins: [million.webpack({ auto: ${String(
+        auto,
+      )} }), ${rest.join('plugins: [')}`;
 
     case 'rollup':
       /**
@@ -240,19 +249,22 @@ async function wrapExportCode(
        * }
        */
       [firstPart, ...rest] = oldExportExpression.split('plugins: [');
-      return `${firstPart!}plugins: [million.rollup({ auto: true }), ${rest.join(
-        'plugins: [',
-      )}`;
+      return `${firstPart!}plugins: [million.rollup({ auto: ${String(
+        auto,
+      )} }), ${rest.join('plugins: [')}`;
     default:
       return '';
   }
 }
 
-async function handleNextCase(oldExportExpression: string): Promise<string> {
+async function handleNextCase(
+  oldExportExpression: string,
+  auto = true,
+): Promise<string> {
   const nextRouter: 'app' | 'pages' = await getNextRouter();
   return `million.next(
   ${oldExportExpression}, { auto: ${
-    nextRouter === 'app' ? '{ rsc: true }' : 'true'
+    auto ? (nextRouter === 'app' ? '{ rsc: true }' : 'true') : 'false'
   } }
 )`;
 }

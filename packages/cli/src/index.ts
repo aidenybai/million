@@ -2,7 +2,6 @@
 
 import { intro, outro } from '@clack/prompts';
 import chalk from 'chalk';
-import gradient from 'gradient-string';
 import { installPackage } from './utils/package-manager.js';
 import { abort } from './utils/utils.js';
 import { handleConfigFile } from './utils/config.js';
@@ -30,7 +29,6 @@ main().catch(() => {
 });
 
 function showWelcomeScreen() {
-  const textGradient = gradient('#efa0a5', '#a788ec');
-  const text = `${chalk.bold(textGradient('Million.js'))}`;
+  const text = `${chalk.bold(chalk.bgMagentaBright(' million '))}`;
   return text;
 }
