@@ -16,6 +16,7 @@ import {
   styleLinks,
   stylePrimaryMessage,
 } from './react/utils';
+import { withTelemetry } from './telemetry';
 import type { PluginObj, PluginItem } from '@babel/core';
 import type * as t from '@babel/types';
 
@@ -27,6 +28,7 @@ export interface Options {
   auto?:
     | boolean
     | { threshold?: number; rsc?: boolean; skip?: (string | RegExp)[] };
+  telemetry?: boolean;
   _file?: string;
 }
 
@@ -124,31 +126,68 @@ export const babelPlugin = declare((api, options: Options) => {
 
   const blockCache = new Map<string, t.Identifier>();
 
+  const baseTelemetryConfig = {
+    enabled: options.telemetry ?? true,
+    name: 'compiler',
+  };
+
   const plugin: PluginObj = {
     name: 'million',
     visitor: {
       JSXElement(path) {
-        handleVisitorError(() => {
-          if (!jsxElementVisitor) return;
-          jsxElementVisitor(path, file);
-        }, options.mute);
+        void withTelemetry(
+          {
+            ...baseTelemetryConfig,
+            integration: 'for',
+          },
+          () => {
+            handleVisitorError(() => {
+              if (!jsxElementVisitor) return;
+              jsxElementVisitor(path, file);
+            }, options.mute);
+          },
+        );
       },
       CallExpression(path) {
-        handleVisitorError(() => {
-          callExpressionVisitor(path, blockCache, file);
-        }, options.mute);
+        void withTelemetry(
+          {
+            ...baseTelemetryConfig,
+            integration: 'block',
+          },
+          () => {
+            handleVisitorError(() => {
+              callExpressionVisitor(path, blockCache, file);
+            }, options.mute);
+          },
+        );
       },
       FunctionDeclaration(path) {
-        handleVisitorError(() => {
-          if (!componentVisitor) return;
-          componentVisitor(path, file);
-        }, options.mute);
+        void withTelemetry(
+          {
+            ...baseTelemetryConfig,
+            integration: 'automatic',
+          },
+          () => {
+            handleVisitorError(() => {
+              if (!componentVisitor) return;
+              componentVisitor(path, file);
+            }, options.mute);
+          },
+        );
       },
       VariableDeclarator(path) {
-        handleVisitorError(() => {
-          if (!componentVisitor) return;
-          componentVisitor(path, file);
-        }, options.mute);
+        void withTelemetry(
+          {
+            ...baseTelemetryConfig,
+            integration: 'automatic',
+          },
+          () => {
+            handleVisitorError(() => {
+              if (!componentVisitor) return;
+              componentVisitor(path, file);
+            }, options.mute);
+          },
+        );
       },
     },
     post() {
