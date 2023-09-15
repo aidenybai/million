@@ -1,0 +1,21 @@
+---
+title: 'Common Errors With Million.js Integration'
+description: 'How to overcome common errors when using Million.js with other technologies'
+---
+
+import { Callout } from 'nextra-theme-docs';
+
+<Callout>This page is a stub</Callout>
+
+# Common Errors
+
+You are probably here because you are having issues integrating your existing project with Million.js.
+
+## MobX Integration
+
+- Upgrade to MobX v6
+- Remove decorators
+
+## twin.macro
+
+Million.js does not work with `twin.macro` due to their JSX transform override.

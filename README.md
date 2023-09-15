@@ -39,32 +39,17 @@ Million.js works with React. Million.js makes creating web apps just as easy (It
 
 **TL;DR:** Imagine [React](https://react.dev) components running at the speed of raw JavaScript.
 
-### [**📚 Learn Million.js in <5 minutes! →**](https://million.dev/)
+### [**👉 Setup Million.js in seconds! →**](https://million.dev/)
 
-## Example Usage
+## Installation
 
-Million.js is a library that enables you to create _blocks_. A block is a special [Higher Order Components (HOCs)](https://legacy.reactjs.org/docs/higher-order-components.html) that can be used as a React component but are hyper-optimized for rendering speed.
+The Million.js CLI will automatically install the package and configure your project for you.
 
-Below is an example of a React "counter" component that's been wrapped with Million.js.
-
-```jsx
-import { useState } from 'react';
-import { block } from 'million/react';
-
-// Just wrap Counter in a block() function!
-const Counter = block(function Counter({ initialCount }) {
-  const [count, setCount] = useState(initialCount);
-  const handleClick = () => {
-    setCount(count + 1);
-  };
-
-  return <button onClick={handleClick}>{count}</button>;
-});
-
-export default Counter;
+```bash
+npx million@latest
 ```
 
-[**→ Try the quickstart**](https://million.dev/docs/quickstart)
+[**→ View the installation guide**](https://million.dev/docs/install)
 
 ## Codebase
 

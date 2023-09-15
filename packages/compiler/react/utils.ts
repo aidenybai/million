@@ -58,6 +58,16 @@ export const getValidSpecifiers = (
   return validSpecifiers;
 };
 
+export const isSensitiveElement = (jsx: t.JSXElement) => {
+  // elements that break when the children are not in a specific format
+  const sensitiveElements = ['select'];
+
+  return (
+    t.isJSXIdentifier(jsx.openingElement.name) &&
+    sensitiveElements.includes(jsx.openingElement.name.name)
+  );
+};
+
 export const hasStyledAttributes = (attribute: t.JSXAttribute) => {
   return attribute.name.name === 'tw' || attribute.name.name === 'css';
 };
