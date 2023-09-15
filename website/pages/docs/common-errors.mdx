@@ -4,28 +4,18 @@ description: 'How to overcome common errors when using Million.js with other tec
 ---
 
 import { Callout } from 'nextra-theme-docs';
-import CommonErrorVideo from '../.././components/common-error-video';
+
+<Callout>This page is a stub</Callout>
 
 # Common Errors
 
-You are probably here because you got yelled at by your project after adding Million.js.
+You are probably here because you are having issues integrating your existing project with Million.js.
 
-For example, something of the sort 👇👇👇
+## MobX Integration
 
-<div>
-  <CommonErrorVideo />
-</div>
+- Upgrade to MobX v6
+- Remove decorators
 
-The above video happens to be an error raised by someone that wanted to integrate Million into their project.
+## twin.macro
 
-## MobX Errors
-
-"One of the biggest things in mobx 6 was that they removed decorators "Due to standardized JavaScript limitations 
-in how class fields are constructed, it is no longer possible for MobX to alter the behavior of class fields by means of decorators or the decorate utility. 
-Instead, fields have to be made observable by the constructor." - [Nobert Torok](https://github.com/norbertorok92)
-
-### Solution To MobX Error
-
-<Callout type="info">
- When using MobX, it is advisable to upgrade to V6 and remove decorators
-</Callout>
+Million.js does not work with `twin.macro` due to their JSX transform override.
