@@ -1,0 +1,31 @@
+---
+title: 'Common Errors With Million.js Integration'
+description: 'How to overcome common errors when using Million.js with other technologies'
+---
+
+import { Callout } from 'nextra-theme-docs';
+import CommonErrorVideo from '../.././components/common-error-video';
+
+# Common Errors
+
+You are probably here because you got yelled at by your project after adding Million.js.
+
+For example, something of the sort 👇👇👇
+
+<div>
+  <CommonErrorVideo />
+</div>
+
+The above video happens to be an error raised by someone that wanted to integrate Million into their project.
+
+## MobX Errors
+
+"One of the biggest things in mobx 6 was that they removed decorators "Due to standardized JavaScript limitations 
+in how class fields are constructed, it is no longer possible for MobX to alter the behavior of class fields by means of decorators or the decorate utility. 
+Instead, fields have to be made observable by the constructor." - [Nobert Torok](https://github.com/norbertorok92)
+
+### Solution To MobX Error
+
+<Callout type="info">
+ When using MobX, it is advisable to upgrade to V6 and remove decorators
+</Callout>
