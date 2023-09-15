@@ -4,7 +4,6 @@ import type { BuildTool, PackageManager } from '../types';
  * Package managers
  */
 
-
 export const yarn: PackageManager = {
   name: 'yarn',
   label: 'Yarn',
@@ -49,11 +48,11 @@ const next: BuildTool = {
 const nextConfig = {
   reactStrictMode: true,
 };
-  
+
 const millionConfig = {
   auto: true,
-}
-  
+};
+
 export default million.next(nextConfig, millionConfig);`,
   configFileContentRSC: `import million from 'million/compiler';
 
@@ -64,7 +63,7 @@ const nextConfig = {
 
 const millionConfig = {
   auto: { rsc: true },
-}
+};
 
 export default million.next(nextConfig, millionConfig);
 `,
@@ -91,12 +90,12 @@ const gatsby: BuildTool = {
   configFilePath: 'gatsby-node.js',
   possibleFileNames: ['gatsby-node.js'],
   configFileContent: `const million = require('million/compiler');
-   
+
 exports.onCreateWebpackConfig = ({ actions }) => {
   actions.setWebpackConfig({
     plugins: [million.webpack({ mode: 'react', server: true, auto: true })],
   })
-}`,
+};`,
 };
 const vite: BuildTool = {
   name: 'vite',
@@ -146,7 +145,7 @@ module.exports = {
   plugins: [
     million.webpack({ auto: true }),
   ],
-}`,
+};`,
 };
 const rollup: BuildTool = {
   name: 'rollup',
@@ -160,7 +159,7 @@ const rollup: BuildTool = {
     'rollup.config.cjs',
   ],
   configFileContent: `import million from 'million/compiler';
-  
+
 export default {
   plugins: [million.rollup({ auto: true })],
 };`,
