@@ -84,36 +84,13 @@ export const renderReactScope = (
     unstable,
     reset(newEl: HTMLElement) {
       millionPortal.current = newEl;
+      newEl.textContent = '';
       millionPortal.portal = createPortal(vnode, newEl);
-    },
-    root: null,
-    render() {
-      const doRoot = server ? hydrateRoot : createRoot;
-
-      if (!millionPortal.root) {
-        console.log(doRoot);
-        // @ts-expect-error boo
-        millionPortal.root = doRoot(millionPortal.current);
-      }
-
-      function Wrapper() {
-        const Bridge = useContextBridge();
-        return createElement(Bridge, null, vnode);
-      }
-
-      // @ts-expect-error boo
-      millionPortal.root?.render(
-        createElement(
-          FiberProvider,
-          null,
-          createElement(Wrapper, null, vnode as any),
-        ),
-      );
     },
   };
 
   if (portals) {
-    // portals[currentIndex] = millionPortal;
+    portals[currentIndex] = millionPortal;
   }
 
   return millionPortal;

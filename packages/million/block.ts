@@ -86,7 +86,13 @@ export const mount = (
   return mount$.call(block, parent, null, hydrateNode);
 };
 
-export const patch = (oldBlock: AbstractBlock, newBlock: AbstractBlock) => {
+export const patch = (
+  oldBlock: AbstractBlock,
+  newBlock: AbstractBlock | null,
+) => {
+  if (!newBlock) {
+    return remove$.call(oldBlock);
+  }
   if ('b' in oldBlock || 'b' in newBlock) {
     arrayPatch$.call(oldBlock, newBlock as ArrayBlock);
   }
@@ -162,7 +168,6 @@ export class Block extends AbstractBlock {
 
             const targetEl = value.current;
             el[TEXT_NODE_CACHE][k] = targetEl;
-            value.render();
             if (!hydrateNode) {
               insertBefore$.call(el, targetEl, childAt(el, edit.i!));
             }
@@ -273,7 +278,6 @@ export class Block extends AbstractBlock {
             } else {
               newValue.current = targetEl;
             }
-            newValue.render();
 
             continue;
           }

@@ -157,9 +157,3 @@ export const babelPlugin = declare((api, options: Options) => {
   };
   return plugin;
 });
-
-export const normalizePlugins = (
-  plugins: (PluginItem | false | undefined | null)[],
-) => {
-  return plugins.filter((plugin) => plugin) as PluginItem[];
-};

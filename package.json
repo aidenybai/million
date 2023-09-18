@@ -137,7 +137,7 @@
   "bugs": {
     "url": "https://github.com/aidenybai/million/issues"
   },
-  "homepage": "https://github.com/aidenybai/million",
+  "homepage": "https://million.dev",
   "prettier": "@vercel/style-guide/prettier",
   "dependencies": {
     "@babel/core": "^7.21.0",
