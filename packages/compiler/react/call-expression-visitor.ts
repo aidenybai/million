@@ -160,9 +160,10 @@ export const callExpressionVisitor = (
       const isComponentNamed =
         t.isFunctionExpression(RawComponent) && t.isIdentifier(RawComponent.id);
 
-      const anonymousComponentId = callSitePath.scope.generateUidIdentifier(
-        isComponentNamed ? RawComponent.id!.name : 'anonymous$',
-      );
+      const unique = globalPath.scope.generateUid('');
+      const anonymousComponentId = isComponentNamed
+        ? RawComponent.id!
+        : t.identifier(`M${unique}`);
 
       /**
        * const anonymous = () => <div />;

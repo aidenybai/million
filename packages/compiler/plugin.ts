@@ -24,6 +24,7 @@ export interface Options {
   server?: boolean;
   mode?: 'react' | 'preact' | 'react-server' | 'preact-server' | 'vdom';
   mute?: boolean | 'info';
+  hmr?: boolean;
   auto?:
     | boolean
     | { threshold?: number; rsc?: boolean; skip?: (string | RegExp)[] };
@@ -61,6 +62,7 @@ export const intro = (options: Options) => {
 
 export const unplugin = createUnplugin((options: Options) => {
   options ??= {};
+
   return {
     enforce: 'pre',
     name: 'million',
@@ -85,6 +87,14 @@ export const unplugin = createUnplugin((options: Options) => {
       const result = await transformAsync(code, { plugins, filename: id });
 
       return result?.code || null;
+    },
+    vite: {
+      configResolved(config) {
+        options.hmr =
+          config.server.hmr &&
+          !config.isProduction &&
+          config.command !== 'build';
+      },
     },
   };
 });
