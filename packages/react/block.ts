@@ -35,7 +35,6 @@ export const block = <P extends MillionProps>(
     const effect = useCallback(() => {
       if (!ref.current) return;
       const currentBlock = block(props, props.key);
-      console.log(hmrTimestamp);
       if (hmrTimestamp) ref.current.textContent = '';
       if (patch.current === null || hmrTimestamp) {
         queueMicrotask$(() => {

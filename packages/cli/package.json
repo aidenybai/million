@@ -32,7 +32,7 @@
     "diff": "^5.1.0"
   },
   "scripts": {
-    "prepare": "esbuild --bundle src/index.ts --platform=node --outfile=dist/index.js",
+    "prepare": "node build.mjs",
     "link": "yarn unlink --global && chmod +x dist/index.js && yarn link",
     "dev": "node ./dist/index.js",
     "prepublishOnly": "pnpm run build",
@@ -43,6 +43,7 @@
     "@types/gradient-string": "^1.1.2",
     "@types/node": "^18.14.1",
     "esbuild": "^0.14.54",
+    "esbuild-plugin-replace": "^1.4.0",
     "prettier": "^2.8.4",
     "typescript": "^5.1.6"
   }
