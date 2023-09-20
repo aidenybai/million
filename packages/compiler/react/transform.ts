@@ -15,6 +15,7 @@ import {
   isJSXFragment,
   hasStyledAttributes,
   isSensitiveElement,
+  getUniqueId,
 } from './utils';
 import { optimize } from './optimize';
 import { evaluate } from './evaluator';
@@ -209,7 +210,7 @@ export const transformComponent = (
    * }
    * ```
    */
-  const unique = Math.random().toString(36).substring(2, 16);
+  const unique = getUniqueId();
   const masterComponentId = t.isIdentifier(originalComponent.id)
     ? originalComponent.id
     : t.identifier(`M${unique}`);

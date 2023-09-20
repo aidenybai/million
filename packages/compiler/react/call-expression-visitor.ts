@@ -6,6 +6,7 @@ import {
   resolveCorrectImportSource,
   resolvePath,
   TRANSFORM_ANNOTATION,
+  getUniqueId,
 } from './utils';
 import { transformComponent } from './transform';
 import { collectImportedBindings } from './bindings';
@@ -160,7 +161,7 @@ export const callExpressionVisitor = (
       const isComponentNamed =
         t.isFunctionExpression(RawComponent) && t.isIdentifier(RawComponent.id);
 
-      const unique = globalPath.scope.generateUid('');
+      const unique = getUniqueId();
       const anonymousComponentId = isComponentNamed
         ? RawComponent.id!
         : t.identifier(`M${unique}`);
