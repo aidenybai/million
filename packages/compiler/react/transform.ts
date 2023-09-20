@@ -15,6 +15,7 @@ import {
   isJSXFragment,
   hasStyledAttributes,
   isSensitiveElement,
+  getUniqueId,
 } from './utils';
 import { optimize } from './optimize';
 import { evaluate } from './evaluator';
@@ -209,12 +210,11 @@ export const transformComponent = (
    * }
    * ```
    */
-  const masterComponentId = callSitePath.scope.generateUidIdentifier(
-    t.isIdentifier(originalComponent.id)
-      ? originalComponent.id.name
-      : 'master$',
-  );
-  const puppetComponentId = callSitePath.scope.generateUidIdentifier('puppet$');
+  const unique = getUniqueId();
+  const masterComponentId = t.isIdentifier(originalComponent.id)
+    ? originalComponent.id
+    : t.identifier(`M${unique}`);
+  const puppetComponentId = t.identifier(`P${unique}`);
 
   const block = imports.addNamed('block');
 
@@ -356,6 +356,15 @@ export const transformComponent = (
   const puppetJsxAttributes = dynamics.data.map(({ id }) =>
     t.jsxAttribute(t.jsxIdentifier(id.name), t.jsxExpressionContainer(id)),
   );
+
+  if (options.hmr) {
+    puppetJsxAttributes.push(
+      t.jsxAttribute(
+        t.jsxIdentifier('_hmr'),
+        t.stringLiteral(String(Date.now())),
+      ),
+    );
+  }
 
   /**
    * We want to change the Component's return from our original JSX

@@ -3,20 +3,14 @@ import { createUnplugin } from 'unplugin';
 import { transformAsync } from '@babel/core';
 import pluginSyntaxJsx from '@babel/plugin-syntax-jsx';
 import pluginSyntaxTypescript from '@babel/plugin-syntax-typescript';
-import { blue } from 'kleur/colors';
+import { dim, magenta } from 'kleur/colors';
 import { visitor as legacyVdomVisitor } from './vdom';
 import {
   callExpressionVisitor as reactCallExpressionVisitor,
   jsxElementVisitor as reactJsxElementVisitor,
   componentVisitor as reactComponentVisitor,
 } from './react';
-import {
-  handleVisitorError,
-  styleCommentMessage,
-  styleLinks,
-  stylePrimaryMessage,
-} from './react/utils';
-import { withTelemetry } from './telemetry';
+import { handleVisitorError } from './react/utils';
 import type { PluginObj, PluginItem } from '@babel/core';
 import type * as t from '@babel/types';
 
@@ -25,44 +19,27 @@ export interface Options {
   server?: boolean;
   mode?: 'react' | 'preact' | 'react-server' | 'preact-server' | 'vdom';
   mute?: boolean | 'info';
+  hmr?: boolean;
   auto?:
     | boolean
     | { threshold?: number; rsc?: boolean; skip?: (string | RegExp)[] };
-  telemetry?: boolean;
   _file?: string;
 }
 
 let hasIntroRan = false;
-export const intro = (options: Options) => {
+export const intro = () => {
   if (hasIntroRan) return;
   hasIntroRan = true;
-  const comment = `${
-    styleLinks(
-      'Schedule a call if you need help: https://million.dev/hotline. To disable help messages, set the "mute" option to true.',
-    ) +
-    styleCommentMessage(
-      '\nThere is no guarantee that features in beta will be completely production ready, so here be dragons.',
-    )
-  }\n\n${blue('💡 TIP')}: Use ${styleCommentMessage(
-    '// million-ignore',
-  )} to skip over problematic components.`;
 
-  if (options.optimize) {
-    // eslint-disable-next-line no-console
-    console.log(
-      stylePrimaryMessage(`Optimizing compiler is enabled ✓ (beta)`, comment),
-    );
-  }
-  if (options.auto) {
-    // eslint-disable-next-line no-console
-    console.log(
-      stylePrimaryMessage(`Automatic mode is enabled ✓ (beta)`, comment),
-    );
-  }
+  // eslint-disable-next-line no-console
+  console.log(`\n  ${magenta(`⚡ Million.js ${process.env.VERSION || ''}`)}
+  - Tip:     use ${dim('// million-ignore')} for errors
+  - Hotline: https://million.dev/hotline\n`);
 };
 
 export const unplugin = createUnplugin((options: Options) => {
   options ??= {};
+
   return {
     enforce: 'pre',
     name: 'million',
@@ -88,13 +65,21 @@ export const unplugin = createUnplugin((options: Options) => {
 
       return result?.code || null;
     },
+    vite: {
+      configResolved(config) {
+        options.hmr =
+          config.server.hmr &&
+          !config.isProduction &&
+          config.command !== 'build';
+      },
+    },
   };
 });
 
 export const babelPlugin = declare((api, options: Options) => {
   api.assertVersion(7);
 
-  intro(options);
+  intro();
 
   const file = options._file!;
   let callExpressionVisitor: ReturnType<typeof reactCallExpressionVisitor>;
@@ -126,68 +111,31 @@ export const babelPlugin = declare((api, options: Options) => {
 
   const blockCache = new Map<string, t.Identifier>();
 
-  const baseTelemetryConfig = {
-    enabled: options.telemetry ?? true,
-    name: 'compiler',
-  };
-
   const plugin: PluginObj = {
     name: 'million',
     visitor: {
       JSXElement(path) {
-        void withTelemetry(
-          {
-            ...baseTelemetryConfig,
-            integration: 'for',
-          },
-          () => {
-            handleVisitorError(() => {
-              if (!jsxElementVisitor) return;
-              jsxElementVisitor(path, file);
-            }, options.mute);
-          },
-        );
+        handleVisitorError(() => {
+          if (!jsxElementVisitor) return;
+          jsxElementVisitor(path, file);
+        }, options.mute);
       },
       CallExpression(path) {
-        void withTelemetry(
-          {
-            ...baseTelemetryConfig,
-            integration: 'block',
-          },
-          () => {
-            handleVisitorError(() => {
-              callExpressionVisitor(path, blockCache, file);
-            }, options.mute);
-          },
-        );
+        handleVisitorError(() => {
+          callExpressionVisitor(path, blockCache, file);
+        }, options.mute);
       },
       FunctionDeclaration(path) {
-        void withTelemetry(
-          {
-            ...baseTelemetryConfig,
-            integration: 'automatic',
-          },
-          () => {
-            handleVisitorError(() => {
-              if (!componentVisitor) return;
-              componentVisitor(path, file);
-            }, options.mute);
-          },
-        );
+        handleVisitorError(() => {
+          if (!componentVisitor) return;
+          componentVisitor(path, file);
+        }, options.mute);
       },
       VariableDeclarator(path) {
-        void withTelemetry(
-          {
-            ...baseTelemetryConfig,
-            integration: 'automatic',
-          },
-          () => {
-            handleVisitorError(() => {
-              if (!componentVisitor) return;
-              componentVisitor(path, file);
-            }, options.mute);
-          },
-        );
+        handleVisitorError(() => {
+          if (!componentVisitor) return;
+          componentVisitor(path, file);
+        }, options.mute);
       },
     },
     post() {
@@ -196,9 +144,3 @@ export const babelPlugin = declare((api, options: Options) => {
   };
   return plugin;
 });
-
-export const normalizePlugins = (
-  plugins: (PluginItem | false | undefined | null)[],
-) => {
-  return plugins.filter((plugin) => plugin) as PluginItem[];
-};

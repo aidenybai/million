@@ -23,12 +23,6 @@ importers:
       '@babel/types':
         specifier: ^7.21.3
         version: 7.21.3
-      '@sentry/integrations':
-        specifier: ^7.69.0
-        version: 7.69.0
-      '@sentry/node':
-        specifier: ^7.69.0
-        version: 7.69.0
       kleur:
         specifier: ^4.1.5
         version: 4.1.5
@@ -39,6 +33,9 @@ importers:
         specifier: ^1.3.1
         version: 1.3.1
     devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^5.0.2
+        version: 5.0.2(rollup@3.28.0)
       '@types/babel-types':
         specifier: ^7.0.11
         version: 7.0.11
@@ -123,6 +120,12 @@ importers:
       '@clack/prompts':
         specifier: ^0.7.0
         version: 0.7.0
+      '@sentry/integrations':
+        specifier: ^7.69.0
+        version: 7.69.0
+      '@sentry/node':
+        specifier: ^7.69.0
+        version: 7.69.0
       chalk:
         specifier: ^5.3.0
         version: 5.3.0
@@ -142,6 +145,9 @@ importers:
       esbuild:
         specifier: ^0.14.54
         version: 0.14.54
+      esbuild-plugin-replace:
+        specifier: ^1.4.0
+        version: 1.4.0
       prettier:
         specifier: ^2.8.4
         version: 2.8.4
@@ -173,8 +179,6 @@ importers:
       '@types/babel__helper-plugin-utils':
         specifier: ^7.10.0
         version: 7.10.0
-
-  packages/jsx-runtime: {}
 
   packages/kitchen-sink:
     dependencies:
@@ -5282,6 +5286,12 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /esbuild-plugin-replace@1.4.0:
+    resolution: {integrity: sha512-lP3ZAyzyRa5JXoOd59lJbRKNObtK8pJ/RO7o6vdjwLi71GfbL32NR22ZuS7/cLZkr10/L1lutoLma8E4DLngYg==}
+    dependencies:
+      magic-string: 0.25.9
+    dev: true
 
   /esbuild-sunos-64@0.14.54:
     resolution: {integrity: sha512-28GZ24KmMSeKi5ueWzMcco6EBHStL3B6ubM7M51RmPwXQGLe0teBGJocmWhgwccA1GeFXqxzILIxXpHbl9Q/Kw==}

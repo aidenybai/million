@@ -6,7 +6,7 @@ const AUTO_ARCHIVE_OPTIONS = [
   14 * 86400, // 2 weeks
   28 * 86400, // 4 weeks
   90 * 86400, // 3 months
-  365 * 86400, // 1 year
+  365 * 864000, // 1 year
 ];
 
 const ArchiveAllPrefGroup = block(() => {

@@ -1,5 +1,5 @@
 import * as t from '@babel/types';
-import { dim, green, red, underline, yellow } from 'kleur/colors';
+import { dim, green, underline, yellow } from 'kleur/colors';
 import {
   addNamedCache,
   handleVisitorError,
@@ -240,32 +240,14 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
       ? (improvement * 100).toFixed(0)
       : '∞';
 
-    const depthFormatted = Number(averageDepth.toFixed(2));
-
     if (!options.mute || options.mute === 'info') {
-      const calculationNote = dim(
-        `   ${green(info.elements)} nodes, ${green(
-          info.attributes,
-        )} attributes, ${green(info.text)} texts, ${red(
-          info.components,
-        )} components, and ${red(
-          info.expressions,
-        )} expressions. Average depth = ${green(depthFormatted)}. (${green(
-          good,
-        )} - ${red(bad)}) / (${green(good)} + ${red(bad)}) = ${green(
-          improvementFormatted,
-        )}%.`,
-      );
-
       // eslint-disable-next-line no-console
       console.log(
         styleSecondaryMessage(
-          `${yellow(
-            `<${rawComponent.id.name}>`,
-          )} was optimized. Estimated reconciliation improvement: ${green(
+          `${yellow(`<${rawComponent.id.name}>`)} now renders ${green(
             underline(`~${improvementFormatted}%`),
-          )} faster.\n${calculationNote}`,
-          '⚡',
+          )} faster`,
+          ' ⚡',
         ),
       );
     }

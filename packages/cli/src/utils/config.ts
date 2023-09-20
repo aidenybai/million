@@ -2,8 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as clack from '@clack/prompts';
 import chalk from 'chalk';
-// eslint-disable-next-line import/no-relative-packages
-import { withTelemetry } from '../../../compiler/telemetry';
+import { withTelemetry } from '../../telemetry';
 import { buildTools } from './constants';
 import { modifyConfigFile } from './modify-config';
 import { abortIfCancelled, getNextRouter } from './utils';
@@ -48,7 +47,11 @@ export async function getBuildTool(): Promise<BuildTool> {
   return selectedBuildTool;
 }
 
-export async function handleConfigFile({ telemetry }): Promise<void> {
+export async function handleConfigFile({
+  telemetry,
+}: {
+  telemetry: boolean;
+}): Promise<void> {
   // Create or Modify config file
   const detectedBuildTool = detectBuildTool();
 

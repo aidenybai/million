@@ -59,6 +59,7 @@ export async function withTelemetry<F>(
         status: 'ok',
         op: `${options.name}.flow`,
       },
+      // eslint-disable-next-line @typescript-eslint/require-await
       async () => runWithAsyncContext(callback),
     );
   } catch (e) {
