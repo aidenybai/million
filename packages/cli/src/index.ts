@@ -29,6 +29,8 @@ main().catch(() => {
 });
 
 function showWelcomeScreen() {
-  const text = `${chalk.bold(chalk.bgMagentaBright(' million '))}`;
+  const text = chalk.magentaBright(
+    `⚡ Million.js ${process.env.VERSION || ''}`,
+  );
   return text;
 }
