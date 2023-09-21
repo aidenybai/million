@@ -1,7 +1,7 @@
 {
   "name": "million",
   "version": "2.6.0",
-  "description": "The Virtual DOM Replacement For React",
+  "description": "Make React Faster. Automatically.",
   "main": "dist/packages/million.mjs",
   "module": "dist/packages/million.mjs",
   "jsdelivr": "dist/packages/million.mjs",
