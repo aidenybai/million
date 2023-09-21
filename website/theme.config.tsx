@@ -238,7 +238,11 @@ const config: DocsThemeConfig = {
   },
   toc: {
     float: true,
+    backToTop: true,
     extraContent: ExtraContent,
+  },
+  nextThemes: {
+    defaultTheme: 'dark',
   },
   useNextSeoProps() {
     const { asPath } = useRouter();

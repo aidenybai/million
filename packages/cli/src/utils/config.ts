@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as clack from '@clack/prompts';
 import chalk from 'chalk';
+import { withTelemetry } from '../../telemetry';
 import { buildTools } from './constants';
 import { modifyConfigFile } from './modify-config';
 import { abortIfCancelled, getNextRouter } from './utils';
@@ -14,7 +15,7 @@ export function detectBuildTool(): BuildTool | null {
   for (const buildTool of buildTools) {
     for (const fileName of buildTool.possibleFileNames) {
       /**
-       * Check for all extentions
+       * Check for all extensions
        */
       if (fs.existsSync(path.join(process.cwd(), fileName))) {
         const currentbuildTool = { ...buildTool, configFilePath: fileName };
@@ -46,7 +47,11 @@ export async function getBuildTool(): Promise<BuildTool> {
   return selectedBuildTool;
 }
 
-export async function handleConfigFile(): Promise<void> {
+export async function handleConfigFile({
+  telemetry,
+}: {
+  telemetry: boolean;
+}): Promise<void> {
   // Create or Modify config file
   const detectedBuildTool = detectBuildTool();
 
@@ -56,7 +61,16 @@ export async function handleConfigFile(): Promise<void> {
       `found existing ${detectedBuildTool.configFilePath} file.`,
       `Transforming ${chalk.cyan(detectedBuildTool.configFilePath)}`,
     );
-    await modifyConfigFile(detectedBuildTool);
+    await withTelemetry(
+      {
+        enabled: telemetry,
+        integration: detectBuildTool.name,
+        name: 'cli',
+      },
+      async () => {
+        await modifyConfigFile(detectedBuildTool);
+      },
+    );
     return;
   }
 

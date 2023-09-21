@@ -7,18 +7,24 @@ import { abort } from './utils/utils.js';
 import { handleConfigFile } from './utils/config.js';
 import { isPackageInstalled } from './utils/package-json.js';
 
-async function runMillionWizard(): Promise<void> {
+async function runMillionWizard({
+  telemetry,
+}: {
+  telemetry: boolean;
+}): Promise<void> {
   const isMillionAlreadyInstalled = await isPackageInstalled();
   await installPackage({
     packageName: 'million',
     alreadyInstalled: isMillionAlreadyInstalled,
   });
-  await handleConfigFile();
+  await handleConfigFile({ telemetry });
 }
+
+const TELEMETRY_ENABLED = !process.argv.includes('--no-telemetry');
 
 async function main() {
   intro(showWelcomeScreen());
-  await runMillionWizard();
+  await runMillionWizard({ telemetry: TELEMETRY_ENABLED });
   outro(`${chalk.bold.green('✓ ')} You're all set!`);
 }
 
@@ -29,6 +35,8 @@ main().catch(() => {
 });
 
 function showWelcomeScreen() {
-  const text = `${chalk.bold(chalk.bgMagentaBright(' million '))}`;
+  const text = chalk.magentaBright(
+    `⚡ Million.js ${process.env.VERSION || ''}`,
+  );
   return text;
 }

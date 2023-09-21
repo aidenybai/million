@@ -8,6 +8,8 @@ import type { Options } from '../plugin';
 export const RENDER_SCOPE = 'slot';
 export const TRANSFORM_ANNOTATION = 'million:transform';
 
+export const getUniqueId = () => Math.random().toString(36).substring(2, 16);
+
 export const getValidSpecifiers = (
   importDeclarationPath: NodePath<t.ImportDeclaration>,
   aliases: Record<string, string>,
