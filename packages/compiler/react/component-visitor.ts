@@ -41,6 +41,7 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
     >;
 
     // Next.js React Server Components support
+    // TODO: refactor this so it supports children components of client components.
     if (typeof options.auto === 'object' && options.auto.rsc) {
       const directives = programPath.node.directives;
       if (!directives.length) return; // we assume it's server component only

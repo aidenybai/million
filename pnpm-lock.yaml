@@ -23,9 +23,6 @@ importers:
       '@babel/types':
         specifier: ^7.21.3
         version: 7.21.3
-      its-fine:
-        specifier: ^1.1.1
-        version: 1.1.1(react@18.2.0)
       kleur:
         specifier: ^4.1.5
         version: 4.1.5
@@ -183,6 +180,8 @@ importers:
         specifier: ^7.10.0
         version: 7.10.0
 
+  packages/jsx-runtime: {}
+
   packages/kitchen-sink:
     dependencies:
       '@tanstack/react-query':
@@ -194,9 +193,6 @@ importers:
       axios:
         specifier: ^1.4.0
         version: 1.4.0
-      its-fine:
-        specifier: ^1.1.1
-        version: 1.1.1(react@18.2.0)
       jotai:
         specifier: ^2.3.1
         version: 2.3.1(@types/react@18.2.20)(react@18.2.0)
@@ -3223,12 +3219,6 @@ packages:
     dependencies:
       '@types/react': 18.2.20
     dev: true
-
-  /@types/react-reconciler@0.28.4:
-    resolution: {integrity: sha512-Xd55E2aLI9Q/ikDQEmfRzIwYJs4oO0h9ZHA3FZDakzt1WR6JMZcpqtCZlF97I72KVjoY4rHXU5TfvkRDOyr/rg==}
-    dependencies:
-      '@types/react': 18.2.20
-    dev: false
 
   /@types/react@18.2.20:
     resolution: {integrity: sha512-WKNtmsLWJM/3D5mG4U84cysVY31ivmyw85dE84fOCk5Hx78wezB/XEjVPWl2JTZ5FkEeaTJf+VgUAUn3PE7Isw==}
@@ -6944,15 +6934,6 @@ packages:
       html-escaper: 2.0.2
       istanbul-lib-report: 3.0.1
     dev: true
-
-  /its-fine@1.1.1(react@18.2.0):
-    resolution: {integrity: sha512-v1Ia1xl20KbuSGlwoaGsW0oxsw8Be+TrXweidxD9oT/1lAh6O3K3/GIM95Tt6WCiv6W+h2M7RB1TwdoAjQyyKw==}
-    peerDependencies:
-      react: '>=18.0'
-    dependencies:
-      '@types/react-reconciler': 0.28.4
-      react: 18.2.0
-    dev: false
 
   /jiti@1.19.3:
     resolution: {integrity: sha512-5eEbBDQT/jF1xg6l36P+mWGGoH9Spuy0PCdSr2dtWRDGC6ph/w9ZCL4lmESW8f8F7MwT3XKescfP0wnZWAKL9w==}

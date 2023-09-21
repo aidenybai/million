@@ -1,7 +1,5 @@
 import { Fragment, createElement, isValidElement } from 'react';
 import { createPortal } from 'react-dom';
-import { createRoot, hydrateRoot } from 'react-dom/client';
-import { useContextBridge, FiberProvider } from 'its-fine';
 import { REGISTRY, RENDER_SCOPE } from './constants';
 import type { ComponentProps, ReactNode, Ref } from 'react';
 import type { VNode } from '../million';
@@ -84,7 +82,7 @@ export const renderReactScope = (
     unstable,
     reset(newEl: HTMLElement) {
       millionPortal.current = newEl;
-      newEl.textContent = '';
+      // newEl.textContent = '';
       millionPortal.portal = createPortal(vnode, newEl);
     },
   };

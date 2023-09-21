@@ -8,7 +8,6 @@ import {
 } from 'react';
 import './style.css';
 import { ErrorBoundary } from 'react-error-boundary';
-import { FiberProvider } from 'its-fine';
 import { createRoot } from 'react-dom/client';
 
 type Module = { default: ComponentType<any> };
