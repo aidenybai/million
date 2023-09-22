@@ -345,11 +345,12 @@ export const transformComponent = (
 
   if (data.length) {
     jsxPath.insertBefore(
-      t.variableDeclaration('const', [
-        ...data.map(({ id, value }) => {
+      t.variableDeclaration(
+        'const',
+        data.map(({ id, value }) => {
           return t.variableDeclarator(id, value);
         }),
-      ]),
+      ),
     );
   }
 
