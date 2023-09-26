@@ -1,7 +1,7 @@
 import * as t from '@babel/types';
 import { type NodePath } from '@babel/core';
 import { addNamed } from '@babel/helper-module-imports';
-import { bgMagenta, cyan, magenta, dim } from 'kleur/colors';
+import { cyan, magenta, dim } from 'kleur/colors';
 import { collectImportedBindings } from './bindings';
 import type { Options } from '../plugin';
 
