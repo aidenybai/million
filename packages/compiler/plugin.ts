@@ -33,8 +33,7 @@ export const intro = () => {
 
   const tips = [
     `use ${dim('// million-ignore')} for errors`,
-    `use { threshold: ? } to adjust optimization sensitivity (default=0.1)`,
-    `use { mute: true } to disable info logs`,
+    `enable { mute: true } to disable info logs`,
   ];
 
   // eslint-disable-next-line no-console
