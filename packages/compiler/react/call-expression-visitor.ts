@@ -235,8 +235,8 @@ export const callExpressionVisitor = (
           t.isFunctionExpression(forwardRefComponent) ||
           t.isArrowFunctionExpression(forwardRefComponent)
         ) {
-          const anonymousComponentId =
-            componentDeclarationPath.scope.generateUidIdentifier('anonymous$');
+          const unique = getUniqueId();
+          const anonymousComponentId = t.identifier(`M${unique}`);
           componentDeclarationPath.parentPath.insertBefore(
             t.variableDeclaration('const', [
               t.variableDeclarator(

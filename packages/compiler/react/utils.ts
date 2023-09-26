@@ -94,12 +94,8 @@ export const createError = (message: string, path: NodePath, file: string) => {
   );
 };
 
-export const stylePrimaryMessage = (message: string, comment: string) => {
-  return `\n🦁 ${bgMagenta(' million ')} ${magenta(message)} \n${comment}\n`;
-};
-
 export const styleSecondaryMessage = (message: string, emoticon: string) => {
-  return `${magenta(emoticon)} ${message}`;
+  return `${magenta(emoticon)}${message}`;
 };
 
 export const styleLinks = (message: string) => {

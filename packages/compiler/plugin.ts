@@ -3,7 +3,7 @@ import { createUnplugin } from 'unplugin';
 import { transformAsync } from '@babel/core';
 import pluginSyntaxJsx from '@babel/plugin-syntax-jsx';
 import pluginSyntaxTypescript from '@babel/plugin-syntax-typescript';
-import { dim, magenta } from 'kleur/colors';
+import { dim, magenta, bold, cyan } from 'kleur/colors';
 import { visitor as legacyVdomVisitor } from './vdom';
 import {
   callExpressionVisitor as reactCallExpressionVisitor,
@@ -31,10 +31,18 @@ export const intro = () => {
   if (hasIntroRan) return;
   hasIntroRan = true;
 
+  const tips = [
+    `use ${dim('// million-ignore')} for errors`,
+    `use { threshold: ? } to adjust optimization sensitivity (default=0.1)`,
+    `use { mute: true } to disable info logs`,
+  ];
+
   // eslint-disable-next-line no-console
-  console.log(`\n  ${magenta(`⚡ Million.js ${process.env.VERSION || ''}`)}
-  - Tip:     use ${dim('// million-ignore')} for errors
-  - Hotline: https://million.dev/hotline\n`);
+  console.log(`\n  ${bold(
+    magenta(`⚡ Million.js ${process.env.VERSION || ''}`),
+  )}
+  - Tip:     ${tips[Math.floor(Math.random() * tips.length)] as string}
+  - Hotline: ${cyan('https://million.dev/hotline')}\n`);
 };
 
 export const unplugin = createUnplugin((options: Options) => {
