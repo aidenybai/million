@@ -180,6 +180,8 @@ importers:
         specifier: ^7.10.0
         version: 7.10.0
 
+  packages/jsx-runtime: {}
+
   packages/kitchen-sink:
     dependencies:
       '@tanstack/react-query':

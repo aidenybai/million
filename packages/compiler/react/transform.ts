@@ -458,8 +458,14 @@ export const transformComponent = (
    * const master = (props) => {
    * ```
    */
-  Component.id = masterComponentId;
 
+  if (
+    t.isIdentifier(Component.id) &&
+    Component.id.name === masterComponentId.name
+  ) {
+    masterComponentId.name = `${masterComponentId.name}_${getUniqueId()}`;
+  }
+  Component.id = masterComponentId;
   callSitePath.replaceWith(masterComponentId);
 
   globalPath.insertBefore(
@@ -473,7 +479,10 @@ export const transformComponent = (
       t.expressionStatement(
         t.assignmentExpression(
           '=',
-          t.memberExpression(masterComponentId, t.identifier('callable')),
+          t.memberExpression(
+            masterComponentId,
+            t.identifier('__block_callable__'),
+          ),
           t.booleanLiteral(true),
         ),
       ),
