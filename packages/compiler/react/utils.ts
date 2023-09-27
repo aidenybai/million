@@ -8,7 +8,30 @@ import type { Options } from '../plugin';
 export const RENDER_SCOPE = 'slot';
 export const TRANSFORM_ANNOTATION = 'million:transform';
 
-export const getUniqueId = () => Math.random().toString(36).substring(2, 16);
+export const getUniqueId = (path: NodePath, name: string): t.Identifier => {
+  const processedName = t
+    .toIdentifier(name)
+    .replace(/^_+/, '')
+    .replace(/[0-9]+$/g, '');
+
+  let uid: string;
+  let i = 0;
+  do {
+    uid = processedName;
+    if (i > 1) uid += i;
+    i++;
+  } while (
+    path.scope.hasLabel(uid) ||
+    path.scope.hasBinding(uid) ||
+    path.scope.hasGlobal(uid) ||
+    path.scope.hasReference(uid)
+  );
+
+  path.scope.references[uid] = true;
+  path.scope.uids[uid] = true;
+
+  return t.identifier(uid);
+};
 
 export const getValidSpecifiers = (
   importDeclarationPath: NodePath<t.ImportDeclaration>,

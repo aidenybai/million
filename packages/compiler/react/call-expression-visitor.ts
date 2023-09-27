@@ -161,10 +161,9 @@ export const callExpressionVisitor = (
       const isComponentNamed =
         t.isFunctionExpression(RawComponent) && t.isIdentifier(RawComponent.id);
 
-      const unique = getUniqueId();
       const anonymousComponentId = isComponentNamed
         ? RawComponent.id!
-        : t.identifier(`M${unique}`);
+        : getUniqueId(globalPath, 'M');
 
       /**
        * const anonymous = () => <div />;
@@ -235,8 +234,7 @@ export const callExpressionVisitor = (
           t.isFunctionExpression(forwardRefComponent) ||
           t.isArrowFunctionExpression(forwardRefComponent)
         ) {
-          const unique = getUniqueId();
-          const anonymousComponentId = t.identifier(`M${unique}`);
+          const anonymousComponentId = getUniqueId(globalPath, 'M');
           componentDeclarationPath.parentPath.insertBefore(
             t.variableDeclaration('const', [
               t.variableDeclarator(
