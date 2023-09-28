@@ -109,9 +109,7 @@ type Module = { default: ComponentType<any> };
 
   createRoot(document.getElementById('root')!).render(
     <StrictMode>
-      <FiberProvider>
-        <App />
-      </FiberProvider>
+      <App />
     </StrictMode>,
   );
 })();

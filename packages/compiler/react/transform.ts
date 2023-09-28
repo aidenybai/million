@@ -661,7 +661,6 @@ export const transformJSX = (
       ..._arguments,
       refCurrent,
       t.numericLiteral(index),
-      t.booleanLiteral(Boolean(options.server)),
     ]);
     const id = createDynamic(null, nestedRender, null, callback);
     return id;

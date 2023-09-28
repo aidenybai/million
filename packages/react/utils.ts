@@ -23,7 +23,6 @@ export const processProps = (
         false,
         portals,
         currentIndex++,
-        false,
       );
 
       continue;
@@ -43,7 +42,6 @@ export const renderReactScope = (
   unstable: boolean,
   portals: MillionPortal[] | undefined,
   currentIndex: number,
-  server: boolean,
 ) => {
   const el = portals?.[currentIndex]?.current;
   const isBlock =
