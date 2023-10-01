@@ -84,7 +84,7 @@ pre {
 }
 
 .component{
-background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(105,20,128,1) 51%, rgba(0,212,255,1) 100%);
+background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(105,20,128,1));
   width: 50%;
   color: #fff;
   margin: 1.4em 0;
