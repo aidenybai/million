@@ -23,10 +23,10 @@ type Module = { default: ComponentType<any> };
     createRootElement = ReactDOM.render;
   }
   const modules = await Promise.all(
-    Object.entries(import.meta.glob('./examples/*.tsx')).map(
+    Object.entries(import.meta.glob('./examples/*.{tsx,jsx}')).map(
       async ([key, mod]) =>
         [
-          key.replace('./examples/', '').replace('.tsx', ''),
+          key.replace('./examples/', '').replace('.tsx', '').replace('.jsx', ''),
           mod as () => Promise<Module>,
         ] as const,
     ),
@@ -67,7 +67,7 @@ type Module = { default: ComponentType<any> };
                 key={key}
                 disabled={hasSelected && selected === index}
               >
-                {key.replace('./examples/', '').replace('.tsx', '')}
+                {key.replace('./examples/', '').replace('.tsx', '').replace('.jsx', '')}
               </button>
             );
           })}{' '}
