@@ -1,5 +1,4 @@
 import * as t from '@babel/types';
-import generate from '@babel/generator';
 import {
   addNamedCache,
   getValidSpecifiers,

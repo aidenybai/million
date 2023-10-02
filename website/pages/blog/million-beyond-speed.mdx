@@ -1,22 +1,23 @@
 ---
 title: 'Million Beyond "Speed"'
-date: JUN 1, 2023
-description: Making React Apps Memory Efficient
+date: OCT 2, 2023
+description: Making React apps memory efficient
 ---
 
 import Image from 'next/image';
 import { Steps, Callout } from 'nextra-theme-docs';
 import { CarbonAds } from '../../components/ad';
 
+<div className="flex flex-col items-center gap-4">
+
 # Million Beyond "Speed"
 
-<div className="flex justify-center">
   <small>[RICARDO NUNEZ](https://x.com/ricardonunez-io) OCT 1 2023</small>
 </div>
 
 ---
 
-If you've heard of Million (from [Aiden Bai](https://twitter.com/aidenybai), its creator, or [Tobi Adedeji](https://twitter.com/toby_solutions)'s React puzzles on Twitter), you've probably been intrigued by the headline: "Make React 70% Faster". 
+If you've heard of Million (from [Aiden Bai](https://twitter.com/aidenybai), its creator, or [Tobi Adedeji](https://twitter.com/toby_solutions)'s React puzzles on Twitter), you've probably been intrigued by the headline: "Make React 70% Faster".
 
 Most developers have the mindset of faster being better for a multitude or reasons, namely SEO and user experience. If I could write plain React and make it as fast or faster than a lot of frameworks like Svelte and Vue (in some cases), then it's a win, right?
 
@@ -32,7 +33,7 @@ If we look at the situations where an app is running really slowly despite being
 
 ## React Without Million
 
-The way that typical React applications work without Million and without a server-side framework like Next.js is that for every component in your JSX, a transpiler (Babel) calls a function called `React.createElement()` which outputs not HTML elements but *React* elements. 
+The way that typical React applications work without Million and without a server-side framework like Next.js is that for every component in your JSX, a transpiler (Babel) calls a function called `React.createElement()` which outputs not HTML elements but *React* elements.
 
 These React elements actually create Javascript objects, so your JSX:
 
@@ -60,7 +61,7 @@ Which gets you a Javascript object that looks like this:
 
 Now, depending on how complex your component tree is, we can have nested objects (DOM Nodes) that go deeper and deeper where the root element's `props` key has hundreds or thousands of children per page.
 
-This object *is* the virtual DOM, which ReactDOM creates actual DOM nodes out of. 
+This object *is* the virtual DOM, which ReactDOM creates actual DOM nodes out of.
 
 So let's say we have only three nested divs:
 
@@ -121,7 +122,7 @@ While server-rendering doesn't require Javascript, not only does React require i
 
 Where the high memory usage comes in is in two ways: storing the large object and continuously diffing the large object. Plus extra if you're also storing state in memory as well and using external libraries which also store state in memory (which most people probably are, myself included).
 
-Storing the large object itself is a problem in memory constrained environments, because mobile and/or older devices might not have much RAM to begin with, even less so for browser tabs which are sandboxed with their own small, finite amount of memory. 
+Storing the large object itself is a problem in memory constrained environments, because mobile and/or older devices might not have much RAM to begin with, even less so for browser tabs which are sandboxed with their own small, finite amount of memory.
 
 > Ever had your browser tab refresh because it was "consuming too much energy"? That was likely a combination of both high memory usage plus continuous CPU operations that your device couldn't handle along with running these other operations like the OS, background app refreshes, keeping other browser tabs open, etc.
 
@@ -130,7 +131,7 @@ Also, diffing the large component tree means replacing old objects with new obje
 ![Object diffing process example in React](https://i.postimg.cc/q7JDzvFs/Example-Diff.png)
 *As you can see, the diffing process for even a simple component where you just change one word in a div means an object for garbage collection to get rid of. But what happens if you have thousands of these nodes in your object tree and many of them rely on dynamic state?*
 
-Immutable object stores used for state management (like with Redux) tax memory even more by continuously adding more and more nodes to their Javascript object. 
+Immutable object stores used for state management (like with Redux) tax memory even more by continuously adding more and more nodes to their Javascript object.
 
 Because this object store is immutable, it'll just continue to grow and grow, which further limits the memory available for the rest of your app to use for things like updating the DOM. All of this can create a sluggish, buggy-feeling experience for the end-user.
 
@@ -138,11 +139,11 @@ Because this object store is immutable, it'll just continue to grow and grow, wh
 
 Modern browsers are optimized for this, though, right? V8's garbage collection is incredibly optimized and runs very quickly, so is this really a problem?
 
-There are two problems with this take. 
+There are two problems with this take.
 
 1. Even if garbage collection runs quickly, garbage collection is a blocking operation, meaning it [introduces delays](https://javascript.info/garbage-collection#internal-algorithms) in subsequent Javascript rendering.
 
-  - The larger the objects are that have to be garbage collected, the longer these delays take. Eventually, there comes a point where there's so much object creation going on that garbage collection needs to run over and over again to free up memory for these new objects, which is often the case when your React app is open for a decent amount of time. 
+  - The larger the objects are that have to be garbage collected, the longer these delays take. Eventually, there comes a point where there's so much object creation going on that garbage collection needs to run over and over again to free up memory for these new objects, which is often the case when your React app is open for a decent amount of time.
 
   - If you've ever worked on optimizing a React app and left it open for a couple of hours, and you click a button only for it to take 10+ seconds to respond, you know this process.
 
@@ -159,7 +160,7 @@ So it's not that performant React is impossible. It's just that it's often not i
 
 > Note: high performance Javascript *is* possible ([I highly recommend this talk from Colt McAnlis](https://www.youtube.com/watch?v=Op52liUjvSk)), but it's also difficult to achieve, because it requires things like [object pooling](https://en.wikipedia.org/wiki/Object_pool_pattern) and static arraylist allocations to get there.
 >
-> Both of these techniques are hard to leverage in React which is componentized by nature and typically doesn't promote the usage of a large list of recycled global objects (hence Redux's large, immutable, *single* object store for example). 
+> Both of these techniques are hard to leverage in React which is componentized by nature and typically doesn't promote the usage of a large list of recycled global objects (hence Redux's large, immutable, *single* object store for example).
 >
 > However, these optimization techniques are still often used under the hood for things like [virtualized lists](/docs/virtualization) which recycle DOM nodes in large lists whose rows go out of view. You can see more of these types of React-specific optimization techniques (specifically for low-end devices like TVs) in [this talk by Seungho Park from LG](https://portal.gitnation.org/contents/overcoming-performance-limitations-in-react-components-for-embedded-devices).
 
@@ -177,7 +178,7 @@ This allows Million's performance and memory overhead to be closer to optimized 
 
 > Keep in mind, Million isn't suitable for all use cases. We'll go into where Million does/doesn't fit in later on.
 
-### Memory Usage 
+### Memory Usage
 
 In terms of memory usage, Million uses about 55% of the memory that React does on standby after the page loads, which is a substantial difference. It uses less than half the memory that React does for every single operation otherwise tested by [Krausest's JS Framework Benchmark](https://krausest.github.io/js-framework-benchmark/2023/table_chrome_113.0.5672.63.html), even on Chrome 113 (we're currently on 117).
 
@@ -193,7 +194,7 @@ As with everything, there are tradeoffs when using Million and the block DOM app
 
 ### Dynamic Components
 
-Let's say you have a highly dynamic component in which data is frequently changed. 
+Let's say you have a highly dynamic component in which data is frequently changed.
 
 For example, maybe you have an application which is consuming stock market data, and you have a component that displays the most recent 1,000 stock trades. The component itself is a list that varies the list item component that's rendered per stock trade depending on whether it was a buy or sell.
 
@@ -230,8 +231,8 @@ export function RecentTrades() {
         <ul>
             {trades.map((trade, index) => (
                 <li key={index}>
-                    {trade.includes("+") ? 
-                        <BuyComponent>BUY: {trade}</BuyComponent> 
+                    {trade.includes("+") ?
+                        <BuyComponent>BUY: {trade}</BuyComponent>
                         : <SellComponent>SELL: {trade}</SellComponent>
                     }
                 </li>
@@ -241,11 +242,11 @@ export function RecentTrades() {
 }
 ```
 
-Ignoring that there are probably more efficient ways to do this, this is a great example of where Million would *not* do well. The data is changing every second, the component being rendered depends on the data itself, and overall, there is nothing really static about this component. 
+Ignoring that there are probably more efficient ways to do this, this is a great example of where Million would *not* do well. The data is changing every second, the component being rendered depends on the data itself, and overall, there is nothing really static about this component.
 
-If you look at the returned HTML, you might think "Having an optimized `<For />` component would work great here!" However, in terms of Million's compiler (barring Million's `<For />` component) there is no way to statically analyze the returned list of elements, and in fact, cases like these are [why React was first brought about at Facebook](https://en.wikipedia.org/wiki/React_(software)#History) (the news section of their UI, a highly dynamic list). 
+If you look at the returned HTML, you might think "Having an optimized `<For />` component would work great here!" However, in terms of Million's compiler (barring Million's `<For />` component) there is no way to statically analyze the returned list of elements, and in fact, cases like these are [why React was first brought about at Facebook](https://en.wikipedia.org/wiki/React_(software)#History) (the news section of their UI, a highly dynamic list).
 
-This is a great use case for React's runtime, because manipulating the DOM directly is expensive, and doing so every second for a large list of elements is expensive as well. 
+This is a great use case for React's runtime, because manipulating the DOM directly is expensive, and doing so every second for a large list of elements is expensive as well.
 
 However, it's quicker when using something *like* React, because it will only diff and rerender this granular part of the page vs. something traditionally server rendered which might replace the entire page. Because of this, Million is better suited to handle other static parts of the page to keep React's footprint smaller.
 
@@ -255,24 +256,24 @@ Again, there's a reason React was built, and there's a reason we're choosing to 
 
 ## What *Will* Million Work Well On?
 
-We'd definitely like to see Million pushed to the limits of where it can be used, but as for right now, there are certainly sweet spots where Million shines. 
+We'd definitely like to see Million pushed to the limits of where it can be used, but as for right now, there are certainly sweet spots where Million shines.
 
-Obviously, static components are great for Million, and those are easy to imagine, so I won't go too deep into them. These could be things like blogs, landing pages, applications with CRUD-type operations where the data isn't too dynamic, etc. 
+Obviously, static components are great for Million, and those are easy to imagine, so I won't go too deep into them. These could be things like blogs, landing pages, applications with CRUD-type operations where the data isn't too dynamic, etc.
 
 However, other great use cases for Million are applications with nested data, i.e. objects with lists of data inside. This is because nested data is typically a bit slow to render due to tree traversal (i.e. going through the entire tree of data to find the datapoint your application needs).
 
 Million is optimized for this use case with our `<For />` component which is made specifically for looping over arrays as efficiently as possible and (like we mentioned before) recycling DOM nodes as you scroll rather than creating and discarding them.
 
-This is one of the examples where even with dynamic, stateful data, performance can be optimized essentially for free by just using `<For />` rather than `Array.prototype.map()` and creating DOM nodes for each item in the mapped array. 
+This is one of the examples where even with dynamic, stateful data, performance can be optimized essentially for free by just using `<For />` rather than `Array.prototype.map()` and creating DOM nodes for each item in the mapped array.
 
 For example:
 
 ```jsx
 import { For } from 'million/react';
- 
+
 export default function App() {
     const [items, setItems] = useState([1, 2, 3]);
- 
+
     return (
         <>
             <button onClick={() => setItems([...items, items.length + 1])}>
@@ -286,7 +287,7 @@ export default function App() {
 }
 ```
 
-Again, this performance can be gained almost for free with the only requirement being knowing how/when to use `<For />`. 
+Again, this performance can be gained almost for free with the only requirement being knowing how/when to use `<For />`.
 
 For example, server rendering tends to cause errors with hydration because we're not mapping array elements 1:1 with DOM nodes, and our server rendering algorithm differs to that of client rendering, but it's a great example of a dynamic, stateful component that can be optimized with Million with a bit of work!
 
@@ -296,16 +297,14 @@ And although this example uses a custom component provided by Million, this is j
 
 We certainly think so. Lots of people, when optimizing for performance look at the easiest metrics to track: page speed. It's what you can measure right away on [pagespeed.web.dev](https://pagespeed.web.dev), and while that is certainly important, initial page load time usually won't be a big draw on user experience, especially when writing a Single Page Application which is optimized for between-page transitions, not full page loads.
 
-However, avoiding and reducing memory usage where possible is also an incredibly compelling use-case for using Million JS. 
+However, avoiding and reducing memory usage where possible is also an incredibly compelling use-case for using Million JS.
 
 If each action that your user performs takes no time to complete and gives them instant feedback, then user experience feels more native, and that's typically where performance issues creep up if you're not careful, because input delay is typically highly influenced by memory usage.
 
 So is it necessary to use a virtual DOM to acheive this? We certainly *don't* think so. Especially if it means more Javascript to run, more objects to create, and more memory overhead to worry about on lower-end devices.
 
-This doesn't mean Million is a good fit for all use cases, nor will it solve all performance problems. In fact, we recommend to use it granularly, as in some cases (i.e. more dynamic data like we discussed), a virtual DOM will actually be more performant. 
+This doesn't mean Million is a good fit for all use cases, nor will it solve all performance problems. In fact, we recommend to use it granularly, as in some cases (i.e. more dynamic data like we discussed), a virtual DOM will actually be more performant.
 
 But having a tool in your toolbelt that requires almost no setup time or config will certainly get us closer to having React be a much more reliable, performant library to reach for when building an app that will live in the wild, outside of other devs' 8 core, 32GB machines.
 
 Soon, we'll be doing benchmarks on common React templates to see how Million impacts memory and performance, so stay tuned!
-
-
