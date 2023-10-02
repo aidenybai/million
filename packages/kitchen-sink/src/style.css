@@ -57,3 +57,82 @@ pre {
 }
 
 
+
+/* Music player styles */
+.body {
+  box-sizing: border-box;
+  background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(20,107,128,1) 51%, rgba(0,212,255,1) 100%);
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+.App {
+  min-height: 100vh;
+  text-align: center;
+}
+
+.music-card {
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.component{
+background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(105,20,128,1));
+  width: 50%;
+  color: #fff;
+  margin: 1.4em 0;
+  max-width: 600px;
+  padding: 1em 2em;
+  border: .1px solid black;
+  border-radius: 10px;
+}
+
+.musicCover {
+  max-width: 100%;
+  border-radius: 10%;
+}
+
+.playButton {
+  background: none;
+  border: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.subTitle {
+  margin-top: -1em;
+  color: #d3c5c5;
+}
+
+.time{
+  margin: 0 auto;
+  width: 80%;
+  display: flex;
+  justify-content: space-between;
+  color: #828282;
+  font-size: smaller;
+}
+
+.timeline {
+width: 80%;
+background-color: #27AE60;
+}
+
+input[type="range"] {
+  background-color: #27AE60;
+}
+
+@media (max-width: 900px) {
+  .component {
+    width: 50%;
+  }
+}
+
+/*  */

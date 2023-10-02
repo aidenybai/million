@@ -25,6 +25,6 @@
       "million/react-server": ["../react-server"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "node_modules/@types"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
