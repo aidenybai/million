@@ -1,4 +1,5 @@
 import * as t from '@babel/types';
+import generate from '@babel/generator';
 import {
   addNamedCache,
   getValidSpecifiers,
@@ -124,7 +125,7 @@ export const callExpressionVisitor = (
      */
     if (callSitePath.parentPath.isExportDefaultDeclaration()) {
       const exportPath = callSitePath.parentPath;
-      const exportName = callSitePath.scope.generateUidIdentifier('default$');
+      const exportName = getUniqueId(callSitePath, 'M$');
       exportPath.insertBefore(
         t.variableDeclaration('const', [
           t.variableDeclarator(exportName, callSite),
@@ -163,17 +164,14 @@ export const callExpressionVisitor = (
 
       const anonymousComponentId = isComponentNamed
         ? RawComponent.id!
-        : getUniqueId(globalPath, 'M');
+        : getUniqueId(globalPath, 'M$');
 
       /**
        * const anonymous = () => <div />;
        */
       globalPath.insertBefore(
         t.variableDeclaration('const', [
-          t.variableDeclarator(
-            anonymousComponentId,
-            t.arrowFunctionExpression(RawComponent.params, RawComponent.body),
-          ),
+          t.variableDeclarator(anonymousComponentId, RawComponent),
         ]),
       );
 
@@ -181,6 +179,7 @@ export const callExpressionVisitor = (
        * Replaces function expression with identifier
        * `block(() => ...)` to `block(anonymous)`
        */
+
       callSite.arguments[0] = anonymousComponentId;
     }
 
@@ -234,7 +233,7 @@ export const callExpressionVisitor = (
           t.isFunctionExpression(forwardRefComponent) ||
           t.isArrowFunctionExpression(forwardRefComponent)
         ) {
-          const anonymousComponentId = getUniqueId(globalPath, 'M');
+          const anonymousComponentId = getUniqueId(globalPath, 'M$');
           componentDeclarationPath.parentPath.insertBefore(
             t.variableDeclaration('const', [
               t.variableDeclarator(

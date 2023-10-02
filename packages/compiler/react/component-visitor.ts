@@ -317,7 +317,6 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
       () => visitor(rewrittenComponentPath, new Map(), file),
       'info',
     );
-    // rewrittenComponentPath.skip();
   };
 };
 
