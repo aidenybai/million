@@ -212,8 +212,8 @@ export const transformComponent = (
    */
   let masterComponentId = t.isIdentifier(originalComponent.id)
     ? originalComponent.id
-    : getUniqueId(globalPath, 'M');
-  const puppetComponentId = getUniqueId(globalPath, 'P');
+    : getUniqueId(callSitePath, 'M$');
+  const puppetComponentId = getUniqueId(callSitePath, 'P$');
 
   const block = imports.addNamed('block');
 
