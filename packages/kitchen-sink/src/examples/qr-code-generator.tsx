@@ -37,7 +37,18 @@ const QRCodeGenerator = block(() => {
         >
           <QRCode value={data} />
         </div>
-      ) : null}
+     {data && (
+        <div
+          style={{
+            display: 'inline-flex',
+            background: 'white',
+            marginTop: 32,
+            padding: 16,
+          }}
+        >
+          <QRCode value={data} />
+        </div>
+      )}
     </div>
   );
 });
