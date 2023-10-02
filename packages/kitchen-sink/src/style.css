@@ -136,3 +136,11 @@ input[type="range"] {
 }
 
 /*  */
+
+/* QR code styles */
+.qr-code-wrapper {
+  display: inline-flex;
+  background: white;
+  margin-top: 2rem;
+  padding: 1rem;
+}
