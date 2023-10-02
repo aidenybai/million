@@ -1,6 +1,6 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 import { useState } from 'react';
-import React from 'react'
+import React from 'react';
 import { block } from 'million/react';
 
 const Condition = styled.span`
@@ -52,83 +52,109 @@ const WelcomeWeatherLogo = styled.img`
   margin: 40px auto;
 `;
 
-type Weather={
-    weather:string,
-    city:string,
-    weatherDesc:string | undefined,
-    temp:any,
-}
+type Weather = {
+  weather: string;
+  city: string;
+  weatherDesc: string | undefined;
+  temp: any;
+};
 
-const WeatherComponent=block(({weather,city,weatherDesc,temp}:Weather)=>{
-    console.log(weather)
-    console.log(city)
+const WeatherComponent = block(
+  ({ weather, city, weatherDesc, temp }: Weather) => {
+    console.log(weather);
+    console.log(city);
     return (
-        <div>
-         <Condition>
-                    <span>{typeof(temp)==="number"?( <Condition>
-                    <span>{`${Math.floor(temp - 273)}°C`}</span>
-                </Condition>):(<h1>NOT DEFINED</h1>)}</span>
-                    {`  |  ${weatherDesc}`}
-                </Condition>
-            <h3 style={{textAlign:"center"}}>{city.toUpperCase()}</h3>
-        </div>
-    )
-})
+      <div>
+        <Condition>
+          <span>
+            {typeof temp === 'number' ? (
+              <Condition>
+                <span>{`${Math.floor(temp - 273)}°C`}</span>
+              </Condition>
+            ) : (
+              <h1>NOT DEFINED</h1>
+            )}
+          </span>
+          {`  |  ${weatherDesc}`}
+        </Condition>
+        <h3 style={{ textAlign: 'center' }}>{city.toUpperCase()}</h3>
+      </div>
+    );
+  },
+);
 
 export default function Weather() {
-    const [city, updatecity] =  useState<string | null>(null);;
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        updatecity(event.target.value);
-    };
-    const [weather, updateWeather] = useState();
-    const [temp, updatetemp] = useState();
-    const [weatherDesc, updateWeatherDesc] = useState();
-    const fetchWeather = async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=fe4feefa8543e06d4f3c66d92c61b69c`,
-      );
-      const data=await response.json();
-      updateWeather(data.weather[0].main)
-      updateWeatherDesc(data.weather[0].description)
-      updatetemp(data.main.temp)
+  const [city, updatecity] = useState<string | null>(null);
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    updatecity(event.target.value);
+  };
+  const [weather, updateWeather] = useState();
+  const [temp, updatetemp] = useState();
+  const [weatherDesc, updateWeatherDesc] = useState();
+  const fetchWeather = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const response = await fetch(
+      `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=fe4feefa8543e06d4f3c66d92c61b69c`,
+    );
+    const data = await response.json();
+    updateWeather(data.weather[0].main);
+    updateWeatherDesc(data.weather[0].description);
+    updatetemp(data.main.temp);
     //   console.log(data.weather[0].main);
-    };
+  };
   return (
-    <div style={{ display: "flex",
-    flexDirection:"column",
-    alignItems:"center",
-    width:"380px",
-    padding:"20px 10px",
-    margin:"auto",
-    borderRadius:"4px",
-    background: "#252525",
-    fontFamily: "Montserrat",
-    color:"white",
-  }}>
-    <span style={{
-         color: "white",
-         margin: "20px auto",
-         fontSize: "18px",
-         fontWeight: "bold",
-    }}>Weather App</span>
-        {city && weather ? (
-            <>
-        <WeatherComponent weather={weather} city={city} weatherDesc={weatherDesc} temp={temp} />
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        width: '380px',
+        padding: '20px 10px',
+        margin: 'auto',
+        borderRadius: '4px',
+        background: '#252525',
+        fontFamily: 'Montserrat',
+        color: 'white',
+      }}
+    >
+      <span
+        style={{
+          color: 'white',
+          margin: '20px auto',
+          fontSize: '18px',
+          fontWeight: 'bold',
+        }}
+      >
+        Weather App
+      </span>
+      {city && weather ? (
+        <>
+          <WeatherComponent
+            weather={weather}
+            city={city}
+            weatherDesc={weatherDesc}
+            temp={temp}
+          />
         </>
       ) : (
         <>
-        <WelcomeWeatherLogo  src={"https://ayushkul.github.io/react-weather-app/icons/perfect-day.svg"} />
-        <ChooseCityLabel>Find Weather of your city</ChooseCityLabel>
-        <SearchBox  onSubmit={async(e)=>{e.preventDefault();await fetchWeather(e)}}>
-          <input
-            onChange={handleChange}
-            placeholder="City"
+          <WelcomeWeatherLogo
+            src={
+              'https://ayushkul.github.io/react-weather-app/icons/perfect-day.svg'
+            }
           />
-          <button type={"submit"}>Search</button>
-        </SearchBox>
+          <ChooseCityLabel>Find Weather of your city</ChooseCityLabel>
+          <SearchBox
+            onSubmit={async (e) => {
+              e.preventDefault();
+              await fetchWeather(e);
+            }}
+          >
+            <input onChange={handleChange} placeholder="City" />
+            <button type={'submit'}>Search</button>
+          </SearchBox>
         </>
       )}
     </div>
-  )
+  );
 }
