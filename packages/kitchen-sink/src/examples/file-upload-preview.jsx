@@ -8,10 +8,9 @@ export default function File() {
   }
 
   const FileUpload=block(({file})=>{
-    console.log(file)
     return(
       <div className='preview' >
-      <img src={file} />
+      <img src={file} alt='file-uploaded'/>
       </div>
     )
   })
@@ -21,7 +20,7 @@ export default function File() {
          <input type="file" onChange={getFile}></input> 
         </div>
          <div style={{height:200,width:200,padding:10}}>
-         <FileUpload file={file}/>
+         {file && <FileUpload file={file}/>}
          </div>
     </div>
   );
