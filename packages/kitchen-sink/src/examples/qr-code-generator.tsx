@@ -26,26 +26,8 @@ const QRCodeGenerator = block(() => {
           Generate
         </button>
       </div>
-      {data ? (
-        <div
-          style={{
-            display: 'inline-flex',
-            background: 'white',
-            marginTop: 32,
-            padding: 16,
-          }}
-        >
-          <QRCode value={data} />
-        </div>
-     {data && (
-        <div
-          style={{
-            display: 'inline-flex',
-            background: 'white',
-            marginTop: 32,
-            padding: 16,
-          }}
-        >
+      {data && (
+        <div className="qr-code-wrapper">
           <QRCode value={data} />
         </div>
       )}
