@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { block } from 'million/react';
 interface Source {
   name: string;
-  id: string;
+  url: string;
 }
 interface Article {
   description: string;
   url: string;
   content: string;
-  urlToImage: string;
+  image: string;
   source: Source;
   publishedAt: string;
 }
@@ -20,6 +20,13 @@ interface NewsCardProps {
   publishedAt: string;
   url: string;
 }
+const apikey = 'a963a8b8b7f31c79f5002d77fcb592be';
+const category = 'general';
+const url =
+  'https://gnews.io/api/v4/top-headlines?category=' +
+  category +
+  '&lang=en&country=us&max=10&apikey=' +
+  apikey;
 const defaultImageUrl =
   'https://euaa.europa.eu/sites/default/files/styles/width_600px/public/default_images/news-default-big.png?itok=NNXAZZTc';
 const NewsCard = ({
@@ -59,9 +66,7 @@ const NewsAggregator: React.FC = block(() => {
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
-    fetch(
-      'https://newsapi.org/v2/everything?q=keyword&apiKey=0d0ece27e27345d8b19faeef591120c0',
-    )
+    fetch(url)
       .then((response) => response.json())
       .then((data) => {
         setArticles(data.articles);
@@ -84,9 +89,7 @@ const NewsAggregator: React.FC = block(() => {
               title={article.description}
               description={article.content}
               imageUrl={
-                article.urlToImage !== null
-                  ? article.urlToImage
-                  : defaultImageUrl
+                article.image !== null ? article.image : defaultImageUrl
               }
               sourceName={article.source.name}
               publishedAt={article.publishedAt}
