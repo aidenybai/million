@@ -1,4 +1,4 @@
-import  { useState } from 'react';
+import { useState } from 'react';
 import { block } from 'million/react';
 import styled from 'styled-components';
 
@@ -84,7 +84,7 @@ const Quiz = block(() => {
   const [selectedOption, setSelectedOption] = useState('');
   const [score, setScore] = useState(0);
 
-  const handleOptionChange = (event:any) => {
+  const handleOptionChange = (event: any) => {
     setSelectedOption(event.target.value);
   };
 
@@ -126,7 +126,9 @@ const Quiz = block(() => {
       ) : (
         <div>
           <h2>Quiz Completed!</h2>
-          <p>Your Score: {score} out of {questions.length}</p>
+          <p>
+            Your Score: {score} out of {questions.length}
+          </p>
         </div>
       )}
     </QuizContainer>
