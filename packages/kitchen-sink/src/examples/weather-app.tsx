@@ -58,27 +58,25 @@ type Weather = {
   temp: any;
 };
 
-const WeatherComponent = block(
-  ({city, weatherDesc, temp }: Weather) => {
-    return (
-      <div>
-        <Condition>
-          <span>
-            {typeof temp === 'number' ? (
-              <Condition>
-                <span>{`${Math.floor(temp - 273)}°C`}</span>
-              </Condition>
-            ) : (
-              <h1>NOT DEFINED</h1>
-            )}
-          </span>
-          {`  |  ${weatherDesc}`}
-        </Condition>
-        <h3 style={{ textAlign: 'center' }}>{city.toUpperCase()}</h3>
-      </div>
-    );
-  },
-);
+const WeatherComponent = block(({ city, weatherDesc, temp }: Weather) => {
+  return (
+    <div>
+      <Condition>
+        <span>
+          {typeof temp === 'number' ? (
+            <Condition>
+              <span>{`${Math.floor(temp - 273)}°C`}</span>
+            </Condition>
+          ) : (
+            <h1>NOT DEFINED</h1>
+          )}
+        </span>
+        {`  |  ${weatherDesc}`}
+      </Condition>
+      <h3 style={{ textAlign: 'center' }}>{city.toUpperCase()}</h3>
+    </div>
+  );
+});
 
 export default function Weather() {
   const [city, updatecity] = useState<string | null>(null);
@@ -125,11 +123,7 @@ export default function Weather() {
       </span>
       {city && weather ? (
         <>
-          <WeatherComponent
-            city={city}
-            weatherDesc={weatherDesc}
-            temp={temp}
-          />
+          <WeatherComponent city={city} weatherDesc={weatherDesc} temp={temp} />
         </>
       ) : (
         <>
