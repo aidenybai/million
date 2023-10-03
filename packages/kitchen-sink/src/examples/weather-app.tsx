@@ -53,16 +53,13 @@ const WelcomeWeatherLogo = styled.img`
 `;
 
 type Weather = {
-  weather: string;
   city: string;
   weatherDesc: string | undefined;
   temp: any;
 };
 
 const WeatherComponent = block(
-  ({ weather, city, weatherDesc, temp }: Weather) => {
-    console.log(weather);
-    console.log(city);
+  ({city, weatherDesc, temp }: Weather) => {
     return (
       <div>
         <Condition>
@@ -100,7 +97,6 @@ export default function Weather() {
     updateWeather(data.weather[0].main);
     updateWeatherDesc(data.weather[0].description);
     updatetemp(data.main.temp);
-    //   console.log(data.weather[0].main);
   };
   return (
     <div
@@ -130,7 +126,6 @@ export default function Weather() {
       {city && weather ? (
         <>
           <WeatherComponent
-            weather={weather}
             city={city}
             weatherDesc={weatherDesc}
             temp={temp}
