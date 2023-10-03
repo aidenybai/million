@@ -2,6 +2,12 @@ import { useState } from 'react';
 import { block } from 'million/react';
 import styled from 'styled-components';
 
+type QuizQuestion = {
+  question: string;
+  options: string[];
+  correctAnswer: string;
+}
+
 const QuizContainer = styled.div`
   text-align: center;
   max-width: 600px;
@@ -52,7 +58,7 @@ const NextButton = styled.button`
 `;
 
 const Quiz = block(() => {
-  const questions = [
+  const questions: QuizQuestion[] = [
     {
       question: 'What is the capital of France?',
       options: ['London', 'Berlin', 'Paris', 'Madrid'],
@@ -80,9 +86,9 @@ const Quiz = block(() => {
     },
   ];
 
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [selectedOption, setSelectedOption] = useState('');
-  const [score, setScore] = useState(0);
+  const [currentQuestion, setCurrentQuestion] = useState<number>(0);
+  const [selectedOption, setSelectedOption] = useState<string>('');
+  const [score, setScore] = useState<number>(0);
 
   const handleOptionChange = (event: any) => {
     setSelectedOption(event.target.value);
