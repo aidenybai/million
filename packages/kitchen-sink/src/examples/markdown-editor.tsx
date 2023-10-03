@@ -31,6 +31,7 @@ const Preview = block(({ markdownContent }: Editing) => {
         <h2>Preview</h2>
         <div
           dangerouslySetInnerHTML={{ __html: mardownFormattedContent }}
+          style={{overflow:"auto"}}
         ></div>
       </ColumnFlex>
     </>
@@ -38,17 +39,7 @@ const Preview = block(({ markdownContent }: Editing) => {
 });
 
 export default function MarkdownEditor() {
-  const [markdownContent, setMarkdownContent] = useState<string>(`
-    # H1
-    ## H2
-    ### H3
-    #### H4
-    ##### H5
-    
-    __bold__
-    **bold**
-    _italic_
-    `);
+  const [markdownContent, setMarkdownContent] = useState<string>(``);
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMarkdownContent(e.target.value);
   };
