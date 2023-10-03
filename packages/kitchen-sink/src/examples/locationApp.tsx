@@ -1,6 +1,6 @@
-import {block} from 'million/react';
-import  { useState, useEffect } from 'react';
-const  LocationComponent= block(() => {
+import { block } from 'million/react';
+import { useState, useEffect } from 'react';
+const LocationComponent = block(() => {
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -15,7 +15,7 @@ const  LocationComponent= block(() => {
         },
         (error) => {
           setError('Error getting user location');
-        }
+        },
       );
     } else {
       setError('Geolocation is not available in this browser.');
