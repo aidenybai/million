@@ -6,7 +6,7 @@ type QuizQuestion = {
   question: string;
   options: string[];
   correctAnswer: string;
-}
+};
 
 const QuizContainer = styled.div`
   text-align: center;
