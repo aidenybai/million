@@ -57,17 +57,20 @@ const NewsCard = ({
 
 const NewsAggregator: React.FC = block(() => {
   const [articles, setArticles] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
-    setIsLoading(true);
     fetch(
       'https://newsapi.org/v2/everything?q=keyword&apiKey=0d0ece27e27345d8b19faeef591120c0',
     )
       .then((response) => response.json())
-      .then((data) => setArticles(data.articles))
-      .catch((error) => console.error('Error fetching news:', error));
-    console.log(articles);
-    setIsLoading(false);
+      .then((data) => {
+        setArticles(data.articles);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching news:', error);
+        setIsLoading(false);
+      });
   }, []);
 
   return (
