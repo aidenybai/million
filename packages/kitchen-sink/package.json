@@ -14,6 +14,7 @@
     "vite-plugin-inspect": "^0.7.37"
   },
   "dependencies": {
+    "@material-ui/core": "^4.12.4",
     "@reduxjs/toolkit": "^1.9.6",
     "@tanstack/react-query": "^4.32.6",
     "@tanstack/react-virtual": "3.0.0-beta.54",
