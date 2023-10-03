@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { For } from 'million/react';
 import { block } from 'million/react';
 
 interface Comment {
@@ -46,12 +47,14 @@ const Guestbook = block(() => {
         <button type="submit">Submit</button>
       </form>
       <ul>
-        {comments.map((comment) => (
-          <li key={comment.id}>
-            {comment.text}
-            <button onClick={() => deleteComment(comment.id)}>Delete</button>
-          </li>
-        ))}
+      <For each={comments}>
+          {(comment:Comment) => (
+            <li key={comment.id}>
+              {comment.text}
+              <button onClick={() => deleteComment(comment.id)}>Delete</button>
+            </li>
+          )}
+        </For>
       </ul>
     </div>
   );
