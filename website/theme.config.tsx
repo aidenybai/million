@@ -110,8 +110,9 @@ const config: DocsThemeConfig = {
             transition: fill 0.5s ease;
           }
 
-          svg:hover {
-            fill: #bba0ff;
+          svg:hover,
+          svg:focus {
+            fill: #6f42c1;
           }
         `}</style>
       </>
@@ -136,8 +137,9 @@ const config: DocsThemeConfig = {
             transition: fill 0.5s ease;
           }
 
-          svg:hover {
-            fill: #bba0ff;
+          svg:hover,
+          svg:focus {
+            fill: #6f42c1;
           }
         `}</style>
       </>
@@ -204,8 +206,9 @@ const config: DocsThemeConfig = {
               transition: fill 0.5s ease;
             }
 
-            svg:hover {
-              fill: #bba0ff;
+            svg:hover,
+            svg:focus {
+              fill: #6f42c1;
             }
           `}</style>
         </a>
