@@ -151,9 +151,6 @@ input[type='range'] {
   padding: 1rem;
 }
 
-<<<<<<< HEAD
-/*  */
-=======
 .news-card {
   display: flex;
   flex-direction: column;
@@ -225,11 +222,9 @@ input[type='range'] {
     }
   }
 }
->>>>>>> 5b29e400d06e4e4b7056821bf4ddc6527f8b008e
 
 
 /* Memory Game CSS */
-
 .memory__container{
   height: 700px;
   width: 700px;

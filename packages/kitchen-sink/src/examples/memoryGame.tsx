@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { block } from 'million/react';
+
 type IteamType = {
     id: number;
     img: string;
