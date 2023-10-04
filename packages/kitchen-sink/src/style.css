@@ -145,6 +145,9 @@ input[type="range"] {
   padding: 1rem;
 }
 
+/*  */
+
+/* QR code styles */
 .memory__container{
   height: 700px;
   width: 700px;
@@ -220,3 +223,5 @@ input[type="range"] {
 .memory__hscore{
   color: rgb(244, 56, 56);
 }
+
+/*  */
