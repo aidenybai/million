@@ -24,22 +24,22 @@ const Card = block(({item, id, handleClick}: CardPrompt) => {
 
 const Cards = ()=>{
     const [items, setItems] = useState([
-        { id: 1, img: '../assets/html.png', stat: "" },
-        { id: 11, img: '../assets/html.png', stat: "" },
-        { id: 2, img: '../assets/css.png', stat: "" },
-        { id: 12, img: '../assets/css.png', stat: "" },
-        { id: 3, img: '../assets/js.png', stat: "" },
-        { id: 13, img: '../assets/js.png', stat: "" },
-        { id: 4, img: '../assets/scss.png', stat: "" },
-        { id: 14, img: '../assets/scss.png', stat: "" },
-        { id: 5, img: '../assets/react.png', stat: "" },
-        { id: 15, img: '../assets/react.png', stat: "" },
-        { id: 6, img: '../assets/vue.png', stat: "" },
-        { id: 16, img: '../assets/vue.png', stat: "" },
-        { id: 7, img: '../assets/angular.png', stat: "" },
-        { id: 17, img: '../assets/angular.png', stat: "" },
-        { id: 8, img: '../assets/nodejs.png', stat: "" },
-        { id: 18, img: '../assets/nodejs.png', stat: "" }
+        { id: 1, img: "https://upload.wikimedia.org/wikipedia/commons/6/61/HTML5_logo_and_wordmark.svg", stat: "" },
+        { id: 11, img: "https://upload.wikimedia.org/wikipedia/commons/6/61/HTML5_logo_and_wordmark.svg", stat: "" },
+        { id: 2, img: 'https://upload.wikimedia.org/wikipedia/commons/d/d5/CSS3_logo_and_wordmark.svg', stat: "" },
+        { id: 12, img: 'https://upload.wikimedia.org/wikipedia/commons/d/d5/CSS3_logo_and_wordmark.svg', stat: "" },
+        { id: 3, img: 'https://static.javatpoint.com/images/javascript/javascript_logo.png', stat: "" },
+        { id: 13, img: 'https://static.javatpoint.com/images/javascript/javascript_logo.png', stat: "" },
+        { id: 4, img: 'https://upload.wikimedia.org/wikipedia/commons/9/96/Sass_Logo_Color.svg', stat: "" },
+        { id: 14, img: 'https://upload.wikimedia.org/wikipedia/commons/9/96/Sass_Logo_Color.svg', stat: "" },
+        { id: 5, img: "https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg", stat: "" },
+        { id: 15, img: "https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg", stat: "" },
+        { id: 6, img: "https://upload.wikimedia.org/wikipedia/commons/9/95/Vue.js_Logo_2.svg", stat: "" },
+        { id: 16, img: "https://upload.wikimedia.org/wikipedia/commons/9/95/Vue.js_Logo_2.svg", stat: "" },
+        { id: 7, img: "https://upload.wikimedia.org/wikipedia/commons/c/cf/Angular_full_color_logo.svg", stat: "" },
+        { id: 17, img: "https://upload.wikimedia.org/wikipedia/commons/c/cf/Angular_full_color_logo.svg", stat: "" },
+        { id: 8, img: "https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg", stat: "" },
+        { id: 18, img: "https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg", stat: "" }
     ].sort(() => Math.random() - 0.5))
 
     const [prev, setPrev] = useState(-1);
