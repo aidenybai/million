@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { block } from 'million/react';
+import "./memoryGame.css";
 
 type IteamType = {
     id: number;
