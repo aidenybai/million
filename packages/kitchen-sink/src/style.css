@@ -187,7 +187,7 @@ input[type="range"] {
 .react-calendar {
   width: 100%;
   max-width: 500px;
-  background-color: #151515;
+  background-color: white;
   border: 1px solid #151515;
   font-family: Arial, Helvetica, sans-serif;
   line-height: 1.125em;
