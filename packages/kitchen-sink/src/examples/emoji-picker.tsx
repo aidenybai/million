@@ -43,6 +43,7 @@ const Emoji: React.FC<AppProps> = () => {
     </div>
   );
 };
+
 const EmojiBlock = block(() => {
   return (
     <div>
