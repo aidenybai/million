@@ -68,7 +68,6 @@ const MainTodoApp = block(() => {
 const TodoApp = () => {
   const [input, setInput] = useState('');
 
-
   const count = useSelector(
     (state: { todo: typeof initialState }) => state.todo.count,
   );
