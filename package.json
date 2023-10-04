@@ -1,6 +1,6 @@
 {
   "name": "million",
-  "version": "2.6.3",
+  "version": "2.6.4",
   "description": "Make React Faster. Automatically.",
   "main": "dist/packages/million.mjs",
   "module": "dist/packages/million.mjs",
