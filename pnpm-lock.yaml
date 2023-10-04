@@ -226,6 +226,9 @@ importers:
       react-router-dom:
         specifier: ^6.15.0
         version: 6.15.0(react-dom@18.2.0)(react@18.2.0)
+      react-shorten-url:
+        specifier: ^1.0.5
+        version: 1.0.5(react@18.2.0)
       styled-components:
         specifier: ^6.0.7
         version: 6.0.7(react-dom@18.2.0)(react@18.2.0)
@@ -4106,6 +4109,14 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
+  /axios@0.21.4:
+    resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
+    dependencies:
+      follow-redirects: 1.15.2
+    transitivePeerDependencies:
+      - debug
+    dev: false
+
   /axios@1.4.0:
     resolution: {integrity: sha512-S4XCWMEmzvo64T9GfvQDOXgYRDJ/wsSZc7Jvdgx5u1sd0JwsuPLqb3SYmusag+edF6ziyMensPVqLTSc1PiSEA==}
     dependencies:
@@ -4181,6 +4192,16 @@ packages:
     resolution: {integrity: sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==}
     engines: {node: '>=8'}
     requiresBuild: true
+
+  /bitly@7.1.2:
+    resolution: {integrity: sha512-DWjsnJ7vaQ6PbTZtuYXwDFeJQfqoN7GIbALo6vVfrPc2tp1jWPzn9QVZI1OxwDK6kSwfg5lTvsYu6yvg+3HSUw==}
+    engines: {node: '>= 10.0.0'}
+    dependencies:
+      axios: 0.21.4
+      valid-url: 1.0.9
+    transitivePeerDependencies:
+      - debug
+    dev: false
 
   /blueimp-md5@2.19.0:
     resolution: {integrity: sha512-DRQrD6gJyy8FbiE4s+bDoXS9hiW3Vbx5uCdwvcCf3zLHL+Iv7LtGHLpr+GZV8rHG8tK766FGYBwRbu8pELTt+w==}
@@ -9281,6 +9302,17 @@ packages:
       react: 18.2.0
     dev: false
 
+  /react-shorten-url@1.0.5(react@18.2.0):
+    resolution: {integrity: sha512-Zb5EMGMu8F7mm+EAxAgK+C6i0Q0c2H6ddjG83O1m5Fug5ind43MT8wBUY2BVroRxljaTyHuhymDnMrZ2u0YAgQ==}
+    peerDependencies:
+      react: '>=16.8.0'
+    dependencies:
+      bitly: 7.1.2
+      react: 18.2.0
+    transitivePeerDependencies:
+      - debug
+    dev: false
+
   /react-transition-group@4.4.5(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-pZcd1MCJoiKiBR2NRxeCRg13uCXbydPnmB4EOeRrY7480qNWO8IIgQG6zlDkm6uRMsURXPuKq0GWtiM59a5Q6g==}
     peerDependencies:
@@ -10719,6 +10751,10 @@ packages:
       '@types/istanbul-lib-coverage': 2.0.4
       convert-source-map: 1.9.0
     dev: true
+
+  /valid-url@1.0.9:
+    resolution: {integrity: sha512-QQDsV8OnSf5Uc30CKSwG9lnhMPe6exHtTXLRYX8uMwKENy640pU+2BgBL0LRbDh/eYRahNCS7aewCx0wf3NYVA==}
+    dev: false
 
   /validate-npm-package-license@3.0.4:
     resolution: {integrity: sha512-DpKm2Ui/xN7/HQKCtpZxoRWBhZ9Z0kqtygG8XCgNQ8ZlDnxuQmWhj566j8fN4Cu3/JmbhsDo7fcAJq4s9h27Ew==}
