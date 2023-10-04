@@ -86,9 +86,7 @@ export const componentVisitor = (options: Options = {}, isReact = true) => {
 
     if (comment?.value.includes('million-ignore')) {
       // eslint-disable-next-line no-console
-      console.log(
-        dim(` ○ ${yellow(`<${rawComponent.id.name}>`)} was ignored`),
-      );
+      console.log(dim(` ○ ${yellow(`<${rawComponent.id.name}>`)} was ignored`));
       return;
     }
 
