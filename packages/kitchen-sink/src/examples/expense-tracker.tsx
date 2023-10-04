@@ -95,11 +95,11 @@ const ExpenseTracker = () => {
 
   return (
     <section>
-      <h1 style={{textAlign:'center'}}> Expense Tracker</h1>
+      <h1 style={{ textAlign: 'center' }}> Expense Tracker</h1>
       <div
         style={{
           display: 'flex',
-          placeContent: 'space-between'
+          placeContent: 'space-between',
         }}
       >
         <p>
@@ -109,7 +109,9 @@ const ExpenseTracker = () => {
           Expenses: <span style={{ color: 'red' }}>${wallet.expenses}</span>
         </p>
       </div>
-      <h2 style={{textAlign:'right'}}>Balance :<span style={{color:'forestgreen',}}>${wallet.balance}</span></h2>
+      <h2 style={{ textAlign: 'right' }}>
+        Balance :<span style={{ color: 'forestgreen' }}>${wallet.balance}</span>
+      </h2>
       <div>
         <InputForm
           formInputs={formInputs}
@@ -200,7 +202,7 @@ const InputForm = ({
           style={{
             display: 'flex',
             gap: '1rem',
-            marginTop: '1rem'
+            marginTop: '1rem',
           }}
         >
           <div
@@ -246,7 +248,12 @@ const InputForm = ({
 
 const ExpenseItem = block(({ title, amount, isExpense }) => {
   return (
-    <li>{title} {`${isExpense ? '-' : '+'}`} <span style={isExpense ? {color:'red'}: {color:'green'}}>${amount}</span></li>
+    <li>
+      {title} {`${isExpense ? '-' : '+'}`}{' '}
+      <span style={isExpense ? { color: 'red' } : { color: 'green' }}>
+        ${amount}
+      </span>
+    </li>
   );
 });
 
