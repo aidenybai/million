@@ -333,7 +333,8 @@ const getCurrentElement = (
 ): HTMLElement => {
   const pathLength = path.length;
   if (!pathLength) return root;
-  if (cache && key !== undefined && cache[key]) {
+  const isCacheAndKeyExists = cache && key !== undefined;
+  if (isCacheAndKeyExists && cache[key]) {
     return cache[key]!;
   }
   // path is an array of indices to traverse the DOM tree
@@ -344,7 +345,7 @@ const getCurrentElement = (
     const siblings = path[i]!;
     root = childAt(root, siblings);
   }
-  if (cache && key !== undefined) cache[key] = root;
+  if (isCacheAndKeyExists) cache[key] = root;
   return root;
 };
 

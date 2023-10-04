@@ -211,11 +211,10 @@ export const transformComponent = (
    * }
    * ```
    */
-  const unique = getUniqueId();
-  const masterComponentId = t.isIdentifier(originalComponent.id)
+  let masterComponentId = t.isIdentifier(originalComponent.id)
     ? originalComponent.id
-    : t.identifier(`M${unique}`);
-  const puppetComponentId = t.identifier(`P${unique}`);
+    : getUniqueId(callSitePath, 'M$');
+  const puppetComponentId = getUniqueId(callSitePath, 'P$');
 
   const block = imports.addNamed('block');
 
@@ -466,8 +465,14 @@ export const transformComponent = (
    * const master = (props) => {
    * ```
    */
-  Component.id = masterComponentId;
 
+  if (
+    t.isIdentifier(Component.id) &&
+    Component.id.name === masterComponentId.name
+  ) {
+    masterComponentId = getUniqueId(globalPath, masterComponentId.name);
+  }
+  Component.id = masterComponentId;
   callSitePath.replaceWith(masterComponentId);
 
   globalPath.insertBefore(

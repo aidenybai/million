@@ -145,7 +145,6 @@ const createChildren = <T>(
             false,
             portals.current,
             index,
-            false,
           ),
         },
         vnode.key ? String(vnode.key) : undefined,

@@ -122,16 +122,18 @@ export const callExpressionVisitor = (
      * const default$ = block(Component);
      * export default default$;
      */
-    if (callSitePath.parentPath.isExportDefaultDeclaration()) {
-      const exportPath = callSitePath.parentPath;
-      const exportName = callSitePath.scope.generateUidIdentifier('default$');
+    const exportPath = callSitePath.parentPath;
+    if (exportPath.isExportDefaultDeclaration()) {
+      const exportName = getUniqueId(callSitePath, 'M$');
       exportPath.insertBefore(
         t.variableDeclaration('const', [
           t.variableDeclarator(exportName, callSite),
         ]),
       );
+      exportPath.replaceWith(
+        t.exportDefaultDeclaration(t.identifier(exportName.name)),
+      );
 
-      exportPath.node.declaration = exportName;
       return; // this "creates" a new callSitePath, so it will be picked up again on the next visitor call. no need to continue.
     }
 
@@ -161,20 +163,16 @@ export const callExpressionVisitor = (
       const isComponentNamed =
         t.isFunctionExpression(RawComponent) && t.isIdentifier(RawComponent.id);
 
-      const unique = getUniqueId();
       const anonymousComponentId = isComponentNamed
-        ? RawComponent.id!
-        : t.identifier(`M${unique}`);
+        ? t.identifier(`M$${RawComponent.id.name as string}`)
+        : getUniqueId(globalPath, 'M$');
 
       /**
        * const anonymous = () => <div />;
        */
       globalPath.insertBefore(
         t.variableDeclaration('const', [
-          t.variableDeclarator(
-            anonymousComponentId,
-            t.arrowFunctionExpression(RawComponent.params, RawComponent.body),
-          ),
+          t.variableDeclarator(anonymousComponentId, RawComponent),
         ]),
       );
 
@@ -182,6 +180,7 @@ export const callExpressionVisitor = (
        * Replaces function expression with identifier
        * `block(() => ...)` to `block(anonymous)`
        */
+
       callSite.arguments[0] = anonymousComponentId;
     }
 
@@ -235,8 +234,7 @@ export const callExpressionVisitor = (
           t.isFunctionExpression(forwardRefComponent) ||
           t.isArrowFunctionExpression(forwardRefComponent)
         ) {
-          const anonymousComponentId =
-            componentDeclarationPath.scope.generateUidIdentifier('anonymous$');
+          const anonymousComponentId = getUniqueId(globalPath, 'M$');
           componentDeclarationPath.parentPath.insertBefore(
             t.variableDeclaration('const', [
               t.variableDeclarator(
