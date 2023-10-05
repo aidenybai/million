@@ -90,6 +90,7 @@ const PasswordGenerator = block(() => {
             <input
               id="number_checkbox"
               name="number_checkbox"
+              disabled={password.password_type === 'pin'}
               type="checkbox"
               checked={password.numbers!}
               onChange={() =>
@@ -105,6 +106,7 @@ const PasswordGenerator = block(() => {
               id="symbol_checkbox"
               name="symbol_checkbox"
               type="checkbox"
+              disabled={password.password_type === 'pin'}
               onChange={() =>
                 setPassword({ ...password, symbols: !password.symbols })
               }
