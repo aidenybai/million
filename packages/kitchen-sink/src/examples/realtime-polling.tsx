@@ -7,7 +7,7 @@ export type PollOption = {
   votes: number;
 };
 
-const RealTimePolling = block(() => {
+const RealTimePolling = () => {
   const [options, setOptions] = useState<PollOption[]>([]);
   const [inputOption, setInputOption] = useState('');
 
@@ -31,6 +31,11 @@ const RealTimePolling = block(() => {
     }
   };
 
+  const resetPoll = () => {
+    setOptions([]);
+    setInputOption('');
+  };
+
   return (
     <div className="polling-app">
       <h1>Polling app</h1>
@@ -47,6 +52,12 @@ const RealTimePolling = block(() => {
           onClick={addOption}
         >
           Add Option
+        </button>
+        <button
+          style={{ marginLeft: 10, padding: '10px 20px 10px 20px' }}
+          onClick={resetPoll}
+        >
+          Reset Poll
         </button>
       </div>
 
@@ -69,6 +80,6 @@ const RealTimePolling = block(() => {
       </ul>
     </div>
   );
-});
+};
 
 export default RealTimePolling;
