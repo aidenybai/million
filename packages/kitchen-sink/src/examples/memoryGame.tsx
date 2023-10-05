@@ -46,8 +46,11 @@ const Cards = ()=>{
     const [moves, setMoves] = useState(0);
     const [hmoves, setHmoves] = useState(0);
     const [correct, setcorrect] = useState(0);
+    const [makingMove, setMakingMove] = useState(false);
+    const [restart, setRestart] = useState(false);
 
-    function check(current : number){
+    const check = (current : number)=>{
+        setMakingMove(true);
         if((items[current].id == items[prev].id+10) || (items[current].id == items[prev].id-10)){
             if((correct==14) && (moves<hmoves || hmoves==0)) setHmoves(moves+1);
             items[current].stat = "correct"
@@ -55,6 +58,7 @@ const Cards = ()=>{
             setcorrect(pre=>pre+2);
             setItems([...items])
             setPrev(-1)
+            setMakingMove(false);
         }else{
             items[current].stat = "wrong"
             items[prev].stat = "wrong"
@@ -64,11 +68,12 @@ const Cards = ()=>{
                 items[prev].stat = ""
                 setItems([...items])
                 setPrev(-1)
+                setMakingMove(false);
             }, 1000)
         }
     }
 
-    function handleClick(id: number){
+    const handleClick = (id: number)=>{
         setMoves(pre=>pre+1);
         if(prev === -1){
             items[id].stat = "active"
@@ -79,6 +84,7 @@ const Cards = ()=>{
         }
     }
     const restartGame =()=>{
+        setRestart(true);
         setItems((pre:IteamType[] ):IteamType[] => {
             let p: IteamType[] = [];
             for(let i=0;i<pre.length;i++){
@@ -89,28 +95,30 @@ const Cards = ()=>{
         });
         setMoves(0);
         setcorrect(0);
+        setTimeout(()=>{setRestart(false);},500)
     }
 
-    return (correct==16)?(
+    return (restart)?(<></>):((correct==16)?(
         <div className="memory__details_result">
             <h3>Your Score: {moves}</h3>
             <h3>HighScore: {(hmoves==0)?"none":hmoves}</h3>
             {(hmoves==moves)&&(<h3 className="memory__hscore">High Score! 🥳🥳</h3>)}
             <button onClick={restartGame}>Restart</button>
         </div>
-    ) :(
+    ):(
         <>
             <div className="memory__details">
                 <h3>Moves: {moves}</h3>
                 <h3>HighScore: {hmoves}</h3>
+                <button onClick={restartGame}>Restart</button>
             </div>
             <div className="memory__container">
                 { items.map((item, index) => (
-                    <Card key={index} item={item} id={index} handleClick={(item.stat=="correct" || item.stat=="active")?()=>{}:handleClick} />
+                    <Card key={index} item={item} id={index} handleClick={(makingMove)?()=>{}:((item.stat=="correct" || item.stat=="active")?()=>{}:handleClick)} />
                     )) }
             </div>
         </>
-    )
+    ))
 }
 
 export default Cards
