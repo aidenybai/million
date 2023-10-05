@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { block } from 'million/react';
 import styled from "styled-components";
 
 const words = [
@@ -73,6 +74,7 @@ function getRandomWord(arr: {}[]) {
   // const word = Object.values(obj)[0] as string;
   return obj;
 }
+
 
 export default function App() {
   const [wordToGuess, setWordToGuess] = useState("");
@@ -377,14 +379,14 @@ interface Drawing {
   numberOfGuesses: number
 }
 
- function Drawing({ numberOfGuesses }:Drawing) {
+ const  Drawing = block( ({ numberOfGuesses }:Drawing) => {
   return (
     <div style={{ position: "relative" }}>
       {BodyParts.slice(0, numberOfGuesses).map((Component, id) => <Component key={id} />)}
       {Gallows.map((Component, id) => <Component key={id} />)}
     </div>
   )
-}
+})
 
 /****************************************************************
               ***************************************
@@ -428,7 +430,7 @@ interface Keyboard {
   addGuessedLetter: (letter: string) => void;
   disabled?: boolean;
 }
- function Keyboard({ correctLetters, incorrectLetters, addGuessedLetter, disabled = false }: Keyboard) {
+ const Keyboard =block(({ correctLetters, incorrectLetters, addGuessedLetter, disabled = false }: Keyboard) => {
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
@@ -470,7 +472,7 @@ interface Keyboard {
       </KeyboardGrid>
     </KeyContainer>
   );
-}
+})
 
 
 const KeyContainer = styled.div`
@@ -531,7 +533,7 @@ interface WordProps {
   reveal?: boolean;
 };
 
- function Word({ guessedLetters, wordToGuess, reveal = false }: WordProps) {
+ const  Word = block(({ guessedLetters, wordToGuess, reveal = false }: WordProps) => {
   return (
     <WordContainer>
       {wordToGuess.split("").map((letter, id) => (
@@ -543,7 +545,7 @@ interface WordProps {
       ))}
     </WordContainer>
   );
-}
+})
 
 const WordContainer = styled.div`
   padding: .5rem;
