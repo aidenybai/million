@@ -222,3 +222,23 @@ input[type='range'] {
     }
   }
 }
+
+.btn-option {
+  width: 100%;
+  text-align: left;
+  margin-bottom: 5px;
+}
+.btn-option.correct {
+  background-color: #1098ad; 
+  border: 2px solid #1098ad; 
+  color: #f1f3f5; 
+  cursor: not-allowed;
+
+}
+.btn-option.wrong {
+  background-color: #ffa94d; 
+  border: 2px solid #ffa94d; 
+  color: #74509a; 
+  cursor: not-allowed;
+
+}
