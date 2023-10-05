@@ -97,7 +97,7 @@ const StockPriceTracker = block(() => {
           <h3>Current Price:</h3>
           <p>{price}</p>
         </div>
-      )}
+      )} 
       {companyOverview && (
         <div>
           <h3>Company Overview:</h3>
