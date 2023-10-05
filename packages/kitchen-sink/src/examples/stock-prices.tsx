@@ -28,7 +28,7 @@ const StockPriceTracker = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     fetchStockPrice();
-  };
+  };  
 
   return (
     <div>
