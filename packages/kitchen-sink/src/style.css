@@ -223,6 +223,110 @@ input[type='range'] {
   }
 }
 
+/**********  PASSWORD GENERATOR  **********/
+.password_generator {
+  width: 80%;
+  margin: 2em auto;
+}
+
+.password_generator_top_section {
+  display: flex;
+  gap: 1.5em;
+}
+
+.password_generator_output_container {
+  display: flex;
+  border-radius: 10px;
+  background: #353535;
+  border: 1px solid #dddddd;
+  align-items: center;
+  padding-right: 20px;
+  flex: 5;
+}
+
+.password_generator_output_container input {
+  padding: 14px;
+  width: 100%;
+  outline: none;
+  line-height: 30px;
+  caret-color: #1c1c1c;
+  background-color: transparent;
+  font-size: 16px;
+  border-radius: 10px;
+  transition: all 0.3s ease-in;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+
+.password_generator_output_container .right-icon {
+  font-size: 25px;
+  cursor: pointer;
+  border: none;
+}
+
+.password_generator_refresh_password {
+  flex: 0.5;
+}
+
+.password_generator_tooltip-container {
+  position: relative;
+}
+
+.password_generator_tooltip-text {
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 4px;
+  padding: 6px;
+  position: absolute;
+  z-index: 1;
+  bottom: 50%;
+  left: 90%;
+  font-size: 12px;
+  opacity: 0;
+  transition: all 200ms ease-in-out;
+}
+
+.password_generator_tooltip-text.visible {
+  opacity: 1;
+}
+
+.password_generator_customizable_options {
+}
+
+.password_generator_customizable_options__length {
+  display: flex;
+  align-items: center;
+}
+
+.password_generator_customizable_options__checkbox {
+  position: relative;
+  /* border: 1px solid themed("primary"); */
+  border-radius: 4px;
+  background: none;
+  cursor: pointer;
+  line-height: 0;
+  margin: 0 0.6em 0 0;
+  outline: 0;
+  padding: 0 !important;
+  vertical-align: text-top;
+  height: 18px;
+  width: 18px;
+  opacity: 0.5;
+  transition: all 200ms ease-in-out;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &:checked {
+    /* background-color: themed("primary"); */
+    opacity: 1;
+    border: none;
+  }
+}
+
 
 /* Memory Game CSS */
 .memory__container{
