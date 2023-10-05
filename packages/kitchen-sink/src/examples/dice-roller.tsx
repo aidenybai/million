@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { block } from 'million/react';
 
-const DiceRoller: React.FC = () => {
+const DiceRoller: React.FC = block(() => {
     const [result, setResult] = useState<number | null>(null);
     const [rolling, setRolling] = useState<boolean>(false);
   
@@ -26,6 +27,6 @@ const DiceRoller: React.FC = () => {
         {result !== null && <p>Result: {result}</p>}
       </div>
     );
-  };
+  });
   
   export default DiceRoller;
