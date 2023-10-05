@@ -136,3 +136,26 @@ input[type="range"] {
 }
 
 /*  */
+
+/* Polling app styles */
+.polling-app ul {
+  list-style-type: none
+}
+
+.polling-app li {
+  margin-bottom: 15px;
+  text-decoration: none;
+}
+
+.polling-app div {
+  width: 100%;
+  position: relative;
+}
+
+.polling-app div > div {
+  height: 20px;
+  background: #2196F3;
+  transition: width 0.3s;
+}
+
+/*  */
