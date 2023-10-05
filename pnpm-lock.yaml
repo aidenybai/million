@@ -26,9 +26,6 @@ importers:
       kleur:
         specifier: ^4.1.5
         version: 4.1.5
-      react-calendar:
-        specifier: ^4.6.0
-        version: 4.6.0(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
       rollup:
         specifier: ^3.28.0
         version: 3.28.0
