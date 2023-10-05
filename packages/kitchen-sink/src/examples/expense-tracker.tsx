@@ -14,7 +14,7 @@ type Wallet = {
   balance: number;
 };
 
-const ExpenseTracker = () => {
+const ExpenseTracker = block(() => {
   const [transactions, setTransactions] = useState<Transaction[]>([
     { id: genUUID(), title: 'Ka-ching', amount: 6000, isExpense: false },
     { id: genUUID(), title: '3% Milk', amount: 20, isExpense: true },
@@ -27,11 +27,6 @@ const ExpenseTracker = () => {
     incomes: 0,
     expenses: 0,
     balance: 0,
-  });
-  const [formInputs, setFormInputs] = useState<Transaction>({
-    title: '',
-    amount: 0,
-    isExpense: true,
   });
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -60,38 +55,25 @@ const ExpenseTracker = () => {
     return self.crypto.randomUUID();
   }
 
-  function handleFormInputs(event: React.SyntheticEvent) {
-    const { name, value, type, id } = event.target as HTMLInputElement;
-    if (type !== 'radio') {
-      setFormInputs((prevData) => {
-        return {
-          ...prevData,
-          [name]: value,
-        };
-      });
-    } else {
-      let isExpense = id === 'expense' ? true : false;
-      setFormInputs((prevData) => {
-        return {
-          ...prevData,
-          isExpense,
-        };
-      });
-    }
-  }
-
   useEffect(() => {
     calculateExpenses();
   }, [transactions]);
 
-  function handleOnSubmit(event: React.SyntheticEvent) {
+  const handleOnSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
-    if (formInputs.title !== '' && formInputs.amount > 0) {
-      setTransactions(transactions.concat({ id: genUUID(), ...formInputs }));
-      setFormInputs({ title: '', amount: 0, isExpense: true });
-      inputRef.current?.focus();
+    const formData = new FormData(event.currentTarget);
+    let formEntry: Transaction | {} = { id: genUUID() };
+    for (let [key, value] of formData.entries()) {
+      if (key === 'isExpense') {
+        let type = value === 'expense' ? true : false;
+        formEntry = { ...formEntry, [key]: type };
+      } else {
+        formEntry = { ...formEntry, [key]: value };
+      }
     }
-  }
+    setTransactions(transactions.concat(formEntry));
+    inputRef.current?.focus();
+  };
 
   return (
     <section>
@@ -113,12 +95,7 @@ const ExpenseTracker = () => {
         Balance :<span style={{ color: 'forestgreen' }}>${wallet.balance}</span>
       </h2>
       <div>
-        <InputForm
-          formInputs={formInputs}
-          handleFormInputs={handleFormInputs}
-          handleOnSubmit={handleOnSubmit}
-          inputRef={inputRef}
-        />
+        <InputForm handleOnSubmit={handleOnSubmit} inputRef={inputRef} />
       </div>
       <h3>History</h3>
       <div>
@@ -144,21 +121,14 @@ const ExpenseTracker = () => {
       </div>
     </section>
   );
-};
+});
 
 type InputFormProps = {
-  formInputs: Transaction;
-  handleFormInputs: (event: React.SyntheticEvent) => void;
-  handleOnSubmit: (event: React.SyntheticEvent) => void;
+  handleOnSubmit: React.FormEventHandler;
   inputRef: React.ForwardedRef<HTMLInputElement>;
 };
 
-const InputForm = ({
-  formInputs,
-  handleFormInputs,
-  handleOnSubmit,
-  inputRef,
-}: InputFormProps) => {
+const InputForm = ({ handleOnSubmit, inputRef }: InputFormProps) => {
   return (
     <div>
       <h3>Add a new entry</h3>
@@ -176,8 +146,6 @@ const InputForm = ({
             name="title"
             id="expenseName"
             placeholder="Enter an expense"
-            value={formInputs.title}
-            onChange={handleFormInputs}
             ref={inputRef}
           />
         </div>
@@ -194,8 +162,6 @@ const InputForm = ({
             name="amount"
             id="expenseAmount"
             placeholder="0.0"
-            value={formInputs.amount}
-            onChange={handleFormInputs}
           />
         </div>
         <div
@@ -214,10 +180,10 @@ const InputForm = ({
           >
             <input
               type="radio"
-              name="wallet-type"
+              name="isExpense"
+              value="expense"
               id="expense"
-              checked={formInputs.isExpense === true}
-              onChange={handleFormInputs}
+              defaultChecked
             />
             <label htmlFor="expense">Expense</label>
           </div>
@@ -228,13 +194,7 @@ const InputForm = ({
               gap: '0.5rem',
             }}
           >
-            <input
-              type="radio"
-              name="wallet-type"
-              id="income"
-              checked={formInputs.isExpense !== true}
-              onChange={handleFormInputs}
-            />
+            <input type="radio" name="isExpense" id="income" value="income" />
             <label htmlFor="income">Income</label>
           </div>
         </div>
@@ -246,7 +206,7 @@ const InputForm = ({
   );
 };
 
-const ExpenseItem = block(({ title, amount, isExpense }) => {
+const ExpenseItem = block(({ title, amount, isExpense }: Transaction) => {
   return (
     <li>
       {title} {`${isExpense ? '-' : '+'}`}{' '}
