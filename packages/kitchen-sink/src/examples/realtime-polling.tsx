@@ -9,24 +9,25 @@ export type PollOption = {
 
 const RealTimePolling = block(() => {
   const [options, setOptions] = useState<PollOption[]>([]);
-  const [inputOption, setInputOption] = useState("");
+  const [inputOption, setInputOption] = useState('');
 
   const totalVotes = options.reduce((sum, option) => sum + option.votes, 0);
 
   const handleVote = (id: number) => {
-    setOptions(prevOptions =>
-      prevOptions.map(option =>
-        option.id === id
-          ? { ...option, votes: option.votes + 1 }
-          : option
-      )
+    setOptions((prevOptions) =>
+      prevOptions.map((option) =>
+        option.id === id ? { ...option, votes: option.votes + 1 } : option,
+      ),
     );
   };
 
   const addOption = () => {
-    if (inputOption.trim() !== "") {
-      setOptions(prevOptions => [...prevOptions, { id: Date.now(), text: inputOption, votes: 0 }]);
-      setInputOption("");
+    if (inputOption.trim() !== '') {
+      setOptions((prevOptions) => [
+        ...prevOptions,
+        { id: Date.now(), text: inputOption, votes: 0 },
+      ]);
+      setInputOption('');
     }
   };
 
@@ -43,22 +44,25 @@ const RealTimePolling = block(() => {
         />
         <button
           style={{ marginLeft: 10, padding: '10px 20px 10px 20px' }}
-          onClick={addOption}>
+          onClick={addOption}
+        >
           Add Option
         </button>
       </div>
 
       <ul>
-        {options.map(option => (
+        {options.map((option) => (
           <li key={option.id}>
             <button onClick={() => handleVote(option.id)}>
               Vote for {option.text}
             </button>
             <div>
               {option.text}: {option.votes} votes
-              <div style={{ 
-                width: `${(option.votes / (totalVotes || 1)) * 100}%`
-              }}></div>
+              <div
+                style={{
+                  width: `${(option.votes / (totalVotes || 1)) * 100}%`,
+                }}
+              ></div>
             </div>
           </li>
         ))}
