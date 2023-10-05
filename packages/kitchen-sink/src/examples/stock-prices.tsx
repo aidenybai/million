@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { block } from 'million/react';
 
-const StockPriceTracker = () => {
+const StockPriceTracker = block(() => {
   const [symbol, setSymbol] = useState('');
   const [price, setPrice] = useState(null);
   const [error, setError] = useState(null);
@@ -28,7 +29,7 @@ const StockPriceTracker = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     fetchStockPrice();
-  };  
+  };
 
   return (
     <div>
@@ -44,6 +45,6 @@ const StockPriceTracker = () => {
       {error && <p>{error}</p>}
     </div>
   );
-};
+});
 
 export default StockPriceTracker;
