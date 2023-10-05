@@ -24,8 +24,8 @@ export function About() {
                 React at the speed of raw JS
               </h2>
               <p className="text-lg my-8 text-zinc-600 dark:text-zinc-300">
-                Million.js automatically optimizes React, making it run way faster. It's one
-                of the top performers in the{' '}
+                Million.js automatically optimizes React, making it run way
+                faster. It's one of the top performers in the{' '}
                 <a
                   href="https://krausest.github.io/js-framework-benchmark/2023/table_chrome_112.0.5615.49.html"
                   target="_blank"

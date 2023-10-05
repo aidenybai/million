@@ -202,6 +202,9 @@ importers:
       axios:
         specifier: ^1.4.0
         version: 1.4.0
+      emoji-picker-react:
+        specifier: ^4.5.2
+        version: 4.5.2(react@18.2.0)
       jotai:
         specifier: ^2.3.1
         version: 2.3.1(@types/react@18.2.20)(react@18.2.0)
@@ -5242,6 +5245,16 @@ packages:
 
   /elkjs@0.8.2:
     resolution: {integrity: sha512-L6uRgvZTH+4OF5NE/MBbzQx/WYpru1xCBE9respNj6qznEewGUIfhzmm7horWWxbNO2M0WckQypGctR8lH79xQ==}
+    dev: false
+
+  /emoji-picker-react@4.5.2(react@18.2.0):
+    resolution: {integrity: sha512-08v+yyFizoR9rEtLjuodTdlYQbkk0QWeKm6er0RQjks+b6Bfpw1UX9XheLcXreEAve7VVE7Tcu/kSAIm54V4zA==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: '>=16'
+    dependencies:
+      clsx: 1.2.1
+      react: 18.2.0
     dev: false
 
   /emoji-regex@10.2.1:
