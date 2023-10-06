@@ -81,8 +81,6 @@ const EventCalender = block(() => {
                                 type="textarea"
                                 placeholder="Event Name"
                                 ref={inputRef}
-                                // value={eventName}
-                                // onChange={Event_Data_Update}
                             />
                             <button
                                 className="create-btn"
