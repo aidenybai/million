@@ -326,6 +326,32 @@ input[type='range'] {
     border: none;
   }
 }
+.container {
+  width: 50vw;
+  display: flex;
+  flex-wrap: wrap;
+  margin: auto;
+  margin-top: 50px;
+  border: 10px solid white;
+}
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding-top: 50px;
+}
+.sketch-button {
+  font-size: 1.4rem;
+  border-radius: 10px;
+  background: linear-gradient(green, royalblue);
+}
+.color-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
 
 
 /* Memory Game CSS */
