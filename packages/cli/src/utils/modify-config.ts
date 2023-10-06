@@ -26,12 +26,12 @@ export async function modifyConfigFile(detectedBuildTool: BuildTool) {
      * If the config file already has million js configured, abort
      */
     configFileContent.includes('million') ||
-    configFileContent.includes('million/compiler')
+      configFileContent.includes('million/compiler')
       ? abort(
-          `${chalk.red(
-            `Million.js is already configured in ${detectedBuildTool.configFilePath}.`,
-          )}\n Please refer docs: https://million.dev/docs/install#use-the-compiler if facing any errors.`,
-        )
+        `${chalk.red(
+          `Million.js is already configured in ${detectedBuildTool.configFilePath}.`,
+        )}\n Please refer docs: https://million.dev/docs/install#use-the-compiler if facing any errors.`,
+      )
       : '';
 
     const detectedModuleType: 'esm' | 'cjs' | 'unknown' =
@@ -165,6 +165,10 @@ function detectModuleType(fileContent: string): 'cjs' | 'esm' | 'unknown' {
   if (fileContent.includes('export default')) {
     return 'esm';
   }
+  // Check for package.json type: module
+  if (JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf-8')).type === 'module') {
+    return 'esm';
+  }
 
   return 'unknown';
 }
@@ -192,7 +196,6 @@ async function wrapExportCode(
       return `${firstPart!}plugins: [million.vite({ auto: ${String(
         auto,
       )} }), ${rest.join('plugins: [')}`;
-
     case 'astro':
       /**
        * defineConfig({
@@ -252,6 +255,16 @@ async function wrapExportCode(
       return `${firstPart!}plugins: [million.rollup({ auto: ${String(
         auto,
       )} }), ${rest.join('plugins: [')}`;
+    case 'packit':
+      /**
+       * {
+       *   plugins: [million.packit({ auto: true }), ],
+       * }
+       */
+      [firstPart, ...rest] = oldExportExpression.split('plugins: [');
+      return `${firstPart!}plugins: [million.packit({ auto: ${String(
+        auto,
+      )} }), ${rest.join('plugins: [')}`;
     default:
       return '';
   }
@@ -263,8 +276,7 @@ async function handleNextCase(
 ): Promise<string> {
   const nextRouter: 'app' | 'pages' = await getNextRouter();
   return `million.next(
-  ${oldExportExpression}, { auto: ${
-    auto ? (nextRouter === 'app' ? '{ rsc: true }' : 'true') : 'false'
-  } }
+  ${oldExportExpression}, { auto: ${auto ? (nextRouter === 'app' ? '{ rsc: true }' : 'true') : 'false'
+    } }
 )`;
 }

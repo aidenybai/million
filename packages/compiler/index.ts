@@ -1,6 +1,7 @@
 import { unplugin, babelPlugin as babel, type Options } from './plugin';
 
 export const vite = unplugin.vite;
+export const packit = unplugin.vite;
 export const webpack = unplugin.webpack;
 export const rollup = unplugin.rollup;
 export const rspack = unplugin.rspack;
@@ -34,6 +35,7 @@ export const next = (
 
 export default {
   vite,
+  packit,
   webpack,
   rollup,
   rspack,

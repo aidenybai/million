@@ -20,7 +20,7 @@ export function detectBuildTool(): BuildTool | null {
       if (fs.existsSync(path.join(process.cwd(), fileName))) {
         const currentbuildTool = { ...buildTool, configFilePath: fileName };
         clack.log.success(
-          `Detected ${chalk.bold(currentbuildTool.name)} project.`,
+          `Detected ${chalk.bold(currentbuildTool.label)} project.`,
         );
         return currentbuildTool;
       }
@@ -64,7 +64,7 @@ export async function handleConfigFile({
     await withTelemetry(
       {
         enabled: telemetry,
-        integration: detectBuildTool.name,
+        integration: (detectBuildTool())?.name||"unknown",
         name: 'cli',
       },
       async () => {

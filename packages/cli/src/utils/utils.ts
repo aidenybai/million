@@ -3,7 +3,7 @@ import * as clack from '@clack/prompts';
 import * as diff from 'diff';
 import chalk from 'chalk';
 import type { BuildTool } from '../types';
-
+import * as Sentry from "@sentry/node";
 /**
  * Abort the process if the user cancels the input prompt.
  */
@@ -24,10 +24,11 @@ export async function abortIfCancelled<T>(
 export function abort(message?: string, status?: number): never {
   clack.outro(
     message ??
-      `${chalk.red('Setup failed.')}\nReport a bug at ${chalk.cyan(
-        'https://github.com/aidenybai/million/issues',
-      )}`,
+    `${chalk.red('Setup failed.')}\nReport a bug at ${chalk.cyan(
+      'https://github.com/aidenybai/million/issues',
+    )}`,
   );
+  Sentry.captureException(new Error(message));
   return process.exit(status ?? 1);
 }
 

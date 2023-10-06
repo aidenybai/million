@@ -164,6 +164,21 @@ export default {
   plugins: [million.rollup({ auto: true })],
 };`,
 };
+const packit: BuildTool = {
+  name: 'packit',
+  label: 'Reejs (Packit)',
+  bundler: 'reejs packit',
+  configFilePath: 'packit.config.js',
+  possibleFileNames: [
+    'packit.config.js',
+    'reecfg.json'
+  ],
+  configFileContent: `import million from 'million/compiler';
+
+export default {
+  plugins: [million.packit({ auto: true })],
+};`,
+};
 
 export const buildTools: BuildTool[] = [
   next,
@@ -173,4 +188,5 @@ export const buildTools: BuildTool[] = [
   craco,
   webpack,
   rollup,
+  packit,
 ];

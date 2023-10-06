@@ -74,7 +74,7 @@ export async function withTelemetry<F>(
 
 function createSentryInstance(enabled: boolean, integration: string) {
   const client = new NodeClient({
-    dsn: 'https://de9a702cad37fec31ace27d9f3976818@o4505682763382784.ingest.sentry.io/4505886741954560',
+    dsn: 'https://e4580d72551a5953e41f49dfac6444b8@o423248.ingest.sentry.io/4505804880871424',
     enabled,
 
     environment: `production-${integration}`,
