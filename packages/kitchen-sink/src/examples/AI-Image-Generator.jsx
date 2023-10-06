@@ -5,7 +5,6 @@ const  Image_generator=block(() =>{
   const [img_url,set_url]=useState("")
   let inputref=useRef(null)
   const imagegen=async()=>{
-    console.log(inputref.current.value)
      if(inputref.current.value===""){return 0;}
      try{
      const response=await fetch(
@@ -14,11 +13,11 @@ const  Image_generator=block(() =>{
         method:"POST",
         headers:{
           "Content-Type":"application/json",
-          "Authorization":"Bearer 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"
+          "Authorization":"Bearer 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"
         },
         body:JSON.stringify({
           "prompt":`${inputref.current.value}`,
-          "n":2,
+          "n":1,
           "size":"512x512",
         }),  
       }
