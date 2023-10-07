@@ -17,12 +17,14 @@ type editItemFuncType = (
   itemName: string,
 ) => void;
 type addItemFuncType = (section: string, itemName: string) => void;
+type deleteItemFuncType = (section: string, indexNumber: number) => void;
 
 type ListDisplayProps = {
   data: ListItem;
   objKey: string;
   addItem: addItemFuncType;
   editItem: editItemFuncType;
+  deleteItem: deleteItemFuncType;
 };
 
 type ListItemPropType = {
@@ -30,6 +32,7 @@ type ListItemPropType = {
   itemIndex: number;
   editItem: editItemFuncType;
   objKey: string;
+  deleteItem: deleteItemFuncType;
 };
 
 const PlusIcon = ({ size, color }: { size: string; color: string }) => {
@@ -92,11 +95,27 @@ const PenIcon = ({ size, color }: { size: string; color: string }) => {
   );
 };
 
+const TrashIcon = ({ size, color }: { size: string; color: string }) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      fill={color}
+      className="bi bi-trash-fill"
+      viewBox="0 0 16 16"
+    >
+      <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
+    </svg>
+  );
+};
+
 const ListItem = ({
   itemName,
   itemIndex,
   editItem,
   objKey,
+  deleteItem,
 }: ListItemPropType) => {
   const [isEditingItem, setIsEditingItem] = useState<boolean>(false);
   const [item, setItem] = useState<string>(itemName);
@@ -107,6 +126,9 @@ const ListItem = ({
     if (!item.trim()) return;
     editItem(objKey, itemIndex, item);
     setIsEditingItem(false);
+  }
+  function deleteItemHandler() {
+    deleteItem(objKey, itemIndex);
   }
   return (
     <>
@@ -124,7 +146,7 @@ const ListItem = ({
           <textarea
             style={{
               flex: 1,
-              border: '3px solid #2a9df5'
+              border: '3px solid #2a9df5',
             }}
             value={item}
             onChange={(e) => itemOnInputHandler(e.target.value)}
@@ -141,12 +163,21 @@ const ListItem = ({
             {item}
           </div>
         )}
-        <span
-          style={{ cursor: 'pointer' }}
-          onClick={() => setIsEditingItem(true)}
-        >
-          {isEditingItem ? <></> : <PenIcon color="gray" size="16" />}
-        </span>
+        {isEditingItem ? (
+          <></>
+        ) : (
+          <>
+            <span
+              style={{ cursor: 'pointer' }}
+              onClick={() => setIsEditingItem(true)}
+            >
+              {isEditingItem ? <></> : <PenIcon color="gray" size="16" />}
+            </span>
+            <span style={{ cursor: 'pointer' }} onClick={deleteItemHandler}>
+              <TrashIcon size="16" color="red" />
+            </span>
+          </>
+        )}
       </div>
       {isEditingItem ? (
         <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
@@ -161,7 +192,13 @@ const ListItem = ({
   );
 };
 
-const ListDisplay = ({ data, objKey, addItem, editItem }: ListDisplayProps) => {
+const ListDisplay = ({
+  data,
+  objKey,
+  addItem,
+  editItem,
+  deleteItem,
+}: ListDisplayProps) => {
   const [isAddingItem, setIsAddingItem] = useState<boolean>(false);
   const [newItemValue, setNewItemValue] = useState<string>('');
   function inputChangeHandler(value: string) {
@@ -199,6 +236,7 @@ const ListDisplay = ({ data, objKey, addItem, editItem }: ListDisplayProps) => {
             itemName={itemName}
             itemIndex={index}
             editItem={editItem}
+            deleteItem={deleteItem}
           />
         );
       })}
@@ -278,6 +316,18 @@ function TaskTracker() {
       return obj;
     });
   }
+  function deleteItem(section: string, itemIndex: number) {
+    setListData((data) => {
+      const obj = { ...data };
+      const selectedSection = obj[section as keyof ListData];
+      selectedSection.items = selectedSection.items.filter(
+        (itemName, index) => {
+          return index !== itemIndex;
+        },
+        );
+        return obj;
+    });
+  }
   return (
     <div style={{ display: 'flex' }}>
       {Object.keys(listData).map((objKey, index) => {
@@ -288,6 +338,7 @@ function TaskTracker() {
             data={listData[objKey as keyof ListData]}
             objKey={objKey}
             editItem={editItem}
+            deleteItem={deleteItem}
           />
         );
       })}
