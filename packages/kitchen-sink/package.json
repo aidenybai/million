@@ -30,6 +30,7 @@
     "styled-components": "^6.0.7",
     "swr": "^2.2.1",
     "use-sound": "^4.0.1",
+    "uuid": "^9.0.0",
     "valtio": "^1.11.2",
     "wouter": "^2.11.0",
     "zustand": "^4.4.1"
