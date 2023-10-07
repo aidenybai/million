@@ -1,22 +1,37 @@
 import { useState, useEffect } from 'react';
 import { block, For } from 'million/react';
 
-const getWordCount = (text) => text.split(' ').length;
-const getWPM = (wordCount, time) => 60000 * wordCount / time;
+const getWPM = (charCount, time) => 12000 * charCount / time;
+const endgameMsg = (wpm) => {
+  if (wpm == 0) {
+    return 'is your keyboard broken? 😭';
+  } else if (wpm <= 20) {
+    return 'a bit too slow... 😢';
+  } else if (wpm <= 40) {
+    return 'keep trying! 💪';
+  } else if (wpm <= 60) {
+    return 'nice! 🤩';
+  } else if (wpm <= 80) {
+    return 'amazing! 🔥';
+  } else if (wpm <= 100) {
+    return "you're insane! 😱";
+  } else {
+    return "are you even human?! 😱";
+  }
+}
 
 async function getSentence() {
   const response = await fetch(
-    `https://api.quotable.io/quotes/random?minLength=30&maxLength=70`
+    `https://api.quotable.io/quotes/random?minLength=30&maxLength=60`
   );
   return response.json();
 }
 
 const StcBlock = block(
-  function Sentence({ text, time, wordCount }) {
+  function Sentence({ text, time }) {
     return (
       <div>
-        <p className='type-mono'>{text}</p>
-        <p><i>{`Finished in ${Number(time / 1000).toFixed(2)} seconds.`}</i></p>
+        <span className='type-mono'>{text}</span> <i>{`(${Number(time / 1000).toFixed(2)} seconds)`}</i>
       </div>
     );
   }
@@ -27,7 +42,7 @@ function HealthBar({ status, time, score, currentStc, stopGame }) {
 
   useEffect(() => {
     if (status == 2) {
-      setHealth(h => h - 0.00025 * (120 - 0.04 * (score < 50 ? 50 - score : 0) ** 2) / currentStc.length);
+      setHealth(h => h - 0.0004 * (120 - 0.04 * (score < 50 ? 50 - score : 0) ** 2) / currentStc.length);
       if (health <= 0) {
         stopGame();
       }
@@ -53,7 +68,7 @@ function HealthBar({ status, time, score, currentStc, stopGame }) {
 }
 
 function TypingArea({ currentStc, nextStc, status, time, onSentenceCompleted }) {
-  const [displayedText, setDisplayedText] = useState([{text: 'Click button above to play!', className: 'type-none'}]);
+  const [displayedText, setDisplayedText] = useState([{text: 'Test your typing skills!', className: 'type-none'}]);
 
   const TextBlock = block(({ text, className }) => <div className={className}>{text}</div>);
 
@@ -67,7 +82,7 @@ function TypingArea({ currentStc, nextStc, status, time, onSentenceCompleted }) 
 
   useEffect(() => {
     if (status == 0) {
-      setDisplayedText([{text: 'Click button above to play!', className: 'type-none'}]);
+      setDisplayedText([{text: 'Test your typing skills!', className: 'type-none'}]);
     } else if (status == 1) {
       setDisplayedText([{text: 'Loading...', className: 'type-gray'}]);
     } else if (status == 2) {
@@ -83,14 +98,11 @@ function TypingArea({ currentStc, nextStc, status, time, onSentenceCompleted }) 
     }
     let newDisplayedText = [];
     const inputLen = inputText.length;
-    if (currentStc.length < inputLen) {
-      // show red text & outline
-      console.log('input too long');
-    } else if (currentStc == inputText) {
+    if (currentStc == inputText) {
       setDisplayedText([nextStc]);
       onSentenceCompleted();
       e.target.value = '';
-    } else {
+    } else if (currentStc.length >= inputLen) {
       for (let i = 0; i < inputLen; i++) {
         const char = currentStc[i];
         newDisplayedText.push({
@@ -115,7 +127,7 @@ function TypingArea({ currentStc, nextStc, status, time, onSentenceCompleted }) 
       <input
         type="text"
         placeholder="Start typing here..."
-        style={{ width: '100%' }}
+        style={{ width: '90%' }}
         onChange={e => handleChange(e)}
         hidden={status == 0}
       />
@@ -127,8 +139,8 @@ function StcLogsArea({ stcLogs }) {
   return (
     <div>
       <For each={stcLogs}>
-        {({ text, time, wordCount }) => (
-          <StcBlock text={text} time={time} wordCount={wordCount} />
+        {({ text, time }) => (
+          <StcBlock text={text} time={time} />
         )}
       </For>
     </div>
@@ -144,27 +156,24 @@ export default function Game() {
   const [intervalId, setIntervalId] = useState();
   const [timeLap, setTimeLap] = useState(0);
   const [stcLogs, setStcLogs] = useState([]);
-  const [totalWC, setTotalWC] = useState(0);
+  const [totalChar, setTotalChar] = useState(0);
 
   const score = stcLogs.length;
-  const endgameMsg = (wpm) => {
-    return 'test';
-  }
 
   function playGame() {
     setTime(0);
     setStcLogs([]);
     setTimeLap(0);
-    setTotalWC(0);
+    setTotalChar(0);
 
     setStatus(1);
     getSentence().then((data) => setCurrentStc(data[0].content));
     getSentence().then((data) => setNextStc(data[0].content));
     
-    setSubtitle('Get ready... (click on the grey box)');
-    setTimeout(() => setSubtitle('Get ready... 3... (click on the grey box)'), 1000);
-    setTimeout(() => setSubtitle('Get ready... 2... (click on the grey box)'), 2000);
-    setTimeout(() => setSubtitle('Get ready... 1... (click on the grey box)'), 3000);
+    setSubtitle('Get ready...');
+    setTimeout(() => setSubtitle('3...'), 1000);
+    setTimeout(() => setSubtitle('2...'), 2000);
+    setTimeout(() => setSubtitle('1...'), 3000);
     setTimeout(() => {
       setSubtitle('TYPE!');
       setStatus(2);
@@ -174,15 +183,13 @@ export default function Game() {
   }
 
   function onSentenceCompleted() {
-    const wordCount = getWordCount(currentStc);
-    setTotalWC(totalWC + wordCount);
+    setTotalChar(totalChar + currentStc.length);
     pushStcLog({
       text: currentStc,
       time: time - timeLap,
-      wordCount: wordCount,
     });
     setTimeLap(time);
-    setSubtitle(score + 1);
+    setSubtitle(`Score: ${score + 1}`);
     setCurrentStc(nextStc);
     getSentence().then((data) => setNextStc(data[0].content));
   }
@@ -195,8 +202,8 @@ export default function Game() {
   function stopGame() {
     clearInterval(intervalId);
     setStatus(0);
-    const wpm = getWPM(totalWC, time);
-    setSubtitle(wpm.toFixed() + ' wpm, ' + endgameMsg(wpm));
+    const wpm = getWPM(totalChar, time);
+    setSubtitle(`Your speed was ${wpm.toFixed()} wpm, ${endgameMsg(wpm)}`);
   }
 
   return (
@@ -220,6 +227,7 @@ export default function Game() {
         time={time}
         onSentenceCompleted={onSentenceCompleted}
       />
+      <hr/>
       <StcLogsArea stcLogs={stcLogs} />
     </div>
   );

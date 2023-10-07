@@ -440,12 +440,12 @@ input[type='range'] {
 
 .type-green {
   display: inline;
-  background-color: #27ae60;
+  background-color: #92f77e;
 }
 
 .type-red {
   display: inline;
-  background-color: red;
+  background-color: #f7887e;
 }
 
 .type-gray {
