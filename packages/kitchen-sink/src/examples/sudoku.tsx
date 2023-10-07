@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect } from 'react';
 // import { generateSudokuBoard } from './utils/generateBoard'
 // import { checkSolved } from './utils/checkSolved'
 // import { nullifyValues } from './utils/nullifyValues'
@@ -9,48 +9,50 @@ import { useState, useRef, useEffect } from 'react'
 
 declare type Board = number[][];
 
-
 /**************************************************
  *              isValid Component
  *************************************************/
-export function isValid(board: Board, row: number, col: number, num: number): boolean {
-    for (let i = 0; i < 9; i++) {
-      if (board[row][i] === num) {
-        return false;
-      }
+export function isValid(
+  board: Board,
+  row: number,
+  col: number,
+  num: number,
+): boolean {
+  for (let i = 0; i < 9; i++) {
+    if (board[row][i] === num) {
+      return false;
     }
-  
-    for (let i = 0; i < 9; i++) {
-      if (board[i][col] === num) {
-        return false;
-      }
-    }
-  
-    const startRow = Math.floor(row / 3) * 3;
-    const startCol = Math.floor(col / 3) * 3;
-    for (let i = startRow; i < startRow + 3; i++) {
-      for (let j = startCol; j < startCol + 3; j++) {
-        if (board[i][j] === num) {
-          return false;
-        }
-      }
-    }
-  
-    return true;
-  }  
+  }
 
+  for (let i = 0; i < 9; i++) {
+    if (board[i][col] === num) {
+      return false;
+    }
+  }
+
+  const startRow = Math.floor(row / 3) * 3;
+  const startCol = Math.floor(col / 3) * 3;
+  for (let i = startRow; i < startRow + 3; i++) {
+    for (let j = startCol; j < startCol + 3; j++) {
+      if (board[i][j] === num) {
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
 
 /**************************************************
  *              Shuffle Component
  *************************************************/
 export function shuffle(array: number[]): number[] {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
   }
-
+  return array;
+}
 
 /**************************************************
  *          Generate Sudoku Board Component
@@ -81,8 +83,6 @@ export function fillBoard(board: Board, row: number, col: number): boolean {
   return false;
 }
 
-
-
 /**************************************************
  *          Generate Sudoku Board Component
  *************************************************/
@@ -101,54 +101,69 @@ export function generateSudokuBoard(): Board {
   return board;
 }
 
-
 /**************************************************
  *             CheckSovled Component
  *************************************************/
 export function checkSolved(board: Board, originalBoard: Board): boolean {
-    if (board.length !== 9 || originalBoard.length !== 9) {
-      return false;
-    }
-  
-    for (let i = 0; i < 9; i++) {
-      for (let j = 0; j < 9; j++) {
-        if (board[i][j] !== originalBoard[i][j]) {
-          return false;
-        }
+  if (board.length !== 9 || originalBoard.length !== 9) {
+    return false;
+  }
+
+  for (let i = 0; i < 9; i++) {
+    for (let j = 0; j < 9; j++) {
+      if (board[i][j] !== originalBoard[i][j]) {
+        return false;
       }
     }
-    return true;
-  }  
-
+  }
+  return true;
+}
 
 /**************************************************
  *              NullifyValues Component
  *************************************************/
 export const nullifyValues = (board: Board) => {
-    const cellsToNullify = 40;
-    let cellsNullified = 0;
-    while (cellsNullified < cellsToNullify) {
-      const row = Math.floor(Math.random() * 9);
-      const col = Math.floor(Math.random() * 9);
-      if (board[row][col] !== 0) {
-        board[row][col] = 0;
-        cellsNullified++;
-      }
+  const cellsToNullify = 40;
+  let cellsNullified = 0;
+  while (cellsNullified < cellsToNullify) {
+    const row = Math.floor(Math.random() * 9);
+    const col = Math.floor(Math.random() * 9);
+    if (board[row][col] !== 0) {
+      board[row][col] = 0;
+      cellsNullified++;
     }
-  };
-  
+  }
+};
 
 /**************************************************
  *                Title Component
  *************************************************/
- const Title = () => {
-    return (
-      <h1 className="title">
-        Sudoku <span>by</span> <a href="https://github.com/datsfilipe">datsfilipe</a>
-      </h1>
-    )
-  }
-  
+const Title = () => {
+  return <h1 className="title">Sudoku</h1>;
+};
+
+/**************************************************
+ *                Toast Component
+ *************************************************/
+const Toast = ({ message }: { message: string }) => {
+  const [showToast, setShowToast] = useState(true);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setShowToast(false);
+    }, 3000); // 3000 milliseconds (3 seconds) to automatically close the toast
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, []);
+
+  return (
+    <div className={`toast ${showToast ? 'show' : ''}`}>
+      <div className="toast-content success">{message}</div>
+    </div>
+  );
+};
 
 /**************************************************
  *                Main Component
@@ -157,7 +172,6 @@ function App() {
   const [initialBoard, setInitialBoard] = useState<Board>([]);
   const boardOriginal = useRef<Board>(generateSudokuBoard());
   const [board, setBoard] = useState<Board>([]);
-  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const newBoard = JSON.parse(JSON.stringify(boardOriginal.current)) as Board;
@@ -166,43 +180,19 @@ function App() {
     setBoard(newBoard);
   }, [boardOriginal]);
 
-  if (checkSolved(board, boardOriginal.current)) {
-    alert('You solved the puzzle!');
-  }
-
+ 
   return (
-    <main>
-        <style>
-            {`
-                :root {
-                    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
-                      "Helvetica Neue", sans-serif;
-                    color-scheme: light dark;
-                    color: rgba(255, 255, 255, 0.87);
-                    background-color: #181818;
-                    font-synthesis: none;
-                    text-rendering: optimizeLegibility;
-                    -webkit-font-smoothing: antialiased;
-                    -moz-osx-font-smoothing: grayscale;
-                    -webkit-text-size-adjust: 100%;
-                  }
-                  
-                 
-                  
-                  main {
-                    min-width: 100vw;
-                    height: 100vh;
-                    overflow: hidden;
-                    display: flex;
-                  }
-                  
-                 
+    <main
+      style={{
+        background:'linear-gradient(to bottom right, rgb(40, 40, 43),rgb(48, 25, 52))',
+        position : 'relative'
+      }}
+    >
+      <style>
+        {`
+                
                   
                   @media (prefers-color-scheme: light) {
-                    :root {
-                      color: #213547;
-                      background-color: #ffffff;
-                    }
                     a:hover {
                       color: #ffffff;
                     }
@@ -214,7 +204,7 @@ function App() {
                   .content {
                     width: 100%;
                     height: 100vh;
-                    margin: 0 auto;
+                    margin-left: 10%;
                     padding: 0;
                     display: flex;
                     flex-direction: column;
@@ -227,8 +217,8 @@ function App() {
                     position: absolute;
                     width: 15rem;
                     height: 100%;
-                    background-color: #212121;
-                    color: #fff;
+                    background-color: rgb(48, 25, 52);
+                    color: rgb(237, 234, 222);
                     display: flex;
                     flex-direction: column;
                     align-items: center;
@@ -277,6 +267,7 @@ function App() {
                     text-align: center;
                     flex-wrap: wrap;
                     width: 80%;
+                    color:#E35335;
                     height: 5rem;
                     display: flex;
                     align-items: center;
@@ -360,29 +351,52 @@ function App() {
                     text-align: center;
                     padding: 0;
                   }
+                  /* Toast.css */
+                  .toast {
+                    position: absolute;
+                    top: 20px;
+                    right: 20px;
+                    background-color: #4caf50; /* Green background color for success */
+                    color: #fff;
+                    padding: 16px;
+                    border-radius: 4px;
+                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+                    transition: opacity 0.5s;
+                    opacity: 0;
+                    pointer-events: none;
+                    z-index: 9999;
+                  }
+
+                  .toast.show {
+                    opacity: 1;
+                    pointer-events: auto;
+                  }
+
+                  .toast-content {
+                    font-size: 16px;
+                  }
                   
             `}
-        </style>
-      <aside
-        className="sidebar"
-        style={{ transform: open ? 'translateX(0)' : 'translateX(-100%)' }}
-      >
+      </style>
+      {checkSolved(board, boardOriginal.current) && (<Toast message='Hooray! 🎉 Puzzle solved!'/>)}
+      <aside className="sidebar" style={{ transform: 'translateX(0)' }}>
         <div className="instructions">
           <h2>Instructions</h2>
           <p>
-            Fill in the grid so that every row, every column, and every 3x3 box contains the digits 1 through 9.
+            Fill in the grid so that every row, every column, and every 3x3 box
+            contains the digits 1 through 9.
           </p>
 
           <h2>How to Play</h2>
-          <p>
-            Click on a cell and enter a number using your keyboard.
-          </p>
+          <p>Click on a cell and enter a number using your keyboard.</p>
           <h2>Actions</h2>
           <div className="actions">
             <button
-              className='button'
+              className="button"
               onClick={() => {
-                const newBoard = JSON.parse(JSON.stringify(boardOriginal.current)) as Board;
+                const newBoard = JSON.parse(
+                  JSON.stringify(boardOriginal.current),
+                ) as Board;
                 nullifyValues(newBoard);
                 setInitialBoard(newBoard);
                 setBoard(newBoard);
@@ -391,9 +405,11 @@ function App() {
               Reset
             </button>
             <button
-              className='button'
+              className="button"
               onClick={() => {
-                const newBoard = JSON.parse(JSON.stringify(boardOriginal.current)) as Board;
+                const newBoard = JSON.parse(
+                  JSON.stringify(boardOriginal.current),
+                ) as Board;
                 setBoard(newBoard);
               }}
             >
@@ -402,19 +418,22 @@ function App() {
           </div>
         </div>
       </aside>
-      <button
+      {/*<button
         className="sidebar-button"
         onClick={() => setOpen(!open)}
       >
         {open ? '⬅' : '➡'}
-      </button>
+            </button>*/}
       <div className="content">
         <Title />
         <div className="board">
           {board.map((square, i) => (
             <div className="square" key={i}>
               {square.map((num, j) => (
-                <div key={j} className={`cell ${initialBoard?.[i][j] ? 'filled' : ''}`}>
+                <div
+                  key={j}
+                  className={`cell ${initialBoard?.[i][j] ? 'filled' : ''}`}
+                >
                   <input
                     type="number"
                     min="1"
@@ -440,9 +459,7 @@ function App() {
         </div>
       </div>
     </main>
-  )
+  );
 }
 
-export default App
-
-
+export default App;
