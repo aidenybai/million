@@ -658,4 +658,67 @@ input[type='range'] {
   justify-content: center;
   align-items: center;
   gap: 10px;
+
+}
+.game-container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+  .restart {
+    background-color: #007bff;
+    padding: 20px;
+    font-size: 1.4rem;
+  }
+  .box1 {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    & button {
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.4em;
+      border-radius: 10px;
+      background-color: royalblue;
+    }
+    button:active {
+      transition: 1s;
+      transform: scale(0.8);
+      background-color: royalblue;
+    }
+  }
+  .box2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    font-size: 1.8em;
+    text-align: center;
+    align-items: center;
+    & .box {
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      align-items: center;
+      border: 2px solid black;
+      padding: 10px;
+    }
+  }
+
+  .output1 {
+    font-size: 1.1rem;
+    margin: auto;
+    text-align: center;
+    margin-top: 20px;
+  }
+  .output {
+    font-size: 1.4rem;
+    margin: auto;
+    text-align: center;
+    font-weight: 700;
+  }
 }
