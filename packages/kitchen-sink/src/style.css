@@ -765,3 +765,48 @@ input[type='range'] {
     font-weight: 700;
   }
 }
+
+.strength-meter {
+  position: relative;
+  height: 1rem;
+  width: 90%;
+  border: 2px solid hsl(261, 88%, 57%);
+  border-radius: 1rem;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.strength-meter::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  height: 100%;
+  width: calc(1% * var(--strength, 0));
+  background-color: hsl(261, 88%, 67%);
+
+  transition: width 200ms;
+}
+
+.password-input {
+  width: 90%;
+  padding: .25rem .75rem;
+  /* background-color: hsl(261, 88%, 25%);
+  color: white;
+  border: 1px solid hsl(261, 88%, 57%);
+  outline: none;
+  text-align: center;
+  border-radius: .3rem; */
+}
+
+.password-input:focus {
+  /* border-color: hsl(261, 88%, 70%); */
+}
+
+.reasons > * {
+  margin-top: .5rem;
+  color: hsl(261, 88%, 80%);
+}
+
+*::before, *::after, * {
+  box-sizing: border-box;
+}
