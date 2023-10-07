@@ -1,8 +1,14 @@
 import { useState } from 'react';
+import { v4 as uuid4 } from 'uuid';
+
+type itemType = {
+  itemName: string;
+  uniqueId: string;
+};
 
 type ListItem = {
   title: string;
-  items: string[];
+  items: itemType[];
 };
 
 type ListData = {
@@ -13,11 +19,11 @@ type ListData = {
 
 type editItemFuncType = (
   section: string,
-  itemIndex: number,
+  uId: string,
   itemName: string,
 ) => void;
 type addItemFuncType = (section: string, itemName: string) => void;
-type deleteItemFuncType = (section: string, indexNumber: number) => void;
+type deleteItemFuncType = (section: string, uId: string) => void;
 
 type ListDisplayProps = {
   data: ListItem;
@@ -28,8 +34,7 @@ type ListDisplayProps = {
 };
 
 type ListItemPropType = {
-  itemName: string;
-  itemIndex: number;
+  itemData: itemType;
   editItem: editItemFuncType;
   objKey: string;
   deleteItem: deleteItemFuncType;
@@ -111,24 +116,23 @@ const TrashIcon = ({ size, color }: { size: string; color: string }) => {
 };
 
 const ListItem = ({
-  itemName,
-  itemIndex,
+  itemData,
   editItem,
   objKey,
   deleteItem,
 }: ListItemPropType) => {
   const [isEditingItem, setIsEditingItem] = useState<boolean>(false);
-  const [item, setItem] = useState<string>(itemName);
+  const [item, setItem] = useState<itemType>(itemData);
   function itemOnInputHandler(value: string) {
-    setItem(value);
+    setItem({ ...item, itemName: value });
   }
   function addItemHandler() {
-    if (!item.trim()) return;
-    editItem(objKey, itemIndex, item);
+    if (!item.itemName.trim()) return;
+    editItem(objKey, item.uniqueId, item.itemName);
     setIsEditingItem(false);
   }
   function deleteItemHandler() {
-    deleteItem(objKey, itemIndex);
+    deleteItem(objKey, item.uniqueId);
   }
   return (
     <>
@@ -148,7 +152,7 @@ const ListItem = ({
               flex: 1,
               border: '3px solid #2a9df5',
             }}
-            value={item}
+            value={item.itemName}
             onChange={(e) => itemOnInputHandler(e.target.value)}
           />
         ) : (
@@ -160,7 +164,7 @@ const ListItem = ({
               overflow: 'hidden',
             }}
           >
-            {item}
+            {item.itemName}
           </div>
         )}
         {isEditingItem ? (
@@ -228,13 +232,12 @@ const ListDisplay = ({
       }}
     >
       <strong style={{ color: '#35ceff' }}>{data.title}</strong>
-      {data.items.map((itemName, index) => {
+      {data.items.map((item) => {
         return (
           <ListItem
             objKey={objKey}
-            key={index}
-            itemName={itemName}
-            itemIndex={index}
+            key={item.uniqueId}
+            itemData={item}
             editItem={editItem}
             deleteItem={deleteItem}
           />
@@ -299,33 +302,30 @@ function TaskTracker() {
       const obj = { ...data };
       obj[section as keyof ListData].items = [
         ...obj[section as keyof ListData].items,
-        itemName,
+        { itemName, uniqueId: uuid4() },
       ];
       return obj;
     });
   }
-  function editItem(section: string, itemIndex: number, newItemName: string) {
+  function editItem(section: string, uId: string, newItemName: string) {
     setListData((data) => {
       const obj = { ...data };
       const selectedSection = obj[section as keyof ListData];
-      selectedSection.items = selectedSection.items.map((itemName, index) => {
-        if (index === itemIndex) return newItemName;
-        return itemName;
+      selectedSection.items = selectedSection.items.map((item) => {
+        if (item.uniqueId === uId) return { ...item, itemName: newItemName };
+        return item;
       });
-
       return obj;
     });
   }
-  function deleteItem(section: string, itemIndex: number) {
+  function deleteItem(section: string, uId: string) {
     setListData((data) => {
       const obj = { ...data };
       const selectedSection = obj[section as keyof ListData];
-      selectedSection.items = selectedSection.items.filter(
-        (itemName, index) => {
-          return index !== itemIndex;
-        },
-        );
-        return obj;
+      selectedSection.items = selectedSection.items.filter((item) => {
+        return item.uniqueId !== uId;
+      });
+      return obj;
     });
   }
   return (
