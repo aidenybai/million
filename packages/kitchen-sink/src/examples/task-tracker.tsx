@@ -113,16 +113,19 @@ const ListItem = ({
       <div
         style={{
           display: 'flex',
-          border: '1px solid black',
           background: 'white',
-          borderRadius: '4px',
+          borderRadius: '0.35rem',
           color: 'black',
-          padding: '5px',
-          marginTop: '10px',
+          padding: '0.2rem 0.5rem',
+          marginTop: '0.8rem',
         }}
       >
         {isEditingItem ? (
           <textarea
+            style={{
+              flex: 1,
+              border: '3px solid #2a9df5'
+            }}
             value={item}
             onChange={(e) => itemOnInputHandler(e.target.value)}
           />
@@ -142,13 +145,13 @@ const ListItem = ({
           style={{ cursor: 'pointer' }}
           onClick={() => setIsEditingItem(true)}
         >
-          {isEditingItem ? <></> : <PenIcon color="black" size="16" />}
+          {isEditingItem ? <></> : <PenIcon color="gray" size="16" />}
         </span>
       </div>
       {isEditingItem ? (
         <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
           <span style={{ cursor: 'pointer' }} onClick={addItemHandler}>
-            <TickIcon color="green" size="20" />
+            <TickIcon color="green" size="25" />
           </span>
         </div>
       ) : (
@@ -177,16 +180,17 @@ const ListDisplay = ({ data, objKey, addItem, editItem }: ListDisplayProps) => {
   return (
     <div
       style={{
-        margin: '5px 20px',
-        width: '25%',
-        border: '1px solid white',
-        borderRadius: '4px',
-        padding: '5px',
+        margin: '0rem 0.8rem',
+        flex: 1,
+        overflow: 'hidden',
+        borderRadius: '0.4rem',
+        padding: '0.5rem 0.5rem',
         display: 'flex',
         flexDirection: 'column',
+        background: 'black',
       }}
     >
-      <strong>{data.title}</strong>
+      <strong style={{ color: '#35ceff' }}>{data.title}</strong>
       {data.items.map((itemName, index) => {
         return (
           <ListItem
@@ -204,21 +208,20 @@ const ListDisplay = ({ data, objKey, addItem, editItem }: ListDisplayProps) => {
             value={newItemValue}
             onChange={(e) => inputChangeHandler(e.target.value)}
             style={{
-              border: '1px solid black',
-              background: 'beige',
-              borderRadius: '4px',
+              border: '3px solid #2a9df5',
+              background: 'white',
+              borderRadius: '0.35rem',
               color: 'black',
-              padding: '5px',
-              marginTop: '10px',
-              height: '20px',
+              padding: '0.5rem 0.5rem',
+              marginTop: '0.8rem',
             }}
           />
           <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
             <span style={{ cursor: 'pointer' }} onClick={cancleAddItemHandler}>
-              <CancleIcon color="red" size="20" />
+              <CancleIcon color="red" size="25" />
             </span>
             <span style={{ cursor: 'pointer' }} onClick={addItemHandler}>
-              <TickIcon color="green" size="20" />
+              <TickIcon color="green" size="25" />
             </span>
           </div>
         </>
@@ -230,7 +233,7 @@ const ListDisplay = ({ data, objKey, addItem, editItem }: ListDisplayProps) => {
           style={{ cursor: 'pointer' }}
           onClick={() => setIsAddingItem(true)}
         >
-          <PlusIcon color="black" size="25" />
+          <PlusIcon color="white" size="25" />
         </span>
       </div>
     </div>
