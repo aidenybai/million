@@ -1,18 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
-// import { generateSudokuBoard } from './utils/generateBoard'
-// import { checkSolved } from './utils/checkSolved'
-// import { nullifyValues } from './utils/nullifyValues'
-// import './globals.css'
-// import { fillBoard } from "./fillBoard"
-// import { isValid } from "./isValid"
-// import { shuffle } from "./shuffle"
+import { block } from 'million/react';
 
 declare type Board = number[][];
 
 /**************************************************
  *              isValid Component
  *************************************************/
-export function isValid(
+ function isValid(
   board: Board,
   row: number,
   col: number,
@@ -46,7 +40,7 @@ export function isValid(
 /**************************************************
  *              Shuffle Component
  *************************************************/
-export function shuffle(array: number[]): number[] {
+ function shuffle(array: number[]): number[] {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
@@ -57,7 +51,7 @@ export function shuffle(array: number[]): number[] {
 /**************************************************
  *          Generate Sudoku Board Component
  *************************************************/
-export function fillBoard(board: Board, row: number, col: number): boolean {
+ function fillBoard(board: Board, row: number, col: number): boolean {
   if (row === 9) {
     return true;
   }
@@ -104,7 +98,7 @@ export function generateSudokuBoard(): Board {
 /**************************************************
  *             CheckSovled Component
  *************************************************/
-export function checkSolved(board: Board, originalBoard: Board): boolean {
+ function checkSolved(board: Board, originalBoard: Board): boolean {
   if (board.length !== 9 || originalBoard.length !== 9) {
     return false;
   }
@@ -122,7 +116,7 @@ export function checkSolved(board: Board, originalBoard: Board): boolean {
 /**************************************************
  *              NullifyValues Component
  *************************************************/
-export const nullifyValues = (board: Board) => {
+ const nullifyValues =  (board: Board) => {
   const cellsToNullify = 40;
   let cellsNullified = 0;
   while (cellsNullified < cellsToNullify) {
@@ -145,7 +139,7 @@ const Title = () => {
 /**************************************************
  *                Toast Component
  *************************************************/
-const Toast = ({ message }: { message: string }) => {
+const Toast = block(({ message }: { message: string }) => {
   const [showToast, setShowToast] = useState(true);
 
   useEffect(() => {
@@ -163,12 +157,12 @@ const Toast = ({ message }: { message: string }) => {
       <div className="toast-content success">{message}</div>
     </div>
   );
-};
+});
 
 /**************************************************
  *                Main Component
  *************************************************/
-function App() {
+const App =() => {
   const [initialBoard, setInitialBoard] = useState<Board>([]);
   const boardOriginal = useRef<Board>(generateSudokuBoard());
   const [board, setBoard] = useState<Board>([]);
