@@ -14,12 +14,15 @@
     "vite-plugin-inspect": "^0.7.37"
   },
   "dependencies": {
+    "@emoji-mart/data": "^1.1.2",
+    "@emoji-mart/react": "^1.1.1",
     "@material-ui/core": "^4.12.4",
     "@reduxjs/toolkit": "^1.9.6",
     "@tanstack/react-query": "^4.32.6",
     "@tanstack/react-virtual": "3.0.0-beta.54",
     "@types/react-redux": "^7.1.27",
     "axios": "^1.4.0",
+    "emoji-mart": "^5.5.2",
     "emoji-picker-react": "^4.5.2",
     "jotai": "^2.3.1",
     "react": "^18.2.0",
@@ -29,6 +32,7 @@
     "react-qr-code": "^2.0.12",
     "react-redux": "^8.1.3",
     "react-router-dom": "^6.15.0",
+    "react-shorten-url": "^1.0.5",
     "styled-components": "^6.0.7",
     "swr": "^2.2.1",
     "use-sound": "^4.0.1",
