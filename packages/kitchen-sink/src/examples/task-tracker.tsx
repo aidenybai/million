@@ -11,10 +11,25 @@ type ListData = {
   COMPLETED: ListItem;
 };
 
+type editItemFuncType = (
+  section: string,
+  itemIndex: number,
+  itemName: string,
+) => void;
+type addItemFuncType = (section: string, itemName: string) => void;
+
 type ListDisplayProps = {
   data: ListItem;
   objKey: string;
-  addItem: (section: string, itemName: string) => void;
+  addItem: addItemFuncType;
+  editItem: editItemFuncType;
+};
+
+type ListItemPropType = {
+  itemName: string;
+  itemIndex: number;
+  editItem: editItemFuncType;
+  objKey: string;
 };
 
 const PlusIcon = ({ size }: { size: string }) => {
@@ -62,7 +77,88 @@ const CancleIcon = ({ size }: { size: string }) => {
   );
 };
 
-const ListDisplay = ({ data, objKey, addItem }: ListDisplayProps) => {
+const PenIcon = ({ size }: { size: string }) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      fill="currentColor"
+      className="bi bi-pencil-fill"
+      viewBox="0 0 16 16"
+    >
+      <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
+    </svg>
+  );
+};
+
+const ListItem = ({
+  itemName,
+  itemIndex,
+  editItem,
+  objKey,
+}: ListItemPropType) => {
+  const [isEditingItem, setIsEditingItem] = useState<boolean>(false);
+  const [item, setItem] = useState<string>(itemName);
+  function itemOnInputHandler(value: string) {
+    setItem(value);
+  }
+  function addItemHandler() {
+    if (!item.trim()) return;
+    editItem(objKey, itemIndex, item);
+    setIsEditingItem(false);
+  }
+  return (
+    <>
+      <div
+        style={{
+          display: 'flex',
+          border: '1px solid black',
+          background: 'white',
+          borderRadius: '4px',
+          color: 'black',
+          padding: '5px',
+          marginTop: '10px',
+        }}
+      >
+        {isEditingItem ? (
+          <textarea
+            value={item}
+            onChange={(e) => itemOnInputHandler(e.target.value)}
+          />
+        ) : (
+          <div
+            style={{
+              flex: 1,
+              wordWrap: 'break-word',
+              overflowWrap: 'break-word',
+              overflow: 'hidden',
+            }}
+          >
+            {item}
+          </div>
+        )}
+        <span
+          style={{ cursor: 'pointer' }}
+          onClick={() => setIsEditingItem(true)}
+        >
+          {isEditingItem ? <></> : <PenIcon size="16" />}
+        </span>
+      </div>
+      {isEditingItem ? (
+        <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
+          <span style={{ cursor: 'pointer' }} onClick={addItemHandler}>
+            <TickIcon size="20" />
+          </span>
+        </div>
+      ) : (
+        <></>
+      )}
+    </>
+  );
+};
+
+const ListDisplay = ({ data, objKey, addItem, editItem }: ListDisplayProps) => {
   const [isAddingItem, setIsAddingItem] = useState<boolean>(false);
   const [newItemValue, setNewItemValue] = useState<string>('');
   function inputChangeHandler(value: string) {
@@ -90,22 +186,16 @@ const ListDisplay = ({ data, objKey, addItem }: ListDisplayProps) => {
         flexDirection: 'column',
       }}
     >
-      <strong>{data.title}</strong>{' '}
+      <strong>{data.title}</strong>
       {data.items.map((itemName, index) => {
         return (
-          <div
+          <ListItem
+            objKey={objKey}
             key={index}
-            style={{
-              border: '1px solid black',
-              background: 'beige',
-              borderRadius: '4px',
-              color: 'black',
-              padding: '5px',
-              marginTop: '10px',
-            }}
-          >
-            {itemName}
-          </div>
+            itemName={itemName}
+            itemIndex={index}
+            editItem={editItem}
+          />
         );
       })}
       {isAddingItem ? (
@@ -173,6 +263,18 @@ function TaskTracker() {
       return obj;
     });
   }
+  function editItem(section: string, itemIndex: number, newItemName: string) {
+    setListData((data) => {
+      const obj = { ...data };
+      const selectedSection = obj[section as keyof ListData];
+      selectedSection.items = selectedSection.items.map((itemName, index) => {
+        if (index === itemIndex) return newItemName;
+        return itemName;
+      });
+
+      return obj;
+    });
+  }
   return (
     <div style={{ display: 'flex' }}>
       {Object.keys(listData).map((objKey, index) => {
@@ -182,6 +284,7 @@ function TaskTracker() {
             key={index}
             data={listData[objKey as keyof ListData]}
             objKey={objKey}
+            editItem={editItem}
           />
         );
       })}
