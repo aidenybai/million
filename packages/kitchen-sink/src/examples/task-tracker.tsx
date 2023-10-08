@@ -244,6 +244,11 @@ const ListDisplayBlock = block(function ListDisplay({
     setNewItemValue('');
     setIsAddingItem(false);
   }
+  function keyDownHandler(key: string) {
+    if (key === 'Enter') {
+      addItemHandler();
+    }
+  }
   return (
     <div
       style={{
@@ -281,6 +286,7 @@ const ListDisplayBlock = block(function ListDisplay({
         <>
           <input
             value={newItemValue}
+            onKeyDown={(e) => keyDownHandler(e.key)}
             onChange={(e) => inputChangeHandler(e.target.value)}
             style={{
               border: '3px solid #2a9df5',
