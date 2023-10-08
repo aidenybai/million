@@ -9,6 +9,7 @@
   "devDependencies": {
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
+    "@types/uuid": "^9.0.5",
     "@vitejs/plugin-react": "^4.0.0",
     "vite": "4.4.9",
     "vite-plugin-inspect": "^0.7.37"
