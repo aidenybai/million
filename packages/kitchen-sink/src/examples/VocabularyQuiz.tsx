@@ -121,6 +121,7 @@ const VocabularyQuiz: React.FC = block(() => {
   };
 
   useEffect(() => {
+    reset();
     setRandomIndices(getRandomIndices(current.length, 4));
   }, [currentCardIndex]);
 
