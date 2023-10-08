@@ -6,6 +6,7 @@ import {
   Draggable,
   OnDragEndResponder,
 } from '@hello-pangea/dnd';
+import { block } from 'million/react';
 
 type itemType = {
   itemName: string;
@@ -122,13 +123,13 @@ const TrashIcon = ({ size, color }: { size: string; color: string }) => {
   );
 };
 
-const ListItem = ({
+const ListItemBlock = block(function ({
   itemData,
   editItem,
   objKey,
   deleteItem,
   index,
-}: ListItemPropType) => {
+}: ListItemPropType) {
   const [isEditingItem, setIsEditingItem] = useState<boolean>(false);
   const [item, setItem] = useState<itemType>(itemData);
   function itemOnInputHandler(value: string) {
@@ -219,15 +220,15 @@ const ListItem = ({
       )}
     </Draggable>
   );
-};
+});
 
-const ListDisplay = ({
+const ListDisplayBlock = block(function ListDisplay({
   data,
   objKey,
   addItem,
   editItem,
   deleteItem,
-}: ListDisplayProps) => {
+}: ListDisplayProps) {
   const [isAddingItem, setIsAddingItem] = useState<boolean>(false);
   const [newItemValue, setNewItemValue] = useState<string>('');
   function inputChangeHandler(value: string) {
@@ -262,7 +263,7 @@ const ListDisplay = ({
           <div {...provided.droppableProps} ref={provided.innerRef}>
             {data.items.map((item, index) => {
               return (
-                <ListItem
+                <ListItemBlock
                   index={index}
                   objKey={objKey}
                   key={item.uniqueId}
@@ -312,9 +313,9 @@ const ListDisplay = ({
       </div>
     </div>
   );
-};
+});
 
-function TaskTracker() {
+const TaskTrackerBlock = block(function TaskTracker() {
   const [listData, setListData] = useState<ListData>({
     TODO: {
       title: 'To-Do',
@@ -381,7 +382,7 @@ function TaskTracker() {
       <DragDropContext onDragEnd={onDragEndHandler}>
         {Object.keys(listData).map((objKey, index) => {
           return (
-            <ListDisplay
+            <ListDisplayBlock
               addItem={addItem}
               key={index}
               data={listData[objKey as keyof ListData]}
@@ -394,6 +395,6 @@ function TaskTracker() {
       </DragDropContext>
     </div>
   );
-}
+});
 
-export default TaskTracker;
+export default TaskTrackerBlock;
