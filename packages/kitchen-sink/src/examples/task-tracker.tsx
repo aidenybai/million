@@ -32,13 +32,13 @@ type ListItemPropType = {
   objKey: string;
 };
 
-const PlusIcon = ({ size }: { size: string }) => {
+const PlusIcon = ({ size, color }: { size: string; color: string }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width={size}
       height={size}
-      fill="currentColor"
+      fill={color}
       className="bi bi-plus-circle-fill"
       viewBox="0 0 16 16"
     >
@@ -47,13 +47,13 @@ const PlusIcon = ({ size }: { size: string }) => {
   );
 };
 
-const TickIcon = ({ size }: { size: string }) => {
+const TickIcon = ({ size, color }: { size: string; color: string }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width={size}
       height={size}
-      fill="currentColor"
+      fill={color}
       className="bi bi-check"
       viewBox="0 0 16 16"
     >
@@ -62,13 +62,13 @@ const TickIcon = ({ size }: { size: string }) => {
   );
 };
 
-const CancleIcon = ({ size }: { size: string }) => {
+const CancleIcon = ({ size, color }: { size: string; color: string }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width={size}
       height={size}
-      fill="currentColor"
+      fill={color}
       className="bi bi-x"
       viewBox="0 0 16 16"
     >
@@ -77,13 +77,13 @@ const CancleIcon = ({ size }: { size: string }) => {
   );
 };
 
-const PenIcon = ({ size }: { size: string }) => {
+const PenIcon = ({ size, color }: { size: string; color: string }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width={size}
       height={size}
-      fill="currentColor"
+      fill={color}
       className="bi bi-pencil-fill"
       viewBox="0 0 16 16"
     >
@@ -142,13 +142,13 @@ const ListItem = ({
           style={{ cursor: 'pointer' }}
           onClick={() => setIsEditingItem(true)}
         >
-          {isEditingItem ? <></> : <PenIcon size="16" />}
+          {isEditingItem ? <></> : <PenIcon color="black" size="16" />}
         </span>
       </div>
       {isEditingItem ? (
         <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
           <span style={{ cursor: 'pointer' }} onClick={addItemHandler}>
-            <TickIcon size="20" />
+            <TickIcon color="green" size="20" />
           </span>
         </div>
       ) : (
@@ -215,10 +215,10 @@ const ListDisplay = ({ data, objKey, addItem, editItem }: ListDisplayProps) => {
           />
           <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
             <span style={{ cursor: 'pointer' }} onClick={cancleAddItemHandler}>
-              <CancleIcon size="20" />
+              <CancleIcon color="red" size="20" />
             </span>
             <span style={{ cursor: 'pointer' }} onClick={addItemHandler}>
-              <TickIcon size="20" />
+              <TickIcon color="green" size="20" />
             </span>
           </div>
         </>
@@ -230,7 +230,7 @@ const ListDisplay = ({ data, objKey, addItem, editItem }: ListDisplayProps) => {
           style={{ cursor: 'pointer' }}
           onClick={() => setIsAddingItem(true)}
         >
-          <PlusIcon size="25" />
+          <PlusIcon color="black" size="25" />
         </span>
       </div>
     </div>
