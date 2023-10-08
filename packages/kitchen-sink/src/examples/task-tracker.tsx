@@ -1,8 +1,14 @@
 import { useState } from 'react';
+import { v4 as uuid4 } from 'uuid';
+
+type itemType = {
+  itemName: string;
+  uniqueId: string;
+};
 
 type ListItem = {
   title: string;
-  items: string[];
+  items: itemType[];
 };
 
 type ListData = {
@@ -13,23 +19,25 @@ type ListData = {
 
 type editItemFuncType = (
   section: string,
-  itemIndex: number,
+  uId: string,
   itemName: string,
 ) => void;
 type addItemFuncType = (section: string, itemName: string) => void;
+type deleteItemFuncType = (section: string, uId: string) => void;
 
 type ListDisplayProps = {
   data: ListItem;
   objKey: string;
   addItem: addItemFuncType;
   editItem: editItemFuncType;
+  deleteItem: deleteItemFuncType;
 };
 
 type ListItemPropType = {
-  itemName: string;
-  itemIndex: number;
+  itemData: itemType;
   editItem: editItemFuncType;
   objKey: string;
+  deleteItem: deleteItemFuncType;
 };
 
 const PlusIcon = ({ size, color }: { size: string; color: string }) => {
@@ -92,21 +100,39 @@ const PenIcon = ({ size, color }: { size: string; color: string }) => {
   );
 };
 
+const TrashIcon = ({ size, color }: { size: string; color: string }) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      fill={color}
+      className="bi bi-trash-fill"
+      viewBox="0 0 16 16"
+    >
+      <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
+    </svg>
+  );
+};
+
 const ListItem = ({
-  itemName,
-  itemIndex,
+  itemData,
   editItem,
   objKey,
+  deleteItem,
 }: ListItemPropType) => {
   const [isEditingItem, setIsEditingItem] = useState<boolean>(false);
-  const [item, setItem] = useState<string>(itemName);
+  const [item, setItem] = useState<itemType>(itemData);
   function itemOnInputHandler(value: string) {
-    setItem(value);
+    setItem({ ...item, itemName: value });
   }
   function addItemHandler() {
-    if (!item.trim()) return;
-    editItem(objKey, itemIndex, item);
+    if (!item.itemName.trim()) return;
+    editItem(objKey, item.uniqueId, item.itemName);
     setIsEditingItem(false);
+  }
+  function deleteItemHandler() {
+    deleteItem(objKey, item.uniqueId);
   }
   return (
     <>
@@ -126,7 +152,7 @@ const ListItem = ({
               flex: 1,
               border: '3px solid #2a9df5',
             }}
-            value={item}
+            value={item.itemName}
             onChange={(e) => itemOnInputHandler(e.target.value)}
           />
         ) : (
@@ -138,15 +164,24 @@ const ListItem = ({
               overflow: 'hidden',
             }}
           >
-            {item}
+            {item.itemName}
           </div>
         )}
-        <span
-          style={{ cursor: 'pointer' }}
-          onClick={() => setIsEditingItem(true)}
-        >
-          {isEditingItem ? <></> : <PenIcon color="gray" size="16" />}
-        </span>
+        {isEditingItem ? (
+          <></>
+        ) : (
+          <>
+            <span
+              style={{ cursor: 'pointer' }}
+              onClick={() => setIsEditingItem(true)}
+            >
+              {isEditingItem ? <></> : <PenIcon color="gray" size="16" />}
+            </span>
+            <span style={{ cursor: 'pointer' }} onClick={deleteItemHandler}>
+              <TrashIcon size="16" color="red" />
+            </span>
+          </>
+        )}
       </div>
       {isEditingItem ? (
         <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
@@ -161,7 +196,13 @@ const ListItem = ({
   );
 };
 
-const ListDisplay = ({ data, objKey, addItem, editItem }: ListDisplayProps) => {
+const ListDisplay = ({
+  data,
+  objKey,
+  addItem,
+  editItem,
+  deleteItem,
+}: ListDisplayProps) => {
   const [isAddingItem, setIsAddingItem] = useState<boolean>(false);
   const [newItemValue, setNewItemValue] = useState<string>('');
   function inputChangeHandler(value: string) {
@@ -191,14 +232,14 @@ const ListDisplay = ({ data, objKey, addItem, editItem }: ListDisplayProps) => {
       }}
     >
       <strong style={{ color: '#35ceff' }}>{data.title}</strong>
-      {data.items.map((itemName, index) => {
+      {data.items.map((item) => {
         return (
           <ListItem
             objKey={objKey}
-            key={index}
-            itemName={itemName}
-            itemIndex={index}
+            key={item.uniqueId}
+            itemData={item}
             editItem={editItem}
+            deleteItem={deleteItem}
           />
         );
       })}
@@ -261,20 +302,29 @@ function TaskTracker() {
       const obj = { ...data };
       obj[section as keyof ListData].items = [
         ...obj[section as keyof ListData].items,
-        itemName,
+        { itemName, uniqueId: uuid4() },
       ];
       return obj;
     });
   }
-  function editItem(section: string, itemIndex: number, newItemName: string) {
+  function editItem(section: string, uId: string, newItemName: string) {
     setListData((data) => {
       const obj = { ...data };
       const selectedSection = obj[section as keyof ListData];
-      selectedSection.items = selectedSection.items.map((itemName, index) => {
-        if (index === itemIndex) return newItemName;
-        return itemName;
+      selectedSection.items = selectedSection.items.map((item) => {
+        if (item.uniqueId === uId) return { ...item, itemName: newItemName };
+        return item;
       });
-
+      return obj;
+    });
+  }
+  function deleteItem(section: string, uId: string) {
+    setListData((data) => {
+      const obj = { ...data };
+      const selectedSection = obj[section as keyof ListData];
+      selectedSection.items = selectedSection.items.filter((item) => {
+        return item.uniqueId !== uId;
+      });
       return obj;
     });
   }
@@ -288,6 +338,7 @@ function TaskTracker() {
             data={listData[objKey as keyof ListData]}
             objKey={objKey}
             editItem={editItem}
+            deleteItem={deleteItem}
           />
         );
       })}
