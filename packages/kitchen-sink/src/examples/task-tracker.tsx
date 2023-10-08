@@ -6,7 +6,7 @@ import {
   Draggable,
   OnDragEndResponder,
 } from '@hello-pangea/dnd';
-import { block } from 'million/react';
+import { block, For } from 'million/react';
 
 type itemType = {
   itemName: string;
@@ -380,18 +380,20 @@ const TaskTrackerBlock = block(function TaskTracker() {
   return (
     <div style={{ display: 'flex' }}>
       <DragDropContext onDragEnd={onDragEndHandler}>
-        {Object.keys(listData).map((objKey, index) => {
-          return (
-            <ListDisplayBlock
-              addItem={addItem}
-              key={index}
-              data={listData[objKey as keyof ListData]}
-              objKey={objKey}
-              editItem={editItem}
-              deleteItem={deleteItem}
-            />
-          );
-        })}
+        <For each={Object.keys(listData)}>
+          {(objKey, index) => {
+            return (
+              <ListDisplayBlock
+                addItem={addItem}
+                key={index}
+                data={listData[objKey as keyof ListData]}
+                objKey={objKey}
+                editItem={editItem}
+                deleteItem={deleteItem}
+              />
+            );
+          }}
+        </For>
       </DragDropContext>
     </div>
   );
