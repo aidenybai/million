@@ -21,6 +21,7 @@
     "@tanstack/react-query": "^4.32.6",
     "@tanstack/react-virtual": "3.0.0-beta.54",
     "@types/react-redux": "^7.1.27",
+    "@types/uuid": "9.0.0",
     "axios": "^1.4.0",
     "emoji-mart": "^5.5.2",
     "emoji-picker-react": "^4.5.2",
@@ -37,6 +38,7 @@
     "styled-components": "^6.0.7",
     "swr": "^2.2.1",
     "use-sound": "^4.0.1",
+    "uuid": "9.0.0",
     "valtio": "^1.11.2",
     "wouter": "^2.11.0",
     "zustand": "^4.4.1"
