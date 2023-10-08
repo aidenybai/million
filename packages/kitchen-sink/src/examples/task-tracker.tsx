@@ -1,5 +1,11 @@
 import { useState } from 'react';
 import { v4 as uuid4 } from 'uuid';
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  OnDragEndResponder,
+} from '@hello-pangea/dnd';
 
 type itemType = {
   itemName: string;
@@ -38,6 +44,7 @@ type ListItemPropType = {
   editItem: editItemFuncType;
   objKey: string;
   deleteItem: deleteItemFuncType;
+  index: number;
 };
 
 const PlusIcon = ({ size, color }: { size: string; color: string }) => {
@@ -120,6 +127,7 @@ const ListItem = ({
   editItem,
   objKey,
   deleteItem,
+  index,
 }: ListItemPropType) => {
   const [isEditingItem, setIsEditingItem] = useState<boolean>(false);
   const [item, setItem] = useState<itemType>(itemData);
@@ -135,64 +143,81 @@ const ListItem = ({
     deleteItem(objKey, item.uniqueId);
   }
   return (
-    <>
-      <div
-        style={{
-          display: 'flex',
-          background: 'white',
-          borderRadius: '0.35rem',
-          color: 'black',
-          padding: '0.2rem 0.5rem',
-          marginTop: '0.8rem',
-        }}
-      >
-        {isEditingItem ? (
-          <textarea
-            style={{
-              flex: 1,
-              border: '3px solid #2a9df5',
-            }}
-            value={item.itemName}
-            onChange={(e) => itemOnInputHandler(e.target.value)}
-          />
-        ) : (
+    <Draggable draggableId={item.uniqueId} index={index}>
+      {(provided) => (
+        <div
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          ref={provided.innerRef}
+        >
           <div
             style={{
-              flex: 1,
-              wordWrap: 'break-word',
-              overflowWrap: 'break-word',
-              overflow: 'hidden',
+              marginTop: '0.8rem',
             }}
           >
-            {item.itemName}
-          </div>
-        )}
-        {isEditingItem ? (
-          <></>
-        ) : (
-          <>
-            <span
-              style={{ cursor: 'pointer' }}
-              onClick={() => setIsEditingItem(true)}
+            <div
+              style={{
+                display: 'flex',
+                background: 'white',
+                borderRadius: '0.35rem',
+                color: 'black',
+                padding: '0.2rem 0.5rem',
+              }}
             >
-              {isEditingItem ? <></> : <PenIcon color="gray" size="16" />}
-            </span>
-            <span style={{ cursor: 'pointer' }} onClick={deleteItemHandler}>
-              <TrashIcon size="16" color="red" />
-            </span>
-          </>
-        )}
-      </div>
-      {isEditingItem ? (
-        <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
-          <span style={{ cursor: 'pointer' }} onClick={addItemHandler}>
-            <TickIcon color="green" size="25" />
-          </span>
+              {isEditingItem ? (
+                <textarea
+                  style={{
+                    flex: 1,
+                    border: '3px solid #2a9df5',
+                    font: 'inherit',
+                  }}
+                  value={item.itemName}
+                  onChange={(e) => itemOnInputHandler(e.target.value)}
+                />
+              ) : (
+                <div
+                  style={{
+                    flex: 1,
+                    wordWrap: 'break-word',
+                    overflowWrap: 'break-word',
+                    overflow: 'hidden',
+                  }}
+                >
+                  {item.itemName}
+                </div>
+              )}
+              {isEditingItem ? (
+                <></>
+              ) : (
+                <>
+                  <span
+                    style={{ cursor: 'pointer', margin: 'auto 0.2rem' }}
+                    onClick={() => setIsEditingItem(true)}
+                  >
+                    <PenIcon color="gray" size="16" />
+                  </span>
+                  <span
+                    style={{ cursor: 'pointer' }}
+                    onClick={deleteItemHandler}
+                  >
+                    <TrashIcon size="16" color="red" />
+                  </span>
+                </>
+              )}
+            </div>
+            {isEditingItem ? (
+              <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
+                <span style={{ cursor: 'pointer' }} onClick={addItemHandler}>
+                  <TickIcon color="green" size="25" />
+                </span>
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
         </div>
-      ) : (
-        <></>
       )}
-    </>
+    </Draggable>
   );
 };
 
@@ -232,17 +257,25 @@ const ListDisplay = ({
       }}
     >
       <strong style={{ color: '#35ceff' }}>{data.title}</strong>
-      {data.items.map((item) => {
-        return (
-          <ListItem
-            objKey={objKey}
-            key={item.uniqueId}
-            itemData={item}
-            editItem={editItem}
-            deleteItem={deleteItem}
-          />
-        );
-      })}
+      <Droppable droppableId={objKey}>
+        {(provided) => (
+          <div {...provided.droppableProps} ref={provided.innerRef}>
+            {data.items.map((item, index) => {
+              return (
+                <ListItem
+                  index={index}
+                  objKey={objKey}
+                  key={item.uniqueId}
+                  itemData={item}
+                  editItem={editItem}
+                  deleteItem={deleteItem}
+                />
+              );
+            })}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
       {isAddingItem ? (
         <>
           <input
@@ -328,20 +361,37 @@ function TaskTracker() {
       return obj;
     });
   }
+  const onDragEndHandler: OnDragEndResponder = (result) => {
+    if (!result.destination) return;
+    const { source, destination } = result;
+    setListData((data) => {
+      const state = { ...data };
+      const isSameList = source.droppableId === destination.droppableId;
+      const sourceList = state[source.droppableId as keyof ListData].items;
+      const [reorderedItem] = sourceList.splice(source.index, 1);
+      const destinationList = isSameList
+        ? sourceList
+        : state[destination.droppableId as keyof ListData].items;
+      destinationList.splice(destination.index, 0, reorderedItem);
+      return { ...state };
+    });
+  };
   return (
     <div style={{ display: 'flex' }}>
-      {Object.keys(listData).map((objKey, index) => {
-        return (
-          <ListDisplay
-            addItem={addItem}
-            key={index}
-            data={listData[objKey as keyof ListData]}
-            objKey={objKey}
-            editItem={editItem}
-            deleteItem={deleteItem}
-          />
-        );
-      })}
+      <DragDropContext onDragEnd={onDragEndHandler}>
+        {Object.keys(listData).map((objKey, index) => {
+          return (
+            <ListDisplay
+              addItem={addItem}
+              key={index}
+              data={listData[objKey as keyof ListData]}
+              objKey={objKey}
+              editItem={editItem}
+              deleteItem={deleteItem}
+            />
+          );
+        })}
+      </DragDropContext>
     </div>
   );
 }
