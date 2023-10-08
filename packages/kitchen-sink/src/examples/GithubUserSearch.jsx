@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import axios from 'axios';
-
-const GithubUserSearch = () => {
+import { block } from 'million/react';
+const GithubUserSearch = block(() => {
     const [userData, setUserData] = useState('');
     const [user, setUser] = useState('');
 
@@ -28,7 +28,7 @@ const GithubUserSearch = () => {
     };
 
     useEffect(() => {
-        getUserDetails('capsy14');
+        getUserDetails('');
     }, []);
 
     return (
@@ -57,6 +57,6 @@ const GithubUserSearch = () => {
             </div>
         </div>
     );
-};
+});
 
 export default GithubUserSearch;
