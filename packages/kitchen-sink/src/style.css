@@ -457,7 +457,7 @@ input[type='range'] {
   background-color: #ff4081;
   color: white;
 }
-======= .news-card {
+.news-card {
   display: flex;
   flex-direction: column;
   background-color: #fff;
