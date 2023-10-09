@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { block } from 'million/react';
-
+import { For } from 'million/react';
 const RecipeFinder = () => {
   const [searchedQuery, setSearchedQuery] = useState('');
   const [recipes, setRecipes] = useState([]);
@@ -9,6 +9,7 @@ const RecipeFinder = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [recipieInstructions, setRecipieInstructions] = useState([]);
+  const [ingredientsInstructions, setIngredientsInstructions] = useState([]);
   const [recipieInstructionsId, setRecipieInstructionsId] = useState('');
   const API_KEY = '5a881b78656146509b31903824370ebb';
 
@@ -22,7 +23,7 @@ const RecipeFinder = () => {
         `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&query=${searchedQuery}`,
       );
       // console.log(response.data);
-      console.log(response.data.results);
+      // console.log(response.data.results);
       setRecipes(response.data.results);
     } catch (error) {
       setError('An error occurred while fetching recipes.');
@@ -30,18 +31,55 @@ const RecipeFinder = () => {
       setLoading(false);
     }
   };
+
+  const showIns = async (recipe) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      // First, get recipe instructions
+      await getRecipeInfo(recipe.id);
+
+      // Then, get ingredients info
+      await getIngredientsInfo(recipe.id);
+
+      // After both functions have completed, update the UI
+      setRecipieInstructionsId(recipe.id);
+    } catch (error) {
+      setError('An error occurred while fetching instructions.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const getRecipeInfo = async (id) => {
     setLoading(true);
     setError(null);
 
     try {
       const response = await axios.get(
-        // `https://forkify-api.herokuapp.com/api/search?q=${searchedQuery}`,
-        `https://api.spoonacular.com/recipes/${id}/information?apiKey=${API_KEY}&includeNutrition=false`,
+        `https://api.spoonacular.com/recipes/${id}/analyzedInstructions?apiKey=${API_KEY}`,
       );
       // console.log(response);
+      setRecipieInstructions(response.data[0].steps);
+    } catch (error) {
+      setError('An error occurred while fetching instructions.');
+    } finally {
+      setLoading(false);
+    }
+  };
+  // console.log(IngredientsInstructions);
+  const getIngredientsInfo = async (id) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await axios.get(
+        `https://api.spoonacular.com/recipes/${id}/information?apiKey=${API_KEY}&includeNutrition=false`,
+      );
+      console.log(response.data.extendedIngredients);
       setRecipieInstructionsId(response.data.id);
-      setRecipieInstructions(response.data.extendedIngredients);
+      setIngredientsInstructions(response.data.extendedIngredients);
     } catch (error) {
       setError('An error occurred while fetching instructions.');
     } finally {
@@ -56,9 +94,10 @@ const RecipeFinder = () => {
   const addToCart = (recipe) => {
     setCart([...cart, recipe]);
   };
-  console.log(recipieInstructions);
+
+  // console.log(recipieInstructions);
   return (
-    <>
+    <div>
       <h1
         style={{
           width: '100%',
@@ -76,7 +115,7 @@ const RecipeFinder = () => {
       >
         <div
           style={{
-            flexBasis: '70%',
+            flexBasis: '65%',
             backgroundColor: 'black',
             borderRadius: '1.5rem',
           }}
@@ -148,61 +187,79 @@ const RecipeFinder = () => {
                     borderRadius: '1rem',
                   }}
                 >
-                  <div
-                    style={{
-                      display: 'flex',
-                    }}
-                  >
-                    <img
+                  <div>
+                    <div
+                      style={{
+                        textAlign: 'center',
+                        margin: 'auto',
+                      }}
+                    >
+                      <img
+                        style={{
+                          margin: '0',
+                          borderRadius: '1rem',
+                          height: '15rem',
+                          maxWidth: '48%',
+                        }}
+                        src={recipe.image}
+                        alt={recipe.title}
+                      />
+                    </div>
+                    <h1
                       style={{
                         margin: '0',
-                        borderRadius: '1rem',
-                        height: '15rem',
-                        maxWidth: '48%',
+                        textAlign: 'center',
                       }}
-                      src={recipe.image}
-                      alt={recipe.title}
-                    />
+                    >
+                      {recipe.title}
+                    </h1>
+
                     <div
                       style={{
                         width: '100%',
                       }}
                     >
-                      <h2
-                        style={{
-                          margin: '0',
-                          textAlign: 'center',
-                        }}
-                      >
-                        {recipe.title}
-                      </h2>
                       <div
                         style={{
                           padding: '0.5rem',
                           backgroundColor: 'silver',
                           margin: '1px 10px',
                           borderRadius: '0.6rem',
-                          height: '11rem',
-                          maxHeight: '11rem',
+                          height: 'auto',
+                          maxHeight: '20rem',
                           overflowY: 'scroll',
                         }}
                       >
                         {recipieInstructions.length > 0 &&
+                        ingredientsInstructions.length > 0 &&
                         recipieInstructionsId === recipe.id ? (
                           <div>
+                            <div>
+                              <h2>Ingredients</h2>
+
+                              <ol>
+                                {ingredientsInstructions &&
+                                  ingredientsInstructions.map((it, index) => (
+                                    <li key={index}>{it.original}.</li>
+                                  ))}
+                              </ol>
+                            </div>
+                            <h2>Method of Preparations</h2>
                             {recipieInstructions.map((item, index) => (
-                              <span key={index}>{item.original}; </span>
+                              <span key={index}>{item.step} </span>
                             ))}
                           </div>
                         ) : (
                           <div
                             style={{
-                              margin: 'auto',
-                              padding: '4rem',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              height: '100%',
                             }}
                           >
-                            <button onClick={() => getRecipeInfo(recipe.id)}>
-                              Show Instructions
+                            <button onClick={() => showIns(recipe)}>
+                              Show Instruction
                             </button>
                           </div>
                         )}
@@ -237,9 +294,12 @@ const RecipeFinder = () => {
 
         <div
           style={{
-            width: '30%',
+            width: '35%',
             color: 'black',
             marginLeft: '1rem',
+            backgroundColor: '#252525',
+            borderRadius: '1.5rem',
+            paddingX: '1rem',
           }}
         >
           <Cart
@@ -247,11 +307,12 @@ const RecipeFinder = () => {
             removeFromCart={removeFromCart}
             recipieInstructions={recipieInstructions}
             recipieInstructionsId={recipieInstructionsId}
-            getRecipeInfo={getRecipeInfo}
+            getRecipeInfo={showIns}
+            ingredientsInstructions={ingredientsInstructions}
           />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
@@ -264,16 +325,17 @@ const Cart = block(
     recipieInstructions,
     recipieInstructionsId,
     getRecipeInfo,
+    ingredientsInstructions,
   }) => {
     return (
       <div>
-        <h2
+        <h1
           style={{
             color: 'white',
           }}
         >
           Cart
-        </h2>
+        </h1>
         <p
           style={{
             color: 'white',
@@ -281,7 +343,11 @@ const Cart = block(
         >
           No. of items in CART: {cartItems.length}
         </p>
-        <div>
+        <div
+          style={{
+            padding: '1rem',
+          }}
+        >
           {cartItems &&
             cartItems.map((recipe, index) => (
               <div
@@ -318,20 +384,29 @@ const Cart = block(
                     backgroundColor: 'silver',
                     margin: 'auto',
                     borderRadius: '0.6rem',
-                    height: '11rem',
-                    maxHeight: '11rem',
+                    height: 'auto',
+                    maxHeight: '15rem',
                     overflowY: 'scroll',
+                    textAlign: 'left',
                   }}
                 >
                   {recipieInstructions.length > 0 &&
+                  ingredientsInstructions.length > 0 &&
                   recipieInstructionsId === recipe.id ? (
-                    <div
-                      style={{
-                        textAlign: 'left',
-                      }}
-                    >
+                    <div>
+                      <div>
+                        <h2>Ingredients</h2>
+
+                        <ol>
+                          {ingredientsInstructions &&
+                            ingredientsInstructions.map((it, index) => (
+                              <li key={index}>{it.original}.</li>
+                            ))}
+                        </ol>
+                      </div>
+                      <h2>Method of Preparations</h2>
                       {recipieInstructions.map((item, index) => (
-                        <span key={index}>{item.original}; </span>
+                        <span key={index}>{item.step} </span>
                       ))}
                     </div>
                   ) : (
@@ -346,7 +421,7 @@ const Cart = block(
                           width: '100%',
                           borderRadius: '1rem',
                         }}
-                        onClick={() => getRecipeInfo(recipe.id)}
+                        onClick={() => getRecipeInfo(recipe)}
                       >
                         Show Instructions
                       </button>
