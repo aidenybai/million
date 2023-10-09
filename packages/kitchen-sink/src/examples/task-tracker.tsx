@@ -123,6 +123,12 @@ const TrashIcon = ({ size, color }: { size: string; color: string }) => {
   );
 };
 
+function getSectionTitleColor(sectionType: string) {
+  if (sectionType === 'TODO') return '#ff0000'
+  if (sectionType === 'IN_PROGRESS') return '#fff000'
+  if (sectionType === 'COMPLETED') return '#00ff40'
+}
+
 const ListItemBlock = block(function ({
   itemData,
   editItem,
@@ -262,7 +268,7 @@ const ListDisplayBlock = block(function ListDisplay({
         background: 'black',
       }}
     >
-      <strong style={{ color: '#35ceff' }}>{data.title}</strong>
+      <strong style={{ color: getSectionTitleColor(objKey) }}>{data.title}</strong>
       <Droppable droppableId={objKey}>
         {(provided) => (
           <div {...provided.droppableProps} ref={provided.innerRef}>
