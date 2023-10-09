@@ -221,6 +221,9 @@ importers:
       react:
         specifier: ^18.2.0
         version: 18.2.0
+      react-calendar:
+        specifier: ^4.6.0
+        version: 4.6.0(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
       react-dom:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
@@ -3367,6 +3370,16 @@ packages:
     resolution: {integrity: sha512-dHsSjSlU/EWEEbeNADr3FtZZOAXPkFPUO457QCnoNqcZQXNqNEu/svQd0Nritvd3wNff4vvC/f4e6xgX3Llt8A==}
     dev: false
 
+  /@types/lodash.memoize@4.1.7:
+    resolution: {integrity: sha512-lGN7WeO4vO6sICVpf041Q7BX/9k1Y24Zo3FY0aUezr1QlKznpjzsDk3T3wvH8ofYzoK0QupN9TWcFAFZlyPwQQ==}
+    dependencies:
+      '@types/lodash': 4.14.199
+    dev: false
+
+  /@types/lodash@4.14.199:
+    resolution: {integrity: sha512-Vrjz5N5Ia4SEzWWgIVwnHNEnb1UE1XMkvY5DGXrAeOGE9imk0hgTHh5GyDjLDJi9OTCn9oo9dXH1uToK1VRfrg==}
+    dev: false
+
   /@types/mdast@3.0.12:
     resolution: {integrity: sha512-DT+iNIRNX884cx0/Q1ja7NyUPpZuv0KPyL5rGNxm1WC1OtHstl7n4Jb7nk+xacNShQMbczJjt8uFzznpp6kYBg==}
     dependencies:
@@ -3906,6 +3919,10 @@ packages:
       loupe: 2.3.6
       pretty-format: 27.5.1
     dev: true
+
+  /@wojtekmaj/date-utils@1.5.0:
+    resolution: {integrity: sha512-0mq88lCND6QiffnSDWp+TbOxzJSwy2V/3XN+HwWZ7S2n19QAgR5dy5hRVhlECXvQIq2r+VcblBu+S9V+yMcxXw==}
+    dev: false
 
   /abab@2.0.6:
     resolution: {integrity: sha512-j2afSsaIENvHZN2B8GOpF566vZ5WVk5opAiMTvWgaQT8DkbOqsTfvNAvHoRGU2zzP8cPoqys+xHTRDWW8L+/BA==}
@@ -6392,6 +6409,13 @@ packages:
       get-intrinsic: 1.2.1
     dev: true
 
+  /get-user-locale@2.3.0:
+    resolution: {integrity: sha512-I3rQvAUwu2nauRD9YyQBSXVFJZixNouwA+eZld51Sn4Pn0N1qFbgcgOi/nPigJPQlNY519mT95fiSPRgflQiTA==}
+    dependencies:
+      '@types/lodash.memoize': 4.1.7
+      lodash.memoize: 4.1.2
+    dev: false
+
   /giget@1.1.2:
     resolution: {integrity: sha512-HsLoS07HiQ5oqvObOI+Qb2tyZH4Gj5nYGfF9qQcZNrPw+uEFhdXtgJr01aO2pWadGHucajYDLxxbtQkm97ON2A==}
     hasBin: true
@@ -7536,6 +7560,10 @@ packages:
 
   /lodash.get@4.4.2:
     resolution: {integrity: sha512-z+Uw/vLuy6gQe8cfaFWD7p0wVv8fJl3mbzXh33RS+0oW2wvUqiRXiQ69gLWSLpgB5/6sU+r6BlQR0MBILadqTQ==}
+    dev: false
+
+  /lodash.memoize@4.1.2:
+    resolution: {integrity: sha512-t7j+NzmgnQzTAYXcsHYLgimltOV1MXHtlOWf6GjL9Kj8GK5FInw5JotxvbOs+IvV1/Dzo04/fCGfLVs7aXb4Ag==}
     dev: false
 
   /lodash.merge@4.6.2:
@@ -9132,6 +9160,26 @@ packages:
       destr: 2.0.1
       flat: 5.0.2
     dev: true
+
+  /react-calendar@4.6.0(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-GJ6ZipKMQmlK666t+0hgmecu6WHydEnMWJjKdEkUxW6F471hiM5DkbWXkfr8wlAg9tc9feNCBhXw3SqsPOm01A==}
+    peerDependencies:
+      '@types/react': ^16.8.0 || ^17.0.0 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+    dependencies:
+      '@types/react': 18.2.20
+      '@wojtekmaj/date-utils': 1.5.0
+      clsx: 2.0.0
+      get-user-locale: 2.3.0
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      tiny-warning: 1.0.3
+    dev: false
 
   /react-card-flip@1.2.0(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-5/tbaSBoTTdxV2glail7fr7W7CqNG/4BOm17pNmI1b6TwtRRUrElPdAO4h235MGU2dDwqyWBzO+H8y2Ax6BTpA==}
