@@ -30,7 +30,7 @@ const MovieFinder = block(() => {
       const data = await res.json();
       setMovie(data);
     } catch (error: any) {
-      console.log(error);
+      return error;
     } finally {
       setLoading(false);
     }
@@ -44,9 +44,6 @@ const MovieFinder = block(() => {
           placeholder="Name a movie & I'll do the rest "
           style={{ width: '40%', padding: '10px' }}
           onChange={(e) => setQuery(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key == 'Enter') fetchMovies();
-          }}
         />
         <button onClick={fetchMovies} disabled={isLoading === true}>
           Search
