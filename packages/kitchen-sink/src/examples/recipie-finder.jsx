@@ -408,6 +408,7 @@ const Cart = block(
                       {recipieInstructions.map((item, index) => (
                         <span key={index}>{item.step} </span>
                       ))}
+                      
                     </div>
                   ) : (
                     <div
