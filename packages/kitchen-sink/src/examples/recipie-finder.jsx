@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { block } from 'million/react';
 import { For } from 'million/react';
-const RecipeFinder = () => {
+const RecipeFinder = block(() => {
   const [searchedQuery, setSearchedQuery] = useState('');
   const [recipes, setRecipes] = useState([]);
   const [cart, setCart] = useState([]);
@@ -314,7 +314,7 @@ const RecipeFinder = () => {
       </div>
     </div>
   );
-};
+});
 
 export default RecipeFinder;
 
