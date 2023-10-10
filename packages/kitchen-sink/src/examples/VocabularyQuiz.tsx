@@ -1,13 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { block } from 'million/react';
 import { BiReset } from 'react-icons/bi';
 import { FaCheck } from 'react-icons/fa';
-import {
-  Card,
-  CardContent,
-  CardHeader, 
-  makeStyles,
-} from '@material-ui/core';
+import { RxCross2 } from 'react-icons/rx';
+import { Card, CardContent, CardHeader, makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles({
   root: {
@@ -46,21 +42,19 @@ const FlashCard: React.FC<{
   word: string;
   definition: string;
   isFlipped: boolean;
-  setIsFlipped: (flipped: boolean) => void;
-}> = block(({ title, word, definition, isFlipped, setIsFlipped }) => {
+}> = block(({ title, word, definition, isFlipped }) => {
   const classes = useStyles();
-  const handleCardClick = () => {
-    setIsFlipped(!isFlipped);
-  };
 
   return (
     <Card
       className={`${classes.root} ${isFlipped ? classes.flipped : ''}`}
       elevation={24}
       key="front"
-      onClick={handleCardClick}
     >
-      <CardHeader title={isFlipped?'Answer':title} className={classes.root} />
+      <CardHeader
+        title={isFlipped ? 'Answer' : title}
+        className={classes.root}
+      />
       <CardContent>
         <CardContent>{isFlipped ? word : definition}</CardContent>
       </CardContent>
@@ -127,6 +121,7 @@ const VocabularyQuiz: React.FC = block(() => {
 
   const reset = () => {
     setIsCheck(false);
+    setIsFlipped(false);
     setUserInput(Array(vocabularyData[currentCardIndex].word.length).fill(''));
   };
 
@@ -148,6 +143,10 @@ const VocabularyQuiz: React.FC = block(() => {
     setUserInput(Array(vocabularyData[currentCardIndex].word.length).fill(''));
   };
 
+  const showAnswer = () => {
+    setIsFlipped(true);
+  };
+
   const handleCheckAnswer = () => {
     const fullWord = vocabularyData[currentCardIndex].word.toLowerCase();
     let newInput = [...userInput];
@@ -156,6 +155,7 @@ const VocabularyQuiz: React.FC = block(() => {
     });
     if (fullWord === newInput.join('').toLowerCase()) {
       setIsAnswerCorrect(true);
+      setIsFlipped(true);
     } else {
       setIsAnswerCorrect(false);
     }
@@ -184,7 +184,6 @@ const VocabularyQuiz: React.FC = block(() => {
       <FlashCard
         title={vocabularyData[currentCardIndex].title}
         isFlipped={isFlipped}
-        setIsFlipped={setIsFlipped}
         definition={vocabularyData[currentCardIndex].definition}
         word={vocabularyData[currentCardIndex].word}
       />
@@ -211,7 +210,6 @@ const VocabularyQuiz: React.FC = block(() => {
                     }
                     disabled={randomIndices?.includes(index)}
                     onChange={(e) => {
-                
                       const newInput = [...userInput];
                       newInput[index] = e.target.value.charAt(0);
                       setUserInput(newInput);
@@ -222,20 +220,23 @@ const VocabularyQuiz: React.FC = block(() => {
         </div>
       </div>
 
-      {!isFlipped && (
+      <button style={{ marginTop: '10px' }} onClick={handleCheckAnswer}>
+        Check
+      </button>
+      {check && isAnswerCorrect && (
+        <p>
+          Correct!
+          <FaCheck style={{ color: 'green' }} />
+        </p>
+      )}
+      {check && !isAnswerCorrect && isAnswerCorrect !== null && (
         <>
-          <button style={{ marginTop: '10px' }} onClick={handleCheckAnswer}>
-            Check
+          <p>
+            Incorrect <RxCross2 style={{ color: 'red' }} />
+          </p>
+          <button type="reset" style={buttonStyle} onClick={showAnswer}>
+            Show Answer
           </button>
-          {check && isAnswerCorrect && (
-            <p>
-              Correct!
-              <FaCheck />
-            </p>
-          )}
-          {check && !isAnswerCorrect && isAnswerCorrect !== null && (
-            <p>Incorrect</p>
-          )}
         </>
       )}
 
