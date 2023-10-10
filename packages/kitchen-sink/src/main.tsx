@@ -26,14 +26,10 @@ type Module = { default: ComponentType<any> };
     Object.entries(import.meta.glob('./examples/*.{tsx,jsx}')).map(
       async ([key, mod]) =>
         [
-<<<<<<< HEAD
-          key.replace('./examples/', '').replace('.tsx', '').replace('.jsx', ''),
-=======
           key
             .replace('./examples/', '')
             .replace('.tsx', '')
             .replace('.jsx', ''),
->>>>>>> 17f5358426a8217b4b4b25bef7deddc2eaea955c
           mod as () => Promise<Module>,
         ] as const,
     ),
@@ -74,14 +70,10 @@ type Module = { default: ComponentType<any> };
                 key={key}
                 disabled={hasSelected && selected === index}
               >
-<<<<<<< HEAD
-                {key.replace('./examples/', '').replace('.tsx', '').replace('.jsx', '')}
-=======
                 {key
                   .replace('./examples/', '')
                   .replace('.tsx', '')
                   .replace('.jsx', '')}
->>>>>>> 17f5358426a8217b4b4b25bef7deddc2eaea955c
               </button>
             );
           })}{' '}
