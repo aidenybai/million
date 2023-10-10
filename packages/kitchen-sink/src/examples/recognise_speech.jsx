@@ -1,51 +1,53 @@
-
+import React, { useState } from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
-import useClipboard from "react-use-clipboard";
-import {useState} from "react";
-import "./style.css"
-
+import { block } from 'million/react';
 
 const App = () => {
-    const [textToCopy, setTextToCopy] = useState();
-    const [isCopied, setCopied] = useClipboard(textToCopy, {
-        successDuration:1000
-    });
+  const [textToCopy, setTextToCopy] = useState('');
+  const [isCopied, setCopied] = useState(false);
 
+  const startListening = () => {
     
+    SpeechRecognition.startListening({ continuous: true, language: 'en-IN' });
+  };
 
-    const startListening = () => SpeechRecognition.startListening({ continuous: true, language: 'en-IN' });
-    const { transcript, browserSupportsSpeechRecognition } = useSpeechRecognition();
+  const stopListening = () => {
+    
+    SpeechRecognition.stopListening();
+  };
 
-    if (!browserSupportsSpeechRecognition) {
-        return null
-    }
+ 
+  const transcript = 'This is a sample transcript';
 
-    return (
-        <>
-            <div className="container">
-                <h2>Speech Detector</h2>
-                <br/>
-                <p>Start speeking and your speech is translated into words and they are displayed dynamically!!</p>
+  
+  const { transcript: speechTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
 
-                <div className="main-content" onClick={() =>  setTextToCopy(transcript)}>
-                    {transcript}
-                </div>
 
-                <div className="btn-style">
+  if (speechTranscript !== textToCopy) {
+    setTextToCopy(speechTranscript);
+  }
 
-                    <button onClick={setCopied}>
-                        {isCopied ? 'Copied!' : 'Copy to clipboard'}
-                    </button>
-                    <button onClick={startListening}>Start Speeking</button>
-                    <button onClick={SpeechRecognition.stopListening}>Stop Speeking</button>
+  return (
+    <>
+      <div className="container">
+        <h2>Speech Detector</h2>
+        <br />
+        <p>Start speaking, and your speech is translated into words and displayed dynamically!!</p>
 
-                </div>
+        <div className="main-content" onClick={() => setTextToCopy(transcript)}>
+          {textToCopy}
+        </div>
 
-            </div>
-
-        </>
-    );
+        <div className="btn-style">
+          <button onClick={() => setCopied(!isCopied)}>
+            {isCopied ? 'Copied!' : 'Copy to clipboard'}
+          </button>
+          <button onClick={startListening}>Start Speaking</button>
+          <button onClick={stopListening}>Stop Speaking</button>
+        </div>
+      </div>
+    </>
+  );
 };
 
-export default App;
-
+export default block(App);
