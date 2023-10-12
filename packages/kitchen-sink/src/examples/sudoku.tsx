@@ -287,7 +287,24 @@ const App =() => {
                       height: 15rem;
                     }
                   }
-                  
+                  .border_right{
+                    border-right:3px solid gray;
+                  }
+                  .border_left{
+                    border-left:3px solid gray;
+                  }
+                  .border_bottom{
+                    border-bottom:1px solid gray;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 1.45rem;
+                    cursor: pointer;
+                    padding: 0;
+                  }
+                  .border_top{
+                    border-top:3px solid gray;
+                  }
                   .square {
                     display: grid;
                     grid-template-rows: repeat(9, 1fr);
@@ -297,9 +314,35 @@ const App =() => {
                     display: grid;
                     grid-template-columns: repeat(3, 1fr);
                   }
-                  
+                  .cell_bottom{
+                    border-width: 1px 1px 3px 1px;
+                    border-color: gray gray white gray;
+                    border-style: solid;
+                  }
+                  .cell_right{
+                    border-width: 1px 3px 1px 1px;
+                    border-color: gray white gray gray;
+                    border-style: solid;
+                  }
+                  .cell_left{
+                    border-width: 1px 1px 3px 1px;
+                    border-color: white;
+                    border-style: solid;
+                  }
+                  .cell_top{
+                    border-width: 1px 1px 3px 1px;
+                    border-color: white;
+                    border-style: solid;
+                  }
+                  .cell_both{
+                    border-width: 1px 3px 3px 1px;
+                    border-color: gray white white gray;
+                    border-style: solid;
+                  }
+                  .border{
+                    border:1px solid gray;
+                  }
                   .cell {
-                    border: 1px solid #aaa;
                     display: flex;
                     align-items: center;
                     justify-content: center;
@@ -350,7 +393,7 @@ const App =() => {
                     position: absolute;
                     top: 20px;
                     right: 20px;
-                    background-color: #4caf50; /* Green background color for success */
+                    background-color: #4caf50; /* gray background color for success */
                     color: #fff;
                     padding: 16px;
                     border-radius: 4px;
@@ -422,11 +465,13 @@ const App =() => {
         <Title />
         <div className="board">
           {board.map((square, i) => (
-            <div className="square" key={i}>
-              {square.map((num, j) => (
+            <div className={`square`} key={i}>
+              {square.map((num, j) => {
+                console.log(j);
+                return(
                 <div
                   key={j}
-                  className={`cell ${initialBoard?.[i][j] ? 'filled' : ''}`}
+                  className={`cell ${initialBoard?.[i][j] ? 'filled' : ''} ${(j%3==2 && (i%3!=j%3))?(j!=8)?"cell_bottom":("border"):""} ${(i%3==2 && (i%3!=j%3))?(i!=8)?"cell_right":("border"):""} ${(i%3==j%3 && i%3==2)? (j==8 && i!=8) ? "cell_right":(i==8 && j!=8)?("cell_bottom"):(i==8 && j==8)?("border"):("cell_both"):""} ${(i%3!=2 && j%3!=2)?"border":""}`}
                 >
                   <input
                     type="number"
@@ -447,7 +492,7 @@ const App =() => {
                     }}
                   />
                 </div>
-              ))}
+              )})}
             </div>
           ))}
         </div>
