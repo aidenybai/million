@@ -11,13 +11,16 @@ export const block = <P extends MillionProps>(
   Component: ComponentType<P>,
   options: Options = {},
 ) => {
-  let blockFactory = millionModule ? millionModule.block(Component) : null;
-  function MillionBlockLoader<P extends MillionProps>(props: P) {
+  let blockFactory = millionModule
+    ? millionModule.block(Component, options)
+    : null;
+  function MillionBlockLoader<P extends MillionProps>(props?: P) {
     const [ready, setReady] = useState(Boolean(blockFactory));
 
     useEffect(() => {
       if (!blockFactory) {
         const importSource = async () => {
+          if (!props) return;
           if (!millionModule) millionModule = await import('../react');
           blockFactory = millionModule.block(Component, options);
           setReady(true);

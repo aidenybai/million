@@ -56,4 +56,712 @@ pre {
   transition: transform 0.3s ease-in-out;
 }
 
+/* Music player styles */
+.body {
+  box-sizing: border-box;
+  background: linear-gradient(
+    90deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(20, 107, 128, 1) 51%,
+    rgba(0, 212, 255, 1) 100%
+  );
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
+.App {
+  min-height: 100vh;
+  text-align: center;
+}
+
+.music-card {
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.component {
+  background: linear-gradient(
+    90deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(105, 20, 128, 1)
+  );
+  width: 50%;
+  color: #fff;
+  margin: 1.4em 0;
+  max-width: 600px;
+  padding: 1em 2em;
+  border: 0.1px solid black;
+  border-radius: 10px;
+}
+
+.musicCover {
+  max-width: 100%;
+  border-radius: 10%;
+}
+
+.playButton {
+  background: none;
+  border: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.subTitle {
+  margin-top: -1em;
+  color: #d3c5c5;
+}
+
+.time {
+  margin: 0 auto;
+  width: 80%;
+  display: flex;
+  justify-content: space-between;
+  color: #828282;
+  font-size: smaller;
+}
+
+.timeline {
+  width: 80%;
+  background-color: #27ae60;
+}
+
+input[type='range'] {
+  background-color: #27ae60;
+}
+
+@media (max-width: 900px) {
+  .component {
+    width: 50%;
+  }
+}
+
+/*  */
+
+/* QR code styles */
+.qr-code-wrapper {
+  display: inline-flex;
+  background: white;
+  margin-top: 2rem;
+  padding: 1rem;
+}
+
+/* calendar styles */
+
+.app {
+  text-align: center;
+  margin: 20px;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: 2rem;
+}
+
+.calendar-container {
+  flex: 1;
+  max-width: 500px;
+  margin-right: 2rem;
+}
+
+.event-container {
+  flex: 1;
+  max-width: 500px;
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+      flex-direction: column;
+  }
+
+  .calendar-container,
+  .event-container {
+      max-width: 100%;
+      margin-right: 0;
+      margin-bottom: 2rem;
+      justify-content: center;
+  }
+}
+
+.react-calendar {
+  width: 100%;
+  max-width: 500px;
+  background-color: white;
+  border: 1px solid #151515;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.125em;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 10px;
+  transition: background-color 0.2s;
+}
+
+.react-calendar--doubleView {
+  width: 100%;
+}
+
+.react-calendar--doubleView .react-calendar__viewContainer {
+  display: flex;
+  margin: -0.5em;
+}
+
+.react-calendar--doubleView .react-calendar__viewContainer>* {
+  width: 50%;
+  margin: 0.5em;
+}
+
+.react-calendar,
+.react-calendar *,
+.react-calendar *:before,
+.react-calendar *:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.react-calendar button {
+  margin: 0;
+  border: 0;
+  outline: none;
+  color: #151515;
+}
+
+.react-calendar button:enabled:hover {
+  cursor: pointer;
+}
+
+.react-calendar__navigation {
+  display: flex;
+  height: 44px;
+  margin-bottom: 1em;
+}
+
+.react-calendar__navigation button {
+  min-width: 44px;
+  background: none;
+}
+
+.react-calendar__navigation button:disabled {
+  background-color: black;
+}
+
+.react-calendar__navigation button:enabled:hover,
+.react-calendar__navigation button:enabled:focus {
+  background-color: black;
+}
+
+.react-calendar__month-view__weekdays {
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 0.8rem;
+  color: black;
+}
+
+.react-calendar__month-view__weekdays__weekday {
+  padding: 0.5em;
+}
+
+.react-calendar__month-view__weekNumbers .react-calendar__tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75em;
+  font-weight: bold;
+}
+
+.react-calendar__month-view__days__day--weekend {
+  color: black;
+}
+
+.react-calendar__month-view__days__day--neighboringMonth {
+  color: black;
+}
+
+.react-calendar__year-view .react-calendar__tile,
+.react-calendar__decade-view .react-calendar__tile,
+.react-calendar__century-view .react-calendar__tile {
+  padding: 2em 0.5em;
+}
+
+.react-calendar__tile {
+  max-width: 100%;
+  padding: 10px 6.6667px;
+  background: none;
+  text-align: center;
+  line-height: 16px;
+}
+
+.react-calendar__tile:disabled {
+  background-color: black;
+}
+
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus {
+  background-color: black;
+}
+
+.react-calendar__tile--now {
+  background: black;
+}
+
+.react-calendar__tile--now:enabled:hover,
+.react-calendar__tile--now:enabled:focus {
+  background: black;
+}
+
+.react-calendar__tile--hasActive {
+  background: black;
+}
+
+.react-calendar__tile--hasActive:enabled:hover,
+.react-calendar__tile--hasActive:enabled:focus {
+  background: black;
+}
+
+.react-calendar__tile--active {
+  background: black;
+  color: black;
+}
+
+.react-calendar__tile--active:enabled:hover,
+.react-calendar__tile--active:enabled:focus {
+  background: black;
+}
+
+.react-calendar--selectRange .react-calendar__tile--hover {
+  background-color: black;
+}
+
+.event-form {
+  margin-bottom: 20px;
+}
+
+.event-form h2 {
+  margin-bottom: 10px;
+}
+
+.event-form p {
+  font-size: 1.2rem;
+}
+
+.event-form input {
+  padding: 8px;
+  font-size: 1rem;
+  margin-right: 10px;
+}
+
+.create-btn {
+  padding: 8px 6px;
+  margin-top: 5px;
+  background-color: white;
+  color: black;
+  border: 0.5px solid black;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.create-btn:hover {
+  background-color: black;
+  color:whitesmoke;
+  border: 0.5px solid white;
+}
+
+.event-list {
+  margin-top: 20px;
+}
+
+.event-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.event-card {
+  width: 300px;
+  background-color:whitesmoke;
+  border-radius: 8px;
+  margin: 10px;
+  padding: 10px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.event-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.event-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.event-date {
+  font-size: 1rem;
+  color: black;
+}
+
+.event-actions {
+  display: flex;
+}
+
+.update-btn,
+.delete-btn {
+  padding: 8px 12px;
+  margin-left: 5px;
+  background-color: white;
+  color: black;
+  border: 0.5px solid black;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.update-btn:hover,
+.delete-btn:hover {
+  background-color: black;
+  color:aliceblue;
+  border: 0.5px solid white;
+}
+
+.event-card-body {
+  padding-bottom: 10px;
+}
+
+.event-title {
+  font-size: 1.5rem;
+  color: blueviolet;
+}
+
+.selected {
+  background-color: #ff4081 !important;
+  color: black;
+}
+
+.event-marked {
+  background-color: #ff4081;
+  color: white;
+}
+
+.news-card {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-bottom: 20px;
+  transition: transform 0.2s ease-in-out;
+  &:hover {
+    transform: scale(1.04);
+  }
+  &:focus {
+    transform: scale(1.04);
+  }
+  .news-container {
+    justify-content: center;
+    align-items: center;
+  }
+  .image-container {
+    display: flex;
+    justify-content: center;
+    height: 300px;
+    width: 100%;
+    &:hover {
+      opacity: 0.8;
+    }
+    img {
+      width: 1000px;
+    }
+  }
+
+  .content {
+    padding: 0 16px;
+
+    .title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: black;
+    }
+
+    .description {
+      font-size: 1rem;
+      color: #333;
+      margin-bottom: 12px;
+    }
+
+    .source {
+      font-size: 0.875rem;
+      color: #777;
+      margin-bottom: 4px;
+    }
+
+    .published-at {
+      font-size: 0.875rem;
+      color: #777;
+      margin-bottom: 12px;
+    }
+
+    .read-more {
+      font-size: 1rem;
+      text-decoration: none;
+      color: #007bff;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+/**********  PASSWORD GENERATOR  **********/
+.password_generator {
+  width: 80%;
+  margin: 2em auto;
+}
+
+.password_generator_top_section {
+  display: flex;
+  gap: 1.5em;
+}
+
+.password_generator_output_container {
+  display: flex;
+  border-radius: 10px;
+  background: #353535;
+  border: 1px solid #dddddd;
+  align-items: center;
+  padding-right: 20px;
+  flex: 5;
+}
+
+.password_generator_output_container input {
+  padding: 14px;
+  width: 100%;
+  outline: none;
+  line-height: 30px;
+  caret-color: #1c1c1c;
+  background-color: transparent;
+  font-size: 16px;
+  border-radius: 10px;
+  transition: all 0.3s ease-in;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+
+.password_generator_output_container .right-icon {
+  font-size: 25px;
+  cursor: pointer;
+  border: none;
+}
+
+.password_generator_refresh_password {
+  flex: 0.5;
+}
+
+.password_generator_tooltip-container {
+  position: relative;
+}
+
+.password_generator_tooltip-text {
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 4px;
+  padding: 6px;
+  position: absolute;
+  z-index: 1;
+  bottom: 50%;
+  left: 90%;
+  font-size: 12px;
+  opacity: 0;
+  transition: all 200ms ease-in-out;
+}
+
+.password_generator_tooltip-text.visible {
+  opacity: 1;
+}
+
+.password_generator_customizable_options {
+}
+
+.password_generator_customizable_options__length {
+  display: flex;
+  align-items: center;
+}
+
+.password_generator_customizable_options__checkbox {
+  position: relative;
+  /* border: 1px solid themed("primary"); */
+  border-radius: 4px;
+  background: none;
+  cursor: pointer;
+  line-height: 0;
+  margin: 0 0.6em 0 0;
+  outline: 0;
+  padding: 0 !important;
+  vertical-align: text-top;
+  height: 18px;
+  width: 18px;
+  opacity: 0.5;
+  transition: all 200ms ease-in-out;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &:checked {
+    /* background-color: themed("primary"); */
+    opacity: 1;
+    border: none;
+  }
+}
+
+/* Dice roller styles */
+@keyframes shakeDice {
+  0% {
+    transform: translateX(0);
+  }
+  10% {
+    transform: translateX(-5px);
+  }
+  20% {
+    transform: translateX(5px);
+  }
+  30% {
+    transform: translateX(-5px);
+  }
+  40% {
+    transform: translateX(5px);
+  }
+  50% {
+    transform: translateX(-5px);
+  }
+  60% {
+    transform: translateX(5px);
+  }
+  70% {
+    transform: translateX(-5px);
+  }
+  80% {
+    transform: translateX(5px);
+  }
+  90% {
+    transform: translateX(-5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.dice-roller.roll-animation {
+  animation: shakeDice 0.5s ease-in-out;
+}
+/*  */
+
+.container {
+  width: 50vw;
+  display: flex;
+  flex-wrap: wrap;
+  margin: auto;
+  margin-top: 50px;
+  border: 10px solid white;
+}
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding-top: 50px;
+}
+.sketch-button {
+  font-size: 1.4rem;
+  border-radius: 10px;
+  background: linear-gradient(green, royalblue);
+}
+.color-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+}
+.game-container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+  .restart {
+    background-color: #007bff;
+    padding: 20px;
+    font-size: 1.4rem;
+  }
+  .box1 {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    & button {
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.4em;
+      border-radius: 10px;
+      background-color: royalblue;
+    }
+    button:active {
+      transition: 1s;
+      transform: scale(0.8);
+      background-color: royalblue;
+    }
+  }
+  .box2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    font-size: 1.8em;
+    text-align: center;
+    align-items: center;
+    & .box {
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      align-items: center;
+      border: 2px solid black;
+      padding: 10px;
+    }
+  }
+
+  .output1 {
+    font-size: 1.1rem;
+    margin: auto;
+    text-align: center;
+    margin-top: 20px;
+  }
+  .output {
+    font-size: 1.4rem;
+    margin: auto;
+    text-align: center;
+    font-weight: 700;
+  }
+}

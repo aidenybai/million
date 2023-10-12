@@ -4,8 +4,11 @@ description: 'List virtualization allows you to render large lists without perfo
 ---
 
 import { Callout, Tabs, Tab, Steps } from 'nextra-theme-docs';
+import { AutomaticModeWarning } from '../../components/automatic-mode-warning';
 
 # Virtualization
+
+<AutomaticModeWarning />
 
 Million.js plays very well with [TanStack Virtual](https://tanstack.com/virtual/v3/docs/guide/introduction). TanStack Virtual is a headless UI utility for virtualizing long lists of elements in React. Together, you can automatically use blocks within virtualized lists.
 
@@ -24,7 +27,7 @@ Virtualization is a technique for efficiently rendering large lists of items. It
 
 You can easily install it via this command:
 
-<Tabs items={['npm', 'pnpm', 'yarn']} storageKey="selected-pkg-manager">
+<Tabs items={['npm', 'pnpm', 'yarn', 'bun']} storageKey="selected-pkg-manager">
   {/* prettier-ignore */}
   <Tab>
   ```bash copy
@@ -41,6 +44,12 @@ You can easily install it via this command:
   <Tab>
   ```bash copy
   yarn add @tanstack/react-virtual@beta
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  bun add @tanstack/react-virtual@beta
   ```
   </Tab>
 </Tabs>

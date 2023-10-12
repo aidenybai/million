@@ -37,6 +37,16 @@ function App() {
 export default App;
 ```
 
+## `as` prop
+
+The `as` prop can be used to specify the tag name of the For. By default, it is `slot`.
+
+```jsx
+<For each={items} as="div">
+  {(item) => <li>{item}</li>}
+</For>
+```
+
 ## Optimizing `<For />`
 
 Internally, `<For />` will not reuse blocks in order to avoid unknown behavior. This means that if you have a `<For />` with 1000 items, it will recreate 1000 blocks.

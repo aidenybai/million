@@ -11,14 +11,14 @@ import {
   NO_PX_PROPERTIES,
   RENDER_SCOPE,
   TRANSFORM_ANNOTATION,
-  handleVisitorError,
   isStatic,
   isJSXFragment,
   hasStyledAttributes,
+  isSensitiveElement,
+  getUniqueId,
 } from './utils';
 import { optimize } from './optimize';
 import { evaluate } from './evaluator';
-import { jsxElementVisitor } from './jsx-element-visitor';
 import type { Options } from '../plugin';
 import type { Dynamics, Shared } from './types';
 import type { NodePath } from '@babel/core';
@@ -210,12 +210,10 @@ export const transformComponent = (
    * }
    * ```
    */
-  const masterComponentId = callSitePath.scope.generateUidIdentifier(
-    t.isIdentifier(originalComponent.id)
-      ? originalComponent.id.name
-      : 'master$',
-  );
-  const puppetComponentId = callSitePath.scope.generateUidIdentifier('puppet$');
+  let masterComponentId = t.isIdentifier(originalComponent.id)
+    ? originalComponent.id
+    : getUniqueId(callSitePath, 'M$');
+  const puppetComponentId = getUniqueId(callSitePath, 'P$');
 
   const block = imports.addNamed('block');
 
@@ -244,6 +242,10 @@ export const transformComponent = (
     },
     SHARED,
   );
+
+  if (!dynamics.data.length && options.server) {
+    throw createDeopt(null, file, callSitePath);
+  }
 
   const isCallable =
     statementsInBody === 1 &&
@@ -342,17 +344,27 @@ export const transformComponent = (
 
   if (data.length) {
     jsxPath.insertBefore(
-      t.variableDeclaration('const', [
-        ...data.map(({ id, value }) => {
+      t.variableDeclaration(
+        'const',
+        data.map(({ id, value }) => {
           return t.variableDeclarator(id, value);
         }),
-      ]),
+      ),
     );
   }
 
   const puppetJsxAttributes = dynamics.data.map(({ id }) =>
     t.jsxAttribute(t.jsxIdentifier(id.name), t.jsxExpressionContainer(id)),
   );
+
+  if (options.hmr) {
+    puppetJsxAttributes.push(
+      t.jsxAttribute(
+        t.jsxIdentifier('_hmr'),
+        t.stringLiteral(String(Date.now())),
+      ),
+    );
+  }
 
   /**
    * We want to change the Component's return from our original JSX
@@ -445,8 +457,14 @@ export const transformComponent = (
    * const master = (props) => {
    * ```
    */
-  Component.id = masterComponentId;
 
+  if (
+    t.isIdentifier(Component.id) &&
+    Component.id.name === masterComponentId.name
+  ) {
+    masterComponentId = getUniqueId(globalPath, masterComponentId.name);
+  }
+  Component.id = masterComponentId;
   callSitePath.replaceWith(masterComponentId);
 
   globalPath.insertBefore(
@@ -460,7 +478,10 @@ export const transformComponent = (
       t.expressionStatement(
         t.assignmentExpression(
           '=',
-          t.memberExpression(masterComponentId, t.identifier('callable')),
+          t.memberExpression(
+            masterComponentId,
+            t.identifier('__block_callable__'),
+          ),
           t.booleanLiteral(true),
         ),
       ),
@@ -557,7 +578,7 @@ export const transformJSX = (
   },
   SHARED: Shared,
 ) => {
-  const { file, imports, unstable, isReact } = SHARED;
+  const { file, imports, unstable } = SHARED;
 
   /**
    * Populates `dynamics` with a new entry.
@@ -672,88 +693,6 @@ export const transformJSX = (
    * handing all the edge cases.
    */
   if (t.isJSXIdentifier(type) && isComponent(type.name)) {
-    if (type.name === 'For') {
-      const visitor = jsxElementVisitor(options, isReact);
-
-      const { attributes } = jsx.openingElement;
-      for (let i = 0, j = attributes.length; i < j; i++) {
-        const attribute = attributes[i]!;
-
-        if (t.isJSXSpreadAttribute(attribute)) {
-          const spreadPath = jsxPath.get(
-            `openingElement.attributes.${i}.argument`,
-          );
-          warn(
-            'Spread attributes are not fully supported.',
-            file,
-            resolvePath(spreadPath),
-          );
-
-          const id = createPortal(() => {
-            jsxPath.replaceWith(t.jsxExpressionContainer(id!));
-          }, [jsx, t.booleanLiteral(unstable)]);
-
-          return dynamics;
-        }
-
-        if (hasStyledAttributes(attribute)) {
-          const id = createPortal(() => {
-            jsxPath.replaceWith(
-              isRoot
-                ? t.expressionStatement(id!)
-                : t.jsxExpressionContainer(id!),
-            );
-          }, [jsx, t.booleanLiteral(unstable)]);
-
-          return dynamics;
-        }
-
-        if (t.isJSXExpressionContainer(attribute.value)) {
-          const attributeValue = attribute.value;
-          const expressionPath = jsxPath.get(
-            `openingElement.attributes.${i}.value.expression`,
-          );
-          const { ast: expression, err } = evaluate(
-            attributeValue.expression,
-            resolvePath(expressionPath).scope,
-          );
-
-          if (!err) attributeValue.expression = expression;
-
-          if (t.isIdentifier(expression)) {
-            if (attribute.name.name === 'ref') {
-              const id = createPortal(() => {
-                jsxPath.replaceWith(
-                  isRoot
-                    ? t.expressionStatement(id!)
-                    : t.jsxExpressionContainer(id!),
-                );
-              }, [jsx, t.booleanLiteral(unstable)]);
-
-              return dynamics;
-            }
-            createDynamic(expression, null, null, null);
-          } else if (isStatic(expression)) {
-            if (t.isStringLiteral(expression)) {
-              attribute.value = expression;
-            }
-            // if other type of literal, do nothing
-          } else {
-            const id = createDynamic(
-              null,
-              expression as t.Expression,
-              resolvePath(expressionPath),
-              () => {
-                if (id) attributeValue.expression = id;
-              },
-            );
-          }
-        }
-      }
-      handleVisitorError(() => visitor(jsxPath, file), options.mute);
-      jsxPath.scope.crawl();
-    }
-
     // TODO: Add a warning for using components that are not block or For
     // warn(
     //   'Components will cause degraded performance. Ideally, you should use DOM elements instead.',
@@ -801,7 +740,9 @@ export const transformJSX = (
       );
 
       const id = createPortal(() => {
-        jsxPath.replaceWith(t.jsxExpressionContainer(id!));
+        jsxPath.replaceWith(
+          isRoot ? t.expressionStatement(id!) : t.jsxExpressionContainer(id!),
+        );
       }, [jsx, t.booleanLiteral(unstable)]);
 
       return dynamics;
@@ -923,7 +864,7 @@ export const transformJSX = (
         resolvePath(expressionPath).scope,
       );
 
-      if (t.isJSXIdentifier(attribute.name) && attribute.name.name === 'css') {
+      if (t.isJSXIdentifier(attribute.name) && hasStyledAttributes(attribute)) {
         const id = createPortal(() => {
           jsxPath.replaceWith(
             isRoot ? t.expressionStatement(id!) : t.jsxExpressionContainer(id!),
@@ -982,7 +923,7 @@ export const transformJSX = (
         jsxPath.replaceWith(t.jsxExpressionContainer(id!));
       }, [jsx, t.booleanLiteral(unstable)]);
 
-      return dynamics;
+      continue;
     }
 
     if (isJSXFragment(child)) {
@@ -1090,10 +1031,19 @@ export const transformJSX = (
          * <div><For each={[1, 2, 3]}>{i => <div>{i}</div>}</For></div>
          * ```
          */
+        const expressionPath = resolvePath(
+          jsxPath.get(`children.${i}.expression`),
+        );
+        const hasSensitive =
+          expressionPath.parentPath?.isJSXExpressionContainer() &&
+          t.isJSXElement(expressionPath.parentPath.parent) &&
+          isSensitiveElement(expressionPath.parentPath.parent);
+
         if (
           t.isCallExpression(expression) &&
           t.isMemberExpression(expression.callee) &&
-          t.isIdentifier(expression.callee.property, { name: 'map' })
+          t.isIdentifier(expression.callee.property, { name: 'map' }) &&
+          !hasSensitive
         ) {
           const For = imports.addNamed('For');
           const jsxFor = t.jsxIdentifier(For.name);
@@ -1134,8 +1084,6 @@ export const transformJSX = (
           t.isConditionalExpression(expression) ||
           t.isLogicalExpression(expression)
         ) {
-          const expressionPath = jsxPath.get(`children.${i}.expression`);
-
           warn(
             'Conditional expressions will degrade performance. We recommend using deterministic returns instead.',
             file,
@@ -1143,19 +1091,37 @@ export const transformJSX = (
             options.mute,
           );
 
-          const renderReactScope = imports.addNamed('renderReactScope');
+          const id = createPortal(() => {
+            jsx.children[i] = t.jsxExpressionContainer(id!);
+          }, [expression, t.booleanLiteral(unstable)]);
 
-          const id = createDynamic(
-            null,
-            t.callExpression(renderReactScope, [
-              expression,
-              t.booleanLiteral(unstable),
-            ]),
-            null,
-            () => {
-              jsx.children[i] = t.jsxExpressionContainer(id!);
-            },
-          );
+          continue;
+        }
+
+        let foundJsxInExpression = false;
+        expressionPath.traverse({
+          JSXElement(path) {
+            foundJsxInExpression = true;
+            path.stop();
+          },
+          JSXFragment(path) {
+            foundJsxInExpression = true;
+            path.stop();
+          },
+        });
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        if (foundJsxInExpression) {
+          const id = createPortal(() => {
+            if (hasSensitive) {
+              return jsxPath.replaceWith(
+                isRoot
+                  ? t.expressionStatement(id!)
+                  : t.jsxExpressionContainer(id!),
+              );
+            }
+            jsx.children[i] = t.jsxExpressionContainer(id!);
+          }, [hasSensitive ? jsx : expression, t.booleanLiteral(unstable)]);
+
           continue;
         }
 

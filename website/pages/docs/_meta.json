@@ -1,21 +1,25 @@
 {
+  "-- Getting Started": {
+    "type": "separator",
+    "title": "Getting Started"
+  },
   "index": "Introduction",
   "install": "Installation",
-  "quickstart": "Tutorial",
-  "faq": "FAQ",
+  "automatic": "Automatic Mode",
   "-- API Reference": {
     "type": "separator",
     "title": "API Reference"
   },
   "block": "block()",
   "for": "<For>",
-  "macro": "macro()",
-  "-- Advanced": {
+  "-- Guide": {
     "type": "separator",
-    "title": "Advanced"
+    "title": "Guide"
   },
+  "quickstart": "Tutorial",
   "rules": "Rules of Blocks",
-  "virtualization": "Virtualization",
   "typescript": "Usage with TypeScript",
+  "virtualization": "Virtualization",
+  "common-errors": "Common Errors",
   "internals": "Internals"
 }

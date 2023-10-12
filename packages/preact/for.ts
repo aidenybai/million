@@ -16,6 +16,7 @@ export const For = <T>({ each, children }: MillionArrayProps<T>) => {
   const cache = useRef<ArrayCache<T>>({
     each: null,
     children: null,
+    mounted: false,
   });
   if (fragmentRef.current && each !== cache.current.each) {
     queueMicrotask$(() => {

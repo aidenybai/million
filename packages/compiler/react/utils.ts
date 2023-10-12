@@ -1,12 +1,37 @@
 import * as t from '@babel/types';
 import { type NodePath } from '@babel/core';
 import { addNamed } from '@babel/helper-module-imports';
-import { bgMagenta, cyan, magenta, dim } from 'kleur/colors';
+import { cyan, magenta, dim } from 'kleur/colors';
 import { collectImportedBindings } from './bindings';
 import type { Options } from '../plugin';
 
 export const RENDER_SCOPE = 'slot';
 export const TRANSFORM_ANNOTATION = 'million:transform';
+
+export const getUniqueId = (path: NodePath, name: string): t.Identifier => {
+  const processedName = t
+    .toIdentifier(name)
+    .replace(/^_+/, '')
+    .replace(/[0-9]+$/g, '');
+
+  let uid: string;
+  let i = 0;
+  do {
+    uid = processedName;
+    if (i > 1) uid += i;
+    i++;
+  } while (
+    path.scope.hasLabel(uid) ||
+    path.scope.hasBinding(uid) ||
+    path.scope.hasGlobal(uid) ||
+    path.scope.hasReference(uid)
+  );
+
+  path.scope.references[uid] = true;
+  path.scope.uids[uid] = true;
+
+  return t.identifier(uid);
+};
 
 export const getValidSpecifiers = (
   importDeclarationPath: NodePath<t.ImportDeclaration>,
@@ -58,6 +83,16 @@ export const getValidSpecifiers = (
   return validSpecifiers;
 };
 
+export const isSensitiveElement = (jsx: t.JSXElement) => {
+  // elements that break when the children are not in a specific format
+  const sensitiveElements = ['select'];
+
+  return (
+    t.isJSXIdentifier(jsx.openingElement.name) &&
+    sensitiveElements.includes(jsx.openingElement.name.name)
+  );
+};
+
 export const hasStyledAttributes = (attribute: t.JSXAttribute) => {
   return attribute.name.name === 'tw' || attribute.name.name === 'css';
 };
@@ -82,12 +117,8 @@ export const createError = (message: string, path: NodePath, file: string) => {
   );
 };
 
-export const stylePrimaryMessage = (message: string, comment: string) => {
-  return `\n🦁 ${bgMagenta(' million ')} ${magenta(message)} \n${comment}\n`;
-};
-
 export const styleSecondaryMessage = (message: string, emoticon: string) => {
-  return `${magenta(emoticon)} ${message}`;
+  return `${magenta(emoticon)}${message}`;
 };
 
 export const styleLinks = (message: string) => {
@@ -158,6 +189,7 @@ export const isComponent = (name: string) => {
   return (
     name.startsWith(name[0]!.toUpperCase()) &&
     !name.startsWith('_') &&
+    !name.startsWith('M$') &&
     !name.startsWith('use')
   );
 };

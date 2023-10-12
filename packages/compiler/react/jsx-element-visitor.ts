@@ -4,6 +4,7 @@ import {
   createDeopt,
   getValidSpecifiers,
   handleVisitorError,
+  hasStyledAttributes,
   isComponent,
   removeDuplicateJSXAttributes,
   resolveCorrectImportSource,
@@ -95,13 +96,29 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
     }
 
     const expression = child.expression;
-
     if (!t.isArrowFunctionExpression(expression)) {
       throw createDeopt(
         'For component must consume a reference to an arrow function',
         file,
         jsxElementPath,
       );
+    }
+
+    if (t.isBlockStatement(expression.body)) {
+      const expressionPath = resolvePath(jsxElementPath.get('children'));
+      const returnStatementPath = resolvePath(
+        expressionPath.find((path) => path.isReturnStatement())!,
+      ) as NodePath<t.ReturnStatement>;
+      const argument = returnStatementPath.node.argument;
+
+      if (!t.isJSXElement(argument) && !t.isJSXFragment(argument)) {
+        return;
+      }
+    } else if (
+      !t.isJSXElement(expression.body) &&
+      !t.isJSXFragment(expression.body)
+    ) {
+      return;
     }
 
     const jsxElementParent = jsxElementPath.parent;
@@ -172,6 +189,23 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
           bailout = true;
         }
       },
+      JSXAttribute(path) {
+        const jsxId = path.node.name;
+        if (!t.isJSXIdentifier(jsxId)) return;
+
+        if (jsxId.name === 'ref' || hasStyledAttributes(path.node)) {
+          path.stop();
+          bailout = true;
+        }
+      },
+      JSXSpreadAttribute(path) {
+        path.stop();
+        bailout = true;
+      },
+      JSXSpreadChild(path) {
+        path.stop();
+        bailout = true;
+      },
       Identifier(path: NodePath<t.Identifier>) {
         if (programPath.scope.hasBinding(path.node.name)) return;
         const targetPath = path.parentPath;
@@ -192,7 +226,6 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
         if (
           targetPath.isObjectMethod() ||
           targetPath.isJSXAttribute() ||
-          targetPath.isJSXSpreadAttribute() ||
           targetPath.isJSXOpeningElement() ||
           targetPath.isJSXClosingElement()
         ) {
@@ -222,6 +255,7 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
     if (bailout) return jsxElementPath.stop();
 
     const ids = [...idNames].map((id) => t.identifier(id));
+    const body = t.cloneNode(expression.body);
 
     // We do a similar extraction process as in the call expression visitor
     const originalComponent = t.variableDeclaration('const', [
@@ -233,9 +267,9 @@ export const jsxElementVisitor = (options: Options = {}, isReact = true) => {
               ids.map((id) => t.objectProperty(id, id, false, true)),
             ),
           ],
-          t.isBlockStatement(expression.body)
-            ? expression.body
-            : t.blockStatement([t.returnStatement(expression.body)]),
+          t.isBlockStatement(body)
+            ? body
+            : t.blockStatement([t.returnStatement(body)]),
         ),
       ),
     ]);

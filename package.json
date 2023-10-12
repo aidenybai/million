@@ -1,7 +1,7 @@
 {
   "name": "million",
-  "version": "2.6.0-beta.8",
-  "description": "The Virtual DOM Replacement For React",
+  "version": "2.6.4",
+  "description": "Make React Faster. Automatically.",
   "main": "dist/packages/million.mjs",
   "module": "dist/packages/million.mjs",
   "jsdelivr": "dist/packages/million.mjs",
@@ -22,6 +22,7 @@
   },
   "files": [
     "dist/**/*",
+    "packages/cli/dist/index.js",
     "react.d.ts",
     "jsx-runtime.d.ts",
     "compiler.d.ts",
@@ -30,6 +31,9 @@
     "preact-server.d.ts",
     "types.d.ts"
   ],
+  "bin": {
+    "million": "./packages/cli/dist/index.js"
+  },
   "exports": {
     ".": {
       "import": {
@@ -146,9 +150,10 @@
     "unplugin": "^1.3.1"
   },
   "devDependencies": {
-    "@types/babel-types": "^7.0.11",
+    "@rollup/plugin-replace": "^5.0.2",
     "@types/babel__core": "^7.20.0",
     "@types/babel__generator": "^7.6.4",
+    "@types/babel-types": "^7.0.11",
     "@types/node": "^18.14.1",
     "@typescript-eslint/eslint-plugin": "^5.53.0",
     "@typescript-eslint/parser": "^5.53.0",

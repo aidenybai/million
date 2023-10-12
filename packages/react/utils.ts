@@ -53,7 +53,7 @@ export const renderReactScope = (
   if (
     isValidElement(vnode) &&
     typeof vnode.type === 'function' &&
-    'callable' in vnode.type
+    '__block_callable__' in vnode.type
   ) {
     const puppetComponent = (vnode.type as any)(vnode.props);
     if (REGISTRY.has(puppetComponent.type)) {

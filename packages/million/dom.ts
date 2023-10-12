@@ -53,7 +53,6 @@ export const SVG_TEMPLATE = /**@__PURE__*/ document$.createElementNS(
   'svg',
 );
 /**@__PURE__*/ _SVG_TEMPLATE.content.appendChild(SVG_TEMPLATE);
-export const SVG_TEMPLATE_CONTENT = _SVG_TEMPLATE.content.firstChild as Element;
 
 // Caching prototypes for performance
 export const node$ = Node.prototype;
@@ -84,7 +83,7 @@ export const characterDataSet$ = getOwnPropertyDescriptor$(
 export const stringToDOM = (content: string, svg?: boolean) => {
   const template = svg ? SVG_TEMPLATE : HTM_TEMPLATE;
   template.innerHTML = content;
-  const dom = svg ? SVG_TEMPLATE_CONTENT : HTM_TEMPLATE_CONTENT;
+  const dom = svg ? SVG_TEMPLATE : HTM_TEMPLATE_CONTENT;
   return dom.firstChild as HTMLElement;
 };
 
@@ -95,24 +94,27 @@ export const createEventListener = (
   name: string,
   value?: EventListener,
 ) => {
-  const event = name.toLowerCase();
+  let event = name.toLowerCase();
+  let capture = false;
+  if (event.endsWith('capture')) {
+    event = event.slice(0, -7);
+    capture = true;
+  }
+
   const key = `$$${event}`;
   if (!SetHas$.call(document$[EVENTS_REGISTRY], event)) {
     // createEventListener uses a synthetic event handler to capture events
     // https://betterprogramming.pub/whats-the-difference-between-synthetic-react-events-and-javascript-events-ba7dbc742294
-    addEventListener$.call(document$, event, (nativeEvent: Event) => {
-      nativeEvent.stopPropagation = () => {
-        nativeEvent.cancelBubble = true;
-        nativeEvent.stopImmediatePropagation();
-      };
-
-      requestAnimationFrame(() => {
+    addEventListener$.call(
+      document$,
+      event,
+      (nativeEvent: Event) => {
         let el = nativeEvent.target as Node | null;
         // Bubble up the DOM tree to find all event listeners
         while (el) {
           const handler = el[key];
           if (handler) {
-            Object.defineProperty(nativeEvent, 'currentTarget', {
+            Object$.defineProperty(nativeEvent, 'currentTarget', {
               configurable: true,
               get() {
                 return el;
@@ -122,8 +124,9 @@ export const createEventListener = (
           }
           el = el.parentNode;
         }
-      });
-    });
+      },
+      { capture },
+    );
     SetAdd$.call(document$[EVENTS_REGISTRY], event);
   }
   const patch = (newValue?: EventListener | null) => {

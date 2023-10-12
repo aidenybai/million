@@ -1,12 +1,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import Wyze from '../../pages/showcase/wyze.png';
+import HackClub from '../../pages/showcase/hackclub.jpeg';
 import DonaAI from '../../pages/showcase/dona-ai.jpeg';
-import T4Stack from '../../pages/showcase/t4stack.png';
 import LLMReport from '../../pages/showcase/llm-report.png';
-import VeganCheck from '../../pages/showcase/vegancheck.png';
-import Windows11Web from '../../pages/showcase/windows-11-web.jpeg';
-import StudioFreight from '../../pages/showcase/studio-freight.jpeg';
 import Texts from '../../pages/showcase/texts.png';
 import { Container } from './container';
 
@@ -18,14 +15,14 @@ export function Showcase() {
       url: 'wyze.com',
     },
     {
+      image: HackClub,
+      name: 'Hack Club',
+      url: 'hackclub.com',
+    },
+    {
       image: DonaAI,
       name: 'Dona AI',
       url: 'dona.ai',
-    },
-    {
-      image: T4Stack,
-      name: 'T4 Stack',
-      url: 't4stack.com',
     },
     {
       image: LLMReport,
@@ -33,24 +30,9 @@ export function Showcase() {
       url: 'llm.report',
     },
     {
-      image: StudioFreight,
-      name: 'Studio Freight',
-      url: 'studiofreight.com',
-    },
-    {
       image: Texts,
       name: 'Texts',
       url: 'texts.com',
-    },
-    {
-      image: VeganCheck,
-      name: 'Vegan Check',
-      url: 'vegancheck.me',
-    },
-    {
-      image: Windows11Web,
-      name: 'Windows 11',
-      url: 'windows11web.com',
     },
   ];
   return (
@@ -67,29 +49,31 @@ export function Showcase() {
         </div>
         <div className="slider">
           <div className="slide-track-10 hover:pause mt-6 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5">
-            {[...entries, ...entries].map(({ image, name, url }, i) => (
-              <a
-                href={`https://${url}`}
-                target="_blank"
-                className="pr-10 space-y-6 text-center w-[24rem] relative grayscale-[50%] opacity-90 hover:opacity-100 transition duration-200 hover:grayscale-0"
-              >
-                <Image
-                  src={image}
-                  alt={name}
-                  width={256}
-                  height={288}
-                  className={`mx-auto h-32 w-72 md:h-40 md:w-24 lg:h-32 lg:w-72 rounded-lg object-cover object-top hover:rotate-0 ${
-                    i % 2 === 0 ? '-rotate-1' : 'rotate-1'
-                  } hover:scale-110 hover:shadow-lg lg:hover:shadow-2xl transition`}
-                />
-                <div>
-                  <h4 className="text-2xl text-gray-700 dark:text-white">
-                    {name}
-                  </h4>
-                  <span className="block text-sm text-gray-500">{url}</span>
-                </div>
-              </a>
-            ))}
+            {[...entries, ...entries, ...entries].map(
+              ({ image, name, url }, i) => (
+                <a
+                  href={`https://${url}`}
+                  target="_blank"
+                  className="pr-10 space-y-6 text-center w-[24rem] relative grayscale-[50%] opacity-90 hover:opacity-100 transition duration-200 hover:grayscale-0"
+                >
+                  <Image
+                    src={image}
+                    alt={name}
+                    width={256}
+                    height={288}
+                    className={`mx-auto h-32 w-72 md:h-40 md:w-24 lg:h-32 lg:w-72 rounded-lg object-cover object-top hover:rotate-0 ${
+                      i % 2 === 0 ? '-rotate-1' : 'rotate-1'
+                    } hover:scale-110 hover:shadow-lg lg:hover:shadow-2xl transition`}
+                  />
+                  <div>
+                    <h4 className="text-2xl text-gray-700 dark:text-white">
+                      {name}
+                    </h4>
+                    <span className="block text-sm text-gray-500">{url}</span>
+                  </div>
+                </a>
+              ),
+            )}
           </div>
         </div>
 

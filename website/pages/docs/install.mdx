@@ -5,15 +5,50 @@ description: 'How to install Million.js into your React project'
 
 import { Callout, Tabs, Tab, Steps } from 'nextra-theme-docs';
 
-# Install Million.js
+# Installation
 
 Million.js assumes that you've already initialized a React project. If you haven't, we recommend checking out [react.dev](https://react.dev) first.
 
-If you're just looking to try out Million.js, check out the [quickstart](/docs/quickstart).
+## Setup in seconds
+
+The Million.js CLI will automatically install the package and configure your project for you.
+
+<Tabs items={['npm', 'pnpm', 'yarn', 'bun']} storageKey="selected-pkg-manager">
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  npx million@latest
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  pnpx million@latest
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  yarn create million@latest
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  bunx million@latest
+  ```
+  </Tab>
+</Tabs>
+
+That's it! **Your project is now running on Million.js 🎉**
 
 <Callout type="info">
   Million.js is compatible with React 16 and above. If you're using an older version of React, you'll need to upgrade first.
 </Callout>
+
+## Manual configuration
+
+In the case you want more granular control over the installation process, you can follow the steps below.
 
 <Tabs items={['Automatic', 'Manual']} storageKey="mode">
 
@@ -25,7 +60,7 @@ If you're just looking to try out Million.js, check out the [quickstart](/docs/q
 
 First things first, you'll need to install Million.js. You can do this with your favorite package manager:
 
-<Tabs items={['npm', 'pnpm', 'yarn']} storageKey="selected-pkg-manager">
+<Tabs items={['npm', 'pnpm', 'yarn', 'bun']} storageKey="selected-pkg-manager">
   {/* prettier-ignore */}
   <Tab>
   ```bash copy
@@ -42,6 +77,12 @@ First things first, you'll need to install Million.js. You can do this with your
   <Tab>
   ```bash copy
   yarn add million
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  bun add million
   ```
   </Tab>
 </Tabs>
@@ -136,39 +177,6 @@ Then, add the compiler to your build tool of choice:
   </Tab>
 </Tabs>
 
-### Ignoring components
-
-If a certain component conflicts with the Million.js runtime, it's possible to skip over them via the `// million-ignore` comment.
-
-```js
-// million-ignore
-function App() {
-  return ...
-}
-```
-
-### Advanced customization
-
-Automatic mode provides options to tune automatic mode:
-
-- `threshold`: The threshold for the heuristic to determine whether a component should be converted to Million.js. The greater the threshold, fewer components will be optimized, and vice versa. The default is `0.1`.
-- `skip`: An array of identifiers that indicate a component should be skipped. You can put hook names, variable names, etc. The default is `[]`.
-
-
-```js
-const options = {
-  auto: {
-    threshold: 0.25, // default: 0.1,
-    skip: ['useBadHook', /badVariable/g] // default []
-  }
-}
-```
-
-### Muting help messages
-
-If you don't want to see the help messages, you can pass the `{ mute: true }{:js}` option to the compiler.
-
-
 </Steps>
 
 </Tab>
@@ -181,7 +189,7 @@ If you don't want to see the help messages, you can pass the `{ mute: true }{:js
 
 First things first, you'll need to install Million.js. You can do this with your favorite package manager:
 
-<Tabs items={['npm', 'pnpm', 'yarn']} storageKey="selected-pkg-manager">
+<Tabs items={['npm', 'pnpm', 'yarn', 'bun']} storageKey="selected-pkg-manager">
   {/* prettier-ignore */}
   <Tab>
   ```bash copy
@@ -198,6 +206,12 @@ First things first, you'll need to install Million.js. You can do this with your
   <Tab>
   ```bash copy
   yarn add million
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  bun add million
   ```
   </Tab>
 </Tabs>

@@ -24,6 +24,7 @@ export const block = <P extends MillionProps>(
     props: P,
     forwardedRef: Ref<any>,
   ) => {
+    const hmrTimestamp = props._hmr;
     const ref = useRef<HTMLElement>(null);
     const patch = useRef<((props: P) => void) | null>(null);
     const portalRef = useRef<MillionPortal[]>([]);
@@ -32,8 +33,10 @@ export const block = <P extends MillionProps>(
     patch.current?.(props);
 
     const effect = useCallback(() => {
+      if (!ref.current) return;
       const currentBlock = block(props, props.key);
-      if (ref.current && patch.current === null) {
+      if (hmrTimestamp) ref.current.textContent = '';
+      if (patch.current === null || hmrTimestamp) {
         queueMicrotask$(() => {
           mount$.call(currentBlock, ref.current!, null);
         });
@@ -53,7 +56,10 @@ export const block = <P extends MillionProps>(
       Fragment,
       null,
       marker,
-      createElement(Effect, { effect }),
+      createElement(Effect, {
+        effect,
+        deps: hmrTimestamp ? [hmrTimestamp] : [],
+      }),
       ...portalRef.current.map((p) => p.portal),
     );
 
