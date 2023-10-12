@@ -2,18 +2,10 @@ import React from 'react';
 import { block } from 'million/react';
 
 interface MovieProps {
-  Poster: string;
-  Title: string;
-  Genre: string;
-  Released: string;
+  title: string;
+  release_date: string;
   Rated: string;
-  Plot: string;
-  Actors: string;
-  Writer: string;
-  Director: string;
-  Awards: string;
-  Rating: string;
-  Response: string;
+  overview: string;
 }
 
 const MovieFinder = block(() => {
@@ -25,10 +17,10 @@ const MovieFinder = block(() => {
     try {
       setLoading(true);
       const res = await fetch(
-        `http://www.omdbapi.com/?apikey=c383ad63&t=${query}`,
+        `https://api.themoviedb.org/3/search/movie?query=${query}&api_key=7375b3162ed1bb2f24bb965386019997`,
       );
       const data = await res.json();
-      setMovie(data);
+      setMovie(data.results[0]);
     } catch (error: any) {
       return error;
     } finally {
@@ -50,20 +42,13 @@ const MovieFinder = block(() => {
         </button>
       </div>
       <div style={{ paddingTop: '15px' }}>
-        {movie?.Response !== 'False' && movie ? (
+        {movie && (
           <>
-            <img src={movie.Poster} />
-            <h3>Title: {movie.Title}</h3>
-            <p>Genre: {movie.Genre} </p>
-            <p>Released: {movie.Released} </p>
-            <p>Rated: {movie.Rated} </p>
-            <p>Plot: {movie.Plot} </p>
-            <p>Actors: {movie.Actors} </p>
-            <p>Writer: {movie.Writer} </p>
-            <p>Director: {movie.Director} </p>
-            <p>Awards: {movie.Awards} </p>
+            <h3>Title: {movie.title}</h3>
+            <p>Released: {movie.release_date} </p>
+            <p>Plot: {movie.overview} </p>
           </>
-        ) : null}
+        )}
       </div>
     </div>
   );
