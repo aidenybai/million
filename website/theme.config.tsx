@@ -2,6 +2,9 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import { type DocsThemeConfig, useConfig } from 'nextra-theme-docs';
 import { ExtraContent } from './components/extra-content';
+import { GitHubIcon } from '@components/icons/github-icon';
+import { DiscordIcon } from '@components/icons/discord-icon';
+import { TwitterXIcon } from '@components/icons/twitter-x-icon';
 
 const config: DocsThemeConfig = {
   logo: () => {
@@ -99,9 +102,11 @@ const config: DocsThemeConfig = {
   },
   project: {
     link: 'https://github.com/aidenybai/million',
+    icon: <GitHubIcon />,
   },
   chat: {
     link: 'https://discord.gg/X9yFbcV2rF',
+    icon: <DiscordIcon />,
   },
   docsRepositoryBase: 'https://github.com/aidenybai/million/tree/main/website/',
   footer: {
@@ -139,41 +144,7 @@ const config: DocsThemeConfig = {
     ),
   },
   navbar: {
-    extraContent: (
-      <>
-        <a
-          style={{ padding: '0.5rem' }}
-          target="_blank"
-          href="https://twitter.com/milliondotjs"
-          aria-label="Million.js twitter"
-          rel="nofollow noreferrer"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className="feather feather-twitter"
-          >
-            <path d="M16.99 0H20.298L13.071 8.26L21.573 19.5H14.916L9.702 12.683L3.736 19.5H0.426L8.156 10.665L0 0H6.826L11.539 6.231L16.99 0ZM15.829 17.52H17.662L5.83 1.876H3.863L15.829 17.52Z"></path>
-          </svg>
-        </a>
-        <a
-          href="https://github.com/sponsors/aidenybai"
-          target="_blank"
-          className="hidden sm:block"
-        >
-          <iframe
-            src="https://github.com/sponsors/aidenybai/button"
-            title="Sponsor aidenybai"
-            height="32"
-            width="114"
-            className="rounded-md border-0 dark:invert invert-0"
-          ></iframe>
-        </a>
-      </>
-    ),
+    extraContent: <TwitterXIcon />,
   },
   head: () => {
     const { asPath, pathname } = useRouter();
