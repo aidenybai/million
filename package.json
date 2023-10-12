@@ -151,9 +151,9 @@
   },
   "devDependencies": {
     "@rollup/plugin-replace": "^5.0.2",
-    "@types/babel-types": "^7.0.11",
     "@types/babel__core": "^7.20.0",
     "@types/babel__generator": "^7.6.4",
+    "@types/babel-types": "^7.0.11",
     "@types/node": "^18.14.1",
     "@typescript-eslint/eslint-plugin": "^5.53.0",
     "@typescript-eslint/parser": "^5.53.0",
