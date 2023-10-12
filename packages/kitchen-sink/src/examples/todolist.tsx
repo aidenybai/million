@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { block } from 'million/react';
+import { block, For } from 'million/react';
 
 const TodoList = block(() => {
   const [tasks, setTasks] = useState<any[]>([]);
@@ -7,7 +7,10 @@ const TodoList = block(() => {
 
   const addTask = () => {
     if (taskInput.trim() === '') return;
-    setTasks([...tasks, { text: taskInput, completed: false }]);
+    setTasks([
+      ...tasks,
+      { id: tasks.length, text: taskInput, completed: false },
+    ]);
     setTaskInput('');
   };
 
@@ -42,28 +45,31 @@ const TodoList = block(() => {
         </button>
       </div>
       <ul>
-        {tasks.map((task: any, index: number) => (
-          <li style={{ margin: '15px 0 15px 0' }} key={index}>
-            <input
-              type="checkbox"
-              checked={task.completed}
-              onChange={() => toggleTaskCompletion(index)}
-            />
-            <span
-              style={{
-                textDecoration: task.completed ? 'line-through' : 'none',
-              }}
-            >
-              {task.text}
-            </span>
-            <button
-              style={{ marginLeft: 10, padding: '7px 15px 7px 15px' }}
-              onClick={() => removeTask(index)}
-            >
-              Remove
-            </button>
-          </li>
-        ))}
+        <For each={tasks}>
+          {(task) => (
+            <li key={task.id} style={{ margin: '15px 0 15px 0' }}>
+              <span
+                style={{
+                  fontSize: '1.25em',
+                  textDecoration: task.completed ? 'line-through' : 'none',
+                }}
+              >
+                {task.text}
+              </span>
+              <input
+                type="checkbox"
+                checked={task.completed}
+                onChange={() => toggleTaskCompletion(task.id)}
+              />
+              <button
+                style={{ marginLeft: 10, padding: '7px 15px 7px 15px' }}
+                onClick={() => removeTask(task.id)}
+              >
+                Remove
+              </button>
+            </li>
+          )}
+        </For>
       </ul>
     </div>
   );
