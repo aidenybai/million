@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { v4 as uuid4 } from 'uuid';
 import {
   DragDropContext,
@@ -124,9 +124,9 @@ const TrashIcon = ({ size, color }: { size: string; color: string }) => {
 };
 
 function getSectionTitleColor(sectionType: string) {
-  if (sectionType === 'TODO') return '#ff0000'
-  if (sectionType === 'IN_PROGRESS') return '#fff000'
-  if (sectionType === 'COMPLETED') return '#00ff40'
+  if (sectionType === 'TODO') return '#ff0000';
+  if (sectionType === 'IN_PROGRESS') return '#fff000';
+  if (sectionType === 'COMPLETED') return '#00ff40';
 }
 
 const ListItemBlock = block(function ({
@@ -258,7 +258,7 @@ const ListDisplayBlock = block(function ListDisplay({
   return (
     <div
       style={{
-        margin: '0rem 0.8rem',
+        margin: '0.5rem 0.8rem',
         flex: 1,
         overflow: 'hidden',
         borderRadius: '0.4rem',
@@ -268,7 +268,9 @@ const ListDisplayBlock = block(function ListDisplay({
         background: 'black',
       }}
     >
-      <strong style={{ color: getSectionTitleColor(objKey) }}>{data.title}</strong>
+      <strong style={{ color: getSectionTitleColor(objKey) }}>
+        {data.title}
+      </strong>
       <Droppable droppableId={objKey}>
         {(provided) => (
           <div {...provided.droppableProps} ref={provided.innerRef}>
@@ -343,6 +345,7 @@ const TaskTrackerBlock = block(function TaskTracker() {
     },
   });
 
+  const screenWidthBreakpoint = 800;
   function addItem(section: string, itemName: string) {
     setListData((data) => {
       const obj = { ...data };
@@ -389,8 +392,24 @@ const TaskTrackerBlock = block(function TaskTracker() {
       return { ...state };
     });
   };
+  const [isMobile, setIsMobile] = useState(
+    window.innerWidth < screenWidthBreakpoint,
+  );
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < screenWidthBreakpoint);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
   return (
-    <div style={{ display: 'flex' }}>
+    <div
+      style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row' }}
+    >
       <DragDropContext onDragEnd={onDragEndHandler}>
         <For each={Object.keys(listData)}>
           {(objKey, index) => {
