@@ -13,7 +13,7 @@ const JournalComponent = ({ entry, onDelete }) => (
         {entry.media.type.startsWith('video') && (
           <video controls style={{width:'30%'}}>
             <source src={entry.media.url} type={entry.media.type} />
-            Your browser does not support the video tag.
+            Your browser does not support the video tag
           </video>
         )}
       </div>
