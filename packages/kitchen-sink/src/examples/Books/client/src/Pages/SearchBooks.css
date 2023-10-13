@@ -1,0 +1,56 @@
+/* Add this CSS to style your cards
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .card {
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 5px;
+    width: 300px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card a {
+    text-decoration: none;
+    color: #333;
+  }
+  
+  .card img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .card-content {
+    margin-top: 10px;
+  }
+  
+  .card-content h3 {
+    font-size: 1.2rem;
+    margin: 0;
+  }
+  
+  .card-content p {
+    margin: 0;
+  }
+   */
+
+
+
+   .card-container {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .card {
+    width: 18rem;
+    margin: 1rem;
+  }
+  
+  .card-img-top {
+    height: 15rem;
+    object-fit: cover;
+  }
+  

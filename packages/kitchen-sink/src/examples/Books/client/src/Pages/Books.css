@@ -1,0 +1,62 @@
+/* Books.css */
+
+.books-container {
+    background-color:whitesmoke;
+    min-height: 100vh;
+    padding: 20px;
+    color: #fff;
+  }
+  
+  .books-header {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .books-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+  
+  .book-card {
+    background-color: #292929;
+    border: 1px solid #444;
+    border-radius: 5px;
+    margin: 10px;
+    padding: 20px;
+    width: 300px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .book-image img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+  
+  .book-title {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  
+  .book-author {
+    font-size: 1rem;
+    margin-bottom: 5px;
+  }
+  
+  .book-description {
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+  }
+  
+  .book-price {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+  
+  .book-actions {
+    display: flex;
+    justify-content: space-between;
+  }
+  

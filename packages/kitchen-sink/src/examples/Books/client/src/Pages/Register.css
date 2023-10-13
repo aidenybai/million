@@ -1,0 +1,60 @@
+/* .register-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; 
+  }
+  
+  h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+  }
+  
+  label {
+    margin-bottom: 5px;
+  }
+  
+  input {
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  span {
+    margin-top: 10px;
+  }
+   */
+
+
+
+   
+   .register-container {
+    background: url('https://i.ibb.co/zGJ1TFC/download-3.jpg') no-repeat center center fixed;
+    background-size:cover;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .register-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 25px 20px 20px gainsboro;
+    padding: 20px;
+  }
+  
