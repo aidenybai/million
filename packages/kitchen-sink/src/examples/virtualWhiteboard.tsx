@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 
 const VirtualBoard: React.FC = () => {
   const [coordinates, setCoordinates] = useState<
@@ -12,13 +12,21 @@ const VirtualBoard: React.FC = () => {
     'draw' | 'text' | 'line' | 'erase' | 'clear'
   >('draw');
   const [color, setColor] = useState<string>('#000000');
+  // Responsible for controlling position and visibility of the text input field
   const [textInput, setTextInput] = useState<{
     x: number;
     y: number;
     show: boolean;
   }>({ x: 0, y: 0, show: false });
+  // Manages the users text input
+  const [inputText, setInputText] = useState<string>('');
+  const [textElements, setTextElements] = useState<
+    Array<{ x: number; y: number; text: string }>
+  >([]);
 
   const colorInputRef = useRef<HTMLInputElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const textInputRef = useRef<HTMLInputElement>(null);
 
   const handleModeChange = (
     newMode: 'draw' | 'text' | 'line' | 'erase' | 'clear',
@@ -28,6 +36,7 @@ const VirtualBoard: React.FC = () => {
 
   const handleClear = () => {
     setCoordinates([]);
+    setTextElements([]);
   };
 
   const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,22 +58,36 @@ const VirtualBoard: React.FC = () => {
   };
 
   const handleText = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    console.log('handleText called, current mode:', mode); // Debug line
     if (mode !== 'text') return; // Only add text when the mode is 'text'
 
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
+    console.log('Setting textInput to show, with coordinates:', x, y); // Debug line
+
     const canvas = e.currentTarget;
     const ctx = canvas.getContext('2d');
-    
-    setTextInput({x, y, show: true});
+
+    setTextInput({ x, y, show: true });
   };
 
-  
-
+  const handleAddTextToCanvas = () => {
+    setTextElements([
+      ...textElements,
+      { x: textInput.x, y: textInput.y, text: inputText },
+    ]);
+    setTextInput({ ...textInput, show: false });
+    setInputText(''); // Clear the input text
+  };
+  useEffect(() => {
+    if (textInput.show && textInputRef.current) {
+      textInputRef.current.focus();
+    }
+  }, [textInput.show]);
   const handleDraw = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!isDrawing) return; // Only draw when isDrawing is true
+    if (mode !== 'draw' || !isDrawing) return; // Only draw when isDrawing is true
 
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -72,7 +95,8 @@ const VirtualBoard: React.FC = () => {
     setCurrentLine([...currentLine, { x, y }]);
   };
 
-  const drawOnCanvas = (canvas: HTMLCanvasElement | null) => {
+  useEffect(() => {
+    const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
@@ -93,6 +117,12 @@ const VirtualBoard: React.FC = () => {
       ctx.stroke();
     });
 
+    // Draw text elements
+    textElements.forEach((textElement) => {
+      ctx.font = '20px sans-serif';
+      ctx.fillText(textElement.text, textElement.x, textElement.y);
+    });
+
     // Draw the current line
     ctx.beginPath();
     currentLine.forEach((point, i) => {
@@ -103,7 +133,7 @@ const VirtualBoard: React.FC = () => {
       }
     });
     ctx.stroke();
-  };
+  }, [coordinates, textElements, currentLine]); // Added currentLine to dependency array
 
   return (
     <>
@@ -128,9 +158,9 @@ const VirtualBoard: React.FC = () => {
           />
         </button> */}
       </div>
-      <div className="canvas">
+      <div className="canvas" style={{ position: 'relative' }}>
         <canvas
-          ref={drawOnCanvas}
+          ref={canvasRef}
           onMouseDown={handleMouseDown}
           onMouseUp={handleMouseUp}
           onMouseMove={handleDraw}
@@ -139,19 +169,36 @@ const VirtualBoard: React.FC = () => {
           height={600}
           style={{ border: '2px solid black' }}
         />
-        {textInput.show && (
-    <input
-      type="text"
-      style={{
-        position: 'absolute',
-        left: `${textInput.x}px`,
-        top: `${textInput.y}px`,
-        cursor: 'text',
-      }}
-      autoFocus
-    />
-  )}
-  
+        <div className="textInputFunctionality">
+          {textInput.show ? (
+            <input
+              type="text"
+              ref={textInputRef}
+              style={{
+                position: 'absolute',
+                left: `${textInput.x}px`,
+                top: `${textInput.y}px`,
+                cursor: 'text',
+              }}
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              onBlur={handleAddTextToCanvas}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleAddTextToCanvas();
+                  e.preventDefault(); // Prevents the default action of a newline
+                }
+              }}
+              autoFocus
+            />
+          ) : (
+            <input
+              type="text"
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+            />
+          )}
+        </div>
       </div>
     </>
   );
