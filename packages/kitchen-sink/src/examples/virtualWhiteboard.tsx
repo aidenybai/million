@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import {block} from 'million/react'
 
 const VirtualBoard: React.FC = () => {
   const [coordinates, setCoordinates] = useState<
@@ -17,6 +18,10 @@ const VirtualBoard: React.FC = () => {
   ) => {
     setMode(newMode);
   };
+
+  const handleClear = () => {
+    setCoordinates([]);
+  }
 
   const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setColor(e.target.value);
@@ -50,8 +55,10 @@ const VirtualBoard: React.FC = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
   
+    // Clear the canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   
+    // Draw the lines from the coordinates state
     coordinates.forEach((line) => {
       ctx.beginPath();
       line.forEach((point, i) => {
@@ -63,7 +70,19 @@ const VirtualBoard: React.FC = () => {
       });
       ctx.stroke();
     });
+  
+    // Draw the current line
+    ctx.beginPath();
+    currentLine.forEach((point, i) => {
+      if (i === 0) {
+        ctx.moveTo(point.x, point.y);
+      } else {
+        ctx.lineTo(point.x, point.y);
+      }
+    });
+    ctx.stroke();
   };
+  
 
   return (
     <>
@@ -72,7 +91,7 @@ const VirtualBoard: React.FC = () => {
         <button onClick={() => handleModeChange('text')}> Text </button>
         <button onClick={() => handleModeChange('line')}> Line </button>
         <button onClick={() => handleModeChange('erase')}> Erase </button>
-        <button onClick={() => handleModeChange('clear')}> Clear </button>
+        <button onClick={handleClear}> Clear </button>
         <input type="color" value={color} onChange={handleColorChange} />
         {/* <button onClick={handleColorButtonClick}>
           Color
