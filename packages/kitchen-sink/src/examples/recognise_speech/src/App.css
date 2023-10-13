@@ -1,0 +1,141 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Lato:wght@400;700&family=Merriweather:wght@700&display=swap");
+
+/* Define colors */
+:root {
+  --primary-color: #11A683;
+  --secondary-color: #2AC9A4;
+  --text-color: #60657B;
+  --background-color: #FFFFFF;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Work Sans", sans-serif;
+}
+
+html {
+  color: var(--text-color);
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(120deg, #84fab0, #8fd3f4);
+  min-height: 100vh;
+  margin: 0;
+  font-family: "Work Sans", sans-serif;
+}
+
+.container {
+  padding: 50px;
+  margin-top: 80px;
+  text-align: center;
+}
+
+h2 {
+  color: var(--text-color);
+  font-size: 36px;
+  font-weight: 700;
+}
+
+p {
+  max-width: 60rem;
+  margin-top: 24px;
+  margin-bottom: 40px;
+  color: var(--text-color);
+}
+
+.main-content {
+  max-width: 50rem;
+  width: 100%;
+  min-height: 400px;
+  height: auto;
+  padding: 18px;
+  position: relative;
+  resize: none;
+  box-shadow: 0 12px 48px 0px rgba(109, 117, 141, 0.2);
+  background: var(--background-color);
+  border: 1px solid #E7E9F5;
+  border-radius: 16px;
+}
+
+.main-content:focus {
+  border: 1px solid rgba(43, 45, 56, 0.3);
+  outline: none;
+}
+
+p,
+.main-content {
+  font-size: 18px;
+  letter-spacing: 1px;
+  line-height: 1.6;
+}
+
+.btn-style {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  /* margin-left: -px; */
+}
+
+button {
+  background: var(--primary-color);
+  color: #fff;
+  border-radius: 6px;
+  padding: 16px 32px;
+  border: none;
+  font-size: 18px;
+  letter-spacing: 1px;
+  margin: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+button:hover {
+  background: var(--secondary-color);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+}
+
+.counter-container {
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-between;
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    margin-top: 20px;
+  }
+
+  h2 {
+    font-size: 28px;
+  }
+
+  p {
+    font-size: 16px;
+    margin-bottom: 20px;
+    margin-top: 15px;
+  }
+
+  .main-content {
+    font-size: 16px;
+  }
+
+  button {
+    padding: 12px 28px;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+
+  .counter-container {
+    flex-direction: column;
+  }
+
+  .counter-container p:first-child {
+    margin-bottom: 0;
+  }
+}
