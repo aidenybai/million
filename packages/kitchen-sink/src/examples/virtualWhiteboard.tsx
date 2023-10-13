@@ -23,6 +23,12 @@ const VirtualBoard: React.FC = () => {
   const [textElements, setTextElements] = useState<
     Array<{ x: number; y: number; text: string }>
   >([]);
+  const [lineStart, setLineStart] = useState<{ x: number; y: number } | null>(
+    null,
+  );
+  const [startPoint, setStartPoint] = useState<{ x: number; y: number } | null>(
+    null,
+  );
 
   const colorInputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -48,13 +54,30 @@ const VirtualBoard: React.FC = () => {
   //   };
 
   const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    setIsDrawing(true);
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    if (mode === 'line') {
+      setStartPoint({ x, y });
+    } else {
+      setIsDrawing(true);
+    }
   };
 
   const handleMouseUp = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    setIsDrawing(false);
-    setCoordinates([...coordinates, currentLine]);
-    setCurrentLine([]);
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    if (mode === 'line' && startPoint) {
+      setCoordinates([...coordinates, [startPoint, { x, y }]]);
+      setStartPoint(null); // Reset the starting point
+    } else {
+      setIsDrawing(false);
+      setCoordinates([...coordinates, currentLine]);
+      setCurrentLine([]);
+    }
   };
 
   const handleText = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -86,14 +109,14 @@ const VirtualBoard: React.FC = () => {
       textInputRef.current.focus();
     }
   }, [textInput.show]);
-  const handleDraw = (e: React.MouseEvent<HTMLCanvasElement>) => {
+const handleDraw = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (mode !== 'draw' || !isDrawing) return; // Only draw when isDrawing is true
 
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     setCurrentLine([...currentLine, { x, y }]);
-  };
+};
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -107,13 +130,18 @@ const VirtualBoard: React.FC = () => {
     // Draw the lines from the coordinates state
     coordinates.forEach((line) => {
       ctx.beginPath();
-      line.forEach((point, i) => {
-        if (i === 0) {
-          ctx.moveTo(point.x, point.y);
-        } else {
-          ctx.lineTo(point.x, point.y);
-        }
-      });
+      if (line.length === 2 && mode === 'line') {
+        ctx.moveTo(line[0].x, line[0].y);
+        ctx.lineTo(line[1].x, line[1].y);
+      } else {
+        line.forEach((point, i) => {
+          if (i === 0) {
+            ctx.moveTo(point.x, point.y);
+          } else {
+            ctx.lineTo(point.x, point.y);
+          }
+        });
+      }
       ctx.stroke();
     });
 
@@ -133,7 +161,26 @@ const VirtualBoard: React.FC = () => {
       }
     });
     ctx.stroke();
-  }, [coordinates, textElements, currentLine]); // Added currentLine to dependency array
+
+    
+    // Draw the start point for line mode
+    if (startPoint && mode === 'line') {
+      ctx.fillStyle = 'black';
+      ctx.fillRect(startPoint.x - 2, startPoint.y - 2, 4, 4);
+    }
+
+    // Draw the preview line for line mode
+    if (isDrawing && startPoint && mode === 'line') {
+      ctx.beginPath();
+      ctx.moveTo(startPoint.x, startPoint.y);
+      ctx.lineTo(
+        currentLine[0]?.x || startPoint.x,
+        currentLine[0]?.y || startPoint.y,
+      );
+      ctx.stroke();
+    }
+    
+  }, [coordinates, textElements, currentLine, mode, startPoint, isDrawing]); 
 
   return (
     <>
