@@ -1,16 +1,23 @@
 import React, { useRef, useState } from 'react';
-import {block} from 'million/react'
 
 const VirtualBoard: React.FC = () => {
   const [coordinates, setCoordinates] = useState<
     Array<{ x: number; y: number }[]>
   >([]);
-  const [currentLine, setCurrentLine] = useState<{ x: number; y: number }[]>([]);
+  const [currentLine, setCurrentLine] = useState<{ x: number; y: number }[]>(
+    [],
+  );
   const [isDrawing, setIsDrawing] = useState(false); // New state to track drawing mode
   const [mode, setMode] = useState<
     'draw' | 'text' | 'line' | 'erase' | 'clear'
   >('draw');
   const [color, setColor] = useState<string>('#000000');
+  const [textInput, setTextInput] = useState<{
+    x: number;
+    y: number;
+    show: boolean;
+  }>({ x: 0, y: 0, show: false });
+
   const colorInputRef = useRef<HTMLInputElement>(null);
 
   const handleModeChange = (
@@ -21,7 +28,7 @@ const VirtualBoard: React.FC = () => {
 
   const handleClear = () => {
     setCoordinates([]);
-  }
+  };
 
   const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setColor(e.target.value);
@@ -38,8 +45,23 @@ const VirtualBoard: React.FC = () => {
   const handleMouseUp = (e: React.MouseEvent<HTMLCanvasElement>) => {
     setIsDrawing(false);
     setCoordinates([...coordinates, currentLine]);
-    setCurrentLine([])
+    setCurrentLine([]);
   };
+
+  const handleText = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (mode !== 'text') return; // Only add text when the mode is 'text'
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const canvas = e.currentTarget;
+    const ctx = canvas.getContext('2d');
+    
+    setTextInput({x, y, show: true});
+  };
+
+  
 
   const handleDraw = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (!isDrawing) return; // Only draw when isDrawing is true
@@ -54,10 +76,10 @@ const VirtualBoard: React.FC = () => {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-  
+
     // Clear the canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
+
     // Draw the lines from the coordinates state
     coordinates.forEach((line) => {
       ctx.beginPath();
@@ -70,7 +92,7 @@ const VirtualBoard: React.FC = () => {
       });
       ctx.stroke();
     });
-  
+
     // Draw the current line
     ctx.beginPath();
     currentLine.forEach((point, i) => {
@@ -82,7 +104,6 @@ const VirtualBoard: React.FC = () => {
     });
     ctx.stroke();
   };
-  
 
   return (
     <>
@@ -113,10 +134,24 @@ const VirtualBoard: React.FC = () => {
           onMouseDown={handleMouseDown}
           onMouseUp={handleMouseUp}
           onMouseMove={handleDraw}
+          onClick={handleText}
           width={800}
           height={600}
           style={{ border: '2px solid black' }}
         />
+        {textInput.show && (
+    <input
+      type="text"
+      style={{
+        position: 'absolute',
+        left: `${textInput.x}px`,
+        top: `${textInput.y}px`,
+        cursor: 'text',
+      }}
+      autoFocus
+    />
+  )}
+  
       </div>
     </>
   );
