@@ -599,8 +599,8 @@ input[type='range'] {
   opacity: 1;
 }
 
-.password_generator_customizable_options {
-}
+/* .password_generator_customizable_options {
+} */
 
 .password_generator_customizable_options__length {
   display: flex;
@@ -763,5 +763,89 @@ input[type='range'] {
     margin: auto;
     text-align: center;
     font-weight: 700;
+  }
+}
+
+
+/*Snake Game CSS*/
+.snakeGame--main{
+  min-width: 500px;
+  height: 500px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* border: 1px solid red; */
+}
+.snakeGame--keys{
+  width: 500px;
+  height: 150px;
+  border: 1px solid white;
+  font-family: monospace;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.snakeGame--keys2{
+  display: flex;
+  flex-direction: row;
+  width: 65%;
+  justify-content: space-between;
+  align-items: center;
+}
+.snakeGame {
+  width: 500px;
+  height: 500px;
+  border: 10px solid white;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-family: monospace;
+  border-radius: 10px;
+}
+
+.snakeGame--button {
+  font-family: inherit;
+  font-size: 1.5rem;
+  border-radius: 10px;
+  color: black;
+  width: 150px;
+  height: 50px;
+  border: none;
+  background-color: #e73d9f;
+  font-weight: 600;
+  z-index: 4;
+  cursor: pointer;
+}
+
+.snakeGame--text {
+  color: #eb2d2d;
+  z-index: 4;
+  opacity: 0.5;
+}
+
+.snakeGame--arrow-msg {
+  font-size: 1rem;
+  margin: 10px;
+}
+
+.snakeGame--game-over {
+  font-size: 3rem;
+}
+
+.snakeGame--count {
+  position: absolute;
+  font-size: 2rem;
+  bottom: 0px;
+  color: #eb2d2d;
+  opacity: 0.5;
+}
+@media (max-width: 768px) {
+  .snakeGame--main{
+      flex-direction: column;
+      height: 700px;
   }
 }
