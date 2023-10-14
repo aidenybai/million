@@ -292,7 +292,8 @@ export const callExpressionVisitor = (
 
     if (
       t.isVariableDeclarator(Component) &&
-      t.isArrowFunctionExpression(Component.init)
+      (t.isArrowFunctionExpression(Component.init) ||
+        t.isFunctionExpression(Component.init))
     ) {
       if (
         !t.isBlockStatement(Component.init.body) &&
@@ -314,6 +315,14 @@ export const callExpressionVisitor = (
         Component.init.body = t.blockStatement([
           t.returnStatement(Component.init.body),
         ]);
+      }
+
+      if (t.isFunctionExpression(Component.init)) {
+        Component.init = t.arrowFunctionExpression(
+          Component.init.params,
+          Component.init.body,
+          Component.init.async,
+        );
       }
 
       /*
