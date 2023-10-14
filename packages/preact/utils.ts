@@ -1,9 +1,6 @@
 import { render, Fragment, isValidElement } from 'preact';
 import { RENDER_SCOPE } from './constants';
-import type {
-  VNode as PreactNode,
-  ComponentProps,
-} from 'preact';
+import type { VNode as PreactNode, ComponentProps } from 'preact';
 import type { VNode } from '../million';
 
 export const processProps = (props: ComponentProps<any>) => {
