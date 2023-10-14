@@ -54,26 +54,28 @@ const VirtualBoard: React.FC = () => {
   //   };
 
   const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
     if (mode === 'line') {
-      setStartPoint({ x, y });
+      if (!startPoint) {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        setStartPoint({ x, y });
+        setIsDrawing(true); 
+      } else {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        setCoordinates([...coordinates, [startPoint, { x, y }]]);
+        setStartPoint(null); // Reset the starting point
+        setIsDrawing(false); // Stop drawing the preview line
+      }
     } else {
       setIsDrawing(true);
     }
   };
 
   const handleMouseUp = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    if (mode === 'line' && startPoint) {
-      setCoordinates([...coordinates, [startPoint, { x, y }]]);
-      setStartPoint(null); // Reset the starting point
-    } else {
+    if (mode !== 'line') {
       setIsDrawing(false);
       setCoordinates([...coordinates, currentLine]);
       setCurrentLine([]);
@@ -81,15 +83,12 @@ const VirtualBoard: React.FC = () => {
   };
 
   const handleText = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    console.log('handleText called, current mode:', mode); // Debug line
+  
     if (mode !== 'text') return; // Only add text when the mode is 'text'
 
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-
-    console.log('Setting textInput to show, with coordinates:', x, y); // Debug line
-
     const canvas = e.currentTarget;
     const ctx = canvas.getContext('2d');
 
