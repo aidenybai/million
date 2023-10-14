@@ -90,8 +90,15 @@ const VirtualBoard: React.FC = () => {
   };
 
   const mouseMoveHandler = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    handleDraw(e);
-    handleMouseMove(e);
+    if (mode === 'draw') {
+      handleDraw(e);
+    }
+    if (mode === 'erase') {
+      handleErase(e);
+    }
+    if (mode === 'line') {
+      handleMouseMove(e);
+    }
   };
 
   const handleText = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -114,6 +121,26 @@ const VirtualBoard: React.FC = () => {
     setTextInput({ ...textInput, show: false });
     setInputText(''); // Clear the input text
   };
+
+  const handleErase = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (mode !== 'erase') return;
+
+    const distance = (x1: number, y1: number, x2: number, y2: number) =>
+      Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const newCoordinates = coordinates
+      .map(
+        (line) => line.filter((point) => distance(x, y, point.x, point.y) > 10), // 10 is the radius of the eraser
+      )
+      .filter((line) => line.length > 0); // Remove empty lines
+
+    setCoordinates(newCoordinates);
+  };
+
   useEffect(() => {
     if (textInput.show && textInputRef.current) {
       textInputRef.current.focus();
@@ -136,6 +163,15 @@ const VirtualBoard: React.FC = () => {
 
     // Clear the canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw eraser preview if mode is 'erase'
+    if (mode === 'erase' && currentLine.length > 0) {
+      const lastPoint = currentLine[currentLine.length - 1];
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.2)'; // semi-transparent black
+      ctx.beginPath();
+      ctx.arc(lastPoint.x, lastPoint.y, 20 /* radius */, 0, Math.PI * 2);
+      ctx.fill();
+    }
 
     // Draw the lines from the coordinates state
     coordinates.forEach((line) => {
