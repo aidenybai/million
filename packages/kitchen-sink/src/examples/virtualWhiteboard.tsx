@@ -23,9 +23,7 @@ const VirtualBoard: React.FC = () => {
   const [textElements, setTextElements] = useState<
     Array<{ x: number; y: number; text: string }>
   >([]);
-  const [lineStart, setLineStart] = useState<{ x: number; y: number } | null>(
-    null,
-  );
+
   const [startPoint, setStartPoint] = useState<{ x: number; y: number } | null>(
     null,
   );
@@ -60,7 +58,7 @@ const VirtualBoard: React.FC = () => {
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
         setStartPoint({ x, y });
-        setIsDrawing(true); 
+        setIsDrawing(true);
       } else {
         const rect = e.currentTarget.getBoundingClientRect();
         const x = e.clientX - rect.left;
@@ -82,8 +80,21 @@ const VirtualBoard: React.FC = () => {
     }
   };
 
+  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (mode === 'line' && startPoint) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      setCurrentLine([{ x, y }]);
+    }
+  };
+
+  const mouseMoveHandler = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    handleDraw(e);
+    handleMouseMove(e);
+  }
+
   const handleText = (e: React.MouseEvent<HTMLCanvasElement>) => {
-  
     if (mode !== 'text') return; // Only add text when the mode is 'text'
 
     const rect = e.currentTarget.getBoundingClientRect();
@@ -108,24 +119,24 @@ const VirtualBoard: React.FC = () => {
       textInputRef.current.focus();
     }
   }, [textInput.show]);
-const handleDraw = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const handleDraw = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (mode !== 'draw' || !isDrawing) return; // Only draw when isDrawing is true
 
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     setCurrentLine([...currentLine, { x, y }]);
-};
+  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-
+  
     // Clear the canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+  
     // Draw the lines from the coordinates state
     coordinates.forEach((line) => {
       ctx.beginPath();
@@ -142,14 +153,15 @@ const handleDraw = (e: React.MouseEvent<HTMLCanvasElement>) => {
         });
       }
       ctx.stroke();
+      ctx.closePath();
     });
-
+  
     // Draw text elements
     textElements.forEach((textElement) => {
       ctx.font = '20px sans-serif';
       ctx.fillText(textElement.text, textElement.x, textElement.y);
     });
-
+  
     // Draw the current line
     ctx.beginPath();
     currentLine.forEach((point, i) => {
@@ -160,14 +172,14 @@ const handleDraw = (e: React.MouseEvent<HTMLCanvasElement>) => {
       }
     });
     ctx.stroke();
-
-    
+    ctx.closePath();
+  
     // Draw the start point for line mode
     if (startPoint && mode === 'line') {
       ctx.fillStyle = 'black';
       ctx.fillRect(startPoint.x - 2, startPoint.y - 2, 4, 4);
     }
-
+  
     // Draw the preview line for line mode
     if (isDrawing && startPoint && mode === 'line') {
       ctx.beginPath();
@@ -177,9 +189,10 @@ const handleDraw = (e: React.MouseEvent<HTMLCanvasElement>) => {
         currentLine[0]?.y || startPoint.y,
       );
       ctx.stroke();
+      ctx.closePath();
     }
-    
-  }, [coordinates, textElements, currentLine, mode, startPoint, isDrawing]); 
+  }, [coordinates, textElements, currentLine, mode, startPoint, isDrawing]);
+  
 
   return (
     <>
@@ -209,7 +222,7 @@ const handleDraw = (e: React.MouseEvent<HTMLCanvasElement>) => {
           ref={canvasRef}
           onMouseDown={handleMouseDown}
           onMouseUp={handleMouseUp}
-          onMouseMove={handleDraw}
+          onMouseMove={mouseMoveHandler}
           onClick={handleText}
           width={800}
           height={600}
