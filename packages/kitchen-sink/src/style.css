@@ -793,6 +793,48 @@ input[type='range'] {
     text-align: center;
     font-weight: 700;
   }
+
+}
+
+.type-health-bar {
+  position: relative;
+  width: 60%;
+  height: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 4px;
+  background-color: #ddd;
+}
+
+.type-health {
+  margin-top: 20px;
+  height: inherit;
+  border-radius: inherit;
+  position: relative;
+  background-color: #27ae60;
+}
+
+.type-mono {
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.type-green {
+  display: inline;
+  background-color: #92f77e;
+}
+
+.type-red {
+  display: inline;
+  background-color: #f7887e;
+}
+
+.type-gray {
+  display: inline;
+  color: gray;
+}
+
+.type-none {
+  display: inline;
 }
 
 
