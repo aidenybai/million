@@ -80,7 +80,6 @@ export const renderReactScope = (
     unstable,
     reset(newEl: HTMLElement) {
       millionPortal.current = newEl;
-      // newEl.textContent = '';
       millionPortal.portal = createPortal(vnode, newEl);
     },
   };
