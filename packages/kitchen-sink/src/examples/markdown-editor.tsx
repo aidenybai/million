@@ -3,7 +3,7 @@ import { marked } from 'marked';
 import { block } from 'million/react';
 
 const MarkdownEditor = block(() => {
-    const markdownRef = useRef<HTMLTextAreaElement>(null);
+  const markdownRef = useRef<HTMLTextAreaElement>(null);
   const markdownPreviewRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
