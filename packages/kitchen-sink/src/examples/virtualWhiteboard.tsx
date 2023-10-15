@@ -49,10 +49,6 @@ const VirtualBoard: React.FC = () => {
     setColor(e.target.value);
   };
 
-  //   const handleColorButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-  //     colorInputRef.current?.click();
-  //   };
-// Maybe we don't need to draw current line because it is saved to state on mouseDown & mouseUp?
   const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (mode === 'line') {
       const rect = e.currentTarget.getBoundingClientRect();
@@ -70,7 +66,7 @@ const VirtualBoard: React.FC = () => {
     } else {
       setIsDrawing(true);
     }
-    setCurrentLine([])
+    setCurrentLine([]);
     console.log('MouseDown:', startPoint, isDrawing);
   };
 
@@ -82,9 +78,9 @@ const VirtualBoard: React.FC = () => {
       setCurrentLine([]);
     }
     console.log('MouseUp:', startPoint, isDrawing);
-    console.log('MouseUp: Coordinates', coordinates)
-    console.log('MouseUp: newCoordinates', newCoordinates)
-    console.log('MouseUp: Current Line', currentLine)
+    console.log('MouseUp: Coordinates', coordinates);
+    console.log('MouseUp: newCoordinates', newCoordinates);
+    console.log('MouseUp: Current Line', currentLine);
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -93,7 +89,7 @@ const VirtualBoard: React.FC = () => {
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
       setCurrentLine([{ x, y }]);
-      console.log('handleMouseMove:', currentLine)
+      console.log('handleMouseMove:', currentLine);
     }
   };
 
@@ -130,6 +126,21 @@ const VirtualBoard: React.FC = () => {
     setInputText(''); // Clear the input text
   };
 
+  const generatePointsAlongLine = (
+    start: { x: number; y: number },
+    end: { x: number; y: number },
+    numPoints: number,
+  ) => {
+    const points = [];
+    for (let i = 0; i <= numPoints; i++) {
+      const t = i / numPoints;
+      const x = start.x + t * (end.x - start.x);
+      const y = start.y + t * (end.y - start.y);
+      points.push({ x, y });
+    }
+    return points;
+  };
+
   const handleErase = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (mode !== 'erase') return;
 
@@ -141,13 +152,33 @@ const VirtualBoard: React.FC = () => {
     const y = e.clientY - rect.top;
 
     const newCoordinates = coordinates
-      .map(
-        (line) => line.filter((point) => distance(x, y, point.x, point.y) > 10), // 10 is the radius of the eraser
-      )
+      .map((line) => {
+        let closestPoint = null;
+        let closestDistance = Infinity;
+        let closestIndex = -1;
+
+        line.forEach((point, index) => {
+          const d = distance(x, y, point.x, point.y);
+          if (d < closestDistance) {
+            closestDistance = d;
+            closestPoint = point;
+            closestIndex = index;
+          }
+        });
+
+        if (closestDistance < 20) {
+          // Sets eraser size
+          const firstHalf = line.slice(0, closestIndex);
+          const secondHalf = line.slice(closestIndex + 1);
+          return [firstHalf, secondHalf];
+        }
+
+        return [line];
+      })
+      .flat()
       .filter((line) => line.length > 0); // Remove empty lines
 
     setCoordinates(newCoordinates);
-    
   };
 
   useEffect(() => {
@@ -170,6 +201,8 @@ const VirtualBoard: React.FC = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    // Set the color here
+    ctx.strokeStyle = color;
     // Clear the canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -203,6 +236,7 @@ const VirtualBoard: React.FC = () => {
 
     // Draw text elements
     textElements.forEach((textElement) => {
+      ctx.fillStyle = color;
       ctx.font = '20px sans-serif';
       ctx.fillText(textElement.text, textElement.x, textElement.y);
     });
@@ -236,7 +270,15 @@ const VirtualBoard: React.FC = () => {
       ctx.stroke();
       ctx.closePath();
     }
-  }, [coordinates, textElements, currentLine, mode, startPoint, isDrawing]);
+  }, [
+    coordinates,
+    textElements,
+    currentLine,
+    mode,
+    startPoint,
+    isDrawing,
+    color,
+  ]);
 
   return (
     <>
@@ -247,19 +289,6 @@ const VirtualBoard: React.FC = () => {
         <button onClick={() => handleModeChange('erase')}> Erase </button>
         <button onClick={handleClear}> Clear </button>
         <input type="color" value={color} onChange={handleColorChange} />
-        {/* <button onClick={handleColorButtonClick}>
-          Color
-          <div
-            className="btn-container"
-            style={{
-              background: color,
-              width: '24px',
-              height: '24px',
-              display: 'inline-block',
-              marginLeft: '5px',
-            }}
-          />
-        </button> */}
       </div>
       <div className="canvas" style={{ position: 'relative' }}>
         <canvas
@@ -273,7 +302,7 @@ const VirtualBoard: React.FC = () => {
           style={{ border: '2px solid black' }}
         />
         <div className="textInputFunctionality">
-          {textInput.show ? (
+          {textInput.show && (
             <input
               type="text"
               ref={textInputRef}
@@ -293,12 +322,6 @@ const VirtualBoard: React.FC = () => {
                 }
               }}
               autoFocus
-            />
-          ) : (
-            <input
-              type="text"
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
             />
           )}
         </div>
