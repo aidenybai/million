@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { block } from 'million/react';
 
-const paragraphSummerizer = () => {
+const paragraphSummerizer = block(() => {
   const [value, setValue] = useState('');
   const [data, setData] = useState([]);
   const [submitting, setSubmitting] = useState(false);
@@ -15,7 +16,8 @@ const paragraphSummerizer = () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + import.meta.env.VITE_OPENAI_API,
+        Authorization:
+          'Bearer ' + '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',
       },
       body: JSON.stringify({
         prompt: value + `\n\nTl;dr`,
@@ -120,7 +122,7 @@ const paragraphSummerizer = () => {
       </SummaryContainer>
     </Container>
   );
-};
+});
 
 export default paragraphSummerizer;
 
