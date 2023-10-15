@@ -4,6 +4,7 @@ const VirtualBoard: React.FC = () => {
   const [coordinates, setCoordinates] = useState<
     Array<{ x: number; y: number }[]>
   >([]);
+  // Maintains the current lines state with x, y coordinates
   const [currentLine, setCurrentLine] = useState<{ x: number; y: number }[]>(
     [],
   );
@@ -24,6 +25,7 @@ const VirtualBoard: React.FC = () => {
     Array<{ x: number; y: number; text: string }>
   >([]);
 
+  // Sets state for the start point of a line
   const [startPoint, setStartPoint] = useState<{ x: number; y: number } | null>(
     null,
   );
@@ -50,7 +52,7 @@ const VirtualBoard: React.FC = () => {
   //   const handleColorButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
   //     colorInputRef.current?.click();
   //   };
-
+// Maybe we don't need to draw current line because it is saved to state on mouseDown & mouseUp?
   const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (mode === 'line') {
       const rect = e.currentTarget.getBoundingClientRect();
@@ -68,16 +70,21 @@ const VirtualBoard: React.FC = () => {
     } else {
       setIsDrawing(true);
     }
+    setCurrentLine([])
     console.log('MouseDown:', startPoint, isDrawing);
   };
 
   const handleMouseUp = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const newCoordinates = [...coordinates, currentLine];
     if (mode !== 'line') {
       setIsDrawing(false);
-      setCoordinates([...coordinates, currentLine]);
+      setCoordinates(newCoordinates);
       setCurrentLine([]);
     }
     console.log('MouseUp:', startPoint, isDrawing);
+    console.log('MouseUp: Coordinates', coordinates)
+    console.log('MouseUp: newCoordinates', newCoordinates)
+    console.log('MouseUp: Current Line', currentLine)
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -86,6 +93,7 @@ const VirtualBoard: React.FC = () => {
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
       setCurrentLine([{ x, y }]);
+      console.log('handleMouseMove:', currentLine)
     }
   };
 
@@ -139,6 +147,7 @@ const VirtualBoard: React.FC = () => {
       .filter((line) => line.length > 0); // Remove empty lines
 
     setCoordinates(newCoordinates);
+    
   };
 
   useEffect(() => {
