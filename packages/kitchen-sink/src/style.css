@@ -898,3 +898,22 @@ input[type='range'] {
 .play-again-button:hover {
   background-color: #45a049;
 }
+
+.markdown-editor-container {
+  width: 48%;
+}
+
+.markdown-input {
+  width: 100%;
+  height: 40vh;
+  padding: 1em;
+  font-size: 16px;
+}
+
+.markdown-preview {
+  width: 48%;
+  border: 1px solid #ddd;
+  padding: 1em;
+  height: 40vh;
+  overflow-y: auto;
+}
