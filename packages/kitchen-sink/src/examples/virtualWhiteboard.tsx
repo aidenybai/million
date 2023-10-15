@@ -397,7 +397,7 @@ const VirtualBoard: React.FC = () => {
           onClick={handleText}
           width={800}
           height={600}
-          style={{ border: '2px solid black' }}
+          style={{ border: '2px solid black', cursor: mode === 'draw' ? 'crosshair' : 'default' }}
         />
         <div className="textInputFunctionality">
           {textInput.show && (
