@@ -1,19 +1,21 @@
 import React, { useRef, useEffect, useState } from 'react';
 
 const VirtualBoard: React.FC = () => {
-
-// Enum responsible for defining modes
-enum Mode {
+  // Enum responsible for defining modes
+  enum Mode {
     Draw = 'draw',
     Text = 'text',
     Line = 'line',
     Erase = 'erase',
-    Clear = 'clear'
-}
+    Clear = 'clear',
+  }
 
-type CoordinateType = Array<{points:{ x: number, y: number}[]; color: string}>;
-  
-const [coordinates, setCoordinates] = useState<
+  type CoordinateType = Array<{
+    points: { x: number; y: number }[];
+    color: string;
+  }>;
+
+  const [coordinates, setCoordinates] = useState<
     Array<{ points: { x: number; y: number }[]; color: string }>
   >([]);
 
@@ -22,7 +24,7 @@ const [coordinates, setCoordinates] = useState<
     [],
   );
   const [isDrawing, setIsDrawing] = useState(false); // New state to track drawing mode
-  const [mode, setMode] = useState< Mode | null>(Mode.Draw)
+  const [mode, setMode] = useState<Mode | null>(Mode.Draw);
   const [color, setColor] = useState<string>('#000000');
   // Responsible for controlling position and visibility of the text input field
   const [textInput, setTextInput] = useState<{
@@ -48,6 +50,11 @@ const [coordinates, setCoordinates] = useState<
   const [undoStack, setUndoStack] = useState<CoordinateType[]>([]);
   const [redoStack, setRedoStack] = useState<CoordinateType[]>([]);
 
+  const isChrome = /Chrome/.test(navigator.userAgent) 
+  const isFirefox = /Firefox/.test(navigator.userAgent);
+
+
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const textInputRef = useRef<HTMLInputElement>(null);
 
@@ -60,32 +67,29 @@ const [coordinates, setCoordinates] = useState<
     if (undoStack.length > 0) {
       const newUndoStack = [...undoStack];
       const lastState = newUndoStack.pop();
-      
+
       const newRedoStack = [...redoStack, coordinates];
-      
+
       setCoordinates(lastState || []);
       setUndoStack(newUndoStack);
       setRedoStack(newRedoStack);
     }
   };
-  
+
   const handleRedo = () => {
     if (redoStack.length > 0) {
       const newRedoStack = [...redoStack];
       const nextState = newRedoStack.pop();
-      
+
       const newUndoStack = [...undoStack, coordinates];
-      
+
       setCoordinates(nextState || []);
       setUndoStack(newUndoStack);
       setRedoStack(newRedoStack);
     }
   };
-  
 
-  const handleModeChange = (
-    newMode: Mode
-  ) => {
+  const handleModeChange = (newMode: Mode) => {
     setMode(newMode);
   };
 
@@ -122,7 +126,7 @@ const [coordinates, setCoordinates] = useState<
     setCurrentLine([]);
   };
 
-  const handleMouseUp = (e:React.MouseEvent<HTMLCanvasElement>) => {
+  const handleMouseUp = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const newLine = { points: currentLine, color: color };
     const newCoordinates = [...coordinates, newLine];
     if (mode !== 'line') {
@@ -365,13 +369,22 @@ const [coordinates, setCoordinates] = useState<
   return (
     <>
       <div className="toolBar" style={{ marginBottom: '10px' }}>
-      <input type="color" value={color} onChange={handleColorChange} />
+        <input
+          type="color"
+          value={color}
+          style={{
+            padding: isChrome ? '0' : isFirefox ? '2px' : undefined,
+            width: isChrome ? '50px' : isFirefox ? '50px' : undefined,
+            height: isChrome ? '33px' : isFirefox ? '30px' : undefined
+          }}
+          onChange={handleColorChange}
+        />
         <button onClick={() => handleModeChange(Mode.Draw)}> Draw </button>
         <button onClick={() => handleModeChange(Mode.Text)}> Text </button>
         <button onClick={() => handleModeChange(Mode.Line)}> Line </button>
         <button onClick={() => handleModeChange(Mode.Erase)}> Erase </button>
         <button onClick={handleClear}> Clear </button>
-        
+
         <button onClick={handleUndo}>Undo</button>
         <button onClick={handleRedo}>Redo</button>
       </div>
