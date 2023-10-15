@@ -1,28 +1,36 @@
-import React, { useState } from 'react';
-import {marked} from 'marked';
+import { useRef, useEffect } from 'react';
+import { marked } from 'marked';
+import { block } from 'million/react';
 
-function MarkdownEditor () {
-  const [markdown, setMarkdown] = useState<string>('## Hello, Markdown!');
+const MarkdownEditor = block(() => {
+    const markdownRef = useRef<HTMLTextAreaElement>(null);
+  const markdownPreviewRef = useRef<HTMLDivElement>(null);
 
-  function handleInputChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
-    setMarkdown(event.target.value);
-  }
+  useEffect(() => {
+    if (markdownRef.current && markdownPreviewRef.current) {
+      markdownPreviewRef.current.innerHTML = marked(markdownRef.current.value);
+    }
+  }, []);
+
+  const handleInputChange = () => {
+    if (markdownRef.current && markdownPreviewRef.current) {
+      markdownPreviewRef.current.innerHTML = marked(markdownRef.current.value);
+    }
+  };
 
   return (
-    <div className="App">
+    <div className="markdown-block">
       <div className="markdown-editor-container">
         <textarea
           className="markdown-input"
-          value={markdown}
-          onChange={handleInputChange}
+          ref={markdownRef}
+          onInput={handleInputChange}
+          defaultValue="## Hello, Markdown!"
         />
       </div>
-      <div
-        className="markdown-preview"
-        dangerouslySetInnerHTML={{ __html: marked(markdown) }}
-      />
+      <div className="markdown-preview" ref={markdownPreviewRef}></div>
     </div>
   );
-}
+});
 
 export default MarkdownEditor;
