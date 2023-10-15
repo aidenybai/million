@@ -1,9 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react';
 
 const VirtualBoard: React.FC = () => {
-  const [coordinates, setCoordinates] = useState<
-    Array<{ x: number; y: number }[]>
+    const [coordinates, setCoordinates] = useState<
+    Array<{ points: { x: number; y: number }[]; color: string }>
   >([]);
+  
   // Maintains the current lines state with x, y coordinates
   const [currentLine, setCurrentLine] = useState<{ x: number; y: number }[]>(
     [],
@@ -59,7 +60,8 @@ const VirtualBoard: React.FC = () => {
         setStartPoint({ x, y });
         setIsDrawing(true);
       } else {
-        setCoordinates([...coordinates, [startPoint, { x, y }]]);
+        setCoordinates([...coordinates, { points: [startPoint, { x, y }], color }]);
+
         setStartPoint(null); // Reset the starting point immediately
         setIsDrawing(false); // Stop drawing the preview line
       }
@@ -71,7 +73,8 @@ const VirtualBoard: React.FC = () => {
   };
 
   const handleMouseUp = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    const newCoordinates = [...coordinates, currentLine];
+    const newLine = { points: currentLine, color: color };
+    const newCoordinates = [...coordinates, newLine];
     if (mode !== 'line') {
       setIsDrawing(false);
       setCoordinates(newCoordinates);
@@ -152,12 +155,12 @@ const VirtualBoard: React.FC = () => {
     const y = e.clientY - rect.top;
 
     const newCoordinates = coordinates
-      .map((line) => {
+      .map((lineData) => {
         let closestPoint = null;
         let closestDistance = Infinity;
         let closestIndex = -1;
 
-        line.forEach((point, index) => {
+        lineData.points.forEach((point, index) => {
           const d = distance(x, y, point.x, point.y);
           if (d < closestDistance) {
             closestDistance = d;
@@ -168,15 +171,18 @@ const VirtualBoard: React.FC = () => {
 
         if (closestDistance < 20) {
           // Sets eraser size
-          const firstHalf = line.slice(0, closestIndex);
-          const secondHalf = line.slice(closestIndex + 1);
-          return [firstHalf, secondHalf];
+          const firstHalf = lineData.points.slice(0, closestIndex);
+          const secondHalf = lineData.points.slice(closestIndex + 1);
+          return [
+            { points: firstHalf, color: lineData.color },
+            { points: secondHalf, color: lineData.color }
+          ];
         }
 
-        return [line];
+        return [lineData];
       })
       .flat()
-      .filter((line) => line.length > 0); // Remove empty lines
+      .filter((lineData) => lineData.points.length > 0); // Remove empty lines
 
     setCoordinates(newCoordinates);
   };
@@ -216,23 +222,19 @@ const VirtualBoard: React.FC = () => {
     }
 
     // Draw the lines from the coordinates state
-    coordinates.forEach((line) => {
-      ctx.beginPath();
-      if (line.length === 2 && mode === 'line') {
-        ctx.moveTo(line[0].x, line[0].y);
-        ctx.lineTo(line[1].x, line[1].y);
-      } else {
-        line.forEach((point, i) => {
+    coordinates.forEach((lineData) => {
+        ctx.strokeStyle = lineData.color;
+        ctx.beginPath();
+        lineData.points.forEach((point, i) => {
           if (i === 0) {
             ctx.moveTo(point.x, point.y);
           } else {
             ctx.lineTo(point.x, point.y);
           }
         });
-      }
-      ctx.stroke();
-      ctx.closePath();
-    });
+        ctx.stroke();
+        ctx.closePath();
+      });
 
     // Draw text elements
     textElements.forEach((textElement) => {
