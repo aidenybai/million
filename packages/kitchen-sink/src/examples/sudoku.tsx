@@ -133,7 +133,7 @@ export function generateSudokuBoard(): Board {
  *                Title Component
  *************************************************/
 const Title = () => {
-  return <h1 className="title">Sudoku</h1>;
+  return <h1 className="class_title">Sudoku</h1>;
 };
 
 /**************************************************
@@ -186,16 +186,8 @@ const App =() => {
         {`
                 
                   
-                  @media (prefers-color-scheme: light) {
-                    a:hover {
-                      color: #ffffff;
-                    }
-                    button {
-                      background-color: #f9f9f9;
-                    }
-                  }
-                  
-                  .content {
+                
+                  .class_content {
                     width: 100%;
                     height: 100vh;
                     margin-left: 10%;
@@ -207,7 +199,7 @@ const App =() => {
                     justify-content: center;
                   }
                   
-                  .sidebar {
+                  .class_sidebar {
                     position: absolute;
                     width: 15rem;
                     height: 100%;
@@ -222,18 +214,18 @@ const App =() => {
                     transition: transform 0.3s ease-in-out;
                   }
                   
-                  .sidebar .instructions {
+                  .class_sidebar .instructions {
                     padding: 2rem;
                   }
                   
-                  .sidebar .instructions .actions {
+                  .class_sidebar .instructions .actions {
                     display: flex;
                     align-items: center;
                     justify-content: space-around;
                     width: 100%;
                   }
                   
-                  button {
+                  .class_button {
                     border: none;
                     background-color: transparent;
                     color: #1a1a1a;
@@ -245,18 +237,18 @@ const App =() => {
                     transition: background-color 0.3s ease-in-out;
                   }
                   
-                  button:hover {
+                  .class_button:hover {
                     background-color: #ccc;
                   }
                   
-                  .sidebar-button {
+                  .class_sidebar-button {
                     position: absolute;
                     bottom: 0;
                     left: 0;
                     margin: 2rem;
                   }
                   
-                  .title {
+                  .class_title {
                     font-size: 2.5rem;
                     text-align: center;
                     flex-wrap: wrap;
@@ -269,7 +261,7 @@ const App =() => {
                     gap: 0.5rem;
                   }
                   
-                  .board {
+                  .class_board {
                     background-color: #1a1a1a;
                     color: #fff;
                     width: 30rem;
@@ -416,7 +408,7 @@ const App =() => {
             `}
       </style>
       {checkSolved(board, boardOriginal.current) && (<Toast message='Hooray! 🎉 Puzzle solved!'/>)}
-      <aside className="sidebar" style={{ transform: 'translateX(0)' }}>
+      <aside className="class_sidebar" style={{ transform: 'translateX(0)' }}>
         <div className="instructions">
           <h2>Instructions</h2>
           <p>
@@ -429,7 +421,7 @@ const App =() => {
           <h2>Actions</h2>
           <div className="actions">
             <button
-              className="button"
+              className="class_button"
               onClick={() => {
                 const newBoard = JSON.parse(
                   JSON.stringify(boardOriginal.current),
@@ -442,7 +434,7 @@ const App =() => {
               Reset
             </button>
             <button
-              className="button"
+              className="class_button"
               onClick={() => {
                 const newBoard = JSON.parse(
                   JSON.stringify(boardOriginal.current),
@@ -461,9 +453,9 @@ const App =() => {
       >
         {open ? '⬅' : '➡'}
             </button>*/}
-      <div className="content">
+      <div className="class_content">
         <Title />
-        <div className="board">
+        <div className="class_board">
           {board.map((square, i) => (
             <div className={`square`} key={i}>
               {square.map((num, j) => {
