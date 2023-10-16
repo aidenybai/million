@@ -189,6 +189,7 @@ export const isComponent = (name: string) => {
   return (
     name.startsWith(name[0]!.toUpperCase()) &&
     !name.startsWith('_') &&
+    !name.startsWith('M$') &&
     !name.startsWith('use')
   );
 };
