@@ -65,10 +65,12 @@ pre {
 /* Music player styles */
 .body {
   box-sizing: border-box;
-  background: linear-gradient(90deg,
-      rgba(2, 0, 36, 1) 0%,
-      rgba(20, 107, 128, 1) 51%,
-      rgba(0, 212, 255, 1) 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(20, 107, 128, 1) 51%,
+    rgba(0, 212, 255, 1) 100%
+  );
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -90,9 +92,11 @@ pre {
 }
 
 .component {
-  background: linear-gradient(90deg,
-      rgba(2, 0, 36, 1) 0%,
-      rgba(105, 20, 128, 1));
+  background: linear-gradient(
+    90deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(105, 20, 128, 1)
+  );
   width: 50%;
   color: #fff;
   margin: 1.4em 0;
@@ -215,7 +219,7 @@ input[type='range'] {
   margin: -0.5em;
 }
 
-.react-calendar--doubleView .react-calendar__viewContainer>* {
+.react-calendar--doubleView .react-calendar__viewContainer > * {
   width: 50%;
   margin: 0.5em;
 }
@@ -607,7 +611,8 @@ input[type='range'] {
   opacity: 1;
 }
 
-.password_generator_customizable_options {}
+.password_generator_customizable_options {
+}
 
 .password_generator_customizable_options__length {
   display: flex;
@@ -722,7 +727,6 @@ input[type='range'] {
   justify-content: center;
   align-items: center;
   gap: 10px;
-
 }
 
 .game-container {
@@ -793,7 +797,6 @@ input[type='range'] {
     text-align: center;
     font-weight: 700;
   }
-
 }
 
 .type-health-bar {
@@ -836,7 +839,6 @@ input[type='range'] {
 .type-none {
   display: inline;
 }
-
 
 .card-game-container {
   display: flex;
@@ -897,4 +899,23 @@ input[type='range'] {
 
 .play-again-button:hover {
   background-color: #45a049;
+}
+
+/* Age calculator styles */
+
+.calculator-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.calculator-form-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.age {
+  font-size: 1.5rem;
 }
