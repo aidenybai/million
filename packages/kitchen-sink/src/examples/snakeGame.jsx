@@ -1,7 +1,7 @@
 import { block } from 'million/react';
 import { useEffect, useRef, useState } from "react";
 
-const Snake = ({ snake }) => {
+const Snake = block(({ snake }) => {
   return (
     <div>
       {snake.map((box, i) => (
@@ -20,9 +20,9 @@ const Snake = ({ snake }) => {
       ))}
     </div>
   );
-}
+})
 
-const Food = ({ position }) => {
+const Food = block(({ position }) => {
   return (
     <div
       style={{
@@ -37,7 +37,7 @@ const Food = ({ position }) => {
       }}
     />
   );
-}
+})
 
 //method to get random x & y number between 0-96 for random food position
 const randomFoodPosition = () => {
@@ -56,7 +56,7 @@ const initialSnake = {
     { x: 8, y: 0 },
   ],
   direction: "ArrowRight",
-  speed: 200,
+  speed: 100,
 };
 
 const snakeGame = block(()=>{
