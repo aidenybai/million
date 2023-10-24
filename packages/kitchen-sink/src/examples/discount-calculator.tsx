@@ -4,7 +4,7 @@ import { block } from 'million/react';
 interface Results {
     discountPrice: number;
     finalPrice: number;
-  }
+}
 
 
 
@@ -22,7 +22,7 @@ const DiscountCalculator = block(() => {
         if (isNaN(p) || isNaN(r) || p <= 0 || r <= 0 ) {
             alert('Please enter valid numbers.');
             return;
-          }
+        }
 
         const discountPrice = p * r;
         const finalPrice = p - discountPrice;
@@ -30,43 +30,43 @@ const DiscountCalculator = block(() => {
         setResults({
             discountPrice,
             finalPrice,
-          });
+        });
     }
 
 
-  return (
+return (
     <div className='Discount Calculator'>
-       <h1>Discount Calculator</h1>
-       <div>
+    <h1>Discount Calculator</h1>
+    <div>
         <label>Original Price ($): </label>
         <input
-          type="number"
-          value={originalPrice}
-          onChange={(e) => setOriginalPrice(e.target.value)}
-          style={{ display: 'block', marginBottom: '15px' }}
+        type="number"
+        value={originalPrice}
+        onChange={(e) => setOriginalPrice(e.target.value)}
+        style={{ display: 'block', marginBottom: '15px' }}
         />
-      </div>
-      <div>
+    </div>
+    <div>
         <label>Discount (% off): </label>
         <input
-          type="number"
-          value={discountRate}
-          onChange={(e) => setDiscountRate(e.target.value)}
-          style={{ display: 'block', marginBottom: '15px' }}
+        type="number"
+        value={discountRate}
+        onChange={(e) => setDiscountRate(e.target.value)}
+        style={{ display: 'block', marginBottom: '15px' }}
         />
-      </div>
-      <button onClick={calculateDiscount}>Calculate</button>
+    </div>
+    <button onClick={calculateDiscount}>Calculate</button>
 
 
-      {results && (
+    {results && (
         <div className="results">
             <h2>Results:</h2>
             <div>Final Price : ${results.finalPrice.toFixed(2)}</div>
             <div>You Save : ${results.discountPrice.toFixed(2)}</div>
         </div>
-      )}
+    )}
     </div>
-  );
+);
 });
 
 export default DiscountCalculator;
