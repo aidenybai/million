@@ -105,14 +105,18 @@ function useLiveCursors() {
 export function Cursors() {
   const cursors = useLiveCursors();
 
-  return cursors.map(({ x, y, connectionId }) => (
-    <Cursor
-      key={connectionId}
-      color={COLORS[connectionId % COLORS.length]}
-      x={x}
-      y={y}
-    />
-  ));
+  return (
+    <>
+      {cursors.map(({ x, y, connectionId }) => (
+        <Cursor
+          key={connectionId}
+          color={COLORS[connectionId % COLORS.length]}
+          x={x}
+          y={y}
+        />
+      ))}
+    </>
+  );
 }
 
 export function getCount() {
