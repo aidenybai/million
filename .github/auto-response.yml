@@ -1,0 +1,37 @@
+name: Automated Responses
+
+on:
+  issues:
+    types: [opened]
+  pull_request:
+    types: [opened]
+
+jobs:
+  respond:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Comment on new issue
+      if: github.event_name == 'issues'
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: 'Thanks for opening this issue! A maintainer will review it soon.',
+          })
+    - name: Comment on new pull request
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          github.rest.pulls.createReview({
+            pull_number: context.pull_request.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: 'Thanks for opening this pull request! A maintainer will review it soon.',
+            event: 'COMMENT',
+          })
