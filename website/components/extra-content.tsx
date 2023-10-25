@@ -17,6 +17,7 @@ export function ExtraContent() {
 export function Status() {
   const [, forceUpdate] = useState({});
   const count = getCount();
+  const userString = count > 1 ? "users" : "user";
   // useEffect(() => {
   //   const interval = setInterval(() => {
   //     forceUpdate({});
@@ -29,7 +30,7 @@ export function Status() {
         <div className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></div>
         <div className="relative inline-flex rounded-full h-3 w-3 bg-purple-500"></div>
       </div>
-      {count} users connected.
+      {count} {userString} connected.
     </div>
   );
 }
