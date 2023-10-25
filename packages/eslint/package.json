@@ -46,7 +46,7 @@
   },
   "engines": {
     "node": "v16.20.0",
-    "pnpm":"8.6.9"
+    "pnpm":"8.1.1"
   },
   "directories": {
     "doc": "docs",
