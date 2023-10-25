@@ -1,14 +1,19 @@
 {
+  "private": true,
   "name": "eslint-plugin-millionjs",
-  "version": "0.0.0-semantically-released",
+  "version": "0.0.1",
   "description": "Eslint Plugin Rules for Million Js",
   "main": "lib/index.js",
   "keywords": [
     "eslint",
     "eslintplugin",
-    "eslint-plugin"
+    "eslint-plugin", 
+    "million js",
+    "fast",
+    "react"
   ],
   "license": "MIT",
+  "author": "Aiden Bai",
   "scripts": {
     "lint": "eslint .",
     "test": "npm run unit-test",
