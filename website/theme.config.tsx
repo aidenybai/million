@@ -226,7 +226,7 @@ const config: DocsThemeConfig = {
   },
   primaryHue: {
     light: 270,
-    dark: 295,
+    dark: 204,
   },
 };
 
