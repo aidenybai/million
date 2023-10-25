@@ -44,10 +44,6 @@
   "peerDependencies": {
     "eslint": ">=6"
   },
-  "engines": {
-    "node": "v19.9.0",
-    "pnpm":"8.1.1"
-  },
   "directories": {
     "doc": "docs",
     "lib": "lib",
