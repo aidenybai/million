@@ -919,3 +919,91 @@ input[type='range'] {
 .age {
   font-size: 1.5rem;
 }
+
+/*Snake Game CSS*/
+.snakeGame--main{
+  height: 500px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  /* border: 1px solid red; */
+}
+.snakeGame--keys{
+  width: 500px;
+  height: 150px;
+  border: 1px solid white;
+  font-family: monospace;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.snakeGame--keys2{
+  display: flex;
+  flex-direction: row;
+  width: 65%;
+  justify-content: space-between;
+  align-items: center;
+}
+.snakeGame {
+  width: 500px;
+  aspect-ratio: 1;
+  /* height: 500px; */
+  border: 10px solid white;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-family: monospace;
+  border-radius: 10px;
+}
+
+.snakeGame--button {
+  font-family: inherit;
+  font-size: 1.5rem;
+  border-radius: 10px;
+  color: black;
+  width: 150px;
+  height: 50px;
+  border: none;
+  background-color: #e73d9f;
+  font-weight: 600;
+  z-index: 4;
+  cursor: pointer;
+}
+
+.snakeGame--text {
+  color: #eb2d2d;
+  z-index: 4;
+  opacity: 0.5;
+}
+
+.snakeGame--arrow-msg {
+  font-size: 1rem;
+  margin: 10px;
+}
+
+.snakeGame--game-over {
+  font-size: 3rem;
+}
+
+.snakeGame--count {
+  position: absolute;
+  font-size: 2rem;
+  bottom: 0px;
+  color: #eb2d2d;
+  opacity: 0.5;
+}
+@media (max-width: 768px) {
+  .snakeGame--main{
+      flex-direction: column;
+      height: auto;
+      width: 100%;
+  }
+  .snakeGame {
+    width: 100%;
+  }
+}
