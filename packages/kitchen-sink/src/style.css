@@ -902,22 +902,22 @@ input[type='range'] {
 }
 
 .markdown-editor-container {
-  width: 48%;
+  width: 100%;
+  display: flex;
+  padding-bottom: 1em;
 }
 
 .markdown-input {
   width: 100%;
   height: 40vh;
-  padding: 1em;
   font-size: 16px;
 }
 
 .markdown-preview {
-  width: 48%;
   border: 1px solid #ddd;
-  padding: 1em;
   height: 40vh;
   overflow-y: auto;
+  padding: 0 5px;
 }
 /* Age calculator styles */
 
