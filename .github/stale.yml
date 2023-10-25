@@ -16,3 +16,4 @@ jobs:
           days-before-close: 7
           stale-issue-message: 'This issue has been automatically marked as stale because it has not had recent activity. It will be closed if no further activity occurs within the next 7 days.'
           stale-pr-message: 'This pull request has been automatically marked as stale because it has not had recent activity. It will be closed if no further activity occurs within the next 7 days.'
+          exempt-issue-labels: '💎Bounty'
