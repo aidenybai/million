@@ -45,7 +45,7 @@
     "eslint": ">=6"
   },
   "engines": {
-    "node": "v16.20.0",
+    "node": "v19.9.0",
     "pnpm":"8.1.1"
   },
   "directories": {
