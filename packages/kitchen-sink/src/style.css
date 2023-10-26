@@ -919,3 +919,15 @@ input[type='range'] {
 .age {
   font-size: 1.5rem;
 }
+
+
+/* ******************************** */
+/* Bmi Calculator Responsiveness */
+
+@media only screen and (min-width: 290px) and (max-width: 590px){
+  .BmiDivInputFields {
+    flex-direction: column;
+  }
+}
+
+/* ********************************* */
