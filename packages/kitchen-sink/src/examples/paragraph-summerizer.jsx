@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { block } from 'million/react';
 
-const paragraphSummerizer = () => {
+const paragraphSummerizer = block(() => {
   const [value, setValue] = useState('');
   const [data, setData] = useState([]);
   const [submitting, setSubmitting] = useState(false);
@@ -16,7 +17,7 @@ const paragraphSummerizer = () => {
       headers: {
         'Content-Type': 'application/json',
         Authorization:
-          'Bearer ' + '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',
+          'Bearer ' + 'skCc0TTQBMinu5Mrq2ZMd0T3BlbkFJiCRbpdqnxq3glQ6zxLYG',
       },
       body: JSON.stringify({
         prompt: value + `\n\nTl;dr`,
@@ -121,7 +122,7 @@ const paragraphSummerizer = () => {
       </SummaryContainer>
     </Container>
   );
-};
+});
 
 export default paragraphSummerizer;
 
