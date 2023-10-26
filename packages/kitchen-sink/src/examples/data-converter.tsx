@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { block } from 'million/react';
 
 interface DataConverterState {
 inputUnit: DataUnit;
@@ -16,7 +17,7 @@ Terabyte = "TB",
 Petabyte = "PB",
 }
 
-const DataConverter: React.FC = () => {
+const DataConverter: React.FC = block(() => {
 const [state, setState] = useState<DataConverterState>({
     inputUnit: DataUnit.Byte,
     outputUnit: DataUnit.Kilobyte,
@@ -115,7 +116,7 @@ return (
     onClick={convertData}>Convert</button>
     </div>
 );
-};
+});
 
 const convert = (
 inputUnit: DataUnit,
