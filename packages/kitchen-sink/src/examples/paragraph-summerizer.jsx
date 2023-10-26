@@ -17,7 +17,7 @@ const paragraphSummerizer = block(() => {
       headers: {
         'Content-Type': 'application/json',
         Authorization:
-          'Bearer ' + 'skCc0TTQBMinu5Mrq2ZMd0T3BlbkFJiCRbpdqnxq3glQ6zxLYG',
+          'Bearer ' + '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',
       },
       body: JSON.stringify({
         prompt: value + `\n\nTl;dr`,
