@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { block } from 'million/react';
 
 interface TemperatureConverterState {
 inputUnit: TemperatureUnit;
@@ -13,7 +14,7 @@ Fahrenheit = "Fahrenheit",
 Kelvin = "Kelvin",
 }
 
-const TemperatureConverter: React.FC = () => {
+const TemperatureConverter: React.FC = block(() => {
 const [state, setState] = useState<TemperatureConverterState>({
     inputUnit: TemperatureUnit.Celsius,
     outputUnit: TemperatureUnit.Fahrenheit,
@@ -110,7 +111,7 @@ return (
     onClick={convertTemperature}>Convert</button>
     </div>
 );
-};
+});
 
 const convert = (
 inputUnit: TemperatureUnit,
