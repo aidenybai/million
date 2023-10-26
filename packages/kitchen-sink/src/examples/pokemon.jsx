@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
+import { block } from 'million/react';
 
 const PokemonListWrapper = styled.div`
   display: flex;
@@ -12,17 +13,15 @@ const PokemonCardWrapper = styled.div`
   border: 1px solid #ccc;
   padding: 20px;
   margin: 20px;
-  max-width: 400px;
+  max-width: 300px;
   text-align: center;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
 const PokemonImage = styled.img`
   max-width: 100%;
   margin-bottom: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
 `;
 
 const StatList = styled.ul`
@@ -33,7 +32,6 @@ const StatList = styled.ul`
 const StatItem = styled.li`
   font-size: 16px;
   margin: 5px 0;
-  font-weight: bold;
 `;
 
 const LoadMoreButton = styled.button`
@@ -47,7 +45,7 @@ const LoadMoreButton = styled.button`
   margin-top: 20px;
 `;
 
-function Pokemon() {
+const Pokemon = block(() => {
   const [pokemons, setPokemons] = useState([]);
   const [allPokemons, setAllPokemons] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -66,43 +64,26 @@ function Pokemon() {
       });
   }, []);
 
-  useEffect(() => {
-    const fetchMorePokemon = () => {
-      if (nextUrl) {
-        axios
-          .get(nextUrl)
-          .then((response) => {
-            setPokemons((prevPokemons) => [
-              ...prevPokemons,
-              ...response.data.results,
-            ]);
-            setAllPokemons((prevPokemons) => [
-              ...prevPokemons,
-              ...response.data.results,
-            ]);
-            setNextUrl(response.data.next);
-          })
-          .catch((error) => {
-            console.error('Error fetching data:', error);
-          });
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-
-    function handleScroll() {
-      if (
-        window.innerHeight + document.documentElement.scrollTop ===
-        document.documentElement.offsetHeight
-      ) {
-        fetchMorePokemon();
-      }
+  const fetchMorePokemon = () => {
+    if (nextUrl) {
+      axios
+        .get(nextUrl)
+        .then((response) => {
+          setPokemons((prevPokemons) => [
+            ...prevPokemons,
+            ...response.data.results,
+          ]);
+          setAllPokemons((prevPokemons) => [
+            ...prevPokemons,
+            ...response.data.results,
+          ]);
+          setNextUrl(response.data.next);
+        })
+        .catch((error) => {
+          console.error('Error fetching data:', error);
+        });
     }
-  }, [nextUrl]);
+  };
 
   const handleSearch = () => {
     const filteredPokemons = allPokemons.filter((pokemon) =>
@@ -129,13 +110,13 @@ function Pokemon() {
         ))}
       </PokemonListWrapper>
       {nextUrl && (
-        <LoadMoreButton onClick={handleSearch}>
+        <LoadMoreButton onClick={fetchMorePokemon}>
           Load More Pokémon
         </LoadMoreButton>
       )}
     </div>
   );
-}
+});
 
 const PokemonCard = ({ pokemon }) => {
   const [details, setDetails] = useState(null);
