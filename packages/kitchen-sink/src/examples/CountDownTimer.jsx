@@ -51,7 +51,6 @@ const CountDownTimer = block( function TimerComponent() {
     setRecordedTimes([]);
   };
 
-
   useEffect(() => {
     let interval;
     if (isRunning) {
