@@ -1,15 +1,36 @@
 import dynamic from 'next/dynamic';
 import { startTransition, useEffect, useRef, useState } from 'react';
 import { CarbonAds } from './ad';
+import { getCount } from './live';
 
 const LagRadar = dynamic(() => import('react-lag-radar'), { ssr: false });
 
 export function ExtraContent() {
   return (
     <>
-      <Showdown />
+      <Status />
       <CarbonAds />
     </>
+  );
+}
+
+export function Status() {
+  const [, forceUpdate] = useState({});
+  const count = getCount();
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     forceUpdate({});
+  //   }, 1000);
+  //   return () => clearInterval(interval);
+  // }, []);
+  return (
+    <div className="flex ml-1 items-center gap-2 text-black dark:text-white">
+      <div className="relative flex h-3 w-3">
+        <div className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></div>
+        <div className="relative inline-flex rounded-full h-3 w-3 bg-purple-500"></div>
+      </div>
+      {count} users connected.
+    </div>
   );
 }
 

@@ -1,14 +1,17 @@
 import '../styles/global.css';
 import { Analytics } from '@vercel/analytics/react';
 import { Inter } from 'next/font/google';
+import { LiveProvider } from '../components/live';
 
 export const inter = Inter({ subsets: ['latin'] });
 
 export default function App({ Component, pageProps }) {
   return (
-    <main className={inter.className}>
-      <Component {...pageProps} />
-      <Analytics />
-    </main>
+    <LiveProvider>
+      <main className={inter.className}>
+        <Component {...pageProps} />
+        <Analytics />
+      </main>
+    </LiveProvider>
   );
 }
