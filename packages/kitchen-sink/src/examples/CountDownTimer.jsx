@@ -32,7 +32,7 @@ const CountDownTimer = block( function TimerComponent() {
       setHours(value);
     }
   };
-  
+
   const handleMinuteChange = (e) => {
     const value = parseInt(e.target.value);
     if (!isNaN(value) && value >= 0 && value < 60) {
@@ -50,7 +50,7 @@ const CountDownTimer = block( function TimerComponent() {
   const clearFlagData = () => {
     setRecordedTimes([]);
   };
-  
+
 
   useEffect(() => {
     let interval;
@@ -91,24 +91,24 @@ const CountDownTimer = block( function TimerComponent() {
     <div>
       <div>
         <div>
-          <h1 style={{fontSize:'80px',textAlign:'center'}}>
+          <h1 className='CountDownTimerDisplay' style={{textAlign:'center'}}>
             {`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}:${milliseconds.toString().padStart(2, '0')}`}
           </h1>
         </div>
 
         <div style={{display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center'}}>
-          <div style={{display:'flex',flexDirection:'row',justifyContent:'space-between',alignItems:'flex-start',gap:'20px'}}>
+          <div className='DivForInputFields' style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:'20px'}}>
             <div style={{display:'flex',flexDirection:'column',alignItems:'flex-start'}}>
               <label htmlFor='hourInput'>Hours</label>
               <input id='hourInput' type="number" value={hours} onChange={handleHourChange}/>
             </div>
-            
+
             <div style={{display:'flex',flexDirection:'column',alignItems:'flex-start'}}>
               <label htmlFor='minuteInput'>Minutes</label>
               <input id='minuteInput' type="number" value={minutes} onChange={handleMinuteChange}/>
             </div>
           </div>
-          
+
           <div style={{display:'flex',flexDirection:'row',justifyContent:'space-between',alignItems:'center',gap:'20px',marginTop:'20px'}}>
             <button onClick={startTimer} style={{backgroundColor:'#FF0054',borderRadius:'100px',border: '0px'}}>
               <img src={StartSVG} alt='play'/>
