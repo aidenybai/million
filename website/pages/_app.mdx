@@ -1,17 +1,26 @@
 import '../styles/global.css';
 import { Analytics } from '@vercel/analytics/react';
 import { Inter } from 'next/font/google';
-import { LiveProvider } from '../components/live';
+import  CursorsContextProvider  from '../components/cursors/context';
+import SharedSpace from "../components/cursors/shared";
+import { LiveProvider} from '../components/live'
 
 export const inter = Inter({ subsets: ['latin'] });
 
 export default function App({ Component, pageProps }) {
   return (
-    <LiveProvider>
-      <main className={inter.className}>
+    <>
+
+<CursorsContextProvider room={"zy"} host={"abc"}>
+        <SharedSpace />
+      </CursorsContextProvider>
+      <LiveProvider>
+  <main className={inter.className}>
         <Component {...pageProps} />
         <Analytics />
       </main>
-    </LiveProvider>
-  );
+      </LiveProvider>
+    </>
+
+);
 }
