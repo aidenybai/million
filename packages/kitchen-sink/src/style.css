@@ -1,3 +1,9 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 :root {
   font-family: 'Inter', sans-serif;
 }
@@ -27,6 +33,90 @@
 button:disabled {
   opacity: 0.2 !important;
   cursor: not-allowed !important;
+}
+
+.kitchen_sink-layout {
+  margin-top: 1.5em;
+  display: flex;
+  height: 100vh;
+  max-width: 100vw;
+  overflow: hidden;
+}
+
+.kitchen_sink-layout-icon {
+  outline: none;
+  border: none;
+  cursor: pointer;
+  position: relative;
+}
+
+.kitchen_sink-content {
+  width: 100%;
+  overflow-x: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.kitchen_sink-content::-webkit-scrollbar {
+  display: none;
+}
+
+.kitchen_sink-content_container {
+  width: 95%;
+  margin: 0 auto;
+  max-width: 1300px;
+  height: 100vh;
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.kitchen_sink-content_container::-webkit-scrollbar {
+  display: none;
+}
+.kitchen_sink-sidebar {
+  border: 1px solid #353535;
+  height: 100vh;
+  box-shadow: 0px 4px 25px rgb(#000, 0.25);
+  overflow-y: scroll;
+  transition: all 200ms ease-in-out;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  background: #252525;
+}
+
+
+.kitchen_sink-sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+.kitchen_sink-sidebar_container {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: stretch;
+  gap: 1em;
+  overflow-y: scroll;
+}
+
+.kitchen_sink-sidebar_close {
+  width: 0px;
+  overflow: hidden;
+  transition: all 200ms ease-in;
+}
+
+.kitchen_sink-sidebar_open {
+  padding: 1em;
+  width: 320px;
+  min-width: 270px;
+}
+
+@media screen and (max-width: 768px) {
+  .kitchen_sink-sidebar {
+    position: fixed;
+    z-index: 99999999;
+    top: 0;
+    left: 0;
+  }
 }
 
 pre {
@@ -921,7 +1011,7 @@ input[type='range'] {
 }
 
 /*Snake Game CSS*/
-.snakeGame--main{
+.snakeGame--main {
   height: 500px;
   display: flex;
   justify-content: space-between;
@@ -929,7 +1019,7 @@ input[type='range'] {
   position: relative;
   /* border: 1px solid red; */
 }
-.snakeGame--keys{
+.snakeGame--keys {
   width: 500px;
   height: 150px;
   border: 1px solid white;
@@ -940,7 +1030,7 @@ input[type='range'] {
   justify-content: center;
   align-items: center;
 }
-.snakeGame--keys2{
+.snakeGame--keys2 {
   display: flex;
   flex-direction: row;
   width: 65%;
@@ -998,10 +1088,10 @@ input[type='range'] {
   opacity: 0.5;
 }
 @media (max-width: 768px) {
-  .snakeGame--main{
-      flex-direction: column;
-      height: auto;
-      width: 100%;
+  .snakeGame--main {
+    flex-direction: column;
+    height: auto;
+    width: 100%;
   }
   .snakeGame {
     width: 100%;
