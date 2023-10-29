@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { block } from 'million/react';
-
+import { Block } from 'million';
 
 function CGPACalculator() {
   const [subjects, setSubjects] = useState([
@@ -16,8 +15,7 @@ function CGPACalculator() {
     setSubjects(updatedSubjects);
   };
 
-  block();
-
+  
   const addSubject = () => {
     setSubjects([...subjects, { name: '', creditHours: 0, grade: '' }]);
   };
@@ -70,18 +68,20 @@ function CGPACalculator() {
       default:
         return 0.00;
     }
+    Block();
   };
 
   return (
-    <div>
-      <h1>CGPA Calculator</h1>
+    <div className="container mx-auto py-6">
+      <h1 className="text-3xl font-semibold text-center mb-4">CGPA Calculator</h1>
       {subjects.map((subject, index) => (
-        <div key={index}>
+        <div key={index} className="mb-4">
           <input
             type="text"
             placeholder="Subject Name"
             value={subject.name}
             onChange={(e) => handleSubjectChange(index, 'name', e.target.value)}
+            className="border border-gray-300 rounded p-2 w-full m-2"
           />
           <input
             type="number"
@@ -90,10 +90,12 @@ function CGPACalculator() {
             onChange={(e) =>
               handleSubjectChange(index, 'creditHours', e.target.value)
             }
+            className="border border-gray-300 rounded p-2 w-full m-2"
           />
           <select
             value={subject.grade}
             onChange={(e) => handleSubjectChange(index, 'grade', e.target.value)}
+            className="border border-gray-300 rounded p-2 w-full m-2"
           >
             <option value="">Select Grade</option>
             <option value="A+">A+</option>
@@ -110,15 +112,24 @@ function CGPACalculator() {
           </select>
         </div>
       ))}
-      <button onClick={addSubject}>Add Subject</button>
-      <button onClick={calculateCGPA}>Calculate CGPA</button>
-      <div>
-        <p>Total Credit Hours: {totalCreditHours}</p>
-        <p>Total Grade Points: {totalGradePoints}</p>
-        <p>CGPA: {cgpa}</p>
+      
+      <button onClick={addSubject} size="sm" className="text-white p-2 bg-indigo-600 m-4 rounded-md">
+        Add Subject
+      </button>
+
+     
+
+      <button onClick={calculateCGPA} size="sm" className="text-white p-2 bg-indigo-600 m-4 font-sans rounded-md">
+        Calculate CGPA
+      </button>
+      <div className="mt-4 flex">
+        <p className='text-indigo-700 font-extrabold border p-1 rounded-md m-2'>Total Credit Hours: {totalCreditHours}</p>
+        <p className='text-indigo-700 font-extrabold border p-1 rounded-md m-2'> Total Grade Points: {totalGradePoints.toFixed(2)}</p>
+        <p className='text-indigo-700 font-extrabold border p-1 rounded-md m-2'>CGPA: {cgpa}</p>
       </div>
     </div>
   );
 }
+
 
 export default CGPACalculator;
