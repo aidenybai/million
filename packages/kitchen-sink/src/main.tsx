@@ -112,6 +112,7 @@ type Module = { default: ComponentType<any> };
                 return (
                   <button
                     onClick={async () => {
+                      isMobile && setSidebarOpened(false)
                       setSelected(index);
                       loadedModules[index] = lazy(() => modules[index]![1]());
                     }}
