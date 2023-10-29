@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Block } from 'million';
 
 function CGPACalculator() {
   const [subjects, setSubjects] = useState([
@@ -15,7 +14,6 @@ function CGPACalculator() {
     setSubjects(updatedSubjects);
   };
 
-  
   const addSubject = () => {
     setSubjects([...subjects, { name: '', creditHours: 0, grade: '' }]);
   };
@@ -68,34 +66,33 @@ function CGPACalculator() {
       default:
         return 0.00;
     }
-    Block();
   };
 
   return (
-    <div className="container mx-auto py-6">
-      <h1 className="text-3xl font-semibold text-center mb-4">CGPA Calculator</h1>
+    <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
+      <h1 style={{ fontSize: '24px', fontWeight: 'bold', textAlign: 'center', marginBottom: '20px' }}>
+        CGPA Calculator
+      </h1>
       {subjects.map((subject, index) => (
-        <div key={index} className="mb-4">
+        <div key={index} style={{ marginBottom: '10px' }}>
           <input
             type="text"
             placeholder="Subject Name"
             value={subject.name}
             onChange={(e) => handleSubjectChange(index, 'name', e.target.value)}
-            className="border border-gray-300 rounded p-2 w-full m-2"
+            style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
           />
           <input
             type="number"
             placeholder="Credit Hours"
             value={subject.creditHours}
-            onChange={(e) =>
-              handleSubjectChange(index, 'creditHours', e.target.value)
-            }
-            className="border border-gray-300 rounded p-2 w-full m-2"
+            onChange={(e) => handleSubjectChange(index, 'creditHours', e.target.value)}
+            style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
           />
           <select
             value={subject.grade}
             onChange={(e) => handleSubjectChange(index, 'grade', e.target.value)}
-            className="border border-gray-300 rounded p-2 w-full m-2"
+            style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
           >
             <option value="">Select Grade</option>
             <option value="A+">A+</option>
@@ -112,24 +109,34 @@ function CGPACalculator() {
           </select>
         </div>
       ))}
-      
-      <button onClick={addSubject} size="sm" className="text-white p-2 bg-indigo-600 m-4 rounded-md">
+
+      <button
+        onClick={addSubject}
+        style={{ backgroundColor: 'black', color: 'white', padding: '8px 12px', margin: '20px 10px', borderRadius: '4px' }}
+      >
         Add Subject
       </button>
 
-     
-
-      <button onClick={calculateCGPA} size="sm" className="text-white p-2 bg-indigo-600 m-4 font-sans rounded-md">
+      <button
+        onClick={calculateCGPA}
+        style={{ backgroundColor: 'black', color: 'white', padding: '8px 12px', margin: '10px', borderRadius: '4px' }}
+      >
         Calculate CGPA
       </button>
-      <div className="mt-4 flex">
-        <p className='text-indigo-700 font-extrabold border p-1 rounded-md m-2'>Total Credit Hours: {totalCreditHours}</p>
-        <p className='text-indigo-700 font-extrabold border p-1 rounded-md m-2'> Total Grade Points: {totalGradePoints.toFixed(2)}</p>
-        <p className='text-indigo-700 font-extrabold border p-1 rounded-md m-2'>CGPA: {cgpa}</p>
+
+      <div style={{ marginTop: '20px' }}>
+        <p style={{ color: 'indigo', fontWeight: 'bold', border: '1px solid indigo', padding: '4px', borderRadius: '4px', margin: '10px' }}>
+          Total Credit Hours: {totalCreditHours}
+        </p>
+        <p style={{ color: 'indigo', fontWeight: 'bold', border: '1px solid indigo', padding: '4px', borderRadius: '4px', margin: '10px' }}>
+          Total Grade Points: {totalGradePoints.toFixed(2)}
+        </p>
+        <p style={{ color: 'indigo', fontWeight: 'bold', border: '1px solid indigo', padding: '4px', borderRadius: '4px', margin: '10px' }}>
+          CGPA: {cgpa}
+        </p>
       </div>
     </div>
   );
 }
-
 
 export default CGPACalculator;
