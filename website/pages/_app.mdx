@@ -1,14 +1,12 @@
 import '../styles/global.css';
 import { Analytics } from '@vercel/analytics/react';
-import { Inter } from 'next/font/google';
+import { GeistSans } from 'geist/font';
 import { LiveProvider } from '../components/live';
-
-export const inter = Inter({ subsets: ['latin'] });
 
 export default function App({ Component, pageProps }) {
   return (
     <LiveProvider>
-      <main className={inter.className}>
+      <main className={GeistSans.className}>
         <Component {...pageProps} />
         <Analytics />
       </main>
