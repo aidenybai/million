@@ -901,6 +901,24 @@ input[type='range'] {
   background-color: #45a049;
 }
 
+.markdown-editor-container {
+  width: 100%;
+  display: flex;
+  padding-bottom: 1em;
+}
+
+.markdown-input {
+  width: 100%;
+  height: 40vh;
+  font-size: 16px;
+}
+
+.markdown-preview {
+  border: 1px solid #ddd;
+  height: 40vh;
+  overflow-y: auto;
+  padding: 0 5px;
+}
 /* Age calculator styles */
 
 .calculator-form {
