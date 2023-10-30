@@ -40,7 +40,7 @@ const BmiCalculator = block( function BmiComponent() {
     <div>
       <h1 style={{textAlign:'center'}}>BMI Calculator</h1>
       <div style={{display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center'}}>
-        <div style={{display:'flex',flexDirection:'row',justifyContent:'space-between',alignItems:'flex-start',gap:'20px'}}>
+        <div className='BmiDivInputFields' style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:'20px'}}>
           <div style={{display:'flex',flexDirection:'column',alignItems:'flex-start'}}>
             <label>Age * :</label>
             <input type="number" placeholder='Enter your age' value={age} onChange={(e) => setAge(e.target.value)} />
@@ -58,7 +58,7 @@ const BmiCalculator = block( function BmiComponent() {
       </div>
 
       <div style={{display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center',marginTop:'20px'}}>
-        <div style={{display:'flex',flexDirection:'row',justifyContent:'space-between',alignItems:'flex-start',gap:'20px'}}>
+        <div className='BmiDivInputFields' style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:'20px'}}>
           <div style={{display:'flex',flexDirection:'column',alignItems:'flex-start'}}>
             <label>Height (in feet and inches) * :</label>
             <input type="number" placeholder="Enter your height in feet" value={heightFeet} onChange={(e) => setHeightFeet(e.target.value)} />
@@ -72,7 +72,7 @@ const BmiCalculator = block( function BmiComponent() {
       </div>
 
       <div style={{display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center',marginTop:'20px'}}>
-        <div style={{display:'flex',flexDirection:'row',justifyContent:'space-between',alignItems:'flex-start',gap:'20px'}}>
+        <div className='BmiDivInputFields' style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:'20px'}}>
           <div style={{display:'flex',flexDirection:'column',alignItems:'flex-start'}}>
             <label>Weight (in kg) * :</label>
             <input type="number" placeholder='Enter you weight' value={weight} onChange={(e) => setWeight(e.target.value)} />
