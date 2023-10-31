@@ -1036,3 +1036,83 @@ input[type='range'] {
     width: 100%;
   }
 }
+
+/* ********************* */
+/* Count Down Timer Responsiveness*/
+
+@media only screen and (min-width: 290px) and (max-width: 320px){
+  .CountDownTimerDisplay {
+    font-size: 36px;
+  }
+  .DivForInputFields {
+    flex-direction: column;
+  }
+}
+
+@media only screen and (min-width: 321px) and (max-width: 360px){
+  .CountDownTimerDisplay {
+    font-size: 45px;
+  }
+  .DivForInputFields {
+    flex-direction: column;
+  }
+}
+
+@media only screen and (min-width: 361px) and (max-width: 390px){
+  .CountDownTimerDisplay {
+    font-size: 50px;
+  }
+  .DivForInputFields {
+    flex-direction: column;
+  }
+}
+
+@media only screen and (min-width: 391px) and (max-width: 430px){
+  .CountDownTimerDisplay {
+    font-size: 55px;
+  }
+  .DivForInputFields {
+    flex-direction: column;
+  }
+}
+
+@media only screen and (min-width: 431px) and (max-width: 480px){
+  .CountDownTimerDisplay {
+    font-size: 60px;
+  }
+  .DivForInputFields {
+    flex-direction: column;
+  }
+}
+
+@media only screen and (min-width: 481px) and (max-width: 530px){
+  .CountDownTimerDisplay {
+    font-size: 65px;
+  }
+  .DivForInputFields {
+    flex-direction: column;
+  }
+}
+
+@media only screen and (min-width: 531px) and (max-width: 570px){
+  .CountDownTimerDisplay {
+    font-size: 70px;
+  }
+  .DivForInputFields {
+    flex-direction: column;
+  }
+}
+
+@media only screen and (min-width: 571px) and (max-width: 620px){
+  .CountDownTimerDisplay {
+    font-size: 75px;
+  }
+}
+
+@media only screen and (min-width: 621px){
+  .CountDownTimerDisplay {
+    font-size: 80px;
+  }
+}
+
+/* ************************* */
