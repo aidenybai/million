@@ -13,4 +13,4 @@ jobs:
       - name: Label issues and pull requests
         uses: actions/labeler@v3
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token: ${{ secrets.github_token }}
