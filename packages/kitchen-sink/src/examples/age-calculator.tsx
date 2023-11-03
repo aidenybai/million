@@ -54,13 +54,14 @@ const AgeCalculator = block(() => {
             <span className="form-input-group">
               <label htmlFor="day">Birth Day</label>
               <input
-                type="text"
+                type="number"
                 name="day"
                 id="day"
                 placeholder="DD"
                 value={birthDay}
                 onChange={(e) => setBirthDay(e.target.value)}
                 maxLength={2}
+                min={1}
                 pattern="(0?[1-9]|[12][0-9]|3[01])"
               />
             </span>
@@ -68,13 +69,14 @@ const AgeCalculator = block(() => {
             <span className="form-input-group">
               <label htmlFor="month">Birth Month</label>
               <input
-                type="text"
+                type="number"
                 name="month"
                 id="month"
                 placeholder="MM"
                 value={birthMonth}
                 onChange={(e) => setBirthMonth(e.target.value)}
                 maxLength={2}
+                min={1}
                 pattern="(1[0-2]|0?[1-9])"
               />
             </span>
@@ -82,7 +84,7 @@ const AgeCalculator = block(() => {
             <span className="form-input-group">
               <label htmlFor="year">Birth Year</label>
               <input
-                type="text"
+                type="number"
                 name="year"
                 id="year"
                 placeholder="YYYY"

@@ -42,7 +42,7 @@ const BmiCalculator = block(function BmiComponent() {
       setBmiCategory('Obese');
     }
   };
-  
+
   return (
     <main className="bmi-calculator">
       <h2>BMI Calculator</h2>
@@ -52,6 +52,7 @@ const BmiCalculator = block(function BmiComponent() {
           <input
             type="number"
             placeholder="Enter your age"
+            min={1}
             value={age}
             onChange={(e) => setAge(e.target.value)}
           />
@@ -72,6 +73,7 @@ const BmiCalculator = block(function BmiComponent() {
             placeholder="Enter your height in feet"
             value={heightFeet}
             onChange={(e) => setHeightFeet(e.target.value)}
+            min={1}
           />
         </div>
 
@@ -82,6 +84,7 @@ const BmiCalculator = block(function BmiComponent() {
             placeholder="Enter your height in inch"
             value={heightInches}
             onChange={(e) => setHeightInches(e.target.value)}
+            min={1}
           />
         </div>
 
@@ -92,6 +95,7 @@ const BmiCalculator = block(function BmiComponent() {
             placeholder="Enter you weight"
             value={weight}
             onChange={(e) => setWeight(e.target.value)}
+            min={1}
           />
         </div>
         <div className="form-input-group">

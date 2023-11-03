@@ -25,6 +25,7 @@
 .bmi-calculator input,
 .bmi-calculator select {
   height: 40px;
+  color: currentColor;
 }
 .bmi-calculator select {
   background-color: var(--background);
