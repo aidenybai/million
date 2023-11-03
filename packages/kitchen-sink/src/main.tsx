@@ -8,7 +8,8 @@ import {
   LazyExoticComponent,
   useEffect,
 } from 'react';
-import './style.css';
+import './css/style.css';
+import './css/examples/style.css';
 import { ErrorBoundary } from 'react-error-boundary';
 import { RxHamburgerMenu } from 'react-icons/rx';
 import { AiOutlineClose } from 'react-icons/ai';
@@ -112,7 +113,7 @@ type Module = { default: ComponentType<any> };
                 return (
                   <button
                     onClick={async () => {
-                      isMobile && setSidebarOpened(false)
+                      isMobile && setSidebarOpened(false);
                       setSelected(index);
                       loadedModules[index] = lazy(() => modules[index]![1]());
                     }}
