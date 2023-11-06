@@ -2,16 +2,18 @@ import { useState } from 'react';
 import { block, For } from 'million/react';
 
 const TodoList = () => {
-  const [tasks, setTasks] = useState<any[]>([]);
+  const [tasks, setTasks] = useState<Object[]>([]);
   const [taskInput, setTaskInput] = useState<string>('');
+  const [taskIdCounter, setTaskIdCounter] = useState<number>(0);
 
   const addTask = () => {
     if (taskInput.trim() === '') return;
     setTasks([
       ...tasks,
-      { id: tasks.length, text: taskInput, completed: false },
+      { id: taskIdCounter, text: taskInput, completed: false },
     ]);
     setTaskInput('');
+    setTaskIdCounter(taskIdCounter + 1);
   };
 
   return (
@@ -46,9 +48,9 @@ const List = block(({ tasks, setTasks }: { tasks: any[]; setTasks: any }) => {
   };
 
   const removeTask = (index: number) => {
-    const updatedTasks = [...tasks];
-    updatedTasks.splice(index, 1);
+    const updatedTasks = tasks.filter((task) => task.id !== index);
     setTasks(updatedTasks);
+    console.log(updatedTasks);
   };
 
   return (
