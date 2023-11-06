@@ -10,7 +10,7 @@ const withNextra = nextra({
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
-  transpilePackages: ['react-tweet'],
+  transpilePackages: ['react-tweet', 'geist'],
 };
 
 // eslint-disable-next-line import/no-default-export

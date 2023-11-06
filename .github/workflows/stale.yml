@@ -1,0 +1,19 @@
+name: Stale Issues and PRs
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs every day at midnight
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Close stale issues and pull requests
+        uses: actions/stale@v3
+        with:
+          repo-token: ${{ secrets.github_token }}
+          days-before-stale: 15
+          days-before-close: 7
+          stale-issue-message: 'This issue has been automatically marked as stale because it has not had recent activity. It will be closed if no further activity occurs within the next 7 days.'
+          stale-pr-message: 'This pull request has been automatically marked as stale because it has not had recent activity. It will be closed if no further activity occurs within the next 7 days.'
+          exempt-issue-labels: '💎Bounty'
