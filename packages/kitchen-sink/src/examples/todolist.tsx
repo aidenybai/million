@@ -1,32 +1,25 @@
 import { useState } from 'react';
-import { block } from 'million/react';
+import { block, For } from 'million/react';
 
-const TodoList = block(() => {
-  const [tasks, setTasks] = useState<any[]>([]);
+const TodoList = () => {
+  const [tasks, setTasks] = useState<Object[]>([]);
   const [taskInput, setTaskInput] = useState<string>('');
+  const [taskIdCounter, setTaskIdCounter] = useState<number>(0);
 
   const addTask = () => {
     if (taskInput.trim() === '') return;
-    setTasks([...tasks, { text: taskInput, completed: false }]);
+    setTasks([
+      ...tasks,
+      { id: taskIdCounter, text: taskInput, completed: false },
+    ]);
     setTaskInput('');
-  };
-
-  const toggleTaskCompletion = (index: number) => {
-    const updatedTasks = [...tasks];
-    updatedTasks[index].completed = !updatedTasks[index].completed;
-    setTasks(updatedTasks);
-  };
-
-  const removeTask = (index: number) => {
-    const updatedTasks = [...tasks];
-    updatedTasks.splice(index, 1);
-    setTasks(updatedTasks);
+    setTaskIdCounter(taskIdCounter + 1);
   };
 
   return (
     <div>
       <h1>Todo List</h1>
-      <div>
+      <form onSubmit={(event) => event.preventDefault()}>
         <input
           type="text"
           placeholder="Add a task"
@@ -36,36 +29,65 @@ const TodoList = block(() => {
         />
         <button
           style={{ marginLeft: 10, padding: '10px 20px 10px 20px' }}
-          onClick={() => addTask()}
+          onClick={addTask}
         >
           Add
         </button>
-      </div>
-      <ul>
-        {tasks.map((task: any, index: number) => (
-          <li style={{ margin: '15px 0 15px 0' }} key={index}>
-            <input
-              type="checkbox"
-              checked={task.completed}
-              onChange={() => toggleTaskCompletion(index)}
-            />
+      </form>
+      <List tasks={tasks} setTasks={setTasks} />
+    </div>
+  );
+};
+
+//* <For /> for iterating over the list & block() for optimizing
+const List = block(({ tasks, setTasks }: { tasks: any[]; setTasks: any }) => {
+  const toggleTaskCompletion = (index: number) => {
+    const updatedTasks = [...tasks];
+    updatedTasks[index].completed = !updatedTasks[index].completed;
+    setTasks(updatedTasks);
+  };
+
+  const removeTask = (index: number) => {
+    const updatedTasks = tasks.filter((task) => task.id !== index);
+    setTasks(updatedTasks);
+    console.log(updatedTasks);
+  };
+
+  return (
+    <ul>
+      <For each={tasks}>
+        {(task) => (
+          <li
+            key={task.id}
+            style={{
+              margin: '15px 0 15px 0',
+              justifyContent: 'center',
+            }}
+          >
             <span
               style={{
+                fontSize: '1.25em',
                 textDecoration: task.completed ? 'line-through' : 'none',
               }}
             >
               {task.text}
             </span>
+            <input
+              type="checkbox"
+              checked={task.completed}
+              style={{ width: '20px', height: '20px', marginLeft: 10 }}
+              onChange={() => toggleTaskCompletion(task.id)}
+            />
             <button
               style={{ marginLeft: 10, padding: '7px 15px 7px 15px' }}
-              onClick={() => removeTask(index)}
+              onClick={() => removeTask(task.id)}
             >
               Remove
             </button>
           </li>
-        ))}
-      </ul>
-    </div>
+        )}
+      </For>
+    </ul>
   );
 });
 
