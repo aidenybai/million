@@ -1,12 +1,11 @@
 import '../styles/global.css';
 import { Analytics } from '@vercel/analytics/react';
-import { GeistSans } from 'geist/font';
 import { LiveProvider } from '../components/live';
 
 export default function App({ Component, pageProps }) {
   return (
     <LiveProvider>
-      <main className={GeistSans.className}>
+      <main>
         <Component {...pageProps} />
         <Analytics />
       </main>
