@@ -213,7 +213,7 @@ const config: DocsThemeConfig = {
     extraContent: ExtraContent,
   },
   nextThemes: {
-    defaultTheme: 'dark',
+    defaultTheme: 'system',
   },
   useNextSeoProps() {
     const { asPath } = useRouter();
