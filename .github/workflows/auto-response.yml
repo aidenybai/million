@@ -14,7 +14,7 @@ jobs:
       if: github.event_name == 'issues'
       uses: actions/github-script@v6
       with:
-        github-token: ${{ secrets.github_token }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
           github.rest.issues.createComment({
             issue_number: context.issue.number,
@@ -26,7 +26,7 @@ jobs:
       if: github.event_name == 'pull_request'
       uses: actions/github-script@v6
       with:
-        github-token: ${{ secrets.github_token }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
           github.rest.pulls.createReview({
             pull_number: context.pull_request.number,
