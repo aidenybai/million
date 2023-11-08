@@ -150,13 +150,6 @@ interface IToolTipProps {
   show: boolean;
 }
 
-interface IGeneratePassword {
-  includeNumbers: boolean;
-  includeSymbols: boolean;
-  passwordLength: number;
-  password_type: IPasswordType;
-}
-
 const useGeneratePassword = () => {
   const passwordInputRef = useRef<HTMLInputElement | null>(null);
 

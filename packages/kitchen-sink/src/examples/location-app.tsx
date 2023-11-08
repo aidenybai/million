@@ -1,5 +1,6 @@
 import { block } from 'million/react';
 import { useState, useEffect } from 'react';
+
 const LocationComponent = block(() => {
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
@@ -13,7 +14,7 @@ const LocationComponent = block(() => {
           setLatitude(latitude);
           setLongitude(longitude);
         },
-        (error) => {
+        () => {
           setError('Error getting user location');
         },
       );

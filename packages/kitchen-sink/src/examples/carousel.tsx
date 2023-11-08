@@ -5,7 +5,6 @@ const Carousel = block(() => {
   const [images, setImages] = useState<any[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  //* API request to Lorem Picsum samples
   const fetchImages = async () => {
     try {
       const response = await fetch(

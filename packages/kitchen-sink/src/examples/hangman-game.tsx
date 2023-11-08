@@ -449,165 +449,163 @@ const Word = block(
   },
 );
 
-
 /****************************************************************
               ***************************************
                        Main Component
               ***************************************
 *****************************************************************/
 
-export default  function App() {
-    const getRandomWord = (arr: {}[]) => {
-      const obj = arr[Math.floor(Math.random() * arr.length)];
-      return obj;
-    };
-  
-    const BigContainer = styled.div`
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(to bottom right, #f0f6fc, #e1f1fe);
+export default function App() {
+  const getRandomWord = (arr: {}[]) => {
+    const obj = arr[Math.floor(Math.random() * arr.length)];
+    return obj;
+  };
 
-    `;
-  
-    const Container = styled.div`
-      margin: 0 0.5rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      gap: 2rem;
-      min-height: 100vh;
-      max-width: 800px;
-  
-      font-family: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-        Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
-        sans-serif;
-      position: relative;
-      padding-bottom: 10px;
-  
-      @media (min-width: 768px) {
-        margin: 0 auto;
-      }
-    `;
-  
-    const Title = styled.h1`
-      padding: 15px;
-    `;
-  
-    const EndGame = styled.div`
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-      text-align: center;
-      font-size: 1.3rem;
-      font-weight: bold;
-      color: black;
-      @media (min-width: 768px) {
-        font-size: 2rem;
-      }
-    `;
-  
-    const TryAgainButton = styled.button`
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.3rem;
-      border: 3px solid black;
-      border-radius: 1rem;
-      font-size: 2.5rem;
-      background: none;
-      color: black;
-      cursor: pointer;
-  
-      &:hover,
-      &:focus {
-        background: #16a085;
-      }
-  
-      @media (min-width: 768px) {
-        font-size: 2.3rem;
-      }
-    `;
-      const WinnerSpan = styled.span`
-        color:  green;
-      `
-      const LoserSpan = styled.span`
-        color:  red;
-      `
-    const [wordToGuess, setWordToGuess] = useState('');
-    const [hintToGuess, setHintToGuess] = useState('');
-    const [guessedLetters, setGuessedLetters] = useState<string[]>([]);
-  
-    const incorrectLetters = guessedLetters.filter(
-      (letter) => !wordToGuess.includes(letter),
-    );
-  
-    const isLoser = incorrectLetters.length >= 6;
-    const isWinner = wordToGuess
-      .split('')
-      .every((letter) => guessedLetters.includes(letter));
-  
-    const addGuessedLetter = (letter: string) => {
-      if (!guessedLetters.includes(letter)) {
-        setGuessedLetters((currentLetters) => [...currentLetters, letter]);
-      }
-    };
-  
-    const restartGame = () => {
-      const obj = getRandomWord(words) as Object;
-      const word = Object.values(obj)[0] as string;
-      const question = Object.keys(obj)[0];
-      setHintToGuess(question);
-      setWordToGuess(word);
-      setGuessedLetters([]);
-    };
-    useEffect(() => {
-      restartGame();
-      // eslint-disable-next-line
-    }, []);
-    return (
-      <BigContainer>
-        <Container>
-          <Title>Hangman</Title>
-  
-          {!(isWinner || isLoser) ? (
-            <Drawing numberOfGuesses={incorrectLetters.length} />
-          ) : (
-            <EndGame>
-              {isWinner &&  <WinnerSpan> 'You are winner!'</WinnerSpan>}
-              {isLoser && <LoserSpan>'Nice try...'</LoserSpan>}
-            </EndGame>
+  const BigContainer = styled.div`
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom right, #f0f6fc, #e1f1fe);
+  `;
+
+  const Container = styled.div`
+    margin: 0 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    min-height: 100vh;
+    max-width: 800px;
+
+    font-family: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+      Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
+      sans-serif;
+    position: relative;
+    padding-bottom: 10px;
+
+    @media (min-width: 768px) {
+      margin: 0 auto;
+    }
+  `;
+
+  const Title = styled.h1`
+    padding: 15px;
+  `;
+
+  const EndGame = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: black;
+    @media (min-width: 768px) {
+      font-size: 2rem;
+    }
+  `;
+
+  const TryAgainButton = styled.button`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.3rem;
+    border: 3px solid black;
+    border-radius: 1rem;
+    font-size: 2.5rem;
+    background: none;
+    color: black;
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+      background: #16a085;
+    }
+
+    @media (min-width: 768px) {
+      font-size: 2.3rem;
+    }
+  `;
+  const WinnerSpan = styled.span`
+    color: green;
+  `;
+  const LoserSpan = styled.span`
+    color: red;
+  `;
+  const [wordToGuess, setWordToGuess] = useState('');
+  const [hintToGuess, setHintToGuess] = useState('');
+  const [guessedLetters, setGuessedLetters] = useState<string[]>([]);
+
+  const incorrectLetters = guessedLetters.filter(
+    (letter) => !wordToGuess.includes(letter),
+  );
+
+  const isLoser = incorrectLetters.length >= 6;
+  const isWinner = wordToGuess
+    .split('')
+    .every((letter) => guessedLetters.includes(letter));
+
+  const addGuessedLetter = (letter: string) => {
+    if (!guessedLetters.includes(letter)) {
+      setGuessedLetters((currentLetters) => [...currentLetters, letter]);
+    }
+  };
+
+  const restartGame = () => {
+    const obj = getRandomWord(words) as Object;
+    const word = Object.values(obj)[0] as string;
+    const question = Object.keys(obj)[0];
+    setHintToGuess(question);
+    setWordToGuess(word);
+    setGuessedLetters([]);
+  };
+  useEffect(() => {
+    restartGame();
+    // eslint-disable-next-line
+  }, []);
+  return (
+    <BigContainer>
+      <Container>
+        <Title>Hangman</Title>
+
+        {!(isWinner || isLoser) ? (
+          <Drawing numberOfGuesses={incorrectLetters.length} />
+        ) : (
+          <EndGame>
+            {isWinner && <WinnerSpan> 'You are winner!'</WinnerSpan>}
+            {isLoser && <LoserSpan>'Nice try...'</LoserSpan>}
+          </EndGame>
+        )}
+        {!(isWinner || isLoser) && (
+          <p
+            style={{
+              marginBottom: '-20px',
+              fontSize: '20px',
+            }}
+          >
+            <span style={{ fontWeight: 'bold' }}>Question: {hintToGuess} </span>
+          </p>
+        )}
+        <Word
+          reveal={isLoser}
+          wordToGuess={wordToGuess}
+          guessedLetters={guessedLetters}
+        />
+
+        {(isWinner || isLoser) && (
+          <TryAgainButton onClick={restartGame}>{tryAgainIcon}</TryAgainButton>
+        )}
+
+        <Keyboard
+          disabled={isWinner || isLoser}
+          correctLetters={guessedLetters.filter((letter) =>
+            wordToGuess.includes(letter),
           )}
-          {!(isWinner || isLoser) && (
-            <p
-              style={{
-                marginBottom: '-20px',
-                fontSize: '20px',
-              }}
-            >
-              <span style={{ fontWeight: 'bold' }}>Question: {hintToGuess} </span>
-            </p>
-          )}
-          <Word
-            reveal={isLoser}
-            wordToGuess={wordToGuess}
-            guessedLetters={guessedLetters}
-          />
-  
-          {(isWinner || isLoser) && (
-            <TryAgainButton onClick={restartGame}>{tryAgainIcon}</TryAgainButton>
-          )}
-  
-          <Keyboard
-            disabled={isWinner || isLoser}
-            correctLetters={guessedLetters.filter((letter) =>
-              wordToGuess.includes(letter),
-            )}
-            incorrectLetters={incorrectLetters}
-            addGuessedLetter={addGuessedLetter}
-          />
-        </Container>
-      </BigContainer>
-    );
-  }
+          incorrectLetters={incorrectLetters}
+          addGuessedLetter={addGuessedLetter}
+        />
+      </Container>
+    </BigContainer>
+  );
+}

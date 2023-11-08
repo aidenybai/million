@@ -9,8 +9,18 @@ interface Card {
 const generateDeck = (): Card[] => {
   const cards: Card[] = [];
   for (let i = 1; i <= 8; i++) {
-    cards.push({ id: i, isFlipped: false, isMatched: false, onClick:()=>null});
-    cards.push({ id: i, isFlipped: false, isMatched: false,onClick:()=>null});
+    cards.push({
+      id: i,
+      isFlipped: false,
+      isMatched: false,
+      onClick: () => null,
+    });
+    cards.push({
+      id: i,
+      isFlipped: false,
+      isMatched: false,
+      onClick: () => null,
+    });
   }
   return cards.sort(() => Math.random() - 0.5);
 };
@@ -26,7 +36,7 @@ const Card = block(({ id, isFlipped, isMatched, onClick }) => {
       <div className="card-content">{isFlipped || isMatched ? id : '?'}</div>
     </div>
   );
-})
+});
 
 const CardGame: React.FC = () => {
   const [cards, setCards] = useState<Card[]>(generateDeck());

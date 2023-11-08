@@ -1,5 +1,6 @@
 import React, { useState, FormEvent } from 'react';
 import { block } from 'million/react';
+
 interface NumberGuessingGameProps {}
 
 const NumberGuessingGame: React.FC<NumberGuessingGameProps> = block(() => {

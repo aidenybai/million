@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { block } from 'million/react';
+
 const Game: React.FC = block(() => {
   const [playerScore, setPlayerScore] = useState<number>(0);
   const [computerScore, setComputerScore] = useState<number>(0);

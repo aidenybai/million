@@ -1,17 +1,23 @@
 import React, { useState, useRef } from 'react';
-import { block } from "million/react";
+import { block } from 'million/react';
 
 const JournalComponent = ({ entry, onDelete }) => (
   <div>
-    <h1 style={{color:'#FF5E5B', margin:'0'}}>{entry.id}. {entry.title}</h1>
-    <p style={{color:'#ADB5BD'}}>{entry.text}</p>
+    <h1 style={{ color: '#FF5E5B', margin: '0' }}>
+      {entry.id}. {entry.title}
+    </h1>
+    <p style={{ color: '#ADB5BD' }}>{entry.text}</p>
     {entry.media && (
       <div>
         {entry.media.type.startsWith('image') && (
-          <img src={entry.media.url} alt="Multimedia Entry" style={{width:'30%'}} />
+          <img
+            src={entry.media.url}
+            alt="Multimedia Entry"
+            style={{ width: '30%' }}
+          />
         )}
         {entry.media.type.startsWith('video') && (
-          <video controls style={{width:'30%'}}>
+          <video controls style={{ width: '30%' }}>
             <source src={entry.media.url} type={entry.media.type} />
             Your browser does not support the video tag
           </video>
@@ -19,10 +25,20 @@ const JournalComponent = ({ entry, onDelete }) => (
       </div>
     )}
     <div>
-      <button onClick={() => onDelete(entry.id)} style={{marginBottom:'15px'}}>
+      <button
+        onClick={() => onDelete(entry.id)}
+        style={{ marginBottom: '15px' }}
+      >
         Delete
       </button>
-      <span style={{display:'block', width:'100%', height:'2px', backgroundColor:'#FFA987'}}></span>
+      <span
+        style={{
+          display: 'block',
+          width: '100%',
+          height: '2px',
+          backgroundColor: '#FFA987',
+        }}
+      ></span>
     </div>
   </div>
 );
@@ -71,26 +87,52 @@ const DigitalPersonalJournal = block(function Journal() {
           placeholder="Title of your Journal"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          style={{display:'block', marginBottom:'15px'}}
+          style={{ display: 'block', marginBottom: '15px' }}
         />
         <input
           type="text"
           placeholder="Write your Journal here"
           value={text}
           onChange={(e) => setText(e.target.value)}
-          style={{display:'block', marginBottom:'15px'}}
+          style={{ display: 'block', marginBottom: '15px' }}
         />
         <input
           type="file"
           accept=".png, .jpg, .jpeg, .mp4, .mp3, .gif"
           onChange={(e) => setMediaFile(e.target.files[0])}
-          style={{display:'block', marginBottom:'15px'}}
+          style={{ display: 'block', marginBottom: '15px' }}
           ref={fileInputRef}
         />
-        <button onClick={handleAddEntry} style={{display:'block', marginBottom:'15px', backgroundColor:'orange'}}>Add Journal</button>
-        <span style={{ display: 'block', marginBottom: '15px' }}>Total Entries: {entries.length}</span>
-        <span style={{ display: 'block', width: '100%', height: '2px', backgroundColor: '#FFED66', marginBottom: '2px' }}></span>
-        <span style={{ display: 'block', width: '100%', height: '2px', backgroundColor: '#FFED66' }}></span>
+        <button
+          onClick={handleAddEntry}
+          style={{
+            display: 'block',
+            marginBottom: '15px',
+            backgroundColor: 'orange',
+          }}
+        >
+          Add Journal
+        </button>
+        <span style={{ display: 'block', marginBottom: '15px' }}>
+          Total Entries: {entries.length}
+        </span>
+        <span
+          style={{
+            display: 'block',
+            width: '100%',
+            height: '2px',
+            backgroundColor: '#FFED66',
+            marginBottom: '2px',
+          }}
+        ></span>
+        <span
+          style={{
+            display: 'block',
+            width: '100%',
+            height: '2px',
+            backgroundColor: '#FFED66',
+          }}
+        ></span>
       </div>
 
       <div>
@@ -104,7 +146,6 @@ const DigitalPersonalJournal = block(function Journal() {
       </div>
     </div>
   );
-}
-)
+});
 
 export default DigitalPersonalJournal;
