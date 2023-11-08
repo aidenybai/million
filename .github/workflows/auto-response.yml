@@ -22,6 +22,7 @@ jobs:
             repo: context.repo.repo,
             body: 'Thanks for opening this issue! A maintainer will review it soon.',
           })
+          
     - name: Comment on new pull request
       if: github.event_name == 'pull_request'
       uses: actions/github-script@v6
@@ -35,3 +36,4 @@ jobs:
             body: 'Thanks for opening this pull request! A maintainer will review it soon.',
             event: 'COMMENT',
           })
+          echo pull_number
