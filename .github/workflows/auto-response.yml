@@ -30,10 +30,9 @@ jobs:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
           github.rest.pulls.createReview({
-            pull_number: context.pull_request.number,
+            pull_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
             body: 'Thanks for opening this pull request! A maintainer will review it soon.',
             event: 'COMMENT',
           })
-          echo pull_number
