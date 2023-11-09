@@ -9,7 +9,7 @@ export const next = (
   nextConfig: Record<string, any> = {},
   overrideOptions: Options = {},
 ) => {
-  const millionOptions: Options = {
+  const millionConfig: Options = {
     mode: 'react',
     server: true,
     ...overrideOptions,
@@ -20,7 +20,7 @@ export const next = (
       config.plugins.unshift(
         webpack({
           mute: webpackOptions.isServer,
-          ...millionOptions,
+          ...millionConfig,
         }),
       );
 

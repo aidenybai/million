@@ -23,7 +23,6 @@ export interface Options {
   auto?:
     | boolean
     | { threshold?: number; rsc?: boolean; skip?: (string | RegExp)[] };
-  _file?: string;
 }
 
 let hasIntroRan = false;
@@ -83,7 +82,7 @@ export const unplugin = createUnplugin((options: Options) => {
   };
 });
 
-export const babelPlugin = declare((api, options: Options) => {
+export const babelPlugin = declare((api, options: Options, dirname: string) => {
   api.assertVersion(7);
 
   intro();
