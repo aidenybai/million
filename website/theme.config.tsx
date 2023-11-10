@@ -1,10 +1,10 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { type DocsThemeConfig, useConfig } from 'nextra-theme-docs';
-import { ExtraContent } from './components/extra-content';
 import { GitHubIcon } from '@components/icons/github-icon';
 import { DiscordIcon } from '@components/icons/discord-icon';
 import { TwitterXIcon } from '@components/icons/twitter-x-icon';
+import { ExtraContent } from './components/extra-content';
 
 const config: DocsThemeConfig = {
   logo: () => {
@@ -213,7 +213,7 @@ const config: DocsThemeConfig = {
     extraContent: ExtraContent,
   },
   nextThemes: {
-    defaultTheme: 'system',
+    defaultTheme: 'dark',
   },
   useNextSeoProps() {
     const { asPath } = useRouter();
