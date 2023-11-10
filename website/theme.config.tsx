@@ -214,6 +214,7 @@ const config: DocsThemeConfig = {
   },
   nextThemes: {
     defaultTheme: 'dark',
+    forcedTheme: 'dark',
   },
   useNextSeoProps() {
     const { asPath } = useRouter();
@@ -224,9 +225,10 @@ const config: DocsThemeConfig = {
 
     return { titleTemplate: `%s | Million.js` };
   },
-  primaryHue: {
-    light: 270,
-    dark: 204,
+  primaryHue: 270,
+  primarySaturation: 70,
+  themeSwitch: {
+    component: null,
   },
 };
 
