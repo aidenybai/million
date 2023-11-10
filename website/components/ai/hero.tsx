@@ -18,8 +18,8 @@ export function Hero() {
             </h1>
             <p className="mt-8 text-xl text-zinc-600 dark:text-zinc-300 leading-8">
               Detect, diagnose, and fix slow components in your React
-              application <span className="font-  ">– automatically</span>.
-              Designed for companies that want to ship fast and stay fast.
+              application <span className="font-semibold">– automatically</span>
+              . Designed for companies that want to ship fast and stay fast.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-y-4 gap-x-6">
               <Link

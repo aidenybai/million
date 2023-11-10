@@ -37,7 +37,7 @@ function useLiveCursors() {
     }
 
     function onPointerMove(event: PointerEvent) {
-      event.preventDefault();
+      // event.preventDefault();
       const position = {
         x: event.pageX,
         y: event.pageY,
