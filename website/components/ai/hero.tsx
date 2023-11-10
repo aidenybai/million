@@ -1,4 +1,5 @@
 import { Link } from 'nextra-theme-docs';
+import Image from 'next/image';
 import { Container } from '../home/container';
 import { ShimmerButton } from '../home/shimmer-button';
 
@@ -39,7 +40,9 @@ export function Hero() {
             </div>
           </div>
         </div>
-        <div className="lg:w-2/3 text-center mx-auto">{/* <input /> */}</div>
+        <div className="lg:w-2/3 text-center mx-auto">
+          <Image alt="ai" width={1000} height={500} src="/ai.png" />
+        </div>
       </Container>
       <Blur />
     </div>
