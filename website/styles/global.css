@@ -23,6 +23,10 @@ body {
     url(https://grainy-gradients.vercel.app/noise.svg);
 }
 
+html[class~='dark'] {
+  background: #111;
+}
+
 html[class~='dark'] #hero {
   background: linear-gradient(to bottom, #111 50%, #2a2044af 100%),
     url(https://grainy-gradients.vercel.app/noise.svg);
