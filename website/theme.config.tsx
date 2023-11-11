@@ -112,13 +112,7 @@ const config: DocsThemeConfig = {
   footer: {
     text: (
       <div className="flex w-full items-center justify-between">
-        <div>
-          MIT {new Date().getFullYear()} ©{' '}
-          <a target="_blank" href="https://aidenybai.com">
-            Aiden Bai
-          </a>
-          .
-        </div>
+        <div>© 2021-{new Date().getFullYear()} Million Software, Inc.</div>
 
         <a
           href="https://vercel.com?utm_source=millionjs"
@@ -214,9 +208,7 @@ const config: DocsThemeConfig = {
   },
   nextThemes: {
     defaultTheme: 'dark',
-    forcedTheme: 'dark',
   },
-  darkMode: false,
   useNextSeoProps() {
     const { asPath } = useRouter();
 
@@ -226,11 +218,8 @@ const config: DocsThemeConfig = {
 
     return { titleTemplate: `%s | Million.js` };
   },
-  primaryHue: 270,
-  primarySaturation: 70,
-  themeSwitch: {
-    component: null,
-  },
+  primaryHue: 275,
+  primarySaturation: 75,
 };
 
 // eslint-disable-next-line import/no-default-export
