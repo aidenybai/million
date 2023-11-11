@@ -102,13 +102,18 @@ const CurrencyInput = block((props: CurrencyInputProps) => {
   return (
     <div>
       <p>
-        Currency {props?.title} {props.currency}
+        Currency {props?.title}: {props.currency}
       </p>
       <input
         style={{
           borderRadius: '10px',
           padding: '10px 10px',
           margin: '5px 5px',
+          outline: 'none',
+          height: '40px',
+          color: 'currentcolor',
+          backgroundColor: ' var(--background)',
+          border: 'none',
         }}
         type="number"
         value={props.amount}
@@ -120,7 +125,7 @@ const CurrencyInput = block((props: CurrencyInputProps) => {
           padding: '10px 10px',
           margin: '5px 5px',
           outline: 'none',
-          height: '50px',
+          height: '40px',
           color: 'currentcolor',
           backgroundColor: ' var(--background)',
           minWidth: '50px',
