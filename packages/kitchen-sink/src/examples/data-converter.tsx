@@ -51,19 +51,20 @@ const DataConverter: React.FC = block(() => {
   };
 
   return (
-    <div
+    <main
       style={{
         textAlign: 'center',
       }}
       className="Data Converter"
     >
-      <h1>Data Converter</h1>
+      <h2>Data Converter</h2>
       <div>
         <input
           style={{
             borderRadius: '10px',
             padding: '10px 10px',
             margin: '5px 5px',
+            height: '40px',
           }}
           type="number"
           value={state.value}
@@ -76,6 +77,10 @@ const DataConverter: React.FC = block(() => {
             padding: '10px 10px',
             margin: '5px 5px',
             outline: 'none',
+            color: 'currentcolor',
+            backgroundColor: ' var(--background)',
+            border: 'none',
+            height: '40px',
           }}
           value={state.inputUnit}
           onChange={handleInputUnitChange}
@@ -94,10 +99,13 @@ const DataConverter: React.FC = block(() => {
             borderRadius: '10px',
             padding: '10px 10px',
             margin: '5px 5px',
+            height: '40px',
+            cursor: 'not-allowed',
           }}
           type="number"
           value={state.convertedValue}
           disabled
+          
         />
         <select
           style={{
@@ -105,6 +113,10 @@ const DataConverter: React.FC = block(() => {
             padding: '10px 10px',
             margin: '5px 5px',
             outline: 'none',
+            height: '40px',
+            color: 'currentcolor',
+            backgroundColor: ' var(--background)',
+            border: 'none',
           }}
           value={state.outputUnit}
           onChange={handleOutputUnitChange}
@@ -132,7 +144,7 @@ const DataConverter: React.FC = block(() => {
       >
         Convert
       </button>
-    </div>
+    </main>
   );
 });
 

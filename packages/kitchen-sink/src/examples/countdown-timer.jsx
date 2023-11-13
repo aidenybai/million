@@ -5,7 +5,7 @@ import StopSVG from '../../assets/stop.svg';
 import FlagSVG from '../../assets/flag.svg';
 import ResetSVG from '../../assets/close.svg';
 
-const CountdownTimer = block(function TimerComponent() {
+const CountDownTimer = block(function TimerComponent() {
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
@@ -96,162 +96,141 @@ const CountdownTimer = block(function TimerComponent() {
   }, [isRunning, hours, minutes, seconds, milliseconds]);
 
   return (
-    <div>
-      <div>
-        <div>
-          <h1 style={{ fontSize: '80px', textAlign: 'center' }}>
-            {`${hours.toString().padStart(2, '0')}:${minutes
-              .toString()
-              .padStart(2, '0')}:${seconds
-              .toString()
-              .padStart(2, '0')}:${milliseconds.toString().padStart(2, '0')}`}
-          </h1>
+    <main>
+      <h2 style={{ fontSize: '2.8rem', textAlign: 'center' }}>
+        {`${hours.toString().padStart(2, '0')}:${minutes
+          .toString()
+          .padStart(2, '0')}:${seconds
+          .toString()
+          .padStart(2, '0')}:${milliseconds.toString().padStart(2, '0')}`}
+      </h2>
+
+      <section
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '10px',
+          flexWrap: 'wrap',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+          }}
+        >
+          <label htmlFor="hourInput">Hours</label>
+          <input
+            id="hourInput"
+            type="number"
+            value={hours}
+            onChange={handleHourChange}
+          />
         </div>
 
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
+            alignItems: 'flex-start',
           }}
         >
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'flex-start',
-              gap: '20px',
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'flex-start',
-              }}
-            >
-              <label htmlFor="hourInput">Hours</label>
-              <input
-                id="hourInput"
-                type="number"
-                value={hours}
-                onChange={handleHourChange}
-              />
-            </div>
-
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'flex-start',
-              }}
-            >
-              <label htmlFor="minuteInput">Minutes</label>
-              <input
-                id="minuteInput"
-                type="number"
-                value={minutes}
-                onChange={handleMinuteChange}
-              />
-            </div>
-          </div>
-
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              gap: '20px',
-              marginTop: '20px',
-            }}
-          >
-            <button
-              onClick={startTimer}
-              style={{
-                backgroundColor: '#FF0054',
-                borderRadius: '100px',
-                border: '0px',
-              }}
-            >
-              <img src={StartSVG} alt="play" />
-            </button>
-
-            <button
-              onClick={stopTimer}
-              style={{
-                backgroundColor: '#FF0054',
-                borderRadius: '100px',
-                border: '0px',
-              }}
-            >
-              <img src={StopSVG} alt="stop" />
-            </button>
-
-            <button
-              onClick={recordTime}
-              style={{
-                backgroundColor: '#FF0054',
-                borderRadius: '100px',
-                border: '0px',
-              }}
-            >
-              <img src={FlagSVG} alt="flag" />
-            </button>
-
-            <button
-              onClick={resetTimer}
-              style={{
-                backgroundColor: '#FF0054',
-                borderRadius: '100px',
-                border: '0px',
-              }}
-            >
-              <img src={ResetSVG} alt="reset" />
-            </button>
-          </div>
+          <label htmlFor="minuteInput">Minutes</label>
+          <input
+            id="minuteInput"
+            type="number"
+            value={minutes}
+            onChange={handleMinuteChange}
+          />
         </div>
+      </section>
 
-        <div
+      <section
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '20px',
+          marginBlock: '30px',
+        }}
+      >
+        <button
+          onClick={startTimer}
           style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginTop: '60px',
+            backgroundColor: '#FF0054',
+            borderRadius: '100px',
+            border: '0px',
           }}
         >
-          <ul>
-            {recordedTimes.map((time, index) => (
-              <li key={index}>{time}</li>
-            ))}
-          </ul>
-        </div>
+          <img src={StartSVG} alt="play" />
+        </button>
+        <button
+          onClick={stopTimer}
+          style={{
+            backgroundColor: '#FF0054',
+            borderRadius: '100px',
+            border: '0px',
+          }}
+        >
+          <img src={StopSVG} alt="stop" />
+        </button>
+        <button
+          onClick={recordTime}
+          style={{
+            backgroundColor: '#FF0054',
+            borderRadius: '100px',
+            border: '0px',
+          }}
+        >
+          <img src={FlagSVG} alt="flag" />
+        </button>
+        <button
+          onClick={resetTimer}
+          style={{
+            backgroundColor: '#FF0054',
+            borderRadius: '100px',
+            border: '0px',
+          }}
+        >
+          <img src={ResetSVG} alt="reset" />
+        </button>
+      </section>
+
+      <section
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '20px',
+          // marginTop: '30px',
+        }}
+      >
+        <ul>
+          {recordedTimes.map((time, index) => (
+            <li key={index}>{time}</li>
+          ))}
+        </ul>
 
         {recordedTimes.length > 0 && (
-          <div
+          <button
+            onClick={clearFlagData}
             style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
+              backgroundColor: '#00c2cb',
+              width: '120px',
+              color: 'black',
             }}
           >
-            <button
-              onClick={clearFlagData}
-              style={{
-                backgroundColor: '#00c2cb',
-                width: '120px',
-                color: 'black',
-              }}
-            >
-              Clear
-            </button>
-          </div>
+            Clear
+          </button>
         )}
-      </div>
-    </div>
+      </section>
+    </main>
   );
 });
 
-export default CountdownTimer;
+export default CountDownTimer;

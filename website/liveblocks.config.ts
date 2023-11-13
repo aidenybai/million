@@ -1,6 +1,6 @@
 import { createClient } from '@liveblocks/client';
 import { createRoomContext } from '@liveblocks/react';
-import type { JsonObject} from '@liveblocks/client';
+import type { JsonObject } from '@liveblocks/client';
 
 const client = createClient({
   throttle: 16,

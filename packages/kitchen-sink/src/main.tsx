@@ -6,7 +6,8 @@ import {
   LazyExoticComponent,
   useEffect,
 } from 'react';
-import './style.css';
+import './css/style.css';
+import './css/examples/style.css';
 import { ErrorBoundary } from 'react-error-boundary';
 import { RxHamburgerMenu } from 'react-icons/rx';
 import { AiOutlineClose } from 'react-icons/ai';

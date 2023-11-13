@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { block } from 'million/react';
+import '../css/examples/carousel.css';
 
 const Carousel = block(() => {
   const [images, setImages] = useState<any[]>([]);
@@ -37,19 +38,19 @@ const Carousel = block(() => {
       <div className="carousel">
         <div
           className="carousel-inner"
-          style={{ transform: `translateX(-${currentIndex * 75}%)` }}
+          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
         >
           {images.map((image) => (
             <img key={image.id} src={image.download_url} alt={image.author} />
           ))}
         </div>
       </div>
-      <button style={{ marginRight: 10 }} onClick={prevSlide}>
-        Previous
-      </button>
-      <button style={{ marginRight: 10 }} onClick={nextSlide}>
-        Next
-      </button>
+      <div style={{ marginTop: '10px' }}>
+        <button onClick={prevSlide}>Previous</button>
+        <button style={{ marginLeft: 10 }} onClick={nextSlide}>
+          Next
+        </button>
+      </div>
     </div>
   );
 });

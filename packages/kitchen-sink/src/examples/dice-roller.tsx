@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { block } from 'million/react';
+import '../css/examples/dice-roller.css';
 
 const DiceRoller: React.FC = block(() => {
   const [result, setResult] = useState<number | null>(null);
