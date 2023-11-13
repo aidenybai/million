@@ -1,0 +1,315 @@
+/* calendar styles */
+.create-event-calender {
+  /* text-align: center; */
+}
+
+.create-event-calender .create-event-calender_wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: 2rem;
+}
+
+.create-event-calender .calendar-container {
+  flex: 1;
+  max-width: 500px;
+  margin-right: 2rem;
+}
+
+.create-event-calender .event-container {
+  flex: 1;
+  max-width: 500px;
+}
+
+@media screen and (max-width: 768px) {
+  .create-event-calender .create-event-calender_wrapper {
+    flex-direction: column;
+  }
+
+  .create-event-calender .calendar-container,
+  .create-event-calender .event-container {
+    max-width: 100%;
+    margin-right: 0;
+    margin-bottom: 2rem;
+    justify-content: center;
+  }
+}
+
+.create-event-calender .react-calendar {
+  width: 100%;
+  max-width: 500px;
+  background-color: white;
+  border: 1px solid #151515;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.125em;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 10px;
+  transition: background-color 0.2s;
+}
+
+.create-event-calender .react-calendar--doubleView {
+  width: 100%;
+}
+
+.create-event-calender
+  .react-calendar--doubleView
+  .react-calendar__viewContainer {
+  display: flex;
+  margin: -0.5em;
+}
+
+.create-event-calender
+  .react-calendar--doubleView
+  .react-calendar__viewContainer
+  > * {
+  width: 50%;
+  margin: 0.5em;
+}
+
+.create-event-calender .react-calendar,
+.create-event-calender .react-calendar *,
+.create-event-calender .react-calendar *:before,
+.create-event-calender .react-calendar *:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.create-event-calender .react-calendar button {
+  margin: 0;
+  border: 0;
+  outline: none;
+  color: #151515;
+}
+
+.create-event-calender .react-calendar button:enabled:hover {
+  cursor: pointer;
+}
+
+.create-event-calender .react-calendar__navigation {
+  display: flex;
+  height: 44px;
+  margin-bottom: 1em;
+}
+
+.create-event-calender .react-calendar__navigation button {
+  min-width: 44px;
+  background: none;
+}
+
+.create-event-calender .react-calendar__navigation button:disabled {
+  background-color: black;
+}
+
+.create-event-calender .react-calendar__navigation button:enabled:hover,
+.create-event-calender .react-calendar__navigation button:enabled:focus {
+  background-color: black;
+}
+
+.create-event-calender .react-calendar__month-view__weekdays {
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 0.8rem;
+  color: black;
+}
+
+.create-event-calender .react-calendar__month-view__weekdays__weekday {
+  padding: 0.5em;
+}
+
+.create-event-calender
+  .react-calendar__month-view__weekNumbers
+  .react-calendar__tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75em;
+  font-weight: bold;
+}
+
+.create-event-calender .react-calendar__month-view__days__day--weekend {
+  color: black;
+}
+
+.create-event-calender
+  .react-calendar__month-view__days__day--neighboringMonth {
+  color: black;
+}
+
+.create-event-calender .react-calendar__year-view .react-calendar__tile,
+.create-event-calender .react-calendar__decade-view .react-calendar__tile,
+.create-event-calender .react-calendar__century-view .react-calendar__tile {
+  padding: 2em 0.5em;
+}
+
+.create-event-calender .react-calendar__tile {
+  max-width: 100%;
+  padding: 10px 6.6667px;
+  background: none;
+  text-align: center;
+  line-height: 16px;
+}
+
+.create-event-calender .react-calendar__tile:disabled {
+  background-color: black;
+}
+
+.create-event-calender .react-calendar__tile:enabled:hover,
+.create-event-calender .react-calendar__tile:enabled:focus {
+  background-color: black;
+}
+
+.create-event-calender .react-calendar__tile--now {
+  background: black;
+  color: white !important;
+}
+
+.create-event-calender .react-calendar__tile--now:enabled:hover,
+.create-event-calender .react-calendar__tile--now:enabled:focus {
+  background: black;
+}
+
+.create-event-calender .react-calendar__tile--hasActive {
+  background: black;
+}
+
+.create-event-calender .react-calendar__tile--hasActive:enabled:hover,
+.create-event-calender .react-calendar__tile--hasActive:enabled:focus {
+  background: black;
+}
+
+.create-event-calender .react-calendar__tile--active {
+  background: black;
+  color: black;
+}
+
+.create-event-calender .react-calendar__tile--active:enabled:hover,
+.create-event-calender .react-calendar__tile--active:enabled:focus {
+  background: black;
+}
+
+.create-event-calender
+  .react-calendar--selectRange
+  .react-calendar__tile--hover {
+  background-color: black;
+}
+
+.create-event-calender .event-form {
+  margin-bottom: 20px;
+}
+
+.create-event-calender .event-form h2 {
+  margin-bottom: 10px;
+}
+
+.create-event-calender .event-form p {
+  font-size: 1.2rem;
+}
+
+.create-event-calender .event-form input {
+  padding: 8px;
+  font-size: 1rem;
+  margin-right: 10px;
+}
+
+.create-event-calender .create-btn {
+  padding: 8px 6px;
+  margin-top: 5px;
+  background-color: white;
+  color: black;
+  border: 0.5px solid black;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.create-event-calender .create-btn:hover {
+  background-color: black;
+  color: whitesmoke;
+  border: 0.5px solid white;
+}
+
+.create-event-calender .event-list {
+  margin-top: 20px;
+}
+
+.create-event-calender .event-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.create-event-calender .event-card {
+  width: 300px;
+  background-color: whitesmoke;
+  border-radius: 8px;
+  margin: 10px;
+  padding: 10px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.create-event-calender .event-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.create-event-calender .event-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.create-event-calender .event-date {
+  font-size: 1rem;
+  color: black;
+}
+
+.create-event-calender .event-actions {
+  display: flex;
+}
+
+.create-event-calender .update-btn,
+.create-event-calender .delete-btn {
+  padding: 8px 12px;
+  margin-left: 5px;
+  background-color: white;
+  color: black;
+  border: 0.5px solid black;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.create-event-calender .update-btn:hover,
+.create-event-calender .delete-btn:hover {
+  background-color: black;
+  color: aliceblue;
+  border: 0.5px solid white;
+}
+
+.create-event-calender .event-card-body {
+  padding-bottom: 10px;
+}
+
+.create-event-calender .event-title {
+  font-size: 1.5rem;
+  color: blueviolet;
+}
+
+.create-event-calender .selected {
+  background-color: #ff4081 !important;
+  color: black;
+}
+
+.create-event-calender .event-marked {
+  background-color: #ff4081;
+  color: white;
+}

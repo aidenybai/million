@@ -31,29 +31,29 @@ const DiscountCalculator = block(() => {
 
   return (
     <div className="Discount Calculator">
-      <h1>Discount Calculator</h1>
-      <div>
+      <h2>Discount Calculator</h2>
+      <div style={{ display: 'block', marginBottom: '10px' }}>
         <label>Original Price ($): </label>
         <input
           type="number"
           value={originalPrice}
           onChange={(e) => setOriginalPrice(e.target.value)}
-          style={{ display: 'block', marginBottom: '15px' }}
+          style={{ display: 'block' }}
         />
       </div>
-      <div>
+      <div style={{ display: 'block', marginBottom: '20px' }}>
         <label>Discount (% off): </label>
         <input
           type="number"
           value={discountRate}
           onChange={(e) => setDiscountRate(e.target.value)}
-          style={{ display: 'block', marginBottom: '15px' }}
+          style={{ display: 'block' }}
         />
       </div>
       <button onClick={calculateDiscount}>Calculate</button>
 
       {results && (
-        <div className="results">
+        <div className="results" style={{ marginTop: '20px' }}>
           <h2>Results:</h2>
           <div>Final Price : ${results.finalPrice.toFixed(2)}</div>
           <div>You Save : ${results.discountPrice.toFixed(2)}</div>

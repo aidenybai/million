@@ -1,0 +1,18 @@
+/* Required styling for carousel */
+.carousel {
+  display: flex;
+  overflow: hidden;
+  gap: 10px;
+}
+
+.carousel-inner {
+  display: flex;
+  width: 100%;
+  aspect-ratio: 3/2;
+  transition: transform 0.3s ease-in-out;
+}
+.carousel img {
+  width: 100%;
+  aspect-ratio: 3/2;
+  transition: transform 0.3s ease-in-out;
+}

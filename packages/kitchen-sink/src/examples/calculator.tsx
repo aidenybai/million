@@ -50,7 +50,6 @@ const Screen = block(({ value, newValue, operator }: ICalculator) => {
     >
       <p
         style={{
-          height: '1rem',
           color: '#333',
           fontSize: '40px',
           fontFamily: 'Roboto, sans-serif',
@@ -62,7 +61,6 @@ const Screen = block(({ value, newValue, operator }: ICalculator) => {
       </p>
       <p
         style={{
-          height: '0.75rem',
           fontSize: 18,
           color: '#aaa',
           fontFamily: 'Roboto, sans-serif',
