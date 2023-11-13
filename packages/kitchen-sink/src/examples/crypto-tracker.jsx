@@ -65,7 +65,7 @@ const Coin = block(
   },
 );
 
-function App() {
+function CryptoTracker() {
   const [coins, setCoins] = useState([]);
   const [search, setSearch] = useState('');
 
@@ -153,4 +153,4 @@ function App() {
   );
 }
 
-export default App;
+export default CryptoTracker;

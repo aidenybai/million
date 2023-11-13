@@ -27,7 +27,7 @@ export function Bounties() {
     algora.bounty.list
       .query({ org, limit, status: 'active' }, { signal: ac.signal })
       .then(({ items: data }) => setBounties({ _tag: 'success', data }))
-      .catch((error) => setBounties({ _tag: 'failure', error }));
+      .catch((error: Error) => setBounties({ _tag: 'failure', error }));
 
     return () => ac.abort();
   }, []);
@@ -43,11 +43,13 @@ export function Bounties() {
             </li>
           ))}
         {bounties._tag === 'loading' &&
-          [...Array(limit)].map((_, i) => (
-            <li key={i}>
-              <BountyCardSkeleton />
-            </li>
-          ))}
+          Array(limit)
+            .fill(0)
+            .map((_, i) => (
+              <li key={i}>
+                <BountyCardSkeleton />
+              </li>
+            ))}
       </ul>
     </div>
   );

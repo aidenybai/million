@@ -5,8 +5,8 @@ import axios from 'axios';
 
 const apiKey = 'AIzaSyBcyDly48QaqUGg-QGB0znsGWWA_TC038Q';
 
-const App = block(() => {
-  const [subject, setSubject] = useState('Javascript');
+const BookRecommendation = block(() => {
+  const [subject, setSubject] = useState('JavaScript');
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -20,7 +20,6 @@ const App = block(() => {
         );
 
         setBooks(response.data.items || []);
-        console.log(books);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -36,7 +35,7 @@ const App = block(() => {
   }, [subject]);
 
   if (loading) {
-    return <div>Loading...</div>; // Show loading message while data is being fetched
+    return <div>Loading...</div>;
   }
 
   return (
@@ -251,4 +250,4 @@ const Subject = block(({ selectedSubject, onSelectSubject }) => {
   );
 });
 
-export default App;
+export default BookRecommendation;

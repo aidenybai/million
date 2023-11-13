@@ -1,10 +1,10 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { type DocsThemeConfig, useConfig } from 'nextra-theme-docs';
-import { ExtraContent } from './components/extra-content';
 import { GitHubIcon } from '@components/icons/github-icon';
 import { DiscordIcon } from '@components/icons/discord-icon';
 import { TwitterXIcon } from '@components/icons/twitter-x-icon';
+import { ExtraContent } from './components/extra-content';
 
 const config: DocsThemeConfig = {
   logo: () => {
@@ -112,13 +112,7 @@ const config: DocsThemeConfig = {
   footer: {
     text: (
       <div className="flex w-full items-center justify-between">
-        <div>
-          MIT {new Date().getFullYear()} ©{' '}
-          <a target="_blank" href="https://aidenybai.com">
-            Aiden Bai
-          </a>
-          .
-        </div>
+        <div>© 2021-{new Date().getFullYear()} Million Software, Inc.</div>
 
         <a
           href="https://vercel.com?utm_source=millionjs"
@@ -224,10 +218,8 @@ const config: DocsThemeConfig = {
 
     return { titleTemplate: `%s | Million.js` };
   },
-  primaryHue: {
-    light: 270,
-    dark: 204,
-  },
+  primaryHue: 275,
+  primarySaturation: 75,
 };
 
 // eslint-disable-next-line import/no-default-export

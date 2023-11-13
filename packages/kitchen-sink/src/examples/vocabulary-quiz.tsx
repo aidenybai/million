@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { block } from 'million/react';
 import { BiReset } from 'react-icons/bi';
 import { FaCheck } from 'react-icons/fa';

@@ -29,7 +29,6 @@ const EtchASketch: React.FC = block(() => {
     const newGridElements: GridElement[] = [];
 
     for (let i = 1; i <= n * n; i++) {
-      const color: string = colors[Math.floor(Math.random() * 7)];
       newGridElements.push({
         id: i,
         color: 'black',

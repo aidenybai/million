@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { block } from 'million/react';
-import { For } from 'million/react';
+
 const RecipeFinder = block(() => {
   const [searchedQuery, setSearchedQuery] = useState('');
   const [recipes, setRecipes] = useState([]);
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [recipieInstructions, setRecipieInstructions] = useState([]);
+  const [recipieInstructions, setRecipeInstructions] = useState([]);
   const [ingredientsInstructions, setIngredientsInstructions] = useState([]);
-  const [recipieInstructionsId, setRecipieInstructionsId] = useState('');
+  const [recipieInstructionsId, setRecipeInstructionsId] = useState('');
   const API_KEY = '5a881b78656146509b31903824370ebb';
 
   const getRecipes = async () => {
@@ -19,11 +19,8 @@ const RecipeFinder = block(() => {
 
     try {
       const response = await axios.get(
-        // `https://forkify-api.herokuapp.com/api/search?q=${searchedQuery}`,
         `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&query=${searchedQuery}`,
       );
-      // console.log(response.data);
-      // console.log(response.data.results);
       setRecipes(response.data.results);
     } catch (error) {
       setError('An error occurred while fetching recipes.');
@@ -37,14 +34,9 @@ const RecipeFinder = block(() => {
     setError(null);
 
     try {
-      // First, get recipe instructions
       await getRecipeInfo(recipe.id);
-
-      // Then, get ingredients info
       await getIngredientsInfo(recipe.id);
-
-      // After both functions have completed, update the UI
-      setRecipieInstructionsId(recipe.id);
+      setRecipeInstructionsId(recipe.id);
     } catch (error) {
       setError('An error occurred while fetching instructions.');
     } finally {
@@ -61,14 +53,14 @@ const RecipeFinder = block(() => {
         `https://api.spoonacular.com/recipes/${id}/analyzedInstructions?apiKey=${API_KEY}`,
       );
       // console.log(response);
-      setRecipieInstructions(response.data[0].steps);
+      setRecipeInstructions(response.data[0].steps);
     } catch (error) {
       setError('An error occurred while fetching instructions.');
     } finally {
       setLoading(false);
     }
   };
-  // console.log(IngredientsInstructions);
+
   const getIngredientsInfo = async (id) => {
     setLoading(true);
     setError(null);
@@ -78,7 +70,7 @@ const RecipeFinder = block(() => {
         `https://api.spoonacular.com/recipes/${id}/information?apiKey=${API_KEY}&includeNutrition=false`,
       );
       console.log(response.data.extendedIngredients);
-      setRecipieInstructionsId(response.data.id);
+      setRecipeInstructionsId(response.data.id);
       setIngredientsInstructions(response.data.extendedIngredients);
     } catch (error) {
       setError('An error occurred while fetching instructions.');
@@ -87,7 +79,6 @@ const RecipeFinder = block(() => {
     }
   };
   const removeFromCart = (recipeId) => {
-    // Filter out the recipe with the specified recipeId from the cart
     const updatedCart = cart.filter((item) => item.id !== recipeId);
     setCart(updatedCart);
   };
@@ -95,7 +86,6 @@ const RecipeFinder = block(() => {
     setCart([...cart, recipe]);
   };
 
-  // console.log(recipieInstructions);
   return (
     <div>
       <h1
@@ -316,8 +306,6 @@ const RecipeFinder = block(() => {
   );
 });
 
-export default RecipeFinder;
-
 const Cart = block(
   ({
     cartItems,
@@ -349,7 +337,7 @@ const Cart = block(
           }}
         >
           {cartItems &&
-            cartItems.map((recipe, index) => (
+            cartItems.map((recipe) => (
               <div
                 style={{
                   backgroundColor: 'white',
@@ -408,7 +396,6 @@ const Cart = block(
                       {recipieInstructions.map((item, index) => (
                         <span key={index}>{item.step} </span>
                       ))}
-                      
                     </div>
                   ) : (
                     <div
@@ -446,3 +433,5 @@ const Cart = block(
     );
   },
 );
+
+export default RecipeFinder;

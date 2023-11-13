@@ -1,6 +1,4 @@
 import {
-  version,
-  StrictMode,
   useState,
   type ComponentType,
   lazy,
@@ -13,19 +11,11 @@ import './css/examples/style.css';
 import { ErrorBoundary } from 'react-error-boundary';
 import { RxHamburgerMenu } from 'react-icons/rx';
 import { AiOutlineClose } from 'react-icons/ai';
+import { createRoot } from 'react-dom/client';
 
 type Module = { default: ComponentType<any> };
 
 (async () => {
-  let createRootElement;
-  if (version.startsWith('18')) {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const { createRoot } = await import('react-dom/client');
-    createRootElement = createRoot;
-  } else {
-    const ReactDOM = await import('react-dom');
-    createRootElement = ReactDOM.render;
-  }
   const modules = await Promise.all(
     Object.entries(import.meta.glob('./examples/*.{tsx,jsx}')).map(
       async ([key, mod]) =>
@@ -180,16 +170,5 @@ type Module = { default: ComponentType<any> };
     );
   }
 
-  version.startsWith('18')
-    ? createRootElement(document.getElementById('root')!).render(
-        <StrictMode>
-          <App />
-        </StrictMode>,
-      )
-    : createRootElement(
-        <StrictMode>
-          <App />
-        </StrictMode>,
-        document.getElementById('root')!,
-      );
+  createRoot(document.getElementById('root')!).render(<App />);
 })();

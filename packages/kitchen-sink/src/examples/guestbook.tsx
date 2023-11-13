@@ -30,7 +30,9 @@ const Guestbook = block(() => {
   };
 
   const deleteComment = (id: number) => {
-    const updatedComments = comments.filter((comment: any) => comment.id !== id);
+    const updatedComments = comments.filter(
+      (comment: any) => comment.id !== id,
+    );
     setComments(updatedComments);
   };
 
@@ -47,8 +49,8 @@ const Guestbook = block(() => {
         <button type="submit">Submit</button>
       </form>
       <ul>
-      <For each={comments}>
-          {(comment:Comment) => (
+        <For each={comments}>
+          {(comment: Comment) => (
             <li key={comment.id}>
               {comment.text}
               <button onClick={() => deleteComment(comment.id)}>Delete</button>

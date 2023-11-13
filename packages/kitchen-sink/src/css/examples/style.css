@@ -15,11 +15,6 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.App {
-  min-height: 100vh;
-  text-align: center;
-}
-
 .music-card {
   min-height: 90vh;
   display: flex;
@@ -238,9 +233,6 @@ input[type='range'] {
 
 .password_generator_tooltip-text.visible {
   opacity: 1;
-}
-
-.password_generator_customizable_options {
 }
 
 .password_generator_customizable_options__length {

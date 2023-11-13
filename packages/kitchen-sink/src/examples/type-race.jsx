@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { block, For } from 'million/react';
 
-const getWPM = (charCount, time) => 12000 * charCount / time;
+const getWPM = (charCount, time) => (12000 * charCount) / time;
 const endgameMsg = (wpm) => {
   if (wpm == 0) {
     return 'is your keyboard broken? 😭';
@@ -16,33 +16,37 @@ const endgameMsg = (wpm) => {
   } else if (wpm <= 100) {
     return "you're insane! 😱";
   } else {
-    return "are you even human?! 😱";
+    return 'are you even human?! 😱';
   }
-}
+};
 
 async function getSentence() {
   const response = await fetch(
-    `https://api.quotable.io/quotes/random?minLength=30&maxLength=60`
+    `https://api.quotable.io/quotes/random?minLength=30&maxLength=60`,
   );
   return response.json();
 }
 
-const StcBlock = block(
-  function Sentence({ text, time }) {
-    return (
-      <div>
-        <span className='type-mono'>{text}</span> <i>{`(${Number(time / 1000).toFixed(2)} seconds)`}</i>
-      </div>
-    );
-  }
-);
+const StcBlock = block(function Sentence({ text, time }) {
+  return (
+    <div>
+      <span className="type-mono">{text}</span>{' '}
+      <i>{`(${Number(time / 1000).toFixed(2)} seconds)`}</i>
+    </div>
+  );
+});
 
 function HealthBar({ status, time, score, currentStc, stopGame }) {
   const [health, setHealth] = useState(1);
 
   useEffect(() => {
     if (status == 2) {
-      setHealth(h => h - 0.0004 * (120 - 0.04 * (score < 50 ? 50 - score : 0) ** 2) / currentStc.length);
+      setHealth(
+        (h) =>
+          h -
+          (0.0004 * (120 - 0.04 * (score < 50 ? 50 - score : 0) ** 2)) /
+            currentStc.length,
+      );
       if (health <= 0) {
         stopGame();
       }
@@ -51,7 +55,7 @@ function HealthBar({ status, time, score, currentStc, stopGame }) {
 
   useEffect(() => {
     if (status == 2) {
-      setHealth(h => h > 0.75 ? 1 : h + 0.25);
+      setHealth((h) => (h > 0.75 ? 1 : h + 0.25));
     }
   }, [score]);
 
@@ -59,37 +63,46 @@ function HealthBar({ status, time, score, currentStc, stopGame }) {
 
   return (
     <div className="type-health-bar" hidden={status == 0}>
-      <div
-        className="type-health"
-        style={{ width: `${health * 100}%` }}
-      ></div>
+      <div className="type-health" style={{ width: `${health * 100}%` }}></div>
     </div>
   );
 }
 
-function TypingArea({ currentStc, nextStc, status, time, onSentenceCompleted }) {
-  const [displayedText, setDisplayedText] = useState([{text: 'Test your typing skills!', className: 'type-none'}]);
+function TypingArea({
+  currentStc,
+  nextStc,
+  status,
+  time,
+  onSentenceCompleted,
+}) {
+  const [displayedText, setDisplayedText] = useState([
+    { text: 'Test your typing skills!', className: 'type-none' },
+  ]);
 
-  const TextBlock = block(({ text, className }) => <div className={className}>{text}</div>);
+  const TextBlock = block(({ text, className }) => (
+    <div className={className}>{text}</div>
+  ));
 
   useEffect(() => {
     if (status == 1) {
-      setDisplayedText([{text: currentStc, className: 'type-gray'}]);
+      setDisplayedText([{ text: currentStc, className: 'type-gray' }]);
     } else if (status == 2) {
-      setDisplayedText([{text: currentStc, className: 'type-none'}]);
+      setDisplayedText([{ text: currentStc, className: 'type-none' }]);
     }
   }, [currentStc]);
 
   useEffect(() => {
     if (status == 0) {
-      setDisplayedText([{text: 'Test your typing skills!', className: 'type-none'}]);
+      setDisplayedText([
+        { text: 'Test your typing skills!', className: 'type-none' },
+      ]);
     } else if (status == 1) {
-      setDisplayedText([{text: 'Loading...', className: 'type-gray'}]);
+      setDisplayedText([{ text: 'Loading...', className: 'type-gray' }]);
     } else if (status == 2) {
-      setDisplayedText([{text: currentStc, className: 'type-none'}]);
+      setDisplayedText([{ text: currentStc, className: 'type-none' }]);
     }
   }, [status]);
-  
+
   function handleChange(e) {
     const inputText = e.target.value;
     if (status != 2) {
@@ -107,17 +120,20 @@ function TypingArea({ currentStc, nextStc, status, time, onSentenceCompleted }) 
         const char = currentStc[i];
         newDisplayedText.push({
           text: char,
-          className: ((char == inputText[i]) ? 'type-green' : 'type-red'),
+          className: char == inputText[i] ? 'type-green' : 'type-red',
         });
       }
-      newDisplayedText.push({text: currentStc.substring(inputLen), className: 'type-none'});
+      newDisplayedText.push({
+        text: currentStc.substring(inputLen),
+        className: 'type-none',
+      });
       setDisplayedText(newDisplayedText);
     }
   }
 
   return (
     <div>
-      <h2 className='type-mono'>
+      <h2 className="type-mono">
         <For each={displayedText}>
           {({ text, className }) => (
             <TextBlock text={text} className={className} />
@@ -128,30 +144,28 @@ function TypingArea({ currentStc, nextStc, status, time, onSentenceCompleted }) 
         type="text"
         placeholder="Start typing here..."
         style={{ width: '90%' }}
-        onChange={e => handleChange(e)}
+        onChange={(e) => handleChange(e)}
         hidden={status == 0}
       />
     </div>
   );
-};
+}
 
-function StcLogsArea({ stcLogs }) {
+const StcLogsArea = ({ stcLogs }) => {
   return (
     <div>
       <For each={stcLogs}>
-        {({ text, time }) => (
-          <StcBlock text={text} time={time} />
-        )}
+        {({ text, time }) => <StcBlock text={text} time={time} />}
       </For>
     </div>
   );
 };
 
-export default function Game() {
+const TypeRace = () => {
   const [currentStc, setCurrentStc] = useState('');
   const [nextStc, setNextStc] = useState('');
   const [subtitle, setSubtitle] = useState('');
-  const [status, setStatus] = useState(0);  // 0 for not currently playing, 1 for getting ready, 2 for playing
+  const [status, setStatus] = useState(0);
   const [time, setTime] = useState(0);
   const [intervalId, setIntervalId] = useState();
   const [timeLap, setTimeLap] = useState(0);
@@ -169,7 +183,7 @@ export default function Game() {
     setStatus(1);
     getSentence().then((data) => setCurrentStc(data[0].content));
     getSentence().then((data) => setNextStc(data[0].content));
-    
+
     setSubtitle('Get ready...');
     setTimeout(() => setSubtitle('3...'), 1000);
     setTimeout(() => setSubtitle('2...'), 2000);
@@ -177,7 +191,7 @@ export default function Game() {
     setTimeout(() => {
       setSubtitle('TYPE!');
       setStatus(2);
-      const id = setInterval(() => setTime(t => t + 10), 10);
+      const id = setInterval(() => setTime((t) => t + 10), 10);
       setIntervalId(id);
     }, 4000);
   }
@@ -211,7 +225,9 @@ export default function Game() {
       <center>
         <h2>Type Race</h2>
         <h4>{subtitle}</h4>
-        <button hidden={status != 0} onClick={playGame}>Play</button>
+        <button hidden={status != 0} onClick={playGame}>
+          Play
+        </button>
       </center>
       <HealthBar
         status={status}
@@ -227,8 +243,10 @@ export default function Game() {
         time={time}
         onSentenceCompleted={onSentenceCompleted}
       />
-      <hr/>
+      <hr />
       <StcLogsArea stcLogs={stcLogs} />
     </div>
   );
-}
+};
+
+export default TypeRace;

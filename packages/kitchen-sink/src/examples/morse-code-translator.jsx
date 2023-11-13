@@ -1,31 +1,88 @@
 import React, { useState } from 'react';
+import { block } from 'million/react';
 
 const morseCode = {
-    'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.',
-    'F': '..-.', 'G': '--.', 'H': '....', 'I': '..', 'J': '.---',
-    'K': '-.-', 'L': '.-..', 'M': '--', 'N': '-.', 'O': '---',
-    'P': '.--.', 'Q': '--.-', 'R': '.-.', 'S': '...', 'T': '-',
-    'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-', 'Y': '-.--',
-    'Z': '--..',
-    '1': '.----', '2': '..---', '3': '...--', '4': '....-', '5': '.....',
-    '6': '-....', '7': '--...', '8': '---..', '9': '----.', '0': '-----',
+  A: '.-',
+  B: '-...',
+  C: '-.-.',
+  D: '-..',
+  E: '.',
+  F: '..-.',
+  G: '--.',
+  H: '....',
+  I: '..',
+  J: '.---',
+  K: '-.-',
+  L: '.-..',
+  M: '--',
+  N: '-.',
+  O: '---',
+  P: '.--.',
+  Q: '--.-',
+  R: '.-.',
+  S: '...',
+  T: '-',
+  U: '..-',
+  V: '...-',
+  W: '.--',
+  X: '-..-',
+  Y: '-.--',
+  Z: '--..',
+  1: '.----',
+  2: '..---',
+  3: '...--',
+  4: '....-',
+  5: '.....',
+  6: '-....',
+  7: '--...',
+  8: '---..',
+  9: '----.',
+  0: '-----',
 };
 
 const morseCodeGuideAlphabets = {
-  'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.',
-  'F': '..-.', 'G': '--.', 'H': '....', 'I': '..', 'J': '.---',
-  'K': '-.-', 'L': '.-..', 'M': '--', 'N': '-.', 'O': '---',
-  'P': '.--.', 'Q': '--.-', 'R': '.-.', 'S': '...', 'T': '-',
-  'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-', 'Y': '-.--',
-  'Z': '--..',
+  A: '.-',
+  B: '-...',
+  C: '-.-.',
+  D: '-..',
+  E: '.',
+  F: '..-.',
+  G: '--.',
+  H: '....',
+  I: '..',
+  J: '.---',
+  K: '-.-',
+  L: '.-..',
+  M: '--',
+  N: '-.',
+  O: '---',
+  P: '.--.',
+  Q: '--.-',
+  R: '.-.',
+  S: '...',
+  T: '-',
+  U: '..-',
+  V: '...-',
+  W: '.--',
+  X: '-..-',
+  Y: '-.--',
+  Z: '--..',
 };
 
 const morseCodeGuideNumerical = {
-  '1': '.----', '2': '..---', '3': '...--', '4': '....-', '5': '.....',
-  '6': '-....', '7': '--...', '8': '---..', '9': '----.', '0': '-----',
+  1: '.----',
+  2: '..---',
+  3: '...--',
+  4: '....-',
+  5: '.....',
+  6: '-....',
+  7: '--...',
+  8: '---..',
+  9: '----.',
+  0: '-----',
 };
 
-function App() {
+const MorseCodeTranslator = block(() => {
   const [inputText, setInputText] = useState('');
   const [translatedText, setTranslatedText] = useState('');
   const [showMorseGuide, setShowMorseGuide] = useState(false);
@@ -61,7 +118,6 @@ function App() {
     }
     setTranslatedText(textResult);
   };
-
   return (
     <div>
       <h1 style={{ textAlign: 'center' }}>Morse Code Translator</h1>
@@ -77,14 +133,21 @@ function App() {
           fontSize: '22px',
         }}
       >
-        <p style={{fontSize:'28px'}}>
-            {translatedText ? translatedText
-                : ( <span style={{ color: 'dimgray' }}>Translated Data</span>)
-            }
+        <p style={{ fontSize: '28px' }}>
+          {translatedText ? (
+            translatedText
+          ) : (
+            <span style={{ color: 'dimgray' }}>Translated Data</span>
+          )}
         </p>
-
       </div>
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
         <textarea
           style={{
             marginTop: '20px',
@@ -100,11 +163,17 @@ function App() {
           placeholder="Enter Text or Morse Code"
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
-        >
-        </textarea>
+        ></textarea>
       </div>
 
-      <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <div
+        style={{
+          marginTop: '20px',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
         <div style={{ display: 'flex', gap: '20px' }}>
           <button onClick={translateToMorse}>Translate to Morse</button>
           <button onClick={translateToText}>Translate to Text</button>
@@ -116,8 +185,17 @@ function App() {
 
       {showMorseGuide && (
         <div>
-          <h2 style={{ textAlign: 'center' }}>Morse Code Guide for Alphabets!</h2>
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}>
+          <h2 style={{ textAlign: 'center' }}>
+            Morse Code Guide for Alphabets!
+          </h2>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+            }}
+          >
             {Object.keys(morseCodeGuideAlphabets).map((key) => (
               <div key={key} style={{ margin: '10px', textAlign: 'center' }}>
                 {key}: {morseCodeGuideAlphabets[key]}
@@ -126,8 +204,17 @@ function App() {
           </div>
 
           <div>
-            <h2 style={{ textAlign: 'center' }}>Morse Code Guide for Numerical!</h2>
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexWrap:'wrap' }}>
+            <h2 style={{ textAlign: 'center' }}>
+              Morse Code Guide for Numerical!
+            </h2>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+              }}
+            >
               {Object.keys(morseCodeGuideNumerical).map((key) => (
                 <div key={key} style={{ margin: '10px', textAlign: 'center' }}>
                   {key}: {morseCodeGuideNumerical[key]}
@@ -139,6 +226,6 @@ function App() {
       )}
     </div>
   );
-}
+});
 
-export default App;
+export default MorseCodeTranslator;
