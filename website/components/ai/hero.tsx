@@ -44,7 +44,10 @@ export function Hero() {
           </div>
         </div>
         <div className="lg:w-2/3 text-center mx-auto flex justify-center mt-6">
-          <YouTube videoId="37v2qVmcWJY" />
+          <YouTube
+            videoId="37v2qVmcWJY"
+            className="youtubeContainer"
+          />
         </div>
       </Container>
       <Blur />
