@@ -208,6 +208,10 @@ const config: DocsThemeConfig = {
   },
   nextThemes: {
     defaultTheme: 'dark',
+    forcedTheme: 'dark',
+  },
+  themeSwitch: {
+    component: null,
   },
   useNextSeoProps() {
     const { asPath } = useRouter();
