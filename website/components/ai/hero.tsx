@@ -2,8 +2,19 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Container } from '../home/container';
 import { ShimmerButton } from '../home/shimmer-button';
+import { useEffect } from 'react';
 
 export function Hero() {
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src =
+      'https://prod-waitlist-widget.s3.us-east-2.amazonaws.com/getwaitlist.min.js';
+    script.async = true;
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
   return (
     <div className="relative">
       <Blur />
@@ -11,7 +22,8 @@ export function Hero() {
         <div className="relative pt-16 md:pt-28 ml-auto">
           <div className="lg:w-[70%] text-center mx-auto">
             <h1 className="text-zinc-900 dark:text-white font-bold text-5xl md:text-6xl xl:text-7xl">
-              You write code.<br />
+              You write code.
+              <br />
               <span className="gradient-text inline-block">
                 We make it fast
               </span>
@@ -44,6 +56,11 @@ export function Hero() {
                   View Demo
                 </span>
               </Link>
+              <div
+                id="getWaitlistContainer"
+                data-waitlist_id="11876"
+                data-widget_type="WIDGET_2"
+              ></div>
             </div>
           </div>
         </div>
