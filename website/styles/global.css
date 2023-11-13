@@ -527,6 +527,7 @@ html[class~='dark'] .gradient-text {
 #getWaitlistContainer [role='button'],
 #getWaitlistContainer [type='button'],
 #getWaitlistContainer button {
+  white-space: nowrap;
   cursor: pointer;
   text-transform: none;
 }
