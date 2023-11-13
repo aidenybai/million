@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import YouTube from 'react-youtube';
 import { Container } from '../home/container';
 import { ShimmerButton } from '../home/shimmer-button';
 
@@ -42,8 +43,8 @@ export function Hero() {
             </div>
           </div>
         </div>
-        <div className="lg:w-2/3 text-center mx-auto">
-          <Image alt="ai" width={1000} height={500} src="/ai.png" />
+        <div className="lg:w-2/3 text-center mx-auto flex justify-center mt-6">
+          <YouTube videoId="37v2qVmcWJY" />
         </div>
       </Container>
       <Blur />
