@@ -485,8 +485,8 @@ html[class~='dark'] .gradient-text {
   -moz-tab-size: 4;
   -o-tab-size: 4;
   tab-size: 4;
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif,
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif,
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   font-feature-settings: normal;
   width: 100%;
@@ -535,8 +535,8 @@ html[class~='dark'] .gradient-text {
 #getWaitlistContainer optgroup,
 #getWaitlistContainer select,
 #getWaitlistContainer textarea {
-  font-family: inherit;
-  font-weight: inherit;
+  font-family: Inter;
+  font-weight: semibold;
   line-height: inherit;
   color: inherit;
 }
@@ -634,10 +634,6 @@ html[class~='dark'] .gradient-text {
 .gw-text-xs {
   display: none !important;
   visibility: hidden !important;
-}
-
-#primaryCTA {
-  font-family: Inter !important;
 }
 
 .gw-flex {
