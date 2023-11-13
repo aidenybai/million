@@ -4,7 +4,6 @@ import { Container } from '../home/container';
 import { ShimmerButton } from '../home/shimmer-button';
 
 export function Hero() {
-  const [isOn, setIsOn] = useState(false);
   useEffect(() => {
     const script = document.createElement('script');
     script.src =
@@ -35,19 +34,7 @@ export function Hero() {
               for companies that want to ship fast and stay fast.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-y-4 gap-x-6">
-              {!isOn ? (
-                <ShimmerButton
-                  onClick={() => setIsOn(true)}
-                  className="relative w-full sm:w-max flex items-center justify-center transition-all hover:shadow-[0_0_0_3px_rgba(255,255,255,0.3)_inset]"
-                  background="radial-gradient(ellipse 80% 70% at 50% 120%, #b28ce2, #892fda)"
-                >
-                  <span className="relative whitespace-pre text-center text-base font-semibold leading-none tracking-tight text-white z-10">
-                    Join waitlist →
-                  </span>
-                </ShimmerButton>
-              ) : null}
               <div
-                style={{ display: isOn ? 'block' : 'none' }}
                 id="getWaitlistContainer"
                 data-waitlist_id="11876"
                 data-widget_type="WIDGET_2"
