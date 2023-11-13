@@ -535,7 +535,9 @@ html[class~='dark'] .gradient-text {
 #getWaitlistContainer optgroup,
 #getWaitlistContainer select,
 #getWaitlistContainer textarea {
-  font-family: Inter;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, avenir next, avenir,
+    segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial,
+    sans-serif;
   font-weight: semibold;
   line-height: inherit;
   color: inherit;
