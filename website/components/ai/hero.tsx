@@ -1,9 +1,21 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import { Container } from '../home/container';
 import { ShimmerButton } from '../home/shimmer-button';
 
 export function Hero() {
+  const [isOn, setIsOn] = useState(false);
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src =
+      'https://prod-waitlist-widget.s3.us-east-2.amazonaws.com/getwaitlist.min.js';
+    script.async = true;
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
   return (
     <div className="relative">
       <Blur />
@@ -11,7 +23,8 @@ export function Hero() {
         <div className="relative pt-16 md:pt-28 ml-auto">
           <div className="lg:w-[70%] text-center mx-auto">
             <h1 className="text-zinc-900 dark:text-white font-bold text-5xl md:text-6xl xl:text-7xl">
-              You write code.<br />
+              You write code.
+              <br />
               <span className="gradient-text inline-block">
                 We make it fast
               </span>
@@ -23,27 +36,23 @@ export function Hero() {
               for companies that want to ship fast and stay fast.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-y-4 gap-x-6">
-              <Link
-                href="https://forms.gle/iDNwZQp96rQAjT4w5"
-                className="w-full sm:w-max"
-              >
+              {!isOn ? (
                 <ShimmerButton
+                  onClick={() => setIsOn(true)}
                   className="relative w-full sm:w-max flex items-center justify-center transition-all hover:shadow-[0_0_0_3px_rgba(255,255,255,0.3)_inset]"
                   background="radial-gradient(ellipse 80% 70% at 50% 120%, #b28ce2, #892fda)"
                 >
                   <span className="relative whitespace-pre text-center text-base font-semibold leading-none tracking-tight text-white z-10">
-                    Join Waitlist
+                    Join waitlist →
                   </span>
                 </ShimmerButton>
-              </Link>
-              <Link
-                href=""
-                className="relative flex h-11 w-full items-center justify-center px-6 before:absolute before:inset-0 before:rounded-full before:border before:border-transparent before:bg-purple-600/10 before:bg-gradient-to-b before:transition before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 dark:before:border-zinc-700 dark:before:bg-zinc-800 sm:w-max"
-              >
-                <span className="relative text-base font-semibold text-purple-600 dark:text-white">
-                  View Demo
-                </span>
-              </Link>
+              ) : null}
+              <div
+                style={{ display: isOn ? 'block' : 'none' }}
+                id="getWaitlistContainer"
+                data-waitlist_id="11876"
+                data-widget_type="WIDGET_2"
+              ></div>
             </div>
           </div>
         </div>
