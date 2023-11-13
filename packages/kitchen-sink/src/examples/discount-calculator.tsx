@@ -53,11 +53,11 @@ const DiscountCalculator = block(() => {
       <button onClick={calculateDiscount}>Calculate</button>
 
       {results && (
-<<<<<<< HEAD
         <div className="results" style={{ marginTop: '20px' }}>
-=======
-        <div className="results">
           <h2>Results:</h2>
+          <div>Final Price : ${results.finalPrice.toFixed(2)}</div>
+          <div>You Save : ${results.discountPrice.toFixed(2)}</div>
+        </div>
       )}
     </div>
   );

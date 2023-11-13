@@ -100,10 +100,12 @@ const DataConverter: React.FC = block(() => {
             padding: '10px 10px',
             margin: '5px 5px',
             height: '40px',
+            cursor: 'not-allowed',
           }}
           type="number"
           value={state.convertedValue}
           disabled
+          
         />
         <select
           style={{
