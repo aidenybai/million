@@ -630,3 +630,24 @@ html[class~='dark'] .gradient-text {
     padding: 1.5rem;
   }
 }
+
+.gw-text-xs {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+#primaryCTA {
+  font-family: Inter !important;
+}
+
+.gw-flex {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.gw-max-w-\[600px\] {
+  max-width: 400px;
+}
