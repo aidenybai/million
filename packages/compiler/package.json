@@ -6,7 +6,6 @@
     "@babel/helper-module-imports": "^7.18.6",
     "@babel/helper-plugin-utils": "^7.20.2",
     "@babel/types": "^7.21.3",
-    "@oxidation-compiler/napi": "^0.1.0",
     "unplugin": "^1.3.0"
   },
   "devDependencies": {

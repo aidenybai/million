@@ -166,9 +166,6 @@ importers:
       '@babel/types':
         specifier: ^7.21.3
         version: 7.22.10
-      '@oxidation-compiler/napi':
-        specifier: ^0.1.0
-        version: 0.1.0
       unplugin:
         specifier: ^1.3.0
         version: 1.3.1
@@ -302,18 +299,6 @@ importers:
 
   packages/million: {}
 
-  packages/preact:
-    dependencies:
-      preact:
-        specifier: ^10.15.0
-        version: 10.15.0
-
-  packages/preact-server:
-    dependencies:
-      preact:
-        specifier: ^10.15.0
-        version: 10.15.0
-
   packages/react:
     dependencies:
       react:
@@ -345,31 +330,6 @@ importers:
       '@types/react-dom':
         specifier: ^18.2.6
         version: 18.2.7
-
-  packages/turbo:
-    dependencies:
-      '@babel/helper-module-imports':
-        specifier: ^7.18.6
-        version: 7.22.5
-      '@babel/helper-plugin-utils':
-        specifier: ^7.20.2
-        version: 7.22.5
-      '@babel/types':
-        specifier: ^7.21.3
-        version: 7.22.10
-      unplugin:
-        specifier: ^1.3.0
-        version: 1.3.1
-    devDependencies:
-      '@types/babel-types':
-        specifier: ^7.0.11
-        version: 7.0.11
-      '@types/babel__helper-module-imports':
-        specifier: ^7.18.0
-        version: 7.18.0
-      '@types/babel__helper-plugin-utils':
-        specifier: ^7.10.0
-        version: 7.10.0
 
   packages/types:
     dependencies:
@@ -2957,65 +2917,6 @@ packages:
 
   /@open-draft/deferred-promise@2.1.0:
     resolution: {integrity: sha512-Rzd5JrXZX8zErHzgcGyngh4fmEbSHqTETdGj9rXtejlqMIgXFlyKBA7Jn1Xp0Ls0M0Y22+xHcWiEzbmdWl0BOA==}
-    dev: false
-
-  /@oxidation-compiler/napi-darwin-arm64@0.1.0:
-    resolution: {integrity: sha512-zcuWuDCcYcXPJRqEuC/yUDPGJuqxorTuQfFOGFDc48OpLi580US/H749RyZZ7LG7NRGjoChhtddz6RmTrK7mtA==}
-    cpu: [arm64]
-    os: [darwin]
-    requiresBuild: true
-    dev: false
-    optional: true
-
-  /@oxidation-compiler/napi-darwin-x64@0.1.0:
-    resolution: {integrity: sha512-iD9ogcM0O1npqseZw4lkrn2QTxcwVcsPeLtd4H/P+UvKwCS5q5S3w07HFYLJbn48/JiA3AZfRTe1I4DDdjQmdA==}
-    cpu: [x64]
-    os: [darwin]
-    requiresBuild: true
-    dev: false
-    optional: true
-
-  /@oxidation-compiler/napi-linux-arm64-gnu@0.1.0:
-    resolution: {integrity: sha512-eLQSnhX2QDjj2CW1m8pwNYUTJsmGvoZEpuA5gEIJJBufHLCL3WMrkGUSIu532uVYuaD1yGdBfEvJTh3mAy55Ag==}
-    cpu: [arm64]
-    os: [linux]
-    requiresBuild: true
-    dev: false
-    optional: true
-
-  /@oxidation-compiler/napi-linux-x64-gnu@0.1.0:
-    resolution: {integrity: sha512-9QeJ9DFDXzH+RdLvEllJ/pZGOWh6gzLOdUJ7i/zYHTtc1YM8zcBg4ckx8/lS7X1DUr5tpK3Z8ZhkmuQNktmEow==}
-    cpu: [x64]
-    os: [linux]
-    requiresBuild: true
-    dev: false
-    optional: true
-
-  /@oxidation-compiler/napi-win32-arm64-msvc@0.1.0:
-    resolution: {integrity: sha512-23z31ddTIjUIHcXey47aJzH4grPfhkBc/yrdeWtAMYkdSfIoajx+Wrn58tt6287EYFom5QFEQEoy8Wd29HOVtQ==}
-    cpu: [arm64]
-    os: [win32]
-    requiresBuild: true
-    dev: false
-    optional: true
-
-  /@oxidation-compiler/napi-win32-x64-msvc@0.1.0:
-    resolution: {integrity: sha512-9HB2YFLINoAvG0QEVLXy/KcvlEcKVad25WejXCgbf/dQlc58XXtnEA4fpN2xl9Yx+0t4WPjs2tS2+1wOcpyrbQ==}
-    cpu: [x64]
-    os: [win32]
-    requiresBuild: true
-    dev: false
-    optional: true
-
-  /@oxidation-compiler/napi@0.1.0:
-    resolution: {integrity: sha512-W21lf+17jHlUQMLBFzJ5TetUz3kktQhP990hHNEuDlXzQxvLJuBoCqaeXjsFs537l9E26rb7SMwUkRTDC1uX7A==}
-    optionalDependencies:
-      '@oxidation-compiler/napi-darwin-arm64': 0.1.0
-      '@oxidation-compiler/napi-darwin-x64': 0.1.0
-      '@oxidation-compiler/napi-linux-arm64-gnu': 0.1.0
-      '@oxidation-compiler/napi-linux-x64-gnu': 0.1.0
-      '@oxidation-compiler/napi-win32-arm64-msvc': 0.1.0
-      '@oxidation-compiler/napi-win32-x64-msvc': 0.1.0
     dev: false
 
   /@polka/url@1.0.0-next.21:
@@ -9191,10 +9092,6 @@ packages:
       nanoid: 3.3.6
       picocolors: 1.0.0
       source-map-js: 1.0.2
-    dev: false
-
-  /preact@10.15.0:
-    resolution: {integrity: sha512-nZSa8M2R2m1n7nJSBlzDpxRJaIsejrTO1vlFbdpFvyC8qM1iU+On2y0otfoUm6SRB5o0lF0CKDFxg6grEFU0iQ==}
     dev: false
 
   /prelude-ls@1.2.1:
