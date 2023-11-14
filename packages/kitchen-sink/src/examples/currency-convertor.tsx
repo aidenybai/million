@@ -10,6 +10,7 @@ interface CurrencyInputProps {
   currencies?: string[];
   onAmountChange?: (amount: number) => void;
   onCurrencyChange?: (currency: string) => void;
+  title: string;
 }
 function CurrencyConvertor() {
   const [amount1, setAmount1] = useState<number>(1);
@@ -72,15 +73,19 @@ function CurrencyConvertor() {
         textAlign: 'center',
       }}
     >
-      <h1>Currency Converter</h1>
+      <h2 style={{ marginBottom: '10px' }}>Currency Converter</h2>
+
       <CurrencyInput
+        title="1"
         onAmountChange={handleAmount1Change}
         onCurrencyChange={handleCurrency1Change}
         currencies={Object.keys(rates)}
         amount={amount1}
         currency={currency1}
       />
+
       <CurrencyInput
+        title="2"
         onAmountChange={handleAmount2Change}
         onCurrencyChange={handleCurrency2Change}
         currencies={Object.keys(rates)}
@@ -96,13 +101,21 @@ export default CurrencyConvertor;
 const CurrencyInput = block((props: CurrencyInputProps) => {
   return (
     <div>
+      <p>
+        Currency {props?.title}: {props.currency}
+      </p>
       <input
         style={{
           borderRadius: '10px',
           padding: '10px 10px',
           margin: '5px 5px',
+          outline: 'none',
+          height: '40px',
+          color: 'currentcolor',
+          backgroundColor: ' var(--background)',
+          border: 'none',
         }}
-        type="text"
+        type="number"
         value={props.amount}
         onChange={(ev) => props.onAmountChange?.(parseFloat(ev.target.value))}
       />
@@ -112,6 +125,11 @@ const CurrencyInput = block((props: CurrencyInputProps) => {
           padding: '10px 10px',
           margin: '5px 5px',
           outline: 'none',
+          height: '40px',
+          color: 'currentcolor',
+          backgroundColor: ' var(--background)',
+          minWidth: '50px',
+          border: 'none',
         }}
         value={props.currency}
         onChange={(ev) => props.onCurrencyChange?.(ev.target.value)}

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { block } from 'million/react';
+import '../css/examples/bmi-calculator.css';
 
-const BmiCalculator = block(() => {
+const BmiCalculator = block(function BmiComponent() {
   const [age, setAge] = useState('');
   const [gender, setGender] = useState('male');
   const [heightFeet, setHeightFeet] = useState('');
@@ -43,208 +44,89 @@ const BmiCalculator = block(() => {
   };
 
   return (
-    <div>
-      <h1 style={{ textAlign: 'center' }}>BMI Calculator</h1>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <div
-          className="BmiDivInputFields"
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'flex-start',
-            gap: '20px',
-          }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-start',
-            }}
-          >
-            <label>Age * :</label>
-            <input
-              type="number"
-              placeholder="Enter your age"
-              value={age}
-              onChange={(e) => setAge(e.target.value)}
-            />
-          </div>
-
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-start',
-            }}
-          >
-            <label>Gender * :</label>
-            <select
-              value={gender}
-              onChange={(e) => setGender(e.target.value)}
-              style={{
-                width: '230px',
-                height: '40px',
-                border: 'none',
-                backgroundColor: '#353535',
-                padding: '0.55rem',
-                color: '#f7f7f7',
-                borderRadius: '0.25rem',
-              }}
-            >
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-            </select>
-          </div>
+    <main className="bmi-calculator">
+      <h2>BMI Calculator</h2>
+      <div className="bmi-calculator_wrapper">
+        <div className="form-input-group">
+          <label>Age*:</label>
+          <input
+            type="number"
+            placeholder="Enter your age"
+            min={1}
+            value={age}
+            onChange={(e) => setAge(e.target.value)}
+          />
         </div>
-      </div>
 
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginTop: '20px',
-        }}
-      >
-        <div
-          className="BmiDivInputFields"
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'flex-start',
-            gap: '20px',
-          }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-start',
-            }}
-          >
-            <label>Height (in feet and inches) * :</label>
-            <input
-              type="number"
-              placeholder="Enter your height in feet"
-              value={heightFeet}
-              onChange={(e) => setHeightFeet(e.target.value)}
-            />
-          </div>
-
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-start',
-            }}
-          >
-            <label>&nbsp;</label>
-            <input
-              type="number"
-              placeholder="Enter your height in inch"
-              value={heightInches}
-              onChange={(e) => setHeightInches(e.target.value)}
-            />
-          </div>
+        <div className="form-input-group">
+          <label>Gender*:</label>
+          <select value={gender} onChange={(e) => setGender(e.target.value)}>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
         </div>
-      </div>
 
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginTop: '20px',
-        }}
-      >
-        <div
-          className="BmiDivInputFields"
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'flex-start',
-            gap: '20px',
-          }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-start',
-            }}
-          >
-            <label>Weight (in kg) * :</label>
-            <input
-              type="number"
-              placeholder="Enter you weight"
-              value={weight}
-              onChange={(e) => setWeight(e.target.value)}
-            />
-          </div>
+        <div className="form-input-group">
+          <label>Height (enter feet)*:</label>
+          <input
+            type="number"
+            placeholder="Enter your height in feet"
+            value={heightFeet}
+            onChange={(e) => setHeightFeet(e.target.value)}
+            min={1}
+          />
+        </div>
 
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-start',
-            }}
-          >
-            <label>&nbsp;</label>
-            <button
-              type="button"
-              onClick={calculateBmi}
-              style={{
-                width: '230px',
-                color: 'black',
-                backgroundColor: 'orange',
-              }}
-            >
-              Calculate BMI
-            </button>
-          </div>
+        <div className="form-input-group">
+          <label>Height (enter inches)*:</label>
+          <input
+            type="number"
+            placeholder="Enter your height in inch"
+            value={heightInches}
+            onChange={(e) => setHeightInches(e.target.value)}
+            min={1}
+          />
+        </div>
+
+        <div className="form-input-group">
+          <label>Weight (in kg)*:</label>
+          <input
+            type="number"
+            placeholder="Enter you weight"
+            value={weight}
+            onChange={(e) => setWeight(e.target.value)}
+            min={1}
+          />
+        </div>
+        <div className="form-input-group">
+          <button type="button" onClick={calculateBmi}>
+            Calculate BMI
+          </button>
         </div>
       </div>
 
       {errorMessage && (
-        <p style={{ color: 'darksalmon', textAlign: 'center' }}>
-          {errorMessage}
-        </p>
+        <p style={{ color: 'tomato', textAlign: 'center' }}>{errorMessage}</p>
       )}
 
       {bmi !== null && (
         <div
           style={{
-            border: '2px solid yellow',
-            marginTop: '20px',
+            border: '2px solid gold',
+            marginTop: '30px',
             padding: '20px',
+            textAlign: 'center',
           }}
         >
-          <p style={{ textAlign: 'center', fontSize: '40px', margin: '0px' }}>
-            Your BMI: {bmi}
+          <p>
+            Your BMI: <b>{bmi}</b>
           </p>
-          <p
-            style={{
-              textAlign: 'center',
-              fontSize: '30px',
-              margin: '0px',
-              color: 'tomato',
-            }}
-          >
-            Category: {bmiCategory}
+          <p>
+            Category: <b>{bmiCategory}</b>
           </p>
         </div>
       )}
-    </div>
+    </main>
   );
 });
 

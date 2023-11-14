@@ -3,17 +3,17 @@ import { block } from 'million/react';
 
 const JournalComponent = ({ entry, onDelete }) => (
   <div>
-    <h1 style={{ color: '#FF5E5B', margin: '0' }}>
+    <h3 style={{ color: '#FF5E5B', margin: '0', fontSize: '1.4rem' }}>
       {entry.id}. {entry.title}
-    </h1>
-    <p style={{ color: '#ADB5BD' }}>{entry.text}</p>
+    </h3>
+    <p style={{ marginBottom: '15px' }}>{entry.text}</p>
     {entry.media && (
       <div>
         {entry.media.type.startsWith('image') && (
           <img
             src={entry.media.url}
             alt="Multimedia Entry"
-            style={{ width: '30%' }}
+            style={{ width: '50%', marginBottom: '15px' }}
           />
         )}
         {entry.media.type.startsWith('video') && (
@@ -37,6 +37,8 @@ const JournalComponent = ({ entry, onDelete }) => (
           width: '100%',
           height: '2px',
           backgroundColor: '#FFA987',
+          marginTop: '10px',
+          marginBottom: '10px',
         }}
       ></span>
     </div>
@@ -79,28 +81,51 @@ const DigitalPersonalJournal = block(function Journal() {
   };
 
   return (
-    <div>
-      <h1>My Digital Personal Journal</h1>
+    <main>
+      <h2 style={{ marginBottom: '15px' }}>My Digital Personal Journal</h2>
       <div>
         <input
           type="text"
           placeholder="Title of your Journal"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          style={{ display: 'block', marginBottom: '15px' }}
+          style={{
+            display: 'block',
+            marginBottom: '15px',
+            width: '100%',
+            maxWidth: '500px',
+          }}
         />
-        <input
-          type="text"
+
+        <textarea
+          cols="30"
+          rows="10"
           placeholder="Write your Journal here"
           value={text}
           onChange={(e) => setText(e.target.value)}
-          style={{ display: 'block', marginBottom: '15px' }}
-        />
+          style={{
+            display: 'block',
+            marginBottom: '15px',
+            width: '100%',
+            maxWidth: '500px',
+            color: 'currentcolor',
+            backgroundColor: ' var(--background)',
+            border: 'none',
+            borderRadius: '4px',
+            padding: '10px',
+            fontSize: 'inherit',
+          }}
+        ></textarea>
         <input
           type="file"
           accept=".png, .jpg, .jpeg, .mp4, .mp3, .gif"
           onChange={(e) => setMediaFile(e.target.files[0])}
-          style={{ display: 'block', marginBottom: '15px' }}
+          style={{
+            display: 'block',
+            marginBottom: '15px',
+            width: '100%',
+            maxWidth: '250px',
+          }}
           ref={fileInputRef}
         />
         <button
@@ -109,6 +134,7 @@ const DigitalPersonalJournal = block(function Journal() {
             display: 'block',
             marginBottom: '15px',
             backgroundColor: 'orange',
+            color: 'black',
           }}
         >
           Add Journal
@@ -122,6 +148,7 @@ const DigitalPersonalJournal = block(function Journal() {
             width: '100%',
             height: '2px',
             backgroundColor: '#FFED66',
+            marginTop: '20px',
             marginBottom: '2px',
           }}
         ></span>
@@ -131,6 +158,7 @@ const DigitalPersonalJournal = block(function Journal() {
             width: '100%',
             height: '2px',
             backgroundColor: '#FFED66',
+            marginBottom: '20px',
           }}
         ></span>
       </div>
@@ -144,7 +172,7 @@ const DigitalPersonalJournal = block(function Journal() {
           />
         ))}
       </div>
-    </div>
+    </main>
   );
 });
 
