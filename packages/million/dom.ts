@@ -227,4 +227,13 @@ export const setAttribute = (
   } else {
     removeAttribute$.call(el, name);
   }
+
+  const isInput = el instanceof HTMLInputElement;
+  const isSelect = el instanceof HTMLSelectElement;
+  const isTextArea = el instanceof HTMLTextAreaElement;
+
+  if (name === 'value' && (isInput || isSelect || isTextArea)) {
+    setAttribute$.call(el, name, String(value));
+    el.value = value as string;
+  }
 };
