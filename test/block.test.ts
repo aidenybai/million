@@ -101,4 +101,31 @@ describe.concurrent('block', () => {
       '<div><h1>Hello</h1> World<p title="baz" style="margin: 1px;" class="bar"></p></div>',
     );
   });
+
+  it('should clear input inside block if the value is empty', ({ expect }) => {
+    const block = createBlock((props?: MillionProps) => {
+      return {
+        type: 'div',
+        props: {
+          children: [
+            {
+              type: 'input',
+              props: {
+                value: props?.foo,
+              },
+            },
+          ],
+        },
+      };
+    });
+
+    const main = block({ foo: 'foo' });
+
+    main.m();
+    expect(main.l?.outerHTML).toEqual('<div><input value="foo"></div>');
+
+    main.p(block({ foo: '' }));
+
+    expect(main.l?.outerHTML).toEqual('<div><input value=""></div>');
+  })
 });
