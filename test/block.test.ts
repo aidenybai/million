@@ -127,5 +127,5 @@ describe.concurrent('block', () => {
     main.p(block({ foo: '' }));
 
     expect(main.l?.outerHTML).toEqual('<div><input value=""></div>');
-  })
+  });
 });
