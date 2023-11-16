@@ -1,0 +1,237 @@
+---
+title: 'Rules Of Blocks'
+description: 'How to use blocks in your projects the right way'
+---
+
+import { Callout } from 'nextra-theme-docs';
+import { AutomaticModeWarning } from '../../components/automatic-mode-warning';
+
+# 区块规则
+
+{/* <AutomaticModeWarning /> */}
+
+您来到这里可能是因为控制台中收到警告消息。
+
+<Callout type="warning">
+  <code><strong>\[Million.js\]</strong> 你做错事了！</code>
+
+  ```jsx showLineNumbers filename="App.jsx" {2}
+  <div>
+    <YourBlock>Uh oh...</YourBlock>
+              ^
+  </div>
+  ```
+</Callout>
+
+您可能会看到它的三个常见原因：
+
+1. 你可能 **违反了区块规则。**
+2.您可能 **忘记使用编译器。**
+3. 您已输入 **不受支持的行为。**
+
+## 打破区块规则
+
+您可能听说过 ["渐进增强,"](https://developer.mozilla.org/en-US/docs/Glossary/Progressive_Enhancement) 这个想法是工具根据支持的内容逐步使用功能。 类似地, Million.js 具有“渐进降级”的概念，即如果您使用不支持的功能，它将优雅地降级为默认的 React 渲染。
+
+本节重点介绍使用块时可能遇到的一些警告。请注意，这不是详尽的列表。
+
+<Callout type="info">
+  本节介绍使用块的惯用模式。它不是错误列表，如果您不遵循这些模式，您的应用程序仍然可以运行。
+</Callout>
+
+### 声明块
+
+<Callout type="warning">
+  <code>
+  <strong>[Million.js]</strong> 块需要定义为变量声明。
+  </code>
+</Callout>
+
+当您有一个未声明为变量的块时，通常会发生上述情况。这会阻止编译器正确分析该块。
+
+```jsx
+console.log(block(() => <div />)) // ❌ Wrong
+export default block(() => <div />) // ❌ Wrong
+
+// 👇👇👇
+
+const Block = block(() => <div />) // ✅ Correct
+console.log(Block);
+export default Block;
+```
+
+### 调用 `block()`
+
+<Callout type="warning">
+  <code>
+  <strong>[Million.js]</strong> 发现块的参数不受支持。确保块消耗引用
+  到组件函数或直接声明。
+  </code>
+</Callout>
+
+当你有一个像这样的实际 JSX 组件时，通常会发生上述情况 `<Component />{:jsx}` 传递到 `block(){:jsx}` 函数而不是对组件本身的引用。
+
+```jsx
+const BadBlock = block(<Component />) // ❌ Wrong
+
+const GoodBlock = block(App)  // ✅ Correct
+```
+
+### 使用 `<For />` 代替 `map()`
+
+<Callout type="warning">
+  <code>
+  <strong>[Million.js]</strong>
+  Array.map() 会降低性能。我们建议移除上的块
+  当前组件并使用 `<For />` 组件代替
+  </code>
+</Callout>
+
+当您在块中使用 `<Array>.map` 时, 会发生上述情况。这并不理想, 特别是如果保存列表的组件是一个块。正确的模式是删除当前组件上的块, 并为子组件使用 `<For />` 组件。
+
+```jsx
+<div>
+  {items.map((item) => (
+    <div key={item}>{item}</div>
+  ))}
+</div>
+
+// 👇👇👇
+
+<For each={items}>
+  {(item) => <div key={item}>{item}</div>}
+</For>
+```
+
+### 确定性回报
+
+<div className="flex gap-3">
+<Callout type="warning">
+  <code>
+  <strong>[Million.js]</strong>
+  条件表达式会降低性能。我们建议使用
+  相反，确定性回报。
+  </code>
+</Callout>
+
+<Callout type="error">
+  <code>
+  未捕获的错误：渲染的钩子数量少于预期。这可能是由于意外的提前退货声明造成的。
+  </code>
+</Callout>
+</div>
+
+
+
+返回必须是“确定性的”，这意味着在返回稳定树的块末尾只能有一个返回语句。
+
+不确定性回报的一些示例：
+
+```jsx
+function Component() {
+  const [count, setCount] = useState(initial.count);
+
+  if (count > 10) {
+    return <div>Too many clicks!</div>; // ❌ Wrong
+  }
+
+  // ❌ Wrong
+  return count > 5 ? (
+    'Count is greater than 5'
+  ) : (
+    <div>Count is {count}.</div>
+  );
+}
+
+const ComponentBlock = block(Component);
+```
+
+### UI 组件库 🙅‍♀️
+
+<Callout type="warning">
+  <code>
+    <strong>[Million.js]</strong>
+    组件会导致性能下降。理想情况下，您应该使用 DOM 元素。
+  </code>
+</Callout>
+
+许多 React 应用程序使用 UI 组件库，例如 Material UI、Chakra UI 或 Tailwind UI。这些库很棒, 但它们没有针对 Million.js 进行优化。
+
+Million.js 要求您使用 DOM 元素而不是组件。这是因为组件可能会引入不确定的回报，从而导致性能下降。
+
+```jsx
+// ❌ Bad
+<Stack>
+  <Text>What's up my fellow components</Text>
+</Stack>
+
+// 🤨 Maybe
+<div>
+  <Text>What's up my fellow components</Text>
+</div>
+
+// ✅ Good
+<div>
+  <p>What's up my fellow components</p>
+</div>
+```
+
+### 传播属性/子项
+
+<Callout type="warning">
+  <code>
+  <strong>[Million.js]</strong>
+  不完全支持传播属性/子项
+  </code>
+</Callout>
+
+您不能使用安全更改的扩展属性/子项或引用 Million.js 内组件内的绑定，因为它们可能会引入不确定的返回。
+
+```jsx
+const arr = ['Hello'];
+
+<div>{...arr}</div> // Ok if arr never changes
+
+// ❌ Bad
+arr.push('World');
+```
+
+### 不支持导入
+
+<Callout type="error">
+  <code>
+  <strong>[Million.js]</strong>
+    发现块的导入不受支持。确保块是从 Million/React 导入的。
+  </code>
+</Callout>
+
+这可能是由于从错误的位置导入块造成的。确保从 `million/react` 而不是 `million` 导入该块。
+
+```jsx
+import { block } from 'million'; // ❌ Wrong
+
+import { block } from 'million/react'; // ✅ Correct
+```
+
+## 使用编译器
+
+<Callout type="error">
+  <code>
+  <strong>警告: </strong>
+  无效的挂钩调用。钩子只能在函数组件的主体内部调用。
+  </code>
+</Callout>
+
+您可能忘记使用编译器，这是确保您的 JSX 编译为 Million.js 兼容代码的必要部分。您可以在以下位置查看说明：[安装指南](/docs/install).
+
+顺便说一句, Million.js 在技术上无需编译器即可使用，但其范围明显受到限制，并且有一个 [可用的功能集更有限](/docs/block#rules-of-usage). 不建议这样做。
+
+## 不受支持的行为
+
+<Callout type="error">
+  <code>
+    未捕获的错误：??? :(
+  </code>
+</Callout>
+
+如果这些都不起作用，请 [创建一个问题](https://github.com/aidenybai/million/issues/new?assignees=aidenybai&labels=bug&projects=&template=bug_report.md&title=bug%3A+) 我们会尽力提供帮助。尝试创建一个小的重现示例 — 当你这样做时，你可能会发现问题。

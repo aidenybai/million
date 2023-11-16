@@ -1,0 +1,379 @@
+---
+title: 'Installation'
+description: 'How to install Million.js into your React project'
+---
+
+import { Callout, Tabs, Tab, Steps } from 'nextra-theme-docs';
+
+# 安装
+
+Million.js 假设您已经初始化了一个 React 项目。如果您还没有，我们建议您首先查看 [react.dev](https://react.dev)。
+
+## 几秒钟内完成设置
+
+Million.js CLI 将自动安装该包并为您配置您的项目。
+
+<Tabs items={['npm', 'pnpm', 'yarn', 'bun']} storageKey="selected-pkg-manager">
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  npx million@latest
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  pnpx million@latest
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  yarn add million@latest
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  bunx million@latest
+  ```
+  </Tab>
+</Tabs>
+
+就是这样！**您的项目现在正在 Million.js 上运行 🎉**
+
+<Callout type="info">
+  Million.js 与 React 16 及更高版本兼容。如果您使用的是旧版本的 React, 则需要先升级。
+</Callout>
+
+## 手动配置
+
+如果您想更精细地控制安装过程，可以按照以下步骤操作。
+
+<Tabs items={['Automatic', 'Manual']} storageKey="mode">
+
+<Tab>
+
+<Steps>
+
+### 安装包
+
+首先，您需要安装 Million.js。您可以使用您最喜欢的包管理器来执行此操作:
+
+<Tabs items={['npm', 'pnpm', 'yarn', 'bun']} storageKey="selected-pkg-manager">
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  npm install million
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  pnpm install million
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  yarn add million
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  bun add million
+  ```
+  </Tab>
+</Tabs>
+
+### 使用编译器
+
+然后，将编译器添加到您选择的构建工具中：
+
+<Tabs items={['Next.js', 'Astro', 'Gatsby', 'Vite', 'Create React App', 'Webpack', 'Rollup']} storageKey="selected-bundler-compiler">
+  <Tab>
+
+  Million.js 在 `/app` (仅“使用客户端”组件) 和 `/pages` 中受支持
+
+  ```js filename="next.config.mjs"
+  import million from 'million/compiler';
+
+  /** @type {import('next').NextConfig} */
+  const nextConfig = {
+    reactStrictMode: true,
+  };
+
+  const millionConfig = {
+    auto: true,
+    // if you're using RSC:
+    // auto: { rsc: true },
+  }
+
+  export default million.next(nextConfig, millionConfig);
+  ```
+  </Tab>
+  <Tab>
+  ```js filename="astro.config.mjs"
+  import { defineConfig } from 'astro/config';
+  import million from 'million/compiler';
+
+  export default defineConfig({
+    vite: {
+      plugins: [million.vite({ mode: 'react', server: true, auto: true })]
+    }
+  });
+  ```
+  </Tab>
+  <Tab>
+  ```js filename="gatsby-node.js"
+  const million = require('million/compiler');
+
+  exports.onCreateWebpackConfig = ({ actions }) => {
+    actions.setWebpackConfig({
+      plugins: [million.webpack({ mode: 'react', server: true, auto: true })],
+    })
+  }
+  ```
+  </Tab>
+  <Tab>
+  ```js filename="vite.config.js"
+  import million from 'million/compiler';
+  import react from "@vitejs/plugin-react";
+  import { defineConfig } from 'vite';
+
+  export default defineConfig({
+    plugins: [million.vite({ auto: true }), react()],
+  });
+  ```
+  </Tab>
+  <Tab>
+  ```js filename="craco.config.js"
+  const million = require('million/compiler');
+  module.exports = {
+    webpack: {
+      plugins: { add: [million.webpack({ auto: true })] }
+    }
+  };
+  ```
+  </Tab>
+  <Tab>
+  ```js filename="webpack.config.js"
+  const million = require('million/compiler');
+  module.exports = {
+    plugins: [
+      million.webpack({ auto: true }),
+    ],
+  }
+  ```
+  </Tab>
+  <Tab>
+  ```js filename="rollup.config.js"
+  import million from 'million/compiler';
+
+  export default {
+    plugins: [million.rollup({ auto: true })],
+  };
+  ```
+  </Tab>
+</Tabs>
+
+</Steps>
+
+</Tab>
+
+<Tab>
+
+<Steps>
+
+### Install package
+
+First things first, you'll need to install Million.js. You can do this with your favorite package manager:
+
+<Tabs items={['npm', 'pnpm', 'yarn', 'bun']} storageKey="selected-pkg-manager">
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  npm install million
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  pnpm install million
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  yarn add million
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  bun add million
+  ```
+  </Tab>
+</Tabs>
+
+### Use the compiler
+
+Then, add the compiler to your build tool of choice:
+
+<details open>
+  <summary>React Instructions</summary>
+  <Tabs items={['Next.js', 'Astro', 'Gatsby', 'Vite', 'Create React App', 'Webpack', 'Rollup']} storageKey="selected-bundler-compiler">
+    <Tab>
+    Million.js is supported within the `/app` ("use client" components only) and `/pages`
+
+    ```js filename="next.config.mjs"
+    import million from 'million/compiler';
+
+    /** @type {import('next').NextConfig} */
+    const nextConfig = {
+      reactStrictMode: true,
+    };
+
+    export default million.next(nextConfig);
+    ```
+    </Tab>
+    <Tab>
+    ```js filename="astro.config.mjs"
+    import { defineConfig } from 'astro/config';
+    import million from 'million/compiler';
+
+    export default defineConfig({
+      vite: {
+        plugins: [million.vite({ mode: 'react', server: true })]
+      }
+    });
+    ```
+    </Tab>
+    <Tab>
+    ```js filename="gatsby-node.js"
+    const million = require('million/compiler');
+
+    exports.onCreateWebpackConfig = ({ actions }) => {
+      actions.setWebpackConfig({
+        plugins: [million.webpack({ mode: 'react', server: true })],
+      })
+    }
+    ```
+    </Tab>
+    <Tab>
+    ```js filename="vite.config.js"
+    import million from 'million/compiler';
+    import react from "@vitejs/plugin-react";
+    import { defineConfig } from 'vite';
+
+    export default defineConfig({
+      plugins: [million.vite(), react()],
+    });
+    ```
+    </Tab>
+    <Tab>
+    ```js filename="craco.config.js"
+    const million = require('million/compiler');
+    module.exports = {
+      webpack: {
+        plugins: { add: [million.webpack()] }
+      }
+    };
+    ```
+    </Tab>
+    <Tab>
+    ```js filename="webpack.config.js"
+    const million = require('million/compiler');
+    module.exports = {
+      plugins: [
+        million.webpack(),
+      ],
+    }
+    ```
+    </Tab>
+    <Tab>
+    ```js filename="rollup.config.js"
+    import million from 'million/compiler';
+
+    export default {
+      plugins: [million.rollup()],
+    };
+    ```
+    </Tab>
+  </Tabs>
+</details>
+
+<details>
+  <summary>Preact Instructions</summary>
+
+  <Callout type="info">
+    Note that instead of importing from `million/react` in your application code, you'll need to import from `million/preact` instead.
+  </Callout>
+
+  <Tabs items={['Astro', 'Vite', 'Webpack', 'Rollup']} storageKey="selected-bundler-compiler-preact">
+    <Tab>
+    ```js filename="astro.config.mjs"
+    import { defineConfig } from 'astro/config';
+    import million from 'million/compiler';
+
+    export default defineConfig({
+      vite: {
+        plugins: [million.vite({ mode: 'preact', server: true })]
+      }
+    });
+    ```
+    </Tab>
+    <Tab>
+    ```js filename="vite.config.js"
+    import million from 'million/compiler';
+    import { defineConfig } from 'vite';
+
+    export default defineConfig({
+      plugins: [million.vite({ mode: 'preact' })],
+    });
+    ```
+    </Tab>
+    <Tab>
+    ```js filename="webpack.config.js"
+    const million = require('million/compiler');
+    module.exports = {
+      plugins: [
+        million.webpack({ mode: 'preact' }),
+      ],
+    }
+    ```
+    </Tab>
+    <Tab>
+    ```js filename="rollup.config.js"
+    import million from 'million/compiler';
+
+    export default {
+      plugins: [million.rollup({ mode: 'preact' })],
+    };
+    ```
+    </Tab>
+  </Tabs>
+</details>
+
+### Using the experimental Optimizer
+
+<Callout type="warning">
+ This is a _**highly experimental**_ feature. It's not recommended to use this in production.
+</Callout>
+
+You can enable the experimental optimizer by passing `optimize: true{:js}` to the compiler options. This will allow the server to attempt to statically analyze blocks beforehand for a zero initialization cost.
+
+You can also add a leading comment of `/* @optimize */` to any block to opt-in to optimization on a component-by-component basis.
+
+```js {3}
+import { block } from "million/react";
+
+const AppBlock = /* @optimize */ block(App);
+```
+
+</Steps>
+
+</Tab>
+
+</Tabs>

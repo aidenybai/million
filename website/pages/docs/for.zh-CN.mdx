@@ -1,0 +1,70 @@
+---
+title: '<For />'
+description: 'Learn how to render lists of blocks in Million.'
+---
+
+import { AutomaticModeWarning } from '../../components/automatic-mode-warning';
+
+# `<对于>{:jsx}`
+
+{/* <AutomaticModeWarning /> */}
+
+**句法:** `<For each={array}>{(item, index) => Block}</For>{:jsx}`\
+**例子:** `<For each={[1, 2, 3]}>{(item) => myBlock({ item })}</For>{:jsx}`
+
+`<For />{:jsx}` 组件用于渲染块列表。它采用一个数组作为 `each` 道具, 并采用一个函数作为其子项。为数组中的每个项目调用该函数, 并将该项目及其索引作为参数传递。
+
+这是循环数组的最佳方法。当数组发生变化时，`<For />{:jsx}` 会更新或移动 DOM 中的项目，而不是重新创建它们。让我们看一个例子：
+
+```jsx
+import { For } from 'million/react';
+
+function App() {
+  const [items, setItems] = useState([1, 2, 3]);
+
+  return (
+    <>
+      <button onClick={() => setItems([...items, items.length + 1])}>
+        Add item
+      </button>
+      <ul>
+        <For each={items}>{(item) => <li>{item}</li>}</For>
+      </ul>
+    </>
+  );
+}
+
+export default App;
+```
+
+## `as` 道具
+
+`as` 属性可用于指定 For 的标签名称。默认情况下, 它是 `slot`。
+
+```jsx
+<For each={items} as="div">
+  {(item) => <li>{item}</li>}
+</For>
+```
+
+## 优化 `<For />`
+
+在内部，`<For />` 不会重用块以避免未知行为。这意味着如果您有一个包含 1000 个项目的 `<For />`，它将重新创建 1000 个块。
+
+但是, 如果您知道您的项目不依赖于除传递给函数的 `item` 之外的任何值, 则可以使用 `memo` 属性告诉 Million 重用块。这将提高性能并减少内存使用。
+
+```jsx
+<For each={items} memo>
+  {(item) => <li>{item}</li>}
+</For>
+```
+
+## 水合作用不匹配
+
+如果您在服务器上使用 Million.js, 您可能会遇到水合不匹配错误。这是因为 Million.js 在服务器上使用与在客户端上不同的算法进行渲染。要解决此问题，您可以禁用 SSR。
+
+```jsx
+<For each={[Math.random(), Math.random(), Math.random()]} ssr={false}>
+  {(item) => <li>{item}</li>}
+</For>
+```

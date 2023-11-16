@@ -1,0 +1,47 @@
+---
+title: 'renderToTemplate()'
+description: 'The renderToTemplate function is used to render a virtual DOM node to a string. This is used to create the template for the block and works tangentially with stringToDOM.'
+---
+
+import { Callout } from 'nextra-theme-docs';
+
+<Callout type="warning">
+  **此函数是内部 API 的一部分。** 您应该仅在以下情况下使用此函数：
+  你正在制作自己的框架。
+</Callout>
+
+<br />
+
+# `渲染到模板(){:jsx}`
+
+**句法:** `renderToTemplate(vnode, edits){:jsx}`\
+**例子:** `renderToTemplate(<div>Hello World</div>, []){:jsx}`
+
+`renderToTemplate()` 函数用于将虚拟 DOM 节点渲染为字符串。这用于创建块的模板并与 [`字符串转DOM(){:jsx}`](/docs/internals/string-to-dom).
+
+```jsx
+import { renderToTemplate } from 'million';
+
+const edits = [];
+const template = renderToTemplate(<div>Hello World</div>, edits);
+
+console.log(template); // '<div>Hello World</div>'
+
+console.log(edits); // []
+```
+
+## 模板中的孔
+
+您还可以将 Holes 传递给 `渲染到模板()` 功能。这将返回经过编辑的模板。
+
+```jsx
+import { renderToTemplate } from 'million';
+
+const edits = [];
+const hole = { $: 'hole' };
+const template = renderToTemplate(<div>Hello {hole}</div>, edits);
+
+console.log(template); // '<div>Hello </div>'
+
+console.log(edits); // [{ type: 'child', index: 0, hole: 'hole' }]
+```

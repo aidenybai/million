@@ -1,0 +1,21 @@
+---
+title: 'Common Errors With Million.js Integration'
+description: 'How to overcome common errors when using Million.js with other technologies'
+---
+
+import { Callout } from 'nextra-theme-docs';
+
+<Callout>此页面是一个存根</Callout>
+
+# 常见错误
+
+您来到这里可能是因为您在将现有项目与 Million.js 集成时遇到问题。
+
+## MobX 集成
+
+- 升级到 MobX v6
+- 删除装饰器
+
+## 双宏
+
+Million.js 无法与 `twin.macro` 一起使用，因为它们的 JSX 转换覆盖。

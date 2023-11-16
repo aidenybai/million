@@ -1,0 +1,46 @@
+---
+title: 'patch()'
+description: 'The patch function is used to rerender a block with another block.'
+---
+
+import { Callout } from 'nextra-theme-docs';
+
+<Callout type="warning">
+  **此函数是内部 API 的一部分。** 您应该仅在以下情况下使用此函数：
+  你正在制作自己的框架。
+</Callout>
+
+<br />
+
+# `修补(){:jsx}`
+
+**句法:** `patch(oldBlock, newBlock){:jsx}`\
+**例子:** `patch(block1, block2){:jsx}`
+
+`patch` 函数用于用另一个块重新渲染一个块。`oldBlock` 是将要重新渲染的块, `newBlock` 表示新版本的 DOM。
+
+<Callout>
+  始终尝试保持相同形状的块（源自相同的函数）
+  使用补丁时为了保持良好的性能。
+</Callout>
+
+```jsx
+import { block, mount, patch, fragment } from 'million';
+
+const display = block(({ text }) => {
+  return <p>{text}</p>;
+});
+
+// we will patch against this block for updates
+const main = display({ text: 'Hello' });
+
+mount(main, document.getElementById('root'));
+
+patch(main, display({ text: 'World' }));
+
+const bigDisplay = block(({ text }) => {
+  return <h1 style={{ color: 'red' }}>{text}</h1>;
+});
+
+patch(main, bigDisplay({ text: 'World' })); // inefficient, but works
+```

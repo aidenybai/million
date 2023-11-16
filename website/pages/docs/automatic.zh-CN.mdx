@@ -1,0 +1,42 @@
+---
+title: 'Automatic Mode'
+description: 'The default mode of Million.js'
+---
+
+import { Callout, Tabs, Tab, Steps } from 'nextra-theme-docs';
+
+# 自动模式
+
+自动模式是Million.js 的默认模式。它会自动将 React 组件转换为 Million.js 组件。
+
+### 忽略组件
+
+如果某个组件与 Million.js 运行时冲突，可以通过 `// million-ignore` 注释跳过它们。
+
+```js
+// million-ignore
+function App() {
+  return ...
+}
+```
+
+### 高级定制
+
+自动模式提供了调整自动模式的选项：
+
+- `threshold`：用于确定组件是否应转换为 Million.js 的启发式阈值。阈值越大, 优化的组件就越少, 反之亦然。默认值为 `0.1`.
+- `skip`：指示应跳过某个组件的标识符数组。可以放钩子名、变量名等，默认是 `[]`。
+
+
+```js
+const options = {
+  auto: {
+    threshold: 0.25, // default: 0.1,
+    skip: ['useBadHook', /badVariable/g] // default []
+  }
+}
+```
+
+### 将帮助消息静音
+
+如果您不想看到帮助消息，可以将 `{ mute: true }{:js}` 选项传递给编译器。

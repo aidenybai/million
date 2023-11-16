@@ -1,0 +1,402 @@
+---
+title: 'Tutorial'
+description: 'Learn how to use Million.js'
+---
+
+import dynamic from 'next/dynamic';
+import { Callout, Tabs, Tab, Cards, Card } from 'nextra-theme-docs';
+import { Box } from '../../components/box';
+import { AutomaticModeWarning } from '../../components/automatic-mode-warning';
+import { BrowserView, MobileView } from 'react-device-detect';
+import { VDomExample } from '../../components/back-in-block/vdom';
+import { CombinedBlockExample } from '../../components/back-in-block/combined-block';
+export const Demo = dynamic(() =>
+  import('../../components/demo').then((mod) => mod.Demo),
+);
+
+<MobileView>
+
+<Callout type="warning">
+  我们强烈建议您在桌面浏览器上查看此文档以访问交互式代码示例。
+</Callout>
+
+</MobileView>
+
+# 教程
+
+{/* <AutomaticModeWarning /> */}
+
+欢迎来到 Million.js 文档 (_woop woop 🎉🤑_)。让我们了解如何将 Million.js 集成到我们的 React 应用程序中。
+
+Million.js 假设您已经熟悉并且正在使用 React。如果您不是, 我们建议您先查看 [react.dev](https://react.dev/)。
+
+<Callout type="info">
+**你将学习：**
+- 如何使用 `block(){:jsx}` 将 React 组件转换为块
+- 如何使用 `<For />{:jsx}` 高效渲染列表
+- 何时使用 `block(){:jsx}` 和 `<For />{:jsx}`
+- 块的局限性
+</Callout>
+
+## 什么是块？
+
+Million.js 是一个可以让您创建_区块_的库。块是一种特殊的[高阶组件 (HOC)](https://legacy.reactjs.org/docs/higher-order-components.html), 可以用作 React 组件,但对渲染速度进行了超级优化。
+
+块本质上是由 `block(){:jsx}` 包裹的组件。
+
+```jsx {3, 7}
+import { block } from "million/react";
+
+const LionBlock = block(function Lion() {
+  return (
+    <img src="https://million.dev/lion.svg" />
+  );
+})
+```
+
+块可以像普通的 React 组件一样使用：
+
+```jsx {5}
+export default function App() {
+  return (
+    <div>
+      <h1>mil + LION = million</h1>
+      <LionBlock />
+    </div>
+  );
+}
+```
+
+<BrowserView>
+
+看看结果：
+
+<Box previewOnly code={`
+  import { block } from 'million/react';
+
+  function Lion() {
+    return (
+      <img src="https://million.dev/lion.svg" width={200} />
+    );
+  }
+
+  const LionBlock = block(Lion);
+
+  export default function App() {
+    return (
+      <div>
+        <h1>mil + LION = million</h1>
+        <LionBlock />
+      </div>
+    );
+  }
+`} />
+
+</BrowserView>
+
+有了这些，我们就可以构建一个应用程序了。
+
+## 数据网格示例
+
+块的一种用例是有效地呈现数据列表。在此示例中，让我们在 React 中构建一个数据网格。
+
+我们可以从我们的假用户界面 (UI) 库访问预构建组件 `<Table />{:jsx}` 和 `<Input />{:jsx}`。然后，我们可以将要显示的行数存储在 `useState(){:jsx}` 挂钩中。
+
+```jsx
+function App() {
+  const [rows, setRows] = useState(1);
+
+  return (
+    <div>
+      <Input value={rows} setValue={setRows} />
+      <Table>
+        // ...
+      </Table>
+    </div>
+  );
+}
+```
+
+可是等等! 我们制作了一个网格, 但没有数据。假设我们可以从名为 `buildData(rows){:jsx}` 的函数中获取一些任意数据数组：
+
+```jsx
+const data = buildData(100);
+// returns [{ adjective: '...', color: '...', noun: '...' }, ... x100]
+```
+
+现在，我们可以使用 `Array.map(){:jsx}` 渲染表中的数据：
+
+
+```jsx {3, 9-15}
+function App() {
+  const [rows, setRows] = useState(1);
+  const data = buildData(rows);
+
+  return (
+    <div>
+      <Input value={rows} setValue={setRows} />
+      <Table>
+        {data.map(({ adjective, color, noun }) => (
+          <tr>
+            <td>{adjective}</td>
+            <td>{color}</td>
+            <td>{noun}</td>
+          </tr>
+        ))}
+      </Table>
+    </div>
+  );
+}
+```
+
+<BrowserView>
+
+<Box previewOnly code={`
+  import { useState } from 'react';
+  import { Table, Input } from './ui';
+  import { buildData } from './data';
+
+  function App() {
+    const [rows, setRows] = useState(1);
+    const data = buildData(rows);
+
+    return (
+      <div>
+        <Input value={rows} setValue={setRows} />
+        <Table>
+          {data.map(({ adjective, color, noun }) => (
+            <tr>
+              <td>{adjective}</td>
+              <td>{color}</td>
+              <td>{noun}</td>
+            </tr>
+          ))}
+        </Table>
+      </div>
+    );
+}
+
+export default App;
+`} />
+
+我们可以看到它的表现相当不错。从 0 到 100, 几乎没有延迟, 但一旦高于 500 左右, 渲染就会出现明显的延迟。
+
+很酷吧？ React 很棒，因为我们可以声明式地编写出色的 UI 并获得相当好的性能。但我们刚刚制作的数据网格只是一个基本示例，并不一定能代表大多数 React 应用程序。
+
+### 更真实的渲染
+
+那么，让我们介绍一些香料。在下面的示例中, 我们将 `lotsOfElements` (包含大量空白元素的数组) 添加到每一行。我们还添加了滞后雷达来监控页面性能。
+
+尝试在 0 到 1000 之间上下更改输入值。请注意, React 在渲染大量元素时“真的很困难”。
+
+<Box code={`
+  import { useState } from 'react';
+  import { Table, Input, lotsOfElements } from './ui';
+  import { buildData } from './data';
+
+  function App() {
+    const [rows, setRows] = useState(1);
+    const data = buildData(rows);
+
+    return (
+      <div>
+        <Input value={rows} setValue={setRows} />
+        <Table showRadar>
+          {data.map(({ adjective, color, noun }) => (
+            <tr>
+              <td>{adjective}</td>
+              <td>{color}</td>
+              <td>{noun}</td>
+              <td>{...lotsOfElements}</td>
+            </tr>
+          ))}
+        </Table>
+      </div>
+    );
+}
+
+export default App;
+`} />
+
+</BrowserView>
+
+### 只需 `阻止` 它
+
+在以下示例中，我们使用 `block(){:jsx}` 和 `<For />{:jsx}` 来优化渲染。
+
+首先，我们需要将 `<tr>{:jsx}` 抽象为它自己的组件。
+
+```jsx
+data.map(({ adjective, color, noun }) => (
+  <tr>
+    <td>{adjective}</td>
+    <td>{color}</td>
+    <td>{noun}</td>
+    <td>{...lotsOfElements}</td>
+  </tr>
+))
+
+// 👇👇👇
+
+function Row({ adjective, color, noun }) {
+  return (
+    <tr>
+      <td>{adjective}</td>
+      <td>{color}</td>
+      <td>{noun}</td>
+      {...lotsOfElements}
+    </tr>
+  );
+}
+```
+
+然后, 我们可以用 `block(){:jsx}` 包装它，以优化 `<Row />{:jsx}` 组件。
+
+```jsx {3, 14}
+import { block } from "million/react";
+
+const RowBlock = block(
+  function Row({ adjective, color, noun }) {
+    return (
+      <tr>
+        <td>{adjective}</td>
+        <td>{color}</td>
+        <td>{noun}</td>
+        {...lotsOfElements}
+      </tr>
+    );
+  }
+);
+```
+
+一旦我们优化了一行，我们需要将其呈现为列表：
+
+```jsx
+data.map(({ adjective, color, noun }) => (
+  <RowBlock adjective={adjective} color={color} noun={noun}>
+));
+```
+
+**但是等等！* 我们实际上可以使用 Million.js 的内置渲染解决方案。
+
+### 优化列表渲染
+
+`<For />{:jsx}` 组件用于渲染块列表。它采用一个数组作为“each”道具, 并采用一个函数作为其子项。为数组中的每个项目调用该函数, 并将该项目及其索引作为参数传递。
+
+<Callout type="info">
+**`<For />{:jsx}` 组件**
+
+句法: `<For each={array}>{(item, index) => Block}</For>{:jsx}`\
+例子: `<For each={[1, 2, 3]}>{(item, index) => myBlock({ item, index })}</For>{:jsx}`
+</Callout>
+
+这是循环数组的最佳方法（在底层使用 [`mapArray(){:jsx}`](/docs/internals/map-array) ）。当数组发生变化时，`<For />{:jsx}` 会更新或移动 DOM 中的项目，而不是重新创建它们。让我们看一个例子：
+
+考虑到这一点，我们可以重写我们的表以使用 `<For />{:jsx}`:
+
+```jsx {3, 4, 5, 6, 7}
+import { For } from "million/react";
+
+<For each={data}>
+  {({ adjective, color, noun }) => (
+    <RowBlock adjective={adjective} color={color} noun={noun} />
+  )}
+</For>
+```
+
+<BrowserView>
+
+现在我们已经集成了 Million.js, 让我们检查一下新示例。
+
+请注意，当您更改输入值时，滞后雷达显示的滞后明显小于纯 React 示例。凭借[更快的底层虚拟 DOM](/blog/virtual-dom), Million.js 可以减轻渲染大型列表的痛苦。
+
+<Box code={`
+  import { useState } from 'react';
+  import { Table, Input, lotsOfElements } from './ui';
+  import { buildData } from './data';
+  import { block, For } from 'million/react';
+
+  const RowBlock = block(
+    function Row({ adjective, color, noun }) {
+      return (
+        <tr>
+          <td>{adjective}</td>
+          <td>{color}</td>
+          <td>{noun}</td>
+          {...lotsOfElements}
+        </tr>
+      );
+    }
+  );
+
+  function App() {
+    const [rows, setRows] = useState(1);
+    const data = buildData(rows);
+
+    return (
+      <div>
+        <Input value={rows} setValue={setRows} />
+        <Table showRadar>
+          <For each={data}>
+            {({ adjective, color, noun }) => (
+              <RowBlock adjective={adjective} color={color} noun={noun} />
+            )}
+          </For>
+        </Table>
+      </div>
+    );
+}
+
+export default App;
+`} />
+
+</BrowserView>
+
+### Million.js 与 React
+
+<Callout type="info">
+ 下面是一个更全面的演示使用 [基于键的渲染](https://react.dev/learn/rendering-lists#keeping-list-items-in-order-with-key) 展示 Million.js 与 React 的性能对比。
+</Callout>
+
+<br />
+
+<Demo />
+
+## 达到极限
+
+<Callout type="warning">
+  本节有点高级。如果您想要限制列表，请查看 [区块规则](/docs/rules). 或者，如果您只是想开始集成 Million.js, 请查看 [安装指南](/docs/install).
+</Callout>
+
+块非常适合渲染大型列表、数据网格和许多其他用例。在底层，它们使用 Million.js 虚拟 DOM 而不是 React 进行渲染。
+
+<details>
+  <summary>
+    <strong>Deep Dive:</strong> How does it work?
+  </summary>
+  <Tabs items={['React', 'Million.js']}>
+    <Tab>
+      <VDomExample />
+    </Tab>
+    <Tab>
+      <CombinedBlockExample />
+    </Tab>
+  </Tabs>
+</details>
+
+使用块可以让我们获得潜在的性能提升。但是，您应该始终使用最佳判断，因为块不是灵丹妙药。以下是一些需要遵循的一般准则：
+
+- **静态视图**: 当没有那么多动态数据时，块的性能最佳。由于 React 动态数据更改时，React 树的静态部分不需要重新渲染，因此块可以直接跳到动态部分。
+- **嵌套数据**: 块非常适合渲染嵌套数据。 Million.js 将树遍历从 `O(树)` 到 `O(1)`, 允许快速访问和更改.
+
+正在寻找完整的指南？查看 [区块规则](/docs/rules).
+
+## 下一步
+
+到目前为止，您已经了解了如何将 Million.js 集成到您的应用程序中的基础知识！
+
+查看 [安装指南](/docs/install) 将它们付诸实践并开始使用块。
+
+---
+
+_此页面的灵感直接来自 [React 的“快速启动”页面](https://react.dev/learn)._

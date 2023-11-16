@@ -1,0 +1,62 @@
+---
+title: 'block()'
+description: 'Million.js introduces the concept of a Block. Blocks are a way for React components to be rendered using the Million.js virtual DOM.'
+---
+
+import { Callout } from 'nextra-theme-docs';
+import { AutomaticModeWarning } from '../../components/automatic-mode-warning';
+
+# `堵塞(){:jsx}`
+
+{/* <AutomaticModeWarning /> */}
+
+**句法:** `block((props) => vnode){:jsx}`\
+**例子:** `block((props) => <div>{props.foo}</div>){:jsx}`
+
+Million.js 是一个可以让您创建_区块_的库。块是一种特殊的[高阶组件  (HOC)](https://legacy.reactjs.org/docs/higher-order-components.htm), 可以用作React组件,但对渲染速度进行了超级优化。
+
+块本质上是由 `block(){:jsx}` 包裹的组件。
+
+```jsx
+import { block } from 'million/react';
+
+const LionBlock = block(function Lion() {
+  return <img src="https://million.dev/lion.svg" />;
+});
+
+export default LionBlock;
+```
+
+<Callout type="warning">
+  {/* There are some limitations to using blocks. Please reference the [Rules of
+  Blocks](/docs/rules) for more information. */}
+  使用块有一些限制。请参考 [区块规则](/docs/rules) 到 了解更多信息。
+</Callout>
+
+## `as` 道具
+
+`as` 属性可用于指定 for 的标签名称. 默认情况下，它是 `slot`.
+
+```jsx
+import { block } from 'million/react';
+
+const LionBlock = block(
+  function Lion() {
+    return <img src="https://million.dev/lion.svg" />;
+  },
+  { as: 'div' },
+);
+```
+
+## 水合作用不匹配
+
+如果您在服务器上使用 Million.js, 您可能会遇到水合不匹配错误。这是因为 Million.js 在服务器上使用与在客户端上不同的算法进行渲染。要解决此问题，您可以禁用 SSR。
+
+```jsx
+const NoSSRBlock = block(
+  function NoSSR() {
+    return <div>{Math.random()}</div>;
+  },
+  { ssr: false },
+);
+```

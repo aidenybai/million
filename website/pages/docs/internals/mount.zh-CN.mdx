@@ -1,0 +1,30 @@
+---
+title: 'mount()'
+description: 'Mount a block to a DOM element.'
+---
+
+import { Callout } from 'nextra-theme-docs';
+
+<Callout type="warning">
+  **此函数是内部 API 的一部分。** 您应该仅在以下情况下使用此函数：
+  你正在制作自己的框架。
+</Callout>
+
+<br />
+
+# `山(){:jsx}`
+
+**句法:** `mount(Block, el){:jsx}`\
+**例子:** `mount(block, document.getElementById('root')){:jsx}`
+
+`mount` 函数用于将块安装到 DOM 元素 (想象一下 React 中的 `ReactDOM.render()`). 它需要两个参数：要挂载的块和要挂载的 DOM 元素。
+
+```jsx
+import { block, mount } from 'million';
+
+const display = block(({ text }) => {
+  return <p>{text}</p>;
+});
+
+const element = mount(display, document.getElementById('root'));
+```

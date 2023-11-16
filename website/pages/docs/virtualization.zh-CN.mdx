@@ -1,0 +1,107 @@
+---
+title: 'Virtualization'
+description: 'List virtualization allows you to render large lists without performance issues.'
+---
+
+import { Callout, Tabs, Tab, Steps } from 'nextra-theme-docs';
+import { AutomaticModeWarning } from '../../components/automatic-mode-warning';
+
+# 虚拟化
+
+{/* <AutomaticModeWarning /> */}
+
+Million.js 配合得很好 [TanStack 虚拟](https://tanstack.com/virtual/v3/docs/guide/introduction). TanStack Virtual 是一个无头 UI 实用程序，用于虚拟化 React 中的长元素列表。 您可以一起自动使用虚拟化列表中的块。
+
+## 为什么要虚拟化？
+
+虚拟化是一种有效渲染大型项目列表的技术。 它仅呈现用户当前可见的项目，而不是呈现所有项目。 这极大地减少了需要创建和更新的 DOM 节点的数量，从而带来了巨大的性能优势。
+
+<Callout type="info">
+  想要比较 Million.js 与 React 虚拟化吗？查看 [这个演示](https://million-tanstack-virtual.vercel.app/)
+</Callout>
+
+![虚拟化图](/virtualized.png)
+
+## 安装
+
+您可以通过以下命令轻松安装它：
+
+<Tabs items={['npm', 'pnpm', 'yarn', 'bun']} storageKey="selected-pkg-manager">
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  npm install @tanstack/react-virtual@beta
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  pnpm install @tanstack/react-virtual@beta
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  yarn add @tanstack/react-virtual@beta
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  bun add @tanstack/react-virtual@beta
+  ```
+  </Tab>
+</Tabs>
+
+## 例子
+
+以下是使用 TanStack Virtual 和 Million.js 虚拟化 div 中的长列表的简单示例：
+
+```jsx
+import { useRef } from 'react';
+import { For } from 'million/react';
+import { useVirtualizer } from '@tanstack/react-virtual';
+
+function App() {
+  const parentRef = useRef();
+
+  const rowVirtualizer = useVirtualizer({
+    count: 10000,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 35,
+  });
+
+  return (
+    <>
+      <div ref={parentRef} style={{ height: `400px`, overflow: 'auto' }}>
+        <For
+          each={rowVirtualizer.getVirtualItems()}
+          style={{
+            height: `${rowVirtualizer.getTotalSize()}px`,
+            width: '100%',
+            position: 'relative',
+          }}
+          as="div"
+        >
+          {(virtualItem) => (
+            <div
+              key={virtualItem.key}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                fontSize: '20px',
+                height: `${virtualItem.size}px`,
+                transform: `translateY(${virtualItem.start}px)`,
+              }}
+            >
+              Row {virtualItem.index}
+            </div>
+          )}
+        </For>
+      </div>
+    </>
+  );
+}
+```

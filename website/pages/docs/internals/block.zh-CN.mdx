@@ -1,0 +1,74 @@
+---
+title: 'block()'
+description: 'The internal virtual DOM block() function instantiates a Block. It accepts a function with a props object parameter and returns a VNode.'
+---
+
+import { Callout } from 'nextra-theme-docs';
+
+<Callout type="warning">
+  **此函数是内部 API 的一部分。** 您应该只使用此函数
+  如果你正在制作自己的框架。
+</Callout>
+
+<br />
+
+# `堵塞(){:jsx}`
+
+**句法:** `block((props) => vnode){:jsx}`\
+**例子:** `block((props) => <div>{props.foo}</div>){:jsx}`
+
+`block` 函数实例化一个 `Block` (_无状态“组件”_)。它接受一个带有 props 对象参数的函数, 该参数返回一个 `VNode`。
+
+## 使用规则
+
+##### `props` 是一个具有原始值或 `Block` 值的不可变对象。
+
+```jsx
+someBlock({
+  one: '1', // ✅
+  two: 1 + 1, // ✅
+  three: true, // ✅
+  four: Date.now(), // ✅
+  five: anotherBlock({ crewmate: true }), // ✅
+  six: { imposter: true }, // ❌
+  seven: new Date(), // ❌
+});
+```
+
+##### `props` 的顶级值不能用其他值进行插值。
+
+这些道具充满了 `Hole` 值。当调用 `block(){:jsx}` 时，这些 `Hole` 值将替换为实际值。`Hole` 值是不可变的, 不能用其他值导出。
+
+```jsx
+// Anatomy of a `Hole`
+{
+  $: 'prop';
+}
+
+// Example:
+block((props) => {
+  console.log(props.foo); // { $: 'foo' } ✅
+  console.log(props.foo + ' bar'); // { $: 'foo' } + ' bar' ❌
+  return <div>{props.foo}</div>;
+});
+```
+
+以下是该规则的示例：
+
+```jsx
+block((props) => {
+  const { favorite } = props.favorite; // ❌
+  <div className={props.className /* ✅ */}>
+    {props.hello /* ✅ */}
+    {Date.now() /* ✅ */}
+    <button
+      onClick={() => {
+        console.log(props.world); /* ❌ (no holes inside listeners) */
+      }}
+    >
+      {props.count + 1 /* ❌ */}
+      {props.foo.toString() /* ❌ */}
+    </button>
+  </div>;
+});
+```

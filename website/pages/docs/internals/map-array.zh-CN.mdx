@@ -1,0 +1,37 @@
+---
+title: 'mapArray()'
+description: "The mapArray function is used to create a Block list. It's the best way to loop over an array."
+---
+
+import { Callout } from 'nextra-theme-docs';
+
+<Callout type="warning">
+  **此函数是内部 API 的一部分。** 您应该仅在以下情况下使用此函数：
+  你正在制作自己的框架。
+</Callout>
+
+<br />
+
+# `映射数组(){:jsx}`
+
+**句法:** `mapArray(Block[]){:jsx}`\
+**例子:** `mapArray([block, block, block]){:jsx}`
+
+`mapArray` 函数用于创建块列表。这是渲染从类数组数据派生的视图的最佳方式。当数组发生变化时，`mapArray(){:jsx}` 会更新或移动 DOM 中的项目，而不是重新创建它们。让我们看一个例子：
+
+```jsx
+import { block, patch, mapArray } from 'million';
+
+const oldList = [1, 2, 3];
+const newList = [3, 2, 1];
+const list = block(({ item }) => {
+  return <div>{item}</div>;
+});
+
+// updates list efficiently (only 2 moves instead of 3 updates)
+patch(
+  document.body,
+  mapArray(oldList.map((item) => list({ item }))),
+  mapArray(newList.map((item) => list({ item }))),
+);
+```

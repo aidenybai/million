@@ -1,0 +1,89 @@
+---
+title: Showcase
+---
+
+import { Card, Cards } from 'nextra/components';
+
+{<h1 className="mt-10 mb-4 text-center text-[2.5rem] font-bold tracking-tight">Showcase</h1>}
+
+{<p className="mb-16 text-center text-lg text-gray-500 dark:text-gray-400">Projects powered by Million.js.</p>}
+
+<Cards>
+  <ShowcaseCard title="Wyze" href="https://wyze.com/">
+    <>![Wyze preview](./showcase/wyze.png)</>
+  </ShowcaseCard>
+  <ShowcaseCard title="Metamask" href="https://metamask.io/">
+    <>![Metamask preview](./showcase/metamask.png)</>
+  </ShowcaseCard>
+  <ShowcaseCard title="Hack Club" href="https://hackclub.com/">
+    <>![Hack Club preview](./showcase/hackclub.jpeg)</>
+  </ShowcaseCard>
+  <ShowcaseCard title="Texts" href="https://texts.com/">
+    <>![Texts preview](./showcase/texts.png)</>
+  </ShowcaseCard>
+  <ShowcaseCard title="OpenSauced" href="https://opensauced.pizza/">
+    <>![OpenSauced preview](./showcase/opensauced.png)</>
+  </ShowcaseCard>
+  <ShowcaseCard title="Typehero" href="https://typehero.dev/">
+    <>![Typehero preview](./showcase/typehero.png)</>
+  </ShowcaseCard>
+  <ShowcaseCard title="LLM Report" href="https://llm.report/">
+    <>![LLM Report preview](./showcase/llm-report.png)</>
+  </ShowcaseCard>
+  <ShowcaseCard title="Supabox AI" href="https://supaboxai.com/">
+    <>![Supabox AI preview](./showcase/supabox.png)</>
+  </ShowcaseCard>
+  <ShowcaseCard title="Studio Freight" href="https://studiofreight.com/">
+    <>![Studio Freight preview](./showcase/studio-freight.jpeg)</>
+  </ShowcaseCard>
+  <ShowcaseCard title="Dona AI" href="https://dona.ai/">
+    <>![Dona AI preview](./showcase/dona-ai.jpeg)</>
+  </ShowcaseCard>
+  <ShowcaseCard title="T4 Stack" href="https://t4stack.com/">
+    <>![T4 Stack preview](./showcase/t4stack.png)</>
+  </ShowcaseCard>
+  <ShowcaseCard title="VeganCheck.me" href="https://vegancheck.me/">
+    <>![VeganCheck.me preview](./showcase/vegancheck.png)</>
+  </ShowcaseCard>
+  <ShowcaseCard
+    title="Windows 11 Web"
+    href="https://github.com/PiyushSuthar/Windows-11-Web"
+  >
+    <>![Windows 11 Web preview](./showcase/windows-11-web.jpeg)</>
+  </ShowcaseCard>
+  <ShowcaseCard
+    title="jahir.dev"
+    href="https://github.com/jahirfiquitiva/jahir.dev"
+  >
+    <>![jahir.dev preview](./showcase/jahir-dev.png)</>
+  </ShowcaseCard>
+  <ShowcaseCard title="LogLib" href="https://www.loglib.io/">
+    <>![LogLib preview](./showcase/loglib.png)</>
+  </ShowcaseCard>
+  <ShowcaseCard title="Comty" href="https://github.com/ragestudio/comty">
+    <>![Comty preview](./showcase/comty.svg)</>
+  </ShowcaseCard>
+    <ShowcaseCard title="4c" href="https://github.com/FrancescoXX/4c-site">
+    <>![Comty preview](./showcase/4c.png)</>
+  </ShowcaseCard>
+</Cards>
+
+export const ShowcaseCard = Object.assign(
+  // Copy card component and add default props
+  Card.bind(),
+  {
+    displayName: 'ShowcaseCard',
+    defaultProps: {
+      image: true,
+      arrow: true,
+      target: '_blank',
+    },
+  },
+);
+
+<style global jsx>{`
+  img {
+    aspect-ratio: 12/6.3;
+    object-fit: cover;
+  }
+`}</style>

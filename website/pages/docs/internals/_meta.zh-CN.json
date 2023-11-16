@@ -1,0 +1,8 @@
+{
+  "block": "堵塞（）",
+  "mount": "山（）",
+  "patch": "修补（）",
+  "map-array": "映射数组()",
+  "render-to-template": "渲染到模板()",
+  "string-to-dom": "字符串转DOM()"
+}

@@ -224,6 +224,10 @@ const config: DocsThemeConfig = {
   },
   primaryHue: 275,
   primarySaturation: 75,
+  i18n: [
+    { locale: 'en-US', text: 'English' },
+    { locale: 'zh-CN', text: '中文' },
+  ]
 };
 
 // eslint-disable-next-line import/no-default-export

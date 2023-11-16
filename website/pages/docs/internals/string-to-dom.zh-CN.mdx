@@ -1,0 +1,31 @@
+---
+title: 'stringToDOM()'
+description: 'Convert a string to a virtual DOM node.'
+---
+
+import { Callout } from 'nextra-theme-docs';
+
+<Callout type="warning">
+  **此函数是内部 API 的一部分。** 您应该只使用此函数
+  如果你正在制作自己的框架。
+</Callout>
+
+<br />
+
+# `字符串转DOM(){:jsx}`
+
+**句法:** `stringToDOM(content, svg){:jsx}`\
+**例子:** `stringToDOM('<div>Hello World</div>'){:jsx}`
+
+`stringToDOM` 函数接受 HTML 或 SVG 字符串并返回 DOM 对象。 这对于从字符串创建 DOM 元素非常有用。
+
+```jsx
+import { stringToDOM } from 'million';
+
+const dom = stringToDOM('<div>Hello World</div>');
+
+dom.innerHTML; // 'Hello World'
+dom.tagName; // 'DIV'
+
+const svg = stringToDOM('<g><rect /></g>'); // creates SVG!
+```

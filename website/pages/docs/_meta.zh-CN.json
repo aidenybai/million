@@ -1,0 +1,25 @@
+{
+  "-- Getting Started": {
+    "type": "separator",
+    "title": "入门"
+  },
+  "index": "介绍",
+  "install": "安装",
+  "automatic": "自动模式",
+  "-- API Reference": {
+    "type": "separator",
+    "title": "API参考"
+  },
+  "block": "堵塞（）",
+  "for": "<对于>",
+  "-- Guide": {
+    "type": "separator",
+    "title": "指导"
+  },
+  "quickstart": "教程",
+  "rules": "区块规则",
+  "typescript": "与 TypeScript 一起使用",
+  "virtualization": "虚拟化",
+  "common-errors": "常见错误",
+  "internals": "内部结构"
+}

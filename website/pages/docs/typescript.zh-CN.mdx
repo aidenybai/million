@@ -1,0 +1,33 @@
+---
+title: 'Usage with TypeScript'
+description: 'Learn how to use TypeScript with Million.js'
+---
+
+import { Callout } from 'nextra-theme-docs';
+import { AutomaticModeWarning } from '../../components/automatic-mode-warning';
+
+# 与 TypeScript 一起使用
+
+{/* <AutomaticModeWarning /> */}
+
+如果您的项目使用 TypeScript, 您可能希望使组件类型安全。
+
+<Callout type="info">
+你必须让你的 Props 使用 `type` 而不是 `interface`，因为这是 [官方认可
+行为](https://github.com/microsoft/TypeScript/issues/15300#issuecomment-332366024)
+由 TypeScript 团队开发。或者，如果您想使用接口，您可以
+添加 `[key: string]: any` 按照 [这个堆栈溢出
+评论](https://stackoverflow.com/questions/37006008/typescript-index-signature-is-missing-in-type/65473225#65473225).
+
+</Callout>
+
+```jsx
+type Props = {
+  name: string,
+};
+
+const MyComponent: React.FC<Props> = ({ name }) => {
+  return <div>Hello {name}</div>;
+};
+const MyBlock = block(MyComponent);
+```
