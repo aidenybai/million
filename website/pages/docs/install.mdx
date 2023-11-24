@@ -144,6 +144,20 @@ Then, add the compiler to your build tool of choice:
   export default defineConfig({
     plugins: [million.vite({ auto: true }), react()],
   });
+
+
+
+  // With Remix:
+
+  import { unstable_vitePlugin as remix } from "@remix-run/dev";
+  import million from 'million/compiler';
+  import { defineConfig } from "vite";
+  
+  
+  export default defineConfig({
+   plugins: [million.vite({ auto: true }), remix()],
+   ｝
+  ）；
   ```
   </Tab>
   <Tab>
