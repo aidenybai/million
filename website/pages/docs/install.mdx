@@ -303,57 +303,6 @@ Then, add the compiler to your build tool of choice:
   </Tabs>
 </details>
 
-<details>
-  <summary>Preact Instructions</summary>
-
-  <Callout type="info">
-    Note that instead of importing from `million/react` in your application code, you'll need to import from `million/preact` instead.
-  </Callout>
-
-  <Tabs items={['Astro', 'Vite', 'Webpack', 'Rollup']} storageKey="selected-bundler-compiler-preact">
-    <Tab>
-    ```js filename="astro.config.mjs"
-    import { defineConfig } from 'astro/config';
-    import million from 'million/compiler';
-
-    export default defineConfig({
-      vite: {
-        plugins: [million.vite({ mode: 'preact', server: true })]
-      }
-    });
-    ```
-    </Tab>
-    <Tab>
-    ```js filename="vite.config.js"
-    import million from 'million/compiler';
-    import { defineConfig } from 'vite';
-
-    export default defineConfig({
-      plugins: [million.vite({ mode: 'preact' })],
-    });
-    ```
-    </Tab>
-    <Tab>
-    ```js filename="webpack.config.js"
-    const million = require('million/compiler');
-    module.exports = {
-      plugins: [
-        million.webpack({ mode: 'preact' }),
-      ],
-    }
-    ```
-    </Tab>
-    <Tab>
-    ```js filename="rollup.config.js"
-    import million from 'million/compiler';
-
-    export default {
-      plugins: [million.rollup({ mode: 'preact' })],
-    };
-    ```
-    </Tab>
-  </Tabs>
-</details>
 
 ### Using the experimental Optimizer
 

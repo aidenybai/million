@@ -13,7 +13,7 @@ import { collectImportedBindings } from './bindings';
 import { evaluate } from './evaluator';
 import type { Shared } from './types';
 import type { NodePath } from '@babel/core';
-import type { Options } from '../plugin';
+import type { Options } from '../options';
 
 export const callExpressionVisitor = (
   options: Options = {},

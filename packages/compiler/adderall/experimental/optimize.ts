@@ -1,20 +1,20 @@
 import * as t from '@babel/types';
 import { addNamed } from '@babel/helper-module-imports';
+import { EventFlag } from '../../../million/constants';
 import {
   hoistElements,
   renderToString,
   renderToTemplate,
-} from '../experimental/render';
-import { EventFlag } from '../../million/constants';
-import { createDirtyChecker, createEdit } from '../experimental/utils';
-import type { Options } from '../options';
+} from './render';
+import { createDirtyChecker, createEdit } from './utils';
+import type { Options } from '../../options';
 import type { Shared } from './types';
 import type {
   IrEdit,
   IrEditBase,
   IrInitChild,
   IrInitEvent,
-} from '../experimental/types';
+} from './types';
 
 export const optimize = (
   _options: Options,

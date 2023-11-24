@@ -106,7 +106,6 @@ The `packages` folder contains all the code related to the Million.js package, b
 - `jsx-runtime` - This folder contains the code related to the runtime code for jsx.
 - `million` - This folder contains the code for the core Million.js package. The implementation of the optimized array rendering `<For/>`, `block()`, and virtual DOM for React are in here.
 - `react` and `react-server` - This folder contains the Million.js support package for React
-- `preact` and `preact-server` - This folder contains the Million.js support package for Preact
 - `types` - This folder contains all the shared types between packages
 
 To run the project locally, run the following commands:

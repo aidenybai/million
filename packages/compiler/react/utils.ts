@@ -284,10 +284,7 @@ export const addNamedCache = (
   path: NodePath,
   programPath: NodePath<t.Program>,
 ) => {
-  const { bindings } = collectImportedBindings(programPath);
-  if (bindings[name]) {
-    return t.identifier(bindings[name]!);
-  }
+  if (programPath.scope.hasBinding(name)) return t.identifier(name);
 
   const id = addNamed(path, name, source, {
     nameHint: `${name}$`,

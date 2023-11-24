@@ -1,5 +1,5 @@
 import { transformSync } from '@babel/core';
-import { babelPlugin } from '../packages/compiler/plugin';
+import { babel } from '../packages/compiler/plugin';
 import type { BabelFileResult } from '@babel/core';
 
 export function babelTransform(code: string) {
@@ -7,7 +7,7 @@ export function babelTransform(code: string) {
 
   const result: BabelFileResult | null = transformSync(code, {
     presets: ['@babel/preset-typescript', ['@babel/preset-react']],
-    plugins: [babelPlugin],
+    plugins: [babel],
     filename,
   });
 

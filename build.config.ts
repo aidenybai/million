@@ -15,8 +15,6 @@ export default defineBuildConfig({
     './packages/compiler',
     './packages/react',
     './packages/react-server',
-    './packages/preact',
-    './packages/preact-server',
     './packages/types',
   ],
   declaration: true,
@@ -39,5 +37,5 @@ export default defineBuildConfig({
       }
     },
   },
-  externals: ['react', 'react-dom', 'preact', 'million', 'vite', 'esbuild'],
+  externals: ['react', 'react-dom', 'million', 'vite', 'esbuild'],
 });

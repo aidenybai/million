@@ -1,78 +1,75 @@
-import { declare } from '@babel/helper-plugin-utils';
-import { createUnplugin } from 'unplugin';
+import path from 'path';
 import { transformAsync } from '@babel/core';
-import pluginSyntaxJsx from '@babel/plugin-syntax-jsx';
-import pluginSyntaxTypescript from '@babel/plugin-syntax-typescript';
-import { dim, magenta, bold, cyan } from 'kleur/colors';
-import { visitor as legacyVdomVisitor } from './vdom';
-import {
-  callExpressionVisitor as reactCallExpressionVisitor,
-  jsxElementVisitor as reactJsxElementVisitor,
-  componentVisitor as reactComponentVisitor,
-} from './react';
-import { handleVisitorError } from './react/utils';
-import type { PluginObj, PluginItem } from '@babel/core';
-import type * as t from '@babel/types';
+import { createUnplugin } from 'unplugin';
+import { declare } from '@babel/helper-plugin-utils';
+import { createFilter } from '@rollup/pluginutils';
+import { displayIntro } from './adderall/utils/log';
+import { Compiler } from './compiler';
+import type { Options } from './options';
+import type { TransformResult, VitePlugin } from 'unplugin';
+import type { ParserOptions } from '@babel/core';
 
-export interface Options {
-  optimize?: boolean;
-  server?: boolean;
-  mode?: 'react' | 'preact' | 'react-server' | 'preact-server' | 'vdom';
-  mute?: boolean | 'info';
-  hmr?: boolean;
-  auto?:
-    | boolean
-    | { threshold?: number; rsc?: boolean; skip?: (string | RegExp)[] };
-}
+const DEFAULT_INCLUDE = 'src/**/*.{jsx,tsx,ts,js,mjs,cjs}';
+const DEFAULT_EXCLUDE = 'node_modules/**/*.{jsx,tsx,ts,js,mjs,cjs}';
 
-let hasIntroRan = false;
-export const intro = () => {
-  if (hasIntroRan) return;
-  hasIntroRan = true;
+export const unplugin = createUnplugin((options: Options = {}) => {
+  const filter = createFilter(
+    options.filter?.include || DEFAULT_INCLUDE,
+    options.filter?.exclude || DEFAULT_EXCLUDE,
+  );
 
-  const tips = [
-    `use ${dim('// million-ignore')} for errors`,
-    `enable { mute: true } to disable info logs`,
-  ];
-
-  // eslint-disable-next-line no-console
-  console.log(`\n  ${bold(
-    magenta(`⚡ Million.js ${process.env.VERSION || ''}`),
-  )}
-  - Tip:     ${tips[Math.floor(Math.random() * tips.length)] as string}
-  - Hotline: ${cyan('https://million.dev/hotline')}\n`);
-};
-
-export const unplugin = createUnplugin((options: Options) => {
-  options ??= {};
+  // Backwards compatibility for `mode: 'react-server'`:
+  // Converts `mode: 'react-server'` to `mode: 'react'` and `server: true`
+  if (options.mode?.endsWith('-server')) {
+    options.server = true;
+    options.mode = options.mode.replace('-server', '') as 'react';
+  }
 
   return {
     enforce: 'pre',
     name: 'million',
-    transformInclude(id: string) {
-      return /\.[jt]sx$/.test(id);
+    transformInclude(id: string): boolean {
+      return filter(id);
     },
-    async transform(code: string, id: string) {
-      options._file = id;
+    async transform(code: string, id: string): Promise<TransformResult> {
+      const plugins: ParserOptions['plugins'] = ['jsx'];
 
-      const plugins: PluginItem[] = [[pluginSyntaxJsx]];
-
-      const isTSX = id.endsWith('.tsx');
-      if (isTSX) {
-        plugins.push([
-          pluginSyntaxTypescript,
-          { allExtensions: true, isTSX: true },
-        ]);
+      if (/\.[mc]?tsx?$/i.test(id)) {
+        plugins.push('typescript');
       }
 
-      plugins.push([babelPlugin, options]);
+      const result = await transformAsync(code, {
+        plugins: [[babel, options]],
+        parserOpts: {
+          plugins,
+        },
+        filename: path.basename(id),
+        ast: false,
+        sourceFileName: id,
+        sourceMaps: true,
+        configFile: false,
+        babelrc: false,
+      });
 
-      const result = await transformAsync(code, { plugins, filename: id });
+      if (result) {
+        return { code: result.code || '', map: result.map };
+      }
 
-      return result?.code || null;
+      return undefined;
     },
     vite: {
       configResolved(config) {
+        // run our plugin before the following plugins:
+        repushPlugin(config.plugins as VitePlugin[], 'million', [
+          // https://github.com/withastro/astro/blob/main/packages/astro/src/vite-plugin-jsx/index.ts#L173
+          'astro:jsx',
+          // https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react
+          'vite:react-babel',
+          'vite:react-jsx',
+          // https://github.com/preactjs/preset-vite/blob/main/src/index.ts
+          'vite:preact-jsx',
+        ]);
+
         options.hmr =
           config.server.hmr &&
           !config.isProduction &&
@@ -82,71 +79,37 @@ export const unplugin = createUnplugin((options: Options) => {
   };
 });
 
-export const babelPlugin = declare((api, options: Options, dirname: string) => {
+export const babel = declare((api, options: Options, dirname: string) => {
   api.assertVersion(7);
 
-  intro();
+  displayIntro(options);
 
-  const file = options._file!;
-  let callExpressionVisitor: ReturnType<typeof reactCallExpressionVisitor>;
-  let jsxElementVisitor: ReturnType<typeof reactJsxElementVisitor> | undefined;
-  let componentVisitor: ReturnType<typeof reactComponentVisitor> | undefined;
-
-  // Backwards compatibility for `mode: 'react-server'`
-  if (options.mode?.endsWith('-server')) {
-    options.server = true;
-    options.mode = options.mode.replace('-server', '') as 'react' | 'preact';
-  }
-
-  switch (options.mode) {
-    case 'vdom':
-      callExpressionVisitor = legacyVdomVisitor(options);
-      break;
-    case 'preact':
-      callExpressionVisitor = reactCallExpressionVisitor(options, false);
-      jsxElementVisitor = reactJsxElementVisitor(options, false);
-      componentVisitor = reactComponentVisitor(options, false);
-      break;
-    case 'react':
-    default:
-      callExpressionVisitor = reactCallExpressionVisitor(options, true);
-      jsxElementVisitor = reactJsxElementVisitor(options, true);
-      componentVisitor = reactComponentVisitor(options, true);
-      break;
-  }
-
-  const blockCache = new Map<string, t.Identifier>();
-
-  const plugin: PluginObj = {
-    name: 'million',
-    visitor: {
-      JSXElement(path) {
-        handleVisitorError(() => {
-          if (!jsxElementVisitor) return;
-          jsxElementVisitor(path, file);
-        }, options.mute);
-      },
-      CallExpression(path) {
-        handleVisitorError(() => {
-          callExpressionVisitor(path, blockCache, file);
-        }, options.mute);
-      },
-      FunctionDeclaration(path) {
-        handleVisitorError(() => {
-          if (!componentVisitor) return;
-          componentVisitor(path, file);
-        }, options.mute);
-      },
-      VariableDeclarator(path) {
-        handleVisitorError(() => {
-          if (!componentVisitor) return;
-          componentVisitor(path, file);
-        }, options.mute);
-      },
-    },
-    post() {
-      blockCache.clear();
-    },
-  };
-  return plugin;
+  return Compiler(options, dirname);
 });
+
+// From: https://github.com/bluwy/whyframe/blob/master/packages/jsx/src/index.js#L27-L37
+export const repushPlugin = (
+  plugins: VitePlugin[],
+  pluginName: string,
+  pluginNames: string[],
+) => {
+  const namesSet = new Set(pluginNames);
+
+  let baseIndex = -1;
+  let targetIndex = -1;
+  let targetPlugin: VitePlugin;
+  for (let i = 0, len = plugins.length; i < len; i += 1) {
+    const current = plugins[i]!;
+    if (namesSet.has(current.name) && baseIndex === -1) {
+      baseIndex = i;
+    }
+    if (current.name === pluginName) {
+      targetIndex = i;
+      targetPlugin = current;
+    }
+  }
+  if (baseIndex !== -1 && targetIndex !== -1 && baseIndex < targetIndex) {
+    plugins.splice(targetIndex, 1);
+    plugins.splice(baseIndex, 0, targetPlugin!);
+  }
+};
