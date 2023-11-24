@@ -84,51 +84,63 @@ export function Companies() {
   const entries = [
     {
       url: 'https://wyze.com',
-      component: <WyzeLogo />,
+      component: (
+        <div key="wyze">
+          <WyzeLogo />
+        </div>
+      ),
     },
     {
       url: 'https://metamask.io',
       component: (
-        <div className="flex font-mono items-center gap-3 text-xl font-semibold">
-          <Image
-            src={MetamaskLogo as string}
-            width={30}
-            height={30}
-            alt="METAMASK"
-          />{' '}
-          METAMASK
+        <div key="metamask">
+          <div className="flex font-mono items-center gap-3 text-xl font-semibold">
+            <Image
+              src={MetamaskLogo as string}
+              width={30}
+              height={30}
+              alt="METAMASK"
+            />{' '}
+            METAMASK
+          </div>
         </div>
       ),
     },
     {
       url: 'https://hackclub.com',
       component: (
-        <Image
-          src={HackClubLogo as string}
-          width={90}
-          height={30}
-          alt="Hack Club"
-        />
+        <div key="hackclub">
+          <Image
+            src={HackClubLogo as string}
+            width={90}
+            height={30}
+            alt="Hack Club"
+          />
+        </div>
       ),
     },
     {
       url: 'https://texts.com',
       component: (
-        <div className="flex items-center gap-3 text-xl font-semibold">
-          <Image src={TextsLogo} width={30} height={30} alt="Texts" /> Texts
+        <div key="texts">
+          <div className="flex items-center gap-3 text-xl font-semibold">
+            <Image src={TextsLogo} width={30} height={30} alt="Texts" /> Texts
+          </div>
         </div>
       ),
     },
     {
       url: 'https://opensauced.pizza/',
       component: (
-        <Image
-          src={OpenSaucedLogo as string}
-          width={150}
-          height={25}
-          className="invert dark:invert-0"
-          alt="OpenSauced"
-        />
+        <div key="opensauced">
+          <Image
+            src={OpenSaucedLogo as string}
+            width={150}
+            height={25}
+            className="invert dark:invert-0"
+            alt="OpenSauced"
+          />
+        </div>
       ),
     },
   ];

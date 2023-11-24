@@ -4,6 +4,7 @@ import { type DocsThemeConfig, useConfig } from 'nextra-theme-docs';
 import { GitHubIcon } from '@components/icons/github-icon';
 import { DiscordIcon } from '@components/icons/discord-icon';
 import { TwitterXIcon } from '@components/icons/twitter-x-icon';
+import packageJson from '../package.json' assert { type: 'json' };
 import { ExtraContent } from './components/extra-content';
 
 const config: DocsThemeConfig = {
@@ -201,6 +202,15 @@ const config: DocsThemeConfig = {
   search: {
     placeholder: 'Search website...',
   },
+  banner: {
+    dismissible: true,
+    key: `version-${packageJson.version}`,
+    text: (
+      <a href="https://github.com/aidenybai/million" target="_blank">
+        Go give a ⭐ to Million.js v{packageJson.version} on GitHub! ➡️
+      </a>
+    ),
+  },
   toc: {
     float: true,
     backToTop: true,
@@ -222,8 +232,7 @@ const config: DocsThemeConfig = {
 
     return { titleTemplate: `%s | Million.js` };
   },
-  primaryHue: 275,
-  primarySaturation: 75,
+  primarySaturation: 0,
 };
 
 // eslint-disable-next-line import/no-default-export
