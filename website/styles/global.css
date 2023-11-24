@@ -95,6 +95,28 @@ html[class~='dark'] .gradient-text {
   }
 }
 
+article p a,
+article li a,
+article td a {
+  color: #9766e0 !important;
+  transition: color 0.2s ease;
+}
+
+article p a:hover,
+article li a:hover,
+article td a:hover {
+  color: #ac8bde !important;
+}
+
+html.dark p a:hover,
+html.dark li a:hover {
+  color: #7445ba !important;
+}
+
+li > a {
+  white-space: nowrap;
+}
+
 .svg {
   width: 100%;
   height: 100%;
