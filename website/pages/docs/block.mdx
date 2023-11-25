@@ -32,7 +32,7 @@ export default LionBlock;
   Blocks](/docs/rules) for more information.
 </Callout>
 
-## `as` prop
+## Custom Tags
 
 The `as` prop can be used to specify the tag name of the For. By default, it is `slot`.
 
@@ -47,7 +47,7 @@ const LionBlock = block(
 );
 ```
 
-## Hydration mismatch
+## Using Block With SSR
 
 If you are using Million.js on the server, you may encounter a hydration mismatch error. This is because Million.js uses a different algorithm for rendering on the server than it does on the client. To fix this, you can disable SSR.
 
