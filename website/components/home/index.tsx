@@ -11,7 +11,6 @@ export function Home() {
       <Hero />
       <About />
       <Showcase />
-      <FAQ />
       <Community />
       <CTA />
     </main>
