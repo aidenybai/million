@@ -116,10 +116,10 @@ const config: DocsThemeConfig = {
         <div>© 2021-{new Date().getFullYear()} Million Software, Inc.</div>
 
         <div>
-          <p className="text-base pb-2 text-white">Resources</p>
+          <p className="text-base pb-2 text-white font-bold">Resources</p>
           <ul className="flex flex-col gap-2">
             <li>
-              <a href="/docs" className="text-sm">
+              <a href="/docs" className="text-sm font-semibold">
                 Documentation
               </a>
             </li>
@@ -127,17 +127,17 @@ const config: DocsThemeConfig = {
         </div>
 
         <div>
-          <p className="text-base pb-2 text-white">Ecosystem</p>
+          <p className="text-base pb-2 text-white font-bold">Ecosystem</p>
           <ul className="flex flex-col gap-2">
             <li>
-              <a href="/showcase" className="text-sm">
+              <a href="/showcase" className="text-sm font-semibold">
                 Showcase
               </a>
             </li>
             <li>
               <a
                 href="https://github.com/aidenybai/million/blob/main/.github/CONTRIBUTING.md"
-                className="text-sm"
+                className="text-sm font-semibold"
               >
                 Contributing
               </a>
@@ -146,10 +146,10 @@ const config: DocsThemeConfig = {
         </div>
 
         <div>
-          <p className="text-base pb-2 text-white">About</p>
+          <p className="text-base pb-2 text-white font-bold">About</p>
           <ul className="flex flex-col gap-2">
             <li>
-              <a href="/foundation" className="text-sm">
+              <a href="/foundation" className="text-sm font-semibold">
                 Million Foundation
               </a>
             </li>
@@ -157,25 +157,28 @@ const config: DocsThemeConfig = {
         </div>
 
         <div>
-          <p className="text-base pb-2 text-white">More Links</p>
+          <p className="text-base pb-2 text-white font-bold">More Links</p>
           <ul className="flex flex-col gap-2">
             <li>
               <a
                 href="https://dl.acm.org/doi/10.1145/3555776.3577683"
-                className="text-sm"
+                className="text-sm font-semibold"
               >
                 Research
               </a>
             </li>
             <li>
-              <a href="https://demo.million.dev/" className="text-sm">
+              <a
+                href="https://demo.million.dev/"
+                className="text-sm font-semibold"
+              >
                 Live Demo
               </a>
             </li>
             <li>
               <a
                 href="https://github.com/aidenybai/hundred"
-                className="text-sm"
+                className="text-sm font-semibold"
               >
                 Build Your Own
               </a>
