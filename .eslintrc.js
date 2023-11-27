@@ -37,6 +37,8 @@ module.exports = {
         'no-nested-ternary': 'off',
         'no-param-reassign': 'off',
         'tsdoc/syntax': 'off',
+        'import/no-extraneous-dependencies': 'off',
+        'eslint-comments/require-description': 'off',
       },
     },
   ],

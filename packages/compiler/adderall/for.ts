@@ -7,20 +7,20 @@ import {
 } from './utils/jsx';
 import { deopt, catchError } from './utils/log';
 import { callExpressionVisitor } from './call-expression-visitor';
-import { findChild } from './traversal';
+import { findChild } from './utils/find';
 import type { NodePath } from '@babel/core';
 import type { Options } from '../options';
-import type { Info } from '../compiler';
+import type { Info } from '../visit';
 
 export const transformFor = (
   options: Options,
   path: NodePath<t.JSXElement>,
   dirname: string,
-  info: Info,
+  info: Info
 ) => {
   const jsxElement = path.node;
   const programPath = path.findParent((path) =>
-    path.isProgram(),
+    path.isProgram()
   ) as NodePath<t.Program>;
 
   const jsxId = jsxElement.openingElement.name;
@@ -129,7 +129,10 @@ export const transformFor = (
   });
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (bailout) return path.stop();
+  if (bailout) {
+    path.stop();
+    return;
+  }
 
   const ids = [...idNames].map((id) => t.identifier(id));
   const body = t.cloneNode(expression.body);
@@ -141,20 +144,20 @@ export const transformFor = (
       t.arrowFunctionExpression(
         [
           t.objectPattern(
-            ids.map((id) => t.objectProperty(id, id, false, true)),
+            ids.map((id) => t.objectProperty(id, id, false, true))
           ),
         ],
         t.isBlockStatement(body)
           ? body
-          : t.blockStatement([t.returnStatement(body)]),
-      ),
+          : t.blockStatement([t.returnStatement(body)])
+      )
     ),
   ]);
 
   const blockComponent = t.variableDeclaration('const', [
     t.variableDeclarator(
       blockComponentId,
-      t.callExpression(t.identifier(info.block), [callbackComponentId]),
+      t.callExpression(t.identifier(info.block), [callbackComponentId])
     ),
   ]);
 
@@ -185,7 +188,7 @@ export const transformFor = (
 export const validateForExpression = (
   jsxElement: t.JSXElement,
   dirname: string,
-  path: NodePath<t.JSXElement>,
+  path: NodePath<t.JSXElement>
 ): t.ArrowFunctionExpression => {
   const VALIDATION_MESSAGE = 'Invalid For usage: https://million.dev/docs/for';
 
@@ -211,7 +214,7 @@ export const validateForExpression = (
 
     const returnStatementPath = findChild<t.ReturnStatement>(
       blockStatementPath,
-      'ReturnStatement',
+      'ReturnStatement'
     );
 
     if (returnStatementPath === null) {
@@ -235,7 +238,7 @@ export const validateForExpression = (
 
 export const hoistFor = (
   jsxElement: t.JSXElement,
-  path: NodePath<t.JSXElement>,
+  path: NodePath<t.JSXElement>
 ) => {
   const jsxElementParent = path.parent;
 
@@ -250,7 +253,7 @@ export const hoistFor = (
     ) {
       if (
         !jsxElement.openingElement.attributes.some(
-          (attr) => t.isJSXAttribute(attr) && attr.name.name === 'as',
+          (attr) => t.isJSXAttribute(attr) && attr.name.name === 'as'
         )
       ) {
         const jsxElementClone = t.cloneNode(jsxElement);

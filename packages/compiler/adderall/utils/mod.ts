@@ -2,6 +2,7 @@ import * as t from '@babel/types';
 import { addNamed } from '@babel/helper-module-imports';
 import type { Options } from '../../options';
 import type { NodePath } from '@babel/core';
+import { Info } from '../../visit';
 
 export const resolveImportSource = (options: Options, source: string) => {
   if (!source.startsWith('million')) return source;
@@ -12,15 +13,10 @@ export const resolveImportSource = (options: Options, source: string) => {
   return `million/${mode}`;
 };
 
-export const addImport = (
-  name: string,
-  source: string,
-  path: NodePath,
-  programPath: NodePath<t.Program>,
-) => {
-  if (programPath.scope.hasBinding(name)) return t.identifier(name);
+export const addImport = (name: string, source: string, info: Info) => {
+  if (info[name]) return info[name];
 
-  return addNamed(path, name, source);
+  return addNamed(info.programPath, name, source);
 };
 
 // export const getNamedImports = (

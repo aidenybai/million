@@ -3,7 +3,7 @@ import { type NodePath } from '@babel/core';
 import { addNamed } from '@babel/helper-module-imports';
 import { cyan, magenta, dim } from 'kleur/colors';
 import { collectImportedBindings } from './bindings';
-import type { Options } from '../plugin';
+import type { Options } from '../options';
 
 export const RENDER_SCOPE = 'slot';
 export const TRANSFORM_ANNOTATION = 'million:transform';
@@ -268,14 +268,13 @@ export const normalizeProperties = (properties: t.ObjectProperty[]) => {
 export const isJSXFragment = (
   node: t.Node | null | undefined,
 ): node is t.JSXFragment | t.JSXElement => {
-  if (t.isJSXElement(node)) {
-    const type = node.openingElement.name;
-    if (t.isJSXMemberExpression(type) && type.property.name === 'Fragment')
-      return true;
-    if (t.isJSXIdentifier(type) && type.name === 'Fragment') return true;
-  }
+  if (!t.isJSXElement(node)) return t.isJSXFragment(node);
 
-  return t.isJSXFragment(node);
+  const type = node.openingElement.name;
+  return (
+    (t.isJSXMemberExpression(type) && type.property.name === 'Fragment') ||
+    (t.isJSXIdentifier(type) && type.name === 'Fragment')
+  );
 };
 
 export const addNamedCache = (

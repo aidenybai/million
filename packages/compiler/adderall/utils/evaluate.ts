@@ -30,7 +30,7 @@
 import vm from 'vm';
 import generate from '@babel/generator';
 import * as t from '@babel/types';
-import type { NodePath } from '@babel/core';
+import type { NodePath } from '@babel/traverse';
 
 type StaticContext = Record<string, any>;
 

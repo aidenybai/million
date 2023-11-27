@@ -18,7 +18,7 @@ export const trimJSXChildren = (jsx: t.JSXElement | t.JSXFragment) => {
 };
 
 export const dedupeJSXAttributes = (
-  attributes: (t.JSXAttribute | t.JSXSpreadAttribute)[],
+  attributes: (t.JSXAttribute | t.JSXSpreadAttribute)[]
 ) => {
   const seen = new Set<string>();
   for (let i = attributes.length - 1; i >= 0; i--) {
@@ -55,4 +55,37 @@ export const isComponent = (name: string) => {
     !name.startsWith('M$') &&
     !name.startsWith('use')
   );
+};
+
+export const isJSXFragment = (
+  node: t.Node | null | undefined
+): node is t.JSXFragment | t.JSXElement => {
+  if (!t.isJSXElement(node)) return t.isJSXFragment(node);
+
+  const type = node.openingElement.name;
+  return (
+    (t.isJSXMemberExpression(type) && type.property.name === 'Fragment') ||
+    (t.isJSXIdentifier(type) && type.name === 'Fragment')
+  );
+};
+
+export const isSensitiveJSXElement = (jsx: t.JSXElement) => {
+  // elements that break when the children are not in a specific format
+  const SENSITIVE_ELEMENTS = ['select'];
+
+  const type = jsx.openingElement.name;
+
+  return t.isJSXIdentifier(type) && SENSITIVE_ELEMENTS.includes(type.name);
+};
+
+export const isStaticAttributeValue = (node: t.Node) => {
+  if (
+    t.isTaggedTemplateExpression(node) &&
+    t.isIdentifier(node.tag) &&
+    node.quasi.expressions.length === 0 &&
+    node.tag.name === 'css'
+  ) {
+    return true;
+  }
+  return t.isLiteral(node) && !t.isTemplateLiteral(node);
 };

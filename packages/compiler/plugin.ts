@@ -1,10 +1,9 @@
 import path from 'path';
-import { transformAsync } from '@babel/core';
 import { createUnplugin } from 'unplugin';
-import { declare } from '@babel/helper-plugin-utils';
 import { createFilter } from '@rollup/pluginutils';
+import { transformAsync } from '@babel/core';
 import { displayIntro } from './adderall/utils/log';
-import { Compiler } from './compiler';
+import { visit } from './visit';
 import type { Options } from './options';
 import type { TransformResult, VitePlugin } from 'unplugin';
 import type { ParserOptions } from '@babel/core';
@@ -22,7 +21,15 @@ export const unplugin = createUnplugin((options: Options = {}) => {
   // Converts `mode: 'react-server'` to `mode: 'react'` and `server: true`
   if (options.mode?.endsWith('-server')) {
     options.server = true;
-    options.mode = options.mode.replace('-server', '') as 'react';
+    options.mode = 'react';
+  }
+
+  // Notice for `mode: 'preact'`, `mode: 'preact-server'`:
+  // Throws an error if `mode: 'preact'` or `mode: 'preact-server'` is used
+  if (options.mode?.startsWith('preact')) {
+    throw new Error(
+      'Preact is no longer maintained. Downgrade to a lower version to maintain support',
+    );
   }
 
   return {
@@ -32,6 +39,8 @@ export const unplugin = createUnplugin((options: Options = {}) => {
       return filter(id);
     },
     async transform(code: string, id: string): Promise<TransformResult> {
+      displayIntro(options);
+
       const plugins: ParserOptions['plugins'] = ['jsx'];
 
       if (/\.[mc]?tsx?$/i.test(id)) {
@@ -39,10 +48,16 @@ export const unplugin = createUnplugin((options: Options = {}) => {
       }
 
       const result = await transformAsync(code, {
-        plugins: [[babel, options]],
-        parserOpts: {
-          plugins,
-        },
+        plugins: [
+          [
+            {
+              name: 'million',
+              visitor: visit(options, id),
+            },
+            options,
+          ],
+        ],
+        parserOpts: { plugins },
         filename: path.basename(id),
         ast: false,
         sourceFileName: id,
@@ -54,8 +69,7 @@ export const unplugin = createUnplugin((options: Options = {}) => {
       if (result) {
         return { code: result.code || '', map: result.map };
       }
-
-      return undefined;
+      return null;
     },
     vite: {
       configResolved(config) {
@@ -77,14 +91,6 @@ export const unplugin = createUnplugin((options: Options = {}) => {
       },
     },
   };
-});
-
-export const babel = declare((api, options: Options, dirname: string) => {
-  api.assertVersion(7);
-
-  displayIntro(options);
-
-  return Compiler(options, dirname);
 });
 
 // From: https://github.com/bluwy/whyframe/blob/master/packages/jsx/src/index.js#L27-L37

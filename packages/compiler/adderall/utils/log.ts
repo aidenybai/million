@@ -1,5 +1,5 @@
 import * as t from '@babel/types';
-import { bold, cyan, dim, magenta } from 'kleur';
+import { bold, cyan, dim, magenta } from 'kleur/colors';
 import type { Options } from '../../options';
 import type { NodePath } from '@babel/core';
 
@@ -10,7 +10,7 @@ export const deopt = (
   message: string | null,
   file: string,
   callSitePath: NodePath,
-  targetPath: NodePath = callSitePath,
+  targetPath: NodePath = callSitePath
 ) => {
   const { parent, node } = callSitePath;
   // This will attempt to reset the variable to the first argument from
@@ -26,10 +26,31 @@ export const deopt = (
   return createErrorMessage(targetPath, message, file);
 };
 
+export const warn = (
+  message: string,
+  file: string,
+  path: NodePath,
+  mute?: boolean | string | null
+) => {
+  if (mute) return;
+  const err = createErrorMessage(path, message, file);
+  // eslint-disable-next-line no-console
+  console.warn(
+    err.message,
+    '\n',
+    dim(
+      `Check out the Rules of Blocks: ${cyan(
+        'https://million.dev/docs/rules'
+      )}. Enable the "mute" option to disable this message.`
+    ),
+    '\n'
+  );
+};
+
 export const createErrorMessage = (
   path: NodePath,
   message: string,
-  file: string,
+  file: string
 ) => {
   return path.buildCodeFrameError(`\n${magenta('⚠')}${message} ${dim(file)}`);
 };
@@ -50,7 +71,7 @@ export const displayIntro = (options: Options) => {
   }
 
   let message = `\n  ${bold(
-    magenta(`⚡ Million.js ${process.env.VERSION || ''}`),
+    magenta(`⚡ Million.js ${process.env.VERSION || ''}`)
   )}
   - Tip:     use ${dim('// million-ignore')} for errors
   - Hotline: ${cyan('https://million.dev/hotline')}`;
@@ -67,7 +88,7 @@ export const displayIntro = (options: Options) => {
 
 export const catchError = (
   fn: () => void,
-  mute: boolean | string | undefined | null,
+  mute: boolean | string | undefined | null
 ) => {
   try {
     fn();

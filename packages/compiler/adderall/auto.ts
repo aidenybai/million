@@ -11,7 +11,7 @@ import {
 import { callExpressionVisitor } from './call-expression-visitor';
 import { catchError } from './utils/log';
 import { addImport } from './utils/mod';
-import type { Info } from '../compiler';
+import type { Info } from '../visit';
 import type { NodePath } from '@babel/core';
 import type { Options } from '../plugin';
 

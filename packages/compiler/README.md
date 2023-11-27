@@ -1,4 +1,4 @@
-# `million/compiler` (codename: "mufasa")
+# `million/compiler`
 
 > Note: this page is a stub
 
