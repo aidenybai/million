@@ -1,6 +1,11 @@
 import { Disclosures } from '../../components/home/faq';
-import { Tab, Tabs } from 'nextra-theme-docs';
+import { Callout, Tab, Tabs } from 'nextra-theme-docs';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
+
+export const Demo = dynamic(() =>
+  import('../../components/demo').then((mod) => mod.Demo),
+);
 
 # Introduction
 
@@ -8,10 +13,21 @@ import Link from 'next/link';
 
 Imagine React components running at the speed of raw JavaScript.
 
-## Questions
+**Million.js** makes your React applications faster automatically with auto-mode ([Automatic mode](/docs/automatic)) enabled. Enabling auto-mode is really easy to do, you just set up the Million compiler to handle optimizations
+automatically with literally one parameter, checkout [Automatic Mode](/docs/install#configure-it-yourself) to set up Million.js in your project or just check out the [Installation Guide](/docs/install).
+
+## Million.js vs. React
+
+<Callout type="info">
+  The following is a comprehensive demo using [key-based
+  rendering](https://react.dev/learn/rendering-lists#keeping-list-items-in-order-with-key)
+  to show how Million.js performance compares to React.
+</Callout>
+
+<br />
+
+<Demo />
+
+## Clarifications
 
 If you have questions or need clarity on things at this point, please feel free to ask them in the `questions` channel on the [Discord](https://discord.gg/7ZAGgTQVTE) or checkout the <Link href="/faq">FAQs</Link>
-
-<div className="mt-4">
-  <Disclosures full />
-</div>

@@ -22,7 +22,7 @@ function App() {
 
 ### Advanced customization
 
-Automatic mode provides options to tune automatic mode:
+Automatic mode provides options to tune it to your taste:
 
 - `threshold`: The threshold for the heuristic to determine whether a component should be converted to Million.js. The greater the threshold, fewer components will be optimized, and vice versa. The default is `0.1`.
 - `skip`: An array of identifiers that indicate a component should be skipped. You can put hook names, variable names, etc. The default is `[]`.
@@ -31,7 +31,7 @@ Automatic mode provides options to tune automatic mode:
 ```js
 const options = {
   auto: {
-    threshold: 0.25, // default: 0.1,
+    threshold: 0.05, // default: 0.1,
     skip: ['useBadHook', /badVariable/g] // default []
   }
 }

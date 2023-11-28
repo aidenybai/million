@@ -5,6 +5,7 @@ description: 'How to install Million.js into your React project'
 
 import { Callout, Tabs, Tab, Steps } from 'nextra-theme-docs';
 
+
 # Installation
 
 Million.js assumes that you've already initialized a React project. If you haven't, it is recommended you check out [react.dev](https://react.dev) first.
@@ -40,21 +41,23 @@ The Million.js CLI will automatically install the package and configure your pro
   </Tab>
 </Tabs>
 
-That's it! **Your project is now running on Million.js 🎉**
+That's it! **Your project is now running on Million.js**
 
 <Callout type="info">
   Million.js is compatible with React 16 and above. If you're using an older version of React, you'll need to upgrade first.
 </Callout>
 
-## Manual configuration
+## Configure It Yourself
 
-In the case you want more granular control over the installation process, you can follow the steps below.
+In the case you want more granular control over the installation process, you can follow the steps below. 
 
 <Tabs items={['Automatic', 'Manual']} storageKey="mode">
 
 <Tab>
 
 <Steps>
+
+
 
 ### Install package
 
@@ -90,6 +93,7 @@ First things first, you'll need to install Million.js. You can do this with your
 ### Use the compiler
 
 Then, add the compiler to your build tool of choice:
+
 
 <Tabs items={['Next.js', 'Astro', 'Gatsby', 'Vite', 'Create React App', 'Webpack', 'Rollup']} storageKey="selected-bundler-compiler">
   <Tab>
@@ -192,8 +196,10 @@ Then, add the compiler to your build tool of choice:
 </Tabs>
 
 </Steps>
-
+<p className="font-normal text-base">Checkout <a href="/docs/automatic">Automatic Mode</a> to learn about the mechanisms behind Automatic mode.</p>
 </Tab>
+
+
 
 <Tab>
 
@@ -283,6 +289,19 @@ Then, add the compiler to your build tool of choice:
     export default defineConfig({
       plugins: [million.vite(), react()],
     });
+
+
+    
+    // With Remix:
+
+    import { unstable_vitePlugin as remix } from "@remix-run/dev";
+    import million from 'million/compiler';
+    import { defineConfig } from "vite";
+  
+  
+    export default defineConfig({
+    plugins: [million.vite(), remix()],
+    }；
     ```
     </Tab>
     <Tab>
@@ -293,6 +312,7 @@ Then, add the compiler to your build tool of choice:
         plugins: { add: [million.webpack()] }
       }
     };
+    
     ```
     </Tab>
     <Tab>
