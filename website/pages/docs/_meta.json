@@ -5,7 +5,7 @@
   },
   "index": "Introduction",
   "install": "Installation",
-  "automatic": "Automatic Mode",
+  "automatic": "How to use Automatic mode",
   "-- API Reference": {
     "type": "separator",
     "title": "API Reference"

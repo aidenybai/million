@@ -183,6 +183,11 @@ const config: DocsThemeConfig = {
                 Build Your Own
               </a>
             </li>
+            <li>
+              <a href="/faq" className="text-sm font-semibold">
+                FAQ
+              </a>
+            </li>
           </ul>
         </div>
         <a
