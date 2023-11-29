@@ -27,14 +27,26 @@ Automatic mode provides options to tune it to your taste:
 - `threshold`: The threshold for the heuristic to determine whether a component should be converted to Million.js. The greater the threshold, fewer components will be optimized, and vice versa. The default is `0.1`.
 - `skip`: An array of identifiers that indicate a component should be skipped. You can put hook names, variable names, etc. The default is `[]`.
 
-
 ```js
 const options = {
   auto: {
-    threshold: 0.05, // default: 0.1,
+    threshold: 0.25, // default: 0.1,
     skip: ['useBadHook', /badVariable/g] // default []
   }
 }
+```
+
+
+If you were using <a className="font-normal text-base" href='https://vitejs.dev/guide/'>Vite</a> for example and were trying to set up additional options for more features other than the default gotten from <a className="font-normal text-base" href="/docs/install">Installation</a>, you 
+add the `auto` options object as follows:
+
+```js
+export default defineConfig({
+  plugins: [million.vite({ auto: true }, auto: {
+    threshold: 0.25, // default: 0.1,
+    skip: ['useBadHook', /badVariable/g] // default []
+}), react()],
+});
 ```
 
 ### Muting help messages
