@@ -7,18 +7,12 @@ import { Callout, Tabs, Tab, Steps } from 'nextra-theme-docs';
 
 # Automatic Mode
 
-Automatic mode is the default mode of Million.js. It automatically converts React components to Million.js components.
+Automatic mode is the default mode of Million.js. It automatically converts React components to Million.js components and makes them faster without you having tweak a lot of your code.
 
-### Ignoring components
 
-If a certain component conflicts with the Million.js runtime, it's possible to skip over them via the `// million-ignore` comment.
+If you remember from [Installation](/docs/install) when you set up Million in your project, you probably used automatic mode which is what we recommend for most users. There you simply passed the `auto` option to the compiler.
 
-```js
-// million-ignore
-function App() {
-  return ...
-}
-```
+In this part of the docs, we expatiate more on more things you can do with automatic mode and how you can properly configure it to your taste.
 
 ### Advanced customization
 
@@ -48,6 +42,20 @@ export default defineConfig({
 }), react()],
 });
 ```
+
+
+### Ignoring components
+
+If a certain component conflicts with the Million.js runtime, it's possible to skip over them via the `// million-ignore` comment.
+
+```js
+// million-ignore
+function App() {
+  return ...
+}
+```
+
+
 
 ### Muting help messages
 
