@@ -119,7 +119,7 @@ const config: DocsThemeConfig = {
           <p className="text-base pb-2 text-white font-bold">Resources</p>
           <ul className="flex flex-col gap-2">
             <li>
-              <a href="/docs" className="text-sm font-semibold">
+              <a href="/docs" className="text-sm">
                 Documentation
               </a>
             </li>
@@ -130,14 +130,14 @@ const config: DocsThemeConfig = {
           <p className="text-base pb-2 text-white font-bold">Ecosystem</p>
           <ul className="flex flex-col gap-2">
             <li>
-              <a href="/showcase" className="text-sm font-semibold">
+              <a href="/showcase" className="text-sm">
                 Showcase
               </a>
             </li>
             <li>
               <a
                 href="https://github.com/aidenybai/million/blob/main/.github/CONTRIBUTING.md"
-                className="text-sm font-semibold"
+                className="text-sm"
               >
                 Contributing
               </a>
@@ -149,7 +149,7 @@ const config: DocsThemeConfig = {
           <p className="text-base pb-2 text-white font-bold">About</p>
           <ul className="flex flex-col gap-2">
             <li>
-              <a href="/foundation" className="text-sm font-semibold">
+              <a href="/foundation" className="text-sm">
                 Million Foundation
               </a>
             </li>
@@ -162,7 +162,7 @@ const config: DocsThemeConfig = {
             <li>
               <a
                 href="https://dl.acm.org/doi/10.1145/3555776.3577683"
-                className="text-sm font-semibold"
+                className="text-sm"
               >
                 Research
               </a>
@@ -170,7 +170,7 @@ const config: DocsThemeConfig = {
             <li>
               <a
                 href="https://demo.million.dev/"
-                className="text-sm font-semibold"
+                className="text-sm"
               >
                 Live Demo
               </a>
@@ -178,13 +178,13 @@ const config: DocsThemeConfig = {
             <li>
               <a
                 href="https://github.com/aidenybai/hundred"
-                className="text-sm font-semibold"
+                className="text-sm"
               >
                 Build Your Own
               </a>
             </li>
             <li>
-              <a href="/faq" className="text-sm font-semibold">
+              <a href="/faq" className="text-sm">
                 FAQ
               </a>
             </li>
