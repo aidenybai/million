@@ -39,17 +39,11 @@ export const visit = (
   };
   let info: Info | null = null;
 
-  console.log('hello');
-
   return {
     Program(programPath: NodePath<t.Program>) {
       programPath.traverse<Nullable<Info>>(
         {
           ImportDeclaration(path, state) {
-            if (state.block && state.For) {
-              path.stop();
-              return;
-            }
             const importDeclaration = path.node;
             const importSource = importDeclaration.source;
             if (!importSource.value.includes('million')) return;
@@ -114,8 +108,6 @@ export const visit = (
         };
       }
 
-      console.log(info);
-
       // TODO: double check if ! assertions are needed
       info = {
         block: state.block!,
@@ -123,6 +115,8 @@ export const visit = (
         aliases: state.aliases!,
         programPath,
       };
+
+      console.log(info);
     },
     // JSXElement(path) {
     //   catchError(() => {
@@ -146,5 +140,12 @@ export const visit = (
     //     componentVisitor(path, dirname);
     //   }, options.mute);
     // },
+  };
+};
+
+export const babel = (options: Options, filename: string): PluginObj => {
+  return {
+    name: 'million',
+    visitor: visit(options, filename),
   };
 };

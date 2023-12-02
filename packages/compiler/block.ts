@@ -302,6 +302,7 @@ export const transformBlock = (
         componentBodyPath: componentDeclarationPath.get(
           'init.body'
         ) as NodePath<t.BlockStatement>,
+        componentDeclarationPath,
       },
       SHARED
     );
@@ -322,6 +323,7 @@ export const transformBlock = (
         componentBodyPath: componentDeclarationPath.get(
           'body'
         ) as NodePath<t.BlockStatement>,
+        componentDeclarationPath,
       },
       SHARED
     );
@@ -345,9 +347,13 @@ export const transformComponent = (
   {
     componentBody,
     componentBodyPath,
+    componentDeclarationPath,
   }: {
     componentBody: t.BlockStatement;
     componentBodyPath: NodePath<t.BlockStatement>;
+    componentDeclarationPath: NodePath<
+      t.VariableDeclarator | t.FunctionDeclaration
+    >;
   },
   SHARED: Shared
 ) => {
@@ -718,19 +724,22 @@ export const transformComponent = (
     t.isIdentifier(Component.id) &&
     Component.id.name === masterComponentId.name
   ) {
-    masterComponentId = getUniqueId(globalPath, masterComponentId.name);
+    masterComponentId = getUniqueId(
+      componentDeclarationPath,
+      masterComponentId.name
+    );
   }
   Component.id = masterComponentId;
   callSitePath.replaceWith(masterComponentId);
 
-  globalPath.insertBefore(
+  componentDeclarationPath.insertBefore(
     t.variableDeclaration('const', [
       t.variableDeclarator(puppetComponentId, puppetBlock),
     ])
   );
 
   if (isCallable) {
-    globalPath.insertBefore(
+    componentDeclarationPath.insertBefore(
       t.expressionStatement(
         t.assignmentExpression(
           '=',
@@ -758,7 +767,7 @@ export const transformComponent = (
       SHARED
     );
 
-    globalPath.insertBefore(variables);
+    callSitePath.parentPath.insertBefore(variables);
 
     const puppetBlockArguments = puppetBlock.arguments;
 
@@ -834,7 +843,7 @@ export const transformJSX = (
   },
   SHARED: Shared
 ) => {
-  const { file, info, unstable, importSource } = SHARED;
+  const { file, info, unstable } = SHARED;
 
   /**
    * Populates `dynamics` with a new entry.

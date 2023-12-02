@@ -1,5 +1,6 @@
 import { unplugin } from './plugin';
 import type { Options } from './options';
+import { babel } from './visit';
 
 export const vite = unplugin.vite;
 export const webpack = unplugin.webpack;
@@ -32,6 +33,7 @@ export const next = (
     },
   };
 };
+export { babel };
 
 export default {
   vite,
@@ -41,4 +43,5 @@ export default {
   esbuild,
   next,
   unplugin,
+  babel,
 };

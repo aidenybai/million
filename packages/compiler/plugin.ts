@@ -3,12 +3,12 @@ import { createUnplugin } from 'unplugin';
 import { createFilter } from '@rollup/pluginutils';
 import { transformAsync } from '@babel/core';
 import { displayIntro } from './utils/log';
-import { visit } from './visit';
+import { babel } from './visit';
 import type { Options } from './options';
 import type { TransformResult, VitePlugin } from 'unplugin';
 import type { ParserOptions } from '@babel/core';
 
-const DEFAULT_INCLUDE = 'src/**/*.{jsx,tsx,ts,js,mjs,cjs}';
+const DEFAULT_INCLUDE = '**/*.{jsx,tsx,ts,js,mjs,cjs}';
 const DEFAULT_EXCLUDE = 'node_modules/**/*.{jsx,tsx,ts,js,mjs,cjs}';
 
 export const unplugin = createUnplugin((options: Options = {}) => {
@@ -28,7 +28,7 @@ export const unplugin = createUnplugin((options: Options = {}) => {
   // Throws an error if `mode: 'preact'` or `mode: 'preact-server'` is used
   if (options.mode?.startsWith('preact')) {
     throw new Error(
-      'Preact is no longer maintained. Downgrade to a lower version to maintain support'
+      'Preact is no longer maintained. Downgrade to a lower version for support'
     );
   }
 
@@ -47,16 +47,9 @@ export const unplugin = createUnplugin((options: Options = {}) => {
         plugins.push('typescript');
       }
 
+
       const result = await transformAsync(code, {
-        plugins: [
-          [
-            () => ({
-              name: 'million',
-              visitor: visit(options, id),
-            }),
-            options,
-          ],
-        ],
+        plugins: [[babel, options]],
         parserOpts: { plugins },
         filename: path.basename(id),
         ast: false,

@@ -161,7 +161,7 @@ export const transformFor = (
   const blockComponent = t.variableDeclaration('const', [
     t.variableDeclarator(
       blockComponentId,
-      t.callExpression(t.identifier(info.block), [callbackComponentId])
+      t.callExpression(t.identifier(info.block!.name), [callbackComponentId])
     ),
   ]);
 
