@@ -8,9 +8,18 @@ import type { NodePath, PluginObj } from '@babel/core';
 
 type Nullable<T> = { [K in keyof T]: T[K] | null };
 export interface Info {
-  block: string;
-  For: string | null;
-  source: string;
+  block: {
+    name: string;
+    source: string;
+  } | null;
+  For: {
+    name: string;
+    source: string;
+  } | null;
+  aliases: {
+    block: Set<string>;
+    For: Set<string>;
+  };
   programPath: NodePath<t.Program>;
   // TODO: add debug that stores timings
 }
@@ -22,7 +31,10 @@ export const visit = (
   const state: Nullable<Info> = {
     block: null,
     For: null,
-    source: null,
+    aliases: {
+      block: new Set(),
+      For: new Set(),
+    },
     programPath: null,
   };
   let info: Info | null = null;
@@ -46,12 +58,6 @@ export const visit = (
              * provided options, we resolve the correct import source.
              */
             const source = resolveImportSource(options, importSource.value);
-            importSource.value = source;
-
-            // by default, we use the first import source
-            if (source.startsWith('million')) {
-              state.source = source;
-            }
 
             for (
               let i = 0, j = importDeclaration.specifiers.length;
@@ -65,10 +71,15 @@ export const visit = (
                 t.isIdentifier(specifier.imported) &&
                 specifier.imported.name === 'block'
               ) {
+                if (!source) continue;
                 if (!state.block) {
-                  state.source = source;
-                  state.block = specifier.local.name;
+                  state.block = {
+                    name: specifier.local.name,
+                    source,
+                  };
                 }
+                state.aliases!.block.add(specifier.local.name);
+                importSource.value = source;
                 continue;
               }
 
@@ -76,10 +87,15 @@ export const visit = (
                 t.isIdentifier(specifier.imported) &&
                 specifier.imported.name === 'For'
               ) {
+                if (!source) continue;
                 if (!state.For) {
-                  state.source = source;
-                  state.For = specifier.local.name;
+                  state.For = {
+                    name: specifier.local.name,
+                    source,
+                  };
                 }
+                state.aliases!.For.add(specifier.local.name);
+                importSource.value = source;
                 continue;
               }
             }
@@ -98,6 +114,7 @@ export const visit = (
         block: state.block!,
         For: state.For,
         source: state.source!,
+        aliases: state.aliases!,
         programPath,
       };
     },

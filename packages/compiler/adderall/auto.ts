@@ -1,19 +1,11 @@
 import * as t from '@babel/types';
-import { dim, green, underline, yellow } from 'kleur/colors';
-import {
-  addNamedCache,
-  handleVisitorError,
-  hasStyledAttributes,
-  isComponent,
-  resolvePath,
-  styleSecondaryMessage,
-} from './utils';
 import { callExpressionVisitor } from './call-expression-visitor';
-import { catchError } from './utils/log';
+import { catchError, logIgnore, logImprovement } from './utils/log';
 import { addImport } from './utils/mod';
 import type { Info } from '../visit';
 import type { NodePath } from '@babel/core';
-import type { Options } from '../plugin';
+import type { Options } from '../options';
+import { isAttributeUnsupported, isComponent } from './utils/jsx';
 
 // TODO: for rsc, need to find children files without 'use client' but are client components
 // https://nextjs.org/docs/app/building-your-application/rendering/client-components#using-client-components-in-nextjs
@@ -23,7 +15,7 @@ export const autoscan = (
   options: Options,
   path: NodePath<t.FunctionDeclaration | t.VariableDeclarator>,
   dirname: string,
-  info: Info,
+  info: Info
 ) => {
   if (!options.auto) return;
 
@@ -82,7 +74,7 @@ export const autoscan = (
   if (!isComponent(rawComponent.id.name)) return;
 
   const globalPath = path.findParent(
-    (path) => path.parentPath?.isProgram() || path.isProgram(),
+    (path) => path.parentPath?.isProgram() || path.isProgram()
   )!;
   const comment =
     rawComponent.leadingComments?.[0] ||
@@ -90,18 +82,21 @@ export const autoscan = (
     globalPath.node.leadingComments?.[0];
 
   if (comment?.value.includes('million-ignore')) {
-    // eslint-disable-next-line no-console
-    console.log(dim(` ○ ${yellow(`<${rawComponent.id.name}>`)} was ignored`));
+    logIgnore(rawComponent.id.name);
     return;
   }
 
-  const blockStatementPath = resolvePath(componentPath.get('body'));
+  const blockStatementPath = componentPath.get(
+    'body'
+  ) as NodePath<t.BlockStatement>;
   const returnStatementPath = blockStatementPath
     .get('body')
     .find((path) => path.isReturnStatement());
 
   if (!returnStatementPath?.has('argument')) return;
-  const argumentPath = resolvePath(returnStatementPath.get('argument'));
+  const argumentPath = returnStatementPath.get('argument') as NodePath<
+    t.JSXElement | t.JSXFragment
+  >;
 
   if (!argumentPath.isJSXElement() && !argumentPath.isJSXFragment()) {
     return;
@@ -130,11 +125,12 @@ export const autoscan = (
         skipIds.some((id) =>
           typeof id === 'string'
             ? path.node.name === id
-            : id.test(path.node.name),
+            : id.test(path.node.name)
         )
       ) {
         componentInfo.bailout = true;
-        return path.stop();
+        path.stop();
+        return;
       }
     },
     JSXElement(path) {
@@ -148,17 +144,20 @@ export const autoscan = (
 
         if (isContext) {
           componentInfo.bailout = true;
-          return path.stop();
+          path.stop();
+          return;
         }
 
         if (isSpecialElement) {
           componentInfo.components++;
-          return path.skip();
+          path.skip();
+          return;
         }
       }
       if (t.isJSXIdentifier(type) && isComponent(type.name)) {
         componentInfo.components++;
-        return path.skip();
+        path.skip();
+        return;
       }
 
       componentInfo.elements++;
@@ -180,7 +179,8 @@ export const autoscan = (
 
       if (t.isConditionalExpression(path.node.expression)) {
         componentInfo.components++;
-        return path.skip();
+        path.skip();
+        return;
       }
 
       if (!t.isLiteral(path.node.expression)) componentInfo.expressions++;
@@ -193,9 +193,10 @@ export const autoscan = (
     JSXAttribute(path) {
       const attribute = path.node;
       // twin.macro + styled-components / emotion support
-      if (hasStyledAttributes(attribute) || attribute.name.name === 'ref') {
+      if (isAttributeUnsupported(attribute) || attribute.name.name === 'ref') {
         componentInfo.components++;
-        return path.skip();
+        path.skip();
+        return;
       }
       if (!t.isLiteral(attribute.value)) componentInfo.attributes++;
     },
@@ -207,7 +208,8 @@ export const autoscan = (
       componentInfo.returns++;
       if (componentInfo.returns > 1) {
         componentInfo.bailout = true;
-        return path.stop();
+        path.stop();
+        return;
       }
     },
   });
@@ -235,16 +237,8 @@ export const autoscan = (
     ? (improvement * 100).toFixed(0)
     : '∞';
 
-  if (!options.mute || options.mute === 'info') {
-    // eslint-disable-next-line no-console
-    console.log(
-      styleSecondaryMessage(
-        `${yellow(`<${rawComponent.id.name}>`)} now renders ${green(
-          underline(`~${improvementFormatted}%`),
-        )} faster`,
-        ' ⚡ ',
-      ),
-    );
+  if (!options.log || options.log === 'info') {
+    logImprovement(rawComponent.id.name, improvementFormatted);
   }
 
   const block = info.programPath.scope.hasBinding('block')
@@ -252,8 +246,7 @@ export const autoscan = (
     : addImport(
         'block',
         options.server ? 'million/react-server' : 'million/react',
-        path,
-        info.programPath,
+        info
       );
 
   const rewrittenComponentNode = t.variableDeclaration('const', [
@@ -264,49 +257,49 @@ export const autoscan = (
           ? t.functionExpression(
               rawComponent.id,
               componentPath.node.params,
-              componentPath.node.body,
+              componentPath.node.body
             )
           : componentPath.node,
-      ]),
+      ])
     ),
   ]);
 
   let rewrittenVariableDeclarationPath: NodePath<t.VariableDeclaration>;
 
-  if (rawComponentParentPath.isExportNamedDeclaration()) {
-    rawComponentParentPath.replaceWith(
+  if (path.parentPath.isExportNamedDeclaration()) {
+    path.parentPath.replaceWith(
       t.exportNamedDeclaration(null, [
         t.exportSpecifier(rawComponent.id, rawComponent.id),
-      ]),
+      ])
     );
-    rewrittenVariableDeclarationPath = rawComponentParentPath.insertBefore(
-      rewrittenComponentNode,
+    rewrittenVariableDeclarationPath = path.parentPath.insertBefore(
+      rewrittenComponentNode
     )[0];
-  } else if (rawComponentParentPath.isExportDefaultDeclaration()) {
+  } else if (path.parentPath.isExportDefaultDeclaration()) {
     path.replaceWith(rawComponent.id);
-    rewrittenVariableDeclarationPath = rawComponentParentPath.insertBefore(
-      rewrittenComponentNode,
+    rewrittenVariableDeclarationPath = path.parentPath.insertBefore(
+      rewrittenComponentNode
     )[0];
   } else if (path.isVariableDeclarator()) {
-    rewrittenVariableDeclarationPath = rawComponentParentPath.replaceWith(
-      rewrittenComponentNode,
+    rewrittenVariableDeclarationPath = path.parentPath.replaceWith(
+      rewrittenComponentNode
     )[0];
   } else {
     rewrittenVariableDeclarationPath = path.replaceWith(
-      rewrittenComponentNode,
+      rewrittenComponentNode
     )[0];
   }
 
-  const rewrittenComponentPath = resolvePath(
-    rewrittenVariableDeclarationPath,
-  ).get('declarations.0.init') as NodePath<t.CallExpression>;
+  const rewrittenComponentPath = rewrittenVariableDeclarationPath.get(
+    'declarations.0.init'
+  ) as NodePath<t.CallExpression>;
 
   rewrittenComponentPath.scope.crawl();
   const visitor = callExpressionVisitor(
     { mute: 'info', ...options },
     isReact,
     false,
-    true,
+    true
   );
   catchError(() => visitor(rewrittenComponentPath, new Map(), dirname), 'info');
 };

@@ -1,13 +1,7 @@
 import * as t from '@babel/types';
 import { createDirtyChecker } from '../experimental/utils';
-import { collectImportedBindings } from './bindings';
 import { optimize } from './experimental/optimize';
-import {
-  NO_PX_PROPERTIES,
-  RENDER_SCOPE,
-  SVG_ELEMENTS,
-  TRANSFORM_ANNOTATION,
-} from './constants';
+import { NO_PX_PROPERTIES, RENDER_SCOPE, SVG_ELEMENTS } from './constants';
 import { addImport } from './utils/mod';
 import { deopt, warn } from './utils/log';
 import { evaluate } from './utils/evaluate';
@@ -18,6 +12,7 @@ import {
   isAttributeUnsupported,
   isSensitiveJSXElement,
   isStaticAttributeValue,
+  handleTopLevelFragment,
 } from './utils/jsx';
 import { getUniqueId } from './utils/id';
 import { dedupeObjectProperties } from './utils/object';
@@ -25,6 +20,7 @@ import type { Options } from '../options';
 import type { Info } from '../visit';
 import type { NodePath } from '@babel/core';
 import { resolveImportSource } from './utils/mod';
+import { findChild, findChildMultiple, findComment } from './utils/ast';
 
 export interface Shared {
   file: string;
@@ -34,8 +30,6 @@ export interface Shared {
   RawComponent: t.Identifier | t.FunctionExpression | t.ArrowFunctionExpression;
   blockCache: Map<string, t.Identifier>;
   originalComponent: t.VariableDeclarator | t.FunctionDeclaration;
-  importSource: t.StringLiteral;
-  globalPath: NodePath;
   unstable: boolean;
   info: Info;
 }
@@ -60,70 +54,45 @@ export const transformBlock = (
   dirname: string,
   info: Info,
   unstable = false,
-  valid = false
+  skipCheck = false
 ) => {
-  // Callsite refers to the block call (e.g. the AST node of "block(Component)")
   const callSite = path.node;
+
+  // validate that callee is block
   if (
-    callSite.leadingComments?.some((comment: t.Comment) =>
-      comment.value.startsWith(TRANSFORM_ANNOTATION)
-    )
-  )
-    return;
-
-  const globalPath = path.findParent(
-    (path: NodePath) => path.parentPath?.isProgram() || path.isProgram()
-  )!;
-
-  // We only want to optimize block calls.
-  // check if the block is aliased (e.g. import { block as createBlock } ...)
-  const programPath = path.findParent((path) =>
-    path.isProgram()
-  ) as NodePath<t.Program>;
-  const { aliases } = collectImportedBindings(programPath);
-
-  if (!t.isIdentifier(callSite.callee) || !aliases[callSite.callee.name])
-    return;
-
-  // Allow the user to opt into experimental optimization by adding a /* @optimize */
-  // to the block call.
-  if (
-    callSite.leadingComments?.some(
-      (comment) => comment.value.trim() === '@optimize'
-    )
+    !t.isIdentifier(callSite.callee) ||
+    !info.aliases.block[callSite.callee.name] ||
+    !info.block
   ) {
+    if (!skipCheck) return;
+  }
+
+  // Allow the user to opt into experimental optimization by adding a
+  // /* @optimize */ in front of the block call.
+  if (findComment(callSite, '@optimize')) {
     options.optimize = true;
   }
 
-  /**
-   * It's possible that the block call is in a scope we don't have access to.
-   * This is when we can't access the import specifier for the block function.
-   *
-   * import { block } from 'million/react';
-   *          ^ could not find this
-   */
-  const blockCallBinding = path.scope.getBinding(callSite.callee.name); // callee.name = 'block'
-  if (!blockCallBinding) return;
+  const RawComponent = callSite.arguments[0];
 
-  const importDeclarationPath = blockCallBinding.path
-    .parentPath as NodePath<t.ImportDeclaration>;
-  const importDeclaration = importDeclarationPath.node;
-
-  const importSource = importDeclaration.source;
-  /**
-   * There are different imports based on the library (e.g. million/react, million/preact, etc.)
-   * and usage context (e.g. million/react-server, million/preact-server, etc.). Based on user
-   * provided options, we resolve the correct import source.
-   */
-  importSource.value = resolveImportSource(options, importSource.value);
-
-  if (!info.block && !valid) return;
-
-  let RawComponent: any = callSite.arguments[0];
+  if (
+    !t.isIdentifier(RawComponent) &&
+    !t.isFunctionDeclaration(RawComponent) &&
+    !t.isFunctionExpression(RawComponent) &&
+    !t.isArrowFunctionExpression(RawComponent)
+  ) {
+    throw deopt(
+      'Unsupported argument for block. Make sure blocks consume a component ' +
+        'function or component reference',
+      dirname,
+      path
+    );
+  }
 
   if (t.isIdentifier(RawComponent) && blockCache.has(RawComponent.name)) {
     throw deopt(
-      'Found duplicate block call. Make sure you are not calling block() more than once with the same component.',
+      'Found duplicate block. Make sure you are not using block() ' +
+        'on the same component more than once.',
       dirname,
       path
     );
@@ -133,20 +102,34 @@ export const transformBlock = (
    * Replaces `export default block(Component)` with
    * const default$ = block(Component);
    * export default default$;
+   *
+   * https://astexplorer.net/#/gist/f2e819d384d8ed976cc9a9a02ba5e4f3/latest
    */
   const exportPath = path.parentPath;
   if (exportPath.isExportDefaultDeclaration()) {
-    const exportName = getUniqueId(path, 'M$');
-    exportPath.insertBefore(
-      t.variableDeclaration('const', [
-        t.variableDeclarator(exportName, callSite),
-      ])
-    );
-    exportPath.replaceWith(
-      t.exportDefaultDeclaration(t.identifier(exportName.name))
-    );
+    let name: string;
+    if (t.isIdentifier(RawComponent)) {
+      name = RawComponent.name;
+    } else if (
+      t.isFunctionExpression(RawComponent) &&
+      t.isIdentifier(RawComponent.id)
+    ) {
+      name = RawComponent.id.name;
+    } else {
+      name = 'default$';
+    }
 
-    return; // this "creates" a new callSitePath, so it will be picked up again on the next visitor call. no need to continue.
+    const exportId = getUniqueId(path, name);
+    exportPath.replaceWithMultiple([
+      t.variableDeclaration('const', [
+        t.variableDeclarator(exportId, callSite),
+      ]),
+      t.exportDefaultDeclaration(exportId),
+    ]);
+
+    // this "creates" a new callSitePath, so it will be picked up again on the
+    // next visitor call. no need to continue.
+    return;
   }
 
   /**
@@ -166,105 +149,93 @@ export const transformBlock = (
    * block(anonymous)
    * ```
    */
-  const isComponentAnonymous =
+
+  if (
     t.isFunctionExpression(RawComponent) ||
-    t.isArrowFunctionExpression(RawComponent);
-
-  if (isComponentAnonymous) {
-    // If we can extract out the name for the function expression, we use that.
-    const isComponentNamed =
-      t.isFunctionExpression(RawComponent) && t.isIdentifier(RawComponent.id);
-
-    const anonymousComponentId = isComponentNamed
-      ? t.identifier(`M$${RawComponent.id.name as string}`)
-      : getUniqueId(globalPath, 'M$');
-
-    /**
-     * const anonymous = () => <div />;
-     */
-    globalPath.insertBefore(
-      t.variableDeclaration('const', [
-        t.variableDeclarator(anonymousComponentId, RawComponent),
-      ])
-    );
+    t.isArrowFunctionExpression(RawComponent)
+  ) {
+    const name =
+      t.isFunctionExpression(RawComponent) && t.isIdentifier(RawComponent.id)
+        ? RawComponent.id.name
+        : 'Anonymous';
+    const anonymousComponentId = getUniqueId(info.programPath, name);
 
     /**
      * Replaces function expression with identifier
      * `block(() => ...)` to `block(anonymous)`
      */
+    path.replaceWithMultiple([
+      t.variableDeclaration('const', [
+        t.variableDeclarator(anonymousComponentId, RawComponent),
+      ]),
+      t.callExpression(callSite.callee, [anonymousComponentId]),
+    ]);
 
-    callSite.arguments[0] = anonymousComponentId;
+    // this "creates" a new callSitePath, so it will be picked up again on the
+    // next visitor call. no need to continue.
+    return;
   }
-
-  /**
-   * We assume that the component is a identifier (e.g. block(Component)). If `isComponentAnonymous`
-   * is true, then we know that it has been replaced with a identifier.
-   */
-  if (
-    !t.isIdentifier(RawComponent) &&
-    !t.isFunctionDeclaration(RawComponent) &&
-    !t.isFunctionExpression(RawComponent) &&
-    !t.isArrowFunctionExpression(RawComponent)
-  ) {
-    if (
-      t.isJSXElement(RawComponent) &&
-      t.isJSXIdentifier(RawComponent.openingElement.name)
-    ) {
-      RawComponent = t.identifier(RawComponent.openingElement.name.name);
-      callSite.arguments[0] = RawComponent;
-      path.scope.crawl();
-    } else {
-      throw deopt(
-        'Found unsupported argument for block. Make sure blocks consume a reference to a component function or the direct declaration.',
-        dirname,
-        path
-      );
-    }
-  }
-
-  path.scope.crawl();
 
   const componentDeclarationPath = path.scope.getBinding(
-    isComponentAnonymous
-      ? // We know that the component is a identifier, so we can safely cast it.
-        (callSite.arguments[0] as t.Identifier).name
-      : RawComponent.name
+    RawComponent.name
   )!.path;
 
+  // handles forwardRef
   if (componentDeclarationPath.isVariableDeclarator()) {
-    const init = componentDeclarationPath.node.init;
+    const initPath = componentDeclarationPath.get(
+      'init'
+    ) as NodePath<t.CallExpression>;
+    const init = initPath.node;
+
     if (
       t.isCallExpression(init) &&
-      ((t.isIdentifier(init.callee) && init.callee.name === 'forwardRef') ||
-        (t.isMemberExpression(init.callee) &&
-          t.isIdentifier(init.callee.property) &&
-          init.callee.property.name === 'forwardRef'))
+      findChild(
+        initPath,
+        'Identifier',
+        (p) => p.isIdentifier() && p.node.name === 'forwardRef'
+      )
     ) {
       const forwardRefComponent = init.arguments[0];
-      if (
-        t.isIdentifier(forwardRefComponent) ||
-        t.isFunctionExpression(forwardRefComponent) ||
-        t.isArrowFunctionExpression(forwardRefComponent)
-      ) {
-        const anonymousComponentId = getUniqueId(globalPath, 'M$');
-        componentDeclarationPath.parentPath.insertBefore(
+      const isId = t.isIdentifier(forwardRefComponent);
+      const isFunction = t.isFunctionExpression(forwardRefComponent);
+      const isArrowFunction = t.isArrowFunctionExpression(forwardRefComponent);
+      if (isId || isFunction || isArrowFunction) {
+        let name = 'Anonymous';
+        if (isId) {
+          name = forwardRefComponent.name;
+        } else if (isFunction && t.isIdentifier(forwardRefComponent.id)) {
+          name = forwardRefComponent.id.name;
+        }
+
+        const anonymousComponentId = getUniqueId(info.programPath, name);
+        componentDeclarationPath.replaceWithMultiple([
           t.variableDeclaration('const', [
             t.variableDeclarator(
               anonymousComponentId,
-              t.callExpression(t.identifier(info.block), [forwardRefComponent])
+              t.callExpression(t.identifier(info.block!.name), [
+                forwardRefComponent,
+              ])
             ),
-          ])
-        );
-        init.arguments[0] = anonymousComponentId;
+          ]),
+          t.variableDeclaration('const', [
+            t.variableDeclarator(
+              componentDeclarationPath.node.id,
+              t.callExpression(callSite.callee, [anonymousComponentId])
+            ),
+          ]),
+        ]);
+
         const { parent, node } = path;
         if (
           t.isVariableDeclarator(parent) &&
           'arguments' in node &&
           t.isIdentifier(node.arguments[0])
         ) {
-          parent.init = node.arguments[0];
+          path.parentPath.replaceWith(t.variableDeclarator(node.arguments[0]));
         }
-        path.scope.crawl();
+
+        // this "creates" a new callSitePath, so it will be picked up again on the
+        // next visitor call. no need to continue.
         return;
       }
     }
@@ -285,8 +256,6 @@ export const transformBlock = (
     RawComponent,
     blockCache,
     originalComponent,
-    importSource,
-    globalPath,
     unstable,
     info,
   };
@@ -358,7 +327,7 @@ export const transformBlock = (
     );
   } else if (t.isImportSpecifier(Component)) {
     throw deopt(
-      'You are using a component imported from another file. The component must be declared in the same file as the block.',
+      'You are using a component imported from another file. The component must be colocated in the same file as the block.',
       dirname,
       componentDeclarationPath
     );
@@ -391,7 +360,6 @@ export const transformComponent = (
     RawComponent,
     blockCache,
     originalComponent,
-    globalPath,
   } = SHARED;
 
   /**
@@ -408,7 +376,8 @@ export const transformComponent = (
    */
   if (!t.isBlockStatement(componentBody)) {
     throw deopt(
-      'Expected a block statement for the component function body. Make sure you are using a function declaration or arrow function.',
+      'Expected a block statement function() { /* block */ } in your function ' +
+        'body. Make sure you are using a function declaration or arrow function.',
       file,
       callSitePath
     );
@@ -429,90 +398,32 @@ export const transformComponent = (
    */
   const statementsInBody = componentBody.body.length;
 
-  for (let i = 0; i < statementsInBody; ++i) {
-    const node = componentBody.body[i];
+  const returnStatementPaths = findChildMultiple<t.ReturnStatement>(
+    componentBodyPath,
+    'ReturnStatement'
+  );
 
-    if (!t.isIfStatement(node)) continue;
-    if (
-      t.isReturnStatement(node.consequent) ||
-      (t.isBlockStatement(node.consequent) &&
-        // Look for an early return in the consequent block
-        node.consequent.body.some((n) => t.isReturnStatement(n)))
-    ) {
-      const ifStatementPath = componentBodyPath.get(
-        `body.${i}.consequent`
-      ) as NodePath<t.IfStatement>;
-
-      throw deopt(
-        'You cannot use multiple returns in blocks. There can only be one return statement at the end of the block.',
-        file,
-        callSitePath,
-        ifStatementPath
-      );
-    }
-    // Checks if the last statement is a return statement
-    if (statementsInBody === i - 1 && !t.isReturnStatement(node)) {
-      throw deopt(
-        'There must be a return statement at the end of the block.',
-        file,
-        callSitePath,
-        componentBodyPath.get(`body.${i}`, componentBodyPath) as NodePath
-      );
-    }
+  if (!returnStatementPaths.length) {
+    throw deopt(
+      'Expected a return statement in your component',
+      file,
+      componentBodyPath
+    );
   }
 
-  const jsxPath = componentBodyPath
-    .get('body')
-    .find((path) => path.isReturnStatement())!;
-  const returnStatement = jsxPath.node as t.ReturnStatement;
+  if (returnStatementPaths.length > 1) {
+    throw deopt(
+      'Expected only one return statement in your component',
+      file,
+      componentBodyPath
+    );
+  }
 
-  /**
-   * Turns top-level JSX fragments into a render scope. This is because
-   * the runtime API does not currently handle fragments. We will deal with
-   * nested fragments later.
-   *
-   * ```js
-   * function Component() {
-   *  return <>
-   *   <div />
-   *  </>;   * }
-   *
-   * // becomes
-   *
-   * function Component() {
-   *  return <slot>
-   *    <div />
-   *  </slot>;
-   * }
-   * ```
-   */
-  const handleTopLevelFragment = (jsx: t.JSXFragment | t.JSXElement) => {
-    trimJSXChildren(jsx);
-    if (jsx.children.length === 1) {
-      const child = jsx.children[0];
-      if (t.isJSXElement(child)) {
-        returnStatement.argument = child;
-      } else if (t.isJSXExpressionContainer(child)) {
-        if (t.isJSXEmptyExpression(child.expression)) {
-          returnStatement.argument = t.nullLiteral();
-        } else {
-          returnStatement.argument = child.expression;
-        }
-      } else if (isJSXFragment(child)) {
-        handleTopLevelFragment(child);
-      }
-    } else {
-      const renderScopeId = t.jsxIdentifier(RENDER_SCOPE);
-      returnStatement.argument = t.jsxElement(
-        t.jsxOpeningElement(renderScopeId, []),
-        t.jsxClosingElement(renderScopeId),
-        jsx.children
-      );
-    }
-  };
+  const returnStatementPath = returnStatementPaths[0]!;
+  const returnStatement = returnStatementPath.node;
 
   if (isJSXFragment(returnStatement.argument)) {
-    handleTopLevelFragment(returnStatement.argument);
+    handleTopLevelFragment(returnStatement);
   }
 
   /**
@@ -572,7 +483,7 @@ export const transformComponent = (
       returnStatement,
       originalComponent,
       jsx: returnStatement.argument,
-      jsxPath: jsxPath.get('argument') as NodePath<t.JSXElement>,
+      jsxPath: returnStatementPath.get('argument') as NodePath<t.JSXElement>,
       layers: [],
     },
     SHARED
@@ -583,7 +494,7 @@ export const transformComponent = (
     options,
     {
       jsx: returnStatement.argument,
-      jsxPath: jsxPath.get('argument') as NodePath<t.JSXElement>,
+      jsxPath: returnStatementPath.get('argument') as NodePath<t.JSXElement>,
       componentBody,
       componentBodyPath,
       dynamics,
@@ -654,7 +565,6 @@ export const transformComponent = (
     puppetFn,
     t.objectExpression(dedupeObjectProperties(compiledOptions)),
   ]);
-  t.addComment(puppetBlock, 'leading', TRANSFORM_ANNOTATION);
 
   const data: (typeof dynamics)['data'] = [];
 
@@ -689,7 +599,7 @@ export const transformComponent = (
   }
 
   if (data.length) {
-    jsxPath.insertBefore(
+    returnStatementPath.insertBefore(
       t.variableDeclaration(
         'const',
         data.map(({ id, value }) => {
@@ -924,7 +834,7 @@ export const transformJSX = (
   },
   SHARED: Shared
 ) => {
-  const { file, info, unstable } = SHARED;
+  const { file, info, unstable, importSource } = SHARED;
 
   /**
    * Populates `dynamics` with a new entry.
@@ -995,7 +905,11 @@ export const transformJSX = (
       | t.SpreadElement
     )[]
   ) => {
-    renderReactScope ??= addImport('renderReactScope', 'million/react', info);
+    renderReactScope ??= addImport(
+      'renderReactScope',
+      importSource.value,
+      info
+    );
     const index = ++dynamics.portalInfo.index;
 
     const refCurrent = t.memberExpression(
@@ -1304,10 +1218,12 @@ export const transformJSX = (
     }
 
     if (t.isJSXExpressionContainer(child)) {
-      const expressionPath = jsxPath.get(`children.${i}.expression`);
+      const expressionPath = jsxPath.get(
+        `children.${i}.expression`
+      ) as NodePath<t.Expression>;
       const { ast: expression, err } = evaluate(
         child.expression,
-        resolvePath(expressionPath).scope
+        expressionPath.scope
       );
 
       if (!err) child.expression = expression;
@@ -1376,11 +1292,11 @@ export const transformJSX = (
          * <div><For each={[1, 2, 3]}>{i => <div>{i}</div>}</For></div>
          * ```
          */
-        const expressionPath = resolvePath(
-          jsxPath.get(`children.${i}.expression`)
-        );
+        const expressionPath = jsxPath.get(
+          `children.${i}.expression`
+        ) as NodePath<t.Expression>;
         const hasSensitive =
-          expressionPath.parentPath?.isJSXExpressionContainer() &&
+          expressionPath.parentPath.isJSXExpressionContainer() &&
           t.isJSXElement(expressionPath.parentPath.parent) &&
           isSensitiveJSXElement(expressionPath.parentPath.parent);
 
@@ -1390,7 +1306,7 @@ export const transformJSX = (
           t.isIdentifier(expression.callee.property, { name: 'map' }) &&
           !hasSensitive
         ) {
-          const For = imports.addNamed('For');
+          const For = addImport('For', importSource.value, info);
           const jsxFor = t.jsxIdentifier(For.name);
           const newJsxArrayIterator = t.jsxElement(
             t.jsxOpeningElement(jsxFor, [
@@ -1432,7 +1348,7 @@ export const transformJSX = (
           warn(
             'Conditional expressions will degrade performance. We recommend using deterministic returns instead.',
             file,
-            resolvePath(expressionPath),
+            expressionPath,
             options.mute
           );
 
@@ -1470,20 +1386,15 @@ export const transformJSX = (
           continue;
         }
 
-        const id = createDynamic(
-          null,
-          expression,
-          resolvePath(expressionPath),
-          () => {
-            if (id) child.expression = id;
-          }
-        );
+        const id = createDynamic(null, expression, expressionPath, () => {
+          if (id) child.expression = id;
+        });
       }
 
       continue;
     }
 
-    const jsxChildPath = resolvePath(jsxPath.get(`children.${i}`));
+    const jsxChildPath = jsxPath.get(`children.${i}`);
 
     transformJSX(
       options,

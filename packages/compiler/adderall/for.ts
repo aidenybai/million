@@ -24,7 +24,11 @@ export const transformFor = (
   ) as NodePath<t.Program>;
 
   const jsxId = jsxElement.openingElement.name;
-  if (!t.isJSXIdentifier(jsxId) || !info.For || info.For !== jsxId.name) {
+  if (
+    !t.isJSXIdentifier(jsxId) ||
+    !info.For ||
+    !info.aliases.For.has(jsxId.name)
+  ) {
     return;
   }
 

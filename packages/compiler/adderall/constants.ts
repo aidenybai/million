@@ -1,5 +1,4 @@
 export const RENDER_SCOPE = 'slot';
-export const TRANSFORM_ANNOTATION = 'million:transform';
 export const SVG_ELEMENTS = [
   'circle',
   'ellipse',

@@ -1,5 +1,13 @@
 import * as t from '@babel/types';
-import { bold, cyan, dim, magenta } from 'kleur/colors';
+import {
+  bold,
+  cyan,
+  dim,
+  green,
+  magenta,
+  underline,
+  yellow,
+} from 'kleur/colors';
 import type { Options } from '../../options';
 import type { NodePath } from '@babel/core';
 
@@ -98,4 +106,18 @@ export const catchError = (
       console.warn(err.message, '\n');
     }
   }
+};
+
+export const logImprovement = (component: string, improvement: string) => {
+  // eslint-disable-next-line no-console
+  console.log(
+    `${magenta(' ⚡ ')}${yellow(`<${component}>`)} now renders ${green(
+      underline(`~${improvement}%`)
+    )} faster`
+  );
+};
+
+export const logIgnore = (component: string) => {
+  // eslint-disable-next-line no-console
+  console.log(dim(` ○ ${yellow(`<${component}>`)} was ignored`));
 };

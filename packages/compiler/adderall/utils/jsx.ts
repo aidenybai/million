@@ -1,4 +1,5 @@
 import * as t from '@babel/types';
+import { RENDER_SCOPE } from '../constants';
 
 export const trimJSXChildren = (jsx: t.JSXElement | t.JSXFragment) => {
   for (let i = jsx.children.length - 1; i >= 0; i--) {
@@ -88,4 +89,56 @@ export const isStaticAttributeValue = (node: t.Node) => {
     return true;
   }
   return t.isLiteral(node) && !t.isTemplateLiteral(node);
+};
+
+/**
+ * Turns top-level JSX fragments into a render scope. This is because
+ * the runtime API does not currently handle fragments. We will deal with
+ * nested fragments later.
+ *
+ * ```js
+ * function Component() {
+ *  return <>
+ *   <div />
+ *  </>;   * }
+ *
+ * // becomes
+ *
+ * function Component() {
+ *  return <slot>
+ *    <div />
+ *  </slot>;
+ * }
+ * ```
+ */
+export const handleTopLevelFragment = (returnStatement: t.ReturnStatement) => {
+  const jsx = returnStatement.argument as t.JSXElement | t.JSXFragment;
+  trimJSXChildren(jsx);
+
+  if (jsx.children.length !== 1) {
+    const renderScopeId = t.jsxIdentifier(RENDER_SCOPE);
+    returnStatement.argument = t.jsxElement(
+      t.jsxOpeningElement(renderScopeId, []),
+      t.jsxClosingElement(renderScopeId),
+      jsx.children
+    );
+    return;
+  }
+
+  const child = jsx.children[0];
+  if (t.isJSXElement(child)) {
+    returnStatement.argument = child;
+  }
+
+  if (t.isJSXExpressionContainer(child)) {
+    if (t.isJSXEmptyExpression(child.expression)) {
+      returnStatement.argument = t.nullLiteral();
+    } else {
+      returnStatement.argument = child.expression;
+    }
+  }
+
+  if (isJSXFragment(child)) {
+    handleTopLevelFragment(child, returnStatement);
+  }
 };

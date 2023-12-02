@@ -5,7 +5,7 @@ import type { NodePath } from '@babel/core';
 import { Info } from '../../visit';
 
 export const resolveImportSource = (options: Options, source: string) => {
-  if (!source.startsWith('million')) return source;
+  if (!source.startsWith('million')) return null;
   const mode = options.mode || 'react';
   if (options.server) {
     return `million/${mode}-server`;
