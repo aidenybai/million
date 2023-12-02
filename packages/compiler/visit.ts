@@ -112,6 +112,8 @@ export const visit = (
         };
       }
 
+      console.log(info);
+
       // TODO: double check if ! assertions are needed
       info = {
         block: state.block!,
