@@ -50,10 +50,10 @@ export const unplugin = createUnplugin((options: Options = {}) => {
       const result = await transformAsync(code, {
         plugins: [
           [
-            {
+            () => ({
               name: 'million',
               visitor: visit(options, id),
-            },
+            }),
             options,
           ],
         ],

@@ -39,6 +39,8 @@ export const visit = (
   };
   let info: Info | null = null;
 
+  console.log('hello');
+
   return {
     Program(programPath: NodePath<t.Program>) {
       programPath.traverse<Nullable<Info>>(
