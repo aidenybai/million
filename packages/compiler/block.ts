@@ -1,6 +1,6 @@
 import * as t from '@babel/types';
 import { createDirtyChecker } from './experimental/utils';
-import { optimize } from './experimental/optimize';
+// import { optimize } from './experimental/optimize';
 import { NO_PX_PROPERTIES, RENDER_SCOPE, SVG_ELEMENTS } from './constants';
 import { addImport } from './utils/mod';
 import { deopt, warn } from './utils/log';
@@ -61,7 +61,7 @@ export const transformBlock = (
   // validate that callee is block
   if (
     !t.isIdentifier(callSite.callee) ||
-    !info.aliases.block[callSite.callee.name] ||
+    !info.aliases.block.has(callSite.callee.name) ||
     !info.block
   ) {
     if (!skipCheck) return;
@@ -164,21 +164,20 @@ export const transformBlock = (
      * Replaces function expression with identifier
      * `block(() => ...)` to `block(anonymous)`
      */
-    path.replaceWithMultiple([
-      t.variableDeclaration('const', [
-        t.variableDeclarator(anonymousComponentId, RawComponent),
-      ]),
-      t.callExpression(callSite.callee, [anonymousComponentId]),
-    ]);
+
+    path.parentPath.insertBefore(
+      t.variableDeclarator(anonymousComponentId, RawComponent)
+    );
+
+    path.replaceWith(t.callExpression(callSite.callee, [anonymousComponentId]));
 
     // this "creates" a new callSitePath, so it will be picked up again on the
     // next visitor call. no need to continue.
     return;
   }
 
-  const componentDeclarationPath = path.scope.getBinding(
-    RawComponent.name
-  )!.path;
+  const componentDeclarationPath = path.scope.getBinding(RawComponent.name)!
+    .path as NodePath<t.VariableDeclarator | t.FunctionDeclaration>;
 
   // handles forwardRef
   if (componentDeclarationPath.isVariableDeclarator()) {
@@ -241,9 +240,7 @@ export const transformBlock = (
     }
   }
 
-  const Component = componentDeclarationPath.node as
-    | t.VariableDeclarator
-    | t.FunctionDeclaration;
+  const Component = componentDeclarationPath.node;
 
   // We clone the component so we can restore it later.
   const originalComponent = t.cloneNode(Component);
@@ -757,25 +754,25 @@ export const transformComponent = (
     blockCache.set(RawComponent.name, masterComponentId);
   }
 
-  if (options.optimize) {
-    const { variables, blockFactory } = optimize(
-      options,
-      {
-        holes,
-        jsx: returnStatement.argument,
-      },
-      SHARED
-    );
+  // if (options.optimize) {
+  //   const { variables, blockFactory } = optimize(
+  //     options,
+  //     {
+  //       holes,
+  //       jsx: returnStatement.argument,
+  //     },
+  //     SHARED
+  //   );
 
-    callSitePath.parentPath.insertBefore(variables);
+  //   callSitePath.parentPath.insertBefore(variables);
 
-    const puppetBlockArguments = puppetBlock.arguments;
+  //   const puppetBlockArguments = puppetBlock.arguments;
 
-    puppetBlockArguments[0] = t.nullLiteral();
-    puppetBlockArguments[1] = t.objectExpression([
-      t.objectProperty(t.identifier('block'), blockFactory),
-    ]);
-  }
+  //   puppetBlockArguments[0] = t.nullLiteral();
+  //   puppetBlockArguments[1] = t.objectExpression([
+  //     t.objectProperty(t.identifier('block'), blockFactory),
+  //   ]);
+  // }
 };
 
 export const extractLayers = (
@@ -864,16 +861,13 @@ export const transformJSX = (
   ): t.Identifier | undefined => {
     if (expression && path) {
       // check for ids:
-      let hasValidId = false;
-      path.traverse({
-        Identifier(path) {
-          if (path.scope.hasBinding(path.node.name)) {
-            hasValidId = true;
-            path.stop();
-          }
-        },
-      });
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      const hasValidId = findChild<t.Identifier>(
+        path,
+        'Identifier',
+        (p: NodePath<t.Identifier>) => {
+          return path.scope.hasBinding(p.node.name);
+        }
+      );
       if (!hasValidId) return;
     }
 
@@ -916,7 +910,7 @@ export const transformJSX = (
   ) => {
     renderReactScope ??= addImport(
       'renderReactScope',
-      importSource.value,
+      info.block!.source,
       info
     );
     const index = ++dynamics.portalInfo.index;
@@ -1315,7 +1309,7 @@ export const transformJSX = (
           t.isIdentifier(expression.callee.property, { name: 'map' }) &&
           !hasSensitive
         ) {
-          const For = addImport('For', importSource.value, info);
+          const For = addImport('For', info.block!.source, info);
           const jsxFor = t.jsxIdentifier(For.name);
           const newJsxArrayIterator = t.jsxElement(
             t.jsxOpeningElement(jsxFor, [
