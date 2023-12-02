@@ -74,6 +74,10 @@ export const transformBlock = (
   }
 
   const RawComponent = callSite.arguments[0];
+  const publicName =
+    t.isVariableDeclarator(path.parent) && t.isIdentifier(path.parent.id)
+      ? path.parent.id
+      : null;
 
   if (
     !t.isIdentifier(RawComponent) &&
@@ -119,11 +123,9 @@ export const transformBlock = (
       name = 'default$';
     }
 
-    const exportId = getUniqueId(path, name);
+    const exportId = getUniqueId(info.programPath, name);
     exportPath.replaceWithMultiple([
-      t.variableDeclaration('const', [
-        t.variableDeclarator(exportId, callSite),
-      ]),
+      t.variableDeclaration('let', [t.variableDeclarator(exportId, callSite)]),
       t.exportDefaultDeclaration(exportId),
     ]);
 
@@ -157,16 +159,18 @@ export const transformBlock = (
     const name =
       t.isFunctionExpression(RawComponent) && t.isIdentifier(RawComponent.id)
         ? RawComponent.id.name
-        : 'Anonymous';
-    const anonymousComponentId = getUniqueId(info.programPath, name);
+        : publicName?.name || 'Anonymous';
+    const anonymousComponentId = getUniqueId(path, name);
 
     /**
      * Replaces function expression with identifier
      * `block(() => ...)` to `block(anonymous)`
      */
 
-    path.parentPath.insertBefore(
-      t.variableDeclarator(anonymousComponentId, RawComponent)
+    path.parentPath.parentPath?.insertBefore(
+      t.variableDeclaration('let', [
+        t.variableDeclarator(anonymousComponentId, RawComponent),
+      ])
     );
 
     path.replaceWith(t.callExpression(callSite.callee, [anonymousComponentId]));
@@ -199,7 +203,7 @@ export const transformBlock = (
       const isFunction = t.isFunctionExpression(forwardRefComponent);
       const isArrowFunction = t.isArrowFunctionExpression(forwardRefComponent);
       if (isId || isFunction || isArrowFunction) {
-        let name = 'Anonymous';
+        let name = publicName?.name || 'Anonymous';
         if (isId) {
           name = forwardRefComponent.name;
         } else if (isFunction && t.isIdentifier(forwardRefComponent.id)) {
@@ -208,7 +212,7 @@ export const transformBlock = (
 
         const anonymousComponentId = getUniqueId(info.programPath, name);
         componentDeclarationPath.replaceWithMultiple([
-          t.variableDeclaration('const', [
+          t.variableDeclaration('let', [
             t.variableDeclarator(
               anonymousComponentId,
               t.callExpression(t.identifier(info.block!.name), [
@@ -216,7 +220,7 @@ export const transformBlock = (
               ])
             ),
           ]),
-          t.variableDeclaration('const', [
+          t.variableDeclaration('let', [
             t.variableDeclarator(
               componentDeclarationPath.node.id,
               t.callExpression(callSite.callee, [anonymousComponentId])
@@ -425,6 +429,8 @@ export const transformComponent = (
   const returnStatementPath = returnStatementPaths[0]!;
   const returnStatement = returnStatementPath.node;
 
+  console.log('hi');
+
   if (isJSXFragment(returnStatement.argument)) {
     handleTopLevelFragment(returnStatement);
   }
@@ -604,7 +610,7 @@ export const transformComponent = (
   if (data.length) {
     returnStatementPath.insertBefore(
       t.variableDeclaration(
-        'const',
+        'let',
         data.map(({ id, value }) => {
           return t.variableDeclarator(id, value);
         })
@@ -730,7 +736,7 @@ export const transformComponent = (
   callSitePath.replaceWith(masterComponentId);
 
   componentDeclarationPath.insertBefore(
-    t.variableDeclaration('const', [
+    t.variableDeclaration('let', [
       t.variableDeclarator(puppetComponentId, puppetBlock),
     ])
   );
