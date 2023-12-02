@@ -180,6 +180,7 @@ export const transformBlock = (
     return;
   }
 
+  console.log(RawComponent.name);
   const componentDeclarationPath = path.scope.getBinding(RawComponent.name)!
     .path as NodePath<t.VariableDeclarator | t.FunctionDeclaration>;
 
