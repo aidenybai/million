@@ -7,10 +7,10 @@ import {
 } from './utils/jsx';
 import { deopt, catchError } from './utils/log';
 import { callExpressionVisitor } from './call-expression-visitor';
-import { findChild } from './utils/find';
+import { findChild } from './utils/ast';
 import type { NodePath } from '@babel/core';
-import type { Options } from '../options';
-import type { Info } from '../visit';
+import type { Options } from './options';
+import type { Info } from './visit';
 
 export const transformFor = (
   options: Options,

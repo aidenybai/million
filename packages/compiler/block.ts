@@ -1,5 +1,5 @@
 import * as t from '@babel/types';
-import { createDirtyChecker } from '../experimental/utils';
+import { createDirtyChecker } from './experimental/utils';
 import { optimize } from './experimental/optimize';
 import { NO_PX_PROPERTIES, RENDER_SCOPE, SVG_ELEMENTS } from './constants';
 import { addImport } from './utils/mod';
@@ -16,8 +16,8 @@ import {
 } from './utils/jsx';
 import { getUniqueId } from './utils/id';
 import { dedupeObjectProperties } from './utils/object';
-import type { Options } from '../options';
-import type { Info } from '../visit';
+import type { Options } from './options';
+import type { Info } from './visit';
 import type { NodePath } from '@babel/core';
 import { resolveImportSource } from './utils/mod';
 import { findChild, findChildMultiple, findComment } from './utils/ast';

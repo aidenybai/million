@@ -2,9 +2,9 @@ import * as t from '@babel/types';
 import { callExpressionVisitor } from './call-expression-visitor';
 import { catchError, logIgnore, logImprovement } from './utils/log';
 import { addImport } from './utils/mod';
-import type { Info } from '../visit';
+import type { Info } from './visit';
 import type { NodePath } from '@babel/core';
-import type { Options } from '../options';
+import type { Options } from './options';
 import { isAttributeUnsupported, isComponent } from './utils/jsx';
 
 // TODO: for rsc, need to find children files without 'use client' but are client components

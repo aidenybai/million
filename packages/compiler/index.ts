@@ -1,4 +1,4 @@
-import { unplugin, babel } from './plugin';
+import { unplugin } from './plugin';
 import type { Options } from './options';
 
 export const vite = unplugin.vite;
@@ -8,7 +8,7 @@ export const rspack = unplugin.rspack;
 export const esbuild = unplugin.esbuild;
 export const next = (
   nextConfig: Record<string, any> = {},
-  overrideOptions: Options = {},
+  overrideOptions: Options = {}
 ) => {
   const millionConfig: Options = {
     mode: 'react',
@@ -22,7 +22,7 @@ export const next = (
         webpack({
           mute: webpackOptions.isServer,
           ...millionConfig,
-        }),
+        })
       );
 
       if (typeof nextConfig.webpack === 'function') {
@@ -41,5 +41,4 @@ export default {
   esbuild,
   next,
   unplugin,
-  babel,
 };

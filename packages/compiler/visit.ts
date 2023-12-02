@@ -1,8 +1,8 @@
 import * as t from '@babel/types';
 import { addNamed } from '@babel/helper-module-imports';
-import { resolveImportSource } from './adderall/utils/mod';
-import { transformFor } from './adderall/for';
-import { catchError } from './adderall/utils/log';
+import { resolveImportSource } from './utils/mod';
+import { transformFor } from './for';
+import { catchError } from './utils/log';
 import type { Options } from './options';
 import type { NodePath, PluginObj } from '@babel/core';
 
@@ -105,24 +105,26 @@ export const visit = (
       );
       if (!state.block && !state.For) return;
 
-      if (!state.block && state.source) {
-        state.block = addNamed(programPath, 'block', state.source).name;
+      if (!state.block && state.For?.source) {
+        state.block = {
+          name: addNamed(programPath, 'block', state.For.source).name,
+          source: state.For.source,
+        };
       }
 
       // TODO: double check if ! assertions are needed
       info = {
         block: state.block!,
         For: state.For,
-        source: state.source!,
         aliases: state.aliases!,
         programPath,
       };
     },
-    JSXElement(path) {
-      catchError(() => {
-        transformFor(options, path, filename, info!);
-      }, options.log);
-    },
+    // JSXElement(path) {
+    //   catchError(() => {
+    //     transformFor(options, path, filename, info!);
+    //   }, options.log);
+    // },
     // CallExpression(path) {
     //   handleVisitorError(() => {
     //     callExpressionVisitor(path, blockCache, dirname);
