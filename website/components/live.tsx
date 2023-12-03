@@ -2,8 +2,8 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import {
   RoomProvider,
-  useOthers,
   useOthersConnectionIds,
+  useOthersMapped,
   useUpdateMyPresence,
 } from '../liveblocks.config';
 import { Cursor } from './cursor';
@@ -33,7 +33,7 @@ function useLiveCursors() {
     function transformPosition(cursor: { x: number; y: number }) {
       return {
         x: cursor.x / window.innerWidth,
-        y: cursor.y,
+        y: Math.round(cursor.y),
       };
     }
 
@@ -82,7 +82,7 @@ function useLiveCursors() {
     };
   }, [updateMyPresence]);
 
-  const others = useOthers();
+  const others = useOthersMapped((other) => other.presence);
 
   const cursors: {
     x: number;
@@ -90,10 +90,13 @@ function useLiveCursors() {
     connectionId: number;
   }[] = [];
 
-  for (const { connectionId, presence } of others) {
+  for (const [connectionId, presence] of others) {
     if (presence.cursor) {
       cursors.push({
-        x: presence.cursor.x * window.innerWidth,
+        x: Math.min(
+          presence.cursor.x * window.innerWidth,
+          window.innerWidth - 32,
+        ),
         y: presence.cursor.y,
         connectionId,
       });
@@ -108,12 +111,12 @@ export function Cursors() {
 
   return (
     <>
-      {cursors.map(({ x, y, connectionId }) => (
+      {cursors.map((cursor) => (
         <Cursor
-          key={connectionId}
-          color={COLORS[connectionId % COLORS.length]}
-          x={x}
-          y={y}
+          key={cursor.connectionId}
+          color={COLORS[cursor.connectionId % COLORS.length]}
+          x={cursor.x}
+          y={cursor.y}
         />
       ))}
     </>

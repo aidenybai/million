@@ -10,5 +10,10 @@ interface Presence extends JsonObject {
   cursor: { x: number; y: number } | null;
 }
 
-export const { RoomProvider, useOthers, useMyPresence, useUpdateMyPresence, useOthersConnectionIds } =
-  createRoomContext<Presence>(client);
+export const {
+  RoomProvider,
+  useMyPresence,
+  useUpdateMyPresence,
+  useOthersConnectionIds,
+  useOthersMapped,
+} = createRoomContext<Presence>(client);
