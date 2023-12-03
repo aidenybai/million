@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import {
   RoomProvider,
   useOthers,
+  useOthersConnectionIds,
   useUpdateMyPresence,
 } from '../liveblocks.config';
 import { Cursor } from './cursor';
@@ -120,7 +121,7 @@ export function Cursors() {
 }
 
 export function getCount() {
-  const others = useOthers();
+  const others = useOthersConnectionIds();
   return others.length;
 }
 
