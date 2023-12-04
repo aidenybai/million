@@ -8,7 +8,7 @@ const faq = [
     question: 'How to get started?',
     answer: (
       <>
-        Getting started is just as easy as running our CLI command: {" "}
+        Getting started is just as easy as running our CLI command:{' '}
         <div className="group relative inline">
           <code
             className="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10 cursor-pointer"
