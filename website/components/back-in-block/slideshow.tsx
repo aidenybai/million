@@ -9,13 +9,12 @@ export const motionAnimationProps = {
   },
 };
 
-export function Slideshow({
-  frames,
-  descriptions,
-}: {
+interface SlideshowProps {
   frames: JSX.Element[];
   descriptions: string[];
-}) {
+}
+
+export function Slideshow({ frames, descriptions }: SlideshowProps) {
   const [frame, setFrame] = useState<number>(0);
 
   return (

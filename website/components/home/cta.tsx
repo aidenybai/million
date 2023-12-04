@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Container } from './container';
-import { Blur } from './hero';
+import { Blur } from './blur';
 import { ShimmerButton } from './shimmer-button';
 
 export function CTA() {

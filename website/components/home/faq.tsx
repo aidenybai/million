@@ -5,7 +5,50 @@ import { Container } from './container';
 
 const faq = [
   {
-    question: <>How is it fast?</>,
+    question: 'How to get started?',
+    answer: (
+      <>
+        Getting started is just as easy as running our CLI command: {" "}
+        <div className="group relative inline">
+          <code
+            className="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10 cursor-pointer"
+            dir="ltr"
+            data-language="jsx"
+            data-theme="default"
+            onClick={(e) => {
+              const target = e.target as HTMLElement;
+              navigator.clipboard
+                .writeText('npx million@latest')
+                .then(() => {
+                  target.innerText = 'Copied!';
+                  setTimeout(() => {
+                    target.innerText = 'npx million@latest';
+                  }, 800);
+                })
+                .catch(() => {
+                  target.innerText = 'Failed to copy!';
+                });
+            }}
+          >
+            <span className="line">npx million@latest</span>
+          </code>
+          <span className="pointer-events-none absolute -top-7 left-0 w-max opacity-0 transition-opacity group-hover:opacity-100 bg-[#292929] py-1 px-2 rounded-lg text-xs">
+            Click to copy!
+          </span>
+        </div>
+        <br />
+        For more information, check out the{' '}
+        <Link
+          className="nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]"
+          href="/docs/install"
+        >
+          Installation Guide
+        </Link>
+      </>
+    ),
+  },
+  {
+    question: 'How is it fast?',
     answer: (
       <>
         We use a novel approach to the virtual DOM called the block virtual DOM.
@@ -60,7 +103,7 @@ const faq = [
     ),
   },
   {
-    question: <> Does it work with Preact, Next.js, etc.?</>,
+    question: 'Does it work with Preact, Next.js, etc.?',
     answer: (
       <>
         If it uses React or Preact, then probably. You can reference the full
@@ -76,7 +119,7 @@ const faq = [
     ),
   },
   {
-    question: <>What are the limitations?</>,
+    question: 'What are the limitations?',
     answer: (
       <>
         You can view the list of current limitations in the{' '}
@@ -93,7 +136,7 @@ const faq = [
     ),
   },
   {
-    question: <>Is this just memo?</>,
+    question: 'Is this just memo?',
     answer: (
       <>
         While React provides memoization utilities, Million.js takes a
@@ -112,7 +155,7 @@ const faq = [
     ),
   },
   {
-    question: <>What is the logo supposed to be?</>,
+    question: 'What is the logo supposed to be?',
     answer: (
       <>
         He's <b>Mil the Lion!</b> He's the friendly mascot of the Million.js

@@ -2,8 +2,13 @@ import Tilt from 'react-parallax-tilt';
 import Link from 'next/link';
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
+import { BoxIcon } from '@components/icons/box';
+import { ClockIcon } from '@components/icons/clock';
+import { LightBulbIcon } from '@components/icons/lightbulb';
+import { LightningIcon } from '@components/icons/lightning';
+import { ThumbsUpIcon } from '@components/icons/thumbsup';
 import { Container } from './container';
-import { Blur } from './hero';
+import { Blur } from './blur';
 
 const Chart = dynamic(() => import('../chart').then((mod) => mod.Chart));
 const Showdown = dynamic(() =>
@@ -146,12 +151,8 @@ export function About() {
 function Graphic() {
   const [showShowdown, setShowShowdown] = useState(false);
 
-  const handleClick = () => {
-    setShowShowdown(!showShowdown);
-  };
-
   return (
-    <GraphicWrapper onClick={handleClick}>
+    <GraphicWrapper onClick={() => setShowShowdown(!showShowdown)}>
       {!showShowdown ? (
         <div className="bg-white p-4 pb-6 dark:bg-zinc-900 rounded-lg">
           <div className="w-full">
@@ -181,13 +182,12 @@ function Graphic() {
   );
 }
 
-function GraphicWrapper({
-  children,
-  onClick,
-}: {
+interface GraphicWrapperProps {
   children: JSX.Element;
   onClick: () => void;
-}) {
+}
+
+function GraphicWrapper({ children, onClick }: GraphicWrapperProps) {
   return (
     <Tilt
       tiltMaxAngleX={5}
@@ -235,7 +235,13 @@ rounded-lg text-center bg-gradient-to-b from-zinc-200 to-white dark:from-zinc-70
   );
 }
 
-function Card({ title, description, icon }) {
+interface CardProps {
+  title: string;
+  description: string | JSX.Element;
+  icon: JSX.Element;
+}
+
+function Card({ title, description, icon }: CardProps) {
   return (
     <Tilt
       tiltMaxAngleX={2.5}
@@ -255,100 +261,5 @@ function Card({ title, description, icon }) {
         </div>
       </div>
     </Tilt>
-  );
-}
-
-function ThumbsUpIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={1.5}
-      stroke="currentColor"
-      className="w-6 h-6 text-purple-500 hover:animate-spin"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M6.633 10.5c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 012.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 00.322-1.672V3a.75.75 0 01.75-.75A2.25 2.25 0 0116.5 4.5c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 01-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 00-1.423-.23H5.904M14.25 9h2.25M5.904 18.75c.083.205.173.405.27.602.197.4-.078.898-.523.898h-.908c-.889 0-1.713-.518-1.972-1.368a12 12 0 01-.521-3.507c0-1.553.295-3.036.831-4.398C3.387 10.203 4.167 9.75 5 9.75h1.053c.472 0 .745.556.5.96a8.958 8.958 0 00-1.302 4.665c0 1.194.232 2.333.654 3.375z"
-      />
-    </svg>
-  );
-}
-
-function LightBulbIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={1.5}
-      stroke="currentColor"
-      className="w-6 h-6 text-purple-400 hover:animate-spin"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18"
-      />
-    </svg>
-  );
-}
-
-function BoxIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth="1.5"
-      stroke="currentColor"
-      className="w-6 h-6 text-purple-400 hover:animate-spin"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"
-      />
-    </svg>
-  );
-}
-
-function LightningIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={1.5}
-      stroke="currentColor"
-      className="w-6 h-6 text-purple-400 m-auto hover:animate-spin"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
-      />
-    </svg>
-  );
-}
-
-function ClockIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={1.5}
-      stroke="currentColor"
-      className="w-6 h-6 m-auto text-purple-600 dark:text-purple-400 hover:animate-spin"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
-      />
-    </svg>
   );
 }

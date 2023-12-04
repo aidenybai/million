@@ -17,6 +17,7 @@
     "module": "esnext",
     "resolveJsonModule": true,
     "paths": {
+      "@/*": ["*"],
       "@components/*": ["components/*"],
       "react": ["./node_modules/@types/react"],
       "react-dom": ["./node_modules/@types/react-dom"]

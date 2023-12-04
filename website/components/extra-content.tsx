@@ -1,5 +1,5 @@
 import dynamic from 'next/dynamic';
-import { startTransition, useEffect, useRef, useState } from 'react';
+import { startTransition, useEffect, useMemo, useRef, useState } from 'react';
 import { CarbonAds } from './ad';
 import { getCount } from './live';
 
@@ -15,15 +15,8 @@ export function ExtraContent() {
 }
 
 export function Status() {
-  const [, forceUpdate] = useState({});
   const count = getCount();
-  const userString = count > 1 ? "users" : "user";
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     forceUpdate({});
-  //   }, 1000);
-  //   return () => clearInterval(interval);
-  // }, []);
+  const userString = useMemo(() => (count > 1 ? 'users' : 'user'), [count]);
   return (
     <div className="flex ml-1 items-center gap-2 text-black dark:text-white">
       <div className="relative flex h-3 w-3">

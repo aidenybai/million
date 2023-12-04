@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react';
 
-interface ShimmerButtonProps {
+interface ShimmerButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   shimmerColor?: string;
   shimmerSize?: string;
   borderRadius?: string;
@@ -8,8 +8,6 @@ interface ShimmerButtonProps {
   background?: string;
   className?: string;
   children?: React.ReactNode;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any; // ...props
 }
 
 export const ShimmerButton = ({
