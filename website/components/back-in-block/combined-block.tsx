@@ -1,3 +1,4 @@
+import { LazyMotion, domAnimation } from 'framer-motion';
 import { Slideshow } from './slideshow';
 import {
   frames as staticAnalysisFrames,
@@ -10,9 +11,11 @@ import {
 
 export const CombinedBlockExample = () => {
   return (
-    <Slideshow
-      frames={[...staticAnalysisFrames, ...blockVDomFrames]}
-      descriptions={[...staticAnalysisDescriptions, ...blockVDomDescriptions]}
-    />
+    <LazyMotion features={domAnimation}>
+      <Slideshow
+        frames={[...staticAnalysisFrames, ...blockVDomFrames]}
+        descriptions={[...staticAnalysisDescriptions, ...blockVDomDescriptions]}
+      />
+    </LazyMotion>
   );
 };
