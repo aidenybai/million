@@ -11,8 +11,9 @@ export function Community() {
               Join our community
             </h2>
             <p className="font-medium pb-6 text-sm xl:text-base">
-              Get support, get involved, and join our community of 5000+ React
-              developers that care about performance—it all happens on Discord.
+              Connect with 5000+ React developers committed to better performing
+              applications. Connect, participate, and seek support — all on
+              Discord.
             </p>
 
             <button className="py-2 px-4 xl:py-4 xl:px-6 bg-white text-blue-purple-gradient rounded-2xl hover:opacity-80">

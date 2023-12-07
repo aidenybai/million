@@ -38,17 +38,17 @@ export function Hero() {
                 </span>{' '}
                 Replacement
               </span>{' '}
-              for React. Gain big performance wins for UI and data heavy React
-              apps. Dead simple to use – try it out with{' '}
+              for React. Experience improved performance for UI and data-heavy
+              React apps. Minimal effort required - all it takes is with{' '}
               <Link href="/docs" className="font-medium hover:underline">
-                just one plugin
+                a single plugin.
               </Link>
               .
             </p>
             <ReactTooltip
               id="virtual-dom-explanation"
               place="bottom"
-              style={{ width: '50%' , zIndex: "13"}}
+              style={{ width: '50%', zIndex: '13' }}
               content="The Virtual DOM is a technique in web development, like React.js, that boosts efficiency by first making changes to a virtual copy of the DOM before updating the actual DOM."
             />
             <div className="mt-16 flex flex-wrap justify-center gap-y-4 gap-x-6">

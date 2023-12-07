@@ -19,7 +19,7 @@ export function About() {
             What's in Million.js?
           </h3>
           <p className="mt-3 text-center text-zinc-600 dark:text-zinc-300 md:text-md lg:text-lg">
-            All the tools to make React faster, automatically.
+            The tools to make React faster, automatically.
           </p>
           <div className="relative mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             <Card
@@ -88,8 +88,8 @@ export function About() {
                 React at the speed of raw JS
               </h2>
               <p className="text-lg my-8 text-zinc-600 dark:text-zinc-300">
-                Million.js automatically optimizes React, making it run way
-                faster. It's one of the top performers in the{' '}
+                Million.js optimizes React, improving its performance. It stands
+                out as one of the top performers in the{' '}
                 <a
                   href="https://krausest.github.io/js-framework-benchmark/2023/table_chrome_112.0.5615.49.html"
                   target="_blank"
@@ -129,12 +129,12 @@ export function About() {
                   </div>
                 </div>
               </div>
-              <div className="mt-10 text-xs bg-gradient-to-b dark:from-zinc-500 dark:to-[#111] dark:hover:to-zinc-500 inline-block text-transparent bg-clip-text from-zinc-500 to-white hover:to-zinc-500 opacity-40 hover:opacity-50 transition-opacity">
-                Note: It's important to note that benchmarks (via JS Framework
-                Benchmark) do not represent real-life performance. Million.js
-                does include some limitations. You may see more performance
-                improvement if you have more data / UI heavy apps.
-              </div>
+              <p className="mt-10 text-xs bg-gradient-to-b dark:from-zinc-500 dark:to-[#111] dark:hover:to-zinc-500 inline-block text-transparent bg-clip-text from-zinc-500 to-white hover:to-zinc-500 opacity-40 hover:opacity-50 transition-opacity">
+                Note: Benchmarks (via JS Framework Benchmark) do not represent
+                real-life performance. Million.js does have some limitations.
+                Performance improvements may be more noticeable with apps that
+                include more data / UI components.
+              </p>
             </div>
           </div>
         </Container>

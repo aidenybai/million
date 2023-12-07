@@ -7,19 +7,24 @@ import { Callout, Tabs, Tab, Steps } from 'nextra-theme-docs';
 
 # Automatic Mode
 
-Automatic mode is the default mode of Million.js. It automatically converts React components to Million.js components and makes them faster without you having tweak a lot of your code.
+Million.js comes with Automatic Mode as its default setting. This transforms your React components into Million.js components, improving speed without any major code changes.
 
 
-If you remember from [Installation](/docs/install) when you set up Million in your project, you probably used automatic mode which is what we recommend for most users. There you simply passed the `auto` option to the compiler.
+When [installing Million into your project](/docs/install), automatic mode is recommended for most users. This passes the `auto` option into the compiler.
 
-In this part of the docs, we expatiate more on more things you can do with automatic mode and how you can properly configure it to your taste.
+
+
+### `auto`
+
+The `auto` option is a boolean that enables automatic mode. By default it is unset, because we still support [manual mode](/docs/install#configure-it-yourself).
+
 
 ### Advanced customization
 
-Automatic mode provides options to tune it to your taste:
+Automatic mode provides customization options:
 
-- `threshold`: The threshold for the heuristic to determine whether a component should be converted to Million.js. The greater the threshold, fewer components will be optimized, and vice versa. The default is `0.1`.
-- `skip`: An array of identifiers that indicate a component should be skipped. You can put hook names, variable names, etc. The default is `[]`.
+- `threshold` (default: `0.1`): What is used to determine whether a component should be converted to Million.js. The greater the threshold, fewer components will be optimized, and vice versa.
+- `skip` (default: `[]`): An array of identifiers to indicate if a component should be skipped. You can use hook names, variable names, etc.
 
 ```js
 const options = {
@@ -31,8 +36,7 @@ const options = {
 ```
 
 
-If you were using <a className="font-normal text-base" href='https://vitejs.dev/guide/'>Vite</a> for example and were trying to set up additional options for more features other than the default gotten from <a className="font-normal text-base" href="/docs/install">Installation</a>, you 
-add the `auto` options object as follows:
+When using <a className="font-normal text-base" href='https://vitejs.dev/guide/'>Vite</a>, the `auto` object lets you configure options beyond the default ones set during installation:
 
 ```js
 export default defineConfig({
@@ -46,7 +50,7 @@ export default defineConfig({
 
 ### Ignoring components
 
-If a certain component conflicts with the Million.js runtime, it's possible to skip over them via the `// million-ignore` comment.
+If you encounter an error with a component during the Million.js runtime, it can be skipped using the `// million-ignore` comment.
 
 ```js
 // million-ignore
@@ -59,4 +63,4 @@ function App() {
 
 ### Muting help messages
 
-If you don't want to see the help messages, you can pass the `{ mute: true }{:js}` option to the compiler.
+To avoid seeing help messages messages, you can pass the `{ mute: true }{:js}` option to the compiler.
