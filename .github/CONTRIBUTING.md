@@ -140,7 +140,12 @@ The source code is divided into four main folders:
 
 > Note: To contribute to the website, you need to have a basic understanding of [Next.js](https://nextjs.org/docs) and [MDX.](https://mdxjs.com/)
 
-To run the website locally, you need to install the dependencies and run the development server:
+To run the website locally:
+- Go to [Liveblocks](https://liveblocks.io/) to create an account
+- Get your API key and rename the `.env.example` to `.env` 
+- Add the API key to the `NEXT_PUBLIC_LIVEBLOCKS_PUBLIC_KEY`. 
+
+Then, you'll need to install the dependencies and run the development server following the commands below: 
 
 ```bash
 pnpm install
