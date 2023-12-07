@@ -1,4 +1,5 @@
 export const RENDER_SCOPE = 'slot';
+export const SKIP_ANNOTATION = '@__SKIP__';
 export const SVG_ELEMENTS = [
   'circle',
   'ellipse',

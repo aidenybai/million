@@ -1,11 +1,10 @@
-import * as t from '@babel/types';
 import { addNamed } from '@babel/helper-module-imports';
-import type { Options } from '../../options';
-import type { NodePath } from '@babel/core';
-import { Info } from '../../visit';
+import type { Options } from '../options';
+import { Info } from '../babel';
+import { NodePath } from '@babel/core';
 
 export const resolveImportSource = (options: Options, source: string) => {
-  if (!source.startsWith('million')) return null;
+  if (!source.startsWith('million/react')) return null;
   const mode = options.mode || 'react';
   if (options.server) {
     return `million/${mode}-server`;
@@ -13,10 +12,29 @@ export const resolveImportSource = (options: Options, source: string) => {
   return `million/${mode}`;
 };
 
-export const addImport = (name: string, source: string, info: Info) => {
-  if (info[name]) return info[name];
+export const addImport = (
+  path: NodePath,
+  name: string,
+  source: string,
+  info: Info
+) => {
+  const hasProgramBinding = info.programPath.scope.hasBinding(name);
+  const hasLocalBinding = path.scope.hasBinding(name);
 
-  return addNamed(info.programPath, name, source);
+  if (info.imports[name] && hasProgramBinding && hasLocalBinding) {
+    return info.imports[name];
+  }
+
+  const id = addNamed(info.programPath, name, source);
+
+  if (info.imports.source === source && name in info.imports) {
+    if (!info.imports[name]) {
+      info.imports[name] = id.name;
+      info.imports.aliases[name] = new Set([id.name]);
+    }
+    info.imports.aliases[name].add(name);
+  }
+  return id;
 };
 
 // export const getNamedImports = (

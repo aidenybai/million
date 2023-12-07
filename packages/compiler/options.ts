@@ -24,6 +24,9 @@ interface PluginOptions {
    * @default false
    */
   hmr?: boolean;
+  /**
+   * @default true
+   */
   log?: boolean | 'info';
   /**
    * @deprecated Use `log` instead

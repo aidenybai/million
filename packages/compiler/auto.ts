@@ -1,23 +1,20 @@
 import * as t from '@babel/types';
-import { callExpressionVisitor } from './call-expression-visitor';
 import { catchError, logIgnore, logImprovement } from './utils/log';
 import { addImport } from './utils/mod';
-import type { Info } from './visit';
+import type { Info } from './babel';
 import type { NodePath } from '@babel/core';
-import type { Options } from './options';
 import { isAttributeUnsupported, isComponent } from './utils/jsx';
+import { transformBlock } from './block';
 
 // TODO: for rsc, need to find children files without 'use client' but are client components
 // https://nextjs.org/docs/app/building-your-application/rendering/client-components#using-client-components-in-nextjs
 //
 // TODO: add support for <For> for .maps
-export const autoscan = (
-  options: Options,
+export const parseAuto = (
   path: NodePath<t.FunctionDeclaration | t.VariableDeclarator>,
-  dirname: string,
   info: Info
 ) => {
-  if (!options.auto) return;
+  if (!info.options.auto) return;
 
   const rawComponent = path.node;
 
@@ -38,7 +35,7 @@ export const autoscan = (
   >;
 
   // Next.js React Server Components support
-  if (typeof options.auto === 'object' && options.auto.rsc) {
+  if (typeof info.options.auto === 'object' && info.options.auto.rsc) {
     const directives = info.programPath.node.directives;
     if (!directives.length) return; // we assume it's server component only
     const hasUseClientDirective = directives.some((directive) => {
@@ -115,8 +112,8 @@ export const autoscan = (
 
   const skipIds: (string | RegExp)[] = [];
 
-  if (typeof options.auto === 'object' && options.auto.skip) {
-    skipIds.push(...options.auto.skip);
+  if (typeof info.options.auto === 'object' && info.options.auto.skip) {
+    skipIds.push(...info.options.auto.skip);
   }
 
   blockStatementPath.traverse({
@@ -220,8 +217,8 @@ export const autoscan = (
   const improvement = (good - bad) / (good + bad);
 
   const threshold =
-    typeof options.auto === 'object' && options.auto.threshold
-      ? options.auto.threshold
+    typeof info.options.auto === 'object' && info.options.auto.threshold
+      ? info.options.auto.threshold
       : 0.1;
 
   if (
@@ -237,17 +234,13 @@ export const autoscan = (
     ? (improvement * 100).toFixed(0)
     : '∞';
 
-  if (!options.log || options.log === 'info') {
+  if (!info.options.log || info.options.log === 'info') {
     logImprovement(rawComponent.id.name, improvementFormatted);
   }
 
   const block = info.programPath.scope.hasBinding('block')
     ? t.identifier('block')
-    : addImport(
-        'block',
-        options.server ? 'million/react-server' : 'million/react',
-        info
-      );
+    : addImport(path, 'block', info.imports.source!, info);
 
   const rewrittenComponentNode = t.variableDeclaration('const', [
     t.variableDeclarator(
@@ -295,11 +288,19 @@ export const autoscan = (
   ) as NodePath<t.CallExpression>;
 
   rewrittenComponentPath.scope.crawl();
-  const visitor = callExpressionVisitor(
-    { mute: 'info', ...options },
-    isReact,
-    false,
-    true
-  );
-  catchError(() => visitor(rewrittenComponentPath, new Map(), dirname), 'info');
+
+  const log = info.options.log;
+  const blocks = info.blocks;
+  if (log !== true) {
+    info.options.log = 'info';
+  }
+
+  info.blocks = new Map();
+
+  catchError(() => {
+    transformBlock(rewrittenComponentPath, info, false);
+  }, 'info');
+
+  info.options.log = log;
+  info.blocks = blocks;
 };

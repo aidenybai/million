@@ -6,42 +6,34 @@ import {
   isComponent,
 } from './utils/jsx';
 import { deopt, catchError } from './utils/log';
-import { callExpressionVisitor } from './call-expression-visitor';
 import { findChild } from './utils/ast';
 import type { NodePath } from '@babel/core';
-import type { Options } from './options';
-import type { Info } from './visit';
+import type { Info } from './babel';
+import { transformBlock } from './block';
+import { getUniqueId } from './utils/id';
 
 export const transformFor = (
-  options: Options,
-  path: NodePath<t.JSXElement>,
-  dirname: string,
+  jsxElementPath: NodePath<t.JSXElement>,
   info: Info
 ) => {
-  const jsxElement = path.node;
-  const programPath = path.findParent((path) =>
-    path.isProgram()
-  ) as NodePath<t.Program>;
+  if (!info.imports.source) return;
 
+  const jsxElement = jsxElementPath.node;
   const jsxId = jsxElement.openingElement.name;
   if (
     !t.isJSXIdentifier(jsxId) ||
-    !info.For ||
-    !info.aliases.For.has(jsxId.name)
+    !info.imports.For ||
+    !info.imports.aliases.For?.has(jsxId.name)
   ) {
     return;
   }
 
-  // update bindings if generated via call expression visitor
-  programPath.scope.crawl();
+  const expression = validateForExpression(jsxElementPath, info);
 
-  const expression = validateForExpression(jsxElement, dirname, path);
+  if (hoistFor(jsxElementPath)) return;
 
-  if (hoistFor(jsxElement, path)) return;
-
-  const callbackComponentId =
-    programPath.scope.generateUidIdentifier('callback$');
-  const blockComponentId = programPath.scope.generateUidIdentifier();
+  const callbackComponentId = getUniqueId(jsxElementPath, 'ForCallback');
+  const blockComponentId = getUniqueId(jsxElementPath, 'ForBody');
 
   const idNames = new Set<string>();
 
@@ -66,7 +58,7 @@ export const transformFor = (
   }
 
   let bailout = false;
-  path.traverse({
+  jsxElementPath.traverse({
     JSXElement(path) {
       const jsxId = path.node.openingElement.name;
       if (t.isJSXIdentifier(jsxId) && isComponent(jsxId.name)) {
@@ -92,7 +84,7 @@ export const transformFor = (
       bailout = true;
     },
     Identifier(path: NodePath<t.Identifier>) {
-      if (programPath.scope.hasBinding(path.node.name)) return;
+      if (info.programPath.scope.hasBinding(path.node.name)) return;
       const targetPath = path.parentPath;
 
       if (targetPath.isMemberExpression()) {
@@ -134,7 +126,7 @@ export const transformFor = (
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (bailout) {
-    path.stop();
+    jsxElementPath.stop();
     return;
   }
 
@@ -161,60 +153,65 @@ export const transformFor = (
   const blockComponent = t.variableDeclaration('const', [
     t.variableDeclarator(
       blockComponentId,
-      t.callExpression(t.identifier(info.block!.name), [callbackComponentId])
+      t.callExpression(t.identifier(info.imports.block!), [callbackComponentId])
     ),
   ]);
 
-  programPath.node.body.push(originalComponent, blockComponent);
+  const [originalComponentPath] = info.programPath.pushContainer(
+    'body',
+    originalComponent
+  );
+  info.programPath.scope.registerDeclaration(originalComponentPath);
+
+  const [blockComponentPath] = info.programPath.pushContainer(
+    'body',
+    blockComponent
+  );
+  info.programPath.scope.registerDeclaration(blockComponentPath);
 
   expression.body = t.callExpression(blockComponentId, [
     t.objectExpression(ids.map((id) => t.objectProperty(id, id))),
   ]);
 
-  const programBodyPath = programPath.get('body');
-  const originalComponentPath = programBodyPath[programBodyPath.length - 1];
+  const callExpressionPath = findChild<t.CallExpression>(
+    jsxElementPath,
+    'CallExpression'
+  );
 
-  if (!originalComponentPath || !originalComponentPath.isVariableDeclaration())
-    return;
-
-  const visitor = callExpressionVisitor(options, isReact, true, true);
-
-  const callSitePath = originalComponentPath
-    .get('declarations')[0]!
-    .get('init');
-
-  if (callSitePath.isCallExpression()) {
-    callSitePath.scope.crawl();
-    catchError(() => visitor(callSitePath, new Map(), dirname), options.mute);
-  }
+  if (!callExpressionPath || !callExpressionPath.isCallExpression()) return;
+  catchError(() => {
+    transformBlock(callExpressionPath, info);
+  }, info.options.log);
 };
 
 export const validateForExpression = (
-  jsxElement: t.JSXElement,
-  dirname: string,
-  path: NodePath<t.JSXElement>
+  jsxElementPath: NodePath<t.JSXElement>,
+  info: Info
 ): t.ArrowFunctionExpression => {
+  const jsxElement = jsxElementPath.node;
   const VALIDATION_MESSAGE = 'Invalid For usage: https://million.dev/docs/for';
 
   trimJSXChildren(jsxElement);
 
   if (jsxElement.children.length !== 1) {
-    throw deopt(VALIDATION_MESSAGE, dirname, path);
+    throw deopt(VALIDATION_MESSAGE, info.filename, jsxElementPath);
   }
 
   const child = jsxElement.children[0];
 
   if (!t.isJSXExpressionContainer(child)) {
-    throw deopt(VALIDATION_MESSAGE, dirname, path);
+    throw deopt(VALIDATION_MESSAGE, info.filename, jsxElementPath);
   }
 
   const expression = child.expression;
   if (!t.isArrowFunctionExpression(expression)) {
-    throw deopt(VALIDATION_MESSAGE, dirname, path);
+    throw deopt(VALIDATION_MESSAGE, info.filename, jsxElementPath);
   }
 
   if (t.isBlockStatement(expression.body)) {
-    const blockStatementPath = path.get('children.0.expression.body')[0]!;
+    const blockStatementPath = jsxElementPath.get(
+      'children.0.expression.body'
+    )[0]!;
 
     const returnStatementPath = findChild<t.ReturnStatement>(
       blockStatementPath,
@@ -222,29 +219,27 @@ export const validateForExpression = (
     );
 
     if (returnStatementPath === null) {
-      throw deopt(VALIDATION_MESSAGE, dirname, path);
+      throw deopt(VALIDATION_MESSAGE, info.filename, jsxElementPath);
     }
 
     const argument = returnStatementPath.node.argument;
 
     if (!t.isJSXElement(argument) && !t.isJSXFragment(argument)) {
-      throw deopt(VALIDATION_MESSAGE, dirname, path);
+      throw deopt(VALIDATION_MESSAGE, info.filename, jsxElementPath);
     }
   } else if (
     !t.isJSXElement(expression.body) &&
     !t.isJSXFragment(expression.body)
   ) {
-    throw deopt(VALIDATION_MESSAGE, dirname, path);
+    throw deopt(VALIDATION_MESSAGE, info.filename, jsxElementPath);
   }
 
   return expression;
 };
 
-export const hoistFor = (
-  jsxElement: t.JSXElement,
-  path: NodePath<t.JSXElement>
-) => {
-  const jsxElementParent = path.parent;
+export const hoistFor = (jsxElementPath: NodePath<t.JSXElement>) => {
+  const jsxElement = jsxElementPath.node;
+  const jsxElementParent = jsxElementPath.parent;
 
   if (t.isJSXElement(jsxElementParent)) {
     const type = jsxElementParent.openingElement.name;
@@ -268,7 +263,7 @@ export const hoistFor = (
           t.jsxAttribute(t.jsxIdentifier('as'), t.stringLiteral(type.name)),
         ]);
 
-        path.parent = jsxElementClone;
+        jsxElementPath.parent = jsxElementClone;
 
         return true;
       }

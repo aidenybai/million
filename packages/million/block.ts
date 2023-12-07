@@ -37,14 +37,14 @@ const HOLE_PROXY = new Proxy(
     get(_, key: string): Hole {
       return { $: key };
     },
-  },
+  }
 );
 
 export const block = (
   fn: (props?: MillionProps) => VElement,
   unwrap?: (vnode: VElement) => VNode,
   shouldUpdate?: (oldProps: MillionProps, newProps: MillionProps) => boolean,
-  svg?: boolean,
+  svg?: boolean
 ) => {
   const vnode = fn(HOLE_PROXY);
   const edits: Edit[] = [];
@@ -53,7 +53,7 @@ export const block = (
   // Edits are instructions for how to update the DOM given some props
   const root = stringToDOM(
     renderToTemplate(unwrap ? unwrap(vnode) : vnode, edits),
-    svg,
+    svg
   );
 
   return <T extends MillionProps>(
@@ -61,8 +61,8 @@ export const block = (
     key?: string,
     shouldUpdateCurrentBlock?: (
       oldProps: MillionProps,
-      newProps: MillionProps,
-    ) => boolean,
+      newProps: MillionProps
+    ) => boolean
   ) => {
     return new Block(
       root,
@@ -70,7 +70,7 @@ export const block = (
       props,
       key ?? props?.key ?? null,
       shouldUpdateCurrentBlock ?? shouldUpdate ?? null,
-      null,
+      null
     );
   };
 };
@@ -109,7 +109,7 @@ export class Block extends AbstractBlock {
     shouldUpdate?:
       | ((oldProps: MillionProps, newProps: MillionProps) => boolean)
       | null,
-    getElements?: ((root: HTMLElement) => HTMLElement[]) | null,
+    getElements?: ((root: HTMLElement) => HTMLElement[]) | null
   ) {
     super();
     this.r = root;
@@ -117,8 +117,16 @@ export class Block extends AbstractBlock {
     this.e = edits;
     this.k = key;
     this.c = Array(edits.length);
-    if (shouldUpdate) this.u = shouldUpdate;
-    if (getElements) this.g = getElements;
+    if (shouldUpdate) {
+      this._u = shouldUpdate;
+    } else {
+      this._u = null;
+    }
+    if (getElements) {
+      this.g = getElements;
+    } else {
+      this.g = null;
+    }
   }
   m(parent?: HTMLElement, refNode: Node | null = null): HTMLElement {
     if (this.l) return this.l;
@@ -153,7 +161,7 @@ export class Block extends AbstractBlock {
             el,
             // eslint-disable-next-line eqeqeq
             value == null || value === false ? '' : String(value),
-            edit.i!,
+            edit.i!
           );
         } else if (edit.t & EventFlag) {
           const patch = createEventListener(el, edit.n!, value);
@@ -250,7 +258,7 @@ export class Block extends AbstractBlock {
           setText(
             el[TEXT_NODE_CACHE][k],
             // eslint-disable-next-line eqeqeq
-            newValue == null || newValue === false ? '' : String(newValue),
+            newValue == null || newValue === false ? '' : String(newValue)
           );
         } else if (edit.t & AttributeFlag) {
           setAttribute(el, edit.n!, newValue);
@@ -280,7 +288,8 @@ export class Block extends AbstractBlock {
     this.l = null;
   }
   u(_oldProps: MillionProps, _newProps: MillionProps): boolean {
-    return true;
+    if (!this._u) return true;
+    return this._u(_oldProps, _newProps);
   }
   s() {
     return String(this.l?.outerHTML);
@@ -295,7 +304,7 @@ const getCurrentElement = (
   path: number[],
   root: HTMLElement,
   cache?: HTMLElement[],
-  key?: number,
+  key?: number
 ): HTMLElement => {
   const pathLength = path.length;
   if (!pathLength) return root;

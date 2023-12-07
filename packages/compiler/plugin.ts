@@ -3,7 +3,7 @@ import { createUnplugin } from 'unplugin';
 import { createFilter } from '@rollup/pluginutils';
 import { transformAsync } from '@babel/core';
 import { displayIntro } from './utils/log';
-import { babel } from './visit';
+import { babel } from './babel';
 import type { Options } from './options';
 import type { TransformResult, VitePlugin } from 'unplugin';
 import type { ParserOptions } from '@babel/core';
@@ -47,7 +47,6 @@ export const unplugin = createUnplugin((options: Options = {}) => {
         plugins.push('typescript');
       }
 
-
       const result = await transformAsync(code, {
         plugins: [[babel, options]],
         parserOpts: { plugins },
@@ -77,10 +76,7 @@ export const unplugin = createUnplugin((options: Options = {}) => {
           'vite:preact-jsx',
         ]);
 
-        options.hmr =
-          config.server.hmr &&
-          !config.isProduction &&
-          config.command !== 'build';
+        options.hmr = config.env.DEV;
       },
     },
   };

@@ -480,7 +480,7 @@ export const transformComponent = (
           '=',
           t.memberExpression(
             masterComponentId,
-            t.identifier('__block_callable__'),
+            t.identifier('_c'),
           ),
           t.booleanLiteral(true),
         ),

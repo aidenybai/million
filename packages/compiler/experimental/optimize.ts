@@ -1,33 +1,20 @@
 import * as t from '@babel/types';
 import { addNamed } from '@babel/helper-module-imports';
-import { EventFlag } from '../../../million/constants';
-import {
-  hoistElements,
-  renderToString,
-  renderToTemplate,
-} from './render';
+import { EventFlag } from '../../million/constants';
+import { hoistElements, renderToString, renderToTemplate } from './render';
 import { createDirtyChecker, createEdit } from './utils';
-import type { Options } from '../../options';
-import type { Shared } from './types';
-import type {
-  IrEdit,
-  IrEditBase,
-  IrInitChild,
-  IrInitEvent,
-} from './types';
+import type { IrEdit, IrEditBase } from './types';
+import { NodePath } from '@babel/core';
+import { Info } from '../babel';
+import { addImport } from '../utils/mod';
+import { getUniqueId } from '../utils/id';
 
 export const optimize = (
-  _options: Options,
-  {
-    holes,
-    jsx,
-  }: {
-    holes: string[];
-    jsx: t.JSXElement;
-  },
-  SHARED: Shared,
+  callExpressionPath: NodePath<t.CallExpression>,
+  info: Info,
+  holes: string[],
+  jsx: t.JSXElement
 ) => {
-  const { callSitePath, imports } = SHARED;
   const edits: IrEdit[] = [];
   const template = renderToTemplate(jsx, edits, [], holes);
 
@@ -41,8 +28,8 @@ export const optimize = (
 
   const { declarators, accessedIds } = hoistElements(
     paths,
-    callSitePath,
-    'million',
+    callExpressionPath,
+    'million'
   );
 
   const editsArray = t.arrayExpression(
@@ -65,14 +52,12 @@ export const optimize = (
             value,
             patch: value,
             block: value,
-          }),
+          })
         );
       }
 
       for (let i = 0, j = edit.inits.length; i < j; ++i) {
-        const { type, name, hole, listener, value, index } = edit.inits[i] as
-          | IrInitChild
-          | IrInitEvent;
+        const { type, name, hole, listener, value, index } = edit.inits[i]!;
 
         if (type.value === EventFlag) {
           initsProperties.push(
@@ -85,7 +70,7 @@ export const optimize = (
               value,
               patch: value,
               block: value,
-            }),
+            })
           );
         } else {
           initsProperties.push(
@@ -97,7 +82,7 @@ export const optimize = (
               value,
               patch: t.nullLiteral(),
               block: t.nullLiteral(),
-            }),
+            })
           );
         }
       }
@@ -109,20 +94,23 @@ export const optimize = (
           t.identifier('i'),
           initsProperties.length
             ? t.arrayExpression(initsProperties)
-            : t.arrayExpression(),
+            : t.arrayExpression()
         ),
       ]);
-    }),
+    })
   );
 
-  const stringToDOM = imports.addNamed('stringToDOM', 'million');
+  const stringToDOM = addImport(
+    callExpressionPath,
+    'stringToDOM',
+    'million',
+    info
+  );
 
-  const domVariable = callSitePath.scope.generateUidIdentifier('dom$');
-  const editsVariable = callSitePath.scope.generateUidIdentifier('edits$');
-  const shouldUpdateVariable =
-    callSitePath.scope.generateUidIdentifier('shouldUpdate$');
-  const getElementsVariable =
-    callSitePath.scope.generateUidIdentifier('getElements$');
+  const domVariable = getUniqueId(callExpressionPath, 'd');
+  const editsVariable = getUniqueId(callExpressionPath, 'e');
+  const shouldUpdateVariable = getUniqueId(callExpressionPath, 'su');
+  const getElementsVariable = getUniqueId(callExpressionPath, 'ge');
 
   const variables = t.variableDeclaration('const', [
     t.variableDeclarator(
@@ -134,9 +122,9 @@ export const optimize = (
               raw: renderToString(template),
             }),
           ],
-          [],
+          []
         ),
-      ]),
+      ])
     ),
     t.variableDeclarator(editsVariable, editsArray),
     t.variableDeclarator(shouldUpdateVariable, createDirtyChecker(holes)),
@@ -148,12 +136,12 @@ export const optimize = (
             t.blockStatement([
               t.variableDeclaration('const', declarators),
               t.returnStatement(t.arrayExpression(accessedIds)),
-            ]),
+            ])
           )
-        : t.nullLiteral(),
+        : t.nullLiteral()
     ),
   ]);
-  const BlockClass = addNamed(callSitePath, 'Block', 'million', {
+  const BlockClass = addNamed(callExpressionPath, 'Block', 'million', {
     nameHint: 'Block$',
   });
 
@@ -168,17 +156,17 @@ export const optimize = (
           t.logicalExpression(
             '??',
             t.identifier('key'),
-            t.memberExpression(t.identifier('props'), t.identifier('key')),
+            t.memberExpression(t.identifier('props'), t.identifier('key'))
           ),
           t.logicalExpression(
             '??',
             t.identifier('shouldUpdate'),
-            shouldUpdateVariable,
+            shouldUpdateVariable
           ),
           getElementsVariable,
-        ]),
+        ])
       ),
-    ]),
+    ])
   );
 
   return {

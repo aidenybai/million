@@ -53,7 +53,6 @@ export const isComponent = (name: string) => {
     // eslint-disable-next-line @typescript-eslint/prefer-string-starts-ends-with
     name[0] === name[0].toUpperCase() &&
     !name.startsWith('_') &&
-    !name.startsWith('M$') &&
     !name.startsWith('use')
   );
 };

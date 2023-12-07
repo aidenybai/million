@@ -1,6 +1,6 @@
 import { unplugin } from './plugin';
 import type { Options } from './options';
-import { babel } from './visit';
+import { babel } from './babel';
 
 export const vite = unplugin.vite;
 export const webpack = unplugin.webpack;

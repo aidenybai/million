@@ -13,16 +13,23 @@ import type { Options, MillionProps, MillionPortal } from '../types';
 
 export const block = <P extends MillionProps>(
   fn: ComponentType<P> | null,
-  { block: compiledBlock, shouldUpdate, svg, as }: Options = {},
+  options: Options | null | undefined
 ) => {
-  const block = fn
-    ? createBlock(fn as any, unwrap as any, shouldUpdate, svg)
-    : compiledBlock;
-  const defaultType = svg ? SVG_RENDER_SCOPE : RENDER_SCOPE;
+  let block: ReturnType<typeof createBlock> | null = options?.block;
+  const defaultType = options?.svg ? SVG_RENDER_SCOPE : RENDER_SCOPE;
+
+  if (fn) {
+    block = createBlock(
+      fn as any,
+      unwrap as any,
+      options?.shouldUpdate,
+      options?.svg
+    );
+  }
 
   const MillionBlock = <P extends MillionProps>(
     props: P,
-    forwardedRef: Ref<any>,
+    forwardedRef: Ref<any>
   ) => {
     const hmrTimestamp = props._hmr;
     const ref = useRef<HTMLElement>(null);
@@ -34,34 +41,42 @@ export const block = <P extends MillionProps>(
 
     const effect = useCallback(() => {
       if (!ref.current) return;
-      const currentBlock = block(props, props.key);
-      if (hmrTimestamp) ref.current.textContent = '';
-      if (patch.current === null || hmrTimestamp) {
+      const currentBlock = block!(props, props.key);
+      if (hmrTimestamp && ref.current.textContent) {
+        ref.current.textContent = '';
+      }
+      if (patch.current === null) {
         queueMicrotask$(() => {
           mount$.call(currentBlock, ref.current!, null);
         });
         patch.current = (props: P) => {
           queueMicrotask$(() => {
-            patchBlock(currentBlock, block(props, props.key, shouldUpdate));
+            patchBlock(
+              currentBlock,
+              block!(props, props.key, options?.shouldUpdate)
+            );
           });
         };
       }
     }, []);
 
     const marker = useMemo(() => {
-      return createElement(as ?? defaultType, { ref });
+      return createElement(options?.as ?? defaultType, { ref });
     }, []);
 
-    const vnode = createElement(
-      Fragment,
-      null,
-      marker,
-      createElement(Effect, {
-        effect,
-        deps: hmrTimestamp ? [hmrTimestamp] : [],
-      }),
-      ...portalRef.current.map((p) => p.portal),
-    );
+    const childrenSize = portalRef.current.length + 2;
+    const children = new Array(childrenSize);
+
+    children[0] = marker;
+    children[1] = createElement(Effect, {
+      effect,
+      deps: hmrTimestamp ? [hmrTimestamp] : [],
+    });
+    for (let i = 2; i < childrenSize; ++i) {
+      children[i] = portalRef.current[i]!.portal;
+    }
+
+    const vnode = createElement(Fragment, { children });
 
     return vnode;
   };

@@ -16,7 +16,7 @@ import type { NodePath } from '@babel/core';
  */
 export const deopt = (
   message: string | null,
-  file: string,
+  filename: string,
   callSitePath: NodePath,
   targetPath: NodePath = callSitePath
 ) => {
@@ -31,16 +31,16 @@ export const deopt = (
     parent.init = node.arguments[0];
   }
   if (message === null) return new Error('');
-  return createErrorMessage(targetPath, message, file);
+  return createErrorMessage(targetPath, message, filename);
 };
 
 export const warn = (
   message: string,
   file: string,
   path: NodePath,
-  mute?: boolean | string | null
+  log?: boolean | string | null
 ) => {
-  if (mute) return;
+  if (log === false) return;
   const err = createErrorMessage(path, message, file);
   // eslint-disable-next-line no-console
   console.warn(
@@ -58,9 +58,9 @@ export const warn = (
 export const createErrorMessage = (
   path: NodePath,
   message: string,
-  file: string
+  filename: string
 ) => {
-  return path.buildCodeFrameError(`\n${magenta('⚠')}${message} ${dim(file)}`);
+  return path.buildCodeFrameError(`\n${magenta('⚠')}${message} ${dim(filename)}`);
 };
 
 let hasIntroRan = false;
@@ -96,12 +96,12 @@ export const displayIntro = (options: Options) => {
 
 export const catchError = (
   fn: () => void,
-  mute: boolean | string | undefined | null
+  log: boolean | string | undefined | null
 ) => {
   try {
     fn();
   } catch (err: unknown) {
-    if (err instanceof Error && err.message && !mute) {
+    if (err instanceof Error && err.message && log !== false) {
       // eslint-disable-next-line no-console
       console.warn(err.message, '\n');
     }
