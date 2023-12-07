@@ -64,7 +64,7 @@ export const block = <P extends MillionProps>(
       return createElement(options?.as ?? defaultType, { ref });
     }, []);
 
-    const childrenSize = portalRef.current.length + 2;
+    const childrenSize = portalRef.current.length;
     const children = new Array(childrenSize);
 
     children[0] = marker;
@@ -72,9 +72,10 @@ export const block = <P extends MillionProps>(
       effect,
       deps: hmrTimestamp ? [hmrTimestamp] : [],
     });
-    for (let i = 2; i < childrenSize; ++i) {
-      children[i] = portalRef.current[i]!.portal;
+    for (let i = 0; i < childrenSize; ++i) {
+      children[i + 2] = portalRef.current[i]?.portal;
     }
+    console.log(children)
 
     const vnode = createElement(Fragment, { children });
 

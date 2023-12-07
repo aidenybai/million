@@ -37,5 +37,12 @@ export default defineBuildConfig({
       }
     },
   },
-  externals: ['react', 'react-dom', 'million', 'vite', 'esbuild'],
+  externals: [
+    'react',
+    'react-dom',
+    'million',
+    'vite',
+    'esbuild',
+    'rollup',
+  ],
 });

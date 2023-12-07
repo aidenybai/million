@@ -621,16 +621,24 @@ export const transformBlock = (
           t.assignmentExpression(
             '=',
             t.memberExpression(portalChildren, t.identifier('i'), true),
-            t.memberExpression(
+            t.optionalMemberExpression(
               t.memberExpression(
                 t.memberExpression(portal.id, t.identifier('$')),
                 t.identifier('i'),
                 true
               ),
-              t.identifier('portal')
+              t.identifier('portal'),
+              undefined,
+              true
             )
           )
         )
+      )
+    );
+    returnStatementPath.insertBefore(
+      t.callExpression(
+        t.memberExpression(t.identifier('console'), t.identifier('log')),
+        [t.stringLiteral('P'), t.identifier('P')]
       )
     );
     puppetCall = t.jsxFragment(t.jsxOpeningFragment(), t.jsxClosingFragment(), [

@@ -2,36 +2,31 @@
   "name": "million",
   "version": "2.6.4",
   "description": "Make React Faster. Automatically.",
-  "main": "dist/packages/million.mjs",
-  "module": "dist/packages/million.mjs",
-  "jsdelivr": "dist/packages/million.mjs",
-  "unpkg": "dist/packages/million.mjs",
-  "types": "dist/packages/million.d.ts",
-  "scripts": {
-    "build": "unbuild",
-    "cleanup": "prettier --write ./**/*.{ts,tsx}",
-    "lint": "eslint ./packages --ext .ts --cache",
-    "lint:fix": "pnpm lint --fix",
-    "test": "vitest run --coverage",
-    "test:dev": "vitest watch",
-    "bump": "pnpm build && pnpm test && pnpm lint && publint --strict && bumpp"
+  "keywords": [
+    "million",
+    "virtualdom",
+    "vdom",
+    "library",
+    "web",
+    "ui",
+    "browser"
+  ],
+  "homepage": "https://github.com/aidenybai/million",
+  "bugs": {
+    "url": "https://github.com/aidenybai/million/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/aidenybai/million.git"
   },
-  "files": [
-    "dist/**/*",
-    "packages/cli/dist/index.js",
-    "react.d.ts",
-    "jsx-runtime.d.ts",
-    "compiler.d.ts",
-    "react-server.d.ts",
-    "types.d.ts"
-  ],
-  "bin": {
-    "million": "./packages/cli/dist/index.js"
+  "funding": "https://github.com/sponsors/aidenybai",
+  "license": "MIT",
+  "author": {
+    "name": "Aiden Bai",
+    "email": "hello@aidenybai.com",
+    "url": "https://aidenybai.com"
   },
+  "sideEffects": false,
   "exports": {
     ".": {
       "import": {
@@ -94,35 +89,38 @@
       }
     }
   },
-  "packageManager": "pnpm@8.1.1",
-  "sideEffects": false,
-  "keywords": [
-    "million",
-    "virtualdom",
-    "vdom",
-    "library",
-    "web",
-    "ui",
-    "browser"
+  "main": "dist/packages/million.mjs",
+  "jsdelivr": "dist/packages/million.mjs",
+  "unpkg": "dist/packages/million.mjs",
+  "module": "dist/packages/million.mjs",
+  "types": "dist/packages/million.d.ts",
+  "bin": {
+    "million": "./packages/cli/dist/index.js"
+  },
+  "files": [
+    "dist/**/*",
+    "packages/cli/dist/index.js",
+    "react.d.ts",
+    "jsx-runtime.d.ts",
+    "compiler.d.ts",
+    "react-server.d.ts",
+    "types.d.ts"
   ],
-  "funding": "https://github.com/sponsors/aidenybai",
-  "author": {
-    "name": "Aiden Bai",
-    "email": "hello@aidenybai.com",
-    "url": "https://aidenybai.com"
+  "scripts": {
+    "build": "unbuild",
+    "bump": "pnpm build && pnpm test && pnpm lint && publint --strict && bumpp",
+    "cleanup": "prettier --write ./**/*.{ts,tsx}",
+    "lint": "eslint ./packages --ext .ts --cache",
+    "lint:fix": "pnpm lint --fix",
+    "test": "vitest run --coverage",
+    "test:dev": "vitest watch"
   },
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/aidenybai/million/issues"
-  },
-  "homepage": "https://github.com/aidenybai/million",
   "prettier": "@vercel/style-guide/prettier",
   "dependencies": {
     "@babel/core": "^7.23.3",
     "@babel/generator": "^7.22.7",
-    "@babel/parser": "^7.23.4",
-    "@babel/traverse": "^7.23.4",
     "@babel/types": "^7.21.3",
+    "@rollup/pluginutils": "^5.1.0",
     "kleur": "^4.1.5",
     "unplugin": "^1.3.1"
   },
@@ -157,5 +155,6 @@
     "vite": "^4.4.9",
     "vite-tsconfig-paths": "^4.2.0",
     "vitest": "1.0.1"
-  }
+  },
+  "packageManager": "pnpm@8.1.1"
 }

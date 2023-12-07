@@ -9,7 +9,7 @@ import type { MillionPortal } from '../types';
 export const processProps = (
   props: ComponentProps<any>,
   ref: Ref<any>,
-  portals: MillionPortal[],
+  portals: MillionPortal[]
 ) => {
   const processedProps: ComponentProps<any> = { ref };
 
@@ -23,7 +23,7 @@ export const processProps = (
         false,
         portals,
         currentIndex++,
-        false,
+        false
       );
 
       continue;
@@ -34,20 +34,26 @@ export const processProps = (
   return processedProps;
 };
 
+const wrap = (vnode: ReactNode): ReactNode => {
+  return createElement(RENDER_SCOPE, { suppressHydrationWarning: true }, vnode);
+};
+
 export const renderReactScope = (
   vnode: ReactNode,
   unstable: boolean,
   portals: MillionPortal[] | undefined,
   currentIndex: number,
-  server: boolean,
+  server: boolean
 ) => {
-  const el = portals?.[currentIndex]?.current;
-  if (typeof window === 'undefined' || (server && !el)) {
-    return createElement(
-      RENDER_SCOPE,
-      { suppressHydrationWarning: true },
-      vnode,
-    );
+  const entry = portals?.[currentIndex];
+  if (typeof window === 'undefined') {
+    if (isBlock) {
+      if (isCallable) {
+        return vnode;
+      }
+      return wrap(wrap(vnode));
+    }
+    return wrap(vnode);
   }
 
   if (
@@ -64,7 +70,7 @@ export const renderReactScope = (
     }
   }
 
-  const current = el ?? document.createElement(RENDER_SCOPE);
+  const current = entry?.current ?? document.createElement(RENDER_SCOPE);
   const reactPortal = createPortal(vnode, current);
   const millionPortal = {
     foreign: true as const,
@@ -102,7 +108,7 @@ export const unwrap = (vnode: JSX.Element | null): VNode => {
   const children = vnode.props?.children;
   if (children !== undefined && children !== null) {
     props.children = flatten(vnode.props.children).map((child) =>
-      unwrap(child),
+      unwrap(child)
     );
   }
 
