@@ -45,7 +45,7 @@ export const block = <P extends MillionProps>(
       if (hmrTimestamp && ref.current.textContent) {
         ref.current.textContent = '';
       }
-      if (patch.current === null) {
+      if (patch.current === null || hmrTimestamp) {
         queueMicrotask$(() => {
           mount$.call(currentBlock, ref.current!, null);
         });

@@ -283,6 +283,49 @@ pluginTester({
         const Component = Component3;
       `,
     },
+    'multiple component portal': {
+      code: `
+        import { block } from 'million/react';
+        const Component = block(() => {
+          return <div><Foreign1 /><Foreign2 /></div>;
+        });
+      `,
+      output: `
+        import { useState as _useState } from 'react';
+        import { renderReactScope as _renderReactScope2 } from 'million/react';
+        import { renderReactScope as _renderReactScope } from 'million/react';
+        import { block } from 'million/react';
+        let Block_Component = /*@__SKIP__*/ block(
+          ({ _, _2 }) => {
+            return (
+              <div>
+                {_}
+                {_2}
+              </div>
+            );
+          },
+          {
+            shouldUpdate: (a, b) => a?._ !== b?._ || a?._2 !== b?._2,
+          }
+        );
+        let Component3 = () => {
+          let portal = _useState(() => ({
+              $: new Array(2),
+            }))[0],
+            _ = _renderReactScope(<Foreign1 />, false, portal.$, 0, false),
+            _2 = _renderReactScope2(<Foreign2 />, false, portal.$, 1, false);
+          let P = new Array(2);
+          for (let i = 0, l = portal.$.length; i < l; ++i) P[i] = portal.$[i].portal;
+          return (
+            <>
+              <Block_Component _={_} _2={_2} />
+              {P}
+            </>
+          );
+        };
+        const Component = Component3;
+      `,
+    },
     'component portal as root': {
       code: `
         import { block } from 'million/react';
@@ -371,7 +414,7 @@ pluginTester({
             _ = _renderReactScope(
               <_For each={[1, 2, 3]}>
                 {(i) =>
-                  _temp({
+                  ForBody({
                     i: i,
                   })
                 }
@@ -391,7 +434,7 @@ pluginTester({
           );
         };
         const Component = Component3;
-        let Block__callback$ = /*@__SKIP__*/ block(
+        let Block_ForCallback = /*@__SKIP__*/ block(
           ({ i }) => {
             return <div>{i}</div>;
           },
@@ -399,11 +442,11 @@ pluginTester({
             shouldUpdate: (a, b) => a?.i !== b?.i,
           }
         );
-        const callback$ = ({ i }) => {
-          return <Block__callback$ i={i} />;
+        const ForCallback2 = ({ i }) => {
+          return <Block_ForCallback i={i} />;
         };
-        callback$._c = true;
-        const _temp = callback$;
+        ForCallback2._c = true;
+        const ForBody = ForCallback2;
       `,
     },
   },
