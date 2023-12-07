@@ -14,7 +14,7 @@ import {
 
 if (typeof window === 'undefined') {
   throw new Error(
-    'See http://million.dev/docs/install to install the compiler.',
+    'See http://million.dev/docs/install to install the compiler.'
   );
 }
 
@@ -50,7 +50,7 @@ export const HTM_TEMPLATE_CONTENT = HTM_TEMPLATE.content;
 const _SVG_TEMPLATE = /**@__PURE__*/ document$.createElement('template');
 export const SVG_TEMPLATE = /**@__PURE__*/ document$.createElementNS(
   'http://www.w3.org/2000/svg',
-  'svg',
+  'svg'
 );
 /**@__PURE__*/ _SVG_TEMPLATE.content.appendChild(SVG_TEMPLATE);
 
@@ -77,7 +77,7 @@ export const nextSibling$ = getOwnPropertyDescriptor$(node$, 'nextSibling')!
   .get!;
 export const characterDataSet$ = getOwnPropertyDescriptor$(
   characterData$,
-  'data',
+  'data'
 )!.set!;
 
 export const stringToDOM = (content: string, svg?: boolean) => {
@@ -92,7 +92,7 @@ document$[EVENTS_REGISTRY] = new Set$();
 export const createEventListener = (
   el: HTMLElement,
   name: string,
-  value?: EventListener,
+  value?: EventListener
 ) => {
   let event = name.toLowerCase();
   let capture = false;
@@ -125,7 +125,7 @@ export const createEventListener = (
           el = el.parentNode;
         }
       },
-      { capture },
+      { capture }
     );
     SetAdd$.call(document$[EVENTS_REGISTRY], event);
   }
@@ -155,7 +155,7 @@ export const childAt = (el: HTMLElement, index: number) => {
 export const insertText = (
   el: HTMLElement,
   value: string,
-  index: number,
+  index: number
 ): Text => {
   const node = document$.createTextNode(value);
   const child = childAt(el, index);
@@ -170,7 +170,7 @@ export const setText = (el: Text, value: string) => {
 export const setStyleAttribute = (
   el: HTMLElement,
   name: string,
-  value?: string | boolean | number | null,
+  value?: string | boolean | number | null
 ) => {
   if (typeof value !== 'number' || IS_NON_DIMENSIONAL.test(name)) {
     el.style[name] = value;
@@ -189,7 +189,7 @@ export const setStyleAttribute = (
 export const setSvgAttribute = (
   el: HTMLElement,
   name: string,
-  value?: string | boolean | null,
+  value?: string | boolean | null
 ) => {
   name = name.replace(/xlink(?:H|:h)/, 'h').replace(/sName$/, 's');
   if (name.startsWith('xmlns')) {
@@ -202,7 +202,7 @@ export const setSvgAttribute = (
 export const setAttribute = (
   el: HTMLElement,
   name: string,
-  value?: string | boolean | null,
+  value?: string | boolean | null
 ): void => {
   const isValueNully = value === undefined || value === null;
   value = isValueNully ? '' : value;
@@ -226,5 +226,14 @@ export const setAttribute = (
     setAttribute$.call(el, name, String(value));
   } else {
     removeAttribute$.call(el, name);
+  }
+
+  const isInput = el instanceof HTMLInputElement;
+  const isSelect = el instanceof HTMLSelectElement;
+  const isTextArea = el instanceof HTMLTextAreaElement;
+
+  if (name === 'value' && (isInput || isSelect || isTextArea)) {
+    setAttribute$.call(el, name, String(value));
+    el.value = value as string;
   }
 };
