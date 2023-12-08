@@ -379,6 +379,9 @@ importers:
       '@vercel/og':
         specifier: ^0.5.6
         version: 0.5.6
+      '@vercel/speed-insights':
+        specifier: ^1.0.1
+        version: 1.0.1
       autoprefixer:
         specifier: ^10.4.13
         version: 10.4.13(postcss@8.4.21)
@@ -3862,6 +3865,11 @@ packages:
       '@resvg/resvg-wasm': 2.4.1
       satori: 0.9.1
       yoga-wasm-web: 0.3.3
+    dev: false
+
+  /@vercel/speed-insights@1.0.1:
+    resolution: {integrity: sha512-cm8KTTsDgS1AbWsgIEZuMoyPUjclzeqJihyLp0tnA21B/x9iTE8hu2S5zM+/DBzihuHxWL1dx9pCWk22ctMFWQ==}
+    requiresBuild: true
     dev: false
 
   /@vercel/style-guide@3.0.0(@babel/core@7.21.0)(eslint@8.34.0)(prettier@2.8.4)(typescript@5.1.6):
