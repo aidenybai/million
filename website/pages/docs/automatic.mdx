@@ -40,10 +40,10 @@ When using <a className="font-normal text-base" href='https://vitejs.dev/guide/'
 
 ```js
 export default defineConfig({
-  plugins: [million.vite({ auto: true }, auto: {
+  plugins: [million.vite({auto: {
     threshold: 0.25, // default: 0.1,
     skip: ['useBadHook', /badVariable/g] // default []
-}), react()],
+}}), react()],
 });
 ```
 

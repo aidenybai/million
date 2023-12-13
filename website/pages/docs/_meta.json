@@ -16,7 +16,7 @@
     "type": "separator",
     "title": "Guide"
   },
-  "guide": "Usage Guide",
+  "usage-guide": "Usage Guide",
   "rules": "Rules of Blocks",
   "typescript": "Usage with TypeScript",
   "virtualization": "Virtualization",
