@@ -109,7 +109,7 @@ export function About() {
                     <h4 className="font-semibold text-lg text-zinc-700 dark:text-purple-300">
                       Up to 70% faster* than React.
                     </h4>
-                    <p className="text-zinc-500 dark:text-zinc-400">
+                    <p className="text-zinc-500 text-sm dark:text-zinc-400">
                       * - Benchmarks may not represent real-world performance.
                     </p>
                   </div>
@@ -122,7 +122,7 @@ export function About() {
                     <h4 className="font-semibold text-lg text-zinc-700 dark:text-purple-300">
                       Integrate and ship in minutes.
                     </h4>
-                    <p className="text-zinc-500 dark:text-zinc-400">
+                    <p className="text-zinc-500 text-sm dark:text-zinc-400">
                       No need to learn a new framework. Works with your existing
                       React components.
                     </p>

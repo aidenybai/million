@@ -17,7 +17,7 @@ import { Callout } from 'nextra-theme-docs';
 **Syntax:** `block((props) => vnode){:jsx}`\
 **Example:** `block((props) => <div>{props.foo}</div>){:jsx}`
 
-The `block` function instantiates a `Block` (_a stateless "component"_). It accepts a function with a props object parameter that returns a `VNode`.
+The `block` function instantiates a `Block` (_a stateless "component"_). It accepts a function with a `props` object parameter that returns a `VNode`.
 
 ## Rules of usage
 
@@ -37,7 +37,7 @@ someBlock({
 
 ##### Top level values of `props` may not be interpolated with other values.
 
-The props are filled with `Hole` values. These `Hole` values are replaced with the actual values when the `block(){:jsx}` is called. The `Hole` values are immutable and cannot be derived with other values.
+The `props` are filled with immutable `Hole` values. These values are replaced with the actual values when the `block(){:jsx}` is called.
 
 ```jsx
 // Anatomy of a `Hole`
