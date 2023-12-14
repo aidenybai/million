@@ -39,9 +39,9 @@ export function Hero() {
                 Replacement
               </span>{' '}
               for React. Experience improved performance for UI and data-heavy
-              React apps. Minimal effort required - all it takes is with{' '}
+              React apps. Minimal effort required - all it takes is {' '}
               <Link href="/docs" className="font-medium hover:underline">
-                a single plugin.
+                a single plugin
               </Link>
               .
             </p>

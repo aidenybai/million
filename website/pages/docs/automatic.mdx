@@ -10,21 +10,22 @@ import { Callout, Tabs, Tab, Steps } from 'nextra-theme-docs';
 Million.js comes with Automatic Mode as its default setting. This transforms your React components into Million.js components, improving speed without any major code changes.
 
 
-When [installing Million into your project](/docs/install), automatic mode is recommended for most users. This passes the `auto` option into the compiler.
+When [installing Million into your project](/docs/install), automatic mode is recommended for most users and this is because it packs in it all the necessary optimizations that your application needs. The `auto` option of the compiler toggles it.
 
 
 
 ### `auto`
 
-The `auto` option is a boolean that enables automatic mode. By default it is unset, because we still support [manual mode](/docs/install#configure-it-yourself).
+The `auto` option is a boolean that enables automatic mode. By default it is unset, because Million offers [a way to manually set your configuration](/docs/install#configure-it-yourself).
 
 
 ### Advanced customization
 
 Automatic mode provides customization options:
 
-- `threshold` (default: `0.1`): What is used to determine whether a component should be converted to Million.js. The greater the threshold, fewer components will be optimized, and vice versa.
-- `skip` (default: `[]`): An array of identifiers to indicate if a component should be skipped. You can use hook names, variable names, etc.
+- `threshold`: What is used to determine whether a component should be converted to Million.js. 
+When the threshold increases, fewer components will be optimized, and vice versa.
+- `skip`: An array of identifiers to indicate if a component should be skipped. You can add hook or variable names, function names, etc.
 
 ```js
 const options = {

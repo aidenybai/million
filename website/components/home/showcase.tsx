@@ -43,8 +43,8 @@ export function Showcase() {
             Faster than the rest
           </h2>
           <p className="mt-3 text-center text-zinc-600 dark:text-zinc-300 md:text-md lg:text-lg">
-            Witness applications/companies using MillionJS in production to
-            build better user experiences.
+            Witness MillionJS in production where it creates a better user
+            experiences.
           </p>
         </div>
         <div className="slider">
