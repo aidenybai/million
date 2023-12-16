@@ -22,8 +22,7 @@ export const processProps = (
         value,
         false,
         portals,
-        currentIndex++,
-        false
+        currentIndex++
       );
 
       continue;
@@ -43,9 +42,15 @@ export const renderReactScope = (
   unstable: boolean,
   portals: MillionPortal[] | undefined,
   currentIndex: number,
-  server: boolean
 ) => {
-  const entry = portals?.[currentIndex];
+  const el = portals?.[currentIndex]?.current;
+
+  const isBlock =
+    isValidElement(vnode) &&
+    typeof vnode.type === 'function' &&
+    '_c' in vnode.type;
+  const isCallable = isBlock && (vnode.type as any)._c;
+
   if (typeof window === 'undefined') {
     if (isBlock) {
       if (isCallable) {
@@ -56,11 +61,7 @@ export const renderReactScope = (
     return wrap(vnode);
   }
 
-  if (
-    isValidElement(vnode) &&
-    typeof vnode.type === 'function' &&
-    '_c' in vnode.type
-  ) {
+  if (isCallable) {
     const puppetComponent = (vnode.type as any)(vnode.props);
     if (REGISTRY.has(puppetComponent.type)) {
       const puppetBlock = REGISTRY.get(puppetComponent.type)!;
@@ -70,15 +71,18 @@ export const renderReactScope = (
     }
   }
 
-  const current = entry?.current ?? document.createElement(RENDER_SCOPE);
+  const current = el ?? document.createElement(RENDER_SCOPE);
   const reactPortal = createPortal(vnode, current);
+
   const millionPortal = {
     foreign: true as const,
     current,
     portal: reactPortal,
     unstable,
   };
-  if (portals) portals[currentIndex] = millionPortal;
+  if (portals) {
+    portals[currentIndex] = millionPortal;
+  }
 
   return millionPortal;
 };

@@ -1,6 +1,7 @@
 import { unplugin } from './plugin';
 import type { Options } from './options';
 import { babel } from './babel';
+import { existsSync } from 'fs';
 
 export const vite = unplugin.vite;
 export const webpack = unplugin.webpack;
@@ -19,6 +20,12 @@ export const next = (
   return {
     ...nextConfig,
     webpack(config: Record<string, any>, webpackOptions: Record<string, any>) {
+      if (millionConfig.rsc === undefined) {
+        millionConfig.rsc =
+          nextConfig.appDir ??
+          existsSync(`${webpackOptions.dir}${nextConfig.basePath || ''}/app`);
+      }
+
       config.plugins.unshift(
         webpack({
           mute: webpackOptions.isServer,

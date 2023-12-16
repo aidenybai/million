@@ -11,7 +11,7 @@ interface PluginOptions {
   mode?: 'react' | 'vdom';
   auto?:
     | boolean
-    | { threshold?: number; rsc?: boolean; skip?: (string | RegExp)[] };
+    | { threshold?: number; skip?: (string | RegExp)[]; rsc?: boolean };
   /**
    * @default false
    */
@@ -28,6 +28,10 @@ interface PluginOptions {
    * @default true
    */
   log?: boolean | 'info';
+  /**
+   * @default false
+   */
+  rsc?: boolean;
   /**
    * @deprecated Use `log` instead
    */

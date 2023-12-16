@@ -32,7 +32,6 @@ export function babel(
   options: Options,
   filename: string
 ): PluginObj {
-  // type State = SetAllNullable<Info, 'aliases' | 'blocks'>;
   const state: Info['imports'] = {
     block: null,
     For: null,
@@ -136,7 +135,7 @@ export function babel(
           if (!programBody.length) return;
           for (let i = 0, j = programBody.length; i < j; ++i) {
             const path = programBody[i];
-            if (!path || !path.isImportDeclaration()) continue;
+            if (!path?.isImportDeclaration()) continue;
             (path.node as any)._blockHoist = 3;
           }
         },

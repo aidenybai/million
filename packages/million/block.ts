@@ -75,11 +75,15 @@ export const block = (
   };
 };
 
-export const mount = (block: AbstractBlock, parent?: HTMLElement) => {
+export const mount = (
+  block: AbstractBlock,
+  parent?: HTMLElement,
+  hydrateNode?: HTMLElement
+) => {
   if ('b' in block && parent) {
-    return arrayMount$.call(block, parent);
+    return arrayMount$.call(block, parent, null);
   }
-  return mount$.call(block, parent);
+  return mount$.call(block, parent, null, hydrateNode);
 };
 
 export const patch = (oldBlock: AbstractBlock, newBlock: AbstractBlock) => {
@@ -128,10 +132,14 @@ export class Block extends AbstractBlock {
       this.g = null;
     }
   }
-  m(parent?: HTMLElement, refNode: Node | null = null): HTMLElement {
+  m(
+    parent?: HTMLElement,
+    refNode: Node | null = null,
+    hydrateNode?: HTMLElement | null
+  ): HTMLElement {
     if (this.l) return this.l;
     // cloneNode(true) uses less memory than recursively creating new nodes
-    const root = cloneNode$.call(this.r, true) as HTMLElement;
+    const root = hydrateNode ?? (cloneNode$.call(this.r, true) as HTMLElement);
     const elements = this.g?.(root);
     if (elements) this.c = elements;
 
@@ -145,15 +153,31 @@ export class Block extends AbstractBlock {
 
         if (edit.t & ChildFlag) {
           if (value instanceof AbstractBlock) {
-            value.m(el, childAt(el, edit.i!));
+            const child = childAt(el, edit.i!);
+            if (hydrateNode) {
+              value.m(el, child, child);
+            } else {
+              value.m(el, child);
+            }
             continue;
           }
           if (!el[TEXT_NODE_CACHE]) el[TEXT_NODE_CACHE] = new Array(l);
 
           if (value && typeof value === 'object' && 'foreign' in value) {
-            const scopeEl = value.current;
-            el[TEXT_NODE_CACHE][k] = scopeEl;
-            insertBefore$.call(el, scopeEl, childAt(el, edit.i!));
+            if (hydrateNode) {
+              const child = childAt(el, edit.i!);
+              value.reset(child);
+            }
+
+            const targetEl = value.current;
+            el[TEXT_NODE_CACHE][k] = targetEl;
+            if (!hydrateNode) {
+              insertBefore$.call(el, targetEl, childAt(el, edit.i!));
+            }
+            continue;
+          }
+          if (hydrateNode) {
+            el[TEXT_NODE_CACHE][k] = childAt(el, edit.i!);
             continue;
           }
           // insertText() on mount, setText() on patch
@@ -191,16 +215,21 @@ export class Block extends AbstractBlock {
           // put into a template, they can be merged. For example,
           // ["hello", "world"] becomes "helloworld" in the DOM.
           // Inserts text nodes into the DOM at the correct position.
-          if (init.v) insertText(el, init.v, init.i);
+          if (init.v && !hydrateNode) insertText(el, init.v, init.i);
         } else if (init.t & EventFlag) {
           createEventListener(el, init.n!, init.l!);
         } else {
-          init.b!.m(el, childAt(el, init.i!));
+          const child = childAt(el, init.i!);
+          if (hydrateNode) {
+            init.b!.m(el, child, child);
+          } else {
+            init.b!.m(el, child);
+          }
         }
       }
     }
 
-    if (parent) {
+    if (parent && !hydrateNode) {
       insertBefore$.call(parent, root, refNode);
     }
     this.l = root;
@@ -244,13 +273,13 @@ export class Block extends AbstractBlock {
             typeof newValue === 'object' &&
             'foreign' in newValue
           ) {
-            const scopeEl = el[TEXT_NODE_CACHE][k];
-            if ('unstable' in newValue && oldValue !== newValue) {
-              const newScopeEl = newValue.current;
-              el[TEXT_NODE_CACHE][k] = newScopeEl;
-              replaceChild$.call(el, newScopeEl, scopeEl);
+            const targetEl = el[TEXT_NODE_CACHE][k];
+            if (newValue.unstable && oldValue !== newValue) {
+              const newTargetEl = newValue.current;
+              el[TEXT_NODE_CACHE][k] = newTargetEl;
+              replaceChild$.call(el, newTargetEl, targetEl);
             } else {
-              newValue.current = scopeEl;
+              newValue.current = targetEl;
             }
 
             continue;

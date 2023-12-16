@@ -17,7 +17,7 @@ import {
   trimJSXChildren,
 } from './utils/jsx';
 import { deopt, warn } from './utils/log';
-import { addImport } from './utils/mod';
+import { addImport, isUseClient } from './utils/mod';
 import { dedupeObjectProperties } from './utils/object';
 
 export type HoistedMap = Record<
@@ -488,6 +488,15 @@ export const transformBlock = (
       t.objectProperty(
         t.identifier('svg'),
         t.booleanLiteral(originalOptions.svg)
+      )
+    );
+  }
+
+  if (info.options.server && isUseClient(info)) {
+    compiledOptions.push(
+      t.objectProperty(
+        t.identifier('rsc'),
+        t.booleanLiteral(true)
       )
     );
   }

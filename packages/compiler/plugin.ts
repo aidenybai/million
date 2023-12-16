@@ -1,4 +1,3 @@
-import path from 'path';
 import { createUnplugin } from 'unplugin';
 import { createFilter } from '@rollup/pluginutils';
 import { transformAsync } from '@babel/core';
@@ -50,7 +49,7 @@ export const unplugin = createUnplugin((options: Options = {}) => {
       const result = await transformAsync(code, {
         plugins: [[babel, options]],
         parserOpts: { plugins },
-        filename: path.basename(id),
+        filename: id,
         ast: false,
         sourceFileName: id,
         sourceMaps: true,

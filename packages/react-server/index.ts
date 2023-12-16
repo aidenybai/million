@@ -1,85 +1,162 @@
-import { createElement, useEffect, useState } from 'react';
+import {
+  Fragment,
+  createElement,
+  forwardRef,
+  memo,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { RENDER_SCOPE, SVG_RENDER_SCOPE } from '../react/constants';
-import type { ComponentType } from 'react';
+import type { ComponentType, ForwardedRef } from 'react';
 import type { MillionArrayProps, MillionProps, Options } from '../types';
 
 export { renderReactScope } from '../react/utils';
 
-let millionModule;
+let globalInfo;
 
 export const block = <P extends MillionProps>(
   Component: ComponentType<P>,
-  options: Options = {},
+  options: Options = {}
 ) => {
-  let blockFactory = millionModule
-    ? millionModule.block(Component, options)
-    : null;
-  function MillionBlockLoader<P extends MillionProps>(props?: P) {
-    const [ready, setReady] = useState(Boolean(blockFactory));
+  let blockFactory = globalInfo ? globalInfo.block(Component, options) : null;
 
-    useEffect(() => {
-      if (!blockFactory) {
-        const importSource = async () => {
-          if (!props) return;
-          if (!millionModule) millionModule = await import('../react');
-          blockFactory = millionModule.block(Component, options);
-          setReady(true);
+  const rscBoundary = options.rsc
+    ? createRSCBoundary(Component, options.svg)
+    : null;
+
+  function MillionBlockLoader<P extends MillionProps>(props?: P) {
+    const ref = useRef<HTMLElement>(null);
+    const patch = useRef<((props: P) => void) | null>(null);
+
+    const effect = useCallback(() => {
+      const init = () => {
+        const el = ref.current;
+
+        if (!el) return;
+
+        const currentBlock = blockFactory(props, props?.key);
+
+        globalInfo.mount(currentBlock, el, el.firstChild);
+        patch.current = (newProps: P) => {
+          globalInfo.patch(currentBlock, blockFactory(newProps, newProps.key));
         };
-        try {
-          void importSource();
-        } catch (e) {
-          throw new Error('Failed to load Million.js');
-        }
+      };
+
+      if (blockFactory && globalInfo) {
+        init();
+      } else {
+        importSource(() => {
+          blockFactory = globalInfo.block(
+            Component,
+            globalInfo.unwrap,
+            options.shouldUpdate,
+            options.svg
+          );
+
+          init();
+        });
       }
+
       return () => {
         blockFactory = null;
       };
     }, []);
 
-    if (!ready || !blockFactory) {
-      if (options.ssr === false) return null;
-      return createElement<P>(
-        RENDER_SCOPE,
-        null,
-        createElement(Component, props as any),
-      );
-    }
+    patch.current?.(props!);
 
-    return createElement<P>(blockFactory, props);
+    const vnode = createElement(
+      Fragment,
+      null,
+      createElement(Effect, { effect }),
+      rscBoundary
+        ? createElement(rscBoundary, { ...props, ref } as any)
+        : createSSRBoundary<P>(Component as any, props!, ref, options.svg)
+    );
+    return vnode;
   }
 
-  return MillionBlockLoader<P>;
+  return MillionBlockLoader;
 };
 
 export function For<T>({ each, children, ssr, svg }: MillionArrayProps<T>) {
-  const [ready, setReady] = useState(false);
+  const [ready, setReady] = useState(Boolean(globalInfo));
 
   useEffect(() => {
-    if (millionModule) return;
-    const importSource = async () => {
-      millionModule = await import('../react');
-      setReady(true);
-    };
-    try {
-      void importSource();
-    } catch (e) {
-      throw new Error('Failed to load Million.js');
+    if (!globalInfo) {
+      importSource(() => {
+        setReady(true);
+      });
     }
   }, []);
 
-  if (!ready || !millionModule) {
+  if (!ready || !globalInfo) {
     if (ssr === false) return null;
     return createElement(
       svg ? SVG_RENDER_SCOPE : RENDER_SCOPE,
       { suppressHydrationWarning: true },
-      ...each.map(children),
+      ...each.map(children)
     );
   }
 
-  return createElement(millionModule.For, {
+  return createElement(globalInfo.For, {
     each,
     children,
     ssr,
     svg,
   });
 }
+
+function Effect({ effect }: { effect: () => void }) {
+  useEffect(effect, []);
+  return null;
+}
+
+export const importSource = (callback: () => void) => {
+  void import('../react')
+    .then(({ unwrap, INTERNALS, For }) => {
+      globalInfo = {
+        unwrap,
+        For,
+        ...INTERNALS,
+      };
+
+      callback();
+    })
+    .catch(() => {
+      throw new Error('Failed to load Million.js');
+    });
+};
+
+export const createSSRBoundary = <P extends MillionProps>(
+  Component: ComponentType<P>,
+  props: P,
+  ref: ForwardedRef<unknown>,
+  svg = false
+) => {
+  const ssrProps =
+    typeof window === 'undefined'
+      ? {
+          children: createElement<P>(Component, props),
+        }
+      : { dangerouslySetInnerHTML: { __html: '' } };
+
+  return createElement(svg ? SVG_RENDER_SCOPE : RENDER_SCOPE, {
+    suppressHydrationWarning: true,
+    ref,
+    ...ssrProps,
+  });
+};
+
+export const createRSCBoundary = <P extends MillionProps>(
+  Component: ComponentType<P>,
+  svg = false
+) => {
+  return memo(
+    forwardRef((props: P, ref) =>
+      createSSRBoundary(Component, props, ref, svg)
+    ),
+    () => true
+  );
+};

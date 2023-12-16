@@ -47,7 +47,7 @@ export const block = <P extends MillionProps>(
       }
       if (patch.current === null || hmrTimestamp) {
         queueMicrotask$(() => {
-          mount$.call(currentBlock, ref.current!, null);
+          mount$.call(currentBlock, ref.current!, null) ;
         });
         patch.current = (props: P) => {
           queueMicrotask$(() => {
