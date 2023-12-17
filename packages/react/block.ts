@@ -47,7 +47,7 @@ export const block = <P extends MillionProps>(
       }
       if (patch.current === null || hmrTimestamp) {
         queueMicrotask$(() => {
-          mount$.call(currentBlock, ref.current!, null) ;
+          mount$.call(currentBlock, ref.current!, null);
         });
         patch.current = (props: P) => {
           queueMicrotask$(() => {
@@ -75,7 +75,6 @@ export const block = <P extends MillionProps>(
     for (let i = 0; i < childrenSize; ++i) {
       children[i + 2] = portalRef.current[i]?.portal;
     }
-    console.log(children)
 
     const vnode = createElement(Fragment, { children });
 

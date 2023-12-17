@@ -91,11 +91,11 @@ export const patch = (oldBlock: AbstractBlock, newBlock: AbstractBlock) => {
     arrayPatch$.call(oldBlock, newBlock as ArrayBlock);
   }
 
-  if (!oldBlock.l) mount$.call(oldBlock);
+  if (!oldBlock.l) mount$.call(oldBlock, undefined, null, null);
   if ((oldBlock.k && oldBlock.k === newBlock.k) || oldBlock.r === newBlock.r) {
     return patch$.call(oldBlock, newBlock);
   }
-  const el = mount$.call(newBlock, oldBlock.t()!, oldBlock.l);
+  const el = mount$.call(newBlock, oldBlock.t()!, oldBlock.l, null);
   remove$.call(oldBlock);
   oldBlock.k = newBlock.k!;
   return el;
@@ -138,6 +138,7 @@ export class Block extends AbstractBlock {
     hydrateNode?: HTMLElement | null
   ): HTMLElement {
     if (this.l) return this.l;
+    console.log(hydrateNode)
     // cloneNode(true) uses less memory than recursively creating new nodes
     const root = hydrateNode ?? (cloneNode$.call(this.r, true) as HTMLElement);
     const elements = this.g?.(root);
