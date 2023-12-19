@@ -45,7 +45,7 @@ export const renderToTemplate = (
       i: [],
     });
 
-    return '<slot/>';
+    return '<></>';
   }
 
   let props = '';
