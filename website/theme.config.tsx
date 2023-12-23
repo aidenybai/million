@@ -112,84 +112,9 @@ const config: DocsThemeConfig = {
   docsRepositoryBase: 'https://github.com/aidenybai/million/tree/main/website/',
   footer: {
     text: (
-      <div className="flex flex-col items-start gap-6 xl:flex-row   w-full justify-between">
+      <div className="flex w-full items-center justify-between">
         <div>© 2021-{new Date().getFullYear()} Million Software, Inc.</div>
 
-        <div>
-          <p className="text-base pb-2 text-white font-bold">Resources</p>
-          <ul className="flex flex-col gap-2">
-            <li>
-              <a href="/docs" className="text-sm">
-                Documentation
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <p className="text-base pb-2 text-white font-bold">Ecosystem</p>
-          <ul className="flex flex-col gap-2">
-            <li>
-              <a href="/showcase" className="text-sm">
-                Showcase
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://github.com/aidenybai/million/blob/main/.github/CONTRIBUTING.md"
-                className="text-sm"
-              >
-                Contributing
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <p className="text-base pb-2 text-white font-bold">About</p>
-          <ul className="flex flex-col gap-2">
-            <li>
-              <a href="/foundation" className="text-sm">
-                Million Foundation
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <p className="text-base pb-2 text-white font-bold">More Links</p>
-          <ul className="flex flex-col gap-2">
-            <li>
-              <a
-                href="https://dl.acm.org/doi/10.1145/3555776.3577683"
-                className="text-sm"
-              >
-                Research
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://demo.million.dev/"
-                className="text-sm"
-              >
-                Live Demo
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://github.com/aidenybai/hundred"
-                className="text-sm"
-              >
-                Build Your Own
-              </a>
-            </li>
-            <li>
-              <a href="/faq" className="text-sm">
-                FAQ
-              </a>
-            </li>
-          </ul>
-        </div>
         <a
           href="https://vercel.com?utm_source=millionjs"
           target="_blank"

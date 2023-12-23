@@ -1,7 +1,25 @@
 {
+  "-- Getting Started": {
+    "type": "separator",
+    "title": "Getting Started"
+  },
   "index": "Introduction",
-  "getting-started": "Getting Started",
-  "automatic-mode": "Automatic Mode",
-  "manual-mode": "Manual Mode",
+  "install": "Installation",
+  "automatic": "Automatic Mode",
+  "-- API Reference": {
+    "type": "separator",
+    "title": "API Reference"
+  },
+  "block": "block()",
+  "for": "<For>",
+  "-- Guide": {
+    "type": "separator",
+    "title": "Guide"
+  },
+  "quickstart": "Tutorial",
+  "rules": "Rules of Blocks",
+  "typescript": "Usage with TypeScript",
+  "virtualization": "Virtualization",
+  "common-errors": "Common Errors",
   "internals": "Internals"
 }
