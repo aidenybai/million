@@ -5,50 +5,15 @@ description: 'How to install Million.js into your React project'
 
 import { Callout, Tabs, Tab, Steps } from 'nextra-theme-docs';
 
+
 # Installation
 
-Million.js assumes that you've already initialized a React project. If you haven't, we recommend checking out [react.dev](https://react.dev) first.
+Million.js assumes that you have an existing React project. To learn about how to create a React app, please see [React's documentation](https://react.dev).
 
-## Setup in seconds
 
-The Million.js CLI will automatically install the package and configure your project for you.
+## Configure It Yourself
 
-<Tabs items={['npm', 'pnpm', 'yarn', 'bun']} storageKey="selected-pkg-manager">
-  {/* prettier-ignore */}
-  <Tab>
-  ```bash copy
-  npx million@latest
-  ```
-  </Tab>
-  {/* prettier-ignore */}
-  <Tab>
-  ```bash copy
-  pnpx million@latest
-  ```
-  </Tab>
-  {/* prettier-ignore */}
-  <Tab>
-  ```bash copy
-  yarn add million@latest
-  ```
-  </Tab>
-  {/* prettier-ignore */}
-  <Tab>
-  ```bash copy
-  bunx million@latest
-  ```
-  </Tab>
-</Tabs>
-
-That's it! **Your project is now running on Million.js 🎉**
-
-<Callout type="info">
-  Million.js is compatible with React 16 and above. If you're using an older version of React, you'll need to upgrade first.
-</Callout>
-
-## Manual configuration
-
-In the case you want more granular control over the installation process, you can follow the steps below.
+For more control, Million offers customizable options.
 
 <Tabs items={['Automatic', 'Manual']} storageKey="mode">
 
@@ -56,9 +21,10 @@ In the case you want more granular control over the installation process, you ca
 
 <Steps>
 
-### Install package
 
-First things first, you'll need to install Million.js. You can do this with your favorite package manager:
+
+### Install Million.js
+
 
 <Tabs items={['npm', 'pnpm', 'yarn', 'bun']} storageKey="selected-pkg-manager">
   {/* prettier-ignore */}
@@ -87,9 +53,8 @@ First things first, you'll need to install Million.js. You can do this with your
   </Tab>
 </Tabs>
 
-### Use the compiler
+### Add the compiler to your application
 
-Then, add the compiler to your build tool of choice:
 
 <Tabs items={['Next.js', 'Astro', 'Gatsby', 'Vite', 'Create React App', 'Webpack', 'Rollup']} storageKey="selected-bundler-compiler">
   <Tab>
@@ -161,6 +126,10 @@ Then, add the compiler to your build tool of choice:
   ```
   </Tab>
   <Tab>
+    <Callout type="warning">
+      If you are using a [Create React App (CRA)](https://create-react-app.dev/) Setup, you will need to [configure Craco](https://craco.js.org/docs/getting-started/) before proceeding.
+    </Callout>
+
   ```js filename="craco.config.js"
   const million = require('million/compiler');
   module.exports = {
@@ -192,16 +161,17 @@ Then, add the compiler to your build tool of choice:
 </Tabs>
 
 </Steps>
-
+<p className="font-normal text-base">Checkout <a href="/docs/automatic-mode/introduction">Automatic Mode</a> to learn about the mechanisms behind Automatic mode.</p>
 </Tab>
+
+
 
 <Tab>
 
 <Steps>
 
-### Install package
+### Install Million.js
 
-First things first, you'll need to install Million.js. You can do this with your favorite package manager:
 
 <Tabs items={['npm', 'pnpm', 'yarn', 'bun']} storageKey="selected-pkg-manager">
   {/* prettier-ignore */}
@@ -230,9 +200,8 @@ First things first, you'll need to install Million.js. You can do this with your
   </Tab>
 </Tabs>
 
-### Use the compiler
+### Add the compiler to your application
 
-Then, add the compiler to your build tool of choice:
 
 <details open>
   <summary>React Instructions</summary>
@@ -283,9 +252,26 @@ Then, add the compiler to your build tool of choice:
     export default defineConfig({
       plugins: [million.vite(), react()],
     });
+
+
+    
+    // With Remix:
+
+    import { unstable_vitePlugin as remix } from "@remix-run/dev";
+    import million from 'million/compiler';
+    import { defineConfig } from "vite";
+  
+  
+    export default defineConfig({
+    plugins: [million.vite(), remix()],
+    }；
     ```
     </Tab>
     <Tab>
+      <Callout type="warning">
+        If you are using a [Create React App (CRA)](https://create-react-app.dev/) Setup, you will need to [configure Craco](https://craco.js.org/docs/getting-started/) before proceeding.
+      </Callout>
+
     ```js filename="craco.config.js"
     const million = require('million/compiler');
     module.exports = {
@@ -293,6 +279,7 @@ Then, add the compiler to your build tool of choice:
         plugins: { add: [million.webpack()] }
       }
     };
+    
     ```
     </Tab>
     <Tab>
@@ -318,21 +305,6 @@ Then, add the compiler to your build tool of choice:
 </details>
 
 
-### Using the experimental Optimizer
-
-<Callout type="warning">
- This is a _**highly experimental**_ feature. It's not recommended to use this in production.
-</Callout>
-
-You can enable the experimental optimizer by passing `optimize: true{:js}` to the compiler options. This will allow the server to attempt to statically analyze blocks beforehand for a zero initialization cost.
-
-You can also add a leading comment of `/* @optimize */` to any block to opt-in to optimization on a component-by-component basis.
-
-```js {3}
-import { block } from "million/react";
-
-const AppBlock = /* @optimize */ block(App);
-```
 
 </Steps>
 
