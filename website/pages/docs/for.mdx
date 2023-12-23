@@ -3,7 +3,7 @@ title: '<For />'
 description: 'Learn how to render lists of blocks in Million.'
 ---
 
-import { AutomaticModeWarning } from '../../../components/automatic-mode-warning';
+import { AutomaticModeWarning } from '../../components/automatic-mode-warning';
 
 # `<For>{:jsx}`
 
@@ -37,7 +37,7 @@ function App() {
 export default App;
 ```
 
-## Custom Tags
+## `as` prop
 
 The `as` prop can be used to specify the tag name of the For. By default, it is `slot`.
 
@@ -47,7 +47,7 @@ The `as` prop can be used to specify the tag name of the For. By default, it is 
 </For>
 ```
 
-## Optimizing `<For />` With `memo`
+## Optimizing `<For />`
 
 Internally, `<For />` will not reuse blocks in order to avoid unknown behavior. This means that if you have a `<For />` with 1000 items, it will recreate 1000 blocks.
 
@@ -59,9 +59,7 @@ However, if you know that your items aren't dependent on any values except the `
 </For>
 ```
 
-
-
-## Using For With SSR
+## Hydration mismatch
 
 If you are using Million.js on the server, you may encounter a hydration mismatch error. This is because Million.js uses a different algorithm for rendering on the server than it does on the client. To fix this, you can disable SSR.
 
