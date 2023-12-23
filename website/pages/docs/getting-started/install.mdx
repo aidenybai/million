@@ -11,47 +11,6 @@ import { Callout, Tabs, Tab, Steps } from 'nextra-theme-docs';
 Million.js assumes that you have an existing React project. To learn about how to create a React app, please see [React's documentation](https://react.dev).
 
 
-<Callout type="warning">
-  If you are using a [Create React App (CRA)](https://create-react-app.dev/) Setup, you will need to [configure Craco](https://craco.js.org/docs/getting-started/) before proceeding.
-</Callout>
-
-## Setup in seconds
-
-The Million.js CLI will automatically install the package and configure your project for you.
-
-<Tabs items={['npm', 'pnpm', 'yarn', 'bun']} storageKey="selected-pkg-manager">
-  {/* prettier-ignore */}
-  <Tab>
-  ```bash copy
-  npx million@latest
-  ```
-  </Tab>
-  {/* prettier-ignore */}
-  <Tab>
-  ```bash copy
-  pnpx million@latest
-  ```
-  </Tab>
-  {/* prettier-ignore */}
-  <Tab>
-  ```bash copy
-  yarn add million@latest
-  ```
-  </Tab>
-  {/* prettier-ignore */}
-  <Tab>
-  ```bash copy
-  bunx million@latest
-  ```
-  </Tab>
-</Tabs>
-
-That's it! **Your project is now running on Million.js.**
-
-<Callout type="info">
-  Million.js is compatible with React 16 and above. If you're using an older version of React, you'll need to upgrade first.
-</Callout>
-
 ## Configure It Yourself
 
 For more control, Million offers customizable options.
@@ -167,6 +126,10 @@ For more control, Million offers customizable options.
   ```
   </Tab>
   <Tab>
+    <Callout type="warning">
+      If you are using a [Create React App (CRA)](https://create-react-app.dev/) Setup, you will need to [configure Craco](https://craco.js.org/docs/getting-started/) before proceeding.
+    </Callout>
+
   ```js filename="craco.config.js"
   const million = require('million/compiler');
   module.exports = {
@@ -198,7 +161,7 @@ For more control, Million offers customizable options.
 </Tabs>
 
 </Steps>
-<p className="font-normal text-base">Checkout <a href="/docs/automatic">Automatic Mode</a> to learn about the mechanisms behind Automatic mode.</p>
+<p className="font-normal text-base">Checkout <a href="/docs/automatic-mode/introduction">Automatic Mode</a> to learn about the mechanisms behind Automatic mode.</p>
 </Tab>
 
 
@@ -305,6 +268,10 @@ For more control, Million offers customizable options.
     ```
     </Tab>
     <Tab>
+      <Callout type="warning">
+        If you are using a [Create React App (CRA)](https://create-react-app.dev/) Setup, you will need to [configure Craco](https://craco.js.org/docs/getting-started/) before proceeding.
+      </Callout>
+
     ```js filename="craco.config.js"
     const million = require('million/compiler');
     module.exports = {
@@ -389,21 +356,6 @@ For more control, Million offers customizable options.
   </Tabs>
 </details>
 
-### Using the experimental Optimizer
-
-<Callout type="warning">
- This is a _**highly experimental**_ feature. It's not recommended to use this in production.
-</Callout>
-
-You can enable the experimental optimizer by passing `optimize: true{:js}` to the compiler options. This will allow the server to attempt to statically analyze blocks beforehand for a zero initialization cost.
-
-You can also add a leading comment of `/* @optimize */` to any block to opt-in to optimization on a component-by-component basis.
-
-```js {3}
-import { block } from "million/react";
-
-const AppBlock = /* @optimize */ block(App);
-```
 
 </Steps>
 

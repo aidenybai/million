@@ -12,10 +12,45 @@ export const Demo = dynamic(() =>
 **Million.js** is a fast and lightweight (`<4kb`) virtual DOM that can improve [React's speed by up to 70%](https://krausest.github.io/js-framework-benchmark/current.html).
 With a fine-tuned, optimized virtual DOM, Million.js can have your React components running at the speed of raw JavaScript.
 
-With [Automatic Mode](/docs/automatic) enabled, Million.js can make your React applications faster without the need for manual intervention. 
-Enabling auto-mode is simple: [configure the Million compiler](/docs/install#configure-it-yourself) to manage optimizations using just one parameter.
+## Setup in seconds
 
-The [Installation Guide](/docs/install) can help you get started right away.
+The Million.js CLI will automatically install the package and configure your project for you.
+
+<Tabs items={['npm', 'pnpm', 'yarn', 'bun']} storageKey="selected-pkg-manager">
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  npx million@latest
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  pnpx million@latest
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  yarn add million@latest
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  bunx million@latest
+  ```
+  </Tab>
+</Tabs>
+
+That's it! **Your project is now running on Million.js.**
+
+<Callout type="info">
+  Million.js is compatible with React 16 and above. If you're using an older
+  version of React, you'll need to upgrade first.
+</Callout>
+
+The [Installation Guide](/docs/getting-started/install) can help you get started right away.
 
 ## Million.js vs. React
 
