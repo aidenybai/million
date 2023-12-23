@@ -1,5 +1,4 @@
 {
-  "block": "block()",
   "mount": "mount()",
   "patch": "patch()",
   "map-array": "mapArray()",

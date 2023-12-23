@@ -1,58 +1,39 @@
 ---
-title: 'Tutorial'
+title: 'How To Integrate Million In A Project'
 description: 'Learn how to use Million.js'
 ---
 
-import dynamic from 'next/dynamic';
 import { Callout, Tabs, Tab, Cards, Card } from 'nextra-theme-docs';
-import { Box } from '../../components/box';
-import { AutomaticModeWarning } from '../../components/automatic-mode-warning';
+import { Box } from '../../../components/box';
+import { AutomaticModeWarning } from '../../../components/automatic-mode-warning';
 import { BrowserView, MobileView } from 'react-device-detect';
-import { VDomExample } from '../../components/back-in-block/vdom';
-import { CombinedBlockExample } from '../../components/back-in-block/combined-block';
-export const Demo = dynamic(() =>
-  import('../../components/demo').then((mod) => mod.Demo),
-);
+import { VDomExample } from '../../../components/back-in-block/vdom';
+import { CombinedBlockExample } from '../../../components/back-in-block/combined-block';
 
 <MobileView>
 
 <Callout type="warning">
-  We highly recommend viewing this documentation on a desktop browser to get access to interactive code examples.
+  It is highly recommended you view this documentation on a desktop browser to
+  get access to interactive code examples.
 </Callout>
 
 </MobileView>
 
-# Tutorial
+# How To Integrate Million In A Project
 
 <AutomaticModeWarning />
 
-Welcome to the Million.js documentation (_woop woop 🎉🤑_). Let's learn how we can integrate Million.js into our React applications.
+Let's learn how you can integrate Million.js into your React applications.
 
-Million.js assumes that you're already familiar with and you're using React. If you're not, we recommend checking out [react.dev](https://react.dev/) first.
+Million.js assumes that you're already familiar with and you're using React. If you're not, is is recommended you check out [react.dev](https://react.dev/) first.
 
 <Callout type="info">
 **You will learn:**
-- How to use `block(){:jsx}` to convert React components into blocks
+- How to use [`block(){:jsx}`](/docs/manual-mode/block) to convert React components into blocks
 - How to use `<For />{:jsx}` for efficiently rendering lists
 - When to use `block(){:jsx}` and `<For />{:jsx}`
 - The limitations of blocks
 </Callout>
-
-## What's a block?
-
-Million.js is a library that enables you to create _blocks_. A block is a special [Higher Order Component (HOC)](https://legacy.reactjs.org/docs/higher-order-components.html) that can be used as a React component but is hyper-optimized for rendering speed.
-
-Blocks are essentially components wrapped by `block(){:jsx}`.
-
-```jsx {3, 7}
-import { block } from "million/react";
-
-const LionBlock = block(function Lion() {
-  return (
-    <img src="https://million.dev/lion.svg" />
-  );
-})
-```
 
 Blocks can be used just like a normal React component:
 
@@ -74,22 +55,22 @@ Have a look at the result:
 <Box previewOnly code={`
   import { block } from 'million/react';
 
-  function Lion() {
-    return (
-      <img src="https://million.dev/lion.svg" width={200} />
-    );
-  }
+function Lion() {
+return (
+   <img src="https://million.dev/lion.svg" width={200} />
+);
+}
 
-  const LionBlock = block(Lion);
+const LionBlock = block(Lion);
 
-  export default function App() {
-    return (
-      <div>
-        <h1>mil + LION = million</h1>
-        <LionBlock />
-      </div>
-    );
-  }
+export default function App() {
+return (
+ <div>
+    <h1>mil + LION = million</h1>
+    <LionBlock />
+ </div>
+);
+}
 `} />
 
 </BrowserView>
@@ -100,7 +81,7 @@ With that in hand, let's build an app.
 
 One use case of blocks is rendering lists of data efficiently. In this example, let's build a data grid in React.
 
-We have access to the prebuilt components `<Table />{:jsx}` and `<Input />{:jsx}` from our fake user interface (UI) library. We can then store the number of rows we want to display in a `useState(){:jsx}` hook.
+You have access to the prebuilt components `<Table />{:jsx}` and `<Input />{:jsx}` from your fake user interface (UI) library. You can then store the number of rows you want to display in a `useState(){:jsx}` hook.
 
 ```jsx
 function App() {
@@ -109,22 +90,20 @@ function App() {
   return (
     <div>
       <Input value={rows} setValue={setRows} />
-      <Table>
-        // ...
-      </Table>
+      <Table>// ...</Table>
     </div>
   );
 }
 ```
 
-But wait! We made a grid but we have no data. Let's say we can grab some array of arbitrary data from a function called `buildData(rows){:jsx}`:
+But wait! You made a grid but you have no data. Let's say you can grab some array of arbitrary data from a function called `buildData(rows){:jsx}`:
 
 ```jsx
 const data = buildData(100);
 // returns [{ adjective: '...', color: '...', noun: '...' }, ... x100]
 ```
 
-Now, we can render the data in our table using `Array.map(){:jsx}`:
+Now, you can render the data in our table using `Array.map(){:jsx}`:
 
 ```jsx {3, 9-15}
 function App() {
@@ -155,9 +134,9 @@ function App() {
   import { Table, Input } from './ui';
   import { buildData } from './data';
 
-  function App() {
-    const [rows, setRows] = useState(1);
-    const data = buildData(rows);
+function App() {
+const [rows, setRows] = useState(1);
+const data = buildData(rows);
 
     return (
       <div>
@@ -173,18 +152,19 @@ function App() {
         </Table>
       </div>
     );
+
 }
 
 export default App;
 `} />
 
-We can see that it performs pretty well. From 0-100, there's virtually no lag, but once you get higher than 500 or so, there's a noticable delay in rendering.
+You can see that it performs pretty well. From 0-100, there's virtually no lag, but once you get higher than 500 or so, there's a noticable delay in rendering.
 
-Cool right? React is great because we can declaratively write great UI and get pretty good performance. But the data grid we just made is a rudimentary example, and is not necessarily representative of most React applications.
+React is great because you can declaratively write great UI and get pretty good performance. But the data grid you just made is a rudimentary example, and is not necessarily representative of most React applications.
 
 ### More realistic rendering
 
-So, let's introduce some spice. In the following example, we add `lotsOfElements` (an array of a lot of blank elements) to each row. We also add a lag radar to monitor page performance.
+In the following example, you add `lotsOfElements` (an array of a lot of blank elements) to each row. you can also add a lag radar to monitor page performance.
 
 Try changing the input value up and down from 0 to 1000. Notice how React _really struggles_ when rendering a lot of elements.
 
@@ -193,9 +173,9 @@ Try changing the input value up and down from 0 to 1000. Notice how React _reall
   import { Table, Input, lotsOfElements } from './ui';
   import { buildData } from './data';
 
-  function App() {
-    const [rows, setRows] = useState(1);
-    const data = buildData(rows);
+function App() {
+const [rows, setRows] = useState(1);
+const data = buildData(rows);
 
     return (
       <div>
@@ -212,6 +192,7 @@ Try changing the input value up and down from 0 to 1000. Notice how React _reall
         </Table>
       </div>
     );
+
 }
 
 export default App;
@@ -221,9 +202,9 @@ export default App;
 
 ### Just `block` it
 
-In the following example, we use `block(){:jsx}` and `<For />{:jsx}` in order to optimize rendering.
+In the following example, you can use `block(){:jsx}` and `<For />{:jsx}` in order to optimize rendering.
 
-First, we need to abstract the `<tr>{:jsx}` into its own component.
+First, you need to abstract the `<tr>{:jsx}` into its own component.
 
 ```jsx
 data.map(({ adjective, color, noun }) => (
@@ -233,7 +214,7 @@ data.map(({ adjective, color, noun }) => (
     <td>{noun}</td>
     <td>{...lotsOfElements}</td>
   </tr>
-))
+));
 
 // 👇👇👇
 
@@ -249,26 +230,24 @@ function Row({ adjective, color, noun }) {
 }
 ```
 
-Then, we can wrap it with `block(){:jsx}` in order to optimize the `<Row />{:jsx}` component.
+Then, you can wrap it with `block(){:jsx}` in order to optimize the `<Row />{:jsx}` component.
 
 ```jsx {3, 14}
-import { block } from "million/react";
+import { block } from 'million/react';
 
-const RowBlock = block(
-  function Row({ adjective, color, noun }) {
-    return (
-      <tr>
-        <td>{adjective}</td>
-        <td>{color}</td>
-        <td>{noun}</td>
-        {...lotsOfElements}
-      </tr>
-    );
-  }
-);
+const RowBlock = block(function Row({ adjective, color, noun }) {
+  return (
+    <tr>
+      <td>{adjective}</td>
+      <td>{color}</td>
+      <td>{noun}</td>
+      {...lotsOfElements}
+    </tr>
+  );
+});
 ```
 
-Once, we've optimized a row, we need to render it as a list:
+Once, you've optimized a row, you will need to render it as a list:
 
 ```jsx
 data.map(({ adjective, color, noun }) => (
@@ -276,7 +255,7 @@ data.map(({ adjective, color, noun }) => (
 ));
 ```
 
-**BUT WAIT!** We can actually use Million.js' built-in rendering solution.
+**BUT WAIT!** You can actually use Million.js' built-in rendering solution.
 
 ### Optimized List Rendering
 
@@ -287,20 +266,21 @@ The `<For />{:jsx}` component is used to render a list of blocks. It takes an ar
 
 Syntax: `<For each={array}>{(item, index) => Block}</For>{:jsx}`\
 Example: `<For each={[1, 2, 3]}>{(item, index) => myBlock({ item, index })}</For>{:jsx}`
+
 </Callout>
 
 It's the best way to loop over an array (uses [`mapArray(){:jsx}`](/docs/internals/map-array) under the hood). As the array changes, `<For />{:jsx}` updates or moves items in the DOM rather than recreating them. Let's look at an example:
 
-With this in mind, we can rewrite our table to use `<For />{:jsx}`:
+With this in mind, you can rewrite your table to use `<For />{:jsx}`:
 
 ```jsx {3, 4, 5, 6, 7}
-import { For } from "million/react";
+import { For } from 'million/react';
 
 <For each={data}>
   {({ adjective, color, noun }) => (
     <RowBlock adjective={adjective} color={color} noun={noun} />
   )}
-</For>
+</For>;
 ```
 
 <BrowserView>
@@ -315,22 +295,22 @@ Notice when you change the input value, the lag radar shows significantly less l
   import { buildData } from './data';
   import { block, For } from 'million/react';
 
-  const RowBlock = block(
-    function Row({ adjective, color, noun }) {
-      return (
-        <tr>
-          <td>{adjective}</td>
-          <td>{color}</td>
-          <td>{noun}</td>
-          {...lotsOfElements}
-        </tr>
-      );
-    }
-  );
+const RowBlock = block(
+function Row({ adjective, color, noun }) {
+return (
+<tr>
+<td>{adjective}</td>
+<td>{color}</td>
+<td>{noun}</td>
+{...lotsOfElements}
+</tr>
+);
+}
+);
 
-  function App() {
-    const [rows, setRows] = useState(1);
-    const data = buildData(rows);
+function App() {
+const [rows, setRows] = useState(1);
+const data = buildData(rows);
 
     return (
       <div>
@@ -344,6 +324,7 @@ Notice when you change the input value, the lag radar shows significantly less l
         </Table>
       </div>
     );
+
 }
 
 export default App;
@@ -351,20 +332,12 @@ export default App;
 
 </BrowserView>
 
-### Million.js vs. React
-
-<Callout type="info">
- The following is a more comprehensive demo using [key-based rendering](https://react.dev/learn/rendering-lists#keeping-list-items-in-order-with-key) to show how Million.js performance compares to React.
-</Callout>
-
-<br />
-
-<Demo />
-
 ## Hitting the limit
 
 <Callout type="warning">
-  This section is a bit more advanced. If you want a list of limitations, check out the [Rules of Blocks](/docs/rules). Or, if you just want to start integrating Million.js, check out the [installation guide](/docs/install).
+  This section is a bit more advanced. If you want a list of limitations, check
+  out the [Rules of Blocks](/docs/rules). Or, if you just want to start
+  integrating Million.js, check out the [installation guide](/docs/install).
 </Callout>
 
 Blocks are great for rendering large lists, data grids, and many other use cases. Under the hood, they render with the Million.js virtual DOM instead of React.

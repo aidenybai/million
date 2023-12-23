@@ -6,8 +6,8 @@ description: 'The patch function is used to rerender a block with another block.
 import { Callout } from 'nextra-theme-docs';
 
 <Callout type="warning">
-  **This function is part of the internal API.** You should only be using this if
-  you are making your own framework.
+  **This function is part of the internal API.** It is intended for developers
+  creating their own frameworks. It is not recommended for general use.
 </Callout>
 
 <br />
@@ -20,8 +20,8 @@ import { Callout } from 'nextra-theme-docs';
 The `patch` function is used to rerender a block with another block. The `oldBlock` is the block that will be rerendered, and the `newBlock` represents the new version of the DOM.
 
 <Callout>
-  Always try to keep Blocks of the same shape (derived from the same function)
-  when using patch in order to maintain good performance.
+  Blocks must be derived from the same function when using `patch()`. This
+  ensures performance is not negatively impacted.
 </Callout>
 
 ```jsx
