@@ -38,9 +38,9 @@ export async function detectPackageManger(): Promise<PackageManager | null> {
 export function installPackageWithPackageManager(
   packageManager: PackageManager,
   packageName: string,
-  flag?:string
+  flag:string = ''
 ): void {
-  exec(`${packageManager.installCommand} ${packageName}@latest --${flag}`);
+  exec(`${packageManager.installCommand} ${packageName}@latest ${flag}`);
 }
 
 /**
@@ -137,7 +137,7 @@ export async function installPackage({
         throw new Error('Please try again  or refer docs to install manually: https://million.dev/docs/install')
       }
 
-      installPackageWithPackageManager(packageManager, packageName, 'legacy-peer-deps');
+      installPackageWithPackageManager(packageManager, packageName, '--legacy-peer-deps');
 
       s.start(
         `${alreadyInstalled ? 'Updating' : 'Installing'} ${chalk.bold.cyan(
