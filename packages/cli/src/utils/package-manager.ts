@@ -38,7 +38,7 @@ export async function detectPackageManger(): Promise<PackageManager | null> {
 export function installPackageWithPackageManager(
   packageManager: PackageManager,
   packageName: string,
-  flag:string = ''
+  flag = ''
 ): void {
   exec(`${packageManager.installCommand} ${packageName}@latest ${flag}`);
 }
