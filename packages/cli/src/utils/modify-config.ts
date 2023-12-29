@@ -174,7 +174,7 @@ async function wrapExportCode(
   oldExportExpression: string,
   auto = true,
 ): Promise<string> {
-  let [firstPart, ...rest]: string[] = [];
+  // let [firstPart, ...rest]: string[] = [];
 
   switch (buildtool.name) {
     case 'next':
@@ -188,10 +188,7 @@ async function wrapExportCode(
        *   plugins: [million.vite({ auto: true }), react(), ],
        * });
        */
-      [firstPart, ...rest] = oldExportExpression.split('plugins: [');
-      return `${firstPart!}plugins: [million.vite({ auto: ${String(
-        auto,
-      )} }), ${rest.join('plugins: [')}`;
+      return handleViteCase(oldExportExpression, auto)
 
     case 'astro':
       /**
@@ -201,11 +198,8 @@ async function wrapExportCode(
        *   }
        * });
        */
-      [firstPart, ...rest] = oldExportExpression.split('plugins: [');
-      return `${firstPart!}plugins: [million.vite({ mode: 'react', server: true, auto: ${String(
-        auto,
-      )} }), ${rest.join('plugins: [')}`;
-
+     
+        return handleAstroCase(oldExportExpression, auto)
     case 'gatsby':
       /**
        * ({ actions }) => {
@@ -214,10 +208,7 @@ async function wrapExportCode(
        *   })
        * }
        */
-      [firstPart, ...rest] = oldExportExpression.split('plugins: [');
-      return `${firstPart!}[plugins: million.webpack({ mode: 'react', server: true, auto: ${String(
-        auto,
-      )} }), ${rest.join('plugins: [')}`;
+      return handleGatsbyCase(oldExportExpression, auto)
     case 'craco':
       /**
        * {
@@ -226,32 +217,22 @@ async function wrapExportCode(
        *   },
        * }
        */
-      [firstPart, ...rest] = oldExportExpression.split('plugins: [');
-      return `${firstPart!}plugins: [million.webpack({ auto: ${String(
-        auto,
-      )} }), ${rest.join('plugins: [')}`;
-
+      return handleCracoCase(oldExportExpression, auto)
     case 'webpack':
       /**
        * {
        *   plugins: [million.webpack({ auto: true }), ],
        * }
        */
-      [firstPart, ...rest] = oldExportExpression.split('plugins: [');
-      return `${firstPart!}plugins: [million.webpack({ auto: ${String(
-        auto,
-      )} }), ${rest.join('plugins: [')}`;
-
+ 
+    return handleWebpackCase(oldExportExpression, auto)
     case 'rollup':
       /**
        * {
        *   plugins: [million.rollup({ auto: true }), ],
        * }
        */
-      [firstPart, ...rest] = oldExportExpression.split('plugins: [');
-      return `${firstPart!}plugins: [million.rollup({ auto: ${String(
-        auto,
-      )} }), ${rest.join('plugins: [')}`;
+     return handleRollupCase(oldExportExpression, auto)
     default:
       return '';
   }
@@ -268,3 +249,72 @@ async function handleNextCase(
   } }
 )`;
 }
+
+function handleViteCase(
+  oldExportExpression: string,
+  auto = true,
+) {
+  const [firstPart, ...rest] = oldExportExpression.split('plugins: [');
+  return `${firstPart!}plugins: [million.vite({ auto: ${String(
+    auto,
+  )} }), ${rest.join('plugins: [')}`
+}
+
+function handleAstroCase (
+  oldExportExpression: string,
+  auto = true,
+) {
+  const [firstPart, ...rest] = oldExportExpression.split('plugins: [');
+  return `${firstPart!}plugins: [million.vite({ mode: 'react', server: true, auto: ${String(
+    auto,
+  )} }), ${rest.join('plugins: [')}`;
+}
+
+
+function handleGatsbyCase (
+  oldExportExpression: string,
+  auto = true,
+) {
+  const [firstPart, ...rest] = oldExportExpression.split('plugins: [');
+
+  return `${firstPart!}[plugins: million.webpack({ mode: 'react', server: true, auto: ${String(
+    auto,
+  )} }), ${rest.join('plugins: [')}`;
+}
+
+
+function handleCracoCase (
+  oldExportExpression: string,
+  auto = true,
+) {
+  const [firstPart, ...rest] = oldExportExpression.split('plugins: [');
+  return `${firstPart!}plugins: [million.webpack({ auto: ${String(
+    auto,
+  )} }), ${rest.join('plugins: [')}`;
+
+}
+
+
+function handleWebpackCase (
+  oldExportExpression: string,
+  auto = true,
+) {
+  const [firstPart, ...rest] = oldExportExpression.split('plugins: [');
+
+  return `${firstPart!}plugins: [million.webpack({ auto: ${String(
+    auto,
+  )} }), ${rest.join('plugins: [')}`;
+}
+
+
+function handleRollupCase (
+  oldExportExpression: string,
+  auto = true,
+) {
+  const [firstPart, ...rest] = oldExportExpression.split('plugins: [');
+  return `${firstPart!}plugins: [million.rollup({ auto: ${String(
+    auto,
+  )} }), ${rest.join('plugins: [')}`;
+}
+
+
