@@ -29,7 +29,7 @@ export async function detectPackageManger(): Promise<PackageManager | null> {
       return bun;
     default:
       return null;
-  }
+  } 
 }
 
 /**
@@ -38,8 +38,9 @@ export async function detectPackageManger(): Promise<PackageManager | null> {
 export function installPackageWithPackageManager(
   packageManager: PackageManager,
   packageName: string,
+  flag?:string
 ): void {
-  exec(`${packageManager.installCommand} ${packageName}@latest`);
+  exec(`${packageManager.installCommand} ${packageName}@latest --${flag}`);
 }
 
 /**
@@ -122,7 +123,31 @@ export async function installPackage({
 
     const installed = await isPackageInstalled()
 
-    if(!installed) throw new Error('Please try again with the "--legacy-peer-deps" flag or refer docs to install manually: https://million.dev/docs/install')
+    if(!installed) {
+
+      s.stop();  
+
+      const shouldUseLegacyPeerDeps = await clack.confirm({
+        message: `The ${chalk.bold.cyan(
+          packageName,
+        )} package did not install, would you like to use the "--legacy-peer-deps" flag?`,
+      })
+  
+      if (!shouldUseLegacyPeerDeps) {
+        throw new Error('Please try again  or refer docs to install manually: https://million.dev/docs/install')
+      }
+
+      installPackageWithPackageManager(packageManager, packageName, 'legacy-peer-deps');
+
+      s.start(
+        `${alreadyInstalled ? 'Updating' : 'Installing'} ${chalk.bold.cyan(
+          packageName,
+        )} with ${chalk.bold(packageManager.label)} and the "--legacy-peer-deps" flag.`,
+      );
+
+      await sleep(1000);
+
+    }
 
     s.stop(
       `${alreadyInstalled ? 'Updated' : 'Installed'} ${chalk.bold.cyan(
