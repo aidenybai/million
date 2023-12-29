@@ -132,6 +132,9 @@ importers:
       diff:
         specifier: ^5.1.0
         version: 5.1.0
+      million:
+        specifier: workspace:^
+        version: link:../..
     devDependencies:
       '@types/diff':
         specifier: ^5.0.3
