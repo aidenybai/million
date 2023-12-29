@@ -7,6 +7,7 @@ import chalk from 'chalk';
 import { abort, abortIfCancelled } from './utils';
 import { npm, pnpm, yarn, bun, packageManagers } from './constants';
 import type { PackageManager } from '../types';
+import { isPackageInstalled } from './package-json';
 
 /**
  * Detect package manager by checking if the lock file exists.
@@ -106,7 +107,7 @@ export async function installPackage({
   }
 
   const packageManager = await getPackageManager();
-
+  
   const s = clack.spinner();
   s.start(
     `${alreadyInstalled ? 'Updating' : 'Installing'} ${chalk.bold.cyan(
@@ -116,13 +117,20 @@ export async function installPackage({
 
   try {
     installPackageWithPackageManager(packageManager, packageName);
+
     await sleep(1000);
+
+    const installed = await isPackageInstalled()
+
+    if(!installed) throw new Error('Please try again with the "--legacy-peer-deps" flag or refer docs to install manually: https://million.dev/docs/install')
 
     s.stop(
       `${alreadyInstalled ? 'Updated' : 'Installed'} ${chalk.bold.cyan(
         packageName,
       )} with ${chalk.bold(packageManager.label)}.`,
     );
+
+
   } catch (e) {
     clack.log.error(
       `${chalk.red('Error during installation.')}\n\n${chalk.dim(
