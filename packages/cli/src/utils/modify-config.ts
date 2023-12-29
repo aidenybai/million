@@ -174,7 +174,7 @@ async function wrapExportCode(
   oldExportExpression: string,
   auto = true,
 ): Promise<string> {
-  let [firstPart, ...rest]: string[] = [];
+  // let [firstPart, ...rest]: string[] = [];
 
   switch (buildtool.name) {
     case 'next':
@@ -254,7 +254,7 @@ function handleViteCase(
   oldExportExpression: string,
   auto = true,
 ) {
-  const [firstPart, ...rest] = oldExportExpression.split('plugins: [');
+  let [firstPart, ...rest] = oldExportExpression.split('plugins: [');
   return `${firstPart!}plugins: [million.vite({ auto: ${String(
     auto,
   )} }), ${rest.join('plugins: [')}`
@@ -264,7 +264,7 @@ function handleAstroCase (
   oldExportExpression: string,
   auto = true,
 ) {
-  const [firstPart, ...rest] = oldExportExpression.split('plugins: [');
+  let [firstPart, ...rest] = oldExportExpression.split('plugins: [');
   return `${firstPart!}plugins: [million.vite({ mode: 'react', server: true, auto: ${String(
     auto,
   )} }), ${rest.join('plugins: [')}`;
@@ -275,7 +275,7 @@ function handleGatsbyCase (
   oldExportExpression: string,
   auto = true,
 ) {
-  const [firstPart, ...rest] = oldExportExpression.split('plugins: [');
+  let [firstPart, ...rest] = oldExportExpression.split('plugins: [');
 
   return `${firstPart!}[plugins: million.webpack({ mode: 'react', server: true, auto: ${String(
     auto,
@@ -287,7 +287,7 @@ function handleCracoCase (
   oldExportExpression: string,
   auto = true,
 ) {
-  const [firstPart, ...rest] = oldExportExpression.split('plugins: [');
+  let [firstPart, ...rest] = oldExportExpression.split('plugins: [');
   return `${firstPart!}plugins: [million.webpack({ auto: ${String(
     auto,
   )} }), ${rest.join('plugins: [')}`;
@@ -299,7 +299,7 @@ function handleWebpackCase (
   oldExportExpression: string,
   auto = true,
 ) {
-  const [firstPart, ...rest] = oldExportExpression.split('plugins: [');
+  let [firstPart, ...rest] = oldExportExpression.split('plugins: [');
 
   return `${firstPart!}plugins: [million.webpack({ auto: ${String(
     auto,
@@ -311,7 +311,7 @@ function handleRollupCase (
   oldExportExpression: string,
   auto = true,
 ) {
-  const [firstPart, ...rest] = oldExportExpression.split('plugins: [');
+  let [firstPart, ...rest] = oldExportExpression.split('plugins: [');
   return `${firstPart!}plugins: [million.rollup({ auto: ${String(
     auto,
   )} }), ${rest.join('plugins: [')}`;
