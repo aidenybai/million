@@ -33,12 +33,11 @@ auto: {
 ```
 
 <Tabs items={['Next.js', 'Astro', 'Gatsby', 'Vite', 'Remix', 'Create React App', 'Webpack', 'Rollup']} storageKey="selected-bundler-compiler">
-  <Tab>
-  
+<Tab>  
 ```js filename="next.config.mjs"
 import million from 'million/compiler';
 
-/\*_ @type {import('next').NextConfig} _/
+/** @type {import('next').NextConfig} */
 const nextConfig = {
    reactStrictMode: true,
 };
@@ -47,146 +46,155 @@ const millionConfig = {{
   auto: {
     threshold: 0.05, // default: 0.1,
     skip: ['useBadHook', /badVariable/g], // default []
+    // if you're using RSC: auto: { rsc: true },
   }}
-// if you're using RSC:
-// auto: { rsc: true },
 }
 
 export default million.next(nextConfig, millionConfig);
 ```
 </Tab>
-  <Tab>
-  ```js filename="astro.config.mjs"
-  import { defineConfig } from 'astro/config';
-  import million from 'million/compiler';
+
+<Tab>
+```js filename="astro.config.mjs"
+import { defineConfig } from "astro/config";
+import million from "million/compiler";
 
 export default defineConfig({
   vite: {
     plugins: [
       million.vite({
-        mode: 'react',
+        mode: "react",
         server: true,
         auto: {
           threshold: 0.05,
-          skip: ['useBadHook', /badVariable/g],
+          skip: ["useBadHook", /badVariable/g],
         },
       }),
     ],
   },
 });
-
-````
+```
 </Tab>
+
 <Tab>
 ```js filename="gatsby-node.js"
-const million = require('million/compiler');
+const million = require("million/compiler");
 
 exports.onCreateWebpackConfig = ({ actions }) => {
   actions.setWebpackConfig({
-    plugins: [million.webpack({
-      mode: 'react',
-      server: true,
-      auto: {
+    plugins: [
+      million.webpack({
+        mode: "react",
+        server: true,
+        auto: {
           threshold: 0.05,
-          skip: ['useBadHook', /badVariable/g],
+          skip: ["useBadHook", /badVariable/g],
         },
-      })],
-  })
-}
-````
+      }),
+    ],
+  });
+};
+```
+</Tab>
 
-  </Tab>
-  <Tab>
-  ```js filename="vite.config.js"
-  import million from 'million/compiler';
-  import react from "@vitejs/plugin-react";
-  import { defineConfig } from 'vite';
+<Tab>
+```js filename="vite.config.js"
+import million from "million/compiler";
+import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [
     million.vite({
       auto: {
         threshold: 0.05,
-        skip: ['useBadHook', /badVariable/g],
+        skip: ["useBadHook", /badVariable/g],
       },
     }),
     react(),
   ],
 });
-````
+```
 </Tab>
+
 <Tab>
-  ```js filename="vite.config.js"
+```js filename="vite.config.js"
 import { unstable_vitePlugin as remix } from "@remix-run/dev";
-import million from 'million/compiler';
+import million from "million/compiler";
 import { defineConfig } from "vite";
 
 export default defineConfig({
-   plugins: [million.vite({    
-     auto: {
+  plugins: [
+    million.vite({
+      auto: {
         threshold: 0.05,
-        skip: ['useBadHook', /badVariable/g], 
-     }
-    }), 
-      remix()
-    ],
-})； 
-````
+        skip: ["useBadHook", /badVariable/g],
+      },
+    }),
+    remix(),
+  ],
+});
+```
 </Tab>
 
 <Tab>
-  <Callout type="warning">
-    If you are using a [Create React App (CRA)](https://create-react-app.dev/) Setup, you will need to [configure Craco](https://craco.js.org/docs/getting-started/) before proceeding.
-  </Callout>
+<Callout type="warning">
+  If you are using a [Create React App (CRA)](https://create-react-app.dev/) Setup, you will need to [configure Craco](https://craco.js.org/docs/getting-started/) before proceeding.
+</Callout>
 
 ```js filename="craco.config.js"
-const million = require('million/compiler');
+const million = require("million/compiler");
 
 module.exports = {
   webpack: {
-    plugins: { add: [million.webpack({
-      auto: {
-        threshold: 0.05,
-        skip: ['useBadHook', /badVariable/g], 
-      }
-     })]
-    }
-  }
+    plugins: {
+      add: [
+        million.webpack({
+          auto: {
+            threshold: 0.05,
+            skip: ["useBadHook", /badVariable/g],
+          },
+        }),
+      ],
+    },
+  },
 };
-````
+```
+</Tab>
 
-  </Tab>
-  <Tab>
-  ```js filename="webpack.config.js"
-  const million = require('million/compiler');
-  module.exports = {
-    plugins: [
-      million.webpack({   
+<Tab>
+```js filename="webpack.config.js"
+const million = require("million/compiler");
+module.exports = {
+  plugins: [
+    million.webpack({
       auto: {
         threshold: 0.05,
-        skip: ['useBadHook', /badVariable/g],
-      }}),
-    ],
-  }
-  ```
-  </Tab>
-  <Tab>
-  ```js filename="rollup.config.js"
-import million from 'million/compiler';
+        skip: ["useBadHook", /badVariable/g],
+      },
+    }),
+  ],
+};
+```
+</Tab>
+
+<Tab>
+```js filename="rollup.config.js"
+import million from "million/compiler";
 
 export default {
   plugins: [
     million.rollup({
       auto: {
         threshold: 0.05,
-        skip: ['useBadHook', /badVariable/g],
+        skip: ["useBadHook", /badVariable/g],
       },
     }),
   ],
 };
-
-````
+```
 </Tab>
+
 </Tabs>
 
 ### Ignoring components

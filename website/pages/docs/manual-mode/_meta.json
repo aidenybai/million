@@ -1,7 +1,6 @@
 {
-    "block": "block()",
-    "usage-guide": "Usage Guide",
-    "for": "<For>",
-    "virtualization": "Virtualization"
-  }
-  
+  "block": "block()",
+  "manual-mode": "Manual Mode Tutorial",
+  "for": "<For>",
+  "virtualization": "Virtualization"
+}
