@@ -26,10 +26,10 @@ Automatic mode provides customization options:
 The `auto` object lets you configure options beyond the default ones set during installation:
 
 ```js
- auto: {
-    threshold: 0.05, // default: 0.1,
-    skip: ['useBadHook', /badVariable/g], // default []
-  }
+auto: {
+  threshold: 0.05, // default: 0.1,
+  skip: ['useBadHook', /badVariable/g], // default []
+}
 ```
 
 <Tabs items={['Next.js', 'Astro', 'Gatsby', 'Vite', 'Remix', 'Create React App', 'Webpack', 'Rollup']} storageKey="selected-bundler-compiler">
@@ -43,21 +43,18 @@ const nextConfig = {
    reactStrictMode: true,
 };
 
-const millionConfig = {
-{
+const millionConfig = {{
   auto: {
     threshold: 0.05, // default: 0.1,
     skip: ['useBadHook', /badVariable/g], // default []
-  },
-}
+  }}
 // if you're using RSC:
 // auto: { rsc: true },
 }
 
 export default million.next(nextConfig, millionConfig);
 ```
-
-  </Tab>
+</Tab>
   <Tab>
   ```js filename="astro.config.mjs"
   import { defineConfig } from 'astro/config';
