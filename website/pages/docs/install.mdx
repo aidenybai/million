@@ -5,15 +5,43 @@ description: 'How to install Million.js into your React project'
 
 import { Callout, Tabs, Tab, Steps } from 'nextra-theme-docs';
 
-
 # Installation
 
 Million.js assumes that you have an existing React project. To learn about how to create a React app, please see [React's documentation](https://react.dev).
 
+### Setup in seconds
 
-## Configure It Yourself
+The Million.js CLI will automatically install the package and configure your project for you.
 
-For more control, Million offers customizable options.
+<Tabs items={['npm', 'pnpm', 'yarn', 'bun']} storageKey="selected-manager">
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  npx million@latest
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  pnpx million@latest
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  yarn add million@latest
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  bunx million@latest
+  ```
+  </Tab>
+</Tabs>
+
+
+**For more control, Million offers customizable options.**
 
 <Tabs items={['Automatic', 'Manual']} storageKey="mode">
 
@@ -21,10 +49,7 @@ For more control, Million offers customizable options.
 
 <Steps>
 
-
-
 ### Install Million.js
-
 
 <Tabs items={['npm', 'pnpm', 'yarn', 'bun']} storageKey="selected-pkg-manager">
   {/* prettier-ignore */}
@@ -55,50 +80,52 @@ For more control, Million offers customizable options.
 
 ### Add the compiler to your application
 
-
-<Tabs items={['Next.js', 'Astro', 'Gatsby', 'Vite', 'Create React App', 'Webpack', 'Rollup']} storageKey="selected-bundler-compiler">
+<Tabs items={['Next.js', 'Astro', 'Gatsby', 'Vite','Remix', 'Create React App', 'Webpack', 'Rollup']} storageKey="selected-bundler-compiler">
   <Tab>
   Million.js is supported within the `/app` ("use client" components only) and `/pages`
 
-  ```js filename="next.config.mjs"
-  import million from 'million/compiler';
+```js filename="next.config.mjs"
+import million from 'million/compiler';
 
-  /** @type {import('next').NextConfig} */
-  const nextConfig = {
-    reactStrictMode: true,
-  };
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+};
 
-  const millionConfig = {
-    auto: true,
-    // if you're using RSC:
-    // auto: { rsc: true },
-  }
+const millionConfig = {
+  auto: true,
+  // if you're using RSC:
+  // auto: { rsc: true },
+};
 
-  export default million.next(nextConfig, millionConfig);
-  ```
+export default million.next(nextConfig, millionConfig);
+```
+
   </Tab>
   <Tab>
   ```js filename="astro.config.mjs"
   import { defineConfig } from 'astro/config';
   import million from 'million/compiler';
 
-  export default defineConfig({
-    vite: {
-      plugins: [million.vite({ mode: 'react', server: true, auto: true })]
-    }
-  });
-  ```
-  </Tab>
-  <Tab>
-  ```js filename="gatsby-node.js"
-  const million = require('million/compiler');
+export default defineConfig({
+  vite: {
+    plugins: [million.vite({ mode: 'react', server: true, auto: true })],
+  },
+});
 
-  exports.onCreateWebpackConfig = ({ actions }) => {
-    actions.setWebpackConfig({
-      plugins: [million.webpack({ mode: 'react', server: true, auto: true })],
-    })
-  }
-  ```
+````
+</Tab>
+<Tab>
+```js filename="gatsby-node.js"
+const million = require('million/compiler');
+
+exports.onCreateWebpackConfig = ({ actions }) => {
+  actions.setWebpackConfig({
+    plugins: [million.webpack({ mode: 'react', server: true, auto: true })],
+  })
+}
+````
+
   </Tab>
   <Tab>
   ```js filename="vite.config.js"
@@ -106,39 +133,36 @@ For more control, Million offers customizable options.
   import react from "@vitejs/plugin-react";
   import { defineConfig } from 'vite';
 
-  export default defineConfig({
-    plugins: [million.vite({ auto: true }), react()],
-  });
-
-
-
-  // With Remix:
-
+export default defineConfig({
+  plugins: [million.vite({ auto: true }), react()],
+});
+````
+</Tab>
+  <Tab>
+  ```js filename="vite.config.js"
   import { unstable_vitePlugin as remix } from "@remix-run/dev";
   import million from 'million/compiler';
   import { defineConfig } from "vite";
-  
-  
+
   export default defineConfig({
    plugins: [million.vite({ auto: true }), remix()],
-   ｝
-  ）；
-  ```
-  </Tab>
-  <Tab>
-    <Callout type="warning">
-      If you are using a [Create React App (CRA)](https://create-react-app.dev/) Setup, you will need to [configure Craco](https://craco.js.org/docs/getting-started/) before proceeding.
-    </Callout>
+  })；
+````
+</Tab>
+<Tab>
+  <Callout type="warning">
+    If you are using a [Create React App (CRA)](https://create-react-app.dev/) Setup, you will need to [configure Craco](https://craco.js.org/docs/getting-started/) before proceeding.
+  </Callout>
 
-  ```js filename="craco.config.js"
-  const million = require('million/compiler');
-  module.exports = {
-    webpack: {
-      plugins: { add: [million.webpack({ auto: true })] }
-    }
-  };
-  ```
-  </Tab>
+```js filename="craco.config.js"
+const million = require('million/compiler');
+module.exports = {
+  webpack: {
+    plugins: { add: [million.webpack({ auto: true })] }
+  }
+};
+````
+</Tab>
   <Tab>
   ```js filename="webpack.config.js"
   const million = require('million/compiler');
@@ -153,15 +177,15 @@ For more control, Million offers customizable options.
   ```js filename="rollup.config.js"
   import million from 'million/compiler';
 
-  export default {
-    plugins: [million.rollup({ auto: true })],
-  };
-  ```
-  </Tab>
+export default {
+  plugins: [million.rollup({ auto: true })],
+};
+
+````
+</Tab>
 </Tabs>
 
 </Steps>
-<p className="font-normal text-base">Checkout <a href="/docs/automatic-mode/introduction">Automatic Mode</a> to learn about the mechanisms behind Automatic mode.</p>
 </Tab>
 
 
@@ -174,11 +198,12 @@ For more control, Million offers customizable options.
 
 
 <Tabs items={['npm', 'pnpm', 'yarn', 'bun']} storageKey="selected-pkg-manager">
-  {/* prettier-ignore */}
-  <Tab>
-  ```bash copy
-  npm install million
-  ```
+{/* prettier-ignore */}
+<Tab>
+```bash copy
+npm install million
+````
+
   </Tab>
   {/* prettier-ignore */}
   <Tab>
@@ -202,10 +227,9 @@ For more control, Million offers customizable options.
 
 ### Add the compiler to your application
 
-
 <details open>
   <summary>React Instructions</summary>
-  <Tabs items={['Next.js', 'Astro', 'Gatsby', 'Vite', 'Create React App', 'Webpack', 'Rollup']} storageKey="selected-bundler-compiler">
+  <Tabs items={['Next.js', 'Astro', 'Gatsby', 'Vite', 'Remix', 'Create React App', 'Webpack', 'Rollup']} storageKey="selected-bundler-compiler">
     <Tab>
     Million.js is supported within the `/app` ("use client" components only) and `/pages`
 
@@ -252,19 +276,19 @@ For more control, Million offers customizable options.
     export default defineConfig({
       plugins: [million.vite(), react()],
     });
+    ```
+    </Tab>
 
-
-    
-    // With Remix:
-
+    <Tab>
+      ```js filename="vite.config.js"
     import { unstable_vitePlugin as remix } from "@remix-run/dev";
     import million from 'million/compiler';
     import { defineConfig } from "vite";
-  
-  
+
+
     export default defineConfig({
-    plugins: [million.vite(), remix()],
-    }；
+       plugins: [million.vite(), remix()],
+    })；
     ```
     </Tab>
     <Tab>
@@ -279,7 +303,7 @@ For more control, Million offers customizable options.
         plugins: { add: [million.webpack()] }
       }
     };
-    
+
     ```
     </Tab>
     <Tab>
@@ -301,61 +325,9 @@ For more control, Million offers customizable options.
     };
     ```
     </Tab>
+
   </Tabs>
 </details>
-
-<details>
-  <summary>Preact Instructions</summary>
-
-  <Callout type="info">
-    Note that instead of importing from `million/react` in your application code, you'll need to import from `million/preact` instead.
-  </Callout>
-
-  <Tabs items={['Astro', 'Vite', 'Webpack', 'Rollup']} storageKey="selected-bundler-compiler-preact">
-    <Tab>
-    ```js filename="astro.config.mjs"
-    import { defineConfig } from 'astro/config';
-    import million from 'million/compiler';
-
-    export default defineConfig({
-      vite: {
-        plugins: [million.vite({ mode: 'preact', server: true })]
-      }
-    });
-    ```
-    </Tab>
-    <Tab>
-    ```js filename="vite.config.js"
-    import million from 'million/compiler';
-    import { defineConfig } from 'vite';
-
-    export default defineConfig({
-      plugins: [million.vite({ mode: 'preact' })],
-    });
-    ```
-    </Tab>
-    <Tab>
-    ```js filename="webpack.config.js"
-    const million = require('million/compiler');
-    module.exports = {
-      plugins: [
-        million.webpack({ mode: 'preact' }),
-      ],
-    }
-    ```
-    </Tab>
-    <Tab>
-    ```js filename="rollup.config.js"
-    import million from 'million/compiler';
-
-    export default {
-      plugins: [million.rollup({ mode: 'preact' })],
-    };
-    ```
-    </Tab>
-  </Tabs>
-</details>
-
 
 </Steps>
 

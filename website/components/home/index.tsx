@@ -10,8 +10,8 @@ export function Home() {
     <main className="space-y-40 mb-40">
       <Hero />
       <About />
-      {/* <Showcase /> */}
-      <Community />
+      <Showcase />
+      {/* <Community /> */}
       <CTA />
     </main>
   );

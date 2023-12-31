@@ -21,6 +21,8 @@ export function Showcase() {
           </p>
         </div>
 
+        <ShowcaseSlider />
+
         <div className="flex flex-wrap justify-center gap-6 mt-8 items-center">
           <Link
             href="/showcase"
@@ -92,3 +94,4 @@ export const ShowcaseSlider = () => {
     </div>
   );
 };
+

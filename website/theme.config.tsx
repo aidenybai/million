@@ -142,6 +142,11 @@ const config: DocsThemeConfig = {
                 Contributing
               </a>
             </li>
+            <li>
+              <a href="https://million.dev/chat" className="text-sm">
+                Discord
+              </a>
+            </li>
           </ul>
         </div>
 
@@ -156,40 +161,6 @@ const config: DocsThemeConfig = {
           </ul>
         </div>
 
-        <div>
-          <p className="text-base pb-2 text-white font-bold">More Links</p>
-          <ul className="flex flex-col gap-2">
-            <li>
-              <a
-                href="https://dl.acm.org/doi/10.1145/3555776.3577683"
-                className="text-sm"
-              >
-                Research
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://demo.million.dev/"
-                className="text-sm"
-              >
-                Live Demo
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://github.com/aidenybai/hundred"
-                className="text-sm"
-              >
-                Build Your Own
-              </a>
-            </li>
-            <li>
-              <a href="/faq" className="text-sm">
-                FAQ
-              </a>
-            </li>
-          </ul>
-        </div>
         <a
           href="https://vercel.com?utm_source=millionjs"
           target="_blank"
