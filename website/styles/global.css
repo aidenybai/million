@@ -677,10 +677,8 @@ li > a {
 .youtubeContainer {
   position: relative;
   width: 100%;
-  height: 0;
-  padding-bottom: 56.25%;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
-  margin-bottom: 50px;
 }
 
 .youtubeContainer iframe {
