@@ -1,4 +1,4 @@
-import { createElement, Fragment, useCallback, useMemo, useRef } from 'react';
+import { createElement, Fragment, useCallback, useRef } from 'react';
 import {
   block as createBlock,
   mount$,
@@ -7,17 +7,16 @@ import {
 import { MapSet$, MapHas$ } from '../million/constants';
 import { queueMicrotask$ } from '../million/dom';
 import { processProps, unwrap } from './utils';
-import { Effect, RENDER_SCOPE, REGISTRY, SVG_RENDER_SCOPE } from './constants';
+import { Effect, REGISTRY } from './constants';
 import type { ComponentType, Ref } from 'react';
 import type { Options, MillionProps, MillionPortal } from '../types';
+import { useContainer, useNearestParent } from './its-fine';
 
 export const block = <P extends MillionProps>(
   fn: ComponentType<P> | null,
   options: Options | null | undefined
 ) => {
   let block: ReturnType<typeof createBlock> | null = options?.block;
-  const defaultType = options?.svg ? SVG_RENDER_SCOPE : RENDER_SCOPE;
-
   if (fn) {
     block = createBlock(
       fn as any,
@@ -31,8 +30,10 @@ export const block = <P extends MillionProps>(
     props: P,
     forwardedRef: Ref<any>
   ) => {
+    const container = useContainer<HTMLElement>() // usable when there's no parent other than the root element
+    const parentRef = useNearestParent<HTMLElement>()
+
     const hmrTimestamp = props._hmr;
-    const ref = useRef<HTMLElement>(null);
     const patch = useRef<((props: P) => void) | null>(null);
     const portalRef = useRef<MillionPortal[]>([]);
 
@@ -40,14 +41,15 @@ export const block = <P extends MillionProps>(
     patch.current?.(props);
 
     const effect = useCallback(() => {
-      if (!ref.current) return;
+      const target = parentRef.current ?? container.current
+      if (!target) return;
       const currentBlock = block!(props, props.key);
-      if (hmrTimestamp && ref.current.textContent) {
-        ref.current.textContent = '';
+      if (hmrTimestamp && target.textContent) {
+        target.textContent = '';
       }
       if (patch.current === null || hmrTimestamp) {
         queueMicrotask$(() => {
-          mount$.call(currentBlock, ref.current!, null);
+          mount$.call(currentBlock, target, null);
         });
         patch.current = (props: P) => {
           queueMicrotask$(() => {
@@ -60,20 +62,15 @@ export const block = <P extends MillionProps>(
       }
     }, []);
 
-    const marker = useMemo(() => {
-      return createElement(options?.as ?? defaultType, { ref });
-    }, []);
-
     const childrenSize = portalRef.current.length;
     const children = new Array(childrenSize);
-
-    children[0] = marker;
-    children[1] = createElement(Effect, {
+   
+    children[0] = createElement(Effect, {
       effect,
       deps: hmrTimestamp ? [hmrTimestamp] : [],
     });
     for (let i = 0; i < childrenSize; ++i) {
-      children[i + 2] = portalRef.current[i]?.portal;
+      children[i + 1] = portalRef.current[i]?.portal;
     }
 
     const vnode = createElement(Fragment, { children });
