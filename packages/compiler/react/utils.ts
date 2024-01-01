@@ -145,7 +145,7 @@ export const warn = (
     err.message,
     '\n',
     styleCommentMessage(
-      `Check out the Rules of Blocks: https://million.dev/docs/rules. Enable the "mute" option to disable this message.`,
+      `Check out the Rules of Blocks: https://million.dev/docs/manual-mode/block#rules-of-blocks. Enable the "mute" option to disable this message.`,
     ),
     '\n',
   );
