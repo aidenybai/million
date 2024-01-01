@@ -1,3 +1,4 @@
+import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import Wyze from '../../pages/showcase/wyze.png';
@@ -7,23 +8,36 @@ import LLMReport from '../../pages/showcase/llm-report.png';
 import Texts from '../../pages/showcase/texts.png';
 import { Container } from './container';
 
-export function Showcase() {
+
+export function Community() {
   return (
-    <div className="my-42 relative">
-      <Container>
-        <div className="mb-16">
-          <h2 className="mb-4 text-center text-2xl font-bold text-gray-800 dark:text-white md:text-4xl">
-            Faster than the rest
-          </h2>
-          <p className="mt-3 text-center text-zinc-600 dark:text-zinc-300 md:text-md lg:text-lg">
-            Witness MillionJS in production where it creates a better user
-            experiences.
-          </p>
-        </div>
+    <>
+      <div className="bg-black max-w-7xl w-[90%]  mx-auto p-6 lg:p-10 xl:p-6 rounded-2xl ">
+        <div className="flex flex-col lg:flex-row gap-6 items-end justify-between overflow-hidden">
+          <div className="py-5 pt-5 lg:pt-20 px-3 lg:w-[50%]">
+            <h2 className="font-normal font-white text-4xl md:text-5xl xl:text-7xl pb-6 leading-6">
+              Join our <br/> community
+            </h2>
+            <p className="font-medium pb-6 text-sm xl:text-base">
+              Connect with 5000+ React developers committed to better performing
+              applications. Connect, participate, and seek support — all on
+              Discord.
+            </p>
 
-        <ShowcaseSlider />
+            <button className="py-2 px-4 xl:py-4 xl:px-6 bg-white text-blue-purple-gradient rounded-2xl hover:opacity-80">
+              <a
+                href="https://million.dev/chat"
+                className="text-black font-semibold text-sm lg:text-base"
+              >
+                Join our Discord
+              </a>
+            </button>
+          </div>
 
-        <div className="flex flex-wrap justify-center gap-6 mt-8 items-center">
+          <div className="w-full lg:w-[45%]">
+            <ShowcaseSlider/>
+
+            <div className="flex flex-wrap justify-center gap-6 mt-8 items-center">
           <Link
             href="/showcase"
             className="relative flex h-11 w-full items-center justify-center px-6 before:absolute before:inset-0 before:rounded-full before:border before:border-transparent before:bg-purple-600/10 before:bg-gradient-to-b before:transition before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 dark:before:border-zinc-700 dark:before:bg-zinc-800 sm:w-max"
@@ -33,10 +47,13 @@ export function Showcase() {
             </span>
           </Link>
         </div>
-      </Container>
-    </div>
+            </div>
+        </div>
+      </div>
+    </>
   );
 }
+
 
 export const ShowcaseSlider = () => {
   const entries = [
@@ -94,4 +111,3 @@ export const ShowcaseSlider = () => {
     </div>
   );
 };
-
