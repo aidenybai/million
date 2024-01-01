@@ -7,7 +7,6 @@ import OpenSaucedLogo from '../../public/opensauced.svg';
 import MetamaskLogo from '../../public/metamask.svg';
 import { Container } from './container';
 import { ShimmerButton } from './shimmer-button';
-import { Tooltip as ReactTooltip } from 'react-tooltip';
 
 const CountUp = dynamic(() => import('react-countup'), {
   loading: () => <span>70</span>,
@@ -30,27 +29,14 @@ export function Hero() {
             <p className="mt-8 text-xl text-zinc-600 dark:text-zinc-300 leading-8">
               The{' '}
               <span className="font-medium dark:text-zinc-100">
-                <span
-                  data-tooltip-id="virtual-dom-explanation"
-                  className="text-purple-500 hover:text-purple-700"
-                >
-                  Virtual DOM
-                </span>{' '}
-                Replacement
+                Virtual DOM Replacement
               </span>{' '}
-              for React. Experience improved performance for UI and data-heavy
-              React apps. Minimal effort required - all it takes is {' '}
+              for React. The Virtual DOM Replacement for React. Gain big performance wins for UI and data heavy React apps. Dead simple to use – try it out {' '}
               <Link href="/docs" className="font-medium hover:underline">
-                a single plugin
+                now
               </Link>
-              .
+              !
             </p>
-            <ReactTooltip
-              id="virtual-dom-explanation"
-              place="bottom"
-              style={{ width: '50%', zIndex: '13' }}
-              content="The Virtual DOM is a technique in web development, like React.js, that boosts efficiency by first making changes to a virtual copy of the DOM before updating the actual DOM."
-            />
             <div className="mt-16 flex flex-wrap justify-center gap-y-4 gap-x-6">
               <Link href="/docs" className="w-full sm:w-max">
                 <ShimmerButton

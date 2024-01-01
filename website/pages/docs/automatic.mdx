@@ -7,13 +7,7 @@ import { Callout, Tab, Tabs } from 'nextra-theme-docs';
 
 # Automatic Mode
 
-Million.js comes with Automatic Mode as its default setting. This transforms your React components into Million.js components, improving speed without any major code changes.
-
-When [installing Million into your project](/docs/install), automatic mode is recommended for most users and this is because it packs in it all the necessary optimizations that your application needs. The `auto` option of the compiler toggles it.
-
-### `auto`
-
-The `auto` option is a boolean that enables automatic mode. By default it is unset, because Million offers [a way to manually set your configuration](/docs/install#configure-it-yourself).
+Million.js uses Automatic Mode out of the box if you installed via CLI. This optimizes your React components, improving speed without any major code changes. This is the recommended way to use Million.js.
 
 ### Advanced customization
 
@@ -33,7 +27,7 @@ auto: {
 ```
 
 <Tabs items={['Next.js', 'Astro', 'Gatsby', 'Vite', 'Remix', 'Create React App', 'Webpack', 'Rollup']} storageKey="selected-bundler-compiler">
-<Tab>  
+<Tab>
 ```js filename="next.config.mjs"
 import million from 'million/compiler';
 
@@ -42,12 +36,12 @@ const nextConfig = {
    reactStrictMode: true,
 };
 
-const millionConfig = {{
+const millionConfig = {
   auto: {
     threshold: 0.05, // default: 0.1,
     skip: ['useBadHook', /badVariable/g], // default []
     // if you're using RSC: auto: { rsc: true },
-  }}
+  }
 }
 
 export default million.next(nextConfig, millionConfig);

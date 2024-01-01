@@ -9,9 +9,57 @@ import { Callout, Tabs, Tab, Steps } from 'nextra-theme-docs';
 
 Million.js assumes that you have an existing React project. To learn about how to create a React app, please see [React's documentation](https://react.dev).
 
+## Install via CLI
+
+The Million.js CLI will automatically install the package and configure your project for you.
+
+<Tabs items={['npm', 'pnpm', 'yarn', 'bun']} storageKey="selected-manager">
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  npx million@latest
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  pnpx million@latest
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  yarn add million@latest
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  bunx million@latest
+  ```
+  </Tab>
+</Tabs>
 
 
-**For more control, Million offers customizable options.**
+<Callout type="info">
+  Million.js is compatible with React 16 and above. If you're using an older
+  version of React, you'll need to upgrade first.
+</Callout>
+
+That's it! Your project is now running on Million.js 🎉
+
+## Install manually
+
+If you have issues [installing via the CLI](#install-via-cli), or you have a custom setup, you can
+install Million.js manually.
+
+Notice that there are two modes you can choose: **Automatic** and **Manual**:
+
+- **Automatic mode** will automatically configure, analyze, and optimize your project for you.
+This is the recommended mode.
+
+- **Manual mode** will require you to write code to [optimize certain parts of
+your project](/docs/manual-mode/manual-mode). This mode is recommended for advanced users who want to have more control over their project.
 
 <Tabs items={['Automatic', 'Manual']} storageKey="mode">
 
@@ -197,8 +245,6 @@ npm install million
 
 ### Add the compiler to your application
 
-<details open>
-  <summary>React Instructions</summary>
 <Tabs items={['Next.js', 'Astro', 'Gatsby', 'Vite', 'Remix', 'Create React App', 'Webpack', 'Rollup']} storageKey="selected-bundler-compiler">
 <Tab>
 Million.js is supported within the `/app` ("use client" components only) and `/pages`
@@ -298,7 +344,6 @@ export default {
 </Tab>
 
 </Tabs>
-</details>
 
 </Steps>
 
