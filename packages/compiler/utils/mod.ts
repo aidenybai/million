@@ -1,9 +1,10 @@
 import { addNamed } from '@babel/helper-module-imports';
+import type { NodePath } from '@babel/core';
+import type * as t from '@babel/types';
 import type { Options } from '../options';
-import { Info } from '../babel';
-import { NodePath } from '@babel/core';
+import type { Info } from '../babel';
 
-export const resolveImportSource = (options: Options, source: string) => {
+export const resolveImportSource = (options: Options, source: string): string | null => {
   if (!source.startsWith('million/react')) return null;
   const mode = options.mode || 'react';
   if (options.server) {
@@ -17,7 +18,7 @@ export const addImport = (
   name: string,
   source: string,
   info: Info
-) => {
+): t.Identifier => {
   const hasProgramBinding = info.programPath.scope.hasBinding(name);
   const hasLocalBinding = path.scope.hasBinding(name);
 
@@ -37,10 +38,10 @@ export const addImport = (
   return id;
 };
 
-export const isUseClient = (info: Info) => {
+export const isUseClient = (info: Info): boolean => {
   const directives = info.programPath.node.directives;
   const directivesLength = directives.length;
-  if (!directivesLength) return; // we assume it's server component only
+  if (!directivesLength) return false; // we assume it's server component only
   for (let i = 0; i < directivesLength; ++i) {
     const directive = directives[i];
     if (directive?.value.value === 'use client') return true;

@@ -1,5 +1,5 @@
-import type { block as createBlock } from '../million';
 import type { ReactPortal } from 'react';
+import type { block as createBlock } from '../million';
 
 export type MillionProps = Record<string, any>;
 

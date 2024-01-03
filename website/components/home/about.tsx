@@ -13,75 +13,13 @@ const Showdown = dynamic(() =>
 export function About() {
   return (
     <>
-      <div>
-        <Container>
-          <div className="lg:p-4 space-y-6 md:flex md:gap-20 justify-center md:space-y-0 lg:items-center">
-            <div className="md:w-7/12 lg:w-1/2">
-              <Graphic />
-            </div>
-            <div className="md:w-7/12 lg:w-1/2">
-              <h2 className="text-3xl font-bold text-zinc-900 md:text-4xl dark:text-white">
-                React at the speed of raw JS
-              </h2>
-              <p className="text-lg my-8 text-zinc-600 dark:text-zinc-300">
-                Million.js automatically optimizes React, making it run way
-                faster. It's one of the top performers in the{' '}
-                <a
-                  href="https://krausest.github.io/js-framework-benchmark/2023/table_chrome_112.0.5615.49.html"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="nx-text-primary-600 underline decoration-from-font [text-underline-position:from-font]"
-                >
-                  JS Framework Benchmark
-                </a>
-                .
-              </p>
-              <div className="divide-y space-y-4 divide-zinc-100 dark:divide-zinc-800">
-                <div className="mt-8 flex gap-4 md:items-center">
-                  <div className="w-12 h-12 flex gap-4 rounded-full bg-purple-100 dark:bg-purple-900/20">
-                    <LightningIcon />
-                  </div>
-                  <div className="w-5/6">
-                    <h4 className="font-semibold text-lg text-zinc-700 dark:text-purple-300">
-                      Up to 70% faster* than React.
-                    </h4>
-                    <p className="text-zinc-500 dark:text-zinc-400">
-                      * - Benchmarks may not represent real-world performance.
-                    </p>
-                  </div>
-                </div>
-                <div className="pt-4 flex gap-4 md:items-center">
-                  <div className="w-12 h-12 flex gap-4 rounded-full bg-purple-100 dark:bg-purple-900/20">
-                    <ClockIcon />
-                  </div>
-                  <div className="w-5/6">
-                    <h4 className="font-semibold text-lg text-zinc-700 dark:text-purple-300">
-                      Integrate and ship in minutes.
-                    </h4>
-                    <p className="text-zinc-500 dark:text-zinc-400">
-                      No need to learn a new framework. Works with your existing
-                      React components.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-10 text-xs bg-gradient-to-b dark:from-zinc-500 dark:to-[#111] dark:hover:to-zinc-500 inline-block text-transparent bg-clip-text from-zinc-500 to-white hover:to-zinc-500 opacity-40 hover:opacity-50 transition-opacity">
-                Note: It's important to note that benchmarks (via JS Framework
-                Benchmark) do not represent real-life performance. Million.js
-                does include some limitations. You may see more performance
-                improvement if you have more data / UI heavy apps.
-              </div>
-            </div>
-          </div>
-        </Container>
-      </div>
       <div className="relative">
         <Container>
           <h3 className="text-2xl text-center font-bold text-zinc-900 dark:text-white md:text-3xl lg:text-4xl">
             What's in Million.js?
           </h3>
           <p className="mt-3 text-center text-zinc-600 dark:text-zinc-300 md:text-md lg:text-lg">
-            All the tools to make React faster, automatically.
+            The tools to make React faster, automatically.
           </p>
           <div className="relative mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             <Card
@@ -138,6 +76,68 @@ export function About() {
           </div>
         </Container>
         <Blur />
+      </div>
+      <div>
+        <Container>
+          <div className="lg:p-4 space-y-6 md:flex md:gap-20 justify-center md:space-y-0 lg:items-center">
+            <div className="md:w-7/12 lg:w-1/2">
+              <Graphic />
+            </div>
+            <div className="md:w-7/12 lg:w-1/2">
+              <h2 className="text-3xl font-bold text-zinc-900 md:text-4xl dark:text-white">
+                React at the speed of raw JS
+              </h2>
+              <p className="text-lg my-8 text-zinc-600 dark:text-zinc-300">
+                Million.js optimizes React, improving its performance. It stands
+                out as one of the top performers in the{' '}
+                <a
+                  href="https://krausest.github.io/js-framework-benchmark/2023/table_chrome_112.0.5615.49.html"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="nx-text-primary-600 underline decoration-from-font [text-underline-position:from-font]"
+                >
+                  JS Framework Benchmark
+                </a>
+                .
+              </p>
+              <div className="divide-y space-y-4 divide-zinc-100 dark:divide-zinc-800">
+                <div className="mt-8 flex gap-4 md:items-center">
+                  <div className="w-12 h-12 flex gap-4 rounded-full bg-purple-100 dark:bg-purple-900/20">
+                    <LightningIcon />
+                  </div>
+                  <div className="w-5/6">
+                    <h4 className="font-semibold text-lg text-zinc-700 dark:text-purple-300">
+                      Up to 70% faster* than React.
+                    </h4>
+                    <p className="text-zinc-500 text-sm dark:text-zinc-400">
+                      * - Benchmarks may not represent real-world performance.
+                    </p>
+                  </div>
+                </div>
+                <div className="pt-4 flex gap-4 md:items-center">
+                  <div className="w-12 h-12 flex gap-4 rounded-full bg-purple-100 dark:bg-purple-900/20">
+                    <ClockIcon />
+                  </div>
+                  <div className="w-5/6">
+                    <h4 className="font-semibold text-lg text-zinc-700 dark:text-purple-300">
+                      Integrate and ship in minutes.
+                    </h4>
+                    <p className="text-zinc-500 text-sm dark:text-zinc-400">
+                      No need to learn a new framework. Works with your existing
+                      React components.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <p className="mt-10 text-xs bg-gradient-to-b dark:from-zinc-500 dark:to-[#111] dark:hover:to-zinc-500 inline-block text-transparent bg-clip-text from-zinc-500 to-white hover:to-zinc-500 opacity-40 hover:opacity-50 transition-opacity">
+                Note: Benchmarks (via JS Framework Benchmark) do not represent
+                real-life performance. Million.js does have some limitations.
+                Performance improvements may be more noticeable with apps that
+                include more data / UI components.
+              </p>
+            </div>
+          </div>
+        </Container>
       </div>
     </>
   );

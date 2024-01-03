@@ -11,6 +11,10 @@ module.exports = {
         spin: 'spin calc(var(--speed) * 2) infinite linear',
         slide: 'slide var(--speed) ease-in-out infinite alternate',
       },
+      backgroundImage: {
+        'blue-purple-gradient':
+          'linear-gradient(83.21deg,#3245FF 0%,#B845ED 100%)',
+      },
     },
     keyframes: {
       spin: {

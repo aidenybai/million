@@ -8,8 +8,8 @@ import {
   underline,
   yellow,
 } from 'kleur/colors';
-import type { Options } from '../../options';
 import type { NodePath } from '@babel/core';
+import type { Options } from '../../options';
 
 /**
  * deopt (deoptimize) will turn a block into a regular function call.

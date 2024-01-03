@@ -1,11 +1,11 @@
 import { createUnplugin } from 'unplugin';
 import { createFilter } from '@rollup/pluginutils';
 import { transformAsync } from '@babel/core';
+import type { TransformResult, VitePlugin } from 'unplugin';
+import type { ParserOptions } from '@babel/core';
 import { displayIntro } from './utils/log';
 import { babel } from './babel';
 import type { Options } from './options';
-import type { TransformResult, VitePlugin } from 'unplugin';
-import type { ParserOptions } from '@babel/core';
 
 const DEFAULT_INCLUDE = '**/*.{jsx,tsx,ts,js,mjs,cjs}';
 const DEFAULT_EXCLUDE = 'node_modules/**/*.{jsx,tsx,ts,js,mjs,cjs}';
@@ -86,7 +86,7 @@ export const repushPlugin = (
   plugins: VitePlugin[],
   pluginName: string,
   pluginNames: string[]
-) => {
+): void => {
   const namesSet = new Set(pluginNames);
 
   let baseIndex = -1;

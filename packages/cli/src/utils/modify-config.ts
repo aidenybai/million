@@ -1,22 +1,24 @@
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 import chalk from 'chalk';
 import * as clack from '@clack/prompts';
+import type { BuildTool } from '../types';
 import {
   abort,
   abortIfCancelled,
   getNextRouter,
   highlightCodeDifferences,
 } from './utils';
-import type { BuildTool } from '../types';
 
-export async function modifyConfigFile(detectedBuildTool: BuildTool) {
+export async function modifyConfigFile(
+  detectedBuildTool: BuildTool
+): Promise<void> {
   try {
     const auto = await abortIfCancelled(
       clack.confirm({
         message: 'Do you want to enable automatic mode?',
         initialValue: true,
-      }),
+      })
     );
 
     let configFileContent = await getExistingConfigContent(detectedBuildTool);
@@ -29,8 +31,8 @@ export async function modifyConfigFile(detectedBuildTool: BuildTool) {
     configFileContent.includes('million/compiler')
       ? abort(
           `${chalk.red(
-            `Million.js is already configured in ${detectedBuildTool.configFilePath}.`,
-          )}\n Please refer docs: https://million.dev/docs/install#use-the-compiler if facing any errors.`,
+            `Million.js is already configured in ${detectedBuildTool.configFilePath}.`
+          )}\n Please refer docs: https://million.dev/docs/install#use-the-compiler if facing any errors.`
         )
       : '';
 
@@ -56,13 +58,13 @@ export async function modifyConfigFile(detectedBuildTool: BuildTool) {
         const newExportExpression = await wrapExportCode(
           detectedBuildTool,
           oldExportExpression!,
-          auto,
+          auto
         );
 
         // 3.
         const newCode = configFileContent.replace(
           regex,
-          `module.exports = ${newExportExpression}`,
+          `module.exports = ${newExportExpression}`
         );
 
         await fs.promises.writeFile(filePath, newCode, {
@@ -86,13 +88,13 @@ export async function modifyConfigFile(detectedBuildTool: BuildTool) {
         const oldExportExpression = match[1];
         const newExportExpression = await wrapExportCode(
           detectedBuildTool,
-          oldExportExpression!,
+          oldExportExpression!
         );
 
         // 3.
         const newCode = configFileContent.replace(
           regex,
-          `export default ${newExportExpression}`,
+          `export default ${newExportExpression}`
         );
 
         await fs.promises.writeFile(filePath, newCode, {
@@ -110,10 +112,10 @@ export async function modifyConfigFile(detectedBuildTool: BuildTool) {
 
       return abort(
         `${chalk.yellow(
-          `Could not detect module type for ${detectedBuildTool.configFilePath}.`,
+          `Could not detect module type for ${detectedBuildTool.configFilePath}.`
         )}\nPlease refer docs to setup manually:${chalk.cyan(
-          'https://million.dev/docs/install#use-the-compiler',
-        )} `,
+          'https://million.dev/docs/install#use-the-compiler'
+        )} `
       );
     }
 
@@ -121,7 +123,7 @@ export async function modifyConfigFile(detectedBuildTool: BuildTool) {
       clack.confirm({
         message: 'Does the config file look good?',
         initialValue: true,
-      }),
+      })
     );
     if (!confirmation) {
       await fs.promises.writeFile(filePath, oldCode, {
@@ -131,8 +133,8 @@ export async function modifyConfigFile(detectedBuildTool: BuildTool) {
 
       return abort(
         `Reverted the changes. \nPlease refer docs for manual setup: ${chalk.cyan(
-          `https://million.dev/docs/install#use-the-compiler`,
-        )}`,
+          `https://million.dev/docs/install#use-the-compiler`
+        )}`
       );
     }
   } catch (e) {
@@ -141,11 +143,11 @@ export async function modifyConfigFile(detectedBuildTool: BuildTool) {
 }
 
 export async function getExistingConfigContent(
-  detectedBuildTool: BuildTool,
+  detectedBuildTool: BuildTool
 ): Promise<string> {
   const configFilePath = path.join(
     process.cwd(),
-    detectedBuildTool.configFilePath,
+    detectedBuildTool.configFilePath
   );
 
   // Read the config file
@@ -172,7 +174,7 @@ function detectModuleType(fileContent: string): 'cjs' | 'esm' | 'unknown' {
 async function wrapExportCode(
   buildtool: BuildTool,
   oldExportExpression: string,
-  auto = true,
+  auto = true
 ): Promise<string> {
   // let [firstPart, ...rest]: string[] = [];
 
@@ -188,7 +190,7 @@ async function wrapExportCode(
        *   plugins: [million.vite({ auto: true }), react(), ],
        * });
        */
-      return handleViteCase(oldExportExpression, auto)
+      return handleViteCase(oldExportExpression, auto);
 
     case 'astro':
       /**
@@ -198,8 +200,8 @@ async function wrapExportCode(
        *   }
        * });
        */
-     
-        return handleAstroCase(oldExportExpression, auto)
+
+      return handleAstroCase(oldExportExpression, auto);
     case 'gatsby':
       /**
        * ({ actions }) => {
@@ -208,7 +210,7 @@ async function wrapExportCode(
        *   })
        * }
        */
-      return handleGatsbyCase(oldExportExpression, auto)
+      return handleGatsbyCase(oldExportExpression, auto);
     case 'craco':
       /**
        * {
@@ -217,22 +219,22 @@ async function wrapExportCode(
        *   },
        * }
        */
-      return handleCracoCase(oldExportExpression, auto)
+      return handleCracoCase(oldExportExpression, auto);
     case 'webpack':
       /**
        * {
        *   plugins: [million.webpack({ auto: true }), ],
        * }
        */
- 
-    return handleWebpackCase(oldExportExpression, auto)
+
+      return handleWebpackCase(oldExportExpression, auto);
     case 'rollup':
       /**
        * {
        *   plugins: [million.rollup({ auto: true }), ],
        * }
        */
-     return handleRollupCase(oldExportExpression, auto)
+      return handleRollupCase(oldExportExpression, auto);
     default:
       return '';
   }
@@ -240,7 +242,7 @@ async function wrapExportCode(
 
 async function handleNextCase(
   oldExportExpression: string,
-  auto = true,
+  auto = true
 ): Promise<string> {
   const nextRouter: 'app' | 'pages' = await getNextRouter();
   return `million.next(
@@ -250,71 +252,46 @@ async function handleNextCase(
 )`;
 }
 
-function handleViteCase(
-  oldExportExpression: string,
-  auto = true,
-) {
+function handleViteCase(oldExportExpression: string, auto = true): string {
   const [firstPart, ...rest] = oldExportExpression.split('plugins: [');
   return `${firstPart!}plugins: [million.vite({ auto: ${String(
-    auto,
-  )} }), ${rest.join('plugins: [')}`
-}
-
-function handleAstroCase (
-  oldExportExpression: string,
-  auto = true,
-) {
-  const [firstPart, ...rest] = oldExportExpression.split('plugins: [');
-  return `${firstPart!}plugins: [million.vite({ mode: 'react', server: true, auto: ${String(
-    auto,
+    auto
   )} }), ${rest.join('plugins: [')}`;
 }
 
+function handleAstroCase(oldExportExpression: string, auto = true): string {
+  const [firstPart, ...rest] = oldExportExpression.split('plugins: [');
+  return `${firstPart!}plugins: [million.vite({ mode: 'react', server: true, auto: ${String(
+    auto
+  )} }), ${rest.join('plugins: [')}`;
+}
 
-function handleGatsbyCase (
-  oldExportExpression: string,
-  auto = true,
-) {
+function handleGatsbyCase(oldExportExpression: string, auto = true): string {
   const [firstPart, ...rest] = oldExportExpression.split('plugins: [');
 
   return `${firstPart!}[plugins: million.webpack({ mode: 'react', server: true, auto: ${String(
-    auto,
+    auto
   )} }), ${rest.join('plugins: [')}`;
 }
 
-
-function handleCracoCase (
-  oldExportExpression: string,
-  auto = true,
-) {
+function handleCracoCase(oldExportExpression: string, auto = true): string {
   const [firstPart, ...rest] = oldExportExpression.split('plugins: [');
   return `${firstPart!}plugins: [million.webpack({ auto: ${String(
-    auto,
+    auto
   )} }), ${rest.join('plugins: [')}`;
-
 }
 
-
-function handleWebpackCase (
-  oldExportExpression: string,
-  auto = true,
-) {
+function handleWebpackCase(oldExportExpression: string, auto = true): string {
   const [firstPart, ...rest] = oldExportExpression.split('plugins: [');
 
   return `${firstPart!}plugins: [million.webpack({ auto: ${String(
-    auto,
+    auto
   )} }), ${rest.join('plugins: [')}`;
 }
 
-
-function handleRollupCase (
-  oldExportExpression: string,
-  auto = true,
-) {
+function handleRollupCase(oldExportExpression: string, auto = true): string {
   const [firstPart, ...rest] = oldExportExpression.split('plugins: [');
   return `${firstPart!}plugins: [million.rollup({ auto: ${String(
-    auto,
+    auto
   )} }), ${rest.join('plugins: [')}`;
 }
-
-

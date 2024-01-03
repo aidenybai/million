@@ -1,16 +1,16 @@
 import { Fragment, createElement, isValidElement } from 'react';
 import { createPortal } from 'react-dom';
-import { REGISTRY, RENDER_SCOPE } from './constants';
 import type { ComponentProps, ReactNode, Ref } from 'react';
 import type { VNode } from '../million';
 import type { MillionPortal } from '../types';
+import { REGISTRY, RENDER_SCOPE } from './constants';
 
 // TODO: access perf impact of this
 export const processProps = (
   props: ComponentProps<any>,
   ref: Ref<any>,
   portals: MillionPortal[]
-) => {
+): ComponentProps<any> => {
   const processedProps: ComponentProps<any> = { ref };
 
   let currentIndex = 0;

@@ -1,7 +1,7 @@
+import { existsSync } from 'node:fs';
 import { unplugin } from './plugin';
 import type { Options } from './options';
 import { babel } from './babel';
-import { existsSync } from 'fs';
 
 export const vite = unplugin.vite;
 export const webpack = unplugin.webpack;
@@ -9,8 +9,11 @@ export const rollup = unplugin.rollup;
 export const rspack = unplugin.rspack;
 export const esbuild = unplugin.esbuild;
 export const next = (
-  nextConfig: Record<string, any> = {},
-  overrideOptions: Options = {}
+  nextConfig: {
+    appDir?: boolean;
+    basePath?: string;
+  } = {},
+  overrideOptions: Options = {},
 ) => {
   const millionConfig: Options = {
     mode: 'react',
@@ -19,7 +22,13 @@ export const next = (
   };
   return {
     ...nextConfig,
-    webpack(config: Record<string, any>, webpackOptions: Record<string, any>) {
+    webpack(
+      config: Record<string, any>,
+      webpackOptions: {
+        dir: string;
+        isServer: boolean;
+      },
+    ) {
       if (millionConfig.rsc === undefined) {
         millionConfig.rsc =
           nextConfig.appDir ??
@@ -30,7 +39,7 @@ export const next = (
         webpack({
           mute: webpackOptions.isServer,
           ...millionConfig,
-        })
+        }),
       );
 
       if (typeof nextConfig.webpack === 'function') {

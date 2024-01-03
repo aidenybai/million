@@ -27,7 +27,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import vm from 'vm';
+import vm from 'node:vm';
 import generate from '@babel/generator';
 import * as t from '@babel/types';
 import type { NodePath } from '@babel/traverse';

@@ -1,4 +1,5 @@
 import * as t from '@babel/types';
+import type { NodePath } from '@babel/core';
 import {
   dedupeJSXAttributes,
   trimJSXChildren,
@@ -7,7 +8,6 @@ import {
 } from './utils/jsx';
 import { deopt, catchError } from './utils/log';
 import { findChild } from './utils/ast';
-import type { NodePath } from '@babel/core';
 import type { Info } from './babel';
 import { transformBlock } from './block';
 import { getUniqueId } from './utils/id';

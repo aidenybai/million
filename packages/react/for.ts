@@ -6,20 +6,20 @@ import {
   useRef,
   useState,
 } from 'react';
+import type { MutableRefObject } from 'react';
 import { arrayMount$, arrayPatch$ } from '../million/array';
 import { mapArray, block as createBlock } from '../million';
 import { MapSet$, MapHas$, MapGet$ } from '../million/constants';
 import { queueMicrotask$ } from '../million/dom';
-import { renderReactScope } from './utils';
-import { RENDER_SCOPE, REGISTRY, SVG_RENDER_SCOPE } from './constants';
 import type { Block } from '../million';
-import type { MutableRefObject } from 'react';
 import type {
   ArrayCache,
   MillionArrayProps,
   MillionPortal,
   MillionProps,
 } from '../types';
+import { renderReactScope } from './utils';
+import { RENDER_SCOPE, REGISTRY, SVG_RENDER_SCOPE } from './constants';
 
 const MillionArray = <T>({
   each,
@@ -28,7 +28,7 @@ const MillionArray = <T>({
   svg,
   as,
   ...rest
-}: MillionArrayProps<T>) => {
+}: MillionArrayProps<T>): ReturnType<typeof createElement> => {
   const ref = useRef<HTMLElement>(null);
   const [portals] = useState<{ current: MillionPortal[] }>(() => ({
     current: Array(each.length),
@@ -136,7 +136,7 @@ const createChildren = <T>(
     }
 
     const block = createBlock((props?: MillionProps) => props?.scope);
-    const currentBlock = (props: MillionProps, index: number) => {
+    const currentBlock = (props: MillionProps, index: number): ReturnType<typeof block> => {
       return block(
         {
           scope: renderReactScope(

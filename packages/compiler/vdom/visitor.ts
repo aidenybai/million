@@ -6,6 +6,7 @@
 
 import { addNamed } from '@babel/helper-module-imports';
 import * as t from '@babel/types';
+import type { NodePath } from '@babel/core';
 import {
   hoistElements,
   renderToString,
@@ -13,7 +14,6 @@ import {
 } from '../experimental/render';
 import { chainOrLogic } from '../experimental/utils';
 import type { IrEdit, IrEditBase } from '../experimental/types';
-import type { NodePath } from '@babel/core';
 import type { Options } from '../options';
 
 export const visitor =

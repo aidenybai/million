@@ -59,7 +59,7 @@ export async function withTelemetry<F>(
         status: 'ok',
         op: `${options.name}.flow`,
       },
-      // eslint-disable-next-line @typescript-eslint/require-await
+
       async () => runWithAsyncContext(callback),
     );
   } catch (e) {
@@ -72,7 +72,10 @@ export async function withTelemetry<F>(
   }
 }
 
-function createSentryInstance(enabled: boolean, integration: string) {
+function createSentryInstance(
+  enabled: boolean,
+  integration: string,
+): { sentryHub: Hub; sentryClient: NodeClient } {
   const client = new NodeClient({
     dsn: 'https://de9a702cad37fec31ace27d9f3976818@o4505682763382784.ingest.sentry.io/4505886741954560',
     enabled,

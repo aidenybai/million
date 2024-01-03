@@ -2,11 +2,11 @@
 // @ts-nocheck
 import * as t from '@babel/types';
 import { addNamed } from '@babel/helper-module-imports';
+import type { NodePath, PluginObj } from '@babel/core';
 import { resolveImportSource } from './utils/mod';
 import { transformFor } from './for';
 import { catchError } from './utils/log';
 import type { Options } from './options';
-import type { NodePath, PluginObj } from '@babel/core';
 import { transformBlock } from './block';
 import { parseAuto } from './auto';
 

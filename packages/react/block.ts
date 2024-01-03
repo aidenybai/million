@@ -1,4 +1,5 @@
-import { createElement, Fragment, useCallback, useRef } from 'react';
+import { createElement, Fragment, useCallback, useMemo, useRef } from 'react';
+import type { ComponentType, Ref } from 'react';
 import {
   block as createBlock,
   mount$,
@@ -6,15 +7,14 @@ import {
 } from '../million/block';
 import { MapSet$, MapHas$ } from '../million/constants';
 import { queueMicrotask$ } from '../million/dom';
-import { processProps, unwrap } from './utils';
-import { Effect, REGISTRY } from './constants';
-import type { ComponentType, Ref } from 'react';
 import type { Options, MillionProps, MillionPortal } from '../types';
+import { processProps, unwrap } from './utils';
 import { useContainer, useNearestParent } from './its-fine';
+import { Effect, RENDER_SCOPE, REGISTRY, SVG_RENDER_SCOPE } from './constants';
 
 export const block = <P extends MillionProps>(
   fn: ComponentType<P> | null,
-  options: Options | null | undefined
+  options: Options | null | undefined = {},
 ) => {
   let block: ReturnType<typeof createBlock> | null = options?.block;
   if (fn) {
@@ -22,16 +22,16 @@ export const block = <P extends MillionProps>(
       fn as any,
       unwrap as any,
       options?.shouldUpdate,
-      options?.svg
+      options?.svg,
     );
   }
 
   const MillionBlock = <P extends MillionProps>(
     props: P,
-    forwardedRef: Ref<any>
+    forwardedRef: Ref<any>,
   ) => {
-    const container = useContainer<HTMLElement>() // usable when there's no parent other than the root element
-    const parentRef = useNearestParent<HTMLElement>()
+    const container = useContainer<HTMLElement>(); // usable when there's no parent other than the root element
+    const parentRef = useNearestParent<HTMLElement>();
 
     const hmrTimestamp = props._hmr;
     const patch = useRef<((props: P) => void) | null>(null);
@@ -41,7 +41,7 @@ export const block = <P extends MillionProps>(
     patch.current?.(props);
 
     const effect = useCallback(() => {
-      const target = parentRef.current ?? container.current
+      const target = parentRef.current ?? container.current;
       if (!target) return;
       const currentBlock = block!(props, props.key);
       if (hmrTimestamp && target.textContent) {
@@ -55,7 +55,7 @@ export const block = <P extends MillionProps>(
           queueMicrotask$(() => {
             patchBlock(
               currentBlock,
-              block!(props, props.key, options?.shouldUpdate)
+              block!(props, props.key, options?.shouldUpdate),
             );
           });
         };
@@ -64,7 +64,7 @@ export const block = <P extends MillionProps>(
 
     const childrenSize = portalRef.current.length;
     const children = new Array(childrenSize);
-   
+
     children[0] = createElement(Effect, {
       effect,
       deps: hmrTimestamp ? [hmrTimestamp] : [],

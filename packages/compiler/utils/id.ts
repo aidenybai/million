@@ -1,4 +1,4 @@
-import { NodePath } from '@babel/core';
+import type { NodePath } from '@babel/core';
 import * as t from '@babel/types';
 
 export const getUniqueId = <T>(path: NodePath<T>, name: string): t.Identifier => {

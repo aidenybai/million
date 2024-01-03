@@ -32,7 +32,7 @@ export const transformBlock = (
   callExpressionPath: NodePath<t.CallExpression>,
   info: Info,
   unstable = false
-) => {
+): void => {
   if (!info.imports.source) return;
 
   const callExpression = callExpressionPath.node;
@@ -815,7 +815,7 @@ export const transformJSX = (
     isRoot: boolean;
   },
   unstable: boolean
-) => {
+): HoistedMap => {
   /**
    * Populates `dynamics` with a new entry.
    *
@@ -880,7 +880,7 @@ export const transformJSX = (
       | t.JSXNamespacedName
       | t.SpreadElement
     )[]
-  ) => {
+  ): t.Identifier | undefined => {
     renderReactScope ??= addImport(
       jsxPath,
       'renderReactScope',
@@ -890,7 +890,7 @@ export const transformJSX = (
     const index = ++portal.index;
 
     const refCurrent = t.memberExpression(portal.id, t.identifier('$'));
-    const nestedRender = t.callExpression(renderReactScope!, [
+    const nestedRender = t.callExpression(renderReactScope, [
       ..._arguments,
       refCurrent,
       t.numericLiteral(index),

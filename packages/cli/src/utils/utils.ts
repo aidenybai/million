@@ -1,4 +1,4 @@
-import * as fs from 'fs';
+import * as fs from 'node:fs';
 import * as clack from '@clack/prompts';
 import * as diff from 'diff';
 import chalk from 'chalk';
@@ -108,7 +108,7 @@ export function highlightCodeDifferences(
     highlightedCode += res;
   });
   clack.note(
-    `${highlightedCode}`,
+    highlightedCode,
     `Take a look at changes in ${chalk.cyan(detectedBuildTool.configFilePath)}`,
   );
 }

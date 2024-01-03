@@ -8,9 +8,14 @@ import {
   useRef,
   useState,
 } from 'react';
-import { useContainer, useFiber, useNearestParent, useNearestParentFiber } from '../react/its-fine';
+import {
+  useContainer,
+  useFiber,
+  useNearestParent,
+  useNearestParentFiber,
+} from '../react/its-fine';
+import type { ComponentType, ForwardedRef } from 'react';
 import { RENDER_SCOPE, SVG_RENDER_SCOPE } from '../react/constants';
-import type { ComponentType, PropsWithChildren, PropsWithRef } from 'react';
 import type { MillionArrayProps, MillionProps, Options } from '../types';
 import { renderReactScope } from '../react/utils';
 
@@ -20,40 +25,35 @@ let globalInfo;
 
 export const block = <P extends MillionProps>(
   Component: ComponentType<P>,
-  options: Options = {}
+  options: Options = {},
 ) => {
-
   let blockFactory = globalInfo ? globalInfo.block(Component, options) : null;
 
-  const rscBoundary = options.rsc
-    ? createRSCBoundary(Component)
-    : null;
+  const rscBoundary = options.rsc ? createRSCBoundary(Component) : null;
 
   function MillionBlockLoader<P extends MillionProps>(props?: P) {
-    const fiber = useFiber()
-    const parentFiber = useNearestParentFiber()
-    console.log(parentFiber)
-    const container = useContainer<HTMLElement>() // usable when there's no parent other than the root element
-    const parentRef = useNearestParent<HTMLElement>()
-
+    const fiber = useFiber();
+    const parentFiber = useNearestParentFiber();
+    console.log(parentFiber);
+    const container = useContainer<HTMLElement>(); // usable when there's no parent other than the root element
+    const parentRef = useNearestParent<HTMLElement>();
 
     const ref = useRef<HTMLElement>(null);
     const patch = useRef<((props: P) => void) | null>(null);
 
     const effect = useCallback(() => {
-      const init = () => {
-
+      const init = (): void => {
         if (parentFiber) {
           parentFiber.pendingProps = {
             ...parentFiber.pendingProps,
             suppressHydrationWarning: true,
             // dangerouslySetInnerHTML: { __html: '' }
-          }
+          };
           parentFiber.memoizedProps = {
             ...parentFiber.memoizedProps,
             suppressHydrationWarning: true,
             // dangerouslySetInnerHTML: { __html: '' }
-          }
+          };
         }
 
         const el = parentRef.current ?? container.current;
@@ -77,7 +77,7 @@ export const block = <P extends MillionProps>(
             Component,
             globalInfo.unwrap,
             options.shouldUpdate,
-            options.svg
+            options.svg,
           );
 
           init();
@@ -97,7 +97,7 @@ export const block = <P extends MillionProps>(
       // createElement(Effect, { effect }),
       rscBoundary
         ? createElement(rscBoundary, { ...props } as any)
-        : createSSRBoundary<P>(Component as any, props!)
+        : createSSRBoundary<P>(Component as any, props!),
     );
     return vnode;
   }
@@ -121,7 +121,7 @@ export function For<T>({ each, children, ssr, svg }: MillionArrayProps<T>) {
     return createElement(
       svg ? SVG_RENDER_SCOPE : RENDER_SCOPE,
       { suppressHydrationWarning: true },
-      ...each.map(children)
+      ...each.map(children),
     );
   }
 
@@ -161,27 +161,25 @@ export const createSSRBoundary = <P extends MillionProps>(
   const ssrProps =
     typeof window === 'undefined'
       ? {
-        children: createElement<P>(Component, props),
-      }
+          children: createElement<P>(Component, props),
+        }
       : {
-    // TODO: patch the warning for a while and then free it up, see the its-fine implmeentation of patching
-      };
+          // TODO: patch the warning for a while and then free it up, see the its-fine implmeentation of patching
+        };
 
   const el = createElement(Fragment, {
     // suppressHydrationWarning: true,
     // ref,
     ...ssrProps,
   });
-  return el
+  return el;
 };
 
 export const createRSCBoundary = <P extends MillionProps>(
   Component: ComponentType<P>,
 ) => {
   return memo(
-    ((props: P) =>
-      createSSRBoundary(Component, props)
-    ),
-    () => true
+    (props: P) => createSSRBoundary(Component, props),
+    () => true,
   );
 };

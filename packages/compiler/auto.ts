@@ -1,8 +1,8 @@
 import * as t from '@babel/types';
+import type { NodePath } from '@babel/core';
 import { catchError, logIgnore, logImprovement } from './utils/log';
 import { addImport } from './utils/mod';
 import type { Info } from './babel';
-import type { NodePath } from '@babel/core';
 import { isAttributeUnsupported, isComponent } from './utils/jsx';
 import { transformBlock } from './block';
 
@@ -13,7 +13,7 @@ import { transformBlock } from './block';
 export const parseAuto = (
   path: NodePath<t.FunctionDeclaration | t.VariableDeclarator>,
   info: Info
-) => {
+): void => {
   if (!info.options.auto) return;
 
   const rawComponent = path.node;
@@ -127,7 +127,7 @@ export const parseAuto = (
       ) {
         componentInfo.bailout = true;
         path.stop();
-        return;
+
       }
     },
     JSXElement(path) {
@@ -206,7 +206,7 @@ export const parseAuto = (
       if (componentInfo.returns > 1) {
         componentInfo.bailout = true;
         path.stop();
-        return;
+
       }
     },
   });
