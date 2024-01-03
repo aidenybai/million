@@ -22,7 +22,7 @@ async function runMillionWizard({
 
 const TELEMETRY_ENABLED = !process.argv.includes('--no-telemetry');
 
-async function main() {
+async function main(): Promise<void> {
   intro(showWelcomeScreen());
   await runMillionWizard({ telemetry: TELEMETRY_ENABLED });
   outro(`${chalk.bold.green('✓ ')} You're all set!`);
@@ -34,7 +34,7 @@ main().catch(() => {
   );
 });
 
-function showWelcomeScreen() {
+function showWelcomeScreen(): string {
   const text = chalk.magentaBright(
     `⚡ Million.js ${process.env.VERSION || ''}`,
   );

@@ -1,4 +1,5 @@
 import { createElement, Fragment, useCallback, useMemo, useRef } from 'react';
+import type { ComponentType, Ref } from 'react';
 import {
   block as createBlock,
   mount$,
@@ -6,10 +7,9 @@ import {
 } from '../million/block';
 import { MapSet$, MapHas$ } from '../million/constants';
 import { queueMicrotask$ } from '../million/dom';
+import type { Options, MillionProps, MillionPortal } from '../types';
 import { processProps, unwrap } from './utils';
 import { Effect, RENDER_SCOPE, REGISTRY, SVG_RENDER_SCOPE } from './constants';
-import type { ComponentType, Ref } from 'react';
-import type { Options, MillionProps, MillionPortal } from '../types';
 
 export const block = <P extends MillionProps>(
   fn: ComponentType<P> | null,

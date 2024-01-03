@@ -1,16 +1,18 @@
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 import chalk from 'chalk';
 import * as clack from '@clack/prompts';
+import type { BuildTool } from '../types';
 import {
   abort,
   abortIfCancelled,
   getNextRouter,
   highlightCodeDifferences,
 } from './utils';
-import type { BuildTool } from '../types';
 
-export async function modifyConfigFile(detectedBuildTool: BuildTool) {
+export async function modifyConfigFile(
+  detectedBuildTool: BuildTool,
+): Promise<void> {
   try {
     const auto = await abortIfCancelled(
       clack.confirm({
@@ -188,7 +190,7 @@ async function wrapExportCode(
        *   plugins: [million.vite({ auto: true }), react(), ],
        * });
        */
-      return handleViteCase(oldExportExpression, auto)
+      return handleViteCase(oldExportExpression, auto);
 
     case 'astro':
       /**
@@ -198,8 +200,8 @@ async function wrapExportCode(
        *   }
        * });
        */
-     
-        return handleAstroCase(oldExportExpression, auto)
+
+      return handleAstroCase(oldExportExpression, auto);
     case 'gatsby':
       /**
        * ({ actions }) => {
@@ -208,7 +210,7 @@ async function wrapExportCode(
        *   })
        * }
        */
-      return handleGatsbyCase(oldExportExpression, auto)
+      return handleGatsbyCase(oldExportExpression, auto);
     case 'craco':
       /**
        * {
@@ -217,22 +219,22 @@ async function wrapExportCode(
        *   },
        * }
        */
-      return handleCracoCase(oldExportExpression, auto)
+      return handleCracoCase(oldExportExpression, auto);
     case 'webpack':
       /**
        * {
        *   plugins: [million.webpack({ auto: true }), ],
        * }
        */
- 
-    return handleWebpackCase(oldExportExpression, auto)
+
+      return handleWebpackCase(oldExportExpression, auto);
     case 'rollup':
       /**
        * {
        *   plugins: [million.rollup({ auto: true }), ],
        * }
        */
-     return handleRollupCase(oldExportExpression, auto)
+      return handleRollupCase(oldExportExpression, auto);
     default:
       return '';
   }
@@ -250,31 +252,21 @@ async function handleNextCase(
 )`;
 }
 
-function handleViteCase(
-  oldExportExpression: string,
-  auto = true,
-) {
+function handleViteCase(oldExportExpression: string, auto = true): string {
   const [firstPart, ...rest] = oldExportExpression.split('plugins: [');
   return `${firstPart!}plugins: [million.vite({ auto: ${String(
     auto,
-  )} }), ${rest.join('plugins: [')}`
+  )} }), ${rest.join('plugins: [')}`;
 }
 
-function handleAstroCase (
-  oldExportExpression: string,
-  auto = true,
-) {
+function handleAstroCase(oldExportExpression: string, auto = true): string {
   const [firstPart, ...rest] = oldExportExpression.split('plugins: [');
   return `${firstPart!}plugins: [million.vite({ mode: 'react', server: true, auto: ${String(
     auto,
   )} }), ${rest.join('plugins: [')}`;
 }
 
-
-function handleGatsbyCase (
-  oldExportExpression: string,
-  auto = true,
-) {
+function handleGatsbyCase(oldExportExpression: string, auto = true): string {
   const [firstPart, ...rest] = oldExportExpression.split('plugins: [');
 
   return `${firstPart!}[plugins: million.webpack({ mode: 'react', server: true, auto: ${String(
@@ -282,23 +274,14 @@ function handleGatsbyCase (
   )} }), ${rest.join('plugins: [')}`;
 }
 
-
-function handleCracoCase (
-  oldExportExpression: string,
-  auto = true,
-) {
+function handleCracoCase(oldExportExpression: string, auto = true): string {
   const [firstPart, ...rest] = oldExportExpression.split('plugins: [');
   return `${firstPart!}plugins: [million.webpack({ auto: ${String(
     auto,
   )} }), ${rest.join('plugins: [')}`;
-
 }
 
-
-function handleWebpackCase (
-  oldExportExpression: string,
-  auto = true,
-) {
+function handleWebpackCase(oldExportExpression: string, auto = true): string {
   const [firstPart, ...rest] = oldExportExpression.split('plugins: [');
 
   return `${firstPart!}plugins: [million.webpack({ auto: ${String(
@@ -306,15 +289,9 @@ function handleWebpackCase (
   )} }), ${rest.join('plugins: [')}`;
 }
 
-
-function handleRollupCase (
-  oldExportExpression: string,
-  auto = true,
-) {
+function handleRollupCase(oldExportExpression: string, auto = true): string {
   const [firstPart, ...rest] = oldExportExpression.split('plugins: [');
   return `${firstPart!}plugins: [million.rollup({ auto: ${String(
     auto,
   )} }), ${rest.join('plugins: [')}`;
 }
-
-

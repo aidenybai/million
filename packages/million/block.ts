@@ -1,5 +1,6 @@
 /* eslint-disable no-bitwise */
 /* eslint-disable @typescript-eslint/unbound-method */
+import type { MillionProps } from '../types';
 import {
   cloneNode$,
   createEventListener,
@@ -25,7 +26,6 @@ import {
   StyleAttributeFlag,
   EVENT_PATCH,
 } from './constants';
-import type { MillionProps } from '../types';
 import type { ArrayBlock } from './array';
 import type { EditChild, VElement, Hole, VNode, Edit } from './types';
 
@@ -79,14 +79,14 @@ export const mount = (
   block: AbstractBlock,
   parent?: HTMLElement,
   hydrateNode?: HTMLElement
-) => {
+): HTMLElement => {
   if ('b' in block && parent) {
     return arrayMount$.call(block, parent, null);
   }
   return mount$.call(block, parent, null, hydrateNode);
 };
 
-export const patch = (oldBlock: AbstractBlock, newBlock: AbstractBlock) => {
+export const patch = (oldBlock: AbstractBlock, newBlock: AbstractBlock): HTMLElement => {
   if ('b' in oldBlock || 'b' in newBlock) {
     arrayPatch$.call(oldBlock, newBlock as ArrayBlock);
   }
@@ -138,7 +138,6 @@ export class Block extends AbstractBlock {
     hydrateNode?: HTMLElement | null
   ): HTMLElement {
     if (this.l) return this.l;
-    console.log(hydrateNode)
     // cloneNode(true) uses less memory than recursively creating new nodes
     const root = hydrateNode ?? (cloneNode$.call(this.r, true) as HTMLElement);
     const elements = this.g?.(root);
@@ -310,10 +309,10 @@ export class Block extends AbstractBlock {
 
     return root;
   }
-  v(block: AbstractBlock | null = null, refNode: Node | null = null) {
+  v(block: AbstractBlock | null = null, refNode: Node | null = null): void {
     insertBefore$.call(this.t(), this.l!, block ? block.l! : refNode);
   }
-  x() {
+  x(): void {
     removeElement$.call(this.l);
     this.l = null;
   }
@@ -321,7 +320,7 @@ export class Block extends AbstractBlock {
     if (!this._u) return true;
     return this._u(_oldProps, _newProps);
   }
-  s() {
+  s(): string {
     return String(this.l?.outerHTML);
   }
   t(): HTMLElement | null | undefined {
@@ -354,7 +353,7 @@ const getCurrentElement = (
   return root;
 };
 
-export const withKey = (value: any, key: string) => {
+export const withKey = (value: any, key: string): any => {
   value.key = key;
   return value;
 };

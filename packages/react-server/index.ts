@@ -8,8 +8,8 @@ import {
   useRef,
   useState,
 } from 'react';
-import { RENDER_SCOPE, SVG_RENDER_SCOPE } from '../react/constants';
 import type { ComponentType, ForwardedRef } from 'react';
+import { RENDER_SCOPE, SVG_RENDER_SCOPE } from '../react/constants';
 import type { MillionArrayProps, MillionProps, Options } from '../types';
 
 export { renderReactScope } from '../react/utils';
@@ -31,7 +31,7 @@ export const block = <P extends MillionProps>(
     const patch = useRef<((props: P) => void) | null>(null);
 
     const effect = useCallback(() => {
-      const init = () => {
+      const init = (): void => {
         const el = ref.current;
 
         if (!el) return;

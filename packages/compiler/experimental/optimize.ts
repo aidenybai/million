@@ -1,20 +1,23 @@
 import * as t from '@babel/types';
 import { addNamed } from '@babel/helper-module-imports';
+import type { NodePath } from '@babel/core';
 import { EventFlag } from '../../million/constants';
+import type { Info } from '../babel';
+import { addImport } from '../utils/mod';
+import { getUniqueId } from '../utils/id';
 import { hoistElements, renderToString, renderToTemplate } from './render';
 import { createDirtyChecker, createEdit } from './utils';
 import type { IrEdit, IrEditBase } from './types';
-import { NodePath } from '@babel/core';
-import { Info } from '../babel';
-import { addImport } from '../utils/mod';
-import { getUniqueId } from '../utils/id';
 
 export const optimize = (
   callExpressionPath: NodePath<t.CallExpression>,
   info: Info,
   holes: string[],
   jsx: t.JSXElement
-) => {
+): {
+  blockFactory: t.ArrowFunctionExpression;
+  variables: t.VariableDeclaration;
+} => {
   const edits: IrEdit[] = [];
   const template = renderToTemplate(jsx, edits, [], holes);
 
