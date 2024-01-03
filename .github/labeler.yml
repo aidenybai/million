@@ -11,6 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Label issues and pull requests
-        uses: actions/labeler@v3
+        uses: actions/labeler@v4
         with:
-          repo-token: ${{ secrets.github_token }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}

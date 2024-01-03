@@ -31,6 +31,20 @@
       "typesetting": "article"
     }
   },
+  "faq": {
+    "type": "page",
+    "title": "FAQ",
+    "theme": {
+      "layout": "raw"
+    }
+  },
+  "ai": {
+    "type": "page",
+    "title": "AI",
+    "theme": {
+      "layout": "raw"
+    }
+  },
   "more": {
     "title": "More",
     "type": "menu",

@@ -4,13 +4,16 @@ module.exports = {
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx}',
     './theme.config.tsx',
-    './node_modules/markprompt/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     extend: {
       animation: {
         spin: 'spin calc(var(--speed) * 2) infinite linear',
         slide: 'slide var(--speed) ease-in-out infinite alternate',
+      },
+      backgroundImage: {
+        'blue-purple-gradient':
+          'linear-gradient(83.21deg,#3245FF 0%,#B845ED 100%)',
       },
     },
     keyframes: {

@@ -1,0 +1,133 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  font-family: 'Inter', sans-serif;
+}
+
+@supports (font-variation-settings: normal) {
+  :root {
+    font-family: 'Inter var', sans-serif;
+  }
+}
+
+.spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 0.25rem solid #56c7ff;
+  border-bottom: 0.25rem solid rgba(0, 0, 0, 0);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  z-index: 9999;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+button:disabled {
+  opacity: 0.2 !important;
+  cursor: not-allowed !important;
+}
+
+.kitchen_sink-layout {
+  margin-top: 1.5em;
+  display: flex;
+  height: 100vh;
+  max-width: 100vw;
+  overflow: hidden;
+}
+
+.kitchen_sink-layout-icon {
+  outline: none;
+  border: none;
+  cursor: pointer;
+  position: relative;
+}
+
+.kitchen_sink-content {
+  width: 100%;
+  overflow-x: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.kitchen_sink-content::-webkit-scrollbar {
+  display: none;
+}
+
+.kitchen_sink-content_container {
+  width: 95%;
+  margin: 0 auto;
+  max-width: 1300px;
+  height: 100vh;
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.kitchen_sink-content_container::-webkit-scrollbar {
+  display: none;
+}
+.kitchen_sink-sidebar {
+  border: 1px solid #353535;
+  height: 100vh;
+  box-shadow: 0px 4px 25px rgb(#000, 0.25);
+  overflow-y: scroll;
+  transition: all 200ms ease-in-out;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  background: #252525;
+}
+
+.kitchen_sink-sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+.kitchen_sink-sidebar_container {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: stretch;
+  gap: 1em;
+  overflow-y: scroll;
+}
+
+.kitchen_sink-sidebar_close {
+  width: 0px;
+  overflow: hidden;
+  transition: all 200ms ease-in;
+}
+
+.kitchen_sink-sidebar_open {
+  padding: 1em;
+  width: 320px;
+  min-width: 270px;
+}
+
+@media screen and (max-width: 768px) {
+  .kitchen_sink-sidebar {
+    position: fixed;
+    z-index: 99999999;
+    top: 0;
+    left: 0;
+  }
+}
+
+
+pre {
+  white-space: pre-wrap;
+  /* css-3 */
+  white-space: -moz-pre-wrap;
+  /* Mozilla, since 1999 */
+  white-space: -pre-wrap;
+  /* Opera 4-6 */
+  white-space: -o-pre-wrap;
+  /* Opera 7 */
+  word-wrap: break-word;
+  /* Internet Explorer 5.5+ */
+}

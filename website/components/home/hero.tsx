@@ -31,12 +31,11 @@ export function Hero() {
               <span className="font-medium dark:text-zinc-100">
                 Virtual DOM Replacement
               </span>{' '}
-              for React. Gain big performance wins for UI and data heavy React
-              apps. Dead simple to use – try it out with{' '}
+              for React. The Virtual DOM Replacement for React. Gain big performance wins for UI and data heavy React apps. Dead simple to use – try it out {' '}
               <Link href="/docs" className="font-medium hover:underline">
-                just one plugin
+                now
               </Link>
-              .
+              !
             </p>
             <div className="mt-16 flex flex-wrap justify-center gap-y-4 gap-x-6">
               <Link href="/docs" className="w-full sm:w-max">
@@ -84,51 +83,63 @@ export function Companies() {
   const entries = [
     {
       url: 'https://wyze.com',
-      component: <WyzeLogo />,
+      component: (
+        <div key="wyze">
+          <WyzeLogo />
+        </div>
+      ),
     },
     {
       url: 'https://metamask.io',
       component: (
-        <div className="flex font-mono items-center gap-3 text-xl font-semibold">
-          <Image
-            src={MetamaskLogo as string}
-            width={30}
-            height={30}
-            alt="METAMASK"
-          />{' '}
-          METAMASK
+        <div key="metamask">
+          <div className="flex font-mono items-center gap-3 text-xl font-semibold">
+            <Image
+              src={MetamaskLogo as string}
+              width={30}
+              height={30}
+              alt="METAMASK"
+            />{' '}
+            METAMASK
+          </div>
         </div>
       ),
     },
     {
       url: 'https://hackclub.com',
       component: (
-        <Image
-          src={HackClubLogo as string}
-          width={90}
-          height={30}
-          alt="Hack Club"
-        />
+        <div key="hackclub">
+          <Image
+            src={HackClubLogo as string}
+            width={90}
+            height={30}
+            alt="Hack Club"
+          />
+        </div>
       ),
     },
     {
       url: 'https://texts.com',
       component: (
-        <div className="flex items-center gap-3 text-xl font-semibold">
-          <Image src={TextsLogo} width={30} height={30} alt="Texts" /> Texts
+        <div key="texts">
+          <div className="flex items-center gap-3 text-xl font-semibold">
+            <Image src={TextsLogo} width={30} height={30} alt="Texts" /> Texts
+          </div>
         </div>
       ),
     },
     {
       url: 'https://opensauced.pizza/',
       component: (
-        <Image
-          src={OpenSaucedLogo as string}
-          width={150}
-          height={25}
-          className="invert dark:invert-0"
-          alt="OpenSauced"
-        />
+        <div key="opensauced">
+          <Image
+            src={OpenSaucedLogo as string}
+            width={150}
+            height={25}
+            className="invert dark:invert-0"
+            alt="OpenSauced"
+          />
+        </div>
       ),
     },
   ];

@@ -1,10 +1,11 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { type DocsThemeConfig, useConfig } from 'nextra-theme-docs';
-import { ExtraContent } from './components/extra-content';
 import { GitHubIcon } from '@components/icons/github-icon';
 import { DiscordIcon } from '@components/icons/discord-icon';
 import { TwitterXIcon } from '@components/icons/twitter-x-icon';
+import packageJson from '../package.json' assert { type: 'json' };
+import { ExtraContent } from './components/extra-content';
 
 const config: DocsThemeConfig = {
   logo: () => {
@@ -111,13 +112,53 @@ const config: DocsThemeConfig = {
   docsRepositoryBase: 'https://github.com/aidenybai/million/tree/main/website/',
   footer: {
     text: (
-      <div className="flex w-full items-center justify-between">
+      <div className="flex flex-col items-start gap-6 xl:flex-row   w-full justify-between">
+        <div>© 2021-{new Date().getFullYear()} Million Software, Inc.</div>
+
         <div>
-          MIT {new Date().getFullYear()} ©{' '}
-          <a target="_blank" href="https://aidenybai.com">
-            Aiden Bai
-          </a>
-          .
+          <p className="text-base pb-2 text-white font-bold">Resources</p>
+          <ul className="flex flex-col gap-2">
+            <li>
+              <a href="/docs" className="text-sm">
+                Documentation
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <p className="text-base pb-2 text-white font-bold">Ecosystem</p>
+          <ul className="flex flex-col gap-2">
+            <li>
+              <a href="/showcase" className="text-sm">
+                Showcase
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://github.com/aidenybai/million/blob/main/.github/CONTRIBUTING.md"
+                className="text-sm"
+              >
+                Contributing
+              </a>
+            </li>
+            <li>
+              <a href="https://million.dev/chat" className="text-sm">
+                Discord
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <p className="text-base pb-2 text-white font-bold">About</p>
+          <ul className="flex flex-col gap-2">
+            <li>
+              <a href="/foundation" className="text-sm">
+                Million Foundation
+              </a>
+            </li>
+          </ul>
         </div>
 
         <a
@@ -207,6 +248,15 @@ const config: DocsThemeConfig = {
   search: {
     placeholder: 'Search website...',
   },
+  banner: {
+    dismissible: true,
+    key: `version-${packageJson.version}`,
+    text: (
+      <a href="https://github.com/aidenybai/million" target="_blank">
+        Go give a ⭐ to Million.js v{packageJson.version} on GitHub! ➡️
+      </a>
+    ),
+  },
   toc: {
     float: true,
     backToTop: true,
@@ -214,6 +264,10 @@ const config: DocsThemeConfig = {
   },
   nextThemes: {
     defaultTheme: 'dark',
+    forcedTheme: 'dark',
+  },
+  themeSwitch: {
+    component: null,
   },
   useNextSeoProps() {
     const { asPath } = useRouter();
@@ -224,10 +278,7 @@ const config: DocsThemeConfig = {
 
     return { titleTemplate: `%s | Million.js` };
   },
-  primaryHue: {
-    light: 270,
-    dark: 204,
-  },
+  primarySaturation: 0,
 };
 
 // eslint-disable-next-line import/no-default-export

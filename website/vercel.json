@@ -30,6 +30,10 @@
     {
       "source": "/stickers",
       "destination": "https://forms.gle/QQ9njK9Z2YjqWPJk9"
+    },
+    {
+      "source": "/3",
+      "destination": "/blog/million-3"
     }
   ]
 }

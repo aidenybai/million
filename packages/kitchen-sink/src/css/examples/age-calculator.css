@@ -1,0 +1,17 @@
+.age-calculator h2 {
+  font-size: 1.2rem;
+}
+.age-calculator .input-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  align-items: flex-end;
+  gap: 10px;
+}
+.age-calculator button {
+  margin-block: 20px;
+}
+.age-calculator .form-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
