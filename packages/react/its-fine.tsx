@@ -20,8 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { useRef, useState, useMemo, createElement, useLayoutEffect } from 'react'
+import { useRef, useState, useMemo, createElement, useLayoutEffect as uLE } from 'react'
 import type ReactReconciler from 'react-reconciler'
+
+// avoid hydration errors in server
+const useLayoutEffect = typeof window === 'undefined' ? () => {} : uLE
 
 /**
  * Represents a react-internal Fiber node.
@@ -112,4 +115,22 @@ export function useContainer<T = any>(): React.MutableRefObject<T | undefined> {
   }, [fiber])
 
   return rootRef
+}
+
+export function useNearestParentFiber(
+  /** An optional element type to filter to. */
+  type?: keyof JSX.IntrinsicElements,
+): Fiber {
+  const fiber = useFiber()
+  const parentRef = useRef<Fiber>()
+
+  useState(() => {
+    parentRef.current = traverse(
+      fiber,
+      (node) => typeof node.type === 'string' && (type === undefined || node.type === type),
+      true,
+    )
+  })
+
+  return parentRef.current!
 }

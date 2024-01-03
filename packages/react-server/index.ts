@@ -8,9 +8,11 @@ import {
   useRef,
   useState,
 } from 'react';
+import { useContainer, useFiber, useNearestParent, useNearestParentFiber } from '../react/its-fine';
 import { RENDER_SCOPE, SVG_RENDER_SCOPE } from '../react/constants';
-import type { ComponentType, ForwardedRef } from 'react';
+import type { ComponentType, PropsWithChildren, PropsWithRef } from 'react';
 import type { MillionArrayProps, MillionProps, Options } from '../types';
+import { renderReactScope } from '../react/utils';
 
 export { renderReactScope } from '../react/utils';
 
@@ -20,21 +22,44 @@ export const block = <P extends MillionProps>(
   Component: ComponentType<P>,
   options: Options = {}
 ) => {
+
   let blockFactory = globalInfo ? globalInfo.block(Component, options) : null;
 
   const rscBoundary = options.rsc
-    ? createRSCBoundary(Component, options.svg)
+    ? createRSCBoundary(Component)
     : null;
 
   function MillionBlockLoader<P extends MillionProps>(props?: P) {
+    const fiber = useFiber()
+    const parentFiber = useNearestParentFiber()
+    console.log(parentFiber)
+    const container = useContainer<HTMLElement>() // usable when there's no parent other than the root element
+    const parentRef = useNearestParent<HTMLElement>()
+
+
     const ref = useRef<HTMLElement>(null);
     const patch = useRef<((props: P) => void) | null>(null);
 
     const effect = useCallback(() => {
       const init = () => {
-        const el = ref.current;
+
+        if (parentFiber) {
+          parentFiber.pendingProps = {
+            ...parentFiber.pendingProps,
+            suppressHydrationWarning: true,
+            // dangerouslySetInnerHTML: { __html: '' }
+          }
+          parentFiber.memoizedProps = {
+            ...parentFiber.memoizedProps,
+            suppressHydrationWarning: true,
+            // dangerouslySetInnerHTML: { __html: '' }
+          }
+        }
+
+        const el = parentRef.current ?? container.current;
 
         if (!el) return;
+        // globalInfo.setAttribute(el, 'suppresshydrationwarning', true)
 
         const currentBlock = blockFactory(props, props?.key);
 
@@ -69,10 +94,10 @@ export const block = <P extends MillionProps>(
     const vnode = createElement(
       Fragment,
       null,
-      createElement(Effect, { effect }),
+      // createElement(Effect, { effect }),
       rscBoundary
-        ? createElement(rscBoundary, { ...props, ref } as any)
-        : createSSRBoundary<P>(Component as any, props!, ref, options.svg)
+        ? createElement(rscBoundary, { ...props } as any)
+        : createSSRBoundary<P>(Component as any, props!)
     );
     return vnode;
   }
@@ -124,38 +149,38 @@ export const importSource = (callback: () => void) => {
 
       callback();
     })
-    .catch(() => {
-      throw new Error('Failed to load Million.js');
+    .catch((e) => {
+      throw new Error(`Failed to load Million.js: ${e}\n${e.stack}`);
     });
 };
 
 export const createSSRBoundary = <P extends MillionProps>(
   Component: ComponentType<P>,
   props: P,
-  ref: ForwardedRef<unknown>,
-  svg = false
 ) => {
   const ssrProps =
     typeof window === 'undefined'
       ? {
-          children: createElement<P>(Component, props),
-        }
-      : { dangerouslySetInnerHTML: { __html: '' } };
+        children: createElement<P>(Component, props),
+      }
+      : {
+    // TODO: patch the warning for a while and then free it up, see the its-fine implmeentation of patching
+      };
 
-  return createElement(svg ? SVG_RENDER_SCOPE : RENDER_SCOPE, {
-    suppressHydrationWarning: true,
-    ref,
+  const el = createElement(Fragment, {
+    // suppressHydrationWarning: true,
+    // ref,
     ...ssrProps,
   });
+  return el
 };
 
 export const createRSCBoundary = <P extends MillionProps>(
   Component: ComponentType<P>,
-  svg = false
 ) => {
   return memo(
-    forwardRef((props: P, ref) =>
-      createSSRBoundary(Component, props, ref, svg)
+    ((props: P) =>
+      createSSRBoundary(Component, props)
     ),
     () => true
   );

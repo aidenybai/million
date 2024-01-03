@@ -206,6 +206,11 @@ export const setAttribute = (
 ): void => {
   const isValueNully = value === undefined || value === null;
   value = isValueNully ? '' : value;
+
+  if (!(el instanceof HTMLElement)) { 
+    return 
+  }
+
   if (
     name in el &&
     el[name] !== undefined &&
