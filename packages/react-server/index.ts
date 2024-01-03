@@ -22,6 +22,61 @@ import { renderReactScope } from '../react/utils';
 export { renderReactScope } from '../react/utils';
 
 let globalInfo;
+// if (!window._nextSetupHydrationWarning) {
+//     const origConsoleError = window.console.error;
+//     window.console.error = (...args)=>{
+//         const isHydrateError = args.some((arg)=>typeof arg === 'string' && arg.match(/(hydration|content does not match|did not match)/i));
+//         if (isHydrateError) {
+//             args = [
+//                 ...args,
+//                 `\n\nSee more info here: https://nextjs.org/docs/messages/react-hydration-error`, 
+//             ];
+//         }
+//         origConsoleError.apply(window.console, args);
+//     };
+//     window._nextSetupHydrationWarning = true;
+// }
+
+const NativeError = Error
+// @ts-ignore
+globalThis.Error = class extends NativeError {
+  constructor(...args) {
+    super()
+    if (args[0] ==="Hydration failed because the initial UI does not match what was rendered on the server.") {
+      return {} as any
+    }
+    if (args[0]?.includes('There was an error while hydrating. Because the error happened outside of a Suspense boundary, the entire root will switch to client rendering.')) {
+      return {} as any
+    }
+    return new NativeError(...args)
+  }
+  
+}
+
+function patchErrors() {
+  const { warn, error } = console
+  console.log('here')
+  const base = (method: Function) => (...args: unknown[]) => {
+    console.log(args)
+    if (typeof args[0] !== 'string') 
+      return
+    if (args[0].includes('Did not expect server HTML to contain a <%s> in <%s>.%s')) {
+      return
+    }
+    if (args[0].includes('An error occurred during hydration. The server HTML was replaced with client content in <%s>.')) {
+      return
+    }
+    return method(...args)
+  } 
+  console.error = base(error)
+  console.warn = base(warn)
+  return () => {
+    // console.error = error
+    // console.warn = warn
+  }
+}
+patchErrors()
+
 
 export const block = <P extends MillionProps>(
   Component: ComponentType<P>,
@@ -40,6 +95,8 @@ export const block = <P extends MillionProps>(
 
     const ref = useRef<HTMLElement>(null);
     const patch = useRef<((props: P) => void) | null>(null);
+
+    const unpatch = patchErrors()
 
     const effect = useCallback(() => {
       const init = (): void => {
@@ -68,6 +125,7 @@ export const block = <P extends MillionProps>(
           globalInfo.patch(currentBlock, blockFactory(newProps, newProps.key));
         };
       };
+      
 
       if (blockFactory && globalInfo) {
         init();
@@ -85,6 +143,7 @@ export const block = <P extends MillionProps>(
       }
 
       return () => {
+        // unpatch()
         blockFactory = null;
       };
     }, []);
@@ -94,7 +153,7 @@ export const block = <P extends MillionProps>(
     const vnode = createElement(
       Fragment,
       null,
-      // createElement(Effect, { effect }),
+      createElement(Effect, { effect }),
       rscBoundary
         ? createElement(rscBoundary, { ...props } as any)
         : createSSRBoundary<P>(Component as any, props!),
