@@ -13,7 +13,7 @@ import type { Options, MillionProps, MillionPortal } from '../types';
 
 export const block = <P extends MillionProps>(
   fn: ComponentType<P> | null,
-  options: Options | null | undefined
+  options: Options | null | undefined = {}
 ) => {
   let block: ReturnType<typeof createBlock> | null = options?.block;
   const defaultType = options?.svg ? SVG_RENDER_SCOPE : RENDER_SCOPE;
