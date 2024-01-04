@@ -80,12 +80,9 @@ export const characterDataSet$ = getOwnPropertyDescriptor$(
   'data'
 )!.set!;
 
-export const stringToDOM = (content: string, svg?: boolean) => {
-  const template = svg ? SVG_TEMPLATE : HTM_TEMPLATE;
-  template.innerHTML = content;
-  const dom = svg ? SVG_TEMPLATE : HTM_TEMPLATE_CONTENT;
-  console.log(content, dom.childNodes, dom)
-  return dom.childNodes
+export const stringToDOM = (content: string): DocumentFragment => {
+  HTM_TEMPLATE.innerHTML = content;
+  return HTM_TEMPLATE_CONTENT;
   // return dom.firstChild as HTMLElement;
 };
 

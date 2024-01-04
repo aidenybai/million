@@ -53,7 +53,6 @@ export const block = (
   // Edits are instructions for how to update the DOM given some props
   const root = stringToDOM(
     renderToTemplate(unwrap ? unwrap(vnode) : vnode, edits),
-    svg
   );
 
   return <T extends MillionProps>(
@@ -102,18 +101,18 @@ export const patch = (oldBlock: AbstractBlock, newBlock: AbstractBlock): HTMLEle
 };
 
 export class Block extends AbstractBlock {
-  declare r: HTMLElement;
+  declare r: DocumentFragment;
   declare e: Edit[];
 
   constructor(
-    root: HTMLElement,
+    root: DocumentFragment,
     edits: Edit[],
     props?: MillionProps | null,
     key?: string | null,
     shouldUpdate?:
       | ((oldProps: MillionProps, newProps: MillionProps) => boolean)
       | null,
-    getElements?: ((root: HTMLElement) => HTMLElement[]) | null
+    getElements?: ((root: DocumentFragment) => HTMLElement[]) | null
   ) {
     super();
     this.r = root;

@@ -66,6 +66,7 @@ export const block = <P extends MillionProps>(
     const children = new Array(childrenSize);
 
     children[0] = createElement(Effect, {
+      key: 0 + hmrTimestamp,
       effect,
       deps: hmrTimestamp ? [hmrTimestamp] : [],
     });

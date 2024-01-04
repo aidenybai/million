@@ -34,10 +34,10 @@ export interface Hole {
 }
 
 export abstract class AbstractBlock {
-  /* root */ r?: HTMLElement;
+  /* root */ r?: DocumentFragment;
   /* edits */ e?: Edit[];
   /* el */ l?: HTMLElement | null;
-  /* getElements */ g?: ((root: HTMLElement) => HTMLElement[]) | null;
+  /* getElements */ g?: ((root: DocumentFragment) => HTMLElement[]) | null;
   /* _shouldUpdate */ _u?:
     | ((oldProps: MillionProps, newProps: MillionProps) => boolean)
     | null;
