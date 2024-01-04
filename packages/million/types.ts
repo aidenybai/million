@@ -1,3 +1,4 @@
+import type {ReactElement} from 'react'
 import type { MillionProps } from '../types';
 
 declare const enum Flags {
@@ -11,6 +12,7 @@ declare const enum Flags {
 
 export type VNode =
   | VElement
+  | ReactElement
   | string
   | number
   | bigint

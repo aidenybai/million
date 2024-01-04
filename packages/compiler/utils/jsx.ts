@@ -91,7 +91,7 @@ export const isStaticAttributeValue = (node: t.Node) => {
 };
 
 /**
- * Turns top-level JSX fragments into a render scope. This is because
+ * Turns top-level JSX fragments (with more than 1 children) into a render scope. This is because
  * the runtime API does not currently handle fragments. We will deal with
  * nested fragments later.
  *
@@ -99,12 +99,14 @@ export const isStaticAttributeValue = (node: t.Node) => {
  * function Component() {
  *  return <>
  *   <div />
+ *   <div />
  *  </>;   * }
  *
  * // becomes
  *
  * function Component() {
  *  return <slot>
+ *    <div />
  *    <div />
  *  </slot>;
  * }
@@ -115,10 +117,9 @@ export const handleTopLevelFragment = (returnStatement: t.ReturnStatement) => {
   trimJSXChildren(jsx);
 
   if (jsx.children.length !== 1) {
-    const renderScopeId = t.jsxIdentifier(RENDER_SCOPE);
     returnStatement.argument = t.jsxElement(
-      t.jsxOpeningElement(renderScopeId, []),
-      t.jsxClosingElement(renderScopeId),
+      t.jsxOpeningElement(t.jsxIdentifier(''), []),
+      t.jsxClosingElement(t.jsxIdentifier('')),
       jsx.children
     );
     return;

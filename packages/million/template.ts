@@ -9,6 +9,7 @@ import {
   BlockFlag,
   SetHas$,
 } from './constants';
+
 import { AbstractBlock } from './types';
 import type { Edit, VNode } from './types';
 
@@ -246,6 +247,10 @@ export const renderToTemplate = (
   }
 
   if (current.i!.length || current.e.length) edits.push(current);
+
+  if (vnode.type.toString() === 'Symbol(react.fragment)') {
+    return `${children}`;
+  }
 
   return `<${vnode.type}${props}>${children}</${vnode.type}>`;
 };

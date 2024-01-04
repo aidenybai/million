@@ -281,7 +281,11 @@ importers:
         specifier: ^0.7.37
         version: 0.7.37(rollup@4.9.2)(vite@4.4.9)
 
-  packages/million: {}
+  packages/million:
+    devDependencies:
+      '@types/react':
+        specifier: ^18.2.46
+        version: 18.2.46
 
   packages/react:
     dependencies:
@@ -3700,6 +3704,14 @@ packages:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.3
       csstype: 3.1.2
+
+  /@types/react@18.2.46:
+    resolution: {integrity: sha512-nNCvVBcZlvX4NU1nRRNV/mFl1nNRuTuslAJglQsq+8ldXe5Xv0Wd2f7WTE3jOxhLH2BFfiZGC6GCp+kHQbgG+w==}
+    dependencies:
+      '@types/prop-types': 15.7.5
+      '@types/scheduler': 0.16.3
+      csstype: 3.1.2
+    dev: true
 
   /@types/resolve@1.20.2:
     resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
