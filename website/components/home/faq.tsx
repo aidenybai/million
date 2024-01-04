@@ -82,7 +82,7 @@ const faq = [
         You can view the list of current limitations in the{' '}
         <Link
           className="nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]"
-          href="/docs/rules"
+          href="/docs/manual-mode/block#breaking-rules-of-blocks"
         >
           Rules of Blocks
         </Link>
