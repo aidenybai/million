@@ -5,6 +5,7 @@ import TextsLogo from '../../public/texts.webp';
 import HackClubLogo from '../../public/hackclub.svg';
 import OpenSaucedLogo from '../../public/opensauced.svg';
 import MetamaskLogo from '../../public/metamask.svg';
+import { RetroGrid } from '../retro-grid';
 import { Container } from './container';
 import { ShimmerButton } from './shimmer-button';
 
@@ -15,8 +16,9 @@ const CountUp = dynamic(() => import('react-countup'), {
 
 export function Hero() {
   return (
-    <div className="relative">
+    <div className="relative pb-10 border-b border-b-[#ffffff1a]">
       <Blur />
+      <RetroGrid className="opacity-20 " />
       <Container>
         <div className="relative pt-20 md:pt-36 ml-auto">
           <div className="lg:w-[70%] text-center mx-auto">
@@ -31,7 +33,9 @@ export function Hero() {
               <span className="font-medium dark:text-zinc-100">
                 Virtual DOM Replacement
               </span>{' '}
-              for React. The Virtual DOM Replacement for React. Gain big performance wins for UI and data heavy React apps. Dead simple to use – try it out {' '}
+              for React. The Virtual DOM Replacement for React. Gain big
+              performance wins for UI and data heavy React apps. Dead simple to
+              use – try it out{' '}
               <Link href="/docs" className="font-medium hover:underline">
                 now
               </Link>
@@ -59,6 +63,8 @@ export function Hero() {
             </div>
           </div>
         </div>
+      </Container>
+      <Container>
         <div className="lg:w-2/3 text-center mx-auto">
           <Companies />
         </div>
