@@ -89,7 +89,7 @@ export const stringToDOM = (content: string): DocumentFragment => {
 document$[EVENTS_REGISTRY] = new Set$();
 
 export const createEventListener = (
-  el: HTMLElement,
+  el: Node,
   name: string,
   value?: EventListener
 ) => {
@@ -140,7 +140,7 @@ export const createEventListener = (
 };
 
 // https://www.measurethat.net/Benchmarks/Show/15652/0/childnodes-vs-children-vs-firstchildnextsibling-vs-firs
-export const childAt = (el: HTMLElement, index: number) => {
+export const childAt = (el: Node, index: number) => {
   let child = firstChild$.call(el);
   if (index) {
     for (let j = 0; j < index; ++j) {
@@ -152,7 +152,7 @@ export const childAt = (el: HTMLElement, index: number) => {
 };
 
 export const insertText = (
-  el: HTMLElement,
+  el: Node,
   value: string,
   index: number
 ): Text => {
@@ -203,6 +203,7 @@ export const setAttribute = (
   name: string,
   value?: string | boolean | null
 ): void => {
+
   const isValueNully = value === undefined || value === null;
   value = isValueNully ? '' : value;
 

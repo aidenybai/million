@@ -36,8 +36,8 @@ export interface Hole {
 export abstract class AbstractBlock {
   /* root */ r?: DocumentFragment;
   /* edits */ e?: Edit[];
-  /* el */ l?: HTMLElement | null;
-  /* getElements */ g?: ((root: DocumentFragment) => HTMLElement[]) | null;
+  /* el */ l?: Node | null;
+  /* getElements */ g?: ((root: Node) => HTMLElement[]) | null;
   /* _shouldUpdate */ _u?:
     | ((oldProps: MillionProps, newProps: MillionProps) => boolean)
     | null;
@@ -45,12 +45,12 @@ export abstract class AbstractBlock {
   /* props */ d?: MillionProps | null;
   /* key */ k?: string | null;
   /* cache */ c?: HTMLElement[];
-  /* patch */ abstract p(block: AbstractBlock): HTMLElement;
+  /* patch */ abstract p(block: AbstractBlock): Node;
   /* mount */ abstract m(
     parent?: HTMLElement,
     refNode?: Node | null,
     hydrateNode?: Node | null
-  ): HTMLElement;
+  ): Node;
   /* move */ abstract v(
     block: AbstractBlock | null,
     refNode: Node | null

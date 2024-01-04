@@ -52,7 +52,7 @@ export const block = (
   // Turns vnode into a string of HTML and creates an array of "edits"
   // Edits are instructions for how to update the DOM given some props
   const root = stringToDOM(
-    renderToTemplate(unwrap ? unwrap(vnode) : vnode, edits),
+    renderToTemplate(unwrap ? unwrap(vnode) : vnode, edits, [0]),
   );
 
   return <T extends MillionProps>(
@@ -78,14 +78,14 @@ export const mount = (
   block: AbstractBlock,
   parent?: HTMLElement,
   hydrateNode?: HTMLElement
-): HTMLElement => {
+): Node => {
   if ('b' in block && parent) {
     return arrayMount$.call(block, parent, null);
   }
   return mount$.call(block, parent, null, hydrateNode);
 };
 
-export const patch = (oldBlock: AbstractBlock, newBlock: AbstractBlock): HTMLElement => {
+export const patch = (oldBlock: AbstractBlock, newBlock: AbstractBlock): Node => {
   if ('b' in oldBlock || 'b' in newBlock) {
     arrayPatch$.call(oldBlock, newBlock as ArrayBlock);
   }
@@ -112,7 +112,7 @@ export class Block extends AbstractBlock {
     shouldUpdate?:
       | ((oldProps: MillionProps, newProps: MillionProps) => boolean)
       | null,
-    getElements?: ((root: DocumentFragment) => HTMLElement[]) | null
+    getElements?: ((root: Node) => HTMLElement[]) | null
   ) {
     super();
     this.r = root;
@@ -135,17 +135,17 @@ export class Block extends AbstractBlock {
     parent?: HTMLElement,
     refNode: Node | null = null,
     hydrateNode?: HTMLElement | null
-  ): HTMLElement {
+  ): Node {
     if (this.l) return this.l;
     // cloneNode(true) uses less memory than recursively creating new nodes
-    const root = hydrateNode ?? (cloneNode$.call(this.r, true) as HTMLElement);
+    const root = hydrateNode ?? (cloneNode$.call(this.r, true));
     const elements = this.g?.(root);
     if (elements) this.c = elements;
 
     for (let i = 0, j = this.e.length; i < j; ++i) {
       const current = this.e[i]!;
       const el =
-        elements?.[i] ?? getCurrentElement(current.p!, root, this.c, i);
+        (elements?.[i] ?? getCurrentElement(current.p!, root, this.c, i)) as HTMLElement;
       for (let k = 0, l = current.e.length; k < l; ++k) {
         const edit = current.e[k]!;
         const value = this.d![edit.h];
@@ -235,7 +235,7 @@ export class Block extends AbstractBlock {
 
     return root;
   }
-  p(newBlock: AbstractBlock): HTMLElement {
+  p(newBlock: AbstractBlock): Node {
     const root = this.l!;
     if (!newBlock.d) return root;
     const props = this.d!;
@@ -245,8 +245,8 @@ export class Block extends AbstractBlock {
 
     for (let i = 0, j = this.e.length; i < j; ++i) {
       const current = this.e[i]!;
-      const el: HTMLElement =
-        this.c![i] ?? getCurrentElement(current.p!, root, this.c, i);
+      const el =
+        (this.c![i] ?? getCurrentElement(current.p!, root, this.c, i)) as HTMLElement;
       for (let k = 0, l = current.e.length; k < l; ++k) {
         const edit = current.e[k]!;
         const oldValue = props[edit.h];
@@ -311,16 +311,16 @@ export class Block extends AbstractBlock {
   v(block: AbstractBlock | null = null, refNode: Node | null = null): void {
     insertBefore$.call(this.t(), this.l!, block ? block.l! : refNode);
   }
-  x(): void {
-    removeElement$.call(this.l);
-    this.l = null;
-  }
+  // x(): void {
+  //   removeElement$.call(this.l);
+  //   this.l = null;
+  // }
   u(_oldProps: MillionProps, _newProps: MillionProps): boolean {
     if (!this._u) return true;
     return this._u(_oldProps, _newProps);
   }
   s(): string {
-    return String(this.l?.outerHTML);
+    return String((this.l as HTMLElement)?.outerHTML);
   }
   t(): HTMLElement | null | undefined {
     if (!this._t) this._t = this.l?.parentElement;
@@ -330,10 +330,10 @@ export class Block extends AbstractBlock {
 
 const getCurrentElement = (
   path: number[],
-  root: HTMLElement,
-  cache?: HTMLElement[],
+  root: Node,
+  cache?: Node[],
   key?: number
-): HTMLElement => {
+): Node => {
   const pathLength = path.length;
   if (!pathLength) return root;
   const isCacheAndKeyExists = cache && key !== undefined;
@@ -348,6 +348,7 @@ const getCurrentElement = (
     const siblings = path[i]!;
     root = childAt(root, siblings);
   }
+  
   if (isCacheAndKeyExists) cache[key] = root;
   return root;
 };

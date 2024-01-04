@@ -644,12 +644,6 @@ export const transformBlock = (
         )
       )
     );
-    returnStatementPath.insertBefore(
-      t.callExpression(
-        t.memberExpression(t.identifier('console'), t.identifier('log')),
-        [t.stringLiteral('P'), t.identifier('P')]
-      )
-    );
     puppetCall = t.jsxFragment(t.jsxOpeningFragment(), t.jsxClosingFragment(), [
       puppetCall,
       t.jsxExpressionContainer(portalChildren),
