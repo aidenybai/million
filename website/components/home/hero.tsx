@@ -31,7 +31,7 @@ export function Hero() {
               <span className="font-medium dark:text-zinc-100">
                 Virtual DOM Replacement
               </span>{' '}
-              for React. The Virtual DOM Replacement for React. Gain big performance wins for UI and data heavy React apps. Dead simple to use – try it out {' '}
+              for React. Gain big performance wins for UI and data heavy React apps. Dead simple to use – try it out {' '}
               <Link href="/docs" className="font-medium hover:underline">
                 now
               </Link>
