@@ -235,13 +235,14 @@ li > a {
 }
 .dark .slider::before,
 .dark .slider::after {
-  background: linear-gradient(to right, #111 0%, #11111100 100%);
+  background: linear-gradient(to right, #111 0%, #11111100 50%);
   content: '';
   z-index: 2;
   position: absolute;
   height: 100%;
   width: 10rem;
   pointer-events: none;
+  /* background:transparent; */
 }
 .slider::after {
   right: 0;
@@ -676,10 +677,8 @@ li > a {
 .youtubeContainer {
   position: relative;
   width: 100%;
-  height: 0;
-  padding-bottom: 56.25%;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
-  margin-bottom: 50px;
 }
 
 .youtubeContainer iframe {

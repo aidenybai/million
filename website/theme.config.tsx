@@ -112,8 +112,54 @@ const config: DocsThemeConfig = {
   docsRepositoryBase: 'https://github.com/aidenybai/million/tree/main/website/',
   footer: {
     text: (
-      <div className="flex w-full items-center justify-between">
+      <div className="flex flex-col items-start gap-6 xl:flex-row   w-full justify-between">
         <div>© 2021-{new Date().getFullYear()} Million Software, Inc.</div>
+
+        <div>
+          <p className="text-base pb-2 text-white font-bold">Resources</p>
+          <ul className="flex flex-col gap-2">
+            <li>
+              <a href="/docs" className="text-sm">
+                Documentation
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <p className="text-base pb-2 text-white font-bold">Ecosystem</p>
+          <ul className="flex flex-col gap-2">
+            <li>
+              <a href="/showcase" className="text-sm">
+                Showcase
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://github.com/aidenybai/million/blob/main/.github/CONTRIBUTING.md"
+                className="text-sm"
+              >
+                Contributing
+              </a>
+            </li>
+            <li>
+              <a href="https://million.dev/chat" className="text-sm">
+                Discord
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <p className="text-base pb-2 text-white font-bold">About</p>
+          <ul className="flex flex-col gap-2">
+            <li>
+              <a href="/foundation" className="text-sm">
+                Million Foundation
+              </a>
+            </li>
+          </ul>
+        </div>
 
         <a
           href="https://vercel.com?utm_source=millionjs"

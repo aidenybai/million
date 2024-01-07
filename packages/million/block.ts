@@ -225,7 +225,7 @@ export class Block extends AbstractBlock {
         if (edit.t & ChildFlag) {
           if (oldValue instanceof AbstractBlock) {
             // Remember! If we find a block inside a child, we need to locate
-            // the cooresponding block in the new props and patch it.
+            // the corresponding block in the new props and patch it.
             const firstEdit = newBlock.e?.[i]?.e[k] as EditChild;
             const newChildBlock = newBlock.d[firstEdit.h];
             oldValue.p(newChildBlock);
