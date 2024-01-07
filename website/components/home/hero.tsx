@@ -153,7 +153,7 @@ export function Companies() {
       <div className="slider">
         <div className="slide-track-5 hover:pause mt-6 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 justify-around items-center">
           {[...entries, ...entries].map(({ component, url }) => (
-            <div className="w-[12rem] relative grayscale opacity-60 hover:opacity-100 transition duration-200 hover:grayscale-0">
+            <div key={url} className="w-[12rem] relative grayscale opacity-60 hover:opacity-100 transition duration-200 hover:grayscale-0">
               <a
                 href={url}
                 target="_blank"
