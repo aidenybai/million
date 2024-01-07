@@ -12,7 +12,7 @@ body:
           required: true
         - label: I have pulled the latest `main` branch of the repository.
           required: true
-        - label: 'I have searched for related issues (https://github.com/aidenybai/million/issues) and found none that matched my issue.'
+        - label: 'I have searched for [related issues](https://github.com/aidenybai/million/issues) and found none that matched my issue.'
           required: true
     type: checkboxes
   - attributes:
