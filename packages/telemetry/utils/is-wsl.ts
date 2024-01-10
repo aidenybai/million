@@ -3,7 +3,7 @@ import os from 'node:os';
 import fs from 'node:fs';
 import { isInsideContainer } from './is-inside-container';
 
-export const isWSL = () => {
+export const isWSL = (): boolean => {
   if (process.platform !== 'linux') {
     return false;
   }

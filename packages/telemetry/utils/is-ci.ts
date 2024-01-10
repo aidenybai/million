@@ -10,8 +10,8 @@ const info: Info = {
   isPR: null,
 };
 
-const init = (vendors) => {
-  vendors.forEach((vendor) => {
+const init = (vendors): void => {
+  for (const vendor of vendors) {
     const envs = Array.isArray(vendor.env) ? vendor.env : [vendor.env];
     const isCI = envs.every((obj) => checkEnv(obj));
 
@@ -25,14 +25,14 @@ const init = (vendors) => {
 
     switch (typeof vendor.pr) {
       case 'string':
-        info.isPR = !!env[vendor.pr];
+        info.isPR = Boolean(env[vendor.pr]);
         break;
       case 'object':
         if ('env' in vendor.pr && vendor.pr.env) {
           info.isPR =
             vendor.pr.env in env && env[vendor.pr.env] !== vendor.pr.ne;
         } else if ('any' in vendor.pr) {
-          info.isPR = vendor.pr.any?.some((key) => !!env[key]);
+          info.isPR = vendor.pr.any?.some((key) => Boolean(env[key]));
         } else {
           info.isPR = checkEnv(vendor.pr);
         }
@@ -40,34 +40,34 @@ const init = (vendors) => {
       default:
         info.isPR = null;
     }
-  });
+  }
 };
 
-export const getCI = () => info.name;
+export const getCI = (): string | null => info.name;
 
-export const isCI = !!(
+export const isCI = Boolean(
   env.CI !== 'false' && // Bypass all checks if CI env is explicitly set to 'false'
-  (env.BUILD_ID || // Jenkins, Cloudbees
-    env.BUILD_NUMBER || // Jenkins, TeamCity
-    env.CI || // Travis CI, CircleCI, Cirrus CI, Gitlab CI, Appveyor, CodeShip, dsari
-    env.CI_APP_ID || // Appflow
-    env.CI_BUILD_ID || // Appflow
-    env.CI_BUILD_NUMBER || // Appflow
-    env.CI_NAME || // Codeship and others
-    env.CONTINUOUS_INTEGRATION || // Travis CI, Cirrus CI
-    env.RUN_ID || // TaskCluster, dsari
-    info.name ||
-    false)
+    (env.BUILD_ID || // Jenkins, Cloudbees
+      env.BUILD_NUMBER || // Jenkins, TeamCity
+      env.CI || // Travis CI, CircleCI, Cirrus CI, Gitlab CI, Appveyor, CodeShip, dsari
+      env.CI_APP_ID || // Appflow
+      env.CI_BUILD_ID || // Appflow
+      env.CI_BUILD_NUMBER || // Appflow
+      env.CI_NAME || // Codeship and others
+      env.CONTINUOUS_INTEGRATION || // Travis CI, Cirrus CI
+      env.RUN_ID || // TaskCluster, dsari
+      info.name ||
+      false),
 );
 
-const checkEnv = (obj) => {
-  if (typeof obj === 'string') return !!env[obj];
+const checkEnv = (obj): boolean => {
+  if (typeof obj === 'string') return Boolean(env[obj]);
 
   if ('env' in obj) {
-    return env[obj.env] && env[obj.env]?.includes(obj.includes);
+    return Boolean(env[obj.env] && env[obj.env]?.includes(obj.includes));
   }
   if ('any' in obj) {
-    return obj.any.some((k) => !!env[k]);
+    return obj.any.some((k) => Boolean(env[k]));
   }
   return Object.keys(obj).every((k) => env[k] === obj[k]);
 };
