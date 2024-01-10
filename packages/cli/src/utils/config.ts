@@ -2,11 +2,10 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as clack from '@clack/prompts';
 import chalk from 'chalk';
-import { withTelemetry } from '../../telemetry';
 import type { BuildTool } from '../types';
 import { buildTools } from './constants';
-import { modifyConfigFile } from './modify-config';
 import { abortIfCancelled, getNextRouter } from './utils';
+import { telemetry } from './telemetry';
 
 export function detectBuildTool(): BuildTool | null {
   /**
@@ -20,7 +19,7 @@ export function detectBuildTool(): BuildTool | null {
       if (fs.existsSync(path.join(process.cwd(), fileName))) {
         const currentbuildTool = { ...buildTool, configFilePath: fileName };
         clack.log.success(
-          `Detected ${chalk.bold(currentbuildTool.name)} project.`,
+          `Detected ${chalk.bold(currentbuildTool.name)} project.`
         );
         return currentbuildTool;
       }
@@ -41,17 +40,13 @@ export async function getBuildTool(): Promise<BuildTool> {
         value: buildTool,
         label: buildTool.label,
       })),
-    }),
+    })
   );
 
   return selectedBuildTool;
 }
 
-export async function handleConfigFile({
-  telemetry,
-}: {
-  telemetry: boolean;
-}): Promise<void> {
+export async function handleConfigFile(): Promise<void> {
   // Create or Modify config file
   const detectedBuildTool = detectBuildTool();
 
@@ -59,18 +54,14 @@ export async function handleConfigFile({
     // Modify existing config file
     clack.note(
       `found existing ${detectedBuildTool.configFilePath} file.`,
-      `Transforming ${chalk.cyan(detectedBuildTool.configFilePath)}`,
+      `Transforming ${chalk.cyan(detectedBuildTool.configFilePath)}`
     );
-    await withTelemetry(
-      {
-        enabled: telemetry,
+    await telemetry.record({
+      event: 'cli',
+      payload: {
         integration: detectBuildTool.name,
-        name: 'cli',
       },
-      async () => {
-        await modifyConfigFile(detectedBuildTool);
-      },
-    );
+    });
     return;
   }
 
@@ -90,17 +81,17 @@ export async function handleConfigFile({
 
     clack.note(
       `at ${chalk.green(targetFilePath)}`,
-      `Created ${chalk.green(buildTool.configFilePath)} file`,
+      `Created ${chalk.green(buildTool.configFilePath)} file`
     );
 
     nextRouter === 'app'
       ? await fs.promises.writeFile(
           targetFilePath,
-          buildTool.configFileContentRSC!,
+          buildTool.configFileContentRSC!
         )
       : await fs.promises.writeFile(
           targetFilePath,
-          buildTool.configFileContent,
+          buildTool.configFileContent
         );
   } else {
     /**
@@ -108,7 +99,7 @@ export async function handleConfigFile({
      */
     clack.note(
       `at ${chalk.green(targetFilePath)}`,
-      `Created ${chalk.green(buildTool.configFilePath)} file`,
+      `Created ${chalk.green(buildTool.configFilePath)} file`
     );
     await fs.promises.writeFile(targetFilePath, buildTool.configFileContent);
   }

@@ -3,6 +3,7 @@ import { createFilter } from '@rollup/pluginutils';
 import { transformAsync } from '@babel/core';
 import type { TransformResult, VitePlugin } from 'unplugin';
 import type { ParserOptions } from '@babel/core';
+import { MillionTelemetry } from '../telemetry';
 import { displayIntro } from './utils/log';
 import { babel } from './babel';
 import type { Options } from './options';
@@ -10,10 +11,11 @@ import type { Options } from './options';
 const DEFAULT_INCLUDE = '**/*.{jsx,tsx,ts,js,mjs,cjs}';
 const DEFAULT_EXCLUDE = 'node_modules/**/*.{jsx,tsx,ts,js,mjs,cjs}';
 
-export const unplugin = createUnplugin((options: Options = {}) => {
+// eslint-disable-next-line @typescript-eslint/default-param-last
+export const unplugin = createUnplugin((options: Options = {}, meta) => {
   const filter = createFilter(
     options.filter?.include || DEFAULT_INCLUDE,
-    options.filter?.exclude || DEFAULT_EXCLUDE
+    options.filter?.exclude || DEFAULT_EXCLUDE,
   );
 
   // Backwards compatibility for `mode: 'react-server'`:
@@ -27,9 +29,18 @@ export const unplugin = createUnplugin((options: Options = {}) => {
   // Throws an error if `mode: 'preact'` or `mode: 'preact-server'` is used
   if (options.mode?.startsWith('preact')) {
     throw new Error(
-      'Preact is no longer maintained. Downgrade to a lower version for support'
+      'Preact is no longer maintained. Downgrade to a lower version for support',
     );
   }
+
+  options.MillionTelemetry = new MillionTelemetry(options.telemetry);
+
+  void options.MillionTelemetry.record({
+    event: 'start-compile',
+    payload: {
+      framework: meta.framework,
+    },
+  });
 
   return {
     enforce: 'pre',
@@ -85,7 +96,7 @@ export const unplugin = createUnplugin((options: Options = {}) => {
 export const repushPlugin = (
   plugins: VitePlugin[],
   pluginName: string,
-  pluginNames: string[]
+  pluginNames: string[],
 ): void => {
   const namesSet = new Set(pluginNames);
 

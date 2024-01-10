@@ -3,6 +3,12 @@
   "main": "./index.ts",
   "module": "./index.ts",
   "devDependencies": {
-    "@rollup/pluginutils": "^5.0.5"
+    "@rollup/pluginutils": "^5.0.5",
+    "@types/which-pm-runs": "^1.0.2"
+  },
+  "dependencies": {
+    "ci-info": "^4.0.0",
+    "is-docker": "^3.0.0",
+    "which-pm-runs": "^1.1.0"
   }
 }

@@ -1,4 +1,5 @@
 import type { FilterPattern } from '@rollup/pluginutils';
+import type { MillionTelemetry } from '../telemetry';
 
 interface PluginOptions {
   filter?: {
@@ -32,6 +33,13 @@ interface PluginOptions {
    * @default false
    */
   rsc?: boolean;
+  /**
+   * Million.js collects anonymous telemetry data about general usage. Participation is optional, and you may opt-out at any time.
+   *
+   * @default true
+   */
+  telemetry?: boolean;
+  MillionTelemetry?: MillionTelemetry;
   /**
    * @deprecated Use `log` instead
    */
