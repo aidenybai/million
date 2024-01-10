@@ -8,7 +8,7 @@ export interface ConfigOptions {
 }
 
 // Adapted from https://github.com/sindresorhus/env-paths
-function getConfigDir(name: string): string {
+const getConfigDir = (name: string): string => {
   const homedir = os.homedir();
   const macos = (): string =>
     path.join(homedir, 'Library', 'Preferences', name);
@@ -28,7 +28,7 @@ function getConfigDir(name: string): string {
     default:
       return linux();
   }
-}
+};
 
 export class GlobalConfig {
   private dir: string;

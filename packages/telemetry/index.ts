@@ -72,13 +72,16 @@ export class MillionTelemetry {
       return Promise.resolve();
     }
 
-    const meta: SystemInfo = getSystemInfo();
+    const meta: { system: SystemInfo; project: ProjectInfo } = {
+      system: getSystemInfo(),
+      project: this.anonymousProjectInfo,
+    };
 
     return post({
       event,
-      anonymousId: meta.isCI
+      anonymousId: meta.system.isCI
         ? this.anonymousId
-        : `CI.${meta.ciName || 'UNKNOWN'}`,
+        : `CI.${meta.system.ciName || 'UNKNOWN'}`,
       anonymousSessionId: this.anonymousSessionId,
       payload,
       meta,
