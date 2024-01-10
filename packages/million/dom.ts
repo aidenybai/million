@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 
+import { createElement } from '../jsx-runtime';
 import {
   EVENTS_REGISTRY,
   IS_NON_DIMENSIONAL,
@@ -11,10 +12,11 @@ import {
   XLINK_NS,
   XML_NS,
 } from './constants';
+import { VElement, VNode } from './types';
 
 if (typeof window === 'undefined') {
   throw new Error(
-    'See http://million.dev/docs/install to install the compiler.'
+    'See http://million.dev/docs/install to install the compiler.',
   );
 }
 
@@ -50,7 +52,7 @@ export const HTM_TEMPLATE_CONTENT = HTM_TEMPLATE.content;
 const _SVG_TEMPLATE = /**@__PURE__*/ document$.createElement('template');
 export const SVG_TEMPLATE = /**@__PURE__*/ document$.createElementNS(
   'http://www.w3.org/2000/svg',
-  'svg'
+  'svg',
 );
 /**@__PURE__*/ _SVG_TEMPLATE.content.appendChild(SVG_TEMPLATE);
 
@@ -77,13 +79,16 @@ export const nextSibling$ = getOwnPropertyDescriptor$(node$, 'nextSibling')!
   .get!;
 export const characterDataSet$ = getOwnPropertyDescriptor$(
   characterData$,
-  'data'
+  'data',
 )!.set!;
 
-export const stringToDOM = (content: string): DocumentFragment => {
-  HTM_TEMPLATE.innerHTML = content;
-  return HTM_TEMPLATE_CONTENT;
-  // return dom.firstChild as HTMLElement;
+export const stringToDOM = (content: string): Node => {
+  const a = document$.createElement('template');
+  a.innerHTML = content;
+  if (a.content.childNodes.length === 1) {
+    return a.content.childNodes.item(0);
+  }
+  return a.content;
 };
 
 document$[EVENTS_REGISTRY] = new Set$();
@@ -91,7 +96,7 @@ document$[EVENTS_REGISTRY] = new Set$();
 export const createEventListener = (
   el: Node,
   name: string,
-  value?: EventListener
+  value?: EventListener,
 ) => {
   let event = name.toLowerCase();
   let capture = false;
@@ -124,7 +129,7 @@ export const createEventListener = (
           el = el.parentNode;
         }
       },
-      { capture }
+      { capture },
     );
     SetAdd$.call(document$[EVENTS_REGISTRY], event);
   }
@@ -151,11 +156,19 @@ export const childAt = (el: Node, index: number) => {
   return child;
 };
 
-export const insertText = (
-  el: Node,
-  value: string,
-  index: number
-): Text => {
+// React removes the comment but since we're hijacking the render, we should do it manually
+export const removeComments = (el: Node) => {
+  let child: ChildNode | null = firstChild$.call(el);
+  while (child) {
+    const next = child.nextSibling;
+    if (child.nodeType === 8) {
+      el.removeChild(child);
+    }
+    child = next;
+  }
+};
+
+export const insertText = (el: Node, value: string, index: number): Text => {
   const node = document$.createTextNode(value);
   const child = childAt(el, index);
   insertBefore$.call(el, node, child);
@@ -169,7 +182,7 @@ export const setText = (el: Text, value: string) => {
 export const setStyleAttribute = (
   el: HTMLElement,
   name: string,
-  value?: string | boolean | number | null
+  value?: string | boolean | number | null,
 ) => {
   if (typeof value !== 'number' || IS_NON_DIMENSIONAL.test(name)) {
     el.style[name] = value;
@@ -188,7 +201,7 @@ export const setStyleAttribute = (
 export const setSvgAttribute = (
   el: HTMLElement,
   name: string,
-  value?: string | boolean | null
+  value?: string | boolean | null,
 ) => {
   name = name.replace(/xlink(?:H|:h)/, 'h').replace(/sName$/, 's');
   if (name.startsWith('xmlns')) {
@@ -201,14 +214,13 @@ export const setSvgAttribute = (
 export const setAttribute = (
   el: HTMLElement,
   name: string,
-  value?: string | boolean | null
+  value?: string | boolean | null,
 ): void => {
-
   const isValueNully = value === undefined || value === null;
   value = isValueNully ? '' : value;
 
-  if (!(el instanceof HTMLElement)) { 
-    return 
+  if (!(el instanceof HTMLElement)) {
+    return;
   }
 
   if (

@@ -31,7 +31,7 @@ export type HoistedMap = Record<
 export const transformBlock = (
   callExpressionPath: NodePath<t.CallExpression>,
   info: Info,
-  unstable = false
+  unstable = false,
 ): void => {
   if (!info.imports.source) return;
 
@@ -65,7 +65,7 @@ export const transformBlock = (
       'Unsupported argument for block. Make sure blocks consume a component ' +
         'function or component reference',
       info.filename,
-      callExpressionPath
+      callExpressionPath,
     );
   }
 
@@ -97,7 +97,7 @@ export const transformBlock = (
     const paths = exportDefaultPath.insertBefore(
       t.variableDeclaration('let', [
         t.variableDeclarator(exportId, callExpression),
-      ])
+      ]),
     );
     exportDefaultPath.replaceWith(t.exportDefaultDeclaration(exportId));
 
@@ -146,7 +146,7 @@ export const transformBlock = (
     const paths = callExpressionPath.parentPath.parentPath?.insertBefore(
       t.variableDeclaration('let', [
         t.variableDeclarator(anonymousComponentId, rawComponent),
-      ])
+      ]),
     );
 
     if (paths) {
@@ -154,7 +154,7 @@ export const transformBlock = (
     }
 
     callExpressionPath.replaceWith(
-      t.callExpression(callExpression.callee, [anonymousComponentId])
+      t.callExpression(callExpression.callee, [anonymousComponentId]),
     );
 
     // this "creates" a new callExpressionPath, so it will be picked up again on the
@@ -163,13 +163,13 @@ export const transformBlock = (
   }
 
   const componentDeclarationPath = callExpressionPath.scope.getBinding(
-    rawComponent.name
+    rawComponent.name,
   )!.path as NodePath<t.VariableDeclarator | t.FunctionDeclaration>;
 
   // handles forwardRef
   if (componentDeclarationPath.isVariableDeclarator()) {
     const initPath = componentDeclarationPath.get(
-      'init'
+      'init',
     ) as NodePath<t.CallExpression>;
     const init = initPath.node;
 
@@ -178,7 +178,7 @@ export const transformBlock = (
       findChild(
         initPath,
         'Identifier',
-        (p) => p.isIdentifier() && p.node.name === 'forwardRef'
+        (p) => p.isIdentifier() && p.node.name === 'forwardRef',
       )
     ) {
       const forwardRefComponent = init.arguments[0];
@@ -198,13 +198,13 @@ export const transformBlock = (
           t.variableDeclaration('let', [
             t.variableDeclarator(
               anonymousComponentId,
-              t.callExpression(callExpression.callee, [forwardRefComponent])
+              t.callExpression(callExpression.callee, [forwardRefComponent]),
             ),
           ]),
           t.variableDeclaration('let', [
             t.variableDeclarator(
               componentDeclarationPath.node.id,
-              anonymousComponentId
+              anonymousComponentId,
             ),
           ]),
         ]);
@@ -217,7 +217,7 @@ export const transformBlock = (
           t.isIdentifier(callExpression.arguments[0])
         ) {
           callExpressionPath.parentPath.replaceWith(
-            t.variableDeclarator(callExpression.arguments[0])
+            t.variableDeclarator(callExpression.arguments[0]),
           );
         }
 
@@ -258,7 +258,7 @@ export const transformBlock = (
     const bodyPath = componentDeclarationPath.get('init.body') as NodePath;
     if (!bodyPath.isBlockStatement() && bodyPath.isExpression()) {
       bodyPath.replaceWith(
-        t.blockStatement([t.returnStatement(bodyPath.node)])
+        t.blockStatement([t.returnStatement(bodyPath.node)]),
       );
     }
   }
@@ -268,13 +268,13 @@ export const transformBlock = (
       'You are using a component imported from another file. The component ' +
         'must be colocated in the same file as the block.',
       info.filename,
-      componentDeclarationPath
+      componentDeclarationPath,
     );
   } else if (!isVariableDeclarator && !isFunctionDeclaration) {
     throw deopt(
       'You can only use block() with a function declaration or arrow function.',
       info.filename,
-      callExpressionPath
+      callExpressionPath,
     );
   }
 
@@ -301,7 +301,7 @@ export const transformBlock = (
       'Expected a block statement function() { /* block */ } in your function ' +
         'body. Make sure you are using a function declaration or arrow function.',
       info.filename,
-      callExpressionPath
+      callExpressionPath,
     );
   }
 
@@ -322,14 +322,14 @@ export const transformBlock = (
 
   const returnStatementPaths = findChildMultiple<t.ReturnStatement>(
     componentBodyPath,
-    'ReturnStatement'
+    'ReturnStatement',
   );
 
   if (!returnStatementPaths.length) {
     throw deopt(
       'Expected a return statement in your component',
       info.filename,
-      componentBodyPath
+      componentBodyPath,
     );
   }
 
@@ -337,7 +337,7 @@ export const transformBlock = (
     throw deopt(
       'Expected only one return statement in your component',
       info.filename,
-      componentBodyPath
+      componentBodyPath,
     );
   }
 
@@ -389,7 +389,7 @@ export const transformBlock = (
     : getUniqueId(callExpressionPath, 'Anonymous');
   const puppetComponentId = getUniqueId(
     callExpressionPath,
-    `Block_${componentName || ''}`
+    `Block_${componentName || ''}`,
   );
 
   const layers: t.JSXElement[] = extractLayers({
@@ -417,7 +417,7 @@ export const transformBlock = (
       componentBodyPath,
       isRoot: true,
     },
-    unstable
+    unstable,
   );
 
   const hoisted = Object.values(hoistedMap);
@@ -447,7 +447,7 @@ export const transformBlock = (
     objectProperties[i] = t.objectProperty(id, id, false, true);
     puppetJsxAttributes[i] = t.jsxAttribute(
       t.jsxIdentifier(id.name),
-      t.jsxExpressionContainer(id)
+      t.jsxExpressionContainer(id),
     );
     if (!value) continue;
     data.push({ id, value });
@@ -487,17 +487,14 @@ export const transformBlock = (
     compiledOptions.push(
       t.objectProperty(
         t.identifier('svg'),
-        t.booleanLiteral(originalOptions.svg)
-      )
+        t.booleanLiteral(originalOptions.svg),
+      ),
     );
   }
 
   if (info.options.server && isUseClient(info)) {
     compiledOptions.push(
-      t.objectProperty(
-        t.identifier('rsc'),
-        t.booleanLiteral(true)
-      )
+      t.objectProperty(t.identifier('rsc'), t.booleanLiteral(true)),
     );
   }
 
@@ -505,13 +502,13 @@ export const transformBlock = (
     originalOptions.shouldUpdate ?? createDirtyChecker(holes);
   if (shouldUpdate) {
     compiledOptions.push(
-      t.objectProperty(t.identifier('shouldUpdate'), shouldUpdate)
+      t.objectProperty(t.identifier('shouldUpdate'), shouldUpdate),
     );
   }
 
   const puppetFn = t.arrowFunctionExpression(
     objectProperties.length ? [t.objectPattern(objectProperties)] : [],
-    t.blockStatement([returnStatement])
+    t.blockStatement([returnStatement]),
   );
 
   const puppetBlock = t.callExpression(callExpression.callee, [
@@ -536,13 +533,13 @@ export const transformBlock = (
                 t.identifier('$'),
                 t.newExpression(t.identifier('Array'), [
                   t.numericLiteral(portal.index + 1),
-                ])
+                ]),
               ),
-            ])
+            ]),
           ),
         ]),
         t.numericLiteral(0),
-        true
+        true,
       ),
     });
   }
@@ -553,8 +550,8 @@ export const transformBlock = (
         'let',
         data.map(({ id, value }) => {
           return t.variableDeclarator(id, value);
-        })
-      )
+        }),
+      ),
     );
   }
 
@@ -562,8 +559,8 @@ export const transformBlock = (
     puppetJsxAttributes.push(
       t.jsxAttribute(
         t.jsxIdentifier('_hmr'),
-        t.stringLiteral(String(Date.now()))
-      )
+        t.stringLiteral(String(Date.now())),
+      ),
     );
   }
 
@@ -594,10 +591,10 @@ export const transformBlock = (
     t.jsxOpeningElement(
       t.jsxIdentifier(puppetComponentId.name),
       puppetJsxAttributes,
-      true
+      true,
     ),
     null,
-    []
+    [],
   );
 
   if (portal.index !== -1) {
@@ -608,9 +605,9 @@ export const transformBlock = (
           portalChildren,
           t.newExpression(t.identifier('Array'), [
             t.numericLiteral(portal.index + 1),
-          ])
+          ]),
         ),
-      ])
+      ]),
     );
     returnStatementPath.insertBefore(
       t.forStatement(
@@ -620,8 +617,8 @@ export const transformBlock = (
             t.identifier('l'),
             t.memberExpression(
               t.memberExpression(portal.id, t.identifier('$')),
-              t.identifier('length')
-            )
+              t.identifier('length'),
+            ),
           ),
         ]),
         t.binaryExpression('<', t.identifier('i'), t.identifier('l')),
@@ -634,15 +631,15 @@ export const transformBlock = (
               t.memberExpression(
                 t.memberExpression(portal.id, t.identifier('$')),
                 t.identifier('i'),
-                true
+                true,
               ),
               t.identifier('portal'),
               undefined,
-              true
-            )
-          )
-        )
-      )
+              true,
+            ),
+          ),
+        ),
+      ),
     );
     puppetCall = t.jsxFragment(t.jsxOpeningFragment(), t.jsxClosingFragment(), [
       puppetCall,
@@ -696,7 +693,7 @@ export const transformBlock = (
     const paths = exportNamedPath.replaceWith(
       t.exportNamedDeclaration(null, [
         t.exportSpecifier(publicComponent, publicComponent),
-      ])
+      ]),
     );
     callExpressionPath.scope.registerDeclaration(paths[0]);
   } else {
@@ -706,7 +703,7 @@ export const transformBlock = (
     ) {
       masterComponentId = getUniqueId(
         componentDeclarationPath,
-        masterComponentId.name
+        masterComponentId.name,
       );
     }
     callExpressionPath.replaceWith(masterComponentId);
@@ -716,7 +713,7 @@ export const transformBlock = (
   componentDeclarationPath.parentPath.insertBefore(
     t.variableDeclaration('let', [
       t.variableDeclarator(puppetComponentId, puppetBlock),
-    ])
+    ]),
   );
 
   if (isCallable) {
@@ -725,9 +722,9 @@ export const transformBlock = (
         t.assignmentExpression(
           '=',
           t.memberExpression(masterComponentId, t.identifier('_c')),
-          t.booleanLiteral(true)
-        )
-      )
+          t.booleanLiteral(true),
+        ),
+      ),
     );
   }
 
@@ -740,7 +737,7 @@ export const transformBlock = (
       callExpressionPath,
       info,
       holes,
-      returnStatement.argument
+      returnStatement.argument,
     );
 
     callExpressionPath.parentPath.insertBefore(variables);
@@ -808,7 +805,7 @@ export const transformJSX = (
     componentBodyPath: NodePath<t.BlockStatement>;
     isRoot: boolean;
   },
-  unstable: boolean
+  unstable: boolean,
 ): HoistedMap => {
   /**
    * Populates `dynamics` with a new entry.
@@ -825,7 +822,7 @@ export const transformJSX = (
     identifier: t.Identifier | null,
     expression: t.Expression | null,
     path: NodePath | null,
-    callback: (() => void) | null
+    callback: (() => void) | null,
   ): t.Identifier | undefined => {
     if (expression && path) {
       // check for ids:
@@ -834,7 +831,7 @@ export const transformJSX = (
         'Identifier',
         (p: NodePath<t.Identifier>) => {
           return path.scope.hasBinding(p.node.name);
-        }
+        },
       );
       if (!hasValidId) return;
     }
@@ -873,13 +870,13 @@ export const transformJSX = (
       | t.ArgumentPlaceholder
       | t.JSXNamespacedName
       | t.SpreadElement
-    )[]
+    )[],
   ): t.Identifier | undefined => {
     renderReactScope ??= addImport(
       jsxPath,
       'renderReactScope',
       info.imports.source || 'million/react',
-      info
+      info,
     );
     const index = ++portal.index;
 
@@ -930,7 +927,7 @@ export const transformJSX = (
 
     const id = createPortal(() => {
       jsxPath.replaceWith(
-        isRoot ? t.expressionStatement(id!) : t.jsxExpressionContainer(id!)
+        isRoot ? t.expressionStatement(id!) : t.jsxExpressionContainer(id!),
       );
     }, [
       jsx,
@@ -944,7 +941,7 @@ export const transformJSX = (
   if (t.isJSXMemberExpression(type)) {
     const id = createPortal(() => {
       jsxPath.replaceWith(
-        isRoot ? t.expressionStatement(id!) : t.jsxExpressionContainer(id!)
+        isRoot ? t.expressionStatement(id!) : t.jsxExpressionContainer(id!),
       );
     }, [jsx, t.booleanLiteral(unstable)]);
 
@@ -961,17 +958,17 @@ export const transformJSX = (
 
     if (t.isJSXSpreadAttribute(attribute)) {
       const spreadPath = jsxPath.get(
-        `openingElement.attributes.${i}.argument`
+        `openingElement.attributes.${i}.argument`,
       ) as NodePath<t.JSXSpreadChild>;
       warn(
         'Spread attributes are not fully supported.',
         info.filename,
-        spreadPath
+        spreadPath,
       );
 
       const id = createPortal(() => {
         jsxPath.replaceWith(
-          isRoot ? t.expressionStatement(id!) : t.jsxExpressionContainer(id!)
+          isRoot ? t.expressionStatement(id!) : t.jsxExpressionContainer(id!),
         );
       }, [jsx, t.booleanLiteral(unstable)]);
 
@@ -996,7 +993,7 @@ export const transformJSX = (
             throw deopt(
               'Computed properties are not supported in style objects.',
               info.filename,
-              jsxPath
+              jsxPath,
             );
           }
 
@@ -1028,7 +1025,7 @@ export const transformJSX = (
             }
           } else {
             const expressionPath = jsxPath.get(
-              `openingElement.attributes.${i}.value.expression.properties.${l}.value`
+              `openingElement.attributes.${i}.value.expression.properties.${l}.value`,
             ) as NodePath<t.Expression>;
 
             const id = createDynamic(
@@ -1037,7 +1034,7 @@ export const transformJSX = (
               expressionPath,
               () => {
                 if (id) property.value = id;
-              }
+              },
             );
             hasDynamic = true;
           }
@@ -1077,7 +1074,7 @@ export const transformJSX = (
                 return null;
               })
               .filter((property) => property)
-              .join(';')
+              .join(';'),
           );
         });
       }
@@ -1087,11 +1084,11 @@ export const transformJSX = (
     if (t.isJSXExpressionContainer(attribute.value)) {
       const attributeValue = attribute.value;
       const expressionPath = jsxPath.get(
-        `openingElement.attributes.${i}.value.expression`
+        `openingElement.attributes.${i}.value.expression`,
       ) as NodePath<t.Expression>;
       const { ast: expression, err } = evaluate(
         attributeValue.expression,
-        expressionPath.scope
+        expressionPath.scope,
       );
 
       if (
@@ -1100,7 +1097,7 @@ export const transformJSX = (
       ) {
         const id = createPortal(() => {
           jsxPath.replaceWith(
-            isRoot ? t.expressionStatement(id!) : t.jsxExpressionContainer(id!)
+            isRoot ? t.expressionStatement(id!) : t.jsxExpressionContainer(id!),
           );
         }, [jsx, t.booleanLiteral(unstable)]);
 
@@ -1115,7 +1112,7 @@ export const transformJSX = (
             jsxPath.replaceWith(
               isRoot
                 ? t.expressionStatement(id!)
-                : t.jsxExpressionContainer(id!)
+                : t.jsxExpressionContainer(id!),
             );
           }, [jsx, t.booleanLiteral(unstable)]);
 
@@ -1134,7 +1131,7 @@ export const transformJSX = (
           expressionPath,
           () => {
             if (id) attributeValue.expression = id;
-          }
+          },
         );
       }
     }
@@ -1147,12 +1144,12 @@ export const transformJSX = (
 
     if (t.isJSXSpreadChild(child)) {
       const spreadPath = jsxPath.get(
-        `children.${i}`
+        `children.${i}`,
       ) as NodePath<t.JSXSpreadChild>;
       warn(
         'Spread children are not fully supported.',
         info.filename,
-        spreadPath
+        spreadPath,
       );
       const id = createPortal(() => {
         jsxPath.replaceWith(t.jsxExpressionContainer(id!));
@@ -1195,11 +1192,11 @@ export const transformJSX = (
 
     if (t.isJSXExpressionContainer(child)) {
       const expressionPath = jsxPath.get(
-        `children.${i}.expression`
+        `children.${i}.expression`,
       ) as NodePath<t.Expression>;
       const { ast: expression, err } = evaluate(
         child.expression,
-        expressionPath.scope
+        expressionPath.scope,
       );
 
       if (!err) child.expression = expression;
@@ -1240,7 +1237,7 @@ export const transformJSX = (
               componentBodyPath,
               isRoot: false,
             },
-            unstable
+            unstable,
           );
           jsx.children[i] = expression;
           continue;
@@ -1270,7 +1267,7 @@ export const transformJSX = (
          * ```
          */
         const expressionPath = jsxPath.get(
-          `children.${i}.expression`
+          `children.${i}.expression`,
         ) as NodePath<t.Expression>;
         const hasSensitive =
           expressionPath.parentPath.isJSXExpressionContainer() &&
@@ -1287,18 +1284,18 @@ export const transformJSX = (
             jsxPath,
             'For',
             info.imports.source || 'million/react',
-            info
+            info,
           );
           const jsxFor = t.jsxIdentifier(For.name);
           const newJsxArrayIterator = t.jsxElement(
             t.jsxOpeningElement(jsxFor, [
               t.jsxAttribute(
                 t.jsxIdentifier('each'),
-                t.jsxExpressionContainer(expression.callee.object)
+                t.jsxExpressionContainer(expression.callee.object),
               ),
             ]),
             t.jsxClosingElement(jsxFor),
-            [t.jsxExpressionContainer(expression.arguments[0] as t.Expression)]
+            [t.jsxExpressionContainer(expression.arguments[0] as t.Expression)],
           );
 
           const id = createPortal(() => {
@@ -1331,7 +1328,7 @@ export const transformJSX = (
             'Conditional expressions will degrade performance. We recommend using deterministic returns instead.',
             info.filename,
             expressionPath,
-            info.options.log
+            info.options.log,
           );
 
           const id = createPortal(() => {
@@ -1359,7 +1356,7 @@ export const transformJSX = (
               return jsxPath.replaceWith(
                 isRoot
                   ? t.expressionStatement(id!)
-                  : t.jsxExpressionContainer(id!)
+                  : t.jsxExpressionContainer(id!),
               );
             }
             jsx.children[i] = t.jsxExpressionContainer(id!);
@@ -1389,7 +1386,7 @@ export const transformJSX = (
         componentBodyPath,
         isRoot: false,
       },
-      unstable
+      unstable,
     );
   }
   return hoisted;

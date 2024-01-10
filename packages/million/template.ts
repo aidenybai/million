@@ -9,7 +9,6 @@ import {
   BlockFlag,
   SetHas$,
 } from './constants';
-
 import { AbstractBlock } from './types';
 import type { Edit, VNode } from './types';
 
@@ -46,7 +45,7 @@ export const renderToTemplate = (
       i: [],
     });
 
-    return '<slot/>';
+    return '';
   }
 
   let props = '';

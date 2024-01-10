@@ -20,21 +20,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { useRef, useState, useMemo, createElement, useLayoutEffect as uLE } from 'react'
-import type ReactReconciler from 'react-reconciler'
+import {
+  useRef,
+  useState,
+  useMemo,
+  createElement,
+  useLayoutEffect as uLE,
+} from 'react';
+import type ReactReconciler from 'react-reconciler';
 
 // avoid hydration errors in server
-const useLayoutEffect = typeof window === 'undefined' ? () => {} : uLE
+const useLayoutEffect = typeof window === 'undefined' ? () => {} : uLE;
 
 /**
  * Represents a react-internal Fiber node.
  */
-export type Fiber = ReactReconciler.Fiber
+export type Fiber = ReactReconciler.Fiber;
 
 /**
  * Represents a {@link Fiber} node selector for traversal.
  */
-export type FiberSelector = (node: Fiber) => boolean | void
+export type FiberSelector = (node: Fiber) => boolean | void;
 
 /**
  * Traverses up or down a {@link Fiber}, return `true` to stop and select a node.
@@ -47,14 +53,14 @@ export function traverse(
   /** Whether to ascend and walk up the tree. Will walk down if `false`. Default is `false`. */
   ascending: boolean,
 ): Fiber | undefined {
-  if (!fiber || selector(fiber)) return fiber
+  if (!fiber || selector(fiber)) return fiber;
 
-  let child = ascending ? fiber.return : fiber.child
+  let child = ascending ? fiber.return : fiber.child;
   while (child) {
-    const match = traverse(child, selector, ascending)
-    if (match) return match
+    const match = traverse(child, selector, ascending);
+    if (match) return match;
 
-    child = ascending ? null : child.sibling
+    child = ascending ? null : child.sibling;
   }
 }
 
@@ -62,20 +68,20 @@ export function traverse(
  * Returns the current react-internal {@link Fiber}. This is an implementation detail of [react-reconciler](https://github.com/facebook/react/tree/main/packages/react-reconciler).
  */
 export function useFiber(): Fiber {
-  const fiber = useRef<Fiber>()
+  const fiber = useRef<Fiber>();
 
   useState(() => {
-    const bind = Function.prototype.bind
+    const bind = Function.prototype.bind;
     Function.prototype.bind = function (self, maybeFiber) {
       if (self === null && typeof maybeFiber?.type === 'function') {
-        fiber.current = maybeFiber
-        Function.prototype.bind = bind
+        fiber.current = maybeFiber;
+        Function.prototype.bind = bind;
       }
-      return bind.apply(this, arguments as any)
-    }
-  })
+      return bind.apply(this, arguments as any);
+    };
+  });
 
-  return fiber.current!
+  return fiber.current!;
 }
 
 /**
@@ -87,18 +93,20 @@ export function useNearestParent<T = any>(
   /** An optional element type to filter to. */
   type?: keyof JSX.IntrinsicElements,
 ): React.MutableRefObject<T | undefined> {
-  const fiber = useFiber()
-  const parentRef = useRef<T>()
+  const fiber = useFiber();
+  const parentRef = useRef<T>();
 
   useLayoutEffect(() => {
     parentRef.current = traverse(
       fiber,
-      (node) => typeof node.type === 'string' && (type === undefined || node.type === type),
+      (node) =>
+        typeof node.type === 'string' &&
+        (type === undefined || node.type === type),
       true,
-    )?.stateNode
-  }, [fiber])
+    )?.stateNode;
+  }, [fiber]);
 
-  return parentRef
+  return parentRef;
 }
 
 /**
@@ -107,30 +115,36 @@ export function useNearestParent<T = any>(
  * In react-dom, a container will point to the root DOM element; in react-three-fiber, it will point to the root Zustand store.
  */
 export function useContainer<T = any>(): React.MutableRefObject<T | undefined> {
-  const fiber = useFiber()
-  const rootRef = useRef<T>()
+  const fiber = useFiber();
+  const rootRef = useRef<T>();
 
   useLayoutEffect(() => {
-    rootRef.current = traverse(fiber, (node) => node.stateNode?.containerInfo != null, true)?.stateNode.containerInfo
-  }, [fiber])
+    rootRef.current = traverse(
+      fiber,
+      (node) => node.stateNode?.containerInfo != null,
+      true,
+    )?.stateNode.containerInfo;
+  }, [fiber]);
 
-  return rootRef
+  return rootRef;
 }
 
 export function useNearestParentFiber(
   /** An optional element type to filter to. */
   type?: keyof JSX.IntrinsicElements,
 ): Fiber {
-  const fiber = useFiber()
-  const parentRef = useRef<Fiber>()
+  const fiber = useFiber();
+  const parentRef = useRef<Fiber>();
 
   useState(() => {
     parentRef.current = traverse(
       fiber,
-      (node) => typeof node.type === 'string' && (type === undefined || node.type === type),
+      (node) =>
+        typeof node.type === 'string' &&
+        (type === undefined || node.type === type),
       true,
-    )
-  })
+    );
+  });
 
-  return parentRef.current!
+  return parentRef.current!;
 }

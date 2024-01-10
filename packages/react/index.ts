@@ -8,5 +8,5 @@ export const INTERNALS = {
   block: internalBlock,
   patch,
   mount,
-  setAttribute
+  setAttribute,
 };

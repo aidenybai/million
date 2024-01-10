@@ -17,7 +17,7 @@ export function ExtraContent() {
 export function Status() {
   const [, forceUpdate] = useState({});
   const count = getCount();
-  const userString = count > 1 ? "users" : "user";
+  const userString = count > 1 ? 'users' : 'user';
   // useEffect(() => {
   //   const interval = setInterval(() => {
   //     forceUpdate({});

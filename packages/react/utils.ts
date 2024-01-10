@@ -1,15 +1,19 @@
 import { Fragment, createElement, isValidElement } from 'react';
 import { createPortal } from 'react-dom';
-import type { ComponentProps, ReactNode, Ref } from 'react';
+import type {
+  ComponentProps,
+  DispatchWithoutAction,
+  ReactNode,
+  Ref,
+} from 'react';
 import type { VNode } from '../million';
 import type { MillionPortal } from '../types';
-import { REGISTRY, RENDER_SCOPE } from './constants';
 
 // TODO: access perf impact of this
 export const processProps = (
   props: ComponentProps<any>,
   ref: Ref<any>,
-  portals: MillionPortal[]
+  portals: MillionPortal[],
 ): ComponentProps<any> => {
   const processedProps: ComponentProps<any> = { ref };
 
@@ -22,7 +26,7 @@ export const processProps = (
         value,
         false,
         portals,
-        currentIndex++
+        currentIndex++,
       );
 
       continue;
@@ -33,15 +37,13 @@ export const processProps = (
   return processedProps;
 };
 
-const wrap = (vnode: ReactNode): ReactNode => {
-  return createElement(RENDER_SCOPE, { suppressHydrationWarning: true }, vnode);
-};
-
 export const renderReactScope = (
   vnode: ReactNode,
   unstable: boolean,
   portals: MillionPortal[] | undefined,
   currentIndex: number,
+  parent: Element,
+  rerender: DispatchWithoutAction,
 ) => {
   const el = portals?.[currentIndex]?.current;
 
@@ -52,13 +54,7 @@ export const renderReactScope = (
   const isCallable = isBlock && (vnode.type as any)._c;
 
   if (typeof window === 'undefined') {
-    if (isBlock) {
-      if (isCallable) {
-        return vnode;
-      }
-      return wrap(wrap(vnode));
-    }
-    return wrap(vnode);
+    return vnode;
   }
 
   if (isCallable) {
@@ -71,16 +67,18 @@ export const renderReactScope = (
     }
   }
 
-  const current = el ?? document.createElement(RENDER_SCOPE);
-  const reactPortal = createPortal(vnode, current);
+  const reactPortal = createPortal(vnode, parent);
 
   const millionPortal = {
     foreign: true as const,
-    current,
+    current: parent,
     portal: reactPortal,
     unstable,
   };
   if (portals) {
+    if (!portals[currentIndex]) {
+      rerender();
+    }
     portals[currentIndex] = millionPortal;
   }
 
@@ -112,7 +110,7 @@ export const unwrap = (vnode: JSX.Element | null): VNode => {
   const children = vnode.props?.children;
   if (children !== undefined && children !== null) {
     props.children = flatten(vnode.props.children).map((child) =>
-      unwrap(child)
+      unwrap(child),
     );
   }
 
@@ -144,3 +142,37 @@ export const flatten = (rawChildren?: JSX.Element | null): JSX.Element[] => {
   }
   return children;
 };
+
+export function convertToJSX(dom: HTMLElement): VNode {
+  if (!dom.tagName) {
+    return null;
+  }
+
+  // Convert 'class' to 'className' and 'for' to 'htmlFor'
+  const attributes: Record<string, any> = {};
+  for (let i = 0; i < dom.attributes.length; i++) {
+    const attrib = dom.attributes[i]!;
+    attributes[attrib.name] = attrib.value;
+  }
+
+  if (attributes.class) {
+    attributes.className = attributes.class;
+    delete attributes.class;
+  }
+
+  if (attributes.for) {
+    attributes.htmlFor = attributes.for;
+    delete attributes.for;
+  }
+  const children: VNode[] = [];
+  for (let i = 0; i < dom.children.length; i++) {
+    const child = dom.children[i];
+    if (child instanceof HTMLElement) {
+      children.push(convertToJSX(child)); // Recursively convert nested elements
+    } else if (child instanceof Text) {
+      children.push(child.textContent);
+    }
+  }
+
+  return createElement(dom.tagName.toLowerCase(), attributes, ...children);
+}

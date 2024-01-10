@@ -13,7 +13,7 @@ const DEFAULT_EXCLUDE = 'node_modules/**/*.{jsx,tsx,ts,js,mjs,cjs}';
 export const unplugin = createUnplugin((options: Options = {}) => {
   const filter = createFilter(
     options.filter?.include || DEFAULT_INCLUDE,
-    options.filter?.exclude || DEFAULT_EXCLUDE
+    options.filter?.exclude || DEFAULT_EXCLUDE,
   );
 
   // Backwards compatibility for `mode: 'react-server'`:
@@ -27,7 +27,7 @@ export const unplugin = createUnplugin((options: Options = {}) => {
   // Throws an error if `mode: 'preact'` or `mode: 'preact-server'` is used
   if (options.mode?.startsWith('preact')) {
     throw new Error(
-      'Preact is no longer maintained. Downgrade to a lower version for support'
+      'Preact is no longer maintained. Downgrade to a lower version for support',
     );
   }
 
@@ -85,7 +85,7 @@ export const unplugin = createUnplugin((options: Options = {}) => {
 export const repushPlugin = (
   plugins: VitePlugin[],
   pluginName: string,
-  pluginNames: string[]
+  pluginNames: string[],
 ): void => {
   const namesSet = new Set(pluginNames);
 

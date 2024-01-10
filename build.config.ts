@@ -5,7 +5,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const version = JSON.parse(
-  readFileSync(join(__dirname, 'package.json'), 'utf-8')
+  readFileSync(join(__dirname, 'package.json'), 'utf-8'),
 ).version;
 
 export default defineBuildConfig({
@@ -17,7 +17,8 @@ export default defineBuildConfig({
     './packages/react-server',
     './packages/types',
   ],
-  declaration: true,
+  // declaration: true,
+  declaration: false,
   clean: true,
   failOnWarn: false,
   rollup: {
@@ -32,17 +33,10 @@ export default defineBuildConfig({
           replace({
             'process.env.VERSION': JSON.stringify(version),
             preventAssignment: true,
-          })
+          }),
         );
       }
     },
   },
-  externals: [
-    'react',
-    'react-dom',
-    'million',
-    'vite',
-    'esbuild',
-    'rollup',
-  ],
+  externals: ['react', 'react-dom', 'million', 'vite', 'esbuild', 'rollup'],
 });

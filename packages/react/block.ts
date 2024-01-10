@@ -10,7 +10,7 @@ import { queueMicrotask$ } from '../million/dom';
 import type { Options, MillionProps, MillionPortal } from '../types';
 import { processProps, unwrap } from './utils';
 import { useContainer, useNearestParent } from './its-fine';
-import { Effect, RENDER_SCOPE, REGISTRY, SVG_RENDER_SCOPE } from './constants';
+import { Effect, REGISTRY } from './constants';
 
 export const block = <P extends MillionProps>(
   fn: ComponentType<P> | null,
@@ -44,15 +44,17 @@ export const block = <P extends MillionProps>(
       const target = parentRef.current ?? container.current;
       if (!target) return;
       const currentBlock = block!(props, props.key);
-      if (hmrTimestamp && target.textContent) {
-        target.textContent = '';
-      }
+      // if (hmrTimestamp && target.textContent) {
+      //   target.textContent = '';
+      // }
       if (patch.current === null || hmrTimestamp) {
         queueMicrotask$(() => {
           mount$.call(currentBlock, target, null);
         });
         patch.current = (props: P) => {
           queueMicrotask$(() => {
+            console.log('here')
+            debugger
             patchBlock(
               currentBlock,
               block!(props, props.key, options?.shouldUpdate),

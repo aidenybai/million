@@ -8,7 +8,6 @@ import LLMReport from '../../pages/showcase/llm-report.png';
 import Texts from '../../pages/showcase/texts.png';
 import { Container } from './container';
 
-
 export function Community() {
   return (
     <>
@@ -16,7 +15,7 @@ export function Community() {
         <div className="flex flex-col lg:flex-row gap-6 items-end justify-between overflow-hidden">
           <div className="py-5 pt-5 lg:pt-20 px-3 lg:w-[50%]">
             <h2 className="font-normal font-white text-4xl md:text-5xl xl:text-7xl pb-6 leading-6">
-              Join our <br/> community
+              Join our <br /> community
             </h2>
             <p className="font-medium pb-6 text-sm xl:text-base">
               Connect with 5000+ React developers committed to better performing
@@ -35,25 +34,24 @@ export function Community() {
           </div>
 
           <div className="w-full lg:w-[45%]">
-            <ShowcaseSlider/>
+            <ShowcaseSlider />
 
             <div className="flex flex-wrap justify-center gap-6 mt-8 items-center">
-          <Link
-            href="/showcase"
-            className="relative flex h-11 w-full items-center justify-center px-6 before:absolute before:inset-0 before:rounded-full before:border before:border-transparent before:bg-purple-600/10 before:bg-gradient-to-b before:transition before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 dark:before:border-zinc-700 dark:before:bg-zinc-800 sm:w-max"
-          >
-            <span className="relative text-base font-semibold text-purple-600 dark:text-white">
-              View the Million.js showcase
-            </span>
-          </Link>
-        </div>
+              <Link
+                href="/showcase"
+                className="relative flex h-11 w-full items-center justify-center px-6 before:absolute before:inset-0 before:rounded-full before:border before:border-transparent before:bg-purple-600/10 before:bg-gradient-to-b before:transition before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 dark:before:border-zinc-700 dark:before:bg-zinc-800 sm:w-max"
+              >
+                <span className="relative text-base font-semibold text-purple-600 dark:text-white">
+                  View the Million.js showcase
+                </span>
+              </Link>
             </div>
+          </div>
         </div>
       </div>
     </>
   );
 }
-
 
 export const ShowcaseSlider = () => {
   const entries = [

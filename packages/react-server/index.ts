@@ -1,131 +1,64 @@
 import {
   Fragment,
   createElement,
-  forwardRef,
   memo,
   useCallback,
   useEffect,
   useRef,
   useState,
 } from 'react';
+import type {
+  ComponentType,
+  PropsWithChildren,
+  ReactNode,
+} from 'react';
+import parse from 'html-react-parser';
 import {
   useContainer,
-  useFiber,
   useNearestParent,
-  useNearestParentFiber,
 } from '../react/its-fine';
-import type { ComponentType, ForwardedRef } from 'react';
-import { RENDER_SCOPE, SVG_RENDER_SCOPE } from '../react/constants';
-import type { MillionArrayProps, MillionProps, Options } from '../types';
-import { renderReactScope } from '../react/utils';
+import type { ArrayCache, MillionArrayProps, MillionProps, Options } from '../types';
+import { useSSRSafeId } from './utils';
 
 export { renderReactScope } from '../react/utils';
 
 let globalInfo;
-// if (!window._nextSetupHydrationWarning) {
-//     const origConsoleError = window.console.error;
-//     window.console.error = (...args)=>{
-//         const isHydrateError = args.some((arg)=>typeof arg === 'string' && arg.match(/(hydration|content does not match|did not match)/i));
-//         if (isHydrateError) {
-//             args = [
-//                 ...args,
-//                 `\n\nSee more info here: https://nextjs.org/docs/messages/react-hydration-error`, 
-//             ];
-//         }
-//         origConsoleError.apply(window.console, args);
-//     };
-//     window._nextSetupHydrationWarning = true;
-// }
 
-const NativeError = Error
-// @ts-ignore
-globalThis.Error = class extends NativeError {
-  constructor(...args) {
-    super()
-    if (args[0] ==="Hydration failed because the initial UI does not match what was rendered on the server.") {
-      return {} as any
-    }
-    if (args[0]?.includes('There was an error while hydrating. Because the error happened outside of a Suspense boundary, the entire root will switch to client rendering.')) {
-      return {} as any
-    }
-    return new NativeError(...args)
-  }
-  
+const isClient =  typeof window !== 'undefined' 
+const isServer = !isClient
+
+if (isClient) {
+  importSource(() => {});
 }
-
-function patchErrors() {
-  const { warn, error } = console
-  console.log('here')
-  const base = (method: Function) => (...args: unknown[]) => {
-    console.log(args)
-    if (typeof args[0] !== 'string') 
-      return
-    if (args[0].includes('Did not expect server HTML to contain a <%s> in <%s>.%s')) {
-      return
-    }
-    if (args[0].includes('An error occurred during hydration. The server HTML was replaced with client content in <%s>.')) {
-      return
-    }
-    return method(...args)
-  } 
-  console.error = base(error)
-  console.warn = base(warn)
-  return () => {
-    // console.error = error
-    // console.warn = warn
-  }
-}
-patchErrors()
-
-
 export const block = <P extends MillionProps>(
   Component: ComponentType<P>,
   options: Options = {},
 ) => {
   let blockFactory = globalInfo ? globalInfo.block(Component, options) : null;
 
-  const rscBoundary = options.rsc ? createRSCBoundary(Component) : null;
+  const rscBoundary = options.rsc ? createRSCBoundary(Component as any) : null;
 
   function MillionBlockLoader<P extends MillionProps>(props?: P) {
-    const fiber = useFiber();
-    const parentFiber = useNearestParentFiber();
-    console.log(parentFiber);
     const container = useContainer<HTMLElement>(); // usable when there's no parent other than the root element
     const parentRef = useNearestParent<HTMLElement>();
 
-    const ref = useRef<HTMLElement>(null);
     const patch = useRef<((props: P) => void) | null>(null);
-
-    const unpatch = patchErrors()
-
     const effect = useCallback(() => {
       const init = (): void => {
-        if (parentFiber) {
-          parentFiber.pendingProps = {
-            ...parentFiber.pendingProps,
-            suppressHydrationWarning: true,
-            // dangerouslySetInnerHTML: { __html: '' }
-          };
-          parentFiber.memoizedProps = {
-            ...parentFiber.memoizedProps,
-            suppressHydrationWarning: true,
-            // dangerouslySetInnerHTML: { __html: '' }
-          };
-        }
-
         const el = parentRef.current ?? container.current;
 
         if (!el) return;
-        // globalInfo.setAttribute(el, 'suppresshydrationwarning', true)
 
         const currentBlock = blockFactory(props, props?.key);
 
-        globalInfo.mount(currentBlock, el, el.firstChild);
-        patch.current = (newProps: P) => {
-          globalInfo.patch(currentBlock, blockFactory(newProps, newProps.key));
-        };
+        globalInfo.mount(currentBlock, el, el.firstChild),
+          (patch.current = (newProps: P) => {
+            globalInfo.patch(
+              currentBlock,
+              blockFactory(newProps, newProps.key),
+            );
+          });
       };
-      
 
       if (blockFactory && globalInfo) {
         init();
@@ -143,7 +76,6 @@ export const block = <P extends MillionProps>(
       }
 
       return () => {
-        // unpatch()
         blockFactory = null;
       };
     }, []);
@@ -156,7 +88,7 @@ export const block = <P extends MillionProps>(
       createElement(Effect, { effect }),
       rscBoundary
         ? createElement(rscBoundary, { ...props } as any)
-        : createSSRBoundary<P>(Component as any, props!),
+        : createElement(SSRBoundary, { Component, props } as any),
     );
     return vnode;
   }
@@ -165,9 +97,13 @@ export const block = <P extends MillionProps>(
 };
 
 export function For<T>({ each, children, ssr, svg }: MillionArrayProps<T>) {
+  const isFirstRender = useRef(true)
+  const [mounted, setMounted] = useState(false)
+  const id = useSSRSafeId();
   const [ready, setReady] = useState(Boolean(globalInfo));
 
   useEffect(() => {
+    isFirstRender.current = false
     if (!globalInfo) {
       importSource(() => {
         setReady(true);
@@ -178,26 +114,39 @@ export function For<T>({ each, children, ssr, svg }: MillionArrayProps<T>) {
   if (!ready || !globalInfo) {
     if (ssr === false) return null;
     return createElement(
-      svg ? SVG_RENDER_SCOPE : RENDER_SCOPE,
-      { suppressHydrationWarning: true },
-      ...each.map(children),
+      Fragment,
+      null,
+      createHydrationBoundary(id, 'start', isServer),
+      createElement(Suspend, {
+        children: each.map(children),
+        id,
+      }),
+      createHydrationBoundary(id, 'end', isServer),
     );
   }
+  const ForElement = createElement(globalInfo.For, {
+        each,
+        children,
+        ssr,
+        setMounted
+      })
 
-  return createElement(globalInfo.For, {
-    each,
-    children,
-    ssr,
-    svg,
-  });
+  return createElement(
+    Fragment,
+    null,
+    !mounted ? createElement(Suspend, {
+      // children: ,
+      id,
+    }) : null,
+  ForElement)
 }
 
-function Effect({ effect }: { effect: () => void }) {
+const Effect = function Effect({ effect }: { effect: () => void }) {
   useEffect(effect, []);
   return null;
-}
+};
 
-export const importSource = (callback: () => void) => {
+export function importSource(callback: () => void) {
   void import('../react')
     .then(({ unwrap, INTERNALS, For }) => {
       globalInfo = {
@@ -211,34 +160,74 @@ export const importSource = (callback: () => void) => {
     .catch((e) => {
       throw new Error(`Failed to load Million.js: ${e}\n${e.stack}`);
     });
-};
+}
 
-export const createSSRBoundary = <P extends MillionProps>(
-  Component: ComponentType<P>,
-  props: P,
+export const SSRBoundary = <P extends MillionProps>(
+  {
+    Component,
+    props,
+  }: {
+    Component: ComponentType<P>;
+    props: P;
+  },
 ) => {
-  const ssrProps =
-    typeof window === 'undefined'
-      ? {
-          children: createElement<P>(Component, props),
-        }
-      : {
-          // TODO: patch the warning for a while and then free it up, see the its-fine implmeentation of patching
-        };
+  const children =
+    isServer ? createElement<P>(Component, props) : null;
+  const id = useSSRSafeId();
 
-  const el = createElement(Fragment, {
-    // suppressHydrationWarning: true,
-    // ref,
-    ...ssrProps,
-  });
+  const el = createElement(
+    Fragment,
+    null,
+    createHydrationBoundary(id, 'start', isServer),
+    createElement(Suspend, {
+      children,
+      id,
+    }),
+    createHydrationBoundary(id, 'end', isServer),
+  );
   return el;
 };
 
-export const createRSCBoundary = <P extends MillionProps>(
-  Component: ComponentType<P>,
-) => {
+const thrown = new Map();
+
+function Suspend({
+  children,
+  id,
+}: PropsWithChildren<{ id: string }>): ReactNode {
+  if (isServer) {
+    return children;
+  }
+
+  let html = '';
+  const startTemplate = document.getElementById(`start-${id}`);
+  const endTemplate = document.getElementById(`end-${id}`);
+  if (!thrown.has(id) && startTemplate && endTemplate) {
+    let el = startTemplate.nextElementSibling;
+    while (el && el !== endTemplate) {
+      html += el.outerHTML;
+      el = el.nextElementSibling;
+    }
+    startTemplate.remove();
+    endTemplate.remove();
+    thrown.set(id, parse(html));
+    throw Promise.resolve();
+  }
+  // we can return null to avoid parsing but this would cause a flashing
+  return thrown.get(id);
+}
+
+const createHydrationBoundary = (id: string, phase: 'start' | 'end', isSSR: boolean) => {
+  // TODO: Better to use html commnts which are not allowed in React
+  return isSSR ? createElement('template', { id: `${phase}-${id}` }) : null;
+};
+
+export const createRSCBoundary = (Component: ComponentType<MillionProps>) => {
   return memo(
-    (props: P) => createSSRBoundary(Component, props),
+    (props) =>
+      createElement(SSRBoundary, {
+        Component,
+        props,
+      }),
     () => true,
   );
 };

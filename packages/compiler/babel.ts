@@ -32,7 +32,7 @@ export interface Info {
 export function babel(
   _: unknown,
   options: Options,
-  filename: string
+  filename: string,
 ): PluginObj {
   const state: Info['imports'] = {
     block: null,
@@ -107,7 +107,7 @@ export function babel(
                 }
               },
             },
-            state
+            state,
           );
           if (!state.source) return;
 
@@ -138,7 +138,7 @@ export function babel(
           for (let i = 0, j = programBody.length; i < j; ++i) {
             const path = programBody[i];
             if (!path?.isImportDeclaration()) continue;
-            (path.node as any)._blockHoist = 3;
+            path.node._blockHoist = 3;
           }
         },
       },

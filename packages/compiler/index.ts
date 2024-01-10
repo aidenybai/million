@@ -42,9 +42,9 @@ export const next = (
         }),
       );
 
-      // @ts-ignore
+      // @ts-expect-error
       if (typeof nextConfig.webpack === 'function') {
-        // @ts-ignore
+        // @ts-expect-error
         return nextConfig.webpack(config, webpackOptions);
       }
       return config;

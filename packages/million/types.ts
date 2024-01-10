@@ -1,4 +1,4 @@
-import type {ReactElement} from 'react'
+import type { ReactElement } from 'react';
 import type { MillionProps } from '../types';
 
 declare const enum Flags {
@@ -34,7 +34,7 @@ export interface Hole {
 }
 
 export abstract class AbstractBlock {
-  /* root */ r?: DocumentFragment;
+  /* root */ r?: Node;
   /* edits */ e?: Edit[];
   /* el */ l?: Node | null;
   /* getElements */ g?: ((root: Node) => HTMLElement[]) | null;
@@ -49,16 +49,16 @@ export abstract class AbstractBlock {
   /* mount */ abstract m(
     parent?: HTMLElement,
     refNode?: Node | null,
-    hydrateNode?: Node | null
+    hydrateNode?: Node | null,
   ): Node;
   /* move */ abstract v(
     block: AbstractBlock | null,
-    refNode: Node | null
+    refNode: Node | null,
   ): void;
   /* remove */ abstract x(): void;
   /* shouldUpdate */ abstract u(
     oldProps: MillionProps,
-    newProps: MillionProps
+    newProps: MillionProps,
   ): boolean;
   /* toString */ abstract s(): string;
   /* parent */ abstract t(): HTMLElement | null | undefined;

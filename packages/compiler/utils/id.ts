@@ -1,7 +1,10 @@
 import type { NodePath } from '@babel/core';
 import * as t from '@babel/types';
 
-export const getUniqueId = <T>(path: NodePath<T>, name: string): t.Identifier => {
+export const getUniqueId = <T>(
+  path: NodePath<T>,
+  name: string,
+): t.Identifier => {
   const processedName = t
     .toIdentifier(name)
     .replace(/^_+/, '')
