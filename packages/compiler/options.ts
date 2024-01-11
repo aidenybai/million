@@ -35,11 +35,7 @@ interface PluginOptions {
   rsc?: boolean;
   /**
    * Million.js collects anonymous telemetry data about general usage. Participation is optional, and you may opt-out at any time.
-   *
-   * We do not collect any metrics which may contain sensitive data. This includes, but is not limited to: environment
-   * variables, personally identifiable information, file paths, contents of files, logs, stack traces, git remote
-   * information, or unsanitized JavaScript error messages.
-   *
+   * For more information, please see https://million.dev/telemetry.
    * @default true
    */
   telemetry?: boolean;

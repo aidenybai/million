@@ -36,7 +36,7 @@ export const unplugin = createUnplugin((options: Options = {}, meta) => {
   options.MillionTelemetry = new MillionTelemetry(options.telemetry);
 
   void options.MillionTelemetry.record({
-    event: 'start-compile',
+    event: 'compile',
     payload: {
       framework: meta.framework,
     },

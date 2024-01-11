@@ -83,57 +83,59 @@ export function About() {
           <p className="mt-3 text-center text-zinc-600 dark:text-zinc-300 md:text-md lg:text-lg">
             The tools to make React faster, automatically.
           </p>
-          <Card
-            title="Block Virtual DOM"
-            icon={<BoxIcon />}
-            description={
-              <>
-                Million.js introduces a novel{' '}
-                <Link
-                  href="/blog/virtual-dom"
-                  className="underline nx-text-primary-600"
-                >
-                  "block" virtual DOM.
-                </Link>{' '}
-                It's significantly faster than React's virtual DOM, as it diffs
-                data instead of the DOM.
-              </>
-            }
-          />
-          <Card
-            title="Supercharged Compiler"
-            icon={<LightBulbIcon />}
-            description={
-              <>
-                Million.js uses a{' '}
-                <Link
-                  href="/blog/behind-the-block"
-                  className="underline nx-text-primary-600"
-                >
-                  custom compiler
-                </Link>{' '}
-                that automatically optimizes your React components on the
-                server.
-              </>
-            }
-          />
-          <Card
-            title="Automatic Mode"
-            icon={<ThumbsUpIcon />}
-            description={
-              <>
-                Tired of learning new frameworks and big migrations? Million.js
-                ships{' '}
-                <Link
-                  href="/docs/automatic"
-                  className="underline nx-text-primary-600"
-                >
-                  a drop-in automatic mode
-                </Link>{' '}
-                to make your React apps faster, without any code changes.
-              </>
-            }
-          />
+          <div className="relative mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <Card
+              title="Block Virtual DOM"
+              icon={<BoxIcon />}
+              description={
+                <>
+                  Million.js introduces a novel{' '}
+                  <Link
+                    href="/blog/virtual-dom"
+                    className="underline nx-text-primary-600"
+                  >
+                    "block" virtual DOM.
+                  </Link>{' '}
+                  It's significantly faster than React's virtual DOM, as it
+                  diffs data instead of the DOM.
+                </>
+              }
+            />
+            <Card
+              title="Supercharged Compiler"
+              icon={<LightBulbIcon />}
+              description={
+                <>
+                  Million.js uses a{' '}
+                  <Link
+                    href="/blog/behind-the-block"
+                    className="underline nx-text-primary-600"
+                  >
+                    custom compiler
+                  </Link>{' '}
+                  that automatically optimizes your React components on the
+                  server.
+                </>
+              }
+            />
+            <Card
+              title="Automatic Mode"
+              icon={<ThumbsUpIcon />}
+              description={
+                <>
+                  Tired of learning new frameworks and big migrations?
+                  Million.js ships{' '}
+                  <Link
+                    href="/docs/automatic"
+                    className="underline nx-text-primary-600"
+                  >
+                    a drop-in automatic mode
+                  </Link>{' '}
+                  to make your React apps faster, without any code changes.
+                </>
+              }
+            />
+          </div>
         </Container>
         <Blur />
       </div>
