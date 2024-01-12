@@ -51,13 +51,13 @@ export const block = <P extends MillionProps>(
 
         const currentBlock = blockFactory(props, props?.key);
 
-        globalInfo.mount(currentBlock, el, el.firstChild),
-          (patch.current = (newProps: P) => {
-            globalInfo.patch(
-              currentBlock,
-              blockFactory(newProps, newProps.key),
-            );
-          });
+        globalInfo.mount(currentBlock, el, el.firstChild);
+        patch.current = (newProps: P) => {
+          globalInfo.patch(
+            currentBlock,
+            blockFactory(newProps, newProps.key),
+          );
+        };
       };
 
       if (blockFactory && globalInfo) {
