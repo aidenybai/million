@@ -7,15 +7,15 @@ export function GitHubIcon() {
       </svg>
       <style jsx>
         {`
-        svg {
-          transition: fill 0.5s ease;
-        }
+          svg {
+            transition: fill 0.5s ease;
+          }
 
-        svg:hover,
-        svg:focus {
-          fill: #6f42c1;
-        }
-      `}
+          svg:hover,
+          svg:focus {
+            fill: #6f42c1;
+          }
+        `}
       </style>
     </>
   );

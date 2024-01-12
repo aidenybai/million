@@ -13,7 +13,7 @@ export const optimize = (
   callExpressionPath: NodePath<t.CallExpression>,
   info: Info,
   holes: string[],
-  jsx: t.JSXElement
+  jsx: t.JSXElement,
 ): {
   blockFactory: t.ArrowFunctionExpression;
   variables: t.VariableDeclaration;
@@ -32,7 +32,7 @@ export const optimize = (
   const { declarators, accessedIds } = hoistElements(
     paths,
     callExpressionPath,
-    'million'
+    'million',
   );
 
   const editsArray = t.arrayExpression(
@@ -55,7 +55,7 @@ export const optimize = (
             value,
             patch: value,
             block: value,
-          })
+          }),
         );
       }
 
@@ -73,7 +73,7 @@ export const optimize = (
               value,
               patch: value,
               block: value,
-            })
+            }),
           );
         } else {
           initsProperties.push(
@@ -85,7 +85,7 @@ export const optimize = (
               value,
               patch: t.nullLiteral(),
               block: t.nullLiteral(),
-            })
+            }),
           );
         }
       }
@@ -97,17 +97,17 @@ export const optimize = (
           t.identifier('i'),
           initsProperties.length
             ? t.arrayExpression(initsProperties)
-            : t.arrayExpression()
+            : t.arrayExpression(),
         ),
       ]);
-    })
+    }),
   );
 
   const stringToDOM = addImport(
     callExpressionPath,
     'stringToDOM',
     'million',
-    info
+    info,
   );
 
   const domVariable = getUniqueId(callExpressionPath, 'd');
@@ -125,9 +125,9 @@ export const optimize = (
               raw: renderToString(template),
             }),
           ],
-          []
+          [],
         ),
-      ])
+      ]),
     ),
     t.variableDeclarator(editsVariable, editsArray),
     t.variableDeclarator(shouldUpdateVariable, createDirtyChecker(holes)),
@@ -139,9 +139,9 @@ export const optimize = (
             t.blockStatement([
               t.variableDeclaration('const', declarators),
               t.returnStatement(t.arrayExpression(accessedIds)),
-            ])
+            ]),
           )
-        : t.nullLiteral()
+        : t.nullLiteral(),
     ),
   ]);
   const BlockClass = addNamed(callExpressionPath, 'Block', 'million', {
@@ -159,17 +159,17 @@ export const optimize = (
           t.logicalExpression(
             '??',
             t.identifier('key'),
-            t.memberExpression(t.identifier('props'), t.identifier('key'))
+            t.memberExpression(t.identifier('props'), t.identifier('key')),
           ),
           t.logicalExpression(
             '??',
             t.identifier('shouldUpdate'),
-            shouldUpdateVariable
+            shouldUpdateVariable,
           ),
           getElementsVariable,
-        ])
+        ]),
       ),
-    ])
+    ]),
   );
 
   return {

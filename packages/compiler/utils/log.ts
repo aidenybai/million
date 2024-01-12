@@ -18,7 +18,7 @@ export const deopt = (
   message: string | null,
   filename: string,
   callSitePath: NodePath,
-  targetPath: NodePath = callSitePath
+  targetPath: NodePath = callSitePath,
 ) => {
   const { parent, node } = callSitePath;
   // This will attempt to reset the variable to the first argument from
@@ -38,7 +38,7 @@ export const warn = (
   message: string,
   file: string,
   path: NodePath,
-  log?: boolean | string | null
+  log?: boolean | string | null,
 ) => {
   if (log === false) return;
   const err = createErrorMessage(path, message, file);
@@ -48,19 +48,21 @@ export const warn = (
     '\n',
     dim(
       `Check out the Rules of Blocks: ${cyan(
-        'https://million.dev/docs/rules'
-      )}. Enable the "mute" option to disable this message.`
+        'https://million.dev/docs/rules',
+      )}. Enable the "mute" option to disable this message.`,
     ),
-    '\n'
+    '\n',
   );
 };
 
 export const createErrorMessage = (
   path: NodePath,
   message: string,
-  filename: string
+  filename: string,
 ) => {
-  return path.buildCodeFrameError(`\n${magenta('⚠')}${message} ${dim(filename)}`);
+  return path.buildCodeFrameError(
+    `\n${magenta('⚠')}${message} ${dim(filename)}`,
+  );
 };
 
 let hasIntroRan = false;
@@ -79,7 +81,7 @@ export const displayIntro = (options: Options) => {
   }
 
   let message = `\n  ${bold(
-    magenta(`⚡ Million.js ${process.env.VERSION || ''}`)
+    magenta(`⚡ Million.js ${process.env.VERSION || ''}`),
   )}
   - Tip:     use ${dim('// million-ignore')} for errors
   - Hotline: ${cyan('https://million.dev/hotline')}`;
@@ -96,7 +98,7 @@ export const displayIntro = (options: Options) => {
 
 export const catchError = (
   fn: () => void,
-  log: boolean | string | undefined | null
+  log: boolean | string | undefined | null,
 ) => {
   try {
     fn();
@@ -112,8 +114,8 @@ export const logImprovement = (component: string, improvement: string) => {
   // eslint-disable-next-line no-console
   console.log(
     `${magenta(' ⚡ ')}${yellow(`<${component}>`)} now renders ${green(
-      underline(`~${improvement}%`)
-    )} faster`
+      underline(`~${improvement}%`),
+    )} faster`,
   );
 };
 

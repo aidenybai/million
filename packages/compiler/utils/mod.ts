@@ -4,7 +4,10 @@ import type * as t from '@babel/types';
 import type { Options } from '../options';
 import type { Info } from '../babel';
 
-export const resolveImportSource = (options: Options, source: string): string | null => {
+export const resolveImportSource = (
+  options: Options,
+  source: string,
+): string | null => {
   if (!source.startsWith('million/react')) return null;
   const mode = options.mode || 'react';
   if (options.server) {
@@ -17,7 +20,7 @@ export const addImport = (
   path: NodePath,
   name: string,
   source: string,
-  info: Info
+  info: Info,
 ): t.Identifier => {
   const hasProgramBinding = info.programPath.scope.hasBinding(name);
   const hasLocalBinding = path.scope.hasBinding(name);

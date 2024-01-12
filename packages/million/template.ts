@@ -45,7 +45,7 @@ export const renderToTemplate = (
       i: [],
     });
 
-    return '<slot/>';
+    return '';
   }
 
   let props = '';
@@ -246,6 +246,10 @@ export const renderToTemplate = (
   }
 
   if (current.i!.length || current.e.length) edits.push(current);
+
+  if (vnode.type.toString() === 'Symbol(react.fragment)') {
+    return `${children}`;
+  }
 
   return `<${vnode.type}${props}>${children}</${vnode.type}>`;
 };

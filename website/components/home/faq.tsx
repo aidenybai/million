@@ -8,8 +8,8 @@ const faq = [
     question: <>How is it fast?</>,
     answer: (
       <>
-        It uses a novel approach to the virtual DOM called the block virtual DOM.
-        You can read more on what the block virtual DOM is with{' '}
+        It uses a novel approach to the virtual DOM called the block virtual
+        DOM. You can read more on what the block virtual DOM is with{' '}
         <Link
           className="nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]"
           href="/blog/virtual-dom"
