@@ -15,8 +15,7 @@ export function Cursor({
         top: 0,
         transform: `translateX(${x}px) translateY(${y}px)`,
         zIndex: 1000,
-        pointerEvents: 'none'
-
+        pointerEvents: 'none',
       }}
       width="24"
       height="36"

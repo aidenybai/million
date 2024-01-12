@@ -14,7 +14,7 @@ import { getUniqueId } from './utils/id';
 
 export const transformFor = (
   jsxElementPath: NodePath<t.JSXElement>,
-  info: Info
+  info: Info,
 ) => {
   if (!info.imports.source) return;
 
@@ -140,32 +140,34 @@ export const transformFor = (
       t.arrowFunctionExpression(
         [
           t.objectPattern(
-            ids.map((id) => t.objectProperty(id, id, false, true))
+            ids.map((id) => t.objectProperty(id, id, false, true)),
           ),
         ],
         t.isBlockStatement(body)
           ? body
-          : t.blockStatement([t.returnStatement(body)])
-      )
+          : t.blockStatement([t.returnStatement(body)]),
+      ),
     ),
   ]);
 
   const blockComponent = t.variableDeclaration('const', [
     t.variableDeclarator(
       blockComponentId,
-      t.callExpression(t.identifier(info.imports.block!), [callbackComponentId])
+      t.callExpression(t.identifier(info.imports.block!), [
+        callbackComponentId,
+      ]),
     ),
   ]);
 
   const [originalComponentPath] = info.programPath.pushContainer(
     'body',
-    originalComponent
+    originalComponent,
   );
   info.programPath.scope.registerDeclaration(originalComponentPath);
 
   const [blockComponentPath] = info.programPath.pushContainer(
     'body',
-    blockComponent
+    blockComponent,
   );
   info.programPath.scope.registerDeclaration(blockComponentPath);
 
@@ -175,7 +177,7 @@ export const transformFor = (
 
   const callExpressionPath = findChild<t.CallExpression>(
     jsxElementPath,
-    'CallExpression'
+    'CallExpression',
   );
 
   if (!callExpressionPath || !callExpressionPath.isCallExpression()) return;
@@ -186,7 +188,7 @@ export const transformFor = (
 
 export const validateForExpression = (
   jsxElementPath: NodePath<t.JSXElement>,
-  info: Info
+  info: Info,
 ): t.ArrowFunctionExpression => {
   const jsxElement = jsxElementPath.node;
   const VALIDATION_MESSAGE = 'Invalid For usage: https://million.dev/docs/for';
@@ -210,12 +212,12 @@ export const validateForExpression = (
 
   if (t.isBlockStatement(expression.body)) {
     const blockStatementPath = jsxElementPath.get(
-      'children.0.expression.body'
+      'children.0.expression.body',
     )[0]!;
 
     const returnStatementPath = findChild<t.ReturnStatement>(
       blockStatementPath,
-      'ReturnStatement'
+      'ReturnStatement',
     );
 
     if (returnStatementPath === null) {
@@ -252,7 +254,7 @@ export const hoistFor = (jsxElementPath: NodePath<t.JSXElement>) => {
     ) {
       if (
         !jsxElement.openingElement.attributes.some(
-          (attr) => t.isJSXAttribute(attr) && attr.name.name === 'as'
+          (attr) => t.isJSXAttribute(attr) && attr.name.name === 'as',
         )
       ) {
         const jsxElementClone = t.cloneNode(jsxElement);

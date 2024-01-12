@@ -2,5 +2,8 @@
   "type": "module",
   "private": true,
   "main": "./index.ts",
-  "module": "./index.ts"
+  "module": "./index.ts",
+  "devDependencies": {
+    "@types/react": "^18.2.46"
+  }
 }

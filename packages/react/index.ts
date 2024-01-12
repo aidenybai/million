@@ -1,4 +1,4 @@
-import { block as internalBlock, patch, mount } from '../million';
+import { block as internalBlock, patch, mount, setAttribute } from '../million';
 
 export { block } from './block';
 export { For } from './for';
@@ -8,4 +8,5 @@ export const INTERNALS = {
   block: internalBlock,
   patch,
   mount,
+  setAttribute,
 };

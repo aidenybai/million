@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react';
 import type { MillionProps } from '../types';
 
 declare const enum Flags {
@@ -11,6 +12,7 @@ declare const enum Flags {
 
 export type VNode =
   | VElement
+  | ReactElement
   | string
   | number
   | bigint
@@ -32,10 +34,10 @@ export interface Hole {
 }
 
 export abstract class AbstractBlock {
-  /* root */ r?: HTMLElement;
+  /* root */ r?: Node;
   /* edits */ e?: Edit[];
-  /* el */ l?: HTMLElement | null;
-  /* getElements */ g?: ((root: HTMLElement) => HTMLElement[]) | null;
+  /* el */ l?: Node | null;
+  /* getElements */ g?: ((root: Node) => HTMLElement[]) | null;
   /* _shouldUpdate */ _u?:
     | ((oldProps: MillionProps, newProps: MillionProps) => boolean)
     | null;
@@ -43,20 +45,20 @@ export abstract class AbstractBlock {
   /* props */ d?: MillionProps | null;
   /* key */ k?: string | null;
   /* cache */ c?: HTMLElement[];
-  /* patch */ abstract p(block: AbstractBlock): HTMLElement;
+  /* patch */ abstract p(block: AbstractBlock): Node;
   /* mount */ abstract m(
     parent?: HTMLElement,
     refNode?: Node | null,
-    hydrateNode?: Node | null
-  ): HTMLElement;
+    hydrateNode?: Node | null,
+  ): Node;
   /* move */ abstract v(
     block: AbstractBlock | null,
-    refNode: Node | null
+    refNode: Node | null,
   ): void;
   /* remove */ abstract x(): void;
   /* shouldUpdate */ abstract u(
     oldProps: MillionProps,
-    newProps: MillionProps
+    newProps: MillionProps,
   ): boolean;
   /* toString */ abstract s(): string;
   /* parent */ abstract t(): HTMLElement | null | undefined;
