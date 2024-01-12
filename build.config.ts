@@ -28,7 +28,12 @@ export default defineBuildConfig({
   hooks: {
     'rollup:options'(_ctx, options) {
       if (Array.isArray(options?.plugins)) {
-        options.plugins.push(banner(() => `'use client';\n`) as any);
+        options.plugins.push(banner((chunk) => { 
+          if (!chunk.name.includes('server')) {
+            return `'use client';\n`
+          }
+          return ''
+        }) as any);
         options.plugins.push(
           replace({
             'process.env.VERSION': JSON.stringify(version),
