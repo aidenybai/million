@@ -8,6 +8,11 @@ import packageJson from '../package.json' assert { type: 'json' };
 import { ExtraContent } from './components/extra-content';
 
 const config: DocsThemeConfig = {
+  i18n: [
+  { locale: 'en', text: 'English' },
+  { locale: 'es', text: 'Spanish' },
+  { locale: 'de', text: 'Deutsch' },
+],
   logo: () => {
     return (
       <span>

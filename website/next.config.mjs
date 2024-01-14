@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/default -- Next.js requires default export
 import nextra from 'nextra';
 
 const withNextra = nextra({
@@ -12,6 +11,12 @@ const withNextra = nextra({
  */
 const nextConfig = {
   transpilePackages: ['react-tweet'],
+  i18n: {
+    locales: ['en', 'fr', 'de', 'es'],
+    defaultLocale: 'en',
+    localeDetection: true,
+  },
+  trailingSlash: true,
 };
 
 // eslint-disable-next-line import/no-default-export  -- Next.js requires default export
