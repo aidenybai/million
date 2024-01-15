@@ -116,7 +116,7 @@ export const handleTopLevelFragment = (returnStatement: t.ReturnStatement) => {
   trimJSXChildren(jsx);
 
   if (jsx.children.length !== 1) {
-    returnStatement.argument = t.jsxElement(
+    returnStatement.argument = t.jsxFragment(
       t.jsxOpeningFragment(),
       t.jsxClosingFragment(),
       jsx.children,
