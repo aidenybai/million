@@ -17,8 +17,6 @@ export interface MillionArrayProps<T> {
   children: (value: T, i: number) => JSX.Element;
   memo?: true;
   ssr?: boolean;
-  svg?: boolean;
-  as?: string;
   html?: string;
   rsc?: boolean;
   [key: string]: any;

@@ -3,10 +3,12 @@ import {
   createElement,
   forwardRef,
   memo,
+  useContext,
   useEffect,
   useReducer,
   useRef,
   useState,
+  createContext
 } from 'react';
 import type { DispatchWithoutAction, MutableRefObject } from 'react';
 import { arrayMount$, arrayPatch$ } from '../million/array';
@@ -24,15 +26,13 @@ import { renderReactScope } from './utils';
 import { REGISTRY } from './constants';
 import { useContainer, useNearestParent } from './its-fine';
 
+export const mountContext = createContext<React.Dispatch<boolean> | null>(null as any)
+
 const MillionArray = <T>({
   each,
   children,
   memo,
-  svg,
-  as,
-  setMounted,
-  ...rest
-}: MillionArrayProps<T>, ref): ReturnType<typeof createElement> => {
+}: MillionArrayProps<T>): ReturnType<typeof createElement> => {
   const container = useContainer<HTMLElement>(); // usable when there's no parent other than the root element
   const parentRef = useNearestParent<HTMLElement>();
 
@@ -46,7 +46,8 @@ const MillionArray = <T>({
     mounted: false,
   });
   const [, setMountPortals] = useState(false);
-  const [, rerender] = useReducer(() => Symbol());
+  const [, rerender] = useReducer(() => Symbol(), Symbol());
+  const setMounted = useContext(mountContext)
 
   if (fragmentRef.current && (each !== cache.current.each || !memo)) {
     queueMicrotask$(() => {
@@ -93,7 +94,7 @@ const MillionArray = <T>({
       arrayMount$.call(fragmentRef.current, el!);
       cache.current.mounted = true;
       setMountPortals(true);
-      setMounted(true)
+      setMounted?.(true)
     });
   }, [parentRef.current, container.current]);
 

@@ -17,18 +17,18 @@ import {
   useContainer,
   useNearestParent,
 } from '../react/its-fine';
-import type { ArrayCache, MillionArrayProps, MillionProps, Options } from '../types';
+import type { MillionArrayProps, MillionProps, Options } from '../types';
 import { useSSRSafeId } from './utils';
 
 export { renderReactScope } from '../react/utils';
 
 let globalInfo;
 
-const isClient =  typeof window !== 'undefined' 
+const isClient = typeof window !== 'undefined'
 const isServer = !isClient
 
 if (isClient) {
-  importSource(() => {});
+  importSource(() => { });
 }
 export const block = <P extends MillionProps>(
   Component: ComponentType<P>,
@@ -96,7 +96,7 @@ export const block = <P extends MillionProps>(
   return MillionBlockLoader;
 };
 
-export function For<T>({ each, children, ssr, svg }: MillionArrayProps<T>) {
+export function For<T>({ each, children, ssr }: MillionArrayProps<T>) {
   const isFirstRender = useRef(true)
   const [mounted, setMounted] = useState(false)
   const id = useSSRSafeId();
@@ -124,21 +124,19 @@ export function For<T>({ each, children, ssr, svg }: MillionArrayProps<T>) {
       createHydrationBoundary(id, 'end', isServer),
     );
   }
-  const ForElement = createElement(globalInfo.For, {
-        each,
-        children,
-        ssr,
-        setMounted
-      })
+  const ForElement = createElement(globalInfo.mountContext.Provider, { value: setMounted }, createElement(globalInfo.For, {
+    each,
+    children,
+    ssr,
+  }))
 
   return createElement(
     Fragment,
     null,
     !mounted ? createElement(Suspend, {
-      // children: ,
       id,
     }) : null,
-  ForElement)
+    ForElement)
 }
 
 const Effect = function Effect({ effect }: { effect: () => void }) {
@@ -148,7 +146,7 @@ const Effect = function Effect({ effect }: { effect: () => void }) {
 
 export function importSource(callback: () => void) {
   void import('../react')
-    .then(({ unwrap, INTERNALS, For }) => {
+    .then(({ unwrap, INTERNALS, For, }) => {
       globalInfo = {
         unwrap,
         For,
