@@ -148,3 +148,38 @@ export function useNearestParentFiber(
 
   return parentRef.current!;
 }
+
+export function useNearestParentInstant(
+  /** An optional element type to filter to. */
+  type?: keyof JSX.IntrinsicElements,
+): Element {
+  const fiber = useFiber();
+  const parentRef = useRef<Element>();
+
+  useState(() => {
+    parentRef.current = traverse(
+      fiber,
+      (node) =>
+        typeof node.type === 'string' &&
+        (type === undefined || node.type === type),
+      true,
+    )?.stateNode;
+  })
+
+  return parentRef.current!;
+}
+
+export function useContainerInstant(): Fiber {
+  const fiber = useFiber();
+  const rootRef = useRef<Fiber>();
+
+  useState(() => {
+    rootRef.current = traverse(
+      fiber,
+      (node) => node.stateNode?.containerInfo != null,
+      true,
+    )?.stateNode.containerInfo;
+  });
+
+  return rootRef.current!;
+}

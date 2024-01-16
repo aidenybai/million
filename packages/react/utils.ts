@@ -8,6 +8,7 @@ import type {
 } from 'react';
 import type { VNode } from '../million';
 import type { MillionPortal } from '../types';
+import { REGISTRY } from './constants';
 
 // TODO: access perf impact of this
 export const processProps = (
@@ -46,9 +47,9 @@ export const renderReactScope = (
   portals: MillionPortal[] | undefined,
   currentIndex: number,
   parent: Element,
-  rerender: DispatchWithoutAction,
+  rerender?: DispatchWithoutAction,
 ) => {
-  const el = portals?.[currentIndex]?.current;
+  // const el = portals?.[currentIndex]?.current;
 
   const isBlock =
     isValidElement(vnode) &&
@@ -70,17 +71,18 @@ export const renderReactScope = (
     }
   }
 
-  const reactPortal = createPortal(vnode, parent);
+  const el = parent || document.createElement('template').content
+  const reactPortal = createPortal(vnode, el);
 
   const millionPortal = {
     foreign: true as const,
-    current: parent,
+    current: el,
     portal: reactPortal,
     unstable,
   };
   if (portals) {
     if (!portals[currentIndex]) {
-      rerender();
+      rerender?.();
     }
     portals[currentIndex] = millionPortal;
   }

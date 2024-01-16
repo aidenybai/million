@@ -76,6 +76,7 @@ const MillionArray = <T>({
 
     queueMicrotask$(() => {
       const el = parentRef.current ?? container.current;
+      console.log('el', parentRef.current, container.current)
       if (cache.current.mounted) return;
 
       const newChildren = createChildren<T>(

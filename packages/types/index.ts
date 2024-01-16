@@ -31,7 +31,7 @@ export interface ArrayCache<T> {
 
 export interface MillionPortal {
   foreign: true;
-  current: HTMLElement;
+  current: Element;
   portal: ReactPortal;
   unstable?: boolean;
 }

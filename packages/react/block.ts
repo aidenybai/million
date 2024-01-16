@@ -9,7 +9,7 @@ import { MapSet$, MapHas$ } from '../million/constants';
 import { queueMicrotask$ } from '../million/dom';
 import type { Options, MillionProps, MillionPortal } from '../types';
 import { processProps, unwrap } from './utils';
-import { useContainer, useNearestParent } from './its-fine';
+import { useContainer, useNearestParent, useNearestParentInstant } from './its-fine';
 import { Effect, REGISTRY } from './constants';
 
 export const block = <P extends MillionProps>(
@@ -30,6 +30,9 @@ export const block = <P extends MillionProps>(
     props: P,
     forwardedRef: Ref<any>,
   ) => {
+    const p = useNearestParentInstant()
+    console.log(p)
+
     const container = useContainer<HTMLElement>(); // usable when there's no parent other than the root element
     const parentRef = useNearestParent<HTMLElement>();
 
@@ -53,8 +56,6 @@ export const block = <P extends MillionProps>(
         });
         patch.current = (props: P) => {
           queueMicrotask$(() => {
-            console.log('here')
-            debugger
             patchBlock(
               currentBlock,
               block!(props, props.key, options?.shouldUpdate),
