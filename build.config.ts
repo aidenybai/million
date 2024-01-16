@@ -15,6 +15,7 @@ export default defineBuildConfig({
     './packages/compiler',
     './packages/react',
     './packages/react-server',
+    './packages/react-server/rsc.ts',
     './packages/types',
   ],
   // declaration: true,

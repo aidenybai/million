@@ -69,8 +69,15 @@
       }
     },
     "./react-server": {
-      "react-server": "./dist/packages/react-server.mjs",
-      "default": "./dist/packages/react-server.mjs"
+      "react-server": "./dist/packages/react-server/rsc.mjs",
+      "import": {
+        "types": "./dist/packages/react-server.d.mts",
+        "default": "./dist/packages/react-server.mjs"
+      },
+      "require": {
+        "types": "./dist/packages/react-server.d.ts",
+        "default": "./dist/packages/react-server.cjs"
+      }
     },
     "./types": {
       "import": {
