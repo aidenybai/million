@@ -9,7 +9,7 @@ import { REGISTRY, RENDER_SCOPE } from './constants';
 export const processProps = (
   props: ComponentProps<any>,
   ref: Ref<any>,
-  portals: MillionPortal[]
+  portals: MillionPortal[],
 ): ComponentProps<any> => {
   const processedProps: ComponentProps<any> = { ref };
 
@@ -17,12 +17,15 @@ export const processProps = (
 
   for (const key in props) {
     const value = props[key];
-    if (isValidElement(value)) {
+    if (
+      isValidElement(value) ||
+      (Array.isArray(value) && value.length && isValidElement(value[0]))
+    ) {
       processedProps[key] = renderReactScope(
         value,
         false,
         portals,
-        currentIndex++
+        currentIndex++,
       );
 
       continue;
@@ -112,7 +115,7 @@ export const unwrap = (vnode: JSX.Element | null): VNode => {
   const children = vnode.props?.children;
   if (children !== undefined && children !== null) {
     props.children = flatten(vnode.props.children).map((child) =>
-      unwrap(child)
+      unwrap(child),
     );
   }
 

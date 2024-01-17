@@ -126,7 +126,7 @@ export function About() {
                   Tired of learning new frameworks and big migrations?
                   Million.js ships{' '}
                   <Link
-                    href="/docs/quickstart"
+                    href="/docs/automatic"
                     className="underline nx-text-primary-600"
                   >
                     a drop-in automatic mode

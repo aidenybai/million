@@ -31,6 +31,14 @@
       "typesetting": "article"
     }
   },
+  "telemetry": {
+    "display": "hidden",
+    "type": "page",
+    "title": "Telemetry",
+    "theme": {
+      "typesetting": "article"
+    }
+  },
   "faq": {
     "type": "page",
     "title": "FAQ",
@@ -52,6 +60,10 @@
       "foundation": {
         "title": "Foundation",
         "href": "/foundation"
+      },
+      "telemetry": {
+        "title": "Telemetry",
+        "href": "/telemetry"
       },
       "research": {
         "title": "Research",
