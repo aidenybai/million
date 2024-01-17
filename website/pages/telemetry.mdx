@@ -1,0 +1,50 @@
+---
+title: Telemetry
+description: Million.js collects anonymous telemetry data about general usage. Participation is optional, and you may opt-out at any time.
+---
+
+# Telemetry
+
+Million.js collects anonymous telemetry data about general usage. Participation is optional, and you may opt-out at any time.
+
+Our telemetry is directly <kbd>cmd-c</kbd> + <kbd>cmd-v</kbd> from Astro's amazing telemetry
+implementation. You can read more about it{' '}<a href="https://astro.build/telemetry/">here</a>.
+
+## Why is telemetry collected?
+
+Anonymous telemetry data makes up an important piece of our roadmap prioritization process. It gives our core team insight into broad trends in feature usage, pain points, and configuration which then helps us make more informed decisions about what to work on next.
+
+## What is being collected?
+
+We track general usage information about Million.js and different configuration options that we support. Specifically, we track the following anonymous data:
+
+- Initializing a new project (`npx million@latest`)
+- Million.js version
+- General machine information (e.g. number of CPUs, macOS/Windows/Linux, CI environment, etc.)
+- General configuration information
+- Sanitized error information
+
+An example telemetry event might look like this:
+
+```json
+{
+  "event": "compile",
+  "payload": {
+    "framework": "vite"
+  }
+}
+```
+
+## What about sensitive data?
+
+We **do not** collect any metrics which may contain sensitive data. This includes, but is not limited to: environment variables, personally identifiable information, file paths, contents of files, logs, stack traces, git remote information, or unsanitized JavaScript error messages.
+
+## How is my data protected?
+
+The data collected by Million.js is completely anonymous and only meaningful in aggregate form. The data that we store is not traceable to the source, and is only available to a small subset of the Million.js core maintainer team to help inform our roadmap prioritization.
+
+Million.js does not track, collect, or store personally identifiable information (PII). The telemetry data that we do track has never and will never be sold or monetized in any form.
+
+## How do I opt out?
+
+You can always opt-out by setting `telemetry: false` in the compiler config. This will disable telemetry across your entire machine, not just the project directory that you run it in:

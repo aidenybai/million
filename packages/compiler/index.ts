@@ -12,9 +12,10 @@ export const next = (
   nextConfig: {
     appDir?: boolean;
     basePath?: string;
+    webpack?: (config: Record<string, any>, options: any) => any;
   } = {},
   overrideOptions: Options = {},
-) => {
+): any => {
   const millionConfig: Options = {
     mode: 'react',
     server: true,

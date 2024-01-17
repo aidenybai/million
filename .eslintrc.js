@@ -39,6 +39,7 @@ module.exports = {
         'tsdoc/syntax': 'off',
         'import/no-extraneous-dependencies': 'off',
         'eslint-comments/require-description': 'off',
+        'import/no-relative-packages': 'off',
       },
     },
   ],
