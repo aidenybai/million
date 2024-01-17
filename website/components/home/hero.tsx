@@ -29,9 +29,9 @@ export function Hero() {
             <p className="mt-8 text-xl text-zinc-600 dark:text-zinc-300 leading-8">
               The{' '}
               <span className="font-medium dark:text-zinc-100">
-                Virtual DOM Replacement
+               drop-in optimizing compiler
               </span>{' '}
-              for React. The Virtual DOM Replacement for React. Gain big performance wins for UI and data heavy React apps. Dead simple to use – try it out {' '}
+              for React. Gain big performance wins for UI and data heavy React apps. Dead simple to use – try it out {' '}
               <Link href="/docs" className="font-medium hover:underline">
                 now
               </Link>
