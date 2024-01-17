@@ -166,6 +166,18 @@ importers:
       '@rollup/pluginutils':
         specifier: ^5.0.5
         version: 5.0.5(rollup@4.9.2)
+      '@types/babel-types':
+        specifier: ^7.0.15
+        version: 7.0.15
+      '@types/babel__core':
+        specifier: ^7.20.5
+        version: 7.20.5
+      '@types/babel__generator':
+        specifier: ^7.6.8
+        version: 7.6.8
+      '@types/babel__helper-module-imports':
+        specifier: ^7.18.3
+        version: 7.18.3
 
   packages/jsx-runtime: {}
 
