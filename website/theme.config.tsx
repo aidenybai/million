@@ -269,6 +269,12 @@ const config: DocsThemeConfig = {
   themeSwitch: {
     component: null,
   },
+  i18n: [
+    { locale: 'en-US', text: 'English' },
+    { locale: 'zh-CN', text: '中文' },
+    { locale: 'de-DE', text: 'Deutsch' },
+    { locale: 'ar-SA', text: 'العربية', direction: 'rtl' },
+  ],
   useNextSeoProps() {
     const { asPath } = useRouter();
 

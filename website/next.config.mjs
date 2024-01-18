@@ -12,6 +12,10 @@ const withNextra = nextra({
  */
 const nextConfig = {
   transpilePackages: ['react-tweet'],
+  i18n: {
+    locales: ['en-US', 'zh-CN', 'de-DE'],
+    defaultLocale: 'en-US',
+  },
 };
 
 // eslint-disable-next-line import/no-default-export  -- Next.js requires default export
