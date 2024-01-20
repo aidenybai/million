@@ -14,7 +14,7 @@ const nextConfig = {
   transpilePackages: ['react-tweet'],
   i18n: {
     locales: ['en-US', 'zh-CN', 'de-DE'],
-    defaultLocale: 'en-US',
+    defaultLocale: 'zh-CN',
   },
 };
 

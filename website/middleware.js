@@ -1,4 +1,3 @@
-import { NextResponse } from 'next/server';
 // import { withLocales } from 'nextra/locales';
 
 // export const middleware = (request: NextRequest) => {
@@ -20,14 +19,16 @@ import { NextResponse } from 'next/server';
 // };
 
 import { locales } from 'nextra/locales';
+import {  NextResponse } from 'next/server';
 
 export const middleware = (request) => {
-  const { nextUrl } = request;
+//   const { nextUrl } = request;
 
-  if (nextUrl.pathname.startsWith('/ai')) {
-    // The middleware must not handle dynamic routes.
-    return;
-  }
+//   if (nextUrl.pathname.startsWith('/ai')) {
+//     // The middleware must not handle dynamic routes.
+//     return;
+//   }
 
-  return locales(request);
+// return locales(request)
 };
+
