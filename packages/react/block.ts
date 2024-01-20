@@ -85,5 +85,14 @@ export const block = <P extends MillionProps>(
     MapSet$.call(REGISTRY, MillionBlock, block);
   }
 
+
+  // TODO add dev guard
+  if (options?.name) {
+    if (fn) {
+      fn.displayName = `Render(Million(${options.name}))`;
+    }
+    MillionBlock.displayName = `Block(Million(${options.name}))`;
+  }
+
   return MillionBlock<P>;
 };

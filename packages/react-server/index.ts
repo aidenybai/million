@@ -77,6 +77,12 @@ export const block = <P extends MillionProps>(
     return vnode;
   }
 
+  // TODO add dev guard
+  if (options.name) {
+    Component.displayName = `Render(Million(${options.name}))`;
+    MillionBlockLoader.displayName = `Block(Million(${options.name}))`;
+  }
+
   return MillionBlockLoader;
 };
 
