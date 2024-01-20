@@ -9,3 +9,9 @@ export const INTERNALS = {
   patch,
   mount,
 };
+
+if (typeof window !== 'undefined') {
+  (window as any).__MILLION_DATA__ = {
+    version: process.env.VERSION,
+  };
+}
