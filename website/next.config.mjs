@@ -13,7 +13,7 @@ const withNextra = nextra({
 const nextConfig = {
   transpilePackages: ['react-tweet'],
   i18n: {
-    locales: ['en-US', 'zh-CN', 'de-DE'],
+    locales: ['en-US', 'es-ES', 'ru'],
     defaultLocale: 'en-US',
   },
 };
