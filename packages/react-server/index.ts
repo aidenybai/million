@@ -12,7 +12,7 @@ import type { ComponentType, ForwardedRef } from 'react';
 import { RENDER_SCOPE, SVG_RENDER_SCOPE } from '../react/constants';
 import type { MillionArrayProps, MillionProps, Options } from '../types';
 
-export { renderReactScope } from '../react/utils';
+export { renderReactScope, areCompiledBlockPropsEqual } from '../react/utils';
 
 let globalInfo;
 
