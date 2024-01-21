@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import { unplugin } from './plugin';
 import type { Options } from './options';
-import { babel } from './babel';
+import { babel } from './babel.new';
 
 export const vite = unplugin.vite;
 export const webpack = unplugin.webpack;

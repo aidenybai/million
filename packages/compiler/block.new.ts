@@ -60,7 +60,11 @@ function pushExpression(
   expr: t.Expression,
 ): number {
   const key = state.exprs.length;
-  state.exprs.push(expr);
+  if (expr.type === 'JSXElement' || expr.type === 'JSXFragment') {
+    state.exprs.push(skippableJSX(t.cloneNode(expr)));
+  } else {
+    state.exprs.push(t.cloneNode(expr));
+  }
   return key;
 }
 
@@ -145,28 +149,26 @@ function extractJSXExpressionsFromJSXAttributes(
   }
 }
 
+function isJSXComponentElement(
+  path: babel.NodePath<t.JSXElement>,
+): boolean {
+  const openingElement = path.get('openingElement');
+  const name = openingElement.get('name');
+  return (
+    isPathValid(name, t.isJSXIdentifier)
+    && (/^[A-Z_]/.test(name.node.name) || name.node.name === 'this')
+  ) || isPathValid(name, t.isJSXMemberExpression)
+}
+
 function extractJSXExpressionsFromJSXElement(
   state: JSXStateContext,
   path: babel.NodePath<t.JSXElement>,
   top: boolean,
 ): boolean {
   const openingElement = path.get('openingElement');
-  const trueOpeningElement = openingElement.get('name');
-
-  if (isPathValid(trueOpeningElement, t.isJSXMemberExpression)) {
-    if (!top) {
-      const key = pushExpressionAndReplace(state, path, false);
-      state.keys.push(t.numericLiteral(key));
-    }
-    return true;
-  } else if (
-    isPathValid(trueOpeningElement, t.isJSXIdentifier)
-    && (/^[A-Z]_/.test(trueOpeningElement.node.name) || trueOpeningElement.node.name === 'this')
-  ) {
-    if (!top) {
-      const key = pushExpressionAndReplace(state, path, false);
-      state.keys.push(t.numericLiteral(key));
-    }
+  if (isJSXComponentElement(path)){
+    const key = pushExpressionAndReplace(state, path, top);
+    state.keys.push(t.numericLiteral(key));
     return true;
   }
   extractJSXExpressionsFromJSXAttributes(state, openingElement.get('attributes'));
@@ -198,7 +200,7 @@ function extractJSXExpressions(
 }
 
 function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.JSXFragment>): void {
-  if (findComment(path.node, JSX_SKIP_ANNOTATION)) {
+  if (findComment(path.node, JSX_SKIP_ANNOTATION) || (isPathValid(path, t.isJSXElement) && isJSXComponentElement(path))) {
     return;
   }
   const state: JSXStateContext = {
@@ -217,7 +219,7 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
     path,
     isComponentishName(descriptiveName)
       ? descriptiveName
-      : 'JSX_' + descriptiveName,
+      : `JSX_${descriptiveName}`,
   );
   const rootPath = getRootStatementPath(path);
 
@@ -260,13 +262,14 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
   rootPath.insertBefore(generatedBlock);
 
   path.replaceWith(
-    skippableJSX(t.jsxElement(
+    t.jsxElement(
       t.jsxOpeningElement(t.jsxIdentifier(id.name), [
         t.jsxAttribute(t.jsxIdentifier('v'), t.jsxExpressionContainer(t.arrayExpression(state.exprs))),
-      ]),
+      ], true),
       t.jsxClosingElement(t.jsxIdentifier(id.name)),
       [],
-    )),
+      true,
+    ),
   );
 }
 
