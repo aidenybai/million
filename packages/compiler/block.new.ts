@@ -201,7 +201,11 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
     source: path.scope.generateUidIdentifier('v'),
     exprs: [],
   };
-  extractJSXExpressions(state, path, true);
+  extractJSXExpressions(state, path, !(
+    isPathValid(path.parentPath, t.isJSXElement)
+    || isPathValid(path.parentPath, t.isJSXFragment)
+    || isPathValid(path.parentPath, t.isJSXAttribute)
+  ));
 
   const descriptiveName = getDescriptiveName(path, 'Anonymous');
   const id = generateUniqueName(
