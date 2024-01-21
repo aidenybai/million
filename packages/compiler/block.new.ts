@@ -302,11 +302,15 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
   const rootPath = getRootStatementPath(path);
   rootPath.insertBefore(generatedBlock);
 
+  const attributes: t.JSXAttribute[] = [];
+
+  if (state.exprs.length) {
+    attributes.push(t.jsxAttribute(t.jsxIdentifier('v'), t.jsxExpressionContainer(t.arrayExpression(state.exprs))));
+  }
+
   path.replaceWith(
     t.jsxElement(
-      t.jsxOpeningElement(t.jsxIdentifier(id.name), [
-        t.jsxAttribute(t.jsxIdentifier('v'), t.jsxExpressionContainer(t.arrayExpression(state.exprs))),
-      ], true),
+      t.jsxOpeningElement(t.jsxIdentifier(id.name), attributes, true),
       t.jsxClosingElement(t.jsxIdentifier(id.name)),
       [],
       true,
