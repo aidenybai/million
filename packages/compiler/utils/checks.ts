@@ -48,3 +48,7 @@ export function isComponent(node: t.Node): node is ComponentNode {
       return false;
   }
 }
+
+export function isComponentishName(name: string) {
+  return name[0] >= 'A' && name[0] <= 'Z';
+}

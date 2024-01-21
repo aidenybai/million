@@ -65,6 +65,10 @@ interface Imports {
     client: ImportDefinition;
     server: ImportDefinition;
   };
+  areCompiledBlockPropsEqual: {
+    client: ImportDefinition;
+    server: ImportDefinition;
+  };
 }
 
 export const IMPORTS: Imports = {
@@ -89,6 +93,18 @@ export const IMPORTS: Imports = {
     server: {
       kind: 'named',
       name: 'For',
+      source: 'million/react-server',
+    },
+  },
+  areCompiledBlockPropsEqual: {
+    client: {
+      kind: 'named',
+      name: 'areCompiledBlockPropsEqual',
+      source: 'million/react',
+    },
+    server: {
+      kind: 'named',
+      name: 'areCompiledBlockPropsEqual',
       source: 'million/react-server',
     },
   }
