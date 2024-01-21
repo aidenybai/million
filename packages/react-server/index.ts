@@ -8,17 +8,18 @@ import {
   useRef,
   useState,
 } from 'react';
-import type { ComponentType, ForwardedRef } from 'react';
+import type { ForwardedRef , ReactPortal, ComponentType , JSX } from 'react';
 import { RENDER_SCOPE, SVG_RENDER_SCOPE } from '../react/constants';
-import type { MillionArrayProps, MillionProps, Options } from '../types';
+import type { MillionArrayProps, MillionProps, Options, MillionPortal } from '../types';
+import { renderReactScope } from '../react/utils';
 
-export { renderReactScope, areCompiledBlockPropsEqual } from '../react/utils';
+export { renderReactScope } from '../react/utils';
 
 let globalInfo;
 
 export const block = <P extends MillionProps>(
   Component: ComponentType<P>,
-  options: Options = {}
+  options: Options<P> = {}
 ) => {
   let blockFactory = globalInfo ? globalInfo.block(Component, options) : null;
 
@@ -166,3 +167,78 @@ export const createRSCBoundary = <P extends MillionProps>(
     () => true
   );
 };
+
+interface CompiledBlockProps extends MillionProps {
+  v: unknown[];
+}
+
+function isEqual(a: unknown, b: unknown): boolean {
+  // Faster than Object.is
+  // eslint-disable-next-line no-self-compare
+  return a === b || (a !== a && b !== b);
+}
+
+function areCompiledBlockPropsEqual(prev: CompiledBlockProps, next: CompiledBlockProps): boolean {
+  for (let i = 0, len = prev.v.length; i < len; i++) {
+    if (!isEqual(prev.v[i], next.v[i])) {
+      return false;
+    }
+  }
+  return true;
+}
+
+interface CompiledBlockOptions extends Omit<Options<CompiledBlockProps>, 'shouldUpdate'> {
+  portals: number[];
+}
+
+// TODO Fix SSR
+export function compiledBlock(
+  render: (values: unknown[]) => JSX.Element,
+  { portals, ...options }: CompiledBlockOptions,
+): ComponentType<CompiledBlockProps> {
+  const RenderBlock = block<CompiledBlockProps>((props) => render(props.v), {
+    ...options,
+    name: `Inner(CompiledBlock(${options.name}))`,
+    shouldUpdate: areCompiledBlockPropsEqual,
+  });
+
+  const portalCount = portals.length;
+
+  const Component: ComponentType<CompiledBlockProps> = portalCount > 0 ? (props: CompiledBlockProps) => {
+    const [current] = useState<MillionPortal[]>(() => []);
+
+    const derived = [...props.v];
+
+    for (let i = 0; i < portalCount; i++) {
+      const index = portals[i]!;
+      derived[index] = renderReactScope(
+        derived[index] as JSX.Element,
+        false,
+        current,
+        i,
+      );
+    }
+
+    const targets: ReactPortal[] = [];
+
+    for (let i = 0, len = current.length; i < len; i++) {
+      targets[i] = current[i]!.portal;
+    }
+
+    return createElement(Fragment, {}, [
+      createElement(RenderBlock, {
+        v: derived,
+      }),
+      targets,
+    ]);
+  } : (props: CompiledBlockProps) => createElement(RenderBlock, {
+    v: props.v,
+  });
+
+  // TODO dev mode
+  if (options.name) {
+    Component.displayName = `Outer(CompiledBlock(Million(${options.name})))`;
+  }
+
+  return Component;
+}
