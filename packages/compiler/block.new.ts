@@ -6,7 +6,7 @@ import { findComment } from './utils/ast';
 import { isComponent, isComponentishName, isPathValid } from './utils/checks';
 import { unwrapPath } from './utils/unwrap-path';
 import { getImportIdentifier } from './utils/get-import-specifier';
-import { IMPORTS } from './constants.new';
+import { HIDDEN_IMPORTS, IMPORTS } from './constants.new';
 import { getDescriptiveName } from './utils/get-descriptive-name';
 import { generateUniqueName } from './utils/generate-unique-name';
 import { getRootStatementPath } from './utils/get-root-statement-path';
@@ -48,6 +48,7 @@ interface JSXStateContext {
   source: t.Identifier;
   // The expressions from the JSX moved into an array
   exprs: t.Expression[];
+  keys: t.NumericLiteral[];
 }
 
 function skippableJSX<T extends t.Node>(node: T): T {
@@ -67,10 +68,11 @@ function pushExpressionAndReplace(
   state: JSXStateContext,
   target: babel.NodePath<t.Expression>,
   top: boolean,
-): void {
+): number {
   const key = pushExpression(state, target.node);
   const expr = t.memberExpression(state.source, t.numericLiteral(key), true);
   target.replaceWith(top ? expr : t.jsxExpressionContainer(expr));
+  return key;
 }
 
 function extractJSXExpressionsFromExpression(
@@ -153,7 +155,8 @@ function extractJSXExpressionsFromJSXElement(
 
   if (isPathValid(trueOpeningElement, t.isJSXMemberExpression)) {
     if (!top) {
-      pushExpressionAndReplace(state, path, false);
+      const key = pushExpressionAndReplace(state, path, false);
+      state.keys.push(t.numericLiteral(key));
     }
     return true;
   } else if (
@@ -161,7 +164,8 @@ function extractJSXExpressionsFromJSXElement(
     && (/^[A-Z]_/.test(trueOpeningElement.node.name) || trueOpeningElement.node.name === 'this')
   ) {
     if (!top) {
-      pushExpressionAndReplace(state, path, false);
+      const key = pushExpressionAndReplace(state, path, false);
+      state.keys.push(t.numericLiteral(key));
     }
     return true;
   }
@@ -200,6 +204,7 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
   const state: JSXStateContext = {
     source: path.scope.generateUidIdentifier('v'),
     exprs: [],
+    keys: [],
   };
   extractJSXExpressions(state, path, !(
     isPathValid(path.parentPath, t.isJSXElement)
@@ -216,40 +221,39 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
   );
   const rootPath = getRootStatementPath(path);
 
-  const args: t.Pattern[] = [];
+  const args: t.Identifier[] = [];
 
   if (state.exprs.length) {
-    args.push(t.objectPattern([t.objectProperty(t.identifier('v'), state.source)]));
+    args.push(state.source);
   }
 
   const newComponent = t.arrowFunctionExpression(
     args,
     path.node,
   );
-  const options = t.objectExpression([
+  const options = [
     // TODO add dev mode
     t.objectProperty(
       t.identifier('name'),
       t.stringLiteral(id.name),
     ),
-    t.objectProperty(
-      t.identifier('shouldUpdate'),
-      getImportIdentifier(ctx, path, IMPORTS.areCompiledBlockPropsEqual[ctx.mode]),
-    ),
-  ]);
+  ];
+
+  if (state.keys.length) {
+    options.push(t.objectProperty(
+      t.identifier('portals'),
+      t.arrayExpression(state.keys),
+    ));
+  }
 
   const generatedBlock = t.variableDeclaration(
     'const',
-    [t.variableDeclarator(id, t.addComment(
-      t.callExpression(
-        getImportIdentifier(ctx, path, IMPORTS.block[ctx.mode]),
-        [
-          newComponent,
-          options,
-        ],
-      ),
-      'leading',
-      SKIP_ANNOTATION,
+    [t.variableDeclarator(id, t.callExpression(
+      getImportIdentifier(ctx, path, HIDDEN_IMPORTS.compiledBlock[ctx.mode]),
+      [
+        newComponent,
+        t.objectExpression(options),
+      ],
     ))],
   );
 

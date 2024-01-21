@@ -65,14 +65,6 @@ interface Imports {
     client: ImportDefinition;
     server: ImportDefinition;
   };
-  areCompiledBlockPropsEqual: {
-    client: ImportDefinition;
-    server: ImportDefinition;
-  };
-  renderReactScope: {
-    client: ImportDefinition;
-    server: ImportDefinition;
-  };
 }
 
 export const IMPORTS: Imports = {
@@ -100,28 +92,26 @@ export const IMPORTS: Imports = {
       source: 'million/react-server',
     },
   },
-  areCompiledBlockPropsEqual: {
+};
+
+interface HiddenImports {
+  compiledBlock: {
+    client: ImportDefinition;
+    server: ImportDefinition;
+  };
+}
+
+export const HIDDEN_IMPORTS: HiddenImports = {
+  compiledBlock: {
     client: {
       kind: 'named',
-      name: 'areCompiledBlockPropsEqual',
+      name: 'compiledBlock',
       source: 'million/react',
     },
     server: {
       kind: 'named',
-      name: 'areCompiledBlockPropsEqual',
+      name: 'compiledBlock',
       source: 'million/react-server',
     },
   },
-  renderReactScope: {
-    client: {
-      kind: 'named',
-      name: 'renderReactScope',
-      source: 'million/react',
-    },
-    server: {
-      kind: 'named',
-      name: 'renderReactScope',
-      source: 'million/react-server',
-    },
-  }
 };
