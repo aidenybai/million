@@ -2,6 +2,7 @@ import type * as t from '@babel/types';
 import type { PluginObj, PluginPass } from '@babel/core';
 import type { ImportDefinition, StateContext } from "./types";
 import { IMPORTS } from './constants.new';
+import { transformBlock } from './block.new';
 
 function getImportSpecifierName(specifier: t.ImportSpecifier): string {
   if (specifier.imported.type === 'Identifier') {
@@ -88,7 +89,7 @@ export function babel(): PluginObj<PluginState> {
         });
       },
       CallExpression(path, ctx) {
-        // TODO
+        transformBlock(ctx.state, path);
       },
     },
   };
