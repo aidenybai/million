@@ -3,9 +3,9 @@ import type { block as createBlock } from '../million';
 
 export type MillionProps = Record<string, any>;
 
-export interface Options {
+export interface Options<T extends MillionProps> {
   name?: string;
-  shouldUpdate?: (oldProps: MillionProps, newProps: MillionProps) => boolean;
+  shouldUpdate?: (oldProps: T, newProps: T) => boolean;
   block?: any;
   ssr?: boolean;
   svg?: boolean;

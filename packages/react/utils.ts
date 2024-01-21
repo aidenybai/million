@@ -147,24 +147,3 @@ export const flatten = (rawChildren?: JSX.Element | null): JSX.Element[] => {
   }
   return children;
 };
-
-// The following code are for the compield `block` components
-
-interface MemoProps {
-  v: unknown[];
-}
-
-function isEqual(a: unknown, b: unknown): boolean {
-  // Faster than Object.is
-  // eslint-disable-next-line no-self-compare
-  return a === b || (a !== a && b !== b);
-}
-
-export function areCompiledBlockPropsEqual(prev: MemoProps, next: MemoProps): boolean {
-  for (let i = 0, len = prev.v.length; i < len; i++) {
-    if (!isEqual(prev.v[i], next.v[i])) {
-      return false;
-    }
-  }
-  return true;
-}
