@@ -1,7 +1,7 @@
 import * as t from '@babel/types';
 import type { StateContext } from "./types";
 import { unwrapNode } from "./utils/unwrap-node";
-import { JSX_SKIP_ANNOTATION, SKIP_ANNOTATION } from './constants';
+import { SKIP_ANNOTATION } from './constants';
 import { findComment } from './utils/ast';
 import { isComponent, isComponentishName, isPathValid } from './utils/checks';
 import { unwrapPath } from './utils/unwrap-path';
@@ -51,20 +51,12 @@ interface JSXStateContext {
   keys: t.NumericLiteral[];
 }
 
-function skippableJSX<T extends t.Node>(node: T): T {
-  return t.addComment(node, 'leading', JSX_SKIP_ANNOTATION);
-}
-
 function pushExpression(
   state: JSXStateContext,
   expr: t.Expression,
 ): number {
   const key = state.exprs.length;
-  if (expr.type === 'JSXElement' || expr.type === 'JSXFragment') {
-    state.exprs.push(skippableJSX(t.cloneNode(expr)));
-  } else {
-    state.exprs.push(t.cloneNode(expr));
-  }
+  state.exprs.push(t.cloneNode(expr));
   return key;
 }
 
@@ -154,9 +146,13 @@ function isJSXComponentElement(
 ): boolean {
   const openingElement = path.get('openingElement');
   const name = openingElement.get('name');
+  /**
+   * Only valid component elements are member expressions and identifiers
+   * starting with component-ish name
+   */
   return (
     isPathValid(name, t.isJSXIdentifier)
-    && (/^[A-Z_]/.test(name.node.name) || name.node.name === 'this')
+    && /^[A-Z_]/.test(name.node.name)
   ) || isPathValid(name, t.isJSXMemberExpression)
 }
 
@@ -166,11 +162,18 @@ function extractJSXExpressionsFromJSXElement(
   top: boolean,
 ): boolean {
   const openingElement = path.get('openingElement');
+  /**
+   * If this is a component element, move the JSX expression
+   * to the expression array.
+   */
   if (isJSXComponentElement(path)){
     const key = pushExpressionAndReplace(state, path, top);
     state.keys.push(t.numericLiteral(key));
     return true;
   }
+  /**
+   * Otherwise, continue extracting in attributes
+   */
   extractJSXExpressionsFromJSXAttributes(state, openingElement.get('attributes'));
   return false;
 }
@@ -180,6 +183,11 @@ function extractJSXExpressions(
   path: babel.NodePath<t.JSXElement | t.JSXFragment>,
   top: boolean,
 ): void {
+  /**
+   * Check if JSX should be skipped for children extraction
+   * We only do this since Component elements
+   * cannot be in the compiledBlock JSX
+   */
   if (isPathValid(path, t.isJSXElement) && extractJSXExpressionsFromJSXElement(state, path, top)) {
     return;
   }
@@ -200,7 +208,10 @@ function extractJSXExpressions(
 }
 
 function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.JSXFragment>): void {
-  if (findComment(path.node, JSX_SKIP_ANNOTATION) || (isPathValid(path, t.isJSXElement) && isJSXComponentElement(path))) {
+  /**
+   * For top-level JSX, we skip at elements that are constructed from components
+   */
+  if (isPathValid(path, t.isJSXElement) && isJSXComponentElement(path)) {
     return;
   }
   const state: JSXStateContext = {
@@ -208,31 +219,54 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
     exprs: [],
     keys: [],
   };
+
+  /**
+   * Begin extracting expressions/portals
+   */
   extractJSXExpressions(state, path, !(
     isPathValid(path.parentPath, t.isJSXElement)
     || isPathValid(path.parentPath, t.isJSXFragment)
     || isPathValid(path.parentPath, t.isJSXAttribute)
   ));
 
+  /**
+   * Get the nearest descriptive name
+   */
   const descriptiveName = getDescriptiveName(path, 'Anonymous');
+  /**
+   * Generate a new name based on the descriptive name
+   */
   const id = generateUniqueName(
     path,
     isComponentishName(descriptiveName)
       ? descriptiveName
       : `JSX_${descriptiveName}`,
   );
-  const rootPath = getRootStatementPath(path);
-
+  /**
+   * The following are arguments for the new render function
+   */
   const args: t.Identifier[] = [];
 
+  /**
+   * If there are any extracted expressions, declare the argument
+   */
   if (state.exprs.length) {
     args.push(state.source);
+  } else {
+    path.scope.removeBinding(state.source.name);
   }
 
+  /**
+   * The new "render" function
+   */
   const newComponent = t.arrowFunctionExpression(
     args,
     path.node,
   );
+
+  /**
+   * Following are the `compiledBlock` options
+   */
   const options = [
     // TODO add dev mode
     t.objectProperty(
@@ -241,6 +275,9 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
     ),
   ];
 
+  /**
+   * If there are any portals, declare them in the options
+   */
   if (state.keys.length) {
     options.push(t.objectProperty(
       t.identifier('portals'),
@@ -248,6 +285,9 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
     ));
   }
 
+  /**
+   * Generate the new compiledBlock
+   */
   const generatedBlock = t.variableDeclaration(
     'const',
     [t.variableDeclarator(id, t.callExpression(
@@ -259,6 +299,7 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
     ))],
   );
 
+  const rootPath = getRootStatementPath(path);
   rootPath.insertBefore(generatedBlock);
 
   path.replaceWith(
