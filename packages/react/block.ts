@@ -13,7 +13,7 @@ import { Effect, RENDER_SCOPE, REGISTRY, SVG_RENDER_SCOPE } from './constants';
 
 export const block = <P extends MillionProps>(
   fn: ComponentType<P> | null,
-  options: Options | null | undefined = {}
+  options: Options<P> | null | undefined = {}
 ) => {
   let block: ReturnType<typeof createBlock> | null = options?.block;
   const defaultType = options?.svg ? SVG_RENDER_SCOPE : RENDER_SCOPE;
