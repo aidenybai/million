@@ -69,6 +69,10 @@ interface Imports {
     client: ImportDefinition;
     server: ImportDefinition;
   };
+  renderReactScope: {
+    client: ImportDefinition;
+    server: ImportDefinition;
+  };
 }
 
 export const IMPORTS: Imports = {
@@ -105,6 +109,18 @@ export const IMPORTS: Imports = {
     server: {
       kind: 'named',
       name: 'areCompiledBlockPropsEqual',
+      source: 'million/react-server',
+    },
+  },
+  renderReactScope: {
+    client: {
+      kind: 'named',
+      name: 'renderReactScope',
+      source: 'million/react',
+    },
+    server: {
+      kind: 'named',
+      name: 'renderReactScope',
       source: 'million/react-server',
     },
   }
