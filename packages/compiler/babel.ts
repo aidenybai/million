@@ -30,7 +30,7 @@ export interface Info {
 export function babel(
   _: unknown,
   options: Options,
-  filename: string
+  filename: string,
 ): PluginObj {
   const state: Info['imports'] = {
     block: null,
@@ -105,7 +105,7 @@ export function babel(
                 }
               },
             },
-            state
+            state,
           );
           if (!state.source) return;
 
