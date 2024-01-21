@@ -1,0 +1,352 @@
+---
+title: 'Installation'
+description: 'How to install Million.js into your React project'
+---
+
+import { Callout, Tabs, Tab, Steps } from 'nextra-theme-docs';
+
+# Installation
+
+Million.js assumes that you have an existing React project. To learn about how to create a React app, please see [React's documentation](https://react.dev).
+
+## Install via CLI
+
+The Million.js CLI will automatically install the package and configure your project for you.
+
+<Tabs items={['npm', 'pnpm', 'yarn', 'bun']} storageKey="selected-manager">
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  npx million@latest
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  pnpx million@latest
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  yarn add million@latest
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  bunx million@latest
+  ```
+  </Tab>
+</Tabs>
+
+
+<Callout type="info">
+  Million.js is compatible with React 16 and above. If you're using an older
+  version of React, you'll need to upgrade first.
+</Callout>
+
+That's it! Your project is now running on Million.js 🎉
+
+## Install manually
+
+If you have issues [installing via the CLI](#install-via-cli), or you have a custom setup, you can
+install Million.js manually.
+
+Notice that there are two modes you can choose: **Automatic** and **Manual**:
+
+- **Automatic mode** will automatically configure, analyze, and optimize your project for you.
+This is the recommended mode.
+
+- **Manual mode** will require you to write code to [optimize certain parts of
+your project](/docs/manual-mode/manual-mode). This mode is recommended for advanced users who want to have more control over their project.
+
+<Tabs items={['Automatic', 'Manual']} storageKey="mode">
+
+<Tab>
+
+<Steps>
+
+### Install Million.js
+
+<Tabs items={['npm', 'pnpm', 'yarn', 'bun']} storageKey="selected-pkg-manager">
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  npm install million
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  pnpm install million
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  yarn add million
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  bun add million
+  ```
+  </Tab>
+</Tabs>
+
+### Add the compiler to your application
+
+<Tabs items={['Next.js', 'Astro', 'Gatsby', 'Vite','Remix', 'Create React App', 'Webpack', 'Rollup']} storageKey="selected-bundler-compiler">
+<Tab>
+Million.js is supported within the `/app` ("use client" components only) and `/pages`
+
+```js filename="next.config.mjs"
+import million from "million/compiler";
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+};
+
+const millionConfig = {
+  auto: true,// if you're using RSC: auto: { rsc: true },
+};
+
+export default million.next(nextConfig, millionConfig);
+```
+</Tab>
+
+<Tab>
+```js filename="astro.config.mjs"
+import { defineConfig } from "astro/config";
+import million from "million/compiler";
+
+export default defineConfig({
+   vite: {
+     plugins: [million.vite({ mode: "react", server: true, auto: true })],
+   },
+});
+```
+</Tab>
+
+<Tab>
+```js filename="gatsby-node.js"
+const million = require("million/compiler");
+
+exports.onCreateWebpackConfig = ({ actions }) => {
+  actions.setWebpackConfig({
+    plugins: [million.webpack({ mode: "react", server: true, auto: true })],
+  });
+};
+```
+</Tab>
+
+<Tab>
+```js filename="vite.config.js"
+import million from "million/compiler";
+import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
+
+export default defineConfig({
+  plugins: [million.vite({ auto: true }), react()],
+});
+```
+</Tab>
+
+<Tab>
+```js filename="vite.config.js"
+import { unstable_vitePlugin as remix } from "@remix-run/dev";
+import million from "million/compiler";
+import { defineConfig } from "vite";
+
+export default defineConfig({
+  plugins: [million.vite({ auto: true }), remix()],
+});
+```
+</Tab>
+
+<Tab>
+  <Callout type="warning">
+    If you are using a [Create React App (CRA)](https://create-react-app.dev/) Setup, you will need to [configure Craco](https://craco.js.org/docs/getting-started/) before proceeding.
+  </Callout>
+
+```js filename="craco.config.js"
+const million = require("million/compiler");
+
+module.exports = {
+  webpack: {
+    plugins: { add: [million.webpack({ auto: true })] },
+  },
+};
+```
+</Tab>
+
+<Tab>
+```js filename="webpack.config.js"
+const million = require("million/compiler");
+module.exports = {
+  plugins: [million.webpack({ auto: true })],
+};
+```
+</Tab>
+
+<Tab>
+```js filename="rollup.config.js"
+import million from "million/compiler";
+
+export default {
+  plugins: [million.rollup({ auto: true })],
+};
+```
+</Tab>
+</Tabs>
+
+</Steps>
+</Tab>
+
+
+
+<Tab>
+
+<Steps>
+
+### Install Million.js
+
+
+<Tabs items={['npm', 'pnpm', 'yarn', 'bun']} storageKey="selected-pkg-manager">
+{/* prettier-ignore */}
+<Tab>
+```bash copy
+npm install million
+```
+
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  pnpm install million
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  yarn add million
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  bun add million
+  ```
+  </Tab>
+</Tabs>
+
+### Add the compiler to your application
+
+<Tabs items={['Next.js', 'Astro', 'Gatsby', 'Vite', 'Remix', 'Create React App', 'Webpack', 'Rollup']} storageKey="selected-bundler-compiler">
+<Tab>
+Million.js is supported within the `/app` ("use client" components only) and `/pages`
+
+```js filename="next.config.mjs"
+import million from "million/compiler";
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+};
+
+export default million.next(nextConfig);
+```
+</Tab>
+
+<Tab>
+```js filename="astro.config.mjs"
+import { defineConfig } from "astro/config";
+import million from "million/compiler";
+
+export default defineConfig({
+  vite: {
+    plugins: [million.vite({ mode: "react", server: true })],
+  },
+});
+```
+</Tab>
+
+<Tab>
+```js filename="gatsby-node.js"
+const million = require("million/compiler");
+
+exports.onCreateWebpackConfig = ({ actions }) => {
+  actions.setWebpackConfig({
+    plugins: [million.webpack({ mode: "react", server: true })],
+  });
+};
+```
+</Tab>
+
+<Tab>
+```js filename="vite.config.js"
+import million from "million/compiler";
+import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
+
+export default defineConfig({
+  plugins: [million.vite(), react()],
+});
+```
+</Tab>
+
+<Tab>
+```js filename="vite.config.js"
+import { unstable_vitePlugin as remix } from "@remix-run/dev";
+import million from "million/compiler";
+import { defineConfig } from "vite";
+
+export default defineConfig({
+  plugins: [million.vite(), remix()],
+});
+```
+</Tab>
+
+<Tab>
+<Callout type="warning">
+  If you are using a [Create React App (CRA)](https://create-react-app.dev/) Setup, you will need to [configure Craco](https://craco.js.org/docs/getting-started/) before proceeding.
+</Callout>
+```js filename="craco.config.js"
+const million = require("million/compiler");
+module.exports = {
+  webpack: {
+    plugins: { add: [million.webpack()] },
+  },
+};
+```
+</Tab>
+
+<Tab>
+```js filename="webpack.config.js"
+const million = require("million/compiler");
+module.exports = {
+  plugins: [million.webpack()],
+};
+```
+</Tab>
+
+<Tab>
+```js filename="rollup.config.js"
+import million from "million/compiler";
+
+export default {
+  plugins: [million.rollup()],
+};
+```
+</Tab>
+
+</Tabs>
+
+</Steps>
+
+</Tab>
+
+</Tabs>
