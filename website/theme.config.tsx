@@ -143,7 +143,7 @@ const config: DocsThemeConfig = {
               </a>
             </li>
             <li>
-              <a href="https://million.dev/chat" className="text-sm">
+              <a href="https://discord.gg/X9yFbcV2rF" className="text-sm">
                 Discord
               </a>
             </li>
