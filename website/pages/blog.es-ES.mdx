@@ -27,9 +27,10 @@ export function BlogIndex() {
         new Date(a.frontMatter?.date || 0).getTime()
       );
     })
+    .filter((page) => page.locale === 'es-ES')
     .map((page) => {
       return (
-        <div key={page.route} className="mb-10">
+        <div key={page.locale} className="mb-10">
           <Link
             href={page.route}
             style={{ color: 'inherit', textDecoration: 'none' }}
