@@ -20,7 +20,7 @@ export function BlogHeader() {
 }
 
 export function BlogIndex() {
-  return getPagesUnderRoute('/blog')
+  const blogArticles = getPagesUnderRoute('/blog')
     .sort((a, b) => {
       return (
         new Date(b.frontMatter?.date || 0).getTime() -
@@ -30,7 +30,7 @@ export function BlogIndex() {
     .filter((page) => page.locale === 'zh-CN')
     .map((page) => {
       return (
-        <div key={page.locale} className="mb-10">
+        <div key={page.route} className="mb-10">
           <Link
             href={page.route}
             style={{ color: 'inherit', textDecoration: 'none' }}
@@ -53,6 +53,7 @@ export function BlogIndex() {
         </div>
       );
     });
+  return blogArticles;
 }
 
 <BlogHeader />
