@@ -55,7 +55,7 @@ function pushExpression(
   state: JSXStateContext,
   expr: t.Expression,
 ): string {
-  const key = 'v' + state.exprs.length;
+  const key = `v${state.exprs.length}`;
   state.exprs.push(t.jsxAttribute(t.jsxIdentifier(key), t.jsxExpressionContainer(t.cloneNode(expr))));
   return key;
 }
