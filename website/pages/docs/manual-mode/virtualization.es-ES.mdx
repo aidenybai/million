@@ -1,0 +1,108 @@
+---
+title: 'Virtualization'
+description: 'List virtualization allows you to render large lists without performance issues.'
+---
+
+import { Callout, Tabs, Tab, Steps } from 'nextra-theme-docs';
+import { AutomaticModeWarning } from '../../../components/automatic-mode-warning';
+
+# Virtualization
+
+<AutomaticModeWarning />
+
+Million.js works with [TanStack Virtual](https://tanstack.com/virtual/v3/docs/guide/introduction). TanStack Virtual is a headless UI utility for virtualizing long lists of elements in React. Together, you can automatically use blocks within virtualized lists.
+
+## Why Virtualize?
+
+Virtualization is a technique for efficiently rendering large lists of items. It only renders the items that are currently visible to the user instead of rendering all of them. This dramatically reduces the number of DOM nodes that need to be created and updated which has a huge performance benefit.
+
+<Callout type="info">
+  Want to compare Million.js vs React virtualization? Check out [this
+  demo!](https://million-tanstack-virtual.vercel.app/)
+</Callout>
+
+![Virtualization diagram](/virtualized.png)
+
+## Installation
+
+You can easily install it via this command:
+
+<Tabs items={['npm', 'pnpm', 'yarn', 'bun']} storageKey="selected-pkg-manager">
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  npm install @tanstack/react-virtual@beta
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  pnpm install @tanstack/react-virtual@beta
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  yarn add @tanstack/react-virtual@beta
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  bun add @tanstack/react-virtual@beta
+  ```
+  </Tab>
+</Tabs>
+
+## Example
+
+Here is just a quick example of what it looks like to virtualize a long list within a `div` using TanStack Virtual with Million.js:
+
+```jsx
+import { useRef } from 'react';
+import { For } from 'million/react';
+import { useVirtualizer } from '@tanstack/react-virtual';
+
+function App() {
+  const parentRef = useRef();
+
+  const rowVirtualizer = useVirtualizer({
+    count: 10000,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 35,
+  });
+
+  return (
+    <>
+      <div ref={parentRef} style={{ height: `400px`, overflow: 'auto' }}>
+        <For
+          each={rowVirtualizer.getVirtualItems()}
+          style={{
+            height: `${rowVirtualizer.getTotalSize()}px`,
+            width: '100%',
+            position: 'relative',
+          }}
+          as="div"
+        >
+          {(virtualItem) => (
+            <div
+              key={virtualItem.key}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                fontSize: '20px',
+                height: `${virtualItem.size}px`,
+                transform: `translateY(${virtualItem.start}px)`,
+              }}
+            >
+              Row {virtualItem.index}
+            </div>
+          )}
+        </For>
+      </div>
+    </>
+  );
+}
+```

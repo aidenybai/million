@@ -1,0 +1,31 @@
+---
+title: 'stringToDOM()'
+description: 'Convert a string to a virtual DOM node.'
+---
+
+import { Callout } from 'nextra-theme-docs';
+
+<Callout type="warning">
+  **This function is part of the internal API.** It is intended for developers
+  creating their own frameworks. It is not recommended for general use.
+</Callout>
+
+<br />
+
+# `stringToDOM(){:jsx}`
+
+**Syntax:** `stringToDOM(content, svg){:jsx}`\
+**Example:** `stringToDOM('<div>Hello World</div>'){:jsx}`
+
+The `stringToDOM` function takes a string of HTML or SVG and returns a DOM object. This is useful for creating DOM elements from strings.
+
+```jsx
+import { stringToDOM } from 'million';
+
+const dom = stringToDOM('<div>Hello World</div>');
+
+dom.innerHTML; // 'Hello World'
+dom.tagName; // 'DIV'
+
+const svg = stringToDOM('<g><rect /></g>'); // creates SVG!
+```
