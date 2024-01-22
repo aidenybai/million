@@ -1,6 +1,7 @@
 
 // The following code are for the compield `block` components
-import { createElement, useState, type JSX, Fragment, ReactPortal, ComponentType } from 'react';
+import type { ReactPortal, ComponentType, JSX } from 'react';
+import { createElement, useState, Fragment } from 'react';
 import type { MillionPortal, MillionProps, Options } from '../types';
 import { block } from "./block";
 import { renderReactScope } from './utils';
