@@ -27,7 +27,7 @@ export function BlogIndex() {
         new Date(a.frontMatter?.date || 0).getTime()
       );
     })
-    .filter((page) => page.locale === 'en-Us')
+    .filter((page) => page.locale === 'en-US')
     .map((page) => {
       return (
         <div key={page.locale} className="mb-10">
