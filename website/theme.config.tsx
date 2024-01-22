@@ -119,7 +119,7 @@ const config: DocsThemeConfig = {
           <p className="text-base pb-2 text-white font-bold">Resources</p>
           <ul className="flex flex-col gap-2">
             <li>
-              <a href="/docs" className="text-sm">
+              <a href="/docs/introduction" className="text-sm">
                 Documentation
               </a>
             </li>
@@ -143,7 +143,7 @@ const config: DocsThemeConfig = {
               </a>
             </li>
             <li>
-              <a href="https://million.dev/chat" className="text-sm">
+              <a href="https://discord.gg/X9yFbcV2rF" className="text-sm">
                 Discord
               </a>
             </li>
