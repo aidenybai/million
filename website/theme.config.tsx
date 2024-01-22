@@ -119,7 +119,7 @@ const config: DocsThemeConfig = {
           <p className="text-base pb-2 text-white font-bold">Resources</p>
           <ul className="flex flex-col gap-2">
             <li>
-              <a href="/docs" className="text-sm">
+              <a href="/docs/introduction" className="text-sm">
                 Documentation
               </a>
             </li>
