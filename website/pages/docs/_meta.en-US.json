@@ -1,7 +1,7 @@
 {
-  "index": "Introduction",
+  "introduction": "Introduction",
   "install": "Installation",
-  "automatic": "Automatic Mode",
+  "automatic": "Automatic",
   "manual-mode": "Manual Mode",
   "internals": "Internals"
 }

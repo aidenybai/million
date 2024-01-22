@@ -1,0 +1,72 @@
+---
+title: '<For />'
+description: 'Learn how to render lists of blocks in Million.'
+---
+
+import { AutomaticModeWarning } from '../../../components/automatic-mode-warning';
+
+# `<For>{:jsx}`
+
+<AutomaticModeWarning />
+
+**Syntax:** `<For each={array}>{(item, index) => Block}</For>{:jsx}`\
+**Example:** `<For each={[1, 2, 3]}>{(item) => myBlock({ item })}</For>{:jsx}`
+
+The `<For />{:jsx}` component is used to render a list of blocks. It takes an array as the `each` prop and a function as its children. The function is called for each item in the array and is passed the item and its index as arguments.
+
+It's the best way to loop over an array. As the array changes, `<For />{:jsx}` updates or moves items in the DOM rather than recreating them. Let's look at an example:
+
+```jsx
+import { For } from 'million/react';
+
+function App() {
+  const [items, setItems] = useState([1, 2, 3]);
+
+  return (
+    <>
+      <button onClick={() => setItems([...items, items.length + 1])}>
+        Add item
+      </button>
+      <ul>
+        <For each={items}>{(item) => <li>{item}</li>}</For>
+      </ul>
+    </>
+  );
+}
+
+export default App;
+```
+
+## Custom Tags
+
+The `as` prop can be used to specify the tag name of the For. By default, it is `slot`.
+
+```jsx
+<For each={items} as="div">
+  {(item) => <li>{item}</li>}
+</For>
+```
+
+## Optimizing `<For />` With `memo`
+
+Internally, `<For />` will not reuse blocks in order to avoid unknown behavior. This means that if you have a `<For />` with 1000 items, it will recreate 1000 blocks.
+
+However, if you know that your items aren't dependent on any values except the `item` passed to the function, you can use the `memo` prop to tell Million to reuse blocks. This will improve performance and reduce memory usage.
+
+```jsx
+<For each={items} memo>
+  {(item) => <li>{item}</li>}
+</For>
+```
+
+
+
+## Using For With SSR
+
+If you are using Million.js on the server, you may encounter a hydration mismatch error. This is because Million.js uses a different algorithm for rendering on the server than it does on the client. To fix this, you can disable SSR.
+
+```jsx
+<For each={[Math.random(), Math.random(), Math.random()]} ssr={false}>
+  {(item) => <li>{item}</li>}
+</For>
+```

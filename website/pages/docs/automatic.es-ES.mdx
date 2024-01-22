@@ -1,0 +1,207 @@
+---
+title: 'Automatic Mode'
+description: 'How to use Automatic Mode'
+---
+
+import { Callout, Tab, Tabs } from 'nextra-theme-docs';
+
+# Automatic Mode
+
+Million.js uses Automatic Mode out of the box if you installed via CLI. This optimizes your React components, improving speed without any major code changes. This is the recommended way to use Million.js.
+
+### Advanced customization
+
+Automatic mode provides customization options:
+
+- `threshold`: What is used to determine whether a component should be converted to Million.js.
+  When the threshold increases, fewer components will be optimized, and vice versa.
+- `skip`: An array of identifiers to indicate if a component should be skipped. You can add hook or variable names, function names, etc.
+
+The `auto` object lets you configure options beyond the default ones set during installation:
+
+```js
+auto: {
+  threshold: 0.05, // default: 0.1,
+  skip: ['useBadHook', /badVariable/g], // default []
+}
+```
+
+<Tabs items={['Next.js', 'Astro', 'Gatsby', 'Vite', 'Remix', 'Create React App', 'Webpack', 'Rollup']} storageKey="selected-bundler-compiler">
+<Tab>
+```js filename="next.config.mjs"
+import million from 'million/compiler';
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+   reactStrictMode: true,
+};
+
+const millionConfig = {
+  auto: {
+    threshold: 0.05, // default: 0.1,
+    skip: ['useBadHook', /badVariable/g], // default []
+    // if you're using RSC: auto: { rsc: true },
+  }
+}
+
+export default million.next(nextConfig, millionConfig);
+```
+</Tab>
+
+<Tab>
+```js filename="astro.config.mjs"
+import { defineConfig } from "astro/config";
+import million from "million/compiler";
+
+export default defineConfig({
+  vite: {
+    plugins: [
+      million.vite({
+        mode: "react",
+        server: true,
+        auto: {
+          threshold: 0.05,
+          skip: ["useBadHook", /badVariable/g],
+        },
+      }),
+    ],
+  },
+});
+```
+</Tab>
+
+<Tab>
+```js filename="gatsby-node.js"
+const million = require("million/compiler");
+
+exports.onCreateWebpackConfig = ({ actions }) => {
+  actions.setWebpackConfig({
+    plugins: [
+      million.webpack({
+        mode: "react",
+        server: true,
+        auto: {
+          threshold: 0.05,
+          skip: ["useBadHook", /badVariable/g],
+        },
+      }),
+    ],
+  });
+};
+```
+</Tab>
+
+<Tab>
+```js filename="vite.config.js"
+import million from "million/compiler";
+import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
+
+export default defineConfig({
+  plugins: [
+    million.vite({
+      auto: {
+        threshold: 0.05,
+        skip: ["useBadHook", /badVariable/g],
+      },
+    }),
+    react(),
+  ],
+});
+```
+</Tab>
+
+<Tab>
+```js filename="vite.config.js"
+import { unstable_vitePlugin as remix } from "@remix-run/dev";
+import million from "million/compiler";
+import { defineConfig } from "vite";
+
+export default defineConfig({
+  plugins: [
+    million.vite({
+      auto: {
+        threshold: 0.05,
+        skip: ["useBadHook", /badVariable/g],
+      },
+    }),
+    remix(),
+  ],
+});
+```
+</Tab>
+
+<Tab>
+<Callout type="warning">
+  If you are using a [Create React App (CRA)](https://create-react-app.dev/) Setup, you will need to [configure Craco](https://craco.js.org/docs/getting-started/) before proceeding.
+</Callout>
+
+```js filename="craco.config.js"
+const million = require("million/compiler");
+
+module.exports = {
+  webpack: {
+    plugins: {
+      add: [
+        million.webpack({
+          auto: {
+            threshold: 0.05,
+            skip: ["useBadHook", /badVariable/g],
+          },
+        }),
+      ],
+    },
+  },
+};
+```
+</Tab>
+
+<Tab>
+```js filename="webpack.config.js"
+const million = require("million/compiler");
+module.exports = {
+  plugins: [
+    million.webpack({
+      auto: {
+        threshold: 0.05,
+        skip: ["useBadHook", /badVariable/g],
+      },
+    }),
+  ],
+};
+```
+</Tab>
+
+<Tab>
+```js filename="rollup.config.js"
+import million from "million/compiler";
+
+export default {
+  plugins: [
+    million.rollup({
+      auto: {
+        threshold: 0.05,
+        skip: ["useBadHook", /badVariable/g],
+      },
+    }),
+  ],
+};
+```
+</Tab>
+
+</Tabs>
+
+### Ignoring components
+
+If you encounter an error with a component during the Million.js runtime, it can be skipped using the `// million-ignore` comment.
+
+```js
+// million-ignore
+function App() {
+  return ...
+}
+````
+
+### Muting help messages
+
+To avoid seeing help messages, you can pass the `mute: true{:js}` option to the compiler inside the `auto` object.
