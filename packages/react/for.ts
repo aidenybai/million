@@ -42,7 +42,7 @@ const MillionArray = <T>({
   const [, setMountPortals] = useState(false);
 
   if (fragmentRef.current && (each !== cache.current.each || !memo)) {
-    queueMicrotask$(() => {
+    // queueMicrotask$(() => {
       const newChildren = createChildren<T>(
         each,
         children,
@@ -51,7 +51,7 @@ const MillionArray = <T>({
         memo,
       );
       arrayPatch$.call(fragmentRef.current, mapArray(newChildren));
-    });
+    // });
   }
 
   const defaultType = svg ? SVG_RENDER_SCOPE : RENDER_SCOPE;
@@ -65,7 +65,7 @@ const MillionArray = <T>({
   useEffect(() => {
     if (!ref.current || fragmentRef.current) return;
 
-    queueMicrotask$(() => {
+    // queueMicrotask$(() => {
       if (cache.current.mounted) return;
 
       const newChildren = createChildren<T>(
@@ -82,7 +82,7 @@ const MillionArray = <T>({
       arrayMount$.call(fragmentRef.current, ref.current!);
       cache.current.mounted = true;
       setMountPortals(true);
-    });
+    // });
   }, [ref.current]);
 
   return MillionFor;
