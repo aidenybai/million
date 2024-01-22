@@ -64,16 +64,20 @@ function pushExpressionAndReplace(
   state: JSXStateContext,
   target: babel.NodePath<t.Expression>,
   top: boolean,
-): string {
+  portal: boolean,
+): void {
   const key = pushExpression(state, target.node);
   const expr = t.memberExpression(state.source, t.identifier(key));
   target.replaceWith(top ? expr : t.jsxExpressionContainer(expr));
-  return key;
+  if (portal) {
+    state.keys.push(t.stringLiteral(key));
+  }
 }
 
 function extractJSXExpressionsFromExpression(
   state: JSXStateContext,
   expr: babel.NodePath<t.Expression>,
+  portal: boolean,
 ): void {
   const unwrappedJSX = unwrapPath(expr, t.isJSXElement);
   if (unwrappedJSX) {
@@ -85,23 +89,24 @@ function extractJSXExpressionsFromExpression(
     extractJSXExpressions(state, unwrappedFragment, true)
     return;
   }
-  pushExpressionAndReplace(state, expr, true);
+  pushExpressionAndReplace(state, expr, true, portal);
 }
 
 function extractJSXExpressionsFromJSXSpreadChild(
   state: JSXStateContext,
   path: babel.NodePath<t.JSXSpreadChild>,
 ): void {
-  extractJSXExpressionsFromExpression(state, path.get('expression'));
+  extractJSXExpressionsFromExpression(state, path.get('expression'), false);
 }
 
 function extractJSXExpressionsFromJSXExpressionContainer(
   state: JSXStateContext,
   path: babel.NodePath<t.JSXExpressionContainer>,
+  portal: boolean,
 ): void {
   const expr = path.get('expression');
   if (isPathValid(expr, t.isExpression)) {
-    extractJSXExpressionsFromExpression(state, expr);
+    extractJSXExpressionsFromExpression(state, expr, portal);
   }
 }
 
@@ -115,7 +120,7 @@ function extractJSXExpressionsFromJSXAttribute(
   } else if (isPathValid(value, t.isJSXFragment)) {
     extractJSXExpressions(state, value, false);
   } else if (isPathValid(value, t.isJSXExpressionContainer)) {
-    extractJSXExpressionsFromJSXExpressionContainer(state, value);
+    extractJSXExpressionsFromJSXExpressionContainer(state, value, false);
   }
 }
 
@@ -123,7 +128,7 @@ function extractJSXExpressionsFromJSXSpreadAttribute(
   state: JSXStateContext,
   attr: babel.NodePath<t.JSXSpreadAttribute>,
 ): void {
-  extractJSXExpressionsFromExpression(state, attr.get('argument'));
+  extractJSXExpressionsFromExpression(state, attr.get('argument'), false);
 }
 
 function extractJSXExpressionsFromJSXAttributes(
@@ -167,8 +172,7 @@ function extractJSXExpressionsFromJSXElement(
    * to the expression array.
    */
   if (isJSXComponentElement(path)){
-    const key = pushExpressionAndReplace(state, path, top);
-    state.keys.push(t.stringLiteral(key));
+    pushExpressionAndReplace(state, path, top, true);
     return true;
   }
   /**
@@ -202,7 +206,7 @@ function extractJSXExpressions(
     } else if (isPathValid(child, t.isJSXSpreadChild)) {
       extractJSXExpressionsFromJSXSpreadChild(state, child);
     } else if (isPathValid(child, t.isJSXExpressionContainer)) {
-      extractJSXExpressionsFromJSXExpressionContainer(state, child);
+      extractJSXExpressionsFromJSXExpressionContainer(state, child, true);
     }
   }
 }
