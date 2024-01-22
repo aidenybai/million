@@ -30,7 +30,7 @@ export function compiledBlock(
 ): ComponentType<MillionProps> {
   const RenderBlock = block<MillionProps>((props) => render(props), {
     ...options,
-    name: `Inner(CompiledBlock(${options.name}))`,
+    name: `CompiledBlock(Inner(${options.name}))`,
     shouldUpdate: shouldCompiledBlockUpdate,
   });
 
@@ -65,7 +65,7 @@ export function compiledBlock(
 
   // TODO dev mode
   if (options.name) {
-    Component.displayName = `Outer(CompiledBlock(Million(${options.name})))`;
+    Component.displayName = `Million(CompiledBlock(Outer(${options.name})))`;
   }
 
   return Component;
