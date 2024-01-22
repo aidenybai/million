@@ -6,7 +6,7 @@ import { findComment } from './utils/ast';
 import { isComponent, isComponentishName, isPathValid } from './utils/checks';
 import { unwrapPath } from './utils/unwrap-path';
 import { getImportIdentifier } from './utils/get-import-specifier';
-import { HIDDEN_IMPORTS, IMPORTS } from './constants.new';
+import { HIDDEN_IMPORTS, IMPORTS, SVG_ELEMENTS } from './constants.new';
 import { getDescriptiveName } from './utils/get-descriptive-name';
 import { generateUniqueName } from './utils/generate-unique-name';
 import { getRootStatementPath } from './utils/get-root-statement-path';
@@ -67,10 +67,13 @@ function pushExpressionAndReplace(
   top: boolean,
   portal: boolean,
 ): void {
+  if (isGuaranteedLiteral(target.node)) {
+    return;
+  }
   const key = pushExpression(state, target.node);
   const expr = t.memberExpression(state.source, t.identifier(key));
   target.replaceWith(top ? expr : t.jsxExpressionContainer(expr));
-  if (portal && !isGuaranteedLiteral(target.node)) {
+  if (portal) {
     state.keys.push(t.stringLiteral(key));
   }
 }
@@ -170,6 +173,23 @@ function isJSXComponentElement(
     const attr = attributes[i];
 
     if (isPathValid(attr, t.isJSXAttribute) && attr.node.name.name === 'ref') {
+      return true;
+    }
+  }
+  return false;
+}
+
+function isJSXSVGElement(
+  path: babel.NodePath<t.JSXElement>,
+): boolean {
+  const openingElement = path.get('openingElement');
+  const name = openingElement.get('name');
+  /**
+   * Only valid component elements are member expressions and identifiers
+   * starting with component-ish name
+   */
+  if (isPathValid(name, t.isJSXIdentifier)) {
+    if (SVG_ELEMENTS.includes(name.node.name)) {
       return true;
     }
   }
@@ -303,6 +323,12 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
     options.push(t.objectProperty(
       t.identifier('portals'),
       t.arrayExpression(state.keys),
+    ));
+  }
+  if (isPathValid(path, t.isJSXElement) && isJSXSVGElement(path)) {
+    options.push(t.objectProperty(
+      t.identifier('svg'),
+      t.booleanLiteral(true),
     ));
   }
 
