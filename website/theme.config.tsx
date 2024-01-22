@@ -271,9 +271,9 @@ const config: DocsThemeConfig = {
   },
   i18n: [
     { locale: 'en-US', text: 'English' },
-    { locale: 'zh-CN', text: 'Chinese' },
-    { locale: 'es-ES', text: 'Español' },
-    { locale: 'fr-FR', text: 'French' },
+    // { locale: 'zh-CN', text: 'Chinese' },
+    // { locale: 'es-ES', text: 'Español' },
+    // { locale: 'fr-FR', text: 'French' },
   ],
   useNextSeoProps() {
     const { asPath } = useRouter();
