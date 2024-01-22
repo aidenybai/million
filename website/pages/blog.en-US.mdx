@@ -29,6 +29,7 @@ export function BlogIndex() {
     })
     .filter((page) => page.locale === 'en-US')
     .map((page) => {
+      console.log(page)
       return (
         <div key={page.locale} className="mb-10">
           <Link
