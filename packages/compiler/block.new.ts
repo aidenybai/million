@@ -1,7 +1,7 @@
 import * as t from '@babel/types';
 import type { StateContext } from "./types";
 import { unwrapNode } from "./utils/unwrap-node";
-import { SKIP_ANNOTATION } from './constants';
+import { JSX_SKIP_ANNOTATION, SKIP_ANNOTATION } from './constants';
 import { findComment } from './utils/ast';
 import { isComponent, isComponentishName, isPathValid } from './utils/checks';
 import { unwrapPath } from './utils/unwrap-path';
@@ -211,7 +211,9 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
   /**
    * For top-level JSX, we skip at elements that are constructed from components
    */
-  if (isPathValid(path, t.isJSXElement) && isJSXComponentElement(path)) {
+  // if (isPathValid(path, t.isJSXElement) && isJSXComponentElement(path)) {
+  if (findComment(path.node, JSX_SKIP_ANNOTATION)) {
+    path.skip();
     return;
   }
   const state: JSXStateContext = {
@@ -309,11 +311,15 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
   }
 
   path.replaceWith(
-    t.jsxElement(
-      t.jsxOpeningElement(t.jsxIdentifier(id.name), attributes, true),
-      t.jsxClosingElement(t.jsxIdentifier(id.name)),
-      [],
-      true,
+    t.addComment(
+      t.jsxElement(
+        t.jsxOpeningElement(t.jsxIdentifier(id.name), attributes, true),
+        t.jsxClosingElement(t.jsxIdentifier(id.name)),
+        [],
+        true,
+      ),
+      'leading',
+      JSX_SKIP_ANNOTATION,
     ),
   );
 }
