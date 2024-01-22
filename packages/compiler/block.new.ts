@@ -378,5 +378,33 @@ export function transformBlock(ctx: StateContext, path: babel.NodePath<t.CallExp
     },
   });
 
-  path.replaceWith(component);
+  if (isPathValid(component, t.isArrowFunctionExpression) && t.isExpression(component.node.body)) {
+    const root = getRootStatementPath(component);
+    const descriptiveName = getDescriptiveName(component, 'Anonymous');
+    const uniqueName = generateUniqueName(
+      component, 
+      isComponentishName(descriptiveName)
+        ? descriptiveName
+        : `JSX_${descriptiveName}`,
+    );
+
+    root.insertBefore([
+      t.variableDeclaration('const', [
+        t.variableDeclarator(uniqueName, component.node),
+      ]),
+      t.expressionStatement(
+        t.assignmentExpression(
+          '=',
+          t.memberExpression(
+            uniqueName,
+            t.identifier('_c'),
+          ),
+          t.booleanLiteral(true),
+        ),
+      ),
+    ]);
+    path.replaceWith(uniqueName);
+  } else {
+    path.replaceWith(component);
+  }
 }
