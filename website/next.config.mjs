@@ -13,7 +13,7 @@ const withNextra = nextra({
 const nextConfig = {
   transpilePackages: ['react-tweet'],
   i18n: {
-    locales: ['en-US', 'zh-CN', 'es-ES', "fr-FR"],
+    locales: ['en-US', 'zh-CN', 'es-ES', 'fr-FR'],
     defaultLocale: 'en-US',
   },
   async redirects() {
@@ -22,7 +22,7 @@ const nextConfig = {
         source: '/docs.([a-zA-Z-]+)',
         destination: '/docs/introduction',
         statusCode: 302,
-      }
+      },
     ];
   },
 };
