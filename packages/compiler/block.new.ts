@@ -47,16 +47,16 @@ interface JSXStateContext {
   // The source of array values
   source: t.Identifier;
   // The expressions from the JSX moved into an array
-  exprs: t.Expression[];
-  keys: t.NumericLiteral[];
+  exprs: t.JSXAttribute[];
+  keys: t.Expression[];
 }
 
 function pushExpression(
   state: JSXStateContext,
   expr: t.Expression,
-): number {
-  const key = state.exprs.length;
-  state.exprs.push(t.cloneNode(expr));
+): string {
+  const key = 'v' + state.exprs.length;
+  state.exprs.push(t.jsxAttribute(t.jsxIdentifier(key), t.jsxExpressionContainer(t.cloneNode(expr))));
   return key;
 }
 
@@ -64,9 +64,9 @@ function pushExpressionAndReplace(
   state: JSXStateContext,
   target: babel.NodePath<t.Expression>,
   top: boolean,
-): number {
+): string {
   const key = pushExpression(state, target.node);
-  const expr = t.memberExpression(state.source, t.numericLiteral(key), true);
+  const expr = t.memberExpression(state.source, t.identifier(key));
   target.replaceWith(top ? expr : t.jsxExpressionContainer(expr));
   return key;
 }
@@ -168,7 +168,7 @@ function extractJSXExpressionsFromJSXElement(
    */
   if (isJSXComponentElement(path)){
     const key = pushExpressionAndReplace(state, path, top);
-    state.keys.push(t.numericLiteral(key));
+    state.keys.push(t.stringLiteral(key));
     return true;
   }
   /**
@@ -217,7 +217,7 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
     return;
   }
   const state: JSXStateContext = {
-    source: path.scope.generateUidIdentifier('v'),
+    source: path.scope.generateUidIdentifier('props'),
     exprs: [],
     keys: [],
   };
@@ -304,16 +304,10 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
   const rootPath = getRootStatementPath(path);
   rootPath.insertBefore(generatedBlock);
 
-  const attributes: t.JSXAttribute[] = [];
-
-  if (state.exprs.length) {
-    attributes.push(t.jsxAttribute(t.jsxIdentifier('v'), t.jsxExpressionContainer(t.arrayExpression(state.exprs))));
-  }
-
   path.replaceWith(
     t.addComment(
       t.jsxElement(
-        t.jsxOpeningElement(t.jsxIdentifier(id.name), attributes, true),
+        t.jsxOpeningElement(t.jsxIdentifier(id.name), state.exprs, true),
         t.jsxClosingElement(t.jsxIdentifier(id.name)),
         [],
         true,

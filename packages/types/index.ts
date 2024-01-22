@@ -11,6 +11,7 @@ export interface Options<T extends MillionProps> {
   svg?: boolean;
   as?: string;
   rsc?: boolean;
+  compiled?: boolean;
 }
 
 export interface MillionArrayProps<T> {

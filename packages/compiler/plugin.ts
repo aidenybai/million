@@ -6,6 +6,7 @@ import type { ParserOptions } from '@babel/core';
 import { MillionTelemetry } from '../telemetry';
 import { displayIntro } from './utils/log';
 import { babel } from './babel.new';
+// import { babel } from './babel';
 import type { Options } from './options';
 
 const DEFAULT_INCLUDE = '**/*.{jsx,tsx,ts,js,mjs,cjs}';
@@ -61,6 +62,7 @@ export const unplugin = createUnplugin((options: Options = {}, meta) => {
         plugins: [[babel, {
           mode: options.server ? 'server' : 'client'
         }]],
+        // plugins: [[babel, options]],
         parserOpts: { plugins },
         filename: id,
         ast: false,

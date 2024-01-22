@@ -23,7 +23,7 @@ export const block = <P extends MillionProps>(
       fn as any,
       unwrap as any,
       options?.shouldUpdate as Parameters<typeof createBlock>[2],
-      options?.svg
+      options?.svg,
     );
   }
 

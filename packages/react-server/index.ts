@@ -168,46 +168,42 @@ export const createRSCBoundary = <P extends MillionProps>(
   );
 };
 
-interface CompiledBlockProps extends MillionProps {
-  v: unknown[];
-}
-
 function isEqual(a: unknown, b: unknown): boolean {
   // Faster than Object.is
   // eslint-disable-next-line no-self-compare
   return a === b || (a !== a && b !== b);
 }
 
-function areCompiledBlockPropsEqual(prev: CompiledBlockProps, next: CompiledBlockProps): boolean {
-  for (let i = 0, len = prev.v.length; i < len; i++) {
-    if (!isEqual(prev.v[i], next.v[i])) {
-      return false;
+function shouldCompiledBlockUpdate(prev: MillionProps, next: MillionProps): boolean {
+  for (const key in prev) {
+    if (!isEqual(prev[key], next[key])) {
+      return true;
     }
   }
-  return true;
+  return false;
 }
 
-interface CompiledBlockOptions extends Omit<Options<CompiledBlockProps>, 'shouldUpdate'> {
-  portals: number[];
+interface CompiledBlockOptions extends Omit<Options<MillionProps>, 'shouldUpdate'> {
+  portals?: string[];
 }
 
 // TODO Fix SSR
 export function compiledBlock(
-  render: (values: unknown[]) => JSX.Element,
+  render: (props: MillionProps) => JSX.Element,
   { portals, ...options }: CompiledBlockOptions,
-): ComponentType<CompiledBlockProps> {
-  const RenderBlock = block<CompiledBlockProps>((props) => render(props.v), {
+): ComponentType<MillionProps> {
+  const RenderBlock = block<MillionProps>((props) => render(props.v), {
     ...options,
     name: `Inner(CompiledBlock(${options.name}))`,
-    shouldUpdate: areCompiledBlockPropsEqual,
+    shouldUpdate: shouldCompiledBlockUpdate,
   });
 
-  const portalCount = portals.length;
+  const portalCount = portals?.length || 0;
 
-  const Component: ComponentType<CompiledBlockProps> = portalCount > 0 ? (props: CompiledBlockProps) => {
+  const Component: ComponentType<MillionProps> = portals && portalCount > 0 ? (props: MillionProps) => {
     const [current] = useState<MillionPortal[]>(() => []);
 
-    const derived = [...props.v];
+    const derived = {...props};
 
     for (let i = 0; i < portalCount; i++) {
       const index = portals[i]!;
@@ -226,14 +222,10 @@ export function compiledBlock(
     }
 
     return createElement(Fragment, {}, [
-      createElement(RenderBlock, {
-        v: derived,
-      }),
+      createElement(RenderBlock, derived),
       targets,
     ]);
-  } : (props: CompiledBlockProps) => createElement(RenderBlock, {
-    v: props.v,
-  });
+  } : (props: MillionProps) => createElement(RenderBlock, props);
 
   // TODO dev mode
   if (options.name) {

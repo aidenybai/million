@@ -44,7 +44,7 @@ export const block = (
   fn: (props?: MillionProps) => VElement,
   unwrap?: (vnode: VElement) => VNode,
   shouldUpdate?: (oldProps: MillionProps, newProps: MillionProps) => boolean,
-  svg?: boolean
+  svg?: boolean,
 ) => {
   const vnode = fn(HOLE_PROXY);
   const edits: Edit[] = [];
