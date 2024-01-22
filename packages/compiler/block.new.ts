@@ -89,6 +89,7 @@ function extractJSXExpressionsFromExpression(
     extractJSXExpressions(state, unwrappedFragment, true)
     return;
   }
+  // TODO Skip if the value is static
   pushExpressionAndReplace(state, expr, true, portal);
 }
 
