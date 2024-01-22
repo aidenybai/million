@@ -14,8 +14,8 @@ export {
   compiledBlock,
 } from './compiled-block';
 
-// if (typeof window !== 'undefined') {
-//   (window as any).__MILLION_DATA__ = {
-//     version: process.env.VERSION,
-//   };
-// }
+if (typeof window !== 'undefined') {
+  (window as any).__MILLION_DATA__ = {
+    version: process.env.VERSION,
+  };
+}
