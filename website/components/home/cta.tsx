@@ -17,7 +17,7 @@ export function CTA() {
               Welcome to the Million.js community. Let's build something great.
             </p>
             <div className="flex flex-wrap justify-center gap-6">
-              <Link href="/docs" className="h-12 w-fullsm:w-max">
+              <Link href="/docs/introduction" className="h-12 w-fullsm:w-max">
                 <ShimmerButton
                   className="relative w-full sm:w-max flex items-center justify-center transition-all hover:shadow-[0_0_0_3px_rgba(255,255,255,0.3)_inset]"
                   background="radial-gradient(ellipse 80% 70% at 50% 120%, #b28ce2, #892fda)"

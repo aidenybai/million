@@ -1,0 +1,73 @@
+{
+  "index": {
+    "type": "page",
+    "title": "Million.js",
+    "display": "hidden",
+    "theme": {
+      "layout": "raw"
+    }
+  },
+  "docs": {
+    "type": "page",
+    "title": "Docs"
+  },
+  "blog": {
+    "type": "page",
+    "title": "Blog"
+  },
+  "showcase": {
+    "type": "page",
+    "title": "Showcase",
+    "theme": {
+      "typesetting": "article",
+      "layout": "full"
+    }
+  },
+  "foundation": {
+    "display": "hidden",
+    "type": "page",
+    "title": "Foundation",
+    "theme": {
+      "typesetting": "article"
+    }
+  },
+  "faq": {
+    "type": "page",
+    "title": "FAQ",
+    "theme": {
+      "layout": "raw"
+    }
+  },
+  "ai": {
+    "type": "page",
+    "title": "AI",
+    "theme": {
+      "layout": "raw"
+    }
+  },
+  "more": {
+    "title": "More",
+    "type": "menu",
+    "items": {
+      "foundation": {
+        "title": "Foundation",
+        "href": "/foundation"
+      },
+      "research": {
+        "title": "Research",
+        "href": "https://dl.acm.org/doi/10.1145/3555776.3577683",
+        "newWindow": true
+      },
+      "demo": {
+        "title": "Live demo",
+        "href": "https://demo.million.dev",
+        "newWindow": true
+      },
+      "hundred": {
+        "title": "Build your own",
+        "href": "https://github.com/aidenybai/hundred",
+        "newWindow": true
+      }
+    }
+  }
+}

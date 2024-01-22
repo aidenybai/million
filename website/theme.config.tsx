@@ -119,7 +119,7 @@ const config: DocsThemeConfig = {
           <p className="text-base pb-2 text-white font-bold">Resources</p>
           <ul className="flex flex-col gap-2">
             <li>
-              <a href="/docs" className="text-sm">
+              <a href="/docs/introduction" className="text-sm">
                 Documentation
               </a>
             </li>
@@ -143,7 +143,7 @@ const config: DocsThemeConfig = {
               </a>
             </li>
             <li>
-              <a href="https://million.dev/chat" className="text-sm">
+              <a href="https://discord.gg/X9yFbcV2rF" className="text-sm">
                 Discord
               </a>
             </li>
@@ -271,9 +271,9 @@ const config: DocsThemeConfig = {
   },
   i18n: [
     { locale: 'en-US', text: 'English' },
-    { locale: 'zh-CN', text: '中文' },
-    { locale: 'de-DE', text: 'Deutsch' },
-    { locale: 'ar-SA', text: 'العربية', direction: 'rtl' },
+    // { locale: 'zh-CN', text: 'Chinese' },
+    // { locale: 'es-ES', text: 'Español' },
+    // { locale: 'fr-FR', text: 'French' },
   ],
   useNextSeoProps() {
     const { asPath } = useRouter();

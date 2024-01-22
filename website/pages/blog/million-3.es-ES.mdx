@@ -1,0 +1,58 @@
+---
+title: 'Announcing Million.js 3.0'
+date: DEC 7, 2023
+description: Updated performance for both compiler and runtime
+---
+
+<div className="flex flex-col items-center gap-4">
+
+# Announcing Million 3.0
+
+  <small>[AIDEN BAI](https://aidenybai.com) DEC 7 2023</small>
+</div>
+
+---
+
+After many months of hard work, I'm excited to announce the release of Million 3.0. Within the next week, we'll roll out an official published release. Soon, you'll be able to get a number of new features and improvements to the library.
+
+Even though we're changing how things work under the hood, Million 3.0 should be a drop-in replacement for everyone. You can upgrade to the latest version without any code changes.
+
+If you haven't tried Million.js yet, you can [check out the documentation](/docs/quickstart) to get started. Or, just run `npx million@latest` to get started. Million.js is a compiler that turns your existing React code into a hyper-optimized virtual DOM. It's a drop-in replacement for React that's faster and smaller.
+
+## What's new?
+
+### Faster build time
+
+This release includes a complete overhaul of the compiler to be more efficient, readable, and scalable. Our initial benchmarks show a huge improvement from the previous version: ~34% faster (3.2s -> 2.1s) for initial compile and ~82% (1.1s -> 0.2s) for code changes on a medium sized Next.js project.
+
+We've also added a legitimate test suite to ensure that the compiler is working as expected. This will help us catch bugs and regressions in the future.
+
+This allows us to support more features and optimizations in the future without comprimising developer experience. Look out for new diagnostic tools, sidecar, and AI gadgets soon 👀
+
+### Faster runtime
+
+Million 3.0 refactors how hydration is done. Instead of replacing DOM on component boundaries, Million.js now can pinpoint hydrate – which results in significantly faster hydration times within blocks.
+
+We're also working on removing the dependency on `<slot>` elements for mounting blocks – for many projects, this is a significant reduction in unnecessary DOM nodes, improving reconciliation, and reducing memory usage.
+
+With these changes, we're seeing an initial ~100% improvement (2s -> 1s) in hydration times (4x CPU slowdown) and much less `<slot>` element generation for a medium sized Next.js project.
+
+## Migrating to 3.0
+
+Migration is easy. Just update your dependencies to the latest version of Million.js. Just run `npm install million@latest` (or your favorite package manager) to get started.
+
+## The road ahead
+
+The future of Million.js is to be the de-facto performance toolset for the web. In the coming weeks, we'll be shipping some extremely powerful and novel tools to help you build faster websites.
+
+Along with the new features, we'll be shipping a new website and documentation to help you get started. We'll also be shipping a new kitchen sink to show off some of the new features.
+
+## Acknowledgements
+
+Thank you to everyone who has [contributed to Million.js](https://github.com/aidenybai/million/contributors).
+
+Big shout out to [@toby_solutions](https://twitter.com/toby_solutions) for helping maintain the website and kitchen sink, [@felpix\_](https://twitter.com/felpix_) for running the Million.js Twitter account, and [@nisargptel](https://twitter.com/nisargptel) for making the trailer video.
+
+Should you have any questions, feel free to reach out to me on [Twitter](https://twitter.com/aidenybai) or [GitHub](https://github.com/aidenybai/million).
+
+Enjoy 🎉

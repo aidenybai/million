@@ -1,0 +1,77 @@
+---
+title: "block()"
+description: "A function that creates a stateless component."
+---
+
+import { Callout } from 'nextra-theme-docs';
+
+{' '}
+<Callout type="warning">
+  **This function is part of the internal API.** You should only be using this
+  if you are making your own framework.
+</Callout>
+
+{' '}
+<br />
+
+
+# `block(){:jsx}`
+
+**Syntax:** `block((props) => vnode){:jsx}`\
+**Example:** `block((props) => <div>{props.foo}</div>){:jsx}`
+
+The `block` function instantiates a `Block` (_a stateless "component"_). It accepts a function with a `props` object parameter that returns a `VNode`.
+
+### Rules of usage
+
+##### `props` is an immutable object with primitive or `Block` values.
+
+```jsx
+someBlock({
+  one: '1', // ✅
+  two: 1 + 1, // ✅
+  three: true, // ✅
+  four: Date.now(), // ✅
+  five: anotherBlock({ crewmate: true }), // ✅
+  six: { imposter: true }, // ❌
+  seven: new Date(), // ❌
+});
+```
+
+##### Top level values of `props` may not be interpolated with other values.
+
+The `props` are filled with immutable `Hole` values. These values are replaced with the actual values when the `block(){:jsx}` is called.
+
+```jsx
+// Anatomy of a `Hole`
+{
+  $: 'prop';
+}
+
+// Example:
+block((props) => {
+  console.log(props.foo); // { $: 'foo' } ✅
+  console.log(props.foo + ' bar'); // { $: 'foo' } + ' bar' ❌
+  return <div>{props.foo}</div>;
+});
+```
+
+The following are examples of this rule:
+
+```jsx
+block((props) => {
+  const { favorite } = props.favorite; // ❌
+  <div className={props.className /* ✅ */}>
+    {props.hello /* ✅ */}
+    {Date.now() /* ✅ */}
+    <button
+      onClick={() => {
+        console.log(props.world); /* ❌ (no holes inside listeners) */
+      }}
+    >
+      {props.count + 1 /* ❌ */}
+      {props.foo.toString() /* ❌ */}
+    </button>
+  </div>;
+});
+```

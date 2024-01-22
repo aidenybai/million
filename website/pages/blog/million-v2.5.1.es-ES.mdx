@@ -1,0 +1,82 @@
+---
+title: 'Million.js v2.5.1'
+date: JUL 21, 2023
+description: Virtualizing the Virtual DOM
+---
+
+import Image from 'next/image';
+import { Callout, Tab, Tabs } from 'nextra-theme-docs';
+import { Tweet } from 'react-tweet';
+import { CarbonAds } from '../../components/ad';
+import { Bounties } from '../../components/bounties';
+
+
+<div className="flex flex-col items-center gap-4">
+
+# Million.js v2.5.1
+
+  <small>[AIDEN BAI](https://aidenybai.com) JUL 21 2023</small>
+</div>
+
+---
+
+<Bounties />
+
+Million.js v2.5.1 brings a ton of new features and bug fixes! Make sure to upgrade your Million.js version to latest:
+
+<Tabs items={['npm', 'pnpm', 'yarn']} storageKey="selected-pkg-manager">
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  npm install million@latest
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  pnpm install million@latest
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  yarn add million@latest
+  ```
+  </Tab>
+</Tabs>
+
+Let's dig straight into it:
+
+<CarbonAds />
+
+## Virtualization
+
+Last week, I released a sneak peek of Million.js virtualizing in React. This week, I'm happy to announce that virtualization is now available in Million.js via TanStack Virtual! You can check out the virtualizing guide [here](/docs/virtualization) to get started.
+
+<Callout type="info">
+  Want to compare Million.js vs React virtualization? Check out [this
+  demo!](https://million-tanstack-virtual.vercel.app/)
+</Callout>
+
+<Tweet id="1680005514821001216" />
+
+## Analytics
+
+Million.js supports a new `analytics` option, where you can hook into the compiler and get insight into blocks. Here's a basic example of how you can use it:
+
+```js
+const ComponentBlock = block(Component, {
+  analytics: ({ traversals, data }) => {
+    const percentImprovement = Math.round(
+      ((traversals - data.traversals) / traversals) * 100,
+    );
+    console.log(
+      `Million.js is reducing reconciliation by ${percentImprovement}%`,
+    );
+  },
+});
+```
+
+## More
+
+You can view the full release here: [https://github.com/aidenybai/million/releases/tag/v2.5.1](https://github.com/aidenybai/million/releases/tag/v2.5.1)
