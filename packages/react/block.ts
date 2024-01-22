@@ -89,9 +89,9 @@ export const block = <P extends MillionProps>(
   // TODO add dev guard
   if (options?.name) {
     if (fn) {
-      fn.displayName = `Render(Million(${options.name}))`;
+      fn.displayName = `Million(Render(${options.name}))`;
     }
-    MillionBlock.displayName = `Block(Million(${options.name}))`;
+    MillionBlock.displayName = `Million(Block(${options.name}))`;
   }
 
   return MillionBlock<P>;
