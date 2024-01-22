@@ -79,7 +79,7 @@ const MillionArray = <T>({
       if (!MapHas$.call(REGISTRY, MillionFor)) {
         MapSet$.call(REGISTRY, MillionFor, fragmentRef.current);
       }
-      arrayMount$.call(fragmentRef.current, ref.current!);
+      arrayMount$.call(fragmentRef.current, ref.current);
       cache.current.mounted = true;
       setMountPortals(true);
     // });

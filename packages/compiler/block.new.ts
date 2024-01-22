@@ -10,6 +10,7 @@ import { HIDDEN_IMPORTS, IMPORTS } from './constants.new';
 import { getDescriptiveName } from './utils/get-descriptive-name';
 import { generateUniqueName } from './utils/generate-unique-name';
 import { getRootStatementPath } from './utils/get-root-statement-path';
+import { isGuaranteedLiteral } from './utils/is-guaranteed-literal';
 
 function isValidBlockCall(ctx: StateContext, path: babel.NodePath<t.CallExpression>): boolean {
   // Check for direct identifier usage e.g. import { block }
@@ -69,7 +70,7 @@ function pushExpressionAndReplace(
   const key = pushExpression(state, target.node);
   const expr = t.memberExpression(state.source, t.identifier(key));
   target.replaceWith(top ? expr : t.jsxExpressionContainer(expr));
-  if (portal) {
+  if (portal && !isGuaranteedLiteral(target.node)) {
     state.keys.push(t.stringLiteral(key));
   }
 }
