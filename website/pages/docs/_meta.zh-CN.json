@@ -1,7 +1,11 @@
 {
+<<<<<<< HEAD
+  "index": "介绍"
+=======
   "introduction": "Introduction",
   "install": "Installation",
   "automatic": "Automatic",
   "manual-mode": "Manual Mode",
   "internals": "Internals"
+>>>>>>> 36d1913569efff3399cde30dbda145ffd761115e
 }
