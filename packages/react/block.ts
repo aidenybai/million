@@ -15,14 +15,14 @@ export const block = <P extends MillionProps>(
   fn: ComponentType<P> | null,
   options: Options<P> | null | undefined = {}
 ) => {
-  let block: ReturnType<typeof createBlock> | null = options?.block;
+  let blockTarget: ReturnType<typeof createBlock> | null = options?.block;
   const defaultType = options?.svg ? SVG_RENDER_SCOPE : RENDER_SCOPE;
 
   if (fn) {
-    block = createBlock(
+    blockTarget = createBlock(
       fn as any,
       unwrap as any,
-      options?.shouldUpdate,
+      options?.shouldUpdate as Parameters<typeof createBlock>[2],
       options?.svg
     );
   }
@@ -41,7 +41,7 @@ export const block = <P extends MillionProps>(
 
     const effect = useCallback(() => {
       if (!ref.current) return;
-      const currentBlock = block!(props, props.key);
+      const currentBlock = blockTarget!(props, props.key);
       if (hmrTimestamp && ref.current.textContent) {
         ref.current.textContent = '';
       }
@@ -53,7 +53,7 @@ export const block = <P extends MillionProps>(
           queueMicrotask$(() => {
             patchBlock(
               currentBlock,
-              block!(props, props.key, options?.shouldUpdate)
+              blockTarget!(props, props.key, options?.shouldUpdate  as Parameters<typeof createBlock>[2])
             );
           });
         };

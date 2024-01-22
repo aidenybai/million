@@ -20,14 +20,14 @@ let globalInfo;
 export const block = <P extends MillionProps>(
   Component: ComponentType<P>,
   options: Options<P> = {}
-) => {
+): ComponentType<P> => {
   let blockFactory = globalInfo ? globalInfo.block(Component, options) : null;
 
   const rscBoundary = options.rsc
     ? createRSCBoundary(Component, options.svg)
     : null;
 
-  function MillionBlockLoader<P extends MillionProps>(props?: P) {
+  function MillionBlockLoader(props?: P) {
     const ref = useRef<HTMLElement>(null);
     const patch = useRef<((props: P) => void) | null>(null);
 
