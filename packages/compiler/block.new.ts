@@ -156,10 +156,23 @@ function isJSXComponentElement(
    * Only valid component elements are member expressions and identifiers
    * starting with component-ish name
    */
-  return (
-    isPathValid(name, t.isJSXIdentifier)
-    && /^[A-Z_]/.test(name.node.name)
-  ) || isPathValid(name, t.isJSXMemberExpression)
+  if (isPathValid(name, t.isJSXMemberExpression)) {
+    return true;
+  }
+  if (isPathValid(name, t.isJSXIdentifier)) {
+    if (/^[A-Z_]/.test(name.node.name)) {
+      return true;
+    }
+  }
+  const attributes = openingElement.get('attributes');
+  for (let i = 0, len = attributes.length; i < len; i++) {
+    const attr = attributes[i];
+
+    if (isPathValid(attr, t.isJSXAttribute) && attr.node.name.name === 'ref') {
+      return true;
+    }
+  }
+  return false;
 }
 
 function extractJSXExpressionsFromJSXElement(
