@@ -7,6 +7,15 @@
       "layout": "raw"
     }
   },
+  "wrapped": {
+    "type": "folder",
+    "title": "Million.js",
+    "theme": {
+      "layout": "full",
+      "toc": false,
+      "pagination": false
+    }
+  },
   "docs": {
     "type": "page",
     "title": "Docs"
