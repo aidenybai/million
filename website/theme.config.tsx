@@ -106,7 +106,7 @@ const config: DocsThemeConfig = {
     icon: <GitHubIcon />,
   },
   chat: {
-    link: 'https://discord.gg/X9yFbcV2rF',
+    link: 'https://million.dev/chat',
     icon: <DiscordIcon />,
   },
   docsRepositoryBase: 'https://github.com/aidenybai/million/tree/main/website/',
@@ -143,7 +143,7 @@ const config: DocsThemeConfig = {
               </a>
             </li>
             <li>
-              <a href="https://discord.gg/X9yFbcV2rF" className="text-sm">
+              <a href="https://million.dev/chat" className="text-sm">
                 Discord
               </a>
             </li>
