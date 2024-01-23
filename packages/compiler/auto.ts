@@ -5,6 +5,9 @@ import { addImport } from './utils/mod';
 import type { Info } from './babel';
 import { isAttributeUnsupported, isComponent } from './utils/jsx';
 import { transformBlock } from './block';
+import { MillionTelemetry } from '../telemetry';
+
+export const telemetry = new MillionTelemetry();
 
 // TODO: for rsc, need to find children files without 'use client' but are client components
 // https://nextjs.org/docs/app/building-your-application/rendering/client-components#using-client-components-in-nextjs
@@ -230,13 +233,7 @@ export const parseAuto = (
     return;
   }
 
-  const improvementFormatted = isFinite(improvement)
-    ? (improvement * 100).toFixed(0)
-    : '∞';
-
-  if (!info.options.log || info.options.log === 'info') {
-    logImprovement(rawComponent.id.name, improvementFormatted);
-  }
+  logImprovement(rawComponent.id.name, improvement, !info.options.log || info.options.log === 'info');
 
   const block = info.programPath.scope.hasBinding('block')
     ? t.identifier('block')

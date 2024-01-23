@@ -36,13 +36,13 @@ export class MillionTelemetry {
 
   private get anonymousId(): string {
     return this.getConfigWithFallback('telemetry_anonymousId', () =>
-      randomBytes(32).toString('hex'),
+      randomBytes(16).toString('hex'),
     );
   }
 
-  private get anonymousSessionId(): string {
+  get anonymousSessionId(): string {
     this._anonymousSessionId =
-      this._anonymousSessionId || randomBytes(32).toString('hex');
+      this._anonymousSessionId || randomBytes(16).toString('hex');
     return this._anonymousSessionId;
   }
 

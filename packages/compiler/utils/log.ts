@@ -10,6 +10,7 @@ import {
 } from 'kleur/colors';
 import type { NodePath } from '@babel/core';
 import type { Options } from '../../options';
+import { telemetry } from '../auto';
 
 /**
  * deopt (deoptimize) will turn a block into a regular function call.
@@ -82,7 +83,8 @@ export const displayIntro = (options: Options) => {
     magenta(`⚡ Million.js ${process.env.VERSION || ''}`)
   )}
   - Tip:     use ${dim('// million-ignore')} for errors
-  - Hotline: ${cyan('https://million.dev/hotline')}`;
+  - Hotline: ${cyan('https://million.dev/hotline')}
+  - Wrapped: ${cyan('https://million.dev/wrapped/' + telemetry.anonymousSessionId)}`;
 
   if (experiments.length) {
     message += `\n  - Experiments (use at your own risk):
@@ -108,11 +110,16 @@ export const catchError = (
   }
 };
 
-export const logImprovement = (component: string, improvement: string) => {
+export const logImprovement = (component: string, improvement: number, stdout: boolean) => {
+  telemetry.record({ event: 'improvement', payload: { component, improvement }})
+
+  const improvementFormatted = isFinite(improvement)
+    ? (improvement * 100).toFixed(0)
+    : '∞';
   // eslint-disable-next-line no-console
-  console.log(
+  stdout && console.log(
     `${magenta(' ⚡ ')}${yellow(`<${component}>`)} now renders ${green(
-      underline(`~${improvement}%`)
+      underline(`~${improvementFormatted}%`)
     )} faster`
   );
 };
