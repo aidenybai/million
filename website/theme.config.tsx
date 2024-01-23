@@ -273,7 +273,7 @@ const config: DocsThemeConfig = {
     { locale: 'en-US', text: 'English' },
     // { locale: 'zh-CN', text: 'Chinese' },
     // { locale: 'es-ES', text: 'Español' },
-    // { locale: 'fr-FR', text: 'French' },
+    { locale: 'fr-FR', text: 'Français' },
   ],
   useNextSeoProps() {
     const { asPath } = useRouter();

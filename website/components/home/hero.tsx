@@ -5,6 +5,7 @@ import TextsLogo from '../../public/texts.webp';
 import HackClubLogo from '../../public/hackclub.svg';
 import OpenSaucedLogo from '../../public/opensauced.svg';
 import MetamaskLogo from '../../public/metamask.svg';
+import { useTranslations } from '../../hooks/use-translations';
 import { Container } from './container';
 import { ShimmerButton } from './shimmer-button';
 
@@ -14,6 +15,7 @@ const CountUp = dynamic(() => import('react-countup'), {
 });
 
 export function Hero() {
+  const { hero } = useTranslations();
   return (
     <div className="relative">
       <Blur />
@@ -21,19 +23,19 @@ export function Hero() {
         <div className="relative pt-20 md:pt-36 ml-auto">
           <div className="lg:w-[70%] text-center mx-auto">
             <h1 className="text-zinc-900 dark:text-white font-extrabold text-5xl md:text-6xl xl:text-7xl">
-              Make React{' '}
+              {hero.makeReact}{' '}
               <span className="gradient-text inline-block">
-                <CountUp start={10} end={70} useEasing />% faster
+                <CountUp start={10} end={70} useEasing />% {hero.faster}
               </span>
             </h1>
             <p className="mt-8 text-xl text-zinc-600 dark:text-zinc-300 leading-8">
-              The{' '}
+              {hero.the}{' '}
               <span className="font-medium dark:text-zinc-100">
-               drop-in optimizing compiler
+                {hero.dropIn}
               </span>{' '}
-              for React. Gain big performance wins for UI and data heavy React apps. Dead simple to use – try it out {' '}
+              {hero.forReact}{' '}
               <Link href="/docs" className="font-medium hover:underline">
-                now
+                {hero.now}
               </Link>
               !
             </p>
@@ -44,7 +46,7 @@ export function Hero() {
                   background="radial-gradient(ellipse 80% 70% at 50% 120%, #b28ce2, #892fda)"
                 >
                   <span className="relative whitespace-pre text-center text-base font-semibold leading-none tracking-tight text-white z-10">
-                    Get started →
+                    {hero.getStarted}
                   </span>
                 </ShimmerButton>
               </Link>
@@ -53,7 +55,7 @@ export function Hero() {
                 className="relative flex h-11 w-full items-center justify-center px-6 before:absolute before:inset-0 before:rounded-full before:border before:border-transparent before:bg-purple-600/10 before:bg-gradient-to-b before:transition before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 dark:before:border-zinc-700 dark:before:bg-zinc-800 sm:w-max"
               >
                 <span className="relative text-base font-semibold text-purple-600 dark:text-white">
-                  How?
+                  {hero.how}
                 </span>
               </Link>
             </div>
@@ -80,6 +82,8 @@ export function Blur() {
 }
 
 export function Companies() {
+  const { hero } = useTranslations();
+
   const entries = [
     {
       url: 'https://wyze.com',
@@ -147,13 +151,17 @@ export function Companies() {
   return (
     <div className="mt-36 text-center lg:mt-32">
       <div className="uppercase text-sm font-semibold tracking-wider text-zinc-600 dark:text-zinc-400">
-        Trusted by companies who ship to{' '}
-        <span className="dark:text-white text-black semibold">3M+</span> users
+        {hero.trustedBy}{' '}
+        <span className="dark:text-white text-black semibold">3M+</span>{' '}
+        {hero.users}
       </div>
       <div className="slider">
         <div className="slide-track-5 hover:pause mt-6 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 justify-around items-center">
           {[...entries, ...entries].map(({ component, url }) => (
-            <div key={url} className="w-[12rem] relative grayscale opacity-60 hover:opacity-100 transition duration-200 hover:grayscale-0">
+            <div
+              key={url}
+              className="w-[12rem] relative grayscale opacity-60 hover:opacity-100 transition duration-200 hover:grayscale-0"
+            >
               <a
                 href={url}
                 target="_blank"
