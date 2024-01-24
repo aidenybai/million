@@ -68,7 +68,7 @@ export const translations = {
     hero: {
       makeReact: 'React',
       faster: 'plus rapide',
-      the: 'the',
+      the: 'le',
       now: 'maintenant',
       dropIn: "compilateur d'optimisation",
       forReact:
