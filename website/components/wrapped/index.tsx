@@ -73,10 +73,8 @@ rounded-lg text-center bg-gradient-to-b from-zinc-200 to-white dark:from-zinc-70
                   muted={true}
                   autoPlay={true}
                   loop={true}
-                  onCanPlay={() => {
-                    console.log('can play');
-                    finish();
-                  }}
+                  onPlay={finish}
+                  onCanPlay={finish}
                 >
                   {id ? <source src={videoUrl} type="video/mp4" /> : null}
                 </video>
