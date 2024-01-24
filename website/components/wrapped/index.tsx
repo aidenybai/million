@@ -15,7 +15,7 @@ import { BasicEvaluatedExpression } from 'next/dist/compiled/webpack/webpack';
 import Head from 'next/head';
 
 export default function Wrapped(props) {
-  const { progress, finish, start } = useMockProgress({ timeInterval: 1000 });
+  const { progress, finish, start } = useMockProgress({ timeInterval: 2000 });
   const id = props.id;
   const videoUrl = `https://telemetry.million.dev/api/v1/wrapped/${id}.mp4`;
   useEffect(start, []);
