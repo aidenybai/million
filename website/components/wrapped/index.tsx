@@ -112,6 +112,7 @@ rounded-lg text-center bg-gradient-to-b from-zinc-200 to-white dark:from-zinc-70
 
                     var a = new FileReader();
                     a.onload = async function (e) {
+                      // @ts-ignore
                       const str: string = e.target.result;
 
                       // console.log(e.target.result);
