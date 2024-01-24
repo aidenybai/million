@@ -28,6 +28,11 @@ const nextConfig = {
         destination: '/docs/introduction',
         statusCode: 302,
       },
+      {
+        source: '/chat',
+        destination: 'https://discord.gg/QezWCDeYfH',
+        statusCode: 302,
+      },
     ];
   },
 >>>>>>> 36d1913569efff3399cde30dbda145ffd761115e
