@@ -8,10 +8,10 @@
     }
   },
   "wrapped": {
-    "type": "folder",
-    "title": "Million.js",
+    "type": "page",
     "theme": {
       "layout": "full",
+      "sidebar": false,
       "toc": false,
       "pagination": false
     }
