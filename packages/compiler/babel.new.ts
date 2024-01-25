@@ -16,6 +16,9 @@ function registerImportDefinition(
   path: babel.NodePath<t.ImportDeclaration>,
   definition: ImportDefinition,
 ): void {
+  if (path.node.importKind !== 'value') {
+    return;
+  }
   for (let i = 0, len = path.node.specifiers.length; i < len; i++) {
     const specifier = path.node.specifiers[i]!;
     switch (specifier.type) {
@@ -35,18 +38,20 @@ function registerImportDefinition(
         break;
       }
       case 'ImportSpecifier': {
-        const key = getImportSpecifierName(specifier);
-        if (
-          (
-            definition.kind === 'named'
-            && key === definition.name
-          )
-          || (
-            definition.kind === 'default'
-            && key === 'default'
-          )
-        ) {
-          ctx.definitions.identifiers.set(specifier.local, definition);
+        if (specifier.importKind === 'value') {
+          const key = getImportSpecifierName(specifier);
+          if (
+            (
+              definition.kind === 'named'
+              && key === definition.name
+            )
+            || (
+              definition.kind === 'default'
+              && key === 'default'
+            )
+          ) {
+            ctx.definitions.identifiers.set(specifier.local, definition);
+          } 
         }
         break;
       }
