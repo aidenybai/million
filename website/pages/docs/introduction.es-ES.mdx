@@ -27,13 +27,13 @@ function App() {
   return (
     <div>
       <p>Count: {count}</p>
-      <button onClick={increment}>Incrementar</button>
+      <button onClick={increment}>Increment</button>
     </div>
   );
 }
 ```
 
-En este componente App, cuando hacemos clic en el botón, el estado `count` se actualizará y, consecuentemente, la etiqueta `<p>` se actualizará para reflejar el nuevo valor. Analicemos esto.
+En este componente `App`, cuando hacemos clic en el botón, el estado `count` se actualizará y, consecuentemente, la etiqueta `<p>` se actualizará para reflejar el nuevo valor. Analicemos esto.
 
 ### Renderización
 
@@ -45,7 +45,7 @@ const snapshot = App();
 // snapshot =
 <div>
   <p>Count: 1</p>
-  <button onClick={increment}>Incrementar</button>
+  <button onClick={increment}>Increment</button>
 </div>;
 ```
 
