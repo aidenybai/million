@@ -1,8 +1,8 @@
-import type * as t from '@babel/types';
 import type { PluginObj, PluginPass } from '@babel/core';
-import type { ImportDefinition, StateContext } from "./types";
-import { IMPORTS } from './constants.new';
+import type * as t from '@babel/types';
 import { transformBlock } from './block.new';
+import { IMPORTS } from './constants.new';
+import type { ImportDefinition, StateContext } from "./types";
 
 function getImportSpecifierName(specifier: t.ImportSpecifier): string {
   if (specifier.imported.type === 'Identifier') {
@@ -16,7 +16,7 @@ function registerImportDefinition(
   path: babel.NodePath<t.ImportDeclaration>,
   definition: ImportDefinition,
 ): void {
-  if (path.node.importKind !== 'value') {
+  if (path.node.importKind === 'typeof' || path.node.importKind === 'type') {
     return;
   }
   for (let i = 0, len = path.node.specifiers.length; i < len; i++) {
@@ -38,7 +38,7 @@ function registerImportDefinition(
         break;
       }
       case 'ImportSpecifier': {
-        if (specifier.importKind === 'value') {
+        if (!(specifier.importKind === 'typeof' || specifier.importKind === 'type')) {
           const key = getImportSpecifierName(specifier);
           if (
             (
