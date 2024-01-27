@@ -92,9 +92,9 @@ const Component = memo(
 
     console.log(rerender)
     // if (!rerender) {
-      return vnode
+      // return vnode
     // } else {
-      // return createPortal(vnode, millionPortal.p!.parent!);
+      return createPortal(vnode, millionPortal.p!.parent!);
     // }
   },
   (prev, next) => prev.vnode === next.vnode
