@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import Image from 'next/image';
 import Link from 'next/link';
 import { Disclosure, Transition } from '@headlessui/react';
@@ -133,7 +132,7 @@ export function Disclosures({ full = false }) {
         <>
           {faqs.he} <b>{faqs.milTheLion}</b> {faqs.friendlyMascot} (
           <i>
-            {faqs.Nobite} <b>{faqs.byte}</b>
+            {faqs.nobite} <b>{faqs.byte}</b>
           </i>
           )
           <Image
