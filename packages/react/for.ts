@@ -48,6 +48,7 @@ const MillionArray = <T>({
   const [, setMountPortals] = useState(false);
   const [, rerender] = useReducer(() => Symbol(), Symbol());
   const setMounted = useContext(mountContext)
+  console.log('MillionArray', [...portals.current])
 
   if (fragmentRef.current && (each !== cache.current.each || !memo)) {
     queueMicrotask$(() => {
@@ -62,6 +63,7 @@ const MillionArray = <T>({
         rerender,
       );
       arrayPatch$.call(fragmentRef.current, mapArray(newChildren));
+      // rerender()
     });
   }
 

@@ -34,4 +34,9 @@ export interface MillionPortal {
   current: Element;
   portal: ReactPortal;
   unstable?: boolean;
+  p?: {
+    parent: Element | null;
+    promise: Promise<null>;
+    resolve: (value: null) => void;
+  };
 }

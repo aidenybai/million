@@ -155,6 +155,7 @@ export class Block extends AbstractBlock {
       for (let k = 0, l = current.e.length; k < l; ++k) {
         const edit = current.e[k]!;
         const value = this.d![edit.h];
+        console.log('mount', value, edit.i)
 
         if (edit.t & ChildFlag) {
           if (value instanceof AbstractBlock) {
@@ -171,6 +172,18 @@ export class Block extends AbstractBlock {
           if (value && typeof value === 'object' && 'foreign' in value) {
             const targetEl = value.current;
             el[TEXT_NODE_CACHE][k] = targetEl;
+            
+            if (value.p) {
+              insertBefore$.call(el, value.p.commentMarker , childAt(el, edit.i))
+              value.p.parent = el
+              value.p.pingResolve()
+              value.p.pongPromise.then(() => {
+                insertBefore$.call(el, targetEl , childAt(el, edit.i))
+                value.p.commentMarker.remove()
+                // console.log('mounted finish', value.p.commentMarker, childAt(el, edit.i))
+                // replaceChild$.call(el, value.p.commentMarker , targetEl);
+              })
+            }
             continue;
           }
           if (hydrateNode) {
@@ -265,6 +278,7 @@ export class Block extends AbstractBlock {
             oldValue.p(newChildBlock);
             continue;
           }
+          console.log('newValue', newValue)
           if (
             newValue &&
             typeof newValue === 'object' &&
@@ -278,6 +292,10 @@ export class Block extends AbstractBlock {
             } else {
               newValue.current = targetEl;
             }
+            // if (newValue.p) {
+            //   newValue.p.parent = el
+            //   newValue.p.resolve()
+            // }
 
             continue;
           }

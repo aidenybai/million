@@ -1,8 +1,20 @@
-import { Fragment, createElement, isValidElement } from 'react';
-import { createPortal } from 'react-dom';
+import {
+  Fragment,
+  Suspense,
+  createElement,
+  isValidElement,
+  memo,
+  startTransition,
+  useEffect,
+  useInsertionEffect,
+  useLayoutEffect,
+  useTransition,
+} from 'react';
+import { createPortal, flushSync } from 'react-dom';
 import type {
   ComponentProps,
   DispatchWithoutAction,
+  ReactElement,
   ReactNode,
   Ref,
 } from 'react';
@@ -10,11 +22,20 @@ import type { VNode } from '../million';
 import type { MillionPortal } from '../types';
 import { REGISTRY } from './constants';
 
+const reactPortal = createPortal('', document.createDocumentFragment());
+
+function isPortal(el: any) {
+  if (typeof el === 'object' && el['$$typeof'] === reactPortal['$$typeof']) {
+    return true;
+  }
+  return false;
+}
+
 // TODO: access perf impact of this
 export const processProps = (
   props: ComponentProps<any>,
   ref: Ref<any>,
-  portals: MillionPortal[],
+  portals: MillionPortal[]
 ): ComponentProps<any> => {
   const processedProps: ComponentProps<any> = { ref };
 
@@ -22,6 +43,7 @@ export const processProps = (
 
   for (const key in props) {
     const value = props[key];
+
     if (
       isValidElement(value) ||
       (Array.isArray(value) && value.length && isValidElement(value[0]))
@@ -30,16 +52,53 @@ export const processProps = (
         value,
         false,
         portals,
-        currentIndex++,
+        currentIndex++
       );
 
       continue;
     }
+    // if ((Array.isArray(value) && value.length && isPortal(value[0]))) {
+    //   portals[currentIndex++] = { portal: props[key] }
+    // }
     processedProps[key] = props[key];
   }
 
   return processedProps;
 };
+
+const Component = memo(
+  ({ parent, vnode, millionPortal, rerender }) => {
+    if (parent) {
+      // millionPortal.p.pongResolve()
+      return vnode;
+    }
+    const [isPending, startTransition] = useTransition()
+    // debugger
+
+    !millionPortal.p?.parent && startTransition(() => {
+      // console.log(vnode, isValidElement(vnode))
+      // if (!millionPortal.p?.parent) {
+        throw millionPortal.p!.pingPromise;
+      // }
+    });
+    
+    
+    useEffect(() => {
+      if (!isPending) {
+        setTimeout(millionPortal.p.pongResolve, 10)
+      }
+      console.log('mounted')
+    }, [isPending])
+
+    console.log(rerender)
+    // if (!rerender) {
+      return vnode
+    // } else {
+      // return createPortal(vnode, millionPortal.p!.parent!);
+    // }
+  },
+  (prev, next) => prev.vnode === next.vnode
+);
 
 export const renderReactScope = (
   vnode: ReactNode,
@@ -47,10 +106,8 @@ export const renderReactScope = (
   portals: MillionPortal[] | undefined,
   currentIndex: number,
   parent: Element,
-  rerender?: DispatchWithoutAction,
+  rerender?: DispatchWithoutAction
 ) => {
-  // const el = portals?.[currentIndex]?.current;
-
   const isBlock =
     isValidElement(vnode) &&
     typeof vnode.type === 'function' &&
@@ -60,6 +117,8 @@ export const renderReactScope = (
   if (typeof window === 'undefined') {
     return vnode;
   }
+
+  const prevPortal = portals?.[currentIndex];
 
   if (isCallable) {
     const puppetComponent = (vnode.type as any)(vnode.props);
@@ -71,17 +130,45 @@ export const renderReactScope = (
     }
   }
 
-  const el = parent || document.createElement('template').content
-  const reactPortal = createPortal(vnode, el);
+  const commentMarker = document.createComment('')
+  const el = parent || prevPortal?.current || document.createElement('template').content;
+  const millionPortal = {} as MillionPortal;
+  console.log(el)
+  const reactPortal = createPortal(
+    createElement(Suspense, {
+      children: createElement(Component, { millionPortal, parent, vnode, rerender }),
+      fallback: null,
+    }),
+    el
+  );
 
-  const millionPortal = {
+  Object.assign(millionPortal, {
     foreign: true as const,
     current: el,
     portal: reactPortal,
     unstable,
-  };
+  });
+  if (!prevPortal) {
+  // if (!parent) {
+    let pingResolve = (value: null) => {};
+    let pongResolve = (value: null) => {};
+    const p = {
+      parent: null,
+      pingPromise: new Promise<null>((res) => (pingResolve = res)),
+      pingResolve,
+      pongPromise: new Promise<null>((res) => (pongResolve = res)),
+      pongResolve,
+    };
+    p.pingResolve = pingResolve;
+    p.pongResolve = pongResolve;
+    p.commentMarker = commentMarker
+    millionPortal.p = p;
+  }
+  if (prevPortal) {
+    millionPortal.p = prevPortal.p;
+  }
   if (portals) {
-    if (!portals[currentIndex]) {
+    if (!prevPortal) {
       rerender?.();
     }
     portals[currentIndex] = millionPortal;
@@ -115,7 +202,7 @@ export const unwrap = (vnode: JSX.Element | null): VNode => {
   const children = vnode.props?.children;
   if (children !== undefined && children !== null) {
     props.children = flatten(vnode.props.children).map((child) =>
-      unwrap(child),
+      unwrap(child)
     );
   }
 
