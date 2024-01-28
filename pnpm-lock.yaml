@@ -327,6 +327,9 @@ importers:
       '@types/react-reconciler':
         specifier: ^0.28.8
         version: 0.28.8
+      afterframe:
+        specifier: ^1.0.2
+        version: 1.0.2
       react-reconciler:
         specifier: ^0.29.0
         version: 0.29.0(react@18.2.0)
@@ -4276,6 +4279,10 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
     dev: false
+
+  /afterframe@1.0.2:
+    resolution: {integrity: sha512-0JeMZI7dIfVs5guqLgidQNV7c6jBC2HO0QNSekAUB82Hr7PdU9QXNAF3kpFkvATvHYDDTGto7FPsRu1ey+aKJQ==}
+    dev: true
 
   /agent-base@6.0.2:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}

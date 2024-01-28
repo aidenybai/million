@@ -19,6 +19,7 @@ export interface MillionArrayProps<T> {
   ssr?: boolean;
   html?: string;
   rsc?: boolean;
+  scoped?: boolean;
   [key: string]: any;
 }
 

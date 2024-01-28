@@ -62,6 +62,7 @@ export const element$ = Element.prototype;
 export const characterData$ = CharacterData.prototype;
 export const getOwnPropertyDescriptor$ = Object$.getOwnPropertyDescriptor;
 export const insertBefore$ = node$.insertBefore;
+export const appendChild$ = node$.appendChild
 export const cloneNode$ = node$.cloneNode;
 export const replaceChild$ = node$.replaceChild;
 export const replaceWith$ = element$.replaceWith;
@@ -167,6 +168,10 @@ export const removeComments = (el: Node) => {
     child = next;
   }
 };
+
+export const betweenNodes = (start: Node, end: Node) => {
+  
+}
 
 export const insertText = (el: Node, value: string, index: number): Text => {
   const node = document$.createTextNode(value);

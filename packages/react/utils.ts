@@ -18,6 +18,7 @@ import type {
   ReactNode,
   Ref,
 } from 'react';
+import afterframe from 'afterframe'
 import type { VNode } from '../million';
 import type { MillionPortal } from '../types';
 import { REGISTRY } from './constants';
@@ -68,10 +69,10 @@ export const processProps = (
 
 const Component = memo(
   ({ parent, vnode, millionPortal, rerender }) => {
-    if (parent) {
-      // millionPortal.p.pongResolve()
-      return vnode;
-    }
+    // if (parent) {
+    //   millionPortal.p?.pongResolve()
+    //   return vnode;
+    // }
     const [isPending, startTransition] = useTransition()
     // debugger
 
@@ -85,16 +86,14 @@ const Component = memo(
     
     useEffect(() => {
       if (!isPending) {
-        setTimeout(millionPortal.p.pongResolve, 10)
+        afterframe(millionPortal.p.pongResolve)
       }
-      console.log('mounted')
     }, [isPending])
 
-    console.log(rerender)
     // if (!rerender) {
-      // return vnode
+      return vnode
     // } else {
-      return createPortal(vnode, millionPortal.p!.parent!);
+      // return createPortal(vnode, millionPortal.p!.parent!);
     // }
   },
   (prev, next) => prev.vnode === next.vnode
@@ -105,7 +104,7 @@ export const renderReactScope = (
   unstable: boolean,
   portals: MillionPortal[] | undefined,
   currentIndex: number,
-  parent: Element,
+  parentEl: Element,
   rerender?: DispatchWithoutAction
 ) => {
   const isBlock =
@@ -131,12 +130,11 @@ export const renderReactScope = (
   }
 
   const commentMarker = document.createComment('')
-  const el = parent || prevPortal?.current || document.createElement('template').content;
+  const el = prevPortal?.current || document.createElement('template').content;
   const millionPortal = {} as MillionPortal;
-  console.log(el)
   const reactPortal = createPortal(
     createElement(Suspense, {
-      children: createElement(Component, { millionPortal, parent, vnode, rerender }),
+      children: createElement(Component, { millionPortal, parent: parentEl, vnode, rerender }),
       fallback: null,
     }),
     el
@@ -147,6 +145,8 @@ export const renderReactScope = (
     current: el,
     portal: reactPortal,
     unstable,
+    rerender,
+    _d_vnode: vnode
   });
   if (!prevPortal) {
   // if (!parent) {

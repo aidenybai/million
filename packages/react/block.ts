@@ -11,6 +11,7 @@ import type { Options, MillionProps, MillionPortal } from '../types';
 import { processProps, unwrap } from './utils';
 import { useContainer, useNearestParent, useNearestParentInstant } from './its-fine';
 import { Effect, REGISTRY } from './constants';
+import afterFrame from 'afterframe';
 
 export const block = <P extends MillionProps>(
   fn: ComponentType<P> | null,
@@ -30,9 +31,6 @@ export const block = <P extends MillionProps>(
     props: P,
     forwardedRef: Ref<any>,
   ) => {
-    const p = useNearestParentInstant()
-    console.log(p)
-
     const container = useContainer<HTMLElement>(); // usable when there's no parent other than the root element
     const parentRef = useNearestParent<HTMLElement>();
 
@@ -55,7 +53,7 @@ export const block = <P extends MillionProps>(
           mount$.call(currentBlock, target, null);
         });
         patch.current = (props: P) => {
-          queueMicrotask$(() => {
+          afterFrame(() => {
             patchBlock(
               currentBlock,
               block!(props, props.key, options?.shouldUpdate),
@@ -76,6 +74,7 @@ export const block = <P extends MillionProps>(
     for (let i = 0; i < childrenSize; ++i) {
       children[i + 1] = portalRef.current[i]?.portal;
     }
+    console.log(children, portalRef)
 
     const vnode = createElement(Fragment, { children });
 

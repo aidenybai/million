@@ -8,7 +8,7 @@ import {
   useReducer,
   useRef,
   useState,
-  createContext
+  createContext,
 } from 'react';
 import type { DispatchWithoutAction, MutableRefObject } from 'react';
 import { arrayMount$, arrayPatch$ } from '../million/array';
@@ -26,12 +26,15 @@ import { renderReactScope } from './utils';
 import { REGISTRY } from './constants';
 import { useContainer, useNearestParent } from './its-fine';
 
-export const mountContext = createContext<React.Dispatch<boolean> | null>(null as any)
+export const mountContext = createContext<React.Dispatch<boolean> | null>(
+  null as any
+);
 
 const MillionArray = <T>({
   each,
   children,
   memo,
+  scoped,
 }: MillionArrayProps<T>): ReturnType<typeof createElement> => {
   const container = useContainer<HTMLElement>(); // usable when there's no parent other than the root element
   const parentRef = useNearestParent<HTMLElement>();
@@ -47,12 +50,15 @@ const MillionArray = <T>({
   });
   const [, setMountPortals] = useState(false);
   const [, rerender] = useReducer(() => Symbol(), Symbol());
-  const setMounted = useContext(mountContext)
-  console.log('MillionArray', [...portals.current])
+  const setMounted = useContext(mountContext);
 
   if (fragmentRef.current && (each !== cache.current.each || !memo)) {
     queueMicrotask$(() => {
+      if (scoped) {
+        parentRef.current = undefined;
+      }
       const el = parentRef.current ?? container.current;
+      const prevPortalsLength = portals.current.length
       const newChildren = createChildren<T>(
         each,
         children,
@@ -60,9 +66,11 @@ const MillionArray = <T>({
         portals,
         memo,
         el,
-        rerender,
+        rerender
       );
       arrayPatch$.call(fragmentRef.current, mapArray(newChildren));
+      // console.log(prevPortalsLength, portals.current.length)
+      // arrayMount$.call(fragmentRef.current, el!);
       // rerender()
     });
   }
@@ -70,15 +78,19 @@ const MillionArray = <T>({
   const MillionFor = createElement(
     Fragment,
     null,
-    ...portals.current.map((p) => p.portal),
+    ...portals.current.map((p) => p.portal)
   );
+  console.log('render phase', portals.current.length)
 
   useEffect(() => {
     if (fragmentRef.current) return;
 
     queueMicrotask$(() => {
+      if (scoped) {
+        parentRef.current = undefined;
+      }
+
       const el = parentRef.current ?? container.current;
-      console.log('el', parentRef.current, container.current)
       if (cache.current.mounted) return;
 
       const newChildren = createChildren<T>(
@@ -88,7 +100,7 @@ const MillionArray = <T>({
         portals,
         memo,
         el,
-        rerender,
+        rerender
       );
       fragmentRef.current = mapArray(newChildren);
       if (!MapHas$.call(REGISTRY, MillionFor)) {
@@ -97,7 +109,7 @@ const MillionArray = <T>({
       arrayMount$.call(fragmentRef.current, el!);
       cache.current.mounted = true;
       setMountPortals(true);
-      setMounted?.(true)
+      setMounted?.(true);
     });
   }, [parentRef.current, container.current]);
 
@@ -108,7 +120,7 @@ const MillionArray = <T>({
 // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/37087#issuecomment-542793243
 const typedMemo: <T>(
   component: T,
-  equal?: (oldProps: MillionProps, newProps: MillionProps) => boolean,
+  equal?: (oldProps: MillionProps, newProps: MillionProps) => boolean
 ) => T = memo;
 
 export const For = typedMemo(MillionArray);
@@ -119,8 +131,8 @@ const createChildren = <T>(
   cache: MutableRefObject<ArrayCache<T>>,
   portals: { current: MillionPortal[] },
   memo = false,
-  parent: Element,
-  rerender: DispatchWithoutAction,
+  parentEl: Element,
+  rerender: DispatchWithoutAction
 ): Block[] => {
   const children = Array(each.length);
   const currentCache = cache.current as any;
@@ -153,7 +165,7 @@ const createChildren = <T>(
     const block = createBlock((props?: MillionProps) => props?.scope);
     const currentBlock = (
       props: MillionProps,
-      index: number,
+      index: number
     ): ReturnType<typeof block> => {
       return block(
         {
@@ -162,11 +174,11 @@ const createChildren = <T>(
             false,
             portals.current,
             index,
-            parent,
-            rerender,
+            parentEl,
+            rerender
           ),
         },
-        vnode.key ? String(vnode.key) : undefined,
+        vnode.key ? String(vnode.key) : undefined
       );
     };
 

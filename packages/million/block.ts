@@ -15,6 +15,7 @@ import {
   replaceChild$,
   stringToDOM,
   removeComments,
+  appendChild$,
 } from './dom';
 import { renderToTemplate } from './template';
 import { AbstractBlock } from './types';
@@ -107,6 +108,8 @@ export const patch = (
 export class Block extends AbstractBlock {
   declare r: Node;
   declare e: Edit[];
+  declare parentEl: HTMLElement 
+  declare boundaries: [Node, Node]
 
   constructor(
     root: Node,
@@ -134,12 +137,15 @@ export class Block extends AbstractBlock {
     } else {
       this.g = null;
     }
+
+    this.boundaries = [document.createComment('start'), document.createComment('end')]
   }
   m(
-    parent?: HTMLElement,
+    parentEl?: HTMLElement,
     refNode: Node | null = null,
     hydrateNode?: HTMLElement | null,
   ): Node {
+    this.parentEl = parentEl
     if (this.l) return this.l;
     // cloneNode(true) uses less memory than recursively creating new nodes
     const root = hydrateNode ?? cloneNode$.call(this.r, true);
@@ -155,7 +161,6 @@ export class Block extends AbstractBlock {
       for (let k = 0, l = current.e.length; k < l; ++k) {
         const edit = current.e[k]!;
         const value = this.d![edit.h];
-        console.log('mount', value, edit.i)
 
         if (edit.t & ChildFlag) {
           if (value instanceof AbstractBlock) {
@@ -173,12 +178,18 @@ export class Block extends AbstractBlock {
             const targetEl = value.current;
             el[TEXT_NODE_CACHE][k] = targetEl;
             
+            // insertBefore$.call(el, targetEl , childAt(el, edit.i))
             if (value.p) {
               insertBefore$.call(el, value.p.commentMarker , childAt(el, edit.i))
               value.p.parent = el
               value.p.pingResolve()
               value.p.pongPromise.then(() => {
-                insertBefore$.call(el, targetEl , childAt(el, edit.i))
+                // debugger
+                const parentOfComment =(value.p.commentMarker as Node).parentNode! 
+                const i = Array.prototype.indexOf.call(parentOfComment.childNodes, value.p.commentMarker)
+                if (parentOfComment !== targetEl) {
+                  insertBefore$.call(parentOfComment, targetEl , childAt(parentOfComment, i))
+                }
                 value.p.commentMarker.remove()
                 // console.log('mounted finish', value.p.commentMarker, childAt(el, edit.i))
                 // replaceChild$.call(el, value.p.commentMarker , targetEl);
@@ -239,8 +250,11 @@ export class Block extends AbstractBlock {
       }
     }
 
-    if (parent && !hydrateNode) {
-      insertBefore$.call(parent, root, refNode);
+    // insertBefore$.call(root, this.boundaries[0], childAt(root, 0))
+    // appendChild$.call(root, this.boundaries[1])
+
+    if (parentEl && !hydrateNode) {
+      insertBefore$.call(parentEl, root, refNode);
     }
     this.l = root;
 
@@ -278,7 +292,6 @@ export class Block extends AbstractBlock {
             oldValue.p(newChildBlock);
             continue;
           }
-          console.log('newValue', newValue)
           if (
             newValue &&
             typeof newValue === 'object' &&
@@ -290,8 +303,13 @@ export class Block extends AbstractBlock {
               el[TEXT_NODE_CACHE][k] = newTargetEl;
               replaceChild$.call(el, newTargetEl, targetEl);
             } else {
+              // debugger
               newValue.current = targetEl;
+              appendChild$.call(el, newValue.current)
             }
+            // appendChild$.call(this.parentEl, el)
+            // newValue.rerender()
+
             // if (newValue.p) {
             //   newValue.p.parent = el
             //   newValue.p.resolve()
@@ -320,6 +338,15 @@ export class Block extends AbstractBlock {
           setSvgAttribute(el, edit.n!, newValue);
         }
       }
+    }
+
+    if (root instanceof DocumentFragment) {
+      // const endComment = this.boundaries[1]
+      // const parentOfComment =endComment.parentNode! 
+      // const i = Array.prototype.indexOf.call(parentOfComment.childNodes, endComment)
+      // insertBefore$.call(parentOfComment, root , childAt(parentOfComment, i))
+      appendChild$.call(this.parentEl, root )
+
     }
 
     return root;
