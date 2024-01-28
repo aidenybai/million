@@ -80,44 +80,44 @@ Con eso en mano, construyamos una aplicación.
 
 Un caso de uso de los bloques es renderizar listas de datos de manera eficiente. En este ejemplo, construyamos un data grid en React.
 
-Supongamos que tienes acceso a los componentes preconstruidos `<Table />{:jsx}` y `<Input />{:jsx}` de tu falsa librería UI. Luego, puedes almacenar el número de filas que deseas mostrar en un hook `useState(){:jsx}`.
+Supongamos que tienes acceso a los componentes preconstruidos `<Table />{:jsx}` y `<Input />{:jsx}` de tu falsa librería UI. Luego, puedes almacenar el número de rows que deseas mostrar en un hook `useState(){:jsx}`.
 
 ```jsx
 function App() {
-  const [filas, setFilas] = useState(1);
+  const [rows, setRows] = useState(1);
 
   return (
     <div>
-      <Input value={filas} setValue={setFilas} />
+      <Input value={rows} setValue={setRows} />
       <Table>// ...</Table>
     </div>
   );
 }
 ```
 
-¡Pero espera! Has creado un grid pero no tienes datos. Supongamos que puedes obtener un array de datos arbitrarios de una función llamada `buildData(filas){:jsx}`:
+¡Pero espera! Has creado un grid pero no tienes datos. Supongamos que puedes obtener un array de datos arbitrarios de una función llamada `buildData(rows){:jsx}`:
 
 ```jsx
 const data = buildData(100);
-// devuelve [{ adjetivo: '...', color: '...', sustantivo: '...' }, ... x100]
+// devuelve [{ adjective: '...', color: '...', noun: '...' }, ... x100]
 ```
 
 Ahora puedes renderizar los datos en nuestra tabla utilizando `Array.map(){:jsx}`:
 
 ```jsx {3, 9-15}
 function App() {
-  const [filas, setFilas] = useState(1);
-  const data = buildData(filas);
+  const [rows, setRows] = useState(1);
+  const data = buildData(rows);
 
   return (
     <div>
-      <Input value={filas} setValue={setFilas} />
+      <Input value={rows} setValue={setRows} />
       <Table>
-        {data.map(({ adjetivo, color, sustantivo }) => (
+        {data.map(({ adjective, color, noun }) => (
           <tr>
-            <td>{adjetivo}</td>
+            <td>{adjective}</td>
             <td>{color}</td>
-            <td>{sustantivo}</td>
+            <td>{noun}</td>
           </tr>
         ))}
       </Table>
@@ -134,18 +134,18 @@ function App() {
   import { buildData } from './data';
 
 function App() {
-const [filas, setFilas] = useState(1);
-const data = buildData(filas);
+const [rows, setRows] = useState(1);
+const data = buildData(rows);
 
     return (
       <div>
-        <Input value={filas} setValue={setFilas} />
+        <Input value={rows} setValue={setRows} />
         <Table>
-          {data.map(({ adjetivo, color, sustantivo }) => (
+          {data.map(({ adjective, color, noun }) => (
             <tr>
-              <td>{adjetivo}</td>
+              <td>{adjective}</td>
               <td>{color}</td>
-              <td>{sustantivo}</td>
+              <td>{noun}</td>
             </tr>
           ))}
         </Table>
@@ -169,23 +169,23 @@ Intenta cambiar el valor de entrada de arriba a abajo, de 0 a 1000. Observa cóm
 
 <Box code={`
   import { useState } from 'react';
-  import { Table, Input, muchosElementos } from './ui';
+  import { Table, Input, lotsOfElements } from './ui';
   import { buildData } from './data';
 
 function App() {
-const [filas, setFilas] = useState(1);
-const data = buildData(filas);
+const [rows, setRows] = useState(1);
+const data = buildData(rows);
 
     return (
       <div>
-        <Input value={filas} setValue={setFilas} />
+        <Input value={rows} setValue={setRows} />
         <Table showRadar>
-          {data.map(({ adjetivo, color, sustantivo }) => (
+          {data.map(({ adjective, color, noun }) => (
             <tr>
-              <td>{adjetivo}</td>
+              <td>{adjective}</td>
               <td>{color}</td>
-              <td>{sustantivo}</td>
-              <td>{...muchosElementos}</td>
+              <td>{noun}</td>
+              <td>{...lotsOfElements}</td>
             </tr>
           ))}
         </Table>
@@ -206,24 +206,24 @@ En el siguiente ejemplo, puedes usar `block(){:jsx}` y `<For />{:jsx}` para opti
 Primero, necesitas abstraer el `<tr>{:jsx}` en su propio componente.
 
 ```jsx
-data.map(({ adjetivo, color, sustantivo }) => (
+data.map(({ adjective, color, noun }) => (
   <tr>
-    <td>{adjetivo}</td>
+    <td>{adjective}</td>
     <td>{color}</td>
-    <td>{sustantivo}</td>
-    <td>{...muchosElementos}</td>
+    <td>{noun}</td>
+    <td>{...lotsOfElements}</td>
   </tr>
 ));
 
 // 👇👇👇
 
-function Fila({ adjetivo, color, sustantivo }) {
+function Fila({ adjective, color, noun }) {
   return (
     <tr>
-      <td>{adjetivo}</td>
+      <td>{adjective}</td>
       <td>{color}</td>
-      <td>{sustantivo}</td>
-      {...muchosElementos}
+      <td>{noun}</td>
+      {...lotsOfElements}
     </tr>
   );
 }
@@ -234,13 +234,13 @@ Luego, puedes envolverlo con `block(){:jsx}` para optimizar el componente `<Fila
 ```jsx {3, 14}
 import { block } from 'million/react';
 
-const RowBlock = block(function Fila({ adjetivo, color, sustantivo }) {
+const RowBlock = block(function Fila({ adjective, color, noun }) {
   return (
     <tr>
-      <td>{adjetivo}</td>
+      <td>{adjective}</td>
       <td>{color}</td>
-      <td>{sustantivo}</td>
-      {...muchosElementos}
+      <td>{noun}</td>
+      {...lotsOfElements}
     </tr>
   );
 });
@@ -249,8 +249,8 @@ const RowBlock = block(function Fila({ adjetivo, color, sustantivo }) {
 Una vez que hayas optimizado una fila, necesitarás renderizarla como una lista:
 
 ```jsx
-data.map(({ adjetivo, color, sustantivo }) => (
-  <RowBlock adjetivo={adjetivo} color={color} sustantivo={sustantivo}>
+data.map(({ adjective, color, noun }) => (
+  <RowBlock adjective={adjective} color={color} noun={noun}>
 ));
 ```
 
@@ -276,8 +276,8 @@ Con esto en mente, puedes reescribir tu tabla para usar `<For />{:jsx}`:
 import { For } from 'million/react';
 
 <For each={data}>
-  {({ adjetivos, color, sustantivos }) => (
-    <RowBlock adjetivos={adjetivos} color={color} sustantivos={sustantivos} />
+  {({ adjective, color, noun }) => (
+    <RowBlock adjective={adjective} color={color} noun={noun} />
   )}
 </For>;
 ```
@@ -290,34 +290,34 @@ Observa que cuando cambias el valor del "input", el radar muestra significativam
 
 <Box code={`
   import { useState } from 'react';
-  import { Table, Input, muchosElementos } from './ui';
+  import { Table, Input, lotsOfElements } from './ui';
   import { buildData } from './data';
   import { block, For } from 'million/react';
 
 const RowBlock = block(
-function Fila({ adjetivos, color, sustantivos }) {
+function Row({ adjective, color, noun }) {
 return (
 <tr>
-<td>{adjetivos}</td>
+<td>{adjective}</td>
 <td>{color}</td>
-<td>{sustantivos}</td>
-{...muchosElementos}
+<td>{noun}</td>
+{...lotsOfElements}
 </tr>
 );
 }
 );
 
 function App() {
-const [filas, setFilas] = useState(1);
-const data = buildData(filas);
+const [rows, setRows] = useState(1);
+const data = buildData(rows);
 
     return (
       <div>
-        <Input value={filas} setValue={setFilas} />
+        <Input value={rows} setValue={setRows} />
         <Table showRadar>
           <For each={data}>
-            {({ adjetivos, color, sustantivos }) => (
-              <RowBlock adjetivos={adjetivos} color={color} sustantivos={sustantivos} />
+            {({ adjective, color, noun }) => (
+              <RowBlock adjective={adjective} color={color} noun={noun} />
             )}
           </For>
         </Table>
