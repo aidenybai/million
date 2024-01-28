@@ -5,7 +5,7 @@ import { IMPORTS } from './constants.new';
 import type { ImportDefinition, StateContext } from "./types";
 
 function getImportSpecifierName(specifier: t.ImportSpecifier): string {
-  if (specifier.imported.type === 'Identifier') {
+  if (t.isIdentifier(specifier.imported)) {
     return specifier.imported.name;
   }
   return specifier.imported.value;
