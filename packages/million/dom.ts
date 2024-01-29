@@ -170,7 +170,15 @@ export const removeComments = (el: Node) => {
 };
 
 export const betweenNodes = (start: Node, end: Node) => {
-  
+  const arr: Node[] = []
+
+  let child: ChildNode | null = nextSibling$.call(start);
+  while (child !== null && child !== end) {
+    arr.push(child)
+    const next = nextSibling$.call(child);
+    child = next;
+  }
+  return arr
 }
 
 export const insertText = (el: Node, value: string, index: number): Text => {

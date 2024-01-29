@@ -16,6 +16,7 @@ import {
   stringToDOM,
   removeComments,
   appendChild$,
+  betweenNodes,
 } from './dom';
 import { renderToTemplate } from './template';
 import { AbstractBlock } from './types';
@@ -39,14 +40,14 @@ const HOLE_PROXY = new Proxy(
     get(_, key: string): Hole {
       return { $: key };
     },
-  },
+  }
 );
 
 export const block = (
   fn: (props?: MillionProps) => VElement,
   unwrap?: (vnode: VElement) => VNode,
   shouldUpdate?: (oldProps: MillionProps, newProps: MillionProps) => boolean,
-  svg?: boolean,
+  svg?: boolean
 ) => {
   const vnode = fn(HOLE_PROXY);
   const edits: Edit[] = [];
@@ -54,7 +55,7 @@ export const block = (
   // Turns vnode into a string of HTML and creates an array of "edits"
   // Edits are instructions for how to update the DOM given some props
   const root = stringToDOM(
-    renderToTemplate(unwrap ? unwrap(vnode) : vnode, edits),
+    renderToTemplate(unwrap ? unwrap(vnode) : vnode, edits)
   );
 
   return <T extends MillionProps>(
@@ -62,8 +63,8 @@ export const block = (
     key?: string,
     shouldUpdateCurrentBlock?: (
       oldProps: MillionProps,
-      newProps: MillionProps,
-    ) => boolean,
+      newProps: MillionProps
+    ) => boolean
   ) => {
     return new Block(
       root,
@@ -71,7 +72,7 @@ export const block = (
       props,
       key ?? props?.key ?? null,
       shouldUpdateCurrentBlock ?? shouldUpdate ?? null,
-      null,
+      null
     );
   };
 };
@@ -79,7 +80,7 @@ export const block = (
 export const mount = (
   block: AbstractBlock,
   parent?: HTMLElement,
-  hydrateNode?: HTMLElement,
+  hydrateNode?: HTMLElement
 ): Node => {
   if ('b' in block && parent) {
     return arrayMount$.call(block, parent, null);
@@ -89,7 +90,7 @@ export const mount = (
 
 export const patch = (
   oldBlock: AbstractBlock,
-  newBlock: AbstractBlock,
+  newBlock: AbstractBlock
 ): Node => {
   if ('b' in oldBlock || 'b' in newBlock) {
     arrayPatch$.call(oldBlock, newBlock as ArrayBlock);
@@ -108,8 +109,8 @@ export const patch = (
 export class Block extends AbstractBlock {
   declare r: Node;
   declare e: Edit[];
-  declare parentEl: HTMLElement 
-  declare boundaries: [Node, Node]
+  declare parentEl: HTMLElement;
+  declare boundaries: [Node, Node];
 
   constructor(
     root: Node,
@@ -119,7 +120,7 @@ export class Block extends AbstractBlock {
     shouldUpdate?:
       | ((oldProps: MillionProps, newProps: MillionProps) => boolean)
       | null,
-    getElements?: ((root: Node) => HTMLElement[]) | null,
+    getElements?: ((root: Node) => HTMLElement[]) | null
   ) {
     super();
     this.r = root;
@@ -138,14 +139,17 @@ export class Block extends AbstractBlock {
       this.g = null;
     }
 
-    this.boundaries = [document.createComment('start'), document.createComment('end')]
+    this.boundaries = [
+      document.createComment('start'),
+      document.createComment('end'),
+    ];
   }
   m(
     parentEl?: HTMLElement,
     refNode: Node | null = null,
-    hydrateNode?: HTMLElement | null,
+    hydrateNode?: HTMLElement | null
   ): Node {
-    this.parentEl = parentEl
+    this.parentEl = parentEl;
     if (this.l) return this.l;
     // cloneNode(true) uses less memory than recursively creating new nodes
     const root = hydrateNode ?? cloneNode$.call(this.r, true);
@@ -177,23 +181,35 @@ export class Block extends AbstractBlock {
           if (value && typeof value === 'object' && 'foreign' in value) {
             const targetEl = value.current;
             el[TEXT_NODE_CACHE][k] = targetEl;
-            
+
             // insertBefore$.call(el, targetEl , childAt(el, edit.i))
             if (value.p) {
-              insertBefore$.call(el, value.p.commentMarker , childAt(el, edit.i))
-              value.p.parent = el
-              value.p.pingResolve()
+              insertBefore$.call(
+                el,
+                value.p.commentMarker,
+                childAt(el, edit.i)
+              );
+              value.p.parent = el;
+              value.p.pingResolve();
               value.p.pongPromise.then(() => {
                 // debugger
-                const parentOfComment =(value.p.commentMarker as Node).parentNode! 
-                const i = Array.prototype.indexOf.call(parentOfComment.childNodes, value.p.commentMarker)
+                const parentOfComment = (value.p.commentMarker as Node)
+                  .parentNode!;
+                const i = Array.prototype.indexOf.call(
+                  parentOfComment.childNodes,
+                  value.p.commentMarker
+                );
                 if (parentOfComment !== targetEl) {
-                  insertBefore$.call(parentOfComment, targetEl , childAt(parentOfComment, i))
+                  insertBefore$.call(
+                    parentOfComment,
+                    targetEl,
+                    childAt(parentOfComment, i)
+                  );
                 }
-                value.p.commentMarker.remove()
+                value.p.commentMarker.remove();
                 // console.log('mounted finish', value.p.commentMarker, childAt(el, edit.i))
                 // replaceChild$.call(el, value.p.commentMarker , targetEl);
-              })
+              });
             }
             continue;
           }
@@ -206,7 +222,7 @@ export class Block extends AbstractBlock {
             el,
             // eslint-disable-next-line eqeqeq
             value == null || value === false ? '' : String(value),
-            edit.i!,
+            edit.i!
           );
         } else if (edit.t & EventFlag) {
           const patch = createEventListener(el, edit.n!, value);
@@ -250,8 +266,8 @@ export class Block extends AbstractBlock {
       }
     }
 
-    // insertBefore$.call(root, this.boundaries[0], childAt(root, 0))
-    // appendChild$.call(root, this.boundaries[1])
+    insertBefore$.call(root, this.boundaries[0], childAt(root, 0));
+    appendChild$.call(root, this.boundaries[1]);
 
     if (parentEl && !hydrateNode) {
       insertBefore$.call(parentEl, root, refNode);
@@ -305,7 +321,7 @@ export class Block extends AbstractBlock {
             } else {
               // debugger
               newValue.current = targetEl;
-              appendChild$.call(el, newValue.current)
+              appendChild$.call(el, newValue.current);
             }
             // appendChild$.call(this.parentEl, el)
             // newValue.rerender()
@@ -320,7 +336,7 @@ export class Block extends AbstractBlock {
           setText(
             el[TEXT_NODE_CACHE][k],
             // eslint-disable-next-line eqeqeq
-            newValue == null || newValue === false ? '' : String(newValue),
+            newValue == null || newValue === false ? '' : String(newValue)
           );
         } else if (edit.t & AttributeFlag) {
           setAttribute(el, edit.n!, newValue);
@@ -342,11 +358,10 @@ export class Block extends AbstractBlock {
 
     if (root instanceof DocumentFragment) {
       // const endComment = this.boundaries[1]
-      // const parentOfComment =endComment.parentNode! 
+      // const parentOfComment =endComment.parentNode!
       // const i = Array.prototype.indexOf.call(parentOfComment.childNodes, endComment)
       // insertBefore$.call(parentOfComment, root , childAt(parentOfComment, i))
-      appendChild$.call(this.parentEl, root )
-
+      appendChild$.call(this.parentEl, root);
     }
 
     return root;
@@ -355,8 +370,12 @@ export class Block extends AbstractBlock {
     insertBefore$.call(this.t(), this.l!, block ? block.l! : refNode);
   }
   x(): void {
-    // removeElement$.call(this.l);
-    // this.l = null;
+    betweenNodes(this.boundaries[0], this.boundaries[1]).forEach((n) =>
+      n.parentNode?.removeChild(n)
+    );
+    this.l?.parentNode?.removeChild(this.l)
+    this.boundaries.map((n) => n.parentNode?.removeChild(n))
+    this.l = null;
   }
   u(_oldProps: MillionProps, _newProps: MillionProps): boolean {
     if (!this._u) return true;
@@ -375,7 +394,7 @@ const getCurrentElement = (
   path: number[],
   root: Node,
   cache?: Node[],
-  key?: number,
+  key?: number
 ): Node => {
   const pathLength = path.length;
   if (!pathLength) return root;

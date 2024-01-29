@@ -3,10 +3,11 @@ import type { ComponentType, Ref } from 'react';
 import {
   block as createBlock,
   mount$,
+  remove$ as removeBlock,
   patch as patchBlock,
 } from '../million/block';
 import { MapSet$, MapHas$ } from '../million/constants';
-import { queueMicrotask$ } from '../million/dom';
+import { queueMicrotask$, remove$ } from '../million/dom';
 import type { Options, MillionProps, MillionPortal } from '../types';
 import { processProps, unwrap } from './utils';
 import { useContainer, useNearestParent, useNearestParentInstant } from './its-fine';
@@ -45,9 +46,10 @@ export const block = <P extends MillionProps>(
       const target = parentRef.current ?? container.current;
       if (!target) return;
       const currentBlock = block!(props, props.key);
-      // if (hmrTimestamp && target.textContent) {
-      //   target.textContent = '';
-      // }
+      if (hmrTimestamp) {
+        removeBlock.call(currentBlock)
+        // target.textContent = '';
+      }
       if (patch.current === null || hmrTimestamp) {
         queueMicrotask$(() => {
           mount$.call(currentBlock, target, null);
@@ -60,6 +62,9 @@ export const block = <P extends MillionProps>(
             );
           });
         };
+      }
+      return () => {
+        removeBlock.call(currentBlock)
       }
     }, []);
 
@@ -74,7 +79,6 @@ export const block = <P extends MillionProps>(
     for (let i = 0; i < childrenSize; ++i) {
       children[i + 1] = portalRef.current[i]?.portal;
     }
-    console.log(children, portalRef)
 
     const vnode = createElement(Fragment, { children });
 
