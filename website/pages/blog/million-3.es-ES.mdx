@@ -1,58 +1,58 @@
 ---
-title: 'Announcing Million.js 3.0'
-date: DEC 7, 2023
-description: Updated performance for both compiler and runtime
+title: 'Anunciando Million.js 3.0'
+date: 7 DEC, 2023
+description: Rendimiento actualizado para ambos, compilador y tiempo de ejecución
 ---
 
 <div className="flex flex-col items-center gap-4">
 
-# Announcing Million 3.0
+# Anunciando Million 3.0
 
-  <small>[AIDEN BAI](https://aidenybai.com) DEC 7 2023</small>
+  <small>[AIDEN BAI](https://aidenybai.com) 7 DEC 2023</small>
 </div>
 
 ---
 
-After many months of hard work, I'm excited to announce the release of Million 3.0. Within the next week, we'll roll out an official published release. Soon, you'll be able to get a number of new features and improvements to the library.
+Después de vatios meses de duro trabajo, estoy emocionado de anunciar el lanzamiento de Million 3.0. Dentro de la próxima semana, lanzaremos una versión publicada oficialmente. Pronto, podrás obtener una serie de nuevas funciones y mejoras en la biblioteca.
 
-Even though we're changing how things work under the hood, Million 3.0 should be a drop-in replacement for everyone. You can upgrade to the latest version without any code changes.
+Incluso si cambiamos la forma en que funcionan las cosas internamente, Million 3.0 debería ser un reemplazo directo para todos. Puedes actualizar a la última versión sin ningún cambio al código.
 
-If you haven't tried Million.js yet, you can [check out the documentation](/docs/quickstart) to get started. Or, just run `npx million@latest` to get started. Million.js is a compiler that turns your existing React code into a hyper-optimized virtual DOM. It's a drop-in replacement for React that's faster and smaller.
+Si no has probado Million.js aún, puedes [consultar la documentación](/docs/quickstart) para comenzar. O simplemente ejecuta `npx million@latest` para comenzar. Million.js es un compilador que convierte tu código React existente en un DOM virtual hiper-optimizado. Es un reemplazo directo para React que es más rápido y más pequeño.
 
-## What's new?
+## ¿Qué es lo nuevo?
 
-### Faster build time
+### Tiempo de compilación mas rápido
 
-This release includes a complete overhaul of the compiler to be more efficient, readable, and scalable. Our initial benchmarks show a huge improvement from the previous version: ~34% faster (3.2s -> 2.1s) for initial compile and ~82% (1.1s -> 0.2s) for code changes on a medium sized Next.js project.
+Este lanzamiento incluye una revisión completa del compilador para que sea más eficiente, legible y escalable. Nuestras pruebas iniciales muestran una gran mejora desde la versión anterior: ~34% más rápido (3.2s -> 2.1s) para la compilación inicial y ~82% (1.1s -> 0.2s) para los cambios de código en un proyecto Next.js de tamaño mediano.
 
-We've also added a legitimate test suite to ensure that the compiler is working as expected. This will help us catch bugs and regressions in the future.
+Tmabién hemos agregado una suite de pruebas legítima para asegurarnos de que el compilador funcione como se esperaba. Esto nos ayudará a detectar errores y regresiones en el futuro.
 
-This allows us to support more features and optimizations in the future without comprimising developer experience. Look out for new diagnostic tools, sidecar, and AI gadgets soon 👀
+Esto nos permite dar soporte a más funciones y optimizaciones en el futuro sin comprometer la experiencia del desarrollador. Esté atento a herramientas de diagnóstico, sidecar y gadgets de IA pronto 👀
 
-### Faster runtime
+### Timpo de ejecución más rápido
 
-Million 3.0 refactors how hydration is done. Instead of replacing DOM on component boundaries, Million.js now can pinpoint hydrate – which results in significantly faster hydration times within blocks.
+Million 3.0 refactoriza cómo se realiza la hidratación. En lugar de reemplazar el DOM en los límites del componente, Million.js ahora puede señalar la hidratación, lo que resulta en tiempos de hidratación significativamente más rápidos dentro de los blocks.
 
-We're also working on removing the dependency on `<slot>` elements for mounting blocks – for many projects, this is a significant reduction in unnecessary DOM nodes, improving reconciliation, and reducing memory usage.
+También estamos trabajando en eliminar la dependencia de los elementos `<slot>` para montar blocks; para muchos proyectos, esta es una reducción significativa en los nodos DOM innecesarios, mejorando la reconciliación y reduciendo el uso de memoria.
 
-With these changes, we're seeing an initial ~100% improvement (2s -> 1s) in hydration times (4x CPU slowdown) and much less `<slot>` element generation for a medium sized Next.js project.
+Con estos cambios, estamos viendo una mejora inicial de ~100% (2s -> 1s) en los tiempos de hidratación (4x ralentización del CPU) y una generación de elementos `<slot>` mucho menor para un proyecto Next.js de tamaño mediano.
 
-## Migrating to 3.0
+## Migrando a 3.0
 
-Migration is easy. Just update your dependencies to the latest version of Million.js. Just run `npm install million@latest` (or your favorite package manager) to get started.
+La migración es fácil. Simplemente actualiza tus dependencias a la última versión de Million.js. Únicamente ejecuta `npm install million@latest` (o tu administrador de paquetes favorito) para comenzar.
 
-## The road ahead
+## El camino por delante
 
-The future of Million.js is to be the de-facto performance toolset for the web. In the coming weeks, we'll be shipping some extremely powerful and novel tools to help you build faster websites.
+El futuro de Million.js es ser el conjunto de herramientas de rendimiento por defecto para la web. En las próximas semanas, enviaremos algunas herramientas extremadamente poderosas y novedosas para ayudarte a crear sitios web más rápidos.
 
-Along with the new features, we'll be shipping a new website and documentation to help you get started. We'll also be shipping a new kitchen sink to show off some of the new features.
+Junto con las nuevas funciones, estaremos lanzando un nuevo sitio web y documentación para ayudarte a comenzar. También enviaremos un nuevo kitchen sink para mostrar algunas de las nuevas funciones.
 
-## Acknowledgements
+## Agradecimientos
 
-Thank you to everyone who has [contributed to Million.js](https://github.com/aidenybai/million/contributors).
+Gracias a todos los que han [contribuido a Million.js](https://github.com/aidenybai/million/contributors).
 
-Big shout out to [@toby_solutions](https://twitter.com/toby_solutions) for helping maintain the website and kitchen sink, [@felpix\_](https://twitter.com/felpix_) for running the Million.js Twitter account, and [@nisargptel](https://twitter.com/nisargptel) for making the trailer video.
+Un gran reconocimiento a [@toby_solutions](https://twitter.com/toby_solutions) por ayudar a mantener el sitio web y el kitchen sink, [@felpix\_](https://twitter.com/felpix_) por manejar la cuenta de Twitter de Million.js, y a [@nisargptel](https://twitter.com/nisargptel) por hacer el video del trailer.
 
-Should you have any questions, feel free to reach out to me on [Twitter](https://twitter.com/aidenybai) or [GitHub](https://github.com/aidenybai/million).
+Si tienes cualquier pregunta, no dudes en contactarme en [Twitter](https://twitter.com/aidenybai) o [GitHub](https://github.com/aidenybai/million).
 
-Enjoy 🎉
+Disfruta 🎉
