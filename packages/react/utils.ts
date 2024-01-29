@@ -89,9 +89,11 @@ const Component = memo(
         afterframe(millionPortal.p.pongResolve)
       }
     }, [isPending])
+    console.log(vnode, millionPortal.p.parent)
 
     // if (!rerender) {
-      return vnode
+      // return  createElement('div', null, vnode) 
+      return vnode 
     // } else {
       // return createPortal(vnode, millionPortal.p!.parent!);
     // }
@@ -104,8 +106,9 @@ export const renderReactScope = (
   unstable: boolean,
   portals: MillionPortal[] | undefined,
   currentIndex: number,
-  parentEl: Element,
-  rerender?: DispatchWithoutAction
+  parentEl?: Element,
+  rerender?: DispatchWithoutAction,
+  key?: string
 ) => {
   const isBlock =
     isValidElement(vnode) &&
@@ -129,15 +132,17 @@ export const renderReactScope = (
     }
   }
 
-  const commentMarker = document.createComment('')
+  
   const el = prevPortal?.current || document.createElement('template').content;
   const millionPortal = {} as MillionPortal;
+  console.log(key, vnode)
   const reactPortal = createPortal(
     createElement(Suspense, {
       children: createElement(Component, { millionPortal, parent: parentEl, vnode, rerender }),
       fallback: null,
     }),
-    el
+    el,
+    key
   );
 
   Object.assign(millionPortal, {
@@ -152,16 +157,17 @@ export const renderReactScope = (
   // if (!parent) {
     let pingResolve = (value: null) => {};
     let pongResolve = (value: null) => {};
-    const p = {
+    const p  = {
       parent: null,
       pingPromise: new Promise<null>((res) => (pingResolve = res)),
       pingResolve,
       pongPromise: new Promise<null>((res) => (pongResolve = res)),
       pongResolve,
-    };
+      boundaries: [document.createComment(`portal ${key} start`), document.createComment(`portal ${key} end`)]
+    } satisfies MillionPortal['p'];
     p.pingResolve = pingResolve;
     p.pongResolve = pongResolve;
-    p.commentMarker = commentMarker
+
     millionPortal.p = p;
   }
   if (prevPortal) {

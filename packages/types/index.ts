@@ -39,7 +39,10 @@ export interface MillionPortal {
   unstable?: boolean;
   p?: {
     parent: Element | null;
-    promise: Promise<null>;
-    resolve: (value: null) => void;
+    pingPromise: Promise<null>;
+    pingResolve: (value: null) => void;
+    pongPromise: Promise<null>;
+    pongResolve: (value: null) => void;
+    boundaries: [Comment, Comment]
   };
 }

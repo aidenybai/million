@@ -178,17 +178,20 @@ export const renderToTemplate = (
   //                                      ↕️ Block edit here
   // 👍: 'foo' + Block + 'bar'   => 'foo', 'bar'
   let canMergeString = false;
+  let portalSpace = 0 // each portal takes two indexes, one for start and one for the end boundary
   for (let i = 0, j = vnode.props.children?.length || 0, k = 0; i < j; ++i) {
     const child = vnode.props.children?.[i];
     if (child === null || child === undefined || child === false) continue;
+    // console.log(child)
 
     if (typeof child === 'object' && '$' in child) {
+      portalSpace++
       current.e.push({
         /* type */ t: ChildFlag,
         /* name */ n: null,
         /* value */ v: null,
         /* hole */ h: child.$,
-        /* index */ i,
+        /* index */ i: i + portalSpace,
         /* listener */ l: null,
         /* patch */ p: null,
         /* block */ b: null,
@@ -202,7 +205,7 @@ export const renderToTemplate = (
         /* name */ n: null,
         /* value */ v: null,
         /* hole */ h: null,
-        /* index */ i,
+        /* index */ i: i + portalSpace,
         /* listener */ l: null,
         /* patch */ p: null,
         /* block */ b: child,
@@ -226,7 +229,7 @@ export const renderToTemplate = (
           /* name */ n: null,
           /* value */ v: value,
           /* hole */ h: null,
-          /* index */ i,
+          /* index */ i: i + portalSpace,
           /* listener */ l: null,
           /* patch */ p: null,
           /* block */ b: null,

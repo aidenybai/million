@@ -47,11 +47,12 @@ export const block = <P extends MillionProps>(
       if (!target) return;
       const currentBlock = blockTarget!(props, props.key);
       if (hmrTimestamp) {
+        // TODO: in compiledBlock, hmr is not supported and it does not pass hmr timestamp
         removeBlock.call(currentBlock)
         // target.textContent = '';
       }
       if (patch.current === null || hmrTimestamp) {
-        queueMicrotask$(() => {
+        afterFrame(() => {
           mount$.call(currentBlock, target, null);
         });
         patch.current = (props: P) => {
@@ -72,13 +73,14 @@ export const block = <P extends MillionProps>(
     const children = new Array(childrenSize);
 
     children[0] = createElement(Effect, {
-      key: 0 + hmrTimestamp,
+      key: 0,
       effect,
       deps: hmrTimestamp ? [hmrTimestamp] : [],
     });
     for (let i = 0; i < childrenSize; ++i) {
       children[i + 1] = portalRef.current[i]?.portal;
     }
+    console.log(props)
 
     const vnode = createElement(Fragment, { children });
 

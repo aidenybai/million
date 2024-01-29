@@ -186,27 +186,39 @@ export class Block extends AbstractBlock {
             if (value.p) {
               insertBefore$.call(
                 el,
-                value.p.commentMarker,
+                value.p.boundaries[0],
                 childAt(el, edit.i)
+              );
+              insertBefore$.call(
+                el,
+                value.p.boundaries[1],
+                childAt(el, edit.i + 1)
               );
               value.p.parent = el;
               value.p.pingResolve();
               value.p.pongPromise.then(() => {
                 // debugger
-                const parentOfComment = (value.p.commentMarker as Node)
+                const parentOfComment = (value.p.boundaries[1] as Node)
                   .parentNode!;
                 const i = Array.prototype.indexOf.call(
                   parentOfComment.childNodes,
-                  value.p.commentMarker
+                  value.p.boundaries[1]
                 );
                 if (parentOfComment !== targetEl) {
+                  // debugger
                   insertBefore$.call(
                     parentOfComment,
                     targetEl,
                     childAt(parentOfComment, i)
                   );
+                  // TODO: insertions are being merged, [5, add, 5] will be 5add 5
+                  // insertBefore$.call(
+                  //   parentOfComment,
+                  //   new Text(' '),
+                  //   childAt(parentOfComment, i)
+                  // );
                 }
-                value.p.commentMarker.remove();
+                // value.p.commentMarker.remove();
                 // console.log('mounted finish', value.p.commentMarker, childAt(el, edit.i))
                 // replaceChild$.call(el, value.p.commentMarker , targetEl);
               });
@@ -321,7 +333,12 @@ export class Block extends AbstractBlock {
             } else {
               // debugger
               newValue.current = targetEl;
-              appendChild$.call(el, newValue.current);
+              // appendChild$.call(el, newValue.current);
+              // betweenNodes(newValue.p.boundaries[0], newValue.p.boundaries[1]).forEach((n) => {
+              //   n.parentNode?.removeChild(n)
+              // })
+              insertBefore$.call(newValue.p.boundaries[1].parentNode, newValue.current, newValue.p.boundaries[1]);
+
             }
             // appendChild$.call(this.parentEl, el)
             // newValue.rerender()
