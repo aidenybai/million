@@ -1,5 +1,5 @@
 import type { PluginObj, PluginPass } from '@babel/core';
-import type * as t from '@babel/types';
+import * as t from '@babel/types';
 import { transformBlock } from './block.new';
 import { IMPORTS } from './constants.new';
 import type { ImportDefinition, StateContext } from "./types";
@@ -21,40 +21,31 @@ function registerImportDefinition(
   }
   for (let i = 0, len = path.node.specifiers.length; i < len; i++) {
     const specifier = path.node.specifiers[i]!;
-    switch (specifier.type) {
-      case 'ImportDefaultSpecifier': {
-        if (definition.kind === 'default') {
-          ctx.definitions.identifiers.set(specifier.local, definition);
-        }
-        break;
+    if (t.isImportDefaultSpecifier(specifier)) {
+      if (definition.kind === 'default') {
+        ctx.definitions.identifiers.set(specifier.local, definition);
       }
-      case 'ImportNamespaceSpecifier': {
-        let current = ctx.definitions.namespaces.get(specifier.local);
-        if (!current) {
-          current = [];
-        }
-        current.push(definition);
-        ctx.definitions.namespaces.set(specifier.local, current);
-        break;
+    } else if (t.isImportNamespaceSpecifier(specifier)) {
+      let current = ctx.definitions.namespaces.get(specifier.local);
+      if (!current) {
+        current = [];
       }
-      case 'ImportSpecifier': {
-        if (!(specifier.importKind === 'typeof' || specifier.importKind === 'type')) {
-          const key = getImportSpecifierName(specifier);
-          if (
-            (
-              definition.kind === 'named'
-              && key === definition.name
-            )
-            || (
-              definition.kind === 'default'
-              && key === 'default'
-            )
-          ) {
-            ctx.definitions.identifiers.set(specifier.local, definition);
-          } 
-        }
-        break;
-      }
+      current.push(definition);
+      ctx.definitions.namespaces.set(specifier.local, current);
+    } else if (!(specifier.importKind === 'typeof' || specifier.importKind === 'type')) {
+      const key = getImportSpecifierName(specifier);
+      if (
+        (
+          definition.kind === 'named'
+          && key === definition.name
+        )
+        || (
+          definition.kind === 'default'
+          && key === 'default'
+        )
+      ) {
+        ctx.definitions.identifiers.set(specifier.local, definition);
+      } 
     }
   }
 }
