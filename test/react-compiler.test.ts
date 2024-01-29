@@ -272,7 +272,7 @@ pluginTester({
             }))[0],
             _ = _renderReactScope(<Foreign />, false, portal.$, 0, false);
           let P = new Array(1);
-          for (let i = 0, l = portal.$.length; i < l; ++i) P[i] = portal.$[i].portal;
+          for (let i = 0, l = portal.$.length; i < l; ++i) P[i] = portal.$[i]?.portal;
           return (
             <>
               <Block_Component _={_} />
@@ -315,7 +315,7 @@ pluginTester({
             _ = _renderReactScope(<Foreign1 />, false, portal.$, 0, false),
             _2 = _renderReactScope2(<Foreign2 />, false, portal.$, 1, false);
           let P = new Array(2);
-          for (let i = 0, l = portal.$.length; i < l; ++i) P[i] = portal.$[i].portal;
+          for (let i = 0, l = portal.$.length; i < l; ++i) P[i] = portal.$[i]?.portal;
           return (
             <>
               <Block_Component _={_} _2={_2} />
@@ -376,7 +376,7 @@ pluginTester({
               false
             );
           let P = new Array(1);
-          for (let i = 0, l = portal.$.length; i < l; ++i) P[i] = portal.$[i].portal;
+          for (let i = 0, l = portal.$.length; i < l; ++i) P[i] = portal.$[i]?.portal;
           return (
             <>
               <Block_Component _={_} />
@@ -425,7 +425,7 @@ pluginTester({
               false
             );
           let P = new Array(1);
-          for (let i = 0, l = portal.$.length; i < l; ++i) P[i] = portal.$[i].portal;
+          for (let i = 0, l = portal.$.length; i < l; ++i) P[i] = portal.$[i]?.portal;
           return (
             <>
               <Block_Component _={_} />

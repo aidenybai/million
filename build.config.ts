@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const version = JSON.parse(
-  readFileSync(join(__dirname, 'package.json'), 'utf-8')
+  readFileSync(join(__dirname, 'package.json'), 'utf-8'),
 ).version;
 
 export default defineBuildConfig({
@@ -14,9 +14,11 @@ export default defineBuildConfig({
     './packages/compiler',
     './packages/react',
     './packages/react-server',
+    './packages/react-server/rsc.ts',
     './packages/types',
   ],
-  declaration: true,
+  // declaration: true,
+  declaration: false,
   clean: true,
   failOnWarn: false,
   rollup: {
@@ -30,16 +32,14 @@ export default defineBuildConfig({
   hooks: {
     'rollup:options'(_ctx, options) {
       if (Array.isArray(options?.plugins)) {
-        options.plugins.push(banner(() => `'use client';\n`) as any);
+        options.plugins.push(banner((chunk) => { 
+          if (!chunk.name.includes('server')) {
+            return `'use client';\n`
+          }
+          return ''
+        }) as any);
       }
     },
   },
-  externals: [
-    'react',
-    'react-dom',
-    'million',
-    'vite',
-    'esbuild',
-    'rollup',
-  ],
+  externals: ['react', 'react-dom', 'million', 'vite', 'esbuild', 'rollup'],
 });

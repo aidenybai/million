@@ -4,7 +4,7 @@ import type * as t from '@babel/types';
 export const findChild = <T>(
   path: NodePath,
   type: string,
-  condition?: (node: NodePath<T>) => boolean
+  condition?: (node: NodePath<T>) => boolean,
 ): NodePath<T> | null => {
   let child: NodePath<T> | null = null;
   path.traverse({
@@ -20,7 +20,7 @@ export const findChild = <T>(
 export const findChildMultiple = <T>(
   path: NodePath,
   type: string,
-  condition?: (node: NodePath<T>) => boolean
+  condition?: (node: NodePath<T>) => boolean,
 ): NodePath<T>[] => {
   const children: NodePath<T>[] = [];
   path.traverse({

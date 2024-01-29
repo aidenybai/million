@@ -43,7 +43,9 @@ export const next = (
         }),
       );
 
+      // @ts-expect-error
       if (typeof nextConfig.webpack === 'function') {
+        // @ts-expect-error
         return nextConfig.webpack(config, webpackOptions);
       }
       return config;

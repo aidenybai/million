@@ -3,7 +3,7 @@ import { block } from 'million/react';
 
 const ThemeContext = createContext('light');
 
-const Context = block(({onClick}) => {
+const Context = block(({ onClick }) => {
   const theme = useContext(ThemeContext);
 
   return (

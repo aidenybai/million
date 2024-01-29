@@ -14,6 +14,9 @@ import {
   childAt,
   replaceChild$,
   stringToDOM,
+  removeComments,
+  appendChild$,
+  betweenNodes,
 } from './dom';
 import { renderToTemplate } from './template';
 import { AbstractBlock } from './types';
@@ -52,8 +55,7 @@ export const block = (
   // Turns vnode into a string of HTML and creates an array of "edits"
   // Edits are instructions for how to update the DOM given some props
   const root = stringToDOM(
-    renderToTemplate(unwrap ? unwrap(vnode) : vnode, edits),
-    svg
+    renderToTemplate(unwrap ? unwrap(vnode) : vnode, edits)
   );
 
   return <T extends MillionProps>(
@@ -79,14 +81,17 @@ export const mount = (
   block: AbstractBlock,
   parent?: HTMLElement,
   hydrateNode?: HTMLElement
-): HTMLElement => {
+): Node => {
   if ('b' in block && parent) {
     return arrayMount$.call(block, parent, null);
   }
   return mount$.call(block, parent, null, hydrateNode);
 };
 
-export const patch = (oldBlock: AbstractBlock, newBlock: AbstractBlock): HTMLElement => {
+export const patch = (
+  oldBlock: AbstractBlock,
+  newBlock: AbstractBlock
+): Node => {
   if ('b' in oldBlock || 'b' in newBlock) {
     arrayPatch$.call(oldBlock, newBlock as ArrayBlock);
   }
@@ -102,18 +107,20 @@ export const patch = (oldBlock: AbstractBlock, newBlock: AbstractBlock): HTMLEle
 };
 
 export class Block extends AbstractBlock {
-  declare r: HTMLElement;
+  declare r: Node;
   declare e: Edit[];
+  declare parentEl: HTMLElement;
+  declare boundaries: [Node, Node];
 
   constructor(
-    root: HTMLElement,
+    root: Node,
     edits: Edit[],
     props?: MillionProps | null,
     key?: string | null,
     shouldUpdate?:
       | ((oldProps: MillionProps, newProps: MillionProps) => boolean)
       | null,
-    getElements?: ((root: HTMLElement) => HTMLElement[]) | null
+    getElements?: ((root: Node) => HTMLElement[]) | null
   ) {
     super();
     this.r = root;
@@ -131,22 +138,30 @@ export class Block extends AbstractBlock {
     } else {
       this.g = null;
     }
+
+    this.boundaries = [
+      document.createComment('start'),
+      document.createComment('end'),
+    ];
   }
   m(
-    parent?: HTMLElement,
+    parentEl?: HTMLElement,
     refNode: Node | null = null,
     hydrateNode?: HTMLElement | null
-  ): HTMLElement {
+  ): Node {
+    this.parentEl = parentEl;
     if (this.l) return this.l;
     // cloneNode(true) uses less memory than recursively creating new nodes
-    const root = hydrateNode ?? (cloneNode$.call(this.r, true) as HTMLElement);
+    const root = hydrateNode ?? cloneNode$.call(this.r, true);
     const elements = this.g?.(root);
     if (elements) this.c = elements;
 
     for (let i = 0, j = this.e.length; i < j; ++i) {
       const current = this.e[i]!;
-      const el =
-        elements?.[i] ?? getCurrentElement(current.p!, root, this.c, i);
+      const el = (elements?.[i] ??
+        getCurrentElement(current.p!, root, this.c, i)) as HTMLElement;
+      removeComments(el);
+
       for (let k = 0, l = current.e.length; k < l; ++k) {
         const edit = current.e[k]!;
         const value = this.d![edit.h];
@@ -164,15 +179,37 @@ export class Block extends AbstractBlock {
           if (!el[TEXT_NODE_CACHE]) el[TEXT_NODE_CACHE] = new Array(l);
 
           if (value && typeof value === 'object' && 'foreign' in value) {
-            if (hydrateNode) {
-              const child = childAt(el, edit.i!);
-              value.reset(child);
-            }
-
             const targetEl = value.current;
             el[TEXT_NODE_CACHE][k] = targetEl;
-            if (!hydrateNode) {
-              insertBefore$.call(el, targetEl, childAt(el, edit.i!));
+
+            // insertBefore$.call(el, targetEl , childAt(el, edit.i))
+            if (value.p) {
+              insertBefore$.call(
+                el,
+                value.p.commentMarker,
+                childAt(el, edit.i)
+              );
+              value.p.parent = el;
+              value.p.pingResolve();
+              value.p.pongPromise.then(() => {
+                // debugger
+                const parentOfComment = (value.p.commentMarker as Node)
+                  .parentNode!;
+                const i = Array.prototype.indexOf.call(
+                  parentOfComment.childNodes,
+                  value.p.commentMarker
+                );
+                if (parentOfComment !== targetEl) {
+                  insertBefore$.call(
+                    parentOfComment,
+                    targetEl,
+                    childAt(parentOfComment, i)
+                  );
+                }
+                value.p.commentMarker.remove();
+                // console.log('mounted finish', value.p.commentMarker, childAt(el, edit.i))
+                // replaceChild$.call(el, value.p.commentMarker , targetEl);
+              });
             }
             continue;
           }
@@ -229,14 +266,17 @@ export class Block extends AbstractBlock {
       }
     }
 
-    if (parent && !hydrateNode) {
-      insertBefore$.call(parent, root, refNode);
+    insertBefore$.call(root, this.boundaries[0], childAt(root, 0));
+    appendChild$.call(root, this.boundaries[1]);
+
+    if (parentEl && !hydrateNode) {
+      insertBefore$.call(parentEl, root, refNode);
     }
     this.l = root;
 
     return root;
   }
-  p(newBlock: AbstractBlock): HTMLElement {
+  p(newBlock: AbstractBlock): Node {
     const root = this.l!;
     if (!newBlock.d) return root;
     const props = this.d!;
@@ -246,8 +286,8 @@ export class Block extends AbstractBlock {
 
     for (let i = 0, j = this.e.length; i < j; ++i) {
       const current = this.e[i]!;
-      const el: HTMLElement =
-        this.c![i] ?? getCurrentElement(current.p!, root, this.c, i);
+      const el = (this.c![i] ??
+        getCurrentElement(current.p!, root, this.c, i)) as HTMLElement;
       for (let k = 0, l = current.e.length; k < l; ++k) {
         const edit = current.e[k]!;
         const oldValue = props[edit.h];
@@ -279,8 +319,17 @@ export class Block extends AbstractBlock {
               el[TEXT_NODE_CACHE][k] = newTargetEl;
               replaceChild$.call(el, newTargetEl, targetEl);
             } else {
+              // debugger
               newValue.current = targetEl;
+              appendChild$.call(el, newValue.current);
             }
+            // appendChild$.call(this.parentEl, el)
+            // newValue.rerender()
+
+            // if (newValue.p) {
+            //   newValue.p.parent = el
+            //   newValue.p.resolve()
+            // }
 
             continue;
           }
@@ -307,13 +356,25 @@ export class Block extends AbstractBlock {
       }
     }
 
+    if (root instanceof DocumentFragment) {
+      // const endComment = this.boundaries[1]
+      // const parentOfComment =endComment.parentNode!
+      // const i = Array.prototype.indexOf.call(parentOfComment.childNodes, endComment)
+      // insertBefore$.call(parentOfComment, root , childAt(parentOfComment, i))
+      appendChild$.call(this.parentEl, root);
+    }
+
     return root;
   }
   v(block: AbstractBlock | null = null, refNode: Node | null = null): void {
     insertBefore$.call(this.t(), this.l!, block ? block.l! : refNode);
   }
   x(): void {
-    removeElement$.call(this.l);
+    betweenNodes(this.boundaries[0], this.boundaries[1]).forEach((n) =>
+      n.parentNode?.removeChild(n)
+    );
+    this.l?.parentNode?.removeChild(this.l)
+    this.boundaries.map((n) => n.parentNode?.removeChild(n))
     this.l = null;
   }
   u(_oldProps: MillionProps, _newProps: MillionProps): boolean {
@@ -321,7 +382,7 @@ export class Block extends AbstractBlock {
     return this._u(_oldProps, _newProps);
   }
   s(): string {
-    return String(this.l?.outerHTML);
+    return String((this.l as HTMLElement).outerHTML);
   }
   t(): HTMLElement | null | undefined {
     if (!this._t) this._t = this.l?.parentElement;
@@ -331,10 +392,10 @@ export class Block extends AbstractBlock {
 
 const getCurrentElement = (
   path: number[],
-  root: HTMLElement,
-  cache?: HTMLElement[],
+  root: Node,
+  cache?: Node[],
   key?: number
-): HTMLElement => {
+): Node => {
   const pathLength = path.length;
   if (!pathLength) return root;
   const isCacheAndKeyExists = cache && key !== undefined;
@@ -349,6 +410,7 @@ const getCurrentElement = (
     const siblings = path[i]!;
     root = childAt(root, siblings);
   }
+
   if (isCacheAndKeyExists) cache[key] = root;
   return root;
 };

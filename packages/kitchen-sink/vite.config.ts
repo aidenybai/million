@@ -10,7 +10,10 @@ import data from '../../package.json';
 // https://vitejs.dev/config/
 export default defineConfig({
   // @ts-ignore
-  plugins: [million.vite({ mute: 'info' }), react(), Inspect()],
+  plugins: [
+    million.vite({ mute: 'info' })
+    ,
+     react(), Inspect()],
   resolve: {
     alias: {
       'million/react': path.resolve(__dirname, '../react'),

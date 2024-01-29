@@ -3,21 +3,22 @@ import type { ComponentType, Ref } from 'react';
 import {
   block as createBlock,
   mount$,
+  remove$ as removeBlock,
   patch as patchBlock,
 } from '../million/block';
 import { MapSet$, MapHas$ } from '../million/constants';
-import { queueMicrotask$ } from '../million/dom';
+import { queueMicrotask$, remove$ } from '../million/dom';
 import type { Options, MillionProps, MillionPortal } from '../types';
 import { processProps, unwrap } from './utils';
-import { Effect, RENDER_SCOPE, REGISTRY, SVG_RENDER_SCOPE } from './constants';
+import { useContainer, useNearestParent, useNearestParentInstant } from './its-fine';
+import { Effect, REGISTRY } from './constants';
+import afterFrame from 'afterframe';
 
 export const block = <P extends MillionProps>(
   fn: ComponentType<P> | null,
-  options: Options<P> | null | undefined = {}
+  options: Options | null | undefined = {},
 ) => {
   let blockTarget: ReturnType<typeof createBlock> | null = options?.block;
-  const defaultType = options?.svg ? SVG_RENDER_SCOPE : RENDER_SCOPE;
-
   if (fn) {
     blockTarget = createBlock(
       fn as any,
@@ -29,10 +30,12 @@ export const block = <P extends MillionProps>(
 
   const MillionBlock = <P extends MillionProps>(
     props: P,
-    forwardedRef: Ref<any>
+    forwardedRef: Ref<any>,
   ) => {
+    const container = useContainer<HTMLElement>(); // usable when there's no parent other than the root element
+    const parentRef = useNearestParent<HTMLElement>();
+
     const hmrTimestamp = props._hmr;
-    const ref = useRef<HTMLElement>(null);
     const patch = useRef<((props: P) => void) | null>(null);
     const portalRef = useRef<MillionPortal[]>([]);
 
@@ -40,17 +43,19 @@ export const block = <P extends MillionProps>(
     patch.current?.(props);
 
     const effect = useCallback(() => {
-      if (!ref.current) return;
+      const target = parentRef.current ?? container.current;
+      if (!target) return;
       const currentBlock = blockTarget!(props, props.key);
-      if (hmrTimestamp && ref.current.textContent) {
-        ref.current.textContent = '';
+      if (hmrTimestamp) {
+        removeBlock.call(currentBlock)
+        // target.textContent = '';
       }
       if (patch.current === null || hmrTimestamp) {
         queueMicrotask$(() => {
-          mount$.call(currentBlock, ref.current!, null);
+          mount$.call(currentBlock, target, null);
         });
         patch.current = (props: P) => {
-          queueMicrotask$(() => {
+          afterFrame(() => {
             patchBlock(
               currentBlock,
               blockTarget!(props, props.key, options?.shouldUpdate  as Parameters<typeof createBlock>[2])
@@ -58,22 +63,21 @@ export const block = <P extends MillionProps>(
           });
         };
       }
-    }, []);
-
-    const marker = useMemo(() => {
-      return createElement(options?.as ?? defaultType, { ref });
+      return () => {
+        removeBlock.call(currentBlock)
+      }
     }, []);
 
     const childrenSize = portalRef.current.length;
     const children = new Array(childrenSize);
 
-    children[0] = marker;
-    children[1] = createElement(Effect, {
+    children[0] = createElement(Effect, {
+      key: 0 + hmrTimestamp,
       effect,
       deps: hmrTimestamp ? [hmrTimestamp] : [],
     });
     for (let i = 0; i < childrenSize; ++i) {
-      children[i + 2] = portalRef.current[i]?.portal;
+      children[i + 1] = portalRef.current[i]?.portal;
     }
 
     const vnode = createElement(Fragment, { children });
@@ -82,7 +86,7 @@ export const block = <P extends MillionProps>(
   };
 
   if (!MapHas$.call(REGISTRY, MillionBlock)) {
-    MapSet$.call(REGISTRY, MillionBlock, block);
+    MapSet$.call(REGISTRY, MillionBlock, blockTarget);
   }
 
 

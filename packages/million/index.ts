@@ -3,4 +3,4 @@ export { mapArray, ArrayBlock } from './array';
 export { renderToTemplate } from './template';
 export { AbstractBlock } from './types';
 export type { VNode, VElement } from './types';
-export { firstChild$, nextSibling$, stringToDOM } from './dom';
+export { firstChild$, nextSibling$, stringToDOM, setAttribute } from './dom';

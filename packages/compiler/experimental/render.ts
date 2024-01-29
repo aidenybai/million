@@ -155,8 +155,8 @@ export const renderToTemplate = (
               name === 'style'
                 ? StyleAttributeFlag
                 : name.charCodeAt(0) === X_CHAR
-                ? SvgAttributeFlag
-                : AttributeFlag,
+                  ? SvgAttributeFlag
+                  : AttributeFlag,
             ),
             hole: t.stringLiteral(expression.name),
             name: t.stringLiteral(name),

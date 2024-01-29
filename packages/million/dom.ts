@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 
+import { createElement } from '../jsx-runtime';
 import {
   EVENTS_REGISTRY,
   IS_NON_DIMENSIONAL,
@@ -11,10 +12,11 @@ import {
   XLINK_NS,
   XML_NS,
 } from './constants';
+import { VElement, VNode } from './types';
 
 if (typeof window === 'undefined') {
   throw new Error(
-    'See http://million.dev/docs/install to install the compiler.'
+    'See http://million.dev/docs/install to install the compiler.',
   );
 }
 
@@ -50,7 +52,7 @@ export const HTM_TEMPLATE_CONTENT = HTM_TEMPLATE.content;
 const _SVG_TEMPLATE = /**@__PURE__*/ document$.createElement('template');
 export const SVG_TEMPLATE = /**@__PURE__*/ document$.createElementNS(
   'http://www.w3.org/2000/svg',
-  'svg'
+  'svg',
 );
 /**@__PURE__*/ _SVG_TEMPLATE.content.appendChild(SVG_TEMPLATE);
 
@@ -60,6 +62,7 @@ export const element$ = Element.prototype;
 export const characterData$ = CharacterData.prototype;
 export const getOwnPropertyDescriptor$ = Object$.getOwnPropertyDescriptor;
 export const insertBefore$ = node$.insertBefore;
+export const appendChild$ = node$.appendChild
 export const cloneNode$ = node$.cloneNode;
 export const replaceChild$ = node$.replaceChild;
 export const replaceWith$ = element$.replaceWith;
@@ -77,22 +80,24 @@ export const nextSibling$ = getOwnPropertyDescriptor$(node$, 'nextSibling')!
   .get!;
 export const characterDataSet$ = getOwnPropertyDescriptor$(
   characterData$,
-  'data'
+  'data',
 )!.set!;
 
-export const stringToDOM = (content: string, svg?: boolean) => {
-  const template = svg ? SVG_TEMPLATE : HTM_TEMPLATE;
-  template.innerHTML = content;
-  const dom = svg ? SVG_TEMPLATE : HTM_TEMPLATE_CONTENT;
-  return dom.firstChild as HTMLElement;
+export const stringToDOM = (content: string): Node => {
+  const a = document$.createElement('template');
+  a.innerHTML = content;
+  if (a.content.childNodes.length === 1) {
+    return a.content.childNodes.item(0);
+  }
+  return a.content;
 };
 
 document$[EVENTS_REGISTRY] = new Set$();
 
 export const createEventListener = (
-  el: HTMLElement,
+  el: Node,
   name: string,
-  value?: EventListener
+  value?: EventListener,
 ) => {
   let event = name.toLowerCase();
   let capture = false;
@@ -125,7 +130,7 @@ export const createEventListener = (
           el = el.parentNode;
         }
       },
-      { capture }
+      { capture },
     );
     SetAdd$.call(document$[EVENTS_REGISTRY], event);
   }
@@ -141,7 +146,7 @@ export const createEventListener = (
 };
 
 // https://www.measurethat.net/Benchmarks/Show/15652/0/childnodes-vs-children-vs-firstchildnextsibling-vs-firs
-export const childAt = (el: HTMLElement, index: number) => {
+export const childAt = (el: Node, index: number) => {
   let child = firstChild$.call(el);
   if (index) {
     for (let j = 0; j < index; ++j) {
@@ -152,11 +157,31 @@ export const childAt = (el: HTMLElement, index: number) => {
   return child;
 };
 
-export const insertText = (
-  el: HTMLElement,
-  value: string,
-  index: number
-): Text => {
+// React removes the comment but since we're hijacking the render, we should do it manually
+export const removeComments = (el: Node) => {
+  let child: ChildNode | null = firstChild$.call(el);
+  while (child) {
+    const next = child.nextSibling;
+    if (child.nodeType === 8) {
+      el.removeChild(child);
+    }
+    child = next;
+  }
+};
+
+export const betweenNodes = (start: Node, end: Node) => {
+  const arr: Node[] = []
+
+  let child: ChildNode | null = nextSibling$.call(start);
+  while (child !== null && child !== end) {
+    arr.push(child)
+    const next = nextSibling$.call(child);
+    child = next;
+  }
+  return arr
+}
+
+export const insertText = (el: Node, value: string, index: number): Text => {
   const node = document$.createTextNode(value);
   const child = childAt(el, index);
   insertBefore$.call(el, node, child);
@@ -170,7 +195,7 @@ export const setText = (el: Text, value: string) => {
 export const setStyleAttribute = (
   el: HTMLElement,
   name: string,
-  value?: string | boolean | number | null
+  value?: string | boolean | number | null,
 ) => {
   if (typeof value !== 'number' || IS_NON_DIMENSIONAL.test(name)) {
     el.style[name] = value;
@@ -189,7 +214,7 @@ export const setStyleAttribute = (
 export const setSvgAttribute = (
   el: HTMLElement,
   name: string,
-  value?: string | boolean | null
+  value?: string | boolean | null,
 ) => {
   name = name.replace(/xlink(?:H|:h)/, 'h').replace(/sName$/, 's');
   if (name.startsWith('xmlns')) {
@@ -202,10 +227,15 @@ export const setSvgAttribute = (
 export const setAttribute = (
   el: HTMLElement,
   name: string,
-  value?: string | boolean | null
+  value?: string | boolean | null,
 ): void => {
   const isValueNully = value === undefined || value === null;
   value = isValueNully ? '' : value;
+
+  if (!(el instanceof HTMLElement)) {
+    return;
+  }
+
   if (
     name in el &&
     el[name] !== undefined &&

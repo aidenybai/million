@@ -12,7 +12,7 @@ import { transformBlock } from './block';
 // TODO: add support for <For> for .maps
 export const parseAuto = (
   path: NodePath<t.FunctionDeclaration | t.VariableDeclarator>,
-  info: Info
+  info: Info,
 ): void => {
   if (!info.options.auto) return;
 
@@ -71,7 +71,7 @@ export const parseAuto = (
   if (!isComponent(rawComponent.id.name)) return;
 
   const globalPath = path.findParent(
-    (path) => path.parentPath?.isProgram() || path.isProgram()
+    (path) => path.parentPath?.isProgram() || path.isProgram(),
   )!;
   const comment =
     rawComponent.leadingComments?.[0] ||
@@ -84,7 +84,7 @@ export const parseAuto = (
   }
 
   const blockStatementPath = componentPath.get(
-    'body'
+    'body',
   ) as NodePath<t.BlockStatement>;
   const returnStatementPath = blockStatementPath
     .get('body')
@@ -122,12 +122,11 @@ export const parseAuto = (
         skipIds.some((id) =>
           typeof id === 'string'
             ? path.node.name === id
-            : id.test(path.node.name)
+            : id.test(path.node.name),
         )
       ) {
         componentInfo.bailout = true;
         path.stop();
-
       }
     },
     JSXElement(path) {
@@ -206,7 +205,6 @@ export const parseAuto = (
       if (componentInfo.returns > 1) {
         componentInfo.bailout = true;
         path.stop();
-
       }
     },
   });
@@ -250,10 +248,10 @@ export const parseAuto = (
           ? t.functionExpression(
               rawComponent.id,
               componentPath.node.params,
-              componentPath.node.body
+              componentPath.node.body,
             )
           : componentPath.node,
-      ])
+      ]),
     ),
   ]);
 
@@ -263,28 +261,28 @@ export const parseAuto = (
     path.parentPath.replaceWith(
       t.exportNamedDeclaration(null, [
         t.exportSpecifier(rawComponent.id, rawComponent.id),
-      ])
+      ]),
     );
     rewrittenVariableDeclarationPath = path.parentPath.insertBefore(
-      rewrittenComponentNode
+      rewrittenComponentNode,
     )[0];
   } else if (path.parentPath.isExportDefaultDeclaration()) {
     path.replaceWith(rawComponent.id);
     rewrittenVariableDeclarationPath = path.parentPath.insertBefore(
-      rewrittenComponentNode
+      rewrittenComponentNode,
     )[0];
   } else if (path.isVariableDeclarator()) {
     rewrittenVariableDeclarationPath = path.parentPath.replaceWith(
-      rewrittenComponentNode
+      rewrittenComponentNode,
     )[0];
   } else {
     rewrittenVariableDeclarationPath = path.replaceWith(
-      rewrittenComponentNode
+      rewrittenComponentNode,
     )[0];
   }
 
   const rewrittenComponentPath = rewrittenVariableDeclarationPath.get(
-    'declarations.0.init'
+    'declarations.0.init',
   ) as NodePath<t.CallExpression>;
 
   rewrittenComponentPath.scope.crawl();

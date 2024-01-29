@@ -1,15 +1,42 @@
-import { Fragment, createElement, isValidElement } from 'react';
-import { createPortal } from 'react-dom';
-import type { ComponentProps, ReactNode, Ref } from 'react';
+import {
+  Fragment,
+  Suspense,
+  createElement,
+  isValidElement,
+  memo,
+  startTransition,
+  useEffect,
+  useInsertionEffect,
+  useLayoutEffect,
+  useTransition,
+} from 'react';
+import { createPortal, flushSync } from 'react-dom';
+import type {
+  ComponentProps,
+  DispatchWithoutAction,
+  ReactElement,
+  ReactNode,
+  Ref,
+} from 'react';
+import afterframe from 'afterframe'
 import type { VNode } from '../million';
 import type { MillionPortal } from '../types';
-import { REGISTRY, RENDER_SCOPE } from './constants';
+import { REGISTRY } from './constants';
+
+const reactPortal = createPortal('', document.createDocumentFragment());
+
+function isPortal(el: any) {
+  if (typeof el === 'object' && el['$$typeof'] === reactPortal['$$typeof']) {
+    return true;
+  }
+  return false;
+}
 
 // TODO: access perf impact of this
 export const processProps = (
   props: ComponentProps<any>,
   ref: Ref<any>,
-  portals: MillionPortal[],
+  portals: MillionPortal[]
 ): ComponentProps<any> => {
   const processedProps: ComponentProps<any> = { ref };
 
@@ -17,6 +44,7 @@ export const processProps = (
 
   for (const key in props) {
     const value = props[key];
+
     if (
       isValidElement(value) ||
       (Array.isArray(value) && value.length && isValidElement(value[0]))
@@ -25,29 +53,60 @@ export const processProps = (
         value,
         false,
         portals,
-        currentIndex++,
+        currentIndex++
       );
 
       continue;
     }
+    // if ((Array.isArray(value) && value.length && isPortal(value[0]))) {
+    //   portals[currentIndex++] = { portal: props[key] }
+    // }
     processedProps[key] = props[key];
   }
 
   return processedProps;
 };
 
-const wrap = (vnode: ReactNode): ReactNode => {
-  return createElement(RENDER_SCOPE, { suppressHydrationWarning: true }, vnode);
-};
+const Component = memo(
+  ({ parent, vnode, millionPortal, rerender }) => {
+    // if (parent) {
+    //   millionPortal.p?.pongResolve()
+    //   return vnode;
+    // }
+    const [isPending, startTransition] = useTransition()
+    // debugger
+
+    !millionPortal.p?.parent && startTransition(() => {
+      // console.log(vnode, isValidElement(vnode))
+      // if (!millionPortal.p?.parent) {
+        throw millionPortal.p!.pingPromise;
+      // }
+    });
+    
+    
+    useEffect(() => {
+      if (!isPending) {
+        afterframe(millionPortal.p.pongResolve)
+      }
+    }, [isPending])
+
+    // if (!rerender) {
+      return vnode
+    // } else {
+      // return createPortal(vnode, millionPortal.p!.parent!);
+    // }
+  },
+  (prev, next) => prev.vnode === next.vnode
+);
 
 export const renderReactScope = (
   vnode: ReactNode,
   unstable: boolean,
   portals: MillionPortal[] | undefined,
   currentIndex: number,
+  parentEl: Element,
+  rerender?: DispatchWithoutAction
 ) => {
-  const el = portals?.[currentIndex]?.current;
-
   const isBlock =
     isValidElement(vnode) &&
     typeof vnode.type === 'function' &&
@@ -55,14 +114,10 @@ export const renderReactScope = (
   const isCallable = isBlock && (vnode.type as any)._c;
 
   if (typeof window === 'undefined') {
-    if (isBlock) {
-      if (isCallable) {
-        return vnode;
-      }
-      return wrap(wrap(vnode));
-    }
-    return wrap(vnode);
+    return vnode;
   }
+
+  const prevPortal = portals?.[currentIndex];
 
   if (isCallable) {
     const puppetComponent = (vnode.type as any)(vnode.props);
@@ -74,16 +129,48 @@ export const renderReactScope = (
     }
   }
 
-  const current = el ?? document.createElement(RENDER_SCOPE);
-  const reactPortal = createPortal(vnode, current);
+  const commentMarker = document.createComment('')
+  const el = prevPortal?.current || document.createElement('template').content;
+  const millionPortal = {} as MillionPortal;
+  const reactPortal = createPortal(
+    createElement(Suspense, {
+      children: createElement(Component, { millionPortal, parent: parentEl, vnode, rerender }),
+      fallback: null,
+    }),
+    el
+  );
 
-  const millionPortal = {
+  Object.assign(millionPortal, {
     foreign: true as const,
-    current,
+    current: el,
     portal: reactPortal,
     unstable,
-  };
+    rerender,
+    _d_vnode: vnode
+  });
+  if (!prevPortal) {
+  // if (!parent) {
+    let pingResolve = (value: null) => {};
+    let pongResolve = (value: null) => {};
+    const p = {
+      parent: null,
+      pingPromise: new Promise<null>((res) => (pingResolve = res)),
+      pingResolve,
+      pongPromise: new Promise<null>((res) => (pongResolve = res)),
+      pongResolve,
+    };
+    p.pingResolve = pingResolve;
+    p.pongResolve = pongResolve;
+    p.commentMarker = commentMarker
+    millionPortal.p = p;
+  }
+  if (prevPortal) {
+    millionPortal.p = prevPortal.p;
+  }
   if (portals) {
+    if (!prevPortal) {
+      rerender?.();
+    }
     portals[currentIndex] = millionPortal;
   }
 
@@ -115,7 +202,7 @@ export const unwrap = (vnode: JSX.Element | null): VNode => {
   const children = vnode.props?.children;
   if (children !== undefined && children !== null) {
     props.children = flatten(vnode.props.children).map((child) =>
-      unwrap(child),
+      unwrap(child)
     );
   }
 
@@ -147,3 +234,37 @@ export const flatten = (rawChildren?: JSX.Element | null): JSX.Element[] => {
   }
   return children;
 };
+
+export function convertToJSX(dom: HTMLElement): VNode {
+  if (!dom.tagName) {
+    return null;
+  }
+
+  // Convert 'class' to 'className' and 'for' to 'htmlFor'
+  const attributes: Record<string, any> = {};
+  for (let i = 0; i < dom.attributes.length; i++) {
+    const attrib = dom.attributes[i]!;
+    attributes[attrib.name] = attrib.value;
+  }
+
+  if (attributes.class) {
+    attributes.className = attributes.class;
+    delete attributes.class;
+  }
+
+  if (attributes.for) {
+    attributes.htmlFor = attributes.for;
+    delete attributes.for;
+  }
+  const children: VNode[] = [];
+  for (let i = 0; i < dom.children.length; i++) {
+    const child = dom.children[i];
+    if (child instanceof HTMLElement) {
+      children.push(convertToJSX(child)); // Recursively convert nested elements
+    } else if (child instanceof Text) {
+      children.push(child.textContent);
+    }
+  }
+
+  return createElement(dom.tagName.toLowerCase(), attributes, ...children);
+}

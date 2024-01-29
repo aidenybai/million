@@ -1,12 +1,16 @@
 import {
   Fragment,
   createElement,
+  forwardRef,
   memo,
+  useContext,
   useEffect,
+  useReducer,
   useRef,
   useState,
+  createContext,
 } from 'react';
-import type { MutableRefObject } from 'react';
+import type { DispatchWithoutAction, MutableRefObject } from 'react';
 import { arrayMount$, arrayPatch$ } from '../million/array';
 import { mapArray, block as createBlock } from '../million';
 import { MapSet$, MapHas$, MapGet$ } from '../million/constants';
@@ -19,17 +23,22 @@ import type {
   MillionProps,
 } from '../types';
 import { renderReactScope } from './utils';
-import { RENDER_SCOPE, REGISTRY, SVG_RENDER_SCOPE } from './constants';
+import { REGISTRY } from './constants';
+import { useContainer, useNearestParent } from './its-fine';
+
+export const mountContext = createContext<React.Dispatch<boolean> | null>(
+  null as any
+);
 
 const MillionArray = <T>({
   each,
   children,
   memo,
-  svg,
-  as,
-  ...rest
+  scoped,
 }: MillionArrayProps<T>): ReturnType<typeof createElement> => {
-  const ref = useRef<HTMLElement>(null);
+  const container = useContainer<HTMLElement>(); // usable when there's no parent other than the root element
+  const parentRef = useNearestParent<HTMLElement>();
+
   const [portals] = useState<{ current: MillionPortal[] }>(() => ({
     current: Array(each.length),
   }));
@@ -40,32 +49,45 @@ const MillionArray = <T>({
     mounted: false,
   });
   const [, setMountPortals] = useState(false);
+  const [, rerender] = useReducer(() => Symbol(), Symbol());
+  const setMounted = useContext(mountContext);
 
   if (fragmentRef.current && (each !== cache.current.each || !memo)) {
-    // queueMicrotask$(() => {
+    queueMicrotask$(() => {
+      if (scoped) {
+        parentRef.current = undefined;
+      }
+      const el = parentRef.current ?? container.current;
+      const prevPortalsLength = portals.current.length
       const newChildren = createChildren<T>(
         each,
         children,
         cache,
         portals,
         memo,
+        el,
+        rerender
       );
       arrayPatch$.call(fragmentRef.current, mapArray(newChildren));
-    // });
+    });
   }
 
-  const defaultType = svg ? SVG_RENDER_SCOPE : RENDER_SCOPE;
   const MillionFor = createElement(
     Fragment,
     null,
-    createElement(as ?? defaultType, { ...rest, ref }),
-    ...portals.current.map((p) => p.portal),
+    ...portals.current.map((p) => p.portal)
   );
+  console.log('render phase', portals.current.length)
 
   useEffect(() => {
-    if (!ref.current || fragmentRef.current) return;
+    if (fragmentRef.current) return;
 
-    // queueMicrotask$(() => {
+    queueMicrotask$(() => {
+      if (scoped) {
+        parentRef.current = undefined;
+      }
+
+      const el = parentRef.current ?? container.current;
       if (cache.current.mounted) return;
 
       const newChildren = createChildren<T>(
@@ -74,16 +96,19 @@ const MillionArray = <T>({
         cache,
         portals,
         memo,
+        el,
+        rerender
       );
       fragmentRef.current = mapArray(newChildren);
       if (!MapHas$.call(REGISTRY, MillionFor)) {
         MapSet$.call(REGISTRY, MillionFor, fragmentRef.current);
       }
-      arrayMount$.call(fragmentRef.current, ref.current);
+      arrayMount$.call(fragmentRef.current, el!);
       cache.current.mounted = true;
       setMountPortals(true);
-    // });
-  }, [ref.current]);
+      setMounted?.(true);
+    });
+  }, [parentRef.current, container.current]);
 
   return MillionFor;
 };
@@ -92,7 +117,7 @@ const MillionArray = <T>({
 // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/37087#issuecomment-542793243
 const typedMemo: <T>(
   component: T,
-  equal?: (oldProps: MillionProps, newProps: MillionProps) => boolean,
+  equal?: (oldProps: MillionProps, newProps: MillionProps) => boolean
 ) => T = memo;
 
 export const For = typedMemo(MillionArray);
@@ -102,7 +127,9 @@ const createChildren = <T>(
   getComponent: (value: T, i: number) => JSX.Element,
   cache: MutableRefObject<ArrayCache<T>>,
   portals: { current: MillionPortal[] },
-  memo?: boolean,
+  memo = false,
+  parentEl: Element,
+  rerender: DispatchWithoutAction
 ): Block[] => {
   const children = Array(each.length);
   const currentCache = cache.current as any;
@@ -121,10 +148,7 @@ const createChildren = <T>(
       continue;
     }
 
-    if (
-      typeof vnode.type === 'function' &&
-      '_c' in vnode.type
-    ) {
+    if (typeof vnode.type === 'function' && '_c' in vnode.type) {
       const puppetComponent = vnode.type(vnode.props);
       if (MapHas$.call(REGISTRY, puppetComponent.type)) {
         const puppetBlock = MapGet$.call(REGISTRY, puppetComponent.type)!;
@@ -136,7 +160,10 @@ const createChildren = <T>(
     }
 
     const block = createBlock((props?: MillionProps) => props?.scope);
-    const currentBlock = (props: MillionProps, index: number): ReturnType<typeof block> => {
+    const currentBlock = (
+      props: MillionProps,
+      index: number
+    ): ReturnType<typeof block> => {
       return block(
         {
           scope: renderReactScope(
@@ -144,9 +171,11 @@ const createChildren = <T>(
             false,
             portals.current,
             index,
+            parentEl,
+            rerender
           ),
         },
-        vnode.key ? String(vnode.key) : undefined,
+        vnode.key ? String(vnode.key) : undefined
       );
     };
 
