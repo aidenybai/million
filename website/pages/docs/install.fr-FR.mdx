@@ -7,11 +7,11 @@ import { Callout, Tabs, Tab, Steps } from 'nextra-theme-docs';
 
 # Installation
 
-Million.js assumes that you have an existing React project. To learn about how to create a React app, please see [React's documentation](https://react.dev).
+Million.js suppose que vous avez un projet React existant. Pour apprendre comment créer une application React, consultez la [documentation de React](https://react.dev).
 
-## Install via CLI
+## Installation via l'interface de ligne de commande (CLI)
 
-The Million.js CLI will automatically install the package and configure your project for you.
+La CLI de Million.js installera automatiquement le package et configurera votre projet pour vous.
 
 <Tabs items={['npm', 'pnpm', 'yarn', 'bun']} storageKey="selected-manager">
   {/* prettier-ignore */}
@@ -40,28 +40,26 @@ The Million.js CLI will automatically install the package and configure your pro
   </Tab>
 </Tabs>
 
-
 <Callout type="info">
-  Million.js is compatible with React 16 and above. If you're using an older
-  version of React, you'll need to upgrade first.
+  Million.js est compatible avec React 16 et versions ultérieures. Si vous
+  utilisez une version plus ancienne de React, vous devrez d'abord effectuer une
+  mise à niveau.
 </Callout>
 
-That's it! Your project is now running on Million.js 🎉
+C'est tout! Votre projet tourne maintenant sur Million.js 🎉
 
-## Install manually
+## Installation manuelle
 
-If you have issues [installing via the CLI](#install-via-cli), or you have a custom setup, you can
-install Million.js manually.
+Si vous rencontrez des problèmes lors de [l'installation via la CLI](#install-via-cli), ou si vous avez une configuration personnalisée, vous pouvez
+installer Million.js manuellement.
 
-Notice that there are two modes you can choose: **Automatic** and **Manual**:
+Remarquez qu'il existe deux modes parmi lesquels vous pouvez choisir: **Automatique** and **Manuel**:
 
-- **Automatic mode** will automatically configure, analyze, and optimize your project for you.
-This is the recommended mode.
+- **Le mode automatique** configurera, analysera et optimisera automatiquement votre projet pour vous. C'est le mode recommandé.
 
-- **Manual mode** will require you to write code to [optimize certain parts of
-your project](/docs/manual-mode/manual-mode). This mode is recommended for advanced users who want to have more control over their project.
+- **Le mode manuel** nécessitera que vous écriviez du code pour [optimiser certaines parties de votre projet](/docs/manual-mode/manual-mode). Ce mode est recommandé pour les utilisateurs avancés qui souhaitent avoir plus de contrôle sur leur projet.
 
-<Tabs items={['Automatic', 'Manual']} storageKey="mode">
+<Tabs items={['Automatique', 'Manuel']} storageKey="mode">
 
 <Tab>
 
@@ -103,7 +101,7 @@ your project](/docs/manual-mode/manual-mode). This mode is recommended for advan
 Million.js is supported within the `/app` ("use client" components only) and `/pages`
 
 ```js filename="next.config.mjs"
-import million from "million/compiler";
+import million from 'million/compiler';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -111,11 +109,12 @@ const nextConfig = {
 };
 
 const millionConfig = {
-  auto: true,// if you're using RSC: auto: { rsc: true },
+  auto: true, // if you're using RSC: auto: { rsc: true },
 };
 
 export default million.next(nextConfig, millionConfig);
 ```
+
 </Tab>
 
 <Tab>
@@ -136,11 +135,12 @@ export default defineConfig({
 const million = require("million/compiler");
 
 exports.onCreateWebpackConfig = ({ actions }) => {
-  actions.setWebpackConfig({
-    plugins: [million.webpack({ mode: "react", server: true, auto: true })],
-  });
+actions.setWebpackConfig({
+plugins: [million.webpack({ mode: "react", server: true, auto: true })],
+});
 };
-```
+
+````
 </Tab>
 
 <Tab>
@@ -152,7 +152,8 @@ import { defineConfig } from "vite";
 export default defineConfig({
   plugins: [million.vite({ auto: true }), react()],
 });
-```
+````
+
 </Tab>
 
 <Tab>
@@ -173,7 +174,7 @@ export default defineConfig({
   </Callout>
 
 ```js filename="craco.config.js"
-const million = require("million/compiler");
+const million = require('million/compiler');
 
 module.exports = {
   webpack: {
@@ -181,6 +182,7 @@ module.exports = {
   },
 };
 ```
+
 </Tab>
 
 <Tab>
@@ -206,14 +208,11 @@ export default {
 </Steps>
 </Tab>
 
-
-
 <Tab>
 
 <Steps>
 
 ### Install Million.js
-
 
 <Tabs items={['npm', 'pnpm', 'yarn', 'bun']} storageKey="selected-pkg-manager">
 {/* prettier-ignore */}
@@ -250,7 +249,7 @@ npm install million
 Million.js is supported within the `/app` ("use client" components only) and `/pages`
 
 ```js filename="next.config.mjs"
-import million from "million/compiler";
+import million from 'million/compiler';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -259,6 +258,7 @@ const nextConfig = {
 
 export default million.next(nextConfig);
 ```
+
 </Tab>
 
 <Tab>
@@ -279,11 +279,12 @@ export default defineConfig({
 const million = require("million/compiler");
 
 exports.onCreateWebpackConfig = ({ actions }) => {
-  actions.setWebpackConfig({
-    plugins: [million.webpack({ mode: "react", server: true })],
-  });
+actions.setWebpackConfig({
+plugins: [million.webpack({ mode: "react", server: true })],
+});
 };
-```
+
+````
 </Tab>
 
 <Tab>
@@ -295,7 +296,8 @@ import { defineConfig } from "vite";
 export default defineConfig({
   plugins: [million.vite(), react()],
 });
-```
+````
+
 </Tab>
 
 <Tab>

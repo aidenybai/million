@@ -9,15 +9,15 @@ export const Demo = dynamic(() =>
 
 # Introduction
 
-Million.js is an extremely fast and lightweight optimizing compiler that make [components](https://react.dev) up to [_**70% faster**_](https://krausest.github.io/js-framework-benchmark/current.html).
+Million.js est un compilateur d'optimisation extrêmement rapide et léger qui rend les [composants](https://react.dev) jusqu'à [_**70% plus rapides**_](https://krausest.github.io/js-framework-benchmark/current.html).
 
-**TL;DR:** Imagine [React](https://react.dev) components running at the speed of raw JavaScript.
+**TL;DR:** Imaginez des composants [React](https://react.dev) fonctionnant à la vitesse du JavaScript brut.
 
-## Why Million.js?
+## Pourquoi Million.js?
 
-To understand why to use Million.js, we need to understand how React updates interfaces. When an application's state or props change, React undergoes an update in two parts: rendering and reconciliation.
+Pour comprendre pourquoi utiliser Million.js, nous devons comprendre comment React met à jour les interfaces. Lorsqu'un état ou des propriétés d'une application changent, React procède à une mise à jour en deux phases : le rendu et la réconciliation.
 
-To show this, let's say this is our `App`:
+Pour illustrer cela, disons que ceci est notre composant `App`:
 
 ```jsx
 function App() {
@@ -32,11 +32,11 @@ function App() {
 }
 ```
 
-In this `App`, when I click on the button, the `count` state will update and the `<p>` tag will update to reflect the new value. Let's break this down.
+Dans ce composant `App`, lorsque je clique sur le bouton, l'état de la variable `count` sera mis à jour et la balise `<p>` sera actualisée pour refléter la nouvelle valeur. Décomposons cela en deux étapes.
 
-### Rendering
+### Le rendu
 
-The first step is rendering. Rendering is the process of generating a snapshot of the current component. You can imagine it as simply "calling" the `App` function and storing the output in a variable. This is what the `App` snapshot would look like:
+La première étape est le rendu. Le rendu est le processus de génération d'un aperçu du composant actuel. Vous pouvez l'imaginer comme simplement "Appeler" la fonction `App` et stocker la sortie dans une variable. Voici à quoi ressemblerait l'aperçu de la fonction `App`:
 
 ```jsx
 const snapshot = App();
@@ -48,18 +48,18 @@ const snapshot = App();
 </div>;
 ```
 
-### Reconciliation
+### La réconciliation
 
-In order to update the interface to reflect the new state, React needs to compare the previous snapshot to the new snapshot (_called "diffing"_). React's reconciler will go to each element in the previous snapshot and compare it to the new snapshot. If the element is the same, it will skip it. If the element is different, it will update it.
+Afin de mettre à jour l'interface pour refléter le nouvel état, React doit comparer l'aperçu précédent au nouvel aperçu (_appelé "diffing"_). Le réconciliateur de React parcourra chaque élément de l'aperçu précédent et le comparera avec le nouvel aperçu. Si l'élément est le même, il le sautera. Si l'élément est différent, il le mettra à jour.
 
-- The `<div>` tag is the same, so it doesn't need to be updated. ✅
-  - The `<p>` tag is the same, so it doesn't needs to be updated. ✅
-    - The text inside the `<p>` tag is different, so it needs to be updated. ⚠ ️
-  - The `<button>` tag is the same, so it doesn't need to be updated. ✅
-    - The `onClick` prop is the same, so it doesn't need to be updated. ✅
-    - The text inside the `<button>` tag is the same, so it doesn't need to be updated. ✅
+- La balise `<div>` est la même, donc elle n'a pas besoin d'être mise à jour. ✅
+  - La balise `<p>` est la même, donc elle n'a pas besoin d'être mise à jour. ✅
+    - Le texte à l'intérieur de la balise `<p>` est différent, donc il doit être mis à jour. ⚠ ️
+  - La balise `<button>` est la même, donc elle n'a pas besoin d'être mise à jour. ✅
+    - La propriété `onClick` est la même, donc elle n'a pas besoin d'être mise à jour. ✅
+    - Le texte à l'intérieur de la balise `<button>` est le même, donc il n'a pas besoin d'être mis à jour. ✅
 
-_(total: 6 diff checks)_
+_(total: 6 vérifications de différences)_
 
 ```diff
 <div>
@@ -69,21 +69,21 @@ _(total: 6 diff checks)_
 </div>
 ```
 
-From here, we can see that the `<p>` tag needs to be updated. React will then update the `<p>` DOM node to reflect the new value.
+À partir d'ici, nous pouvons voir que la balise `<p>` doit être mise à jour. React mettra ensuite à jour le nœud DOM `<p>` pour refléter la nouvelle valeur.
 
 ```jsx
 <p>.innerHTML = `Count: ${count}`;
 ```
 
-### How Million.js makes this faster
+### Comment Million.js rend cela plus rapide
 
-React is slow.
+React est lent.
 
-The issue with React's reconciliation it becomes **exponentially slower** the more JSX elements you have. With this simple `App`, it only needs to diff a few elements. In a real world React app, you can easily have hundreds of elements, slowing down interface updates.
+Le problème avec la réconciliation de React est qu'elle devient **exponentiellement plus lente** à mesure que vous avez plus d'éléments JSX. Avec cette `App` simple, elle n'a besoin de différencier que quelques éléments. Dans une application React du monde réel, vous pouvez facilement avoir des centaines d'éléments, ce qui ralentit les mises à jour de l'interface.
 
-Million.js solves this by **skipping the diffing step entirely** and directly updating the DOM node.
+Million.js résout cela en **sautant complètement l'étape de différenciation** et en mettant à jour directement le nœud DOM.
 
-Here is a conceptual example of how Million.js reconciler works:
+Voici un exemple conceptuel de fonctionnement du réconciliateur Million.js :
 
 ```jsx
 function App() {
@@ -101,13 +101,13 @@ function App() {
 }
 ```
 
-Notice how when the `count` is updated, Million.js will directly update the DOM node. Million.js turns React reconciliation from `O(n^3)` (cubic time) to `O(1)` (constant time).
+Remarquez comment lorsque la variable `count` est mis à jour, Million.js mettra à jour directement le nœud DOM. Million.js transforme la réconciliation de React de O(n^3) (temps cubique) à O(1) (temps constant).
 
-> How fast is it? [**→ View the benchmarks**](https://krausest.github.io/js-framework-benchmark/current.html)
+> Quelle est sa vitesse ? [**→ Consultez les benchmarks**](https://krausest.github.io/js-framework-benchmark/current.html)
 
-## Setup in seconds
+## Configuration
 
-The Million.js CLI will automatically install the package and configure your project for you.
+La CLI de Million.js installera automatiquement le package et configurera votre projet pour vous.
 
 <Tabs items={['npm', 'pnpm', 'yarn', 'bun']} storageKey="selected-manager">
   {/* prettier-ignore */}
@@ -137,22 +137,22 @@ The Million.js CLI will automatically install the package and configure your pro
 </Tabs>
 
 <Callout type="info">
-  Million.js is compatible with React 16 and above. If you're using an older
-  version of React, you'll need to upgrade first.
+  Million.js est compatible avec React 16 et versions ultérieures. Si vous
+  utilisez une version plus ancienne de React, vous devrez d'abord effectuer une
+  mise à niveau.
 </Callout>
 
-That's it! Your project is now running on Million.js 🎉
+C'est tout! Votre projet tourne maintenant sur Million.js 🎉
 
 ## Million.js vs. React
 
-The following is a comprehensive demo using [key-based
-rendering](https://react.dev/learn/rendering-lists#keeping-list-items-in-order-with-key)
-to show how Million.js performance compares to React.
+La démo suivante est complète et utilise [le rendu basé sur les clés](https://react.dev/learn/rendering-lists#keeping-list-items-in-order-with-key)
+pour montrer comment la performance de Million.js se compare à celle de React
 
 <br />
 
 <Demo />
 
-## Any questions?
+## Des questions ?
 
-If you have any questions or need support, please feel free to ask them in [Discord](https://million.dev/chat) or submit an issue on [GitHub](https://github.com/aidenybai/million).
+Si vous avez des questions ou avez besoin d'assistance, n'hésitez pas à les poser sur [Discord](https://million.dev/chat) ou à soumettre un problème sur [GitHub](https://github.com/aidenybai/million).
