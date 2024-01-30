@@ -181,6 +181,28 @@ export const betweenNodes = (start: Node, end: Node) => {
   return arr
 }
 
+export const extractPortalContent = (targetEl: DocumentFragment): DocumentFragment => {
+  const el = targetEl.children[0]
+  const fragment = document.createDocumentFragment()
+  if (!el) {
+    return fragment
+  }
+  el.childNodes.forEach((cn) => {
+    fragment.appendChild(cn.cloneNode(true))
+  })
+  // console.log(fragment)
+  return fragment
+  // return (targetEl.children[0] as HTMLTemplateElement)?.content?.cloneNode(true) ?? document.createDocumentFragment()
+  // return targetEl.cloneNode(true)
+  // const portalTemplate =targetEl.children[0] 
+  // const fragment = document.createDocumentFragment()
+  // portalTemplate?.childNodes.forEach((cn) => {
+  //   fragment.appendChild(cn)
+  // })
+  // return fragment
+}
+
+
 export const insertText = (el: Node, value: string, index: number): Text => {
   const node = document$.createTextNode(value);
   const child = childAt(el, index);

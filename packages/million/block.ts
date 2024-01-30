@@ -17,7 +17,10 @@ import {
   removeComments,
   appendChild$,
   betweenNodes,
+  extractPortalContent,
 } from './dom';
+import React from 'react'
+console.log(React)
 import { renderToTemplate } from './template';
 import { AbstractBlock } from './types';
 import { arrayMount$, arrayPatch$ } from './array';
@@ -205,10 +208,9 @@ export class Block extends AbstractBlock {
                   value.p.boundaries[1]
                 );
                 if (parentOfComment !== targetEl) {
-                  // debugger
                   insertBefore$.call(
                     parentOfComment,
-                    targetEl,
+                    extractPortalContent(targetEl),
                     childAt(parentOfComment, i)
                   );
                   // TODO: insertions are being merged, [5, add, 5] will be 5add 5
@@ -334,10 +336,15 @@ export class Block extends AbstractBlock {
               // debugger
               newValue.current = targetEl;
               // appendChild$.call(el, newValue.current);
-              // betweenNodes(newValue.p.boundaries[0], newValue.p.boundaries[1]).forEach((n) => {
-              //   n.parentNode?.removeChild(n)
-              // })
-              insertBefore$.call(newValue.p.boundaries[1].parentNode, newValue.current, newValue.p.boundaries[1]);
+              const df = extractPortalContent(newValue.current)
+              // if (df.childNodes) {
+                betweenNodes(newValue.p.boundaries[0], newValue.p.boundaries[1]).forEach((n) => {
+                  n.parentNode?.removeChild(n)
+                })
+                // insertBefore$.call(newValue.p.boundaries[1].parentNode, newValue.current, newValue.p.boundaries[1]);
+                insertBefore$.call(newValue.p.boundaries[1].parentNode, df, newValue.p.boundaries[1]);
+              // }
+              
 
             }
             // appendChild$.call(this.parentEl, el)

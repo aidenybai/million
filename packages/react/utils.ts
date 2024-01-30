@@ -89,11 +89,12 @@ const Component = memo(
         afterframe(millionPortal.p.pongResolve)
       }
     }, [isPending])
-    console.log(vnode, millionPortal.p.parent)
+    // console.log(vnode, millionPortal.p.parent)
 
     // if (!rerender) {
-      // return  createElement('div', null, vnode) 
-      return vnode 
+    // TOOD: maybe we should have a template here and when we inject the content, we get things out of that template, so the unmount does not fail
+      return vnode === null || vnode === undefined  || vnode === '' ? null :  createElement('template', null, vnode) 
+      // return vnode 
     // } else {
       // return createPortal(vnode, millionPortal.p!.parent!);
     // }
@@ -135,7 +136,7 @@ export const renderReactScope = (
   
   const el = prevPortal?.current || document.createElement('template').content;
   const millionPortal = {} as MillionPortal;
-  console.log(key, vnode)
+  // console.log(key, vnode)
   const reactPortal = createPortal(
     createElement(Suspense, {
       children: createElement(Component, { millionPortal, parent: parentEl, vnode, rerender }),
