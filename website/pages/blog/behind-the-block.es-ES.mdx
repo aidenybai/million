@@ -1,7 +1,7 @@
 ---
-title: 'Behind the block()'
-date: JUN 1, 2023
-description: So how does block() really work with React?
+title: 'Detrás del block()'
+date: 1 JUN, 2023
+description: ¿Cómo el block() funciona realmente en React?
 ---
 
 import Image from 'next/image';
@@ -12,17 +12,16 @@ import { CarbonAds } from '../../components/ad';
   <Image src="/behind-the-block.png" width={350} height={130} />
 </div>
 
-
 <div className="flex flex-col items-center gap-4">
 
-# Behind the `block(){:jsx}`
+# Detrás del `block(){:jsx}`
 
-  <small>[AIDEN BAI](https://aidenybai.com) JUN 1 2023</small>
+  <small>[AIDEN BAI](https://aidenybai.com) 1 JUN 2023</small>
 </div>
 
 ---
 
-If you've used Million.js for a while, you've probably heard of the [`block(){:jsx}`](/docs/quickstart) function.
+Si has usado Million.js por un tiempo, probablemente hayas escuchado de la función [`block(){:jsx}`](/docs/quickstart).
 
 ```jsx {8}
 function MyComponent() {
@@ -32,55 +31,55 @@ function MyComponent() {
 const MyBlock = block(MyComponent);
 
 export default function App() {
-  return <MyBlock />; // ✨ it works! ✨
+  return <MyBlock />; // ✨ ¡Funciona! ✨
 }
 ```
 
-Wrapping a React component with `block(){:jsx}` creates a block. A block is a special [**Higher Order Component (HOC)**](https://legacy.reactjs.org/docs/higher-order-components.html) that can be used as a React component but are hyper-optimized for rendering speed by rendering using Million.js.
+Envolviendo un componente de React con `block(){:jsx}` crea un block. Un block es un [**Componente de Alto Orden (HOC)**](https://legacy.reactjs.org/docs/higher-order-components.html) especial que puede ser usado como un componente de React pero está hiper-optimizado para la velocidad de renderizado al renderizar usando Million.js.
 
-But how can this be? How can we use blocks _**inside**_ of React? Isn't Million.js a completely different virtual DOM?
+¿Pero cómo puede ser esto? ¿Cómo podemos usar blocks **dentro** de React? ¿No es Million.js un virtual DOM completamente diferente?
 
 <CarbonAds />
 
-## Anatomy of `block(){:jsx}`
+## Anatomía de un `block(){:jsx}`
 
-Once you've created a block and use it as a React component, the following will occur during rendering:
+Una vez que hayas creado un block y lo uses como un componente de React, lo siguiente ocurrirá durante el renderizado:
 
 ![React to Million mount](/react-to-million.png)
 
 <Steps>
 
-### React renders `<Loader />{:jsx}` component
+### React renderiza el componente `<Loader />{:jsx}`
 
-Initially, React is responsible for rendering the `<Loader />{:jsx}` component. This process involves creating the necessary DOM elements and applying any initial properties or styles. During this phase, React is managing the lifecycle and state of the component, allowing for rich features such as state management, lifecycle methods, and more.
+Inicialmente, React es responsable de renderizar el componente `<Loader />{:jsx}`. Este proceso involucra la creación de los elementos DOM necesarios y la aplicación de cualquier propiedad o estilo inicial. Durante esta fase, React está administrando el ciclo de vida y el estado del componente, lo que permite funciones avanzadas como la gestión de estado, métodos del ciclo de vida y más.
 
-### React mounts `<Loader />{:jsx}` and puts the DOM element in the ref
+### React monta un `<Loader />{:jsx}` y pone al elemento del DOM en un ref
 
-Following the rendering process, React then mounts the `<Loader />{:jsx}` component. This involves inserting the component into the DOM and making it visible to the user. At this point, React also updates the ref with the DOM element. A ref in React is a way to hold local state that doesn't invoke rendering, and in this case, it's being used to store a reference to the DOM element.
+Siguiendo el proceso de renderizado, React monta el componente `<Loader />{:jsx}`. Esto implica insertar el componente en el DOM y hacerlo visible para el usuario. En este punto, React también actualiza el ref con el elemento DOM. Un ref en React es una forma de mantener un estado local que no invoca el renderizado, y en este caso, se está utilizando para almacenar una referencia al elemento DOM.
 
-### Million.js renders `<App />{:jsx}` into the ref
+### Million.js renderiza `<App />{:jsx}` en el ref
 
-Finally, the ref is handed over to Million.js, a fast, lightweight virtual DOM. Using the DOM reference stored in the ref, Million.js renders the `<App />{:jsx}` component directly into this element. This allows Million.js to manage the `<App />{:jsx}` component separately from React, leading to potential performance benefits and isolation of responsibilities.
+Finalmente, el ref se entrega a Million.js, un virtual DOM rápido y ligero. Usando la referencia DOM almacenada en el ref, Million.js renderiza el componente `<App />{:jsx}` directamente en este elemento. Esto permite que Million.js administre el componente `<App />{:jsx}` por separado de React, lo que conduce a posibles beneficios de rendimiento y aislamiento de responsabilidades.
 
 </Steps>
 
-This pattern allows us to "control" the DOM element without React knowing about it. React will only know about the `<Loader />{:jsx}` component, and Million.js will only know about the `<App />{:jsx}` component.
+Este patrón nos permite "controlar" el elemento DOM sin que React lo sepa. React solo sabrá sobre el componente `<Loader />{:jsx}`, y Million.js solo sabrá sobre el componente `<App />{:jsx}`.
 
-## Implementing `block(){:jsx}`
+## Implementando `block(){:jsx}`
 
-With this in mind, we can create a basic implementation of this pattern.
+Con esto en mente, podemos crear una implementación básica de este patrón.
 
 <Callout type="info">
-  Note: This is not the actual implemention, rather more a conceptual code
-  sample. [View the source
-  here.](https://github.com/aidenybai/million/blob/674b13047665009f8ab1281e77a00a017ddea6e9/packages/react/block.ts#L45)
+  Nota: Esta no es la implementación exacta, y está es mas bien una muestra
+  simplificada [Ver código
+  fuente.](https://github.com/aidenybai/million/blob/674b13047665009f8ab1281e77a00a017ddea6e9/packages/react/block.ts#L45)
 </Callout>
 
 <Steps>
 
-### Creating a HOC factory
+### Creando un HOC factory
 
-An HOC factory consumes some React component and spits out our `<Loader />{:jsx}` component. The `<Loader />{:jsx}` component is responsible for rendering the DOM element and passing it to Million.js.
+Un HOC factory consume un componente de React y escupe nuestro componente `<Loader />{:jsx}`. El componente `<Loader />{:jsx}` es responsable de renderizar el elemento DOM y pasarlo a Million.js.
 
 ```jsx
 const block = (ReactComponent) => {
@@ -90,25 +89,25 @@ const block = (ReactComponent) => {
 };
 ```
 
-### Grabbing the DOM element with `useRef(){:js}`
+## Tomando el elemento del DOM con `useRef(){:js}`
 
-We can use the `useRef(){:js}` hook to grab the DOM element.
+Podemos usar el hook `useRef(){:js}` para tomar el elemento del DOM.
 
 ```jsx
 const block = (ReactComponent) => {
   return function Loader(props) {
-    const el = useRef(); // stores the DOM element
+    const el = useRef(); // almacena el elemento del DOM
 
     return <div ref={el}></div>;
   };
 };
 ```
 
-### Create an effect to render Million.js
+### Crea un efecto para renderizar Million.js
 
-Now, we put it all together. We create a `<Effect />{:jsx}` component that runs an effect on mount. This effect is responsible for rendering the `<App />{:jsx}` component into the DOM element. We use `useCallback(){:js}` to create a stable closure reference to the effect.
+Ahora, pondremos todo junto. Creamos un componente `<Effect />{:jsx}` que ejecuta un efecto en el montaje. Este efecto es responsable de renderizar el componente `<App />{:jsx}` en el elemento DOM. Usamos `useCallback(){:js}` para crear una referencia de cierre estable al efecto.
 
-Notice how there are `Million.convert(){:js}` and `Million.render(){:js}` calls. These are not real, but they essentially create blocks and render it into the DOM element.
+Nota como hay llamadas `Million.convert(){:js}` y `Million.render(){:js}`. Estas no son reales, pero esencialmente crean bloques y los renderizan en el elemento DOM.
 
 ```jsx
 const block = (ReactComponent) => {
@@ -116,13 +115,13 @@ const block = (ReactComponent) => {
   return function Loader(props) {
     const el = useRef();
 
-    // 3. Million.js renders <App /> into the ref
+    // 3. Million.js rendereriza <App /> en el ref
     const effect = useCallback(() => {
-      // useCallback is used as a stable closure reference
+      // useCallback es utilizado como una referencia de cierre estable
       Million.render(MillionComponent, el.current);
     }, []);
 
-    // 2. React mounts <Loader /> and puts the DOM element in the ref
+    // 2. React monta <Loader /> y pone al elemento del DOM en el ref
     return (
       <>
         <div ref={el}></div>
@@ -132,7 +131,7 @@ const block = (ReactComponent) => {
   };
 };
 
-// Effect is a component that runs an effect on mount
+// Effect es un componente que corre un effect al momento de montarlo
 function Effect({ effect }) {
   useEffect(effect, []);
   return null;
@@ -141,11 +140,11 @@ function Effect({ effect }) {
 
 </Steps>
 
-## Compiler, you're a wizard! 🧙
+## ¡Compilador, eres un hechicero! 🧙
 
-One major limitation of the runtime implementation is that it requires the user to pass in a stateless component. This is because the internal block implementation has [a number of limitations](/docs/block). However, we can use the compiler to get around this limitation.
+Una limitación importante de la implementación en tiempo de ejecución es que requiere que el usuario pase un componente sin estado. Esto se debe a que la implementación interna del block tiene [una serie de limitaciones](/docs/block). Sin embargo, podemos usar el compilador para evitar esta limitación.
 
-Let's say we have an `<Emotion />{:jsx}` component that has some `isSad` state, and based on that state, it renders a 😢 or 😂 emoji.
+Digamos que tenemos un componente `<Emotion />{:jsx}` que tiene algún estado `isSad`, y basado en ese estado, renderiza un emoji 😢 o 😂.
 
 ```jsx
 function Emotion() {
@@ -156,7 +155,7 @@ function Emotion() {
 const EmotionBlock = block(Emotion);
 ```
 
-The compiler can extract out the `isSad` state and convert it into a prop that Million.js can understand.
+El compilador puede extraer el estado `isSad` y convertirlo en una prop que Million.js pueda entender.
 
 ```jsx
 function Emotion_jsx({ _0 }) {
@@ -171,7 +170,7 @@ function EmotionBlock() {
 }
 ```
 
-But what if we had another React component inside of `<Emotion />{:jsx}`?
+¿Pero que pasaría si tuvieramos otro componente de React dentro de `<Emotion />{:jsx}`?
 
 ```jsx
 function SadEmoji() {
@@ -190,7 +189,7 @@ function Emotion() {
 const EmotionBlock = block(Emotion);
 ```
 
-Similarly, this is extracted, but during rendering when it meets a component boundary, it will create a "React render scope." Essentially, it delegates the responsibility of rendering the component to React.
+Similarmente, esto es extraído, pero durante el renderizado cuando se encuentra con un límite de componente, creará un "scope de renderizado de React". Esencialmente, delega la responsabilidad de renderizar el componente a React.
 
 ```jsx
 function SadEmoji() {
@@ -217,35 +216,35 @@ function EmotionBlock() {
 }
 ```
 
-As you can see, the compiler is able to extract out the state and render it from a parent element. It can also recognize when it hits a component boundary and delegate the responsibility of rendering to React.
+Como puedes ver, el compilador es capaz de extraer el estado y renderizarlo desde un elemento padre. También puede reconocer cuando llega a un límite de componente y delegar la responsabilidad de renderizar a React.
 
-## Not just Million.js
+## No solo Million.js
 
-While this article details how Million.js takes advantage of this pattern, it is not limited to just Million.js.
+Minetras este artículo detalla como Million.js aprovecha este patrón, no se limita solo a Million.js.
 
-For any modern framework that can render into a DOM element, you can use the `<Loader />{:jsx}` and HOC pattern to render foreign framework components inside of React.
+Para cualquier framework moderno que pueda renderizar en un elemento DOM, puedes usar el `<Loader />{:jsx}` y el patrón HOC para renderizar componentes de otros frameworks dentro de React.
 
-A very similar concept is the ["islands architecture"](https://www.patterns.dev/posts/islands-architecture), which allows you to incapsulate any framework into static HTML. This is a bit different, instead of rendering into static HTML, it renders into a React tree.
+Un concepto muy similar es la ["arquitectura de islas"](https://www.patterns.dev/posts/islands-architecture), que te permite incapsular cualquier framework en HTML estático. Esto es un poco diferente, en lugar de renderizar en HTML estático, renderiza en un árbol de React.
 
 <div className="flex justify-center">
   <Image src="/foreign-tree.png" width={350} height={500} />
 </div>
 
-## Why not a compatibility layer?
+## ¿Por qué no una capa de compatibilidad?
 
-JavaScript frameworks like [Preact](https://preactjs.com) and [Inferno](https://infernojs.org) have compatibility layers that allow them to masquerade as React components but with better performance. This has a lot of benefit, as it allows projects and engineering teams to move very fast without having to rewrite their entire codebase.
+Frameworks JavaScript como [Preact](https://preactjs.com) y [Inferno](https://infernojs.org) tienen capas de compatibilidad que les permiten disfrazarse como componentes de React pero con un mejor rendimiento. Esto tiene muchos beneficios, ya que permite que los proyectos y los equipos de ingeniería se muevan muy rápido sin tener que reescribir todo su código base.
 
-But it comes at a cost. Compatibility layers always have to play catch up. When React adds a new feature, the compatibility layer has to add support for it. Maintaining the same behavior is near impossible, especially emulating the same behavior and benefits of the React concurrency model.
+Pero viene con un costo. Las capas de compatibilidad siempre tienen que ponerse al día. Cuando React agrega una nueva función, la capa de compatibilidad tiene que agregar soporte para ella. Mantener el mismo comportamiento es casi imposible, especialmente emular el mismo comportamiento y beneficios del modelo de concurrencia de React.
 
-## Closing Thoughts
+## Reflexiones finales
 
-By using specific different rendering methodologies on a component-by-component basis, we can take advantage of the best of both worlds and use the right tool for the right job. Hopefully one day, we'll see more frameworks adopt this pattern. Because performance shouldn't be a tradeoff for migration.
+Utilizando diferentes metodologías specificas de renderizado en una forma componente por componente, podemos aprovechar lo mejor de ambos mundos y usar la herramienta correcta para el trabajo correcto. Esperemos que algún día, veamos más frameworks adoptar este patrón. Porque el rendimiento no debería ser un compromiso para la migración.
 
-[Discuss on Twitter](https://twitter.com/search?q=https%3A%2F%2Fmillion.dev%2Fblog%2Fbehind-the-block) | [Edit on GitHub](https://github.com/aidenybai/million/blob/main/website/pages/blog/behind-the-block.mdx)
+[Discutirlo en Twitter](https://twitter.com/search?q=https%3A%2F%2Fmillion.dev%2Fblog%2Fbehind-the-block) | [Edit on GitHub](https://github.com/aidenybai/million/blob/main/website/pages/blog/behind-the-block.mdx)
 
-## Acknowledgements
+## Agradecimientos
 
-Thank you to [Ryan Carniato](https://twitter.com/ryancarniato) for creating an initial Solid.js inside React [proof-of-concept](https://stackblitz.com/edit/hr-meheraj-vite-react-zgzg43?file=src%2FApp.jsx) that inspired this article.
+Gracia a ti [Ryan Carniato](https://twitter.com/ryancarniato) por crear un Solid.js inicial dentro de React [proof-of-concept](https://stackblitz.com/edit/hr-meheraj-vite-react-zgzg43?file=src%2FApp.jsx) que inspiró este artículo.
 
-Looking for more? Check out another [interesting read](https://pyjun01.github.io/v/million-js/) from [Yongjun Park
+¿Quieres saber mas? Da un vistazo a otra [lectura interesante](https://pyjun01.github.io/v/million-js/) de [Yongjun Park
 ](https://github.com/pyjun01).
