@@ -8,11 +8,12 @@ import { generateUniqueName } from './utils/generate-unique-name';
 import { getDescriptiveName } from './utils/get-descriptive-name';
 import { getImportIdentifier } from './utils/get-import-specifier';
 import { getRootStatementPath } from './utils/get-root-statement-path';
-import { getValidCallee } from './utils/get-valid-callee';
+import { getValidImportDefinition } from './utils/get-valid-import-definition';
 import { isGuaranteedLiteral } from './utils/is-guaranteed-literal';
 import { unwrapPath } from './utils/unwrap-path';
 
 interface JSXStateContext {
+  ctx: StateContext;
   // The source of array values
   source: t.Identifier;
   // The expressions from the JSX moved into an array
@@ -165,6 +166,32 @@ function isJSXSVGElement(
   return false;
 }
 
+function isJSXForElement(
+  ctx: StateContext,
+  path: babel.NodePath<t.JSXElement>,
+): boolean {
+
+  const openingElement = path.get('openingElement');
+  const name = openingElement.get('name');
+  /**
+   * Only valid component elements are member expressions and identifiers
+   * starting with component-ish name
+   */
+  if (isPathValid(name, t.isJSXIdentifier) || isPathValid(name, t.isJSXMemberExpression)) {
+    return getValidImportDefinition(ctx, name) === IMPORTS.For[ctx.server ? 'server' : 'client'];
+  }
+  return false;
+}
+
+function transformJSXForElement(
+  ctx: StateContext,
+  path: babel.NodePath<t.JSXElement>,
+): void {
+  if (isJSXForElement(ctx, path)) {
+    path.node.openingElement.attributes.push(t.jsxAttribute(t.jsxIdentifier('scoped')));
+  }
+}
+
 function extractJSXExpressionsFromJSXElement(
   state: JSXStateContext,
   path: babel.NodePath<t.JSXElement>,
@@ -175,7 +202,8 @@ function extractJSXExpressionsFromJSXElement(
    * If this is a component element, move the JSX expression
    * to the expression array.
    */
-  if (isJSXComponentElement(path)){
+  if (isJSXComponentElement(path)) {
+    transformJSXForElement(state.ctx, path);
     pushExpressionAndReplace(state, path, top, true);
     return true;
   }
@@ -225,6 +253,7 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
     return;
   }
   const state: JSXStateContext = {
+    ctx,
     source: path.scope.generateUidIdentifier('props'),
     exprs: [],
     keys: [],
@@ -344,7 +373,7 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
 }
 
 export function transformBlock(ctx: StateContext, path: babel.NodePath<t.CallExpression>): void {
-  const definition = getValidCallee(ctx, path);
+  const definition = getValidImportDefinition(ctx, path.get('callee'));
   // Check first if the call is a valid `block` call
   if (IMPORTS.block[ctx.server ? 'server' : 'client'] !== definition) {
     return;

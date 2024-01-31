@@ -8,7 +8,7 @@ import { generateUniqueName } from './utils/generate-unique-name';
 import { getDescriptiveName } from './utils/get-descriptive-name';
 import { getImportIdentifier } from './utils/get-import-specifier';
 import { getRootStatementPath } from './utils/get-root-statement-path';
-import { getValidCallee } from './utils/get-valid-callee';
+import { getValidImportDefinition } from './utils/get-valid-import-definition';
 import { registerImportDefinition } from './utils/register-import-definition';
 import { unwrapNode } from './utils/unwrap-node';
 import { unwrapPath } from './utils/unwrap-path';
@@ -116,7 +116,7 @@ function transformCallExpression(
   ctx: StateContext,
   path: babel.NodePath<t.CallExpression>,
 ): void {
-  const definition = getValidCallee(ctx, path);
+  const definition = getValidImportDefinition(ctx, path.get('callee'));
   if (definition === REACT_IMPORTS.memo[ctx.server ? 'server' : 'client']) {
     const args = path.get('arguments');
     const arg = args[0];
