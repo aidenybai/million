@@ -60,6 +60,7 @@ export function babel(): PluginObj<PluginState> {
     name: 'million',
     pre(): void {
       this.state = {
+        auto: this.opts.auto ?? false,
         hmr: this.opts.hmr ?? false,
         server: this.opts.server ?? false,
         definitions: {
@@ -71,6 +72,9 @@ export function babel(): PluginObj<PluginState> {
     },
     visitor: {
       Program(programPath, ctx) {
+        if (ctx.state.auto) {
+          transformAuto(ctx, programPath);
+        }
         programPath.traverse({
           ImportDeclaration(path) {
             const mod = path.node.source.value;

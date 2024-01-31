@@ -356,7 +356,9 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
   );
 
   const rootPath = getRootStatementPath(path);
-  rootPath.insertBefore(generatedBlock);
+  rootPath.scope.registerDeclaration(
+    rootPath.insertBefore(generatedBlock)[0]
+  );
 
   path.replaceWith(
     t.addComment(

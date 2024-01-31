@@ -14,6 +14,7 @@ export interface DefaultImportDefinition {
 export type ImportDefinition = NamedImportDefinition | DefaultImportDefinition;
 
 export interface StateContext {
+  auto: boolean;
   hmr: boolean;
   server: boolean;
   definitions: {
@@ -26,4 +27,5 @@ export interface StateContext {
 export interface CompilerOptions {
   hmr?: boolean;
   server?: boolean;
+  auto?: boolean;
 }
