@@ -18,9 +18,8 @@ import {
   appendChild$,
   betweenNodes,
   extractPortalContent,
+  isBlockSymbol,
 } from './dom';
-import React from 'react'
-console.log(React)
 import { renderToTemplate } from './template';
 import { AbstractBlock } from './types';
 import { arrayMount$, arrayPatch$ } from './array';
@@ -79,6 +78,8 @@ export const block = (
     );
   };
 };
+
+
 
 export const mount = (
   block: AbstractBlock,
@@ -159,6 +160,8 @@ export class Block extends AbstractBlock {
     const elements = this.g?.(root);
     if (elements) this.c = elements;
 
+    root[isBlockSymbol] = true
+
     for (let i = 0, j = this.e.length; i < j; ++i) {
       const current = this.e[i]!;
       const el = (elements?.[i] ??
@@ -197,6 +200,7 @@ export class Block extends AbstractBlock {
                 value.p.boundaries[1],
                 childAt(el, edit.i + 1)
               );
+              // debugger
               value.p.parent = el;
               value.p.pingResolve();
               value.p.pongPromise.then(() => {
@@ -208,6 +212,7 @@ export class Block extends AbstractBlock {
                   value.p.boundaries[1]
                 );
                 if (parentOfComment !== targetEl) {
+                  // debugger
                   insertBefore$.call(
                     parentOfComment,
                     extractPortalContent(targetEl),
@@ -239,6 +244,7 @@ export class Block extends AbstractBlock {
             edit.i!
           );
         } else if (edit.t & EventFlag) {
+          // debugger
           const patch = createEventListener(el, edit.n!, value);
           el[EVENT_PATCH + edit.n!] = patch;
         } else if (edit.t & AttributeFlag) {
@@ -335,8 +341,10 @@ export class Block extends AbstractBlock {
             } else {
               // debugger
               newValue.current = targetEl;
+              debugger
               // appendChild$.call(el, newValue.current);
-              const df = extractPortalContent(newValue.current)
+              const df = extractPortalContent(newValue.current, false)
+
               // if (df.childNodes) {
                 betweenNodes(newValue.p.boundaries[0], newValue.p.boundaries[1]).forEach((n) => {
                   n.parentNode?.removeChild(n)
@@ -380,13 +388,13 @@ export class Block extends AbstractBlock {
       }
     }
 
-    if (root instanceof DocumentFragment) {
-      // const endComment = this.boundaries[1]
-      // const parentOfComment =endComment.parentNode!
-      // const i = Array.prototype.indexOf.call(parentOfComment.childNodes, endComment)
-      // insertBefore$.call(parentOfComment, root , childAt(parentOfComment, i))
-      appendChild$.call(this.parentEl, root);
-    }
+    // if (root instanceof DocumentFragment) {
+    //   // const endComment = this.boundaries[1]
+    //   // const parentOfComment =endComment.parentNode!
+    //   // const i = Array.prototype.indexOf.call(parentOfComment.childNodes, endComment)
+    //   // insertBefore$.call(parentOfComment, root , childAt(parentOfComment, i))
+    //   appendChild$.call(this.parentEl, root);
+    // }
 
     return root;
   }

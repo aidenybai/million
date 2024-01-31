@@ -23,15 +23,6 @@ import type { VNode } from '../million';
 import type { MillionPortal } from '../types';
 import { REGISTRY } from './constants';
 
-const reactPortal = createPortal('', document.createDocumentFragment());
-
-function isPortal(el: any) {
-  if (typeof el === 'object' && el['$$typeof'] === reactPortal['$$typeof']) {
-    return true;
-  }
-  return false;
-}
-
 // TODO: access perf impact of this
 export const processProps = (
   props: ComponentProps<any>,
@@ -91,9 +82,11 @@ const Component = memo(
     }, [isPending])
     // console.log(vnode, millionPortal.p.parent)
 
+    console.log(vnode)
     // if (!rerender) {
     // TOOD: maybe we should have a template here and when we inject the content, we get things out of that template, so the unmount does not fail
       return vnode === null || vnode === undefined  || vnode === '' ? null :  createElement('template', null, vnode) 
+      // return vnode === null || vnode === undefined  || vnode === '' ? null :  createElement('template', null, vnode) 
       // return vnode 
     // } else {
       // return createPortal(vnode, millionPortal.p!.parent!);
@@ -116,6 +109,7 @@ export const renderReactScope = (
     typeof vnode.type === 'function' &&
     '_c' in vnode.type;
   const isCallable = isBlock && (vnode.type as any)._c;
+  console.log('isBlock', isBlock, vnode)
 
   if (typeof window === 'undefined') {
     return vnode;
@@ -145,6 +139,7 @@ export const renderReactScope = (
     el,
     key
   );
+  console.log('vnode', vnode)
 
   Object.assign(millionPortal, {
     foreign: true as const,
@@ -241,37 +236,3 @@ export const flatten = (rawChildren?: JSX.Element | null): JSX.Element[] => {
   }
   return children;
 };
-
-export function convertToJSX(dom: HTMLElement): VNode {
-  if (!dom.tagName) {
-    return null;
-  }
-
-  // Convert 'class' to 'className' and 'for' to 'htmlFor'
-  const attributes: Record<string, any> = {};
-  for (let i = 0; i < dom.attributes.length; i++) {
-    const attrib = dom.attributes[i]!;
-    attributes[attrib.name] = attrib.value;
-  }
-
-  if (attributes.class) {
-    attributes.className = attributes.class;
-    delete attributes.class;
-  }
-
-  if (attributes.for) {
-    attributes.htmlFor = attributes.for;
-    delete attributes.for;
-  }
-  const children: VNode[] = [];
-  for (let i = 0; i < dom.children.length; i++) {
-    const child = dom.children[i];
-    if (child instanceof HTMLElement) {
-      children.push(convertToJSX(child)); // Recursively convert nested elements
-    } else if (child instanceof Text) {
-      children.push(child.textContent);
-    }
-  }
-
-  return createElement(dom.tagName.toLowerCase(), attributes, ...children);
-}

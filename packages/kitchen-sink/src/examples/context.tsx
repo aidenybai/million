@@ -3,10 +3,16 @@ import { block } from 'million/react';
 
 const ThemeContext = createContext('light');
 
+function boundary(reactNode: React.ReactNode) {
+  
+  console.log('here', reactNode)
+  return reactNode
+}
+
 const Context = block(({ onClick }) => {
   const theme = useContext(ThemeContext);
 
-  return (
+  return boundary(
     <button
       style={{
         color: theme === 'light' ? 'black' : 'white',
