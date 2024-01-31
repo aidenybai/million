@@ -62,6 +62,7 @@ export const unplugin = createUnplugin((options: Options = {}, meta) => {
         plugins: [[babel, {
           mode: options.server ? 'server' : 'client',
           hmr: options.hmr,
+          auto: options.auto,
         }]],
         // plugins: [[babel, options]],
         parserOpts: { plugins },
