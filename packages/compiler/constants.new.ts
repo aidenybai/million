@@ -115,3 +115,25 @@ export const HIDDEN_IMPORTS: HiddenImports = {
     },
   },
 };
+
+interface ReactImports {
+  memo: {
+    client: ImportDefinition;
+    server: ImportDefinition;
+  }
+}
+
+export const REACT_IMPORTS: ReactImports = {
+  memo: {
+    client: {
+      kind: 'named',
+      name: 'memo',
+      source: 'react',
+    },
+    server: {
+      kind: 'named',
+      name: 'memo',
+      source: 'react',
+    },
+  },
+};

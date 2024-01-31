@@ -8,41 +8,9 @@ import { generateUniqueName } from './utils/generate-unique-name';
 import { getDescriptiveName } from './utils/get-descriptive-name';
 import { getImportIdentifier } from './utils/get-import-specifier';
 import { getRootStatementPath } from './utils/get-root-statement-path';
+import { getValidCallee } from './utils/get-valid-callee';
 import { isGuaranteedLiteral } from './utils/is-guaranteed-literal';
-import { unwrapNode } from "./utils/unwrap-node";
 import { unwrapPath } from './utils/unwrap-path';
-
-function isValidBlockCall(ctx: StateContext, path: babel.NodePath<t.CallExpression>): boolean {
-  // Check for direct identifier usage e.g. import { block }
-  const identifier = unwrapNode(path.node.callee, t.isIdentifier);
-  if (identifier) {
-    const binding = path.scope.getBindingIdentifier(identifier.name);
-    const definition = ctx.definitions.identifiers.get(binding);
-    if (definition) {
-      return IMPORTS.block[ctx.server ? 'server' : 'client'] === definition;
-    }
-    return false;
-  }
-  // Check for namespace usage e.g. import * as million
-  const memberExpr = unwrapNode(path.node.callee, t.isMemberExpression);
-  if (memberExpr && !memberExpr.computed && t.isIdentifier(memberExpr.property)) {
-    const object = unwrapNode(memberExpr.object, t.isIdentifier);
-    if (object) {
-      const binding = path.scope.getBindingIdentifier(object.name);
-      const propName = memberExpr.property.name;
-      const definitions = ctx.definitions.namespaces.get(binding);
-      if (definitions) {
-        for (let i = 0, len = definitions.length; i < len; i++) {
-          const definition = definitions[i]!;
-          if (definition.kind === 'named' && definition.name === propName) {
-            return IMPORTS.block[ctx.server ? 'server' : 'client'] === definition;
-          }
-        }
-      }
-    }
-  } 
-  return false;
-}
 
 interface JSXStateContext {
   // The source of array values
@@ -140,6 +108,7 @@ function extractJSXExpressionsFromJSXAttributes(
   state: JSXStateContext,
   attrs: babel.NodePath<t.JSXAttribute | t.JSXSpreadAttribute>[],
 ): void {
+  // TODO handle specific attributes
   for (let i = 0, len = attrs.length; i < len; i++) {
     const attr = attrs[i];
 
@@ -375,8 +344,9 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
 }
 
 export function transformBlock(ctx: StateContext, path: babel.NodePath<t.CallExpression>): void {
+  const definition = getValidCallee(ctx, path);
   // Check first if the call is a valid `block` call
-  if (!isValidBlockCall(ctx, path)) {
+  if (IMPORTS.block[ctx.server ? 'server' : 'client'] !== definition) {
     return;
   }
   // Check if we should skip because the compiler
