@@ -1,27 +1,25 @@
 ---
 title: 'patch()'
-description: 'The patch function is used to rerender a block with another block.'
+description: 'The patch function is used to rerender a bloque with another bloque.'
 ---
 
 import { Callout } from 'nextra-theme-docs';
 
 <Callout type="warning">
-  **This function is part of the internal API.** It is intended for developers
-  creating their own frameworks. It is not recommended for general use.
+  Esta función forma parte de la API interna. Deberías utilizarla **solo** si estás creando tu propio *framework*. No es recomendada para uso general.
 </Callout>
 
 <br />
 
 # `patch(){:jsx}`
 
-**Syntax:** `patch(oldBlock, newBlock){:jsx}`\
-**Example:** `patch(block1, block2){:jsx}`
+**Sintaxis:** `patch(oldBlock, newBlock){:jsx}`\
+**Ejemplo:** `patch(block1, block2){:jsx}`
 
-The `patch` function is used to rerender a block with another block. The `oldBlock` is the block that will be rerendered, and the `newBlock` represents the new version of the DOM.
+La función `patch` se utiliza para volver a renderizar un bloque con otro bloque. El `oldBlock` (bloque viejo) es el block que se volverá a renderizar, y el `newBlock` (bloque nuevo) representa la nueva versión del DOM.
 
 <Callout>
-  Blocks must be derived from the same function when using `patch()`. This
-  ensures performance is not negatively impacted.
+  Los bloques deben derivarse de la misma función al usar `patch()`. Esto asegura que el rendimiento no se vea afectado negativamente.
 </Callout>
 
 ```jsx
@@ -31,7 +29,7 @@ const display = block(({ text }) => {
   return <p>{text}</p>;
 });
 
-// we will patch against this block for updates
+// Vamos a aplicar un "patch" a este bloque para las actualizaciones.
 const main = display({ text: 'Hello' });
 
 mount(main, document.getElementById('root'));
@@ -42,5 +40,5 @@ const bigDisplay = block(({ text }) => {
   return <h1 style={{ color: 'red' }}>{text}</h1>;
 });
 
-patch(main, bigDisplay({ text: 'World' })); // inefficient, but works
+patch(main, bigDisplay({ text: 'World' })); // ineficiente, pero funciona.
 ```
