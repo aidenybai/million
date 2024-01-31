@@ -1,6 +1,7 @@
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useState } from 'react';
 import TextsLogo from '../../public/texts.webp';
 import HackClubLogo from '../../public/hackclub.svg';
 import OpenSaucedLogo from '../../public/opensauced.svg';
@@ -16,6 +17,15 @@ const CountUp = dynamic(() => import('react-countup'), {
 
 export function Hero() {
   const { hero } = useTranslations();
+  const [submitted, setSubmitted] = useState<boolean>(false);
+
+  const handleClickWizard = () => {
+    void navigator.clipboard.writeText('npx million@latest');
+    setSubmitted(true);
+
+    setTimeout(() => setSubmitted(false), 1000);
+  };
+
   return (
     <div className="relative">
       <Blur />
@@ -39,7 +49,7 @@ export function Hero() {
               </Link>
               !
             </p>
-            <div className="mt-16 flex flex-wrap justify-center gap-y-4 gap-x-6">
+            <div className="mt-8 flex flex-wrap justify-center gap-y-4 gap-x-6">
               <Link href="/docs/introduction" className="w-full sm:w-max">
                 <ShimmerButton
                   className="relative w-full sm:w-max flex items-center justify-center transition-all hover:shadow-[0_0_0_3px_rgba(255,255,255,0.3)_inset]"
@@ -59,6 +69,51 @@ export function Hero() {
                 </span>
               </Link>
             </div>
+            <button
+              className="mt-6 flex flex-row items-center gap-2 mx-auto rounded-lg group"
+              onClick={handleClickWizard}
+            >
+              <p className="text-sm text-zinc-100 dark:text-zinc-400 font-mono">
+                ~ npx million@latest
+              </p>
+              <div className="opacity-0 group-hover:opacity-100 text-xs text-zinc-600 dark:text-zinc-300 transition-opacity">
+                {submitted ? (
+                  <svg
+                    className="w-[16px] h-[16px] dark:text-zinc-100 pt-[1px]"
+                    data-testid="geist-icon"
+                    fill="none"
+                    height={24}
+                    shapeRendering="geometricPrecision"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="1.5"
+                    viewBox="0 0 24 24"
+                    width={24}
+                    data-open="false"
+                  >
+                    <path d="M20 6L9 17l-5-5" />
+                  </svg>
+                ) : (
+                  <svg
+                    className="w-[16px] h-[16px] dark:text-zinc-100 pt-[1px]"
+                    data-testid="geist-icon"
+                    fill="none"
+                    height={24}
+                    shapeRendering="geometricPrecision"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="1.5"
+                    viewBox="0 0 24 24"
+                    width={24}
+                    data-open="true"
+                  >
+                    <path d="M6 17C4.89543 17 4 16.1046 4 15V5C4 3.89543 4.89543 3 6 3H13C13.7403 3 14.3866 3.4022 14.7324 4M11 21H18C19.1046 21 20 20.1046 20 19V9C20 7.89543 19.1046 7 18 7H11C9.89543 7 9 7.89543 9 9V19C9 20.1046 9.89543 21 11 21Z" />
+                  </svg>
+                )}
+              </div>
+            </button>
           </div>
         </div>
         <div className="lg:w-2/3 text-center mx-auto">
