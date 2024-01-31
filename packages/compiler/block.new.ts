@@ -1,50 +1,19 @@
 import * as t from '@babel/types';
-import type { StateContext } from "./types";
-import { unwrapNode } from "./utils/unwrap-node";
 import { JSX_SKIP_ANNOTATION, SKIP_ANNOTATION } from './constants';
+import { HIDDEN_IMPORTS, IMPORTS, SVG_ELEMENTS } from './constants.new';
+import type { StateContext } from "./types";
 import { findComment } from './utils/ast';
 import { isComponent, isComponentishName, isPathValid } from './utils/checks';
-import { unwrapPath } from './utils/unwrap-path';
-import { getImportIdentifier } from './utils/get-import-specifier';
-import { HIDDEN_IMPORTS, IMPORTS, SVG_ELEMENTS } from './constants.new';
-import { getDescriptiveName } from './utils/get-descriptive-name';
 import { generateUniqueName } from './utils/generate-unique-name';
+import { getDescriptiveName } from './utils/get-descriptive-name';
+import { getImportIdentifier } from './utils/get-import-specifier';
 import { getRootStatementPath } from './utils/get-root-statement-path';
+import { getValidImportDefinition } from './utils/get-valid-import-definition';
 import { isGuaranteedLiteral } from './utils/is-guaranteed-literal';
-
-function isValidBlockCall(ctx: StateContext, path: babel.NodePath<t.CallExpression>): boolean {
-  // Check for direct identifier usage e.g. import { block }
-  const identifier = unwrapNode(path.node.callee, t.isIdentifier);
-  if (identifier) {
-    const binding = path.scope.getBindingIdentifier(identifier.name);
-    const definition = ctx.definitions.identifiers.get(binding);
-    if (definition) {
-      return IMPORTS.block[ctx.mode] === definition;
-    }
-    return false;
-  }
-  // Check for namespace usage e.g. import * as million
-  const memberExpr = unwrapNode(path.node.callee, t.isMemberExpression);
-  if (memberExpr && !memberExpr.computed && t.isIdentifier(memberExpr.property)) {
-    const object = unwrapNode(memberExpr.object, t.isIdentifier);
-    if (object) {
-      const binding = path.scope.getBindingIdentifier(object.name);
-      const propName = memberExpr.property.name;
-      const definitions = ctx.definitions.namespaces.get(binding);
-      if (definitions) {
-        for (let i = 0, len = definitions.length; i < len; i++) {
-          const definition = definitions[i]!;
-          if (definition.kind === 'named' && definition.name === propName) {
-            return IMPORTS.block[ctx.mode] === definition;
-          }
-        }
-      }
-    }
-  } 
-  return false;
-}
+import { unwrapPath } from './utils/unwrap-path';
 
 interface JSXStateContext {
+  ctx: StateContext;
   // The source of array values
   source: t.Identifier;
   // The expressions from the JSX moved into an array
@@ -140,6 +109,7 @@ function extractJSXExpressionsFromJSXAttributes(
   state: JSXStateContext,
   attrs: babel.NodePath<t.JSXAttribute | t.JSXSpreadAttribute>[],
 ): void {
+  // TODO handle specific attributes
   for (let i = 0, len = attrs.length; i < len; i++) {
     const attr = attrs[i];
 
@@ -196,6 +166,32 @@ function isJSXSVGElement(
   return false;
 }
 
+function isJSXForElement(
+  ctx: StateContext,
+  path: babel.NodePath<t.JSXElement>,
+): boolean {
+
+  const openingElement = path.get('openingElement');
+  const name = openingElement.get('name');
+  /**
+   * Only valid component elements are member expressions and identifiers
+   * starting with component-ish name
+   */
+  if (isPathValid(name, t.isJSXIdentifier) || isPathValid(name, t.isJSXMemberExpression)) {
+    return getValidImportDefinition(ctx, name) === IMPORTS.For[ctx.server ? 'server' : 'client'];
+  }
+  return false;
+}
+
+function transformJSXForElement(
+  ctx: StateContext,
+  path: babel.NodePath<t.JSXElement>,
+): void {
+  if (isJSXForElement(ctx, path)) {
+    path.node.openingElement.attributes.push(t.jsxAttribute(t.jsxIdentifier('scoped')));
+  }
+}
+
 function extractJSXExpressionsFromJSXElement(
   state: JSXStateContext,
   path: babel.NodePath<t.JSXElement>,
@@ -206,7 +202,8 @@ function extractJSXExpressionsFromJSXElement(
    * If this is a component element, move the JSX expression
    * to the expression array.
    */
-  if (isJSXComponentElement(path)){
+  if (isJSXComponentElement(path)) {
+    transformJSXForElement(state.ctx, path);
     pushExpressionAndReplace(state, path, top, true);
     return true;
   }
@@ -256,6 +253,7 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
     return;
   }
   const state: JSXStateContext = {
+    ctx,
     source: path.scope.generateUidIdentifier('props'),
     exprs: [],
     keys: [],
@@ -283,6 +281,15 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
       ? descriptiveName
       : `JSX_${descriptiveName}`,
   );
+
+  if (ctx.hmr) {
+    state.exprs.push(
+      t.jsxAttribute(
+        t.jsxIdentifier('_hmr'),
+        t.stringLiteral(String(Date.now())),
+      ),
+    );
+  }
   /**
    * The following are arguments for the new render function
    */
@@ -338,7 +345,7 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
   const generatedBlock = t.variableDeclaration(
     'const',
     [t.variableDeclarator(id, t.callExpression(
-      getImportIdentifier(ctx, path, HIDDEN_IMPORTS.compiledBlock[ctx.mode]),
+      getImportIdentifier(ctx, path, HIDDEN_IMPORTS.compiledBlock[ctx.server ? 'server' : 'client']),
       [
         newComponent,
         t.objectExpression(options),
@@ -347,7 +354,9 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
   );
 
   const rootPath = getRootStatementPath(path);
-  rootPath.insertBefore(generatedBlock);
+  rootPath.scope.registerDeclaration(
+    rootPath.insertBefore(generatedBlock)[0]
+  );
 
   path.replaceWith(
     t.addComment(
@@ -364,8 +373,9 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
 }
 
 export function transformBlock(ctx: StateContext, path: babel.NodePath<t.CallExpression>): void {
+  const definition = getValidImportDefinition(ctx, path.get('callee'));
   // Check first if the call is a valid `block` call
-  if (!isValidBlockCall(ctx, path)) {
+  if (IMPORTS.block[ctx.server ? 'server' : 'client'] !== definition) {
     return;
   }
   // Check if we should skip because the compiler
