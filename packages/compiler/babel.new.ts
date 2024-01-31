@@ -2,7 +2,7 @@ import type { PluginObj, PluginPass } from '@babel/core';
 import * as t from '@babel/types';
 import { transformBlock } from './block.new';
 import { IMPORTS } from './constants.new';
-import type { ImportDefinition, StateContext } from "./types";
+import type { CompilerOptions, ImportDefinition, StateContext } from "./types";
 
 function getImportSpecifierName(specifier: t.ImportSpecifier): string {
   if (t.isIdentifier(specifier.imported)) {
@@ -52,9 +52,7 @@ function registerImportDefinition(
 
 interface PluginState extends PluginPass {
   state: StateContext;
-  opts: {
-    mode: 'client' | 'server';
-  };
+  opts: CompilerOptions;
 }
 
 export function babel(): PluginObj<PluginState> {
@@ -62,7 +60,8 @@ export function babel(): PluginObj<PluginState> {
     name: 'million',
     pre(): void {
       this.state = {
-        mode: this.opts.mode,
+        hmr: this.opts.hmr ?? false,
+        server: this.opts.server ?? false,
         definitions: {
           identifiers: new Map(),
           namespaces: new Map(),
@@ -76,7 +75,7 @@ export function babel(): PluginObj<PluginState> {
           ImportDeclaration(path) {
             const mod = path.node.source.value;
             for (const importName in IMPORTS) {
-              const definition = IMPORTS[importName][ctx.state.mode];
+              const definition = IMPORTS[importName][ctx.state.server ? 'server' : 'client'];
               if (definition.source === mod) {
                 registerImportDefinition(ctx.state, path, definition);
               }

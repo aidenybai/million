@@ -1,16 +1,16 @@
 import * as t from '@babel/types';
-import type { StateContext } from "./types";
-import { unwrapNode } from "./utils/unwrap-node";
 import { JSX_SKIP_ANNOTATION, SKIP_ANNOTATION } from './constants';
+import { HIDDEN_IMPORTS, IMPORTS, SVG_ELEMENTS } from './constants.new';
+import type { StateContext } from "./types";
 import { findComment } from './utils/ast';
 import { isComponent, isComponentishName, isPathValid } from './utils/checks';
-import { unwrapPath } from './utils/unwrap-path';
-import { getImportIdentifier } from './utils/get-import-specifier';
-import { HIDDEN_IMPORTS, IMPORTS, SVG_ELEMENTS } from './constants.new';
-import { getDescriptiveName } from './utils/get-descriptive-name';
 import { generateUniqueName } from './utils/generate-unique-name';
+import { getDescriptiveName } from './utils/get-descriptive-name';
+import { getImportIdentifier } from './utils/get-import-specifier';
 import { getRootStatementPath } from './utils/get-root-statement-path';
 import { isGuaranteedLiteral } from './utils/is-guaranteed-literal';
+import { unwrapNode } from "./utils/unwrap-node";
+import { unwrapPath } from './utils/unwrap-path';
 
 function isValidBlockCall(ctx: StateContext, path: babel.NodePath<t.CallExpression>): boolean {
   // Check for direct identifier usage e.g. import { block }
@@ -19,7 +19,7 @@ function isValidBlockCall(ctx: StateContext, path: babel.NodePath<t.CallExpressi
     const binding = path.scope.getBindingIdentifier(identifier.name);
     const definition = ctx.definitions.identifiers.get(binding);
     if (definition) {
-      return IMPORTS.block[ctx.mode] === definition;
+      return IMPORTS.block[ctx.server ? 'server' : 'client'] === definition;
     }
     return false;
   }
@@ -35,7 +35,7 @@ function isValidBlockCall(ctx: StateContext, path: babel.NodePath<t.CallExpressi
         for (let i = 0, len = definitions.length; i < len; i++) {
           const definition = definitions[i]!;
           if (definition.kind === 'named' && definition.name === propName) {
-            return IMPORTS.block[ctx.mode] === definition;
+            return IMPORTS.block[ctx.server ? 'server' : 'client'] === definition;
           }
         }
       }
@@ -283,6 +283,15 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
       ? descriptiveName
       : `JSX_${descriptiveName}`,
   );
+
+  if (ctx.hmr) {
+    state.exprs.push(
+      t.jsxAttribute(
+        t.jsxIdentifier('_hmr'),
+        t.stringLiteral(String(Date.now())),
+      ),
+    );
+  }
   /**
    * The following are arguments for the new render function
    */
@@ -338,7 +347,7 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
   const generatedBlock = t.variableDeclaration(
     'const',
     [t.variableDeclarator(id, t.callExpression(
-      getImportIdentifier(ctx, path, HIDDEN_IMPORTS.compiledBlock[ctx.mode]),
+      getImportIdentifier(ctx, path, HIDDEN_IMPORTS.compiledBlock[ctx.server ? 'server' : 'client']),
       [
         newComponent,
         t.objectExpression(options),

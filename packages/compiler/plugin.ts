@@ -60,7 +60,8 @@ export const unplugin = createUnplugin((options: Options = {}, meta) => {
 
       const result = await transformAsync(code, {
         plugins: [[babel, {
-          mode: options.server ? 'server' : 'client'
+          mode: options.server ? 'server' : 'client',
+          hmr: options.hmr,
         }]],
         // plugins: [[babel, options]],
         parserOpts: { plugins },

@@ -14,10 +14,16 @@ export interface DefaultImportDefinition {
 export type ImportDefinition = NamedImportDefinition | DefaultImportDefinition;
 
 export interface StateContext {
-  mode: 'server' | 'client';
+  hmr: boolean;
+  server: boolean;
   definitions: {
     identifiers: Map<t.Identifier, ImportDefinition>;
     namespaces: Map<t.Identifier, ImportDefinition[]>;
   };
   imports: Map<string, t.Identifier>;
+}
+
+export interface CompilerOptions {
+  hmr?: boolean;
+  server?: boolean;
 }
