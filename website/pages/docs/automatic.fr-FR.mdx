@@ -1,23 +1,22 @@
 ---
-title: 'Automatic Mode'
-description: 'How to use Automatic Mode'
+title: 'Mode automatique'
+description: 'Comment utiliser le mode automatique'
 ---
 
 import { Callout, Tab, Tabs } from 'nextra-theme-docs';
 
-# Automatic Mode
+# Mode automatique
 
-Million.js uses Automatic Mode out of the box if you installed via CLI. This optimizes your React components, improving speed without any major code changes. This is the recommended way to use Million.js.
+Million.js utilise automatiquement le mode par défaut si vous l'avez installé via l'interface de ligne de commande (CLI). Cela optimise vos composants React, améliorant la vitesse sans apporter de modifications majeures au code. C'est la méthode recommandée pour utiliser Million.js.
 
-### Advanced customization
+### Personnalisation avancée
 
-Automatic mode provides customization options:
+Le mode automatique offre des options de personnalisation :
 
-- `threshold`: What is used to determine whether a component should be converted to Million.js.
-  When the threshold increases, fewer components will be optimized, and vice versa.
-- `skip`: An array of identifiers to indicate if a component should be skipped. You can add hook or variable names, function names, etc.
+- `threshold`: Il est utilisé pour déterminer si un composant doit être converti en Million.js. Lorsque le seuil augmente, moins de composants seront optimisés, et vice versa.
+- `skip`: Un tableau d'identifiants pour indiquer si un composant doit être ignoré. Vous pouvez ajouter des noms de hooks, de variables, de fonctions, etc.
 
-The `auto` object lets you configure options beyond the default ones set during installation:
+L'objet `auto` vous permet de configurer des options au-delà de celles par défaut définies lors de l'installation :
 
 ```js
 auto: {
@@ -31,17 +30,17 @@ auto: {
 ```js filename="next.config.mjs"
 import million from 'million/compiler';
 
-/** @type {import('next').NextConfig} */
+/\*_ @type {import('next').NextConfig} _/
 const nextConfig = {
-   reactStrictMode: true,
+reactStrictMode: true,
 };
 
 const millionConfig = {
-  auto: {
-    threshold: 0.05, // default: 0.1,
-    skip: ['useBadHook', /badVariable/g], // default []
-    // if you're using RSC: auto: { rsc: true },
-  }
+auto: {
+threshold: 0.05, // default: 0.1,
+skip: ['useBadHook', /badVariable/g], // default []
+// if you're using RSC: auto: { rsc: true },
+}
 }
 
 export default million.next(nextConfig, millionConfig);
@@ -75,20 +74,21 @@ export default defineConfig({
 const million = require("million/compiler");
 
 exports.onCreateWebpackConfig = ({ actions }) => {
-  actions.setWebpackConfig({
-    plugins: [
-      million.webpack({
-        mode: "react",
-        server: true,
-        auto: {
-          threshold: 0.05,
-          skip: ["useBadHook", /badVariable/g],
-        },
-      }),
-    ],
-  });
+actions.setWebpackConfig({
+plugins: [
+million.webpack({
+mode: "react",
+server: true,
+auto: {
+threshold: 0.05,
+skip: ["useBadHook", /badVariable/g],
+},
+}),
+],
+});
 };
-```
+
+````
 </Tab>
 
 <Tab>
@@ -108,7 +108,8 @@ export default defineConfig({
     react(),
   ],
 });
-```
+````
+
 </Tab>
 
 <Tab>
@@ -133,11 +134,11 @@ export default defineConfig({
 
 <Tab>
 <Callout type="warning">
-  If you are using a [Create React App (CRA)](https://create-react-app.dev/) Setup, you will need to [configure Craco](https://craco.js.org/docs/getting-started/) before proceeding.
+  Si vous utilisez une configuration [Create React App (CRA)](https://create-react-app.dev/), vous devrez [configurer Craco](https://craco.js.org/docs/getting-started/) avant de continuer.
 </Callout>
 
 ```js filename="craco.config.js"
-const million = require("million/compiler");
+const million = require('million/compiler');
 
 module.exports = {
   webpack: {
@@ -146,7 +147,7 @@ module.exports = {
         million.webpack({
           auto: {
             threshold: 0.05,
-            skip: ["useBadHook", /badVariable/g],
+            skip: ['useBadHook', /badVariable/g],
           },
         }),
       ],
@@ -154,6 +155,7 @@ module.exports = {
   },
 };
 ```
+
 </Tab>
 
 <Tab>
@@ -191,17 +193,17 @@ export default {
 
 </Tabs>
 
-### Ignoring components
+### Ignorer des composants
 
-If you encounter an error with a component during the Million.js runtime, it can be skipped using the `// million-ignore` comment.
+Si vous rencontrez une erreur avec un composant pendant l'exécution de Million.js, vous pouvez le passer en utilisant le commentaire `// million-ignore`
 
 ```js
 // million-ignore
 function App() {
   return ...
 }
-````
+```
 
-### Muting help messages
+### Désactivation des messages d'aide
 
-To avoid seeing help messages, you can pass the `mute: true{:js}` option to the compiler inside the `auto` object.
+Pour éviter de voir les messages d'aide, vous pouvez passer l'option `mute: true{:js}` au compilateur à l'intérieur de l'objet `auto`

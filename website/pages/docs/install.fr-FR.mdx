@@ -7,7 +7,7 @@ import { Callout, Tabs, Tab, Steps } from 'nextra-theme-docs';
 
 # Installation
 
-Million.js suppose que vous avez un projet React existant. Pour apprendre comment créer une application React, consultez la [documentation de React](https://react.dev).
+Million.js suppose que vous avez un projet React existant. Pour apprendre comment créer une application React, consultez la [documentation React](https://react.dev).
 
 ## Installation via l'interface de ligne de commande (CLI)
 
@@ -65,7 +65,7 @@ Remarquez qu'il existe deux modes parmi lesquels vous pouvez choisir: **Automati
 
 <Steps>
 
-### Install Million.js
+### Installer Million.js
 
 <Tabs items={['npm', 'pnpm', 'yarn', 'bun']} storageKey="selected-pkg-manager">
   {/* prettier-ignore */}
@@ -94,11 +94,11 @@ Remarquez qu'il existe deux modes parmi lesquels vous pouvez choisir: **Automati
   </Tab>
 </Tabs>
 
-### Add the compiler to your application
+### Ajoutez le compilateur à votre application
 
 <Tabs items={['Next.js', 'Astro', 'Gatsby', 'Vite','Remix', 'Create React App', 'Webpack', 'Rollup']} storageKey="selected-bundler-compiler">
 <Tab>
-Million.js is supported within the `/app` ("use client" components only) and `/pages`
+Million.js est pris en charge dans les dossiers `/app` (composants "use client" uniquement) et `/pages`
 
 ```js filename="next.config.mjs"
 import million from 'million/compiler';
@@ -170,7 +170,7 @@ export default defineConfig({
 
 <Tab>
   <Callout type="warning">
-    If you are using a [Create React App (CRA)](https://create-react-app.dev/) Setup, you will need to [configure Craco](https://craco.js.org/docs/getting-started/) before proceeding.
+     Si vous utilisez une configuration [Create React App (CRA)](https://create-react-app.dev/), vous devrez [configurer Craco](https://craco.js.org/docs/getting-started/) avant de continuer.
   </Callout>
 
 ```js filename="craco.config.js"
@@ -212,7 +212,7 @@ export default {
 
 <Steps>
 
-### Install Million.js
+### Installer Million.js
 
 <Tabs items={['npm', 'pnpm', 'yarn', 'bun']} storageKey="selected-pkg-manager">
 {/* prettier-ignore */}
@@ -242,11 +242,11 @@ npm install million
   </Tab>
 </Tabs>
 
-### Add the compiler to your application
+### Ajoutez le compilateur à votre application
 
 <Tabs items={['Next.js', 'Astro', 'Gatsby', 'Vite', 'Remix', 'Create React App', 'Webpack', 'Rollup']} storageKey="selected-bundler-compiler">
 <Tab>
-Million.js is supported within the `/app` ("use client" components only) and `/pages`
+Million.js est pris en charge dans les dossiers /app (composants 'use client' uniquement) et /pages.
 
 ```js filename="next.config.mjs"
 import million from 'million/compiler';
@@ -314,7 +314,7 @@ export default defineConfig({
 
 <Tab>
 <Callout type="warning">
-  If you are using a [Create React App (CRA)](https://create-react-app.dev/) Setup, you will need to [configure Craco](https://craco.js.org/docs/getting-started/) before proceeding.
+  Si vous utilisez une configuration [Create React App (CRA)](https://create-react-app.dev/), vous devrez [configurer Craco](https://craco.js.org/docs/getting-started/) avant de continuer.
 </Callout>
 ```js filename="craco.config.js"
 const million = require("million/compiler");
