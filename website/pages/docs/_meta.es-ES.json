@@ -1,7 +1,7 @@
 {
-  "introduction": "Introduction",
-  "install": "Installation",
-  "automatic": "Automatic",
-  "manual-mode": "Manual Mode",
-  "internals": "Internals"
+  "introduction": "Introducción",
+  "install": "Instalación",
+  "automatic": "Automático",
+  "manual-mode": "Modo Manual",
+  "internals": "Internas"
 }

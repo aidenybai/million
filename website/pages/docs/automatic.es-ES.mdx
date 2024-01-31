@@ -1,23 +1,23 @@
 ---
-title: 'Automatic Mode'
-description: 'How to use Automatic Mode'
+title: 'Modo Automático'
+description: 'Cómo usar Modo Automático'
 ---
 
 import { Callout, Tab, Tabs } from 'nextra-theme-docs';
 
-# Automatic Mode
+# Modo Automático
 
-Million.js uses Automatic Mode out of the box if you installed via CLI. This optimizes your React components, improving speed without any major code changes. This is the recommended way to use Million.js.
+Million.js utiliza el Modo Automático de forma predeterminada si lo has instalado a través de la CLI.
+Esto optimiza tus componentes de React, mejorando la velocidad sin necesidad de realizar cambios importantes en el código. Esta es la forma recomendada de utilizar Million.js.
 
-### Advanced customization
+### Personalización avanzada
 
-Automatic mode provides customization options:
+El modo automático proporciona opciones de personalización:
 
-- `threshold`: What is used to determine whether a component should be converted to Million.js.
-  When the threshold increases, fewer components will be optimized, and vice versa.
-- `skip`: An array of identifiers to indicate if a component should be skipped. You can add hook or variable names, function names, etc.
+- `threshold`: Se utiliza para determinar si un componente debe convertirse a Million.js. A medida que aumenta el `threshold`, se optimizarán menos componentes, y viceversa.
+- `skip`: Un array de identificadores que indica si un componente debe omitirse. Puedes agregar nombres de hooks, variables, nombres de funciones, etc.
 
-The `auto` object lets you configure options beyond the default ones set during installation:
+El objeto `auto` te permite configurar opciones más allá de las predeterminadas establecidas durante la instalación:
 
 ```js
 auto: {
@@ -40,7 +40,7 @@ const millionConfig = {
   auto: {
     threshold: 0.05, // default: 0.1,
     skip: ['useBadHook', /badVariable/g], // default []
-    // if you're using RSC: auto: { rsc: true },
+    // Si estas usando RSC: auto: { rsc: true },
   }
 }
 
@@ -133,7 +133,7 @@ export default defineConfig({
 
 <Tab>
 <Callout type="warning">
-  If you are using a [Create React App (CRA)](https://create-react-app.dev/) Setup, you will need to [configure Craco](https://craco.js.org/docs/getting-started/) before proceeding.
+  Si estas usando [Create React App (CRA)](https://create-react-app.dev/), necesitaras [configurar Craco](https://craco.js.org/docs/getting-started/) antes de proceder.
 </Callout>
 
 ```js filename="craco.config.js"
@@ -191,17 +191,17 @@ export default {
 
 </Tabs>
 
-### Ignoring components
+### Ignorando componentes
 
-If you encounter an error with a component during the Million.js runtime, it can be skipped using the `// million-ignore` comment.
+Si te encuentras con algún error en un componente durante el tiempo de ejecución de Million.js, puedes omitirlo utilizando el comentario `// million-ignore`.
 
 ```js
 // million-ignore
 function App() {
   return ...
 }
-````
+```
 
-### Muting help messages
+### Silenciando mensajes de ayuda
 
-To avoid seeing help messages, you can pass the `mute: true{:js}` option to the compiler inside the `auto` object.
+Para evitar ver mensajes de ayuda, puedes pasar la opción `mute: true{:js}` al compilador dentro del objeto `auto`.

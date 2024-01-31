@@ -1,6 +1,6 @@
 ---
 title: '<For />'
-description: 'Learn how to render lists of blocks in Million.'
+description: 'Aprende a renderizar listas de bloques en Million.'
 ---
 
 import { AutomaticModeWarning } from '../../../components/automatic-mode-warning';
@@ -9,12 +9,12 @@ import { AutomaticModeWarning } from '../../../components/automatic-mode-warning
 
 <AutomaticModeWarning />
 
-**Syntax:** `<For each={array}>{(item, index) => Block}</For>{:jsx}`\
-**Example:** `<For each={[1, 2, 3]}>{(item) => myBlock({ item })}</For>{:jsx}`
+**Sintaxis:** `<For each={array}>{(item, index) => Block}</For>{:jsx}`\
+**Ejemplo:** `<For each={[1, 2, 3]}>{(item) => myBlock({ item })}</For>{:jsx}`
 
-The `<For />{:jsx}` component is used to render a list of blocks. It takes an array as the `each` prop and a function as its children. The function is called for each item in the array and is passed the item and its index as arguments.
+El componente `<For />{:jsx}` se utiliza para renderizar una lista de bloques (blocks). Acepta un array en la propiedad each y una función como "elemento" hijo. La función es llamada una vez por cada elemento (item) que hay en el array y recibe el elemento y su índice como argumentos.
 
-It's the best way to loop over an array. As the array changes, `<For />{:jsx}` updates or moves items in the DOM rather than recreating them. Let's look at an example:
+Es la mejor manera de iterar sobre un array. A medida que el array cambia, `<For />{:jsx}` actualiza o mueve los elementos ("items" en inglés) en el DOM en lugar de recrearlos. Veamos un ejemplo:
 
 ```jsx
 import { For } from 'million/react';
@@ -37,9 +37,9 @@ function App() {
 export default App;
 ```
 
-## Custom Tags
+## Etiquetas personalizadas
 
-The `as` prop can be used to specify the tag name of the For. By default, it is `slot`.
+La propiedad `as` se puede utilizar para especificar el nombre de la etiqueta (elemento HTML) para el componente For. Por defecto, es `slot`.
 
 ```jsx
 <For each={items} as="div">
@@ -47,11 +47,11 @@ The `as` prop can be used to specify the tag name of the For. By default, it is 
 </For>
 ```
 
-## Optimizing `<For />` With `memo`
+## Optimizando `<For />` con `memo`
 
-Internally, `<For />` will not reuse blocks in order to avoid unknown behavior. This means that if you have a `<For />` with 1000 items, it will recreate 1000 blocks.
+Internamente, `<For />` no reutilizará bloques para evitar comportamientos desconocidos. Esto significa que si tienes un `<For />` con 1000 elementos, recreará 1000 bloques.
 
-However, if you know that your items aren't dependent on any values except the `item` passed to the function, you can use the `memo` prop to tell Million to reuse blocks. This will improve performance and reduce memory usage.
+Sin embargo, si sabes que tus elementos no dependen de ningún valor excepto el `item` (elemento) pasado a la función, puedes utilizar la propiedad `memo` para indicarle a Million que reutilice bloques. Esto mejorará el rendimiento y reducirá el uso de memoria.
 
 ```jsx
 <For each={items} memo>
@@ -59,11 +59,9 @@ However, if you know that your items aren't dependent on any values except the `
 </For>
 ```
 
+## Usando For con SSR
 
-
-## Using For With SSR
-
-If you are using Million.js on the server, you may encounter a hydration mismatch error. This is because Million.js uses a different algorithm for rendering on the server than it does on the client. To fix this, you can disable SSR.
+Si estás utilizando Million.js en el servidor, es posible que te encuentres con un error de inconsistencia en el proceso de hidratación ("hydration mismatch error" en inglés). Esto se debe a que Million.js utiliza un algoritmo diferente para renderizar en el servidor que en el cliente. Para solucionar esto, puedes desactivar la renderización del lado del servidor (SSR).
 
 ```jsx
 <For each={[Math.random(), Math.random(), Math.random()]} ssr={false}>
