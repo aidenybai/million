@@ -176,19 +176,19 @@ Así que no es que tener rendimiento en React sea imposible, es solo que a menud
 
 ## React con Million
 
-Keep in mind that even though memory constraints are real, developers are often conscious of the amount of tabs or apps open while running their dev server, so we often won't notice them apart from a few buggy experiences that might prompt a refresh or a server restart in development. However, your users will probably notice more often than you, especially on older phones, tablets, laptops, since they aren't clearing their open apps/tabs for your app.
+Ten en mente que aunque las restricciones de memoria son reales, los desarrolladores a menudo son conscientes de la cantidad de pestañas o aplicaciones abiertas mientras ejecutan su servidor de desarrollo, por lo que a menudo no los notamos aparte de algunas experiencias con errores que podrían provocar una actualización o un reinicio del servidor en desarrollo. Sin embargo, tus usuarios probablemente lo notarán más a menudo que tú, especialmente en teléfonos, tabletas, computadoras portátiles más antiguas, ya que no están limpiando sus aplicaciones/pestañas abiertas para tu aplicación.
 
-So what does Million do differently that solves this problem?
+¿Entonces que hace Million de manera diferente que resuelve este problema?
 
-Well, Million is a compiler, and while I won't go into everything here (you can read more about the [block DOM](/blog/virtual-dom) and Million's [`block()` function](/blog/behind-the-block) at these links), Million can statically analyze your React code and automatically compile React components into tightly optimized [Higher Order Components](https://https://legacy.reactjs.org/docs/higher-order-components.html) which are then rendered by Million.
+Bueno, Million es un compilador, y aunque no entraré en detalle aquí (puedes leer más sobre el [block DOM](/blog/virtual-dom) y la función [`block()` de Million](/blog/behind-the-block) en estos enlaces), Million puede analizar estáticamente tu código de React y compilar automáticamente componentes de React en [Componentes de Orden Superior (HOC)](https://https://legacy.reactjs.org/docs/higher-order-components.html) que son renderizados por Million.
 
-Million uses techniques closer to fine-grained reactivity (shoutout [Solid JS](https://solidjs.com)) where observers are placed right on the necessary DOM nodes to track state changes among other optimizations, rather than using a virtual DOM.
+Million utiliza técnicas más cercanas a la reactividad de grano fino (un saludo a [Solid JS](https://solidjs.com)) donde los observadores se colocan directamente en los nodos DOM necesarios para rastrear los cambios de estado entre otras optimizaciones, en lugar de usar un DOM virtual.
 
-This allows Million's performance and memory overhead to be closer to optimized vanilla Javascript than even performance focused virtual DOMs like Preact or Inferno, but without having an abstraction layer on top of React. That is to say using Million doesn't mean moving your React app to use "React-compatible" libraries. It's just plain React that Million itself can automatically optimize via our [CLI](/docs/install).
+Esto le permite al rendimiento en memoria de Million estar cerca al de Javascript puro que está optimizado, incluso más que los virtual DOMs enfocados en el rendimiento como Preact o Inferno, pero sin tener una capa de abstracción sobre React. Es decir, usar Million no significa mover tu aplicación de React a usar librerías "compatibles con React". Es solo React puro que Million puede optimizar automáticamente a través de nuestra [CLI](/docs/install).
 
-> Keep in mind, Million isn't suitable for all use cases. We'll go into where Million does/doesn't fit in later on.
+> Ten en mente que, Million no es adecuado para todos los casos de uso. Hablaremos de dónde sí y dónde no en un momento.
 
-### Memory Usage
+### Uso de memoria
 
 In terms of memory usage, Million uses about 55% of the memory that React does on standby after the page loads, which is a substantial difference. It uses less than half the memory that React does for every single operation otherwise tested by [Krausest's JS Framework Benchmark](https://krausest.github.io/js-framework-benchmark/2023/table_chrome_113.0.5672.63.html), even on Chrome 113 (we're currently on 117).
 
