@@ -16,7 +16,7 @@ import { VElement, VNode } from './types';
 
 if (typeof window === 'undefined') {
   throw new Error(
-    'See http://million.dev/docs/install to install the compiler.',
+    'See http://million.dev/docs/install to install the compiler.'
   );
 }
 
@@ -52,7 +52,7 @@ export const HTM_TEMPLATE_CONTENT = HTM_TEMPLATE.content;
 const _SVG_TEMPLATE = /**@__PURE__*/ document$.createElement('template');
 export const SVG_TEMPLATE = /**@__PURE__*/ document$.createElementNS(
   'http://www.w3.org/2000/svg',
-  'svg',
+  'svg'
 );
 /**@__PURE__*/ _SVG_TEMPLATE.content.appendChild(SVG_TEMPLATE);
 
@@ -62,7 +62,7 @@ export const element$ = Element.prototype;
 export const characterData$ = CharacterData.prototype;
 export const getOwnPropertyDescriptor$ = Object$.getOwnPropertyDescriptor;
 export const insertBefore$ = node$.insertBefore;
-export const appendChild$ = node$.appendChild
+export const appendChild$ = node$.appendChild;
 export const cloneNode$ = node$.cloneNode;
 export const replaceChild$ = node$.replaceChild;
 export const replaceWith$ = element$.replaceWith;
@@ -80,7 +80,7 @@ export const nextSibling$ = getOwnPropertyDescriptor$(node$, 'nextSibling')!
   .get!;
 export const characterDataSet$ = getOwnPropertyDescriptor$(
   characterData$,
-  'data',
+  'data'
 )!.set!;
 
 export const stringToDOM = (content: string): Node => {
@@ -97,7 +97,7 @@ document$[EVENTS_REGISTRY] = new Set$();
 export const createEventListener = (
   el: Node,
   name: string,
-  value?: EventListener,
+  value?: EventListener
 ) => {
   let event = name.toLowerCase();
   let capture = false;
@@ -130,7 +130,7 @@ export const createEventListener = (
           el = el.parentNode;
         }
       },
-      { capture },
+      { capture }
     );
     SetAdd$.call(document$[EVENTS_REGISTRY], event);
   }
@@ -170,38 +170,96 @@ export const removeComments = (el: Node) => {
 };
 
 export const betweenNodes = (start: Node, end: Node) => {
-  const arr: Node[] = []
+  const arr: Node[] = [];
 
   let child: ChildNode | null = nextSibling$.call(start);
   while (child !== null && child !== end) {
-    arr.push(child)
+    arr.push(child);
     const next = nextSibling$.call(child);
     child = next;
   }
-  return arr
+  return arr;
+};
+
+export const isBlockSymbol = Symbol('isBlock')
+
+// This is for copying comments references rather than shallow copying, so portal-in-portal would run properly
+function customCloneNode(
+  node: Node,
+  referenceCondition?: (node: Node) => boolean
+) {
+  const referenceCopy = referenceCondition?.(node);
+  var clone = referenceCopy ? node : node.cloneNode(false);
+  let prevChildNodesLength = node.childNodes.length 
+  for (var i = 0; i < node.childNodes.length; i++) {
+    const childNode = node.childNodes[i]!;
+    // clone.appendChild(customCloneNode(node.childNodes[i]));
+    if (referenceCopy) {
+      clone.removeChild(childNode)
+      clone.insertBefore(customCloneNode(childNode, referenceCondition), childAt(clone, i))
+      // clone.replaceChild(
+      //   childNode,
+      //   customCloneNode(childNode, referenceCondition)
+      // );
+    } else {
+      clone.appendChild(customCloneNode(childNode, referenceCondition));
+    }
+    if (prevChildNodesLength !== node.childNodes.length) {
+      // at this point, we already removed a child node from `clone` 
+      prevChildNodesLength = node.childNodes.length 
+      i--
+    }
+    
+  }
+  return clone;
 }
 
-export const extractPortalContent = (targetEl: DocumentFragment): DocumentFragment => {
-  const el = targetEl.children[0]
-  const fragment = document.createDocumentFragment()
-  if (!el) {
-    return fragment
+function moveComments(node: Node): boolean {
+  if (node.nodeType === Node.COMMENT_NODE) {
+    // return true
+    return !!node.textContent?.includes('portal')
   }
+  if (node[isBlockSymbol]) {
+    return true
+  }
+
+  // console.log()
+  return false
+}
+
+export const extractPortalContent = (
+  targetEl: DocumentFragment,
+  // removeComment: boolean = true
+): DocumentFragment => {
+  const el = targetEl.children[0];
+  // debugger
+  // console.log(
+  //   'customCloneNode',
+  //   customCloneNode(el, moveComments).cloneNode(true)
+  // );
+  // console.log('el', el?.cloneNode(true));
+  const fragment = document.createDocumentFragment();
+  if (!el) {
+    return fragment;
+  }
+
   el.childNodes.forEach((cn) => {
-    fragment.appendChild(cn.cloneNode(true))
-  })
+    // stale.appendChild(cn.cloneNode(true))
+    // console.log('cn', );
+    fragment.appendChild(customCloneNode(cn, moveComments));
+    // fragment.appendChild(cn.cloneNode(true));
+  });
   // console.log(fragment)
-  return fragment
+  return fragment;
   // return (targetEl.children[0] as HTMLTemplateElement)?.content?.cloneNode(true) ?? document.createDocumentFragment()
   // return targetEl.cloneNode(true)
-  // const portalTemplate =targetEl.children[0] 
+  // const portalTemplate =targetEl.children[0]
   // const fragment = document.createDocumentFragment()
   // portalTemplate?.childNodes.forEach((cn) => {
   //   fragment.appendChild(cn)
   // })
   // return fragment
-}
-
+};
 
 export const insertText = (el: Node, value: string, index: number): Text => {
   const node = document$.createTextNode(value);
@@ -217,7 +275,7 @@ export const setText = (el: Text, value: string) => {
 export const setStyleAttribute = (
   el: HTMLElement,
   name: string,
-  value?: string | boolean | number | null,
+  value?: string | boolean | number | null
 ) => {
   if (typeof value !== 'number' || IS_NON_DIMENSIONAL.test(name)) {
     el.style[name] = value;
@@ -236,7 +294,7 @@ export const setStyleAttribute = (
 export const setSvgAttribute = (
   el: HTMLElement,
   name: string,
-  value?: string | boolean | null,
+  value?: string | boolean | null
 ) => {
   name = name.replace(/xlink(?:H|:h)/, 'h').replace(/sName$/, 's');
   if (name.startsWith('xmlns')) {
@@ -249,7 +307,7 @@ export const setSvgAttribute = (
 export const setAttribute = (
   el: HTMLElement,
   name: string,
-  value?: string | boolean | null,
+  value?: string | boolean | null
 ): void => {
   const isValueNully = value === undefined || value === null;
   value = isValueNully ? '' : value;

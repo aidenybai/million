@@ -80,7 +80,6 @@ export const block = <P extends MillionProps>(
     for (let i = 0; i < childrenSize; ++i) {
       children[i + 1] = portalRef.current[i]?.portal;
     }
-    console.log(props)
 
     const vnode = createElement(Fragment, { children });
 

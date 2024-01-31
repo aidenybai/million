@@ -1,7 +1,7 @@
 ---
 title: 'Announcing Million.js 3.0.0'
 date: FEB 2, 2024
-description: Faster compiler, faster runtime, new dynamic linter, AI explains, and more!
+description: Better compiler, faster runtime, new dynamic linter, AI explains, and more!
 ---
 
 import Image from 'next/image';
@@ -49,9 +49,37 @@ npm install million@latest
 
 AI powered React performance linter
 
-### Faster build time
+### Better compiler
 
-// TODO: Alexis
+#### Consistent import macro
+
+```js
+import { block } from 'million/react';
+
+// or
+
+import { block as millionBlock } from 'million/react';
+
+// or
+
+import * as million from 'million/react';
+```
+
+#### Automatic block name generation
+
+// TODO showcase name generation
+
+#### Composition
+
+// TODO explain how new compiler handles block components
+
+#### Portal Support
+
+// TODO explain how new compiler handles portals
+
+#### TypeScript
+
+// TODO explain how new compiler understands TypeScript syntax
 
 ### Faster runtime
 
