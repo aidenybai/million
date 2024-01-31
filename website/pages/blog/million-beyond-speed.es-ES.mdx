@@ -1,7 +1,7 @@
 ---
-title: 'Million Beyond "Speed"'
-date: OCT 1, 2023
-description: Making React apps memory efficient
+title: 'Million más allá de la "Velocidad"'
+date: 1 OCT, 2023
+description: Haciendo apps en React eficientes en memoria
 ---
 
 import Image from 'next/image';
@@ -10,72 +10,82 @@ import { CarbonAds } from '../../components/ad';
 
 <div className="flex flex-col items-center gap-4">
 
-# Million Beyond "Speed"
+# Million más allá de la "Velocidad"
 
-  <small>[RICARDO NUNEZ](https://x.com/ricardonunez-io) OCT 1 2023</small>
+  <small>[RICARDO NUNEZ](https://x.com/ricardonunez-io) 1 OCT 2023</small>
 </div>
 
 ---
 
-If you've heard of Million (from [Aiden Bai](https://twitter.com/aidenybai), its creator, or [Tobi Adedeji](https://twitter.com/toby_solutions)'s React puzzles on Twitter), you've probably been intrigued by the headline: "Make React 70% Faster".
+Si has escuchado de Million (por [Aiden Bai](https://twitter.com/aidenybai), su creador, o los puzzles de React de [Tobi Adedeji](https://twitter.com/toby_solutions) en Twitter), probablemente te has sentido intrigado por el titular: "Haz React 70% más rápido".
 
-Most developers have the mindset of faster being better for a multitude or reasons, namely SEO and user experience. If I could write plain React and make it as fast or faster than a lot of frameworks like Svelte and Vue (in some cases), then it's a win, right?
+La mayoría de desarrolladores tienen la mentalidad de que más rápido es mejor por una multitud de razones, principalmente SEO y experiencia de usuario. Si pudiera escribir React puro y hacerlo tan rápido o más rápido que muchos frameworks como Svelte y Vue (en algunos casos), entonces es una victoria, ¿verdad?
 
-However, there are actually a few other reasons why Million optimizes React applications that has less to do with just "speed" and more to do with compatibility, whether with old devices, slow laptops, resource-constrained phones, etc.
+Sin embargo, hay algunas otras razones por las que Million optimiza aplicaciones React que tienen menos que ver con la "velocidad" y más que ver con la compatibilidad, ya sea con dispositivos antiguos, laptops lentas, teléfonos con recursos limitados, etc.
 
-Ultimately, what all of this comes down to is memory.
+Últimadamente, todo esto se reduce a la memoria.
 
-> The old meme of a Chrome window with 10 tabs open chugging your old laptop to a halt has a lot more basis in reality than people realize.
+> El viejo meme de una ventana de Chrome con 10 pestañas abiertas que hace que tu vieja laptop se detenga tiene mucho más base en la realidad de lo que la gente se da cuenta.
 
-If we look at the situations where an app is running really slowly despite being on a good network, it typically has a lot less to do with bandwidth and a lot more to do with memory, and that's what we're taking a look at in this article.
+Si vemos la situación donde la app está ejecutandose muy lento a pesar de estar en una buena red, típicamente tiene mucho menos que ver con el ancho de banda y mucho más que ver con la memoria, y eso es lo que estamos viendo en este artículo.
 
 <CarbonAds />
 
-## React Without Million
+## React Sin Million
 
-The way that typical React applications work without Million and without a server-side framework like Next.js is that for every component in your JSX, a transpiler (Babel) calls a function called `React.createElement()` which outputs not HTML elements but *React* elements.
+La forma típica en la que las aplicaciones de React funcionan sin Million y sin un framework del lado del servidor como Next.js es que para cada componente en tu JSX, un transpilador (Babel) llama a una función llamada `React.createElement()` que no produce elementos HTML sino elementos _React_.
 
-These React elements actually create Javascript objects, so your JSX:
+Estos elementos de React crean de hecho objetos Javascript, así que tu JSX:
 
 ```jsx
-<div>Hello world</div>
+<div>Hola mundo</div>
 ```
 
-turns into a `React.createElement()` Javascript call that look like this:
+se convierte en una llamada `React.createElement()` de Javascript que se ve así:
 
 ```js
-React.createElement('div', {}, 'Hello world')
+React.createElement('div', {}, 'Hola mundo');
 ```
 
-Which gets you a Javascript object that looks like this:
+Y que te da un objecto de Javascript que se ve de esta forma:
 
 ```js
 {
     $$typeof: Symbol(react.element),
     key: null,
-    props: { children: "Hello world" },
+    props: { children: "Hola mundo" },
     ref: null,
     type: "div"
 }
 ```
 
-Now, depending on how complex your component tree is, we can have nested objects (DOM Nodes) that go deeper and deeper where the root element's `props` key has hundreds or thousands of children per page.
+Que a su vez te devuelve un objeto de Javascript que se ve así:
 
-This object *is* the virtual DOM, which ReactDOM creates actual DOM nodes out of.
+```js
+{
+    $$typeof: Symbol(react.element),
+    key: null,
+    props: { children: "Hola mundo" },
+    ref: null,
+    type: "div"
+}
+```
 
-So let's say we have only three nested divs:
+Ahora, dependiendo de que tan complejo sea tu árbol de componentes, podemos tener objetos anidados (Nodos del DOM) que van más y más profundo donde la llave `props` del elemento raíz tiene cientos o miles de hijos por página.
+
+Este objeto _es_ el DOM virtual, del cual ReactDOM crea nodos del DOM reales.
+
+Así que digamos que tenemos solo tres divs anidados:
 
 ```jsx
 <div>
-    <div>
-        <div>
-            Hello world
-        </div>
-    </div>
+  <div>
+    <div>Hola mundo</div>
+  </div>
 </div>
 ```
 
-This would become something that looks more like this under the hood:
+Esto se convertirá en algo que se ve más o menos así por dentro:
 
 ```js
 {
@@ -91,7 +101,7 @@ This would become something that looks more like this under the hood:
                         {
                             $$typeof: Symbol(react.element),
                             key: null,
-                            props: { children: "Hello world" },
+                            props: { children: "Hola mundo" },
                             ref: null,
                             type: "div"
                         }
@@ -106,65 +116,65 @@ This would become something that looks more like this under the hood:
 }
 ```
 
-Pretty large, right? Keep in mind, this is only for a nested object with three elements, too!
+Demasiado largo, ¿verdad? Ten en cuenta que esto es solo para un objeto anidado con tres elementos, ¡también!
 
-From here, when the nested object(s) change (i.e. when state causes your component to render a different output), React will compare the old virtual DOM and new virtual DOM, update the actual DOM so that it matches the new virtual DOM, and discard of any stale objects from the old component tree.
+Desde aquí, cuando el objeto anidado cambia (es decir, cuando el estado hace que tu componente renderice una salida diferente), React comparará el DOM virtual viejo y el DOM virtual nuevo, actualizará el DOM real para que coincida con el nuevo DOM virtual y descartará cualquier objeto obsoleto del árbol de componentes viejo.
 
-> Note, this is why most React tutorials will recommend moving your `useState()` or `useEffect()` as far down the tree as possible, because the smaller the component is that has to re-render, the more efficient it is to accomplish this comparing process (diffing).
+> Nota, esto es por lo que la mayoría de los tutoriales de React recomiendan mover tu `useState()` o `useEffect()` lo más abajo posible en el árbol, porque mientras más pequeño sea el componente que tiene que volver a renderizarse, más eficiente es realizar este proceso de comparación (diffing).
 >
-> ![Diagram of why moving state to the component leaves of the tree is more efficient](https://i.postimg.cc/1R6kkLcQ/Screenshot-2023-09-28-at-10-44-28-PM.png)
+> ![Diagrama de por qué mover el estado a los componentes hace el árbol más eficiente](https://i.postimg.cc/1R6kkLcQ/Screenshot-2023-09-28-at-10-44-28-PM.png)
 
-Now, diffing is incredibly expensive compared to traditional server-rendering where the browser just receives a string of HTML, parses it, and puts it in the DOM.
+Ahora, el diffing es increíblemente costoso en comparación con el renderizado del lado del servidor tradicional donde el navegador solo recibe una cadena de HTML, lo analiza y lo coloca en el DOM.
 
-While server-rendering doesn't require Javascript, not only does React require it, but it creates this huge nested object in the process, and at runtime, React has to continuously check for changes which is very CPU intensive.
+Mientras el renderizado del servidor no requiere Javascript, no solo React lo requiere, sino que crea este enorme objeto anidado en el proceso, y en tiempo de ejecución, React tiene que verificar continuamente los cambios, lo que es muy intensivo en la CPU.
 
-### Memory Usage
+### Uso de Memoria
 
-Where the high memory usage comes in is in two ways: storing the large object and continuously diffing the large object. Plus extra if you're also storing state in memory as well and using external libraries which also store state in memory (which most people probably are, myself included).
+Donde el alto uso de memoría entra en juego es de dos formas: almacenando el objeto grande y comparando continuamente el objeto grande. Además de extra si también estás almacenando el estado en la memoria y usando bibliotecas externas que también almacenan el estado en la memoria (lo que probablemente la mayoría de la gente hace, incluyéndome a mí).
 
-Storing the large object itself is a problem in memory constrained environments, because mobile and/or older devices might not have much RAM to begin with, even less so for browser tabs which are sandboxed with their own small, finite amount of memory.
+Almacenando el objeto grande en sí es un problema en entornos con memoria limitada, porque los dispositivos móviles y/o más antiguos podrían no tener mucha RAM para empezar, y mucho menos para las pestañas del navegador que están aisladas con su propia cantidad pequeña y finita de memoria.
 
-> Ever had your browser tab refresh because it was "consuming too much energy"? That was likely a combination of both high memory usage plus continuous CPU operations that your device couldn't handle along with running these other operations like the OS, background app refreshes, keeping other browser tabs open, etc.
+> ¿Alguna vez has tenido que refrescar la pestaña de tu navegador porque estaba "consumiendo demasiada energía"? Eso probablemente fue una combinación de un alto uso de memoria más operaciones continuas de la CPU que tu dispositivo no podía manejar junto con la ejecución de estas otras operaciones como el sistema operativo, las actualizaciones de las aplicaciones en segundo plano, mantener otras pestañas del navegador abiertas, etc.
 
-Also, diffing the large component tree means replacing old objects with new objects whenever the UI updates along with tossing the old objects away to the garbage collector, repeating the process constantly throughout the lifetime of the application. This is especially true for more dynamic, interactive applications (a.k.a. React's main selling point).
+También, hacer diffing al componente mas grande significa reemplazar los objetos viejos con nuevos objetos cada vez que la UI se actualiza junto con descartar los objetos viejos para que el recolector de basura los elimine, repitiendo el proceso constantemente a lo largo de la vida de la aplicación. Esto es especialmente cierto para aplicaciones más dinámicas e interactivas (también conocidas como el principal punto de venta de React).
 
-![Object diffing process example in React](https://i.postimg.cc/q7JDzvFs/Example-Diff.png)
-*As you can see, the diffing process for even a simple component where you just change one word in a div means an object for garbage collection to get rid of. But what happens if you have thousands of these nodes in your object tree and many of them rely on dynamic state?*
+![Ejemplo del proceso de diffing de objetos en React](https://i.postimg.cc/q7JDzvFs/Example-Diff.png)
+_Como puedes ver, el proceso de diffing para un componente incluso simple donde solo cambias una palabra en un div significa un objeto para que el recolector de basura se deshaga de él. Pero ¿qué pasa si tienes miles de estos nodos en tu árbol de objetos y muchos de ellos dependen del estado dinámico?_
 
-Immutable object stores used for state management (like with Redux) tax memory even more by continuously adding more and more nodes to their Javascript object.
+El objeto inmutable almacenado para la gestión del estado (como con Redux) grava aún más la memoria al agregar continuamente más y más nodos a su objeto Javascript.
 
-Because this object store is immutable, it'll just continue to grow and grow, which further limits the memory available for the rest of your app to use for things like updating the DOM. All of this can create a sluggish, buggy-feeling experience for the end-user.
+Debido a que este objeto de almacenamiento es inmutable, simplemente seguirá creciendo y creciendo, lo que limita aún más la memoria disponible para el resto de tu aplicación para usarla en cosas como la actualización del DOM. Todo esto puede crear una experiencia lenta y con errores para el usuario final.
 
-### V8 and Garbage Collection
+### V8 y la Recolección de Basura
 
-Modern browsers are optimized for this, though, right? V8's garbage collection is incredibly optimized and runs very quickly, so is this really a problem?
+Navegadores modernos están optimizados para esto, ¿verdad? La recolección de basura de V8 está increíblemente optimizada y se ejecuta muy rápidamente, ¿así que ¿es esto realmente un problema?
 
-There are two problems with this take.
+Hay dos problemas con este enfoque.
 
-1. Even if garbage collection runs quickly, garbage collection is a blocking operation, meaning it [introduces delays](https://javascript.info/garbage-collection#internal-algorithms) in subsequent Javascript rendering.
+1. Incluso si la recolección de basura se ejecuta rápidamente, la recolección de basura es una operación de bloqueo, lo que significa que [introduce retrasos](https://javascript.info/garbage-collection#internal-algorithms) en el renderizado de Javascript posterior.
 
-  - The larger the objects are that have to be garbage collected, the longer these delays take. Eventually, there comes a point where there's so much object creation going on that garbage collection needs to run over and over again to free up memory for these new objects, which is often the case when your React app is open for a decent amount of time.
+- Cuanto más grandes sean los objetos que se deben recolectar, más tiempo tomarán estos retrasos. Eventualmente, llega un punto en el que hay tanta creación de objetos que la recolección de basura necesita ejecutarse una y otra vez para liberar memoria para estos nuevos objetos, lo que a menudo ocurre cuando tu aplicación React está abierta durante un tiempo decente.
 
-  - If you've ever worked on optimizing a React app and left it open for a couple of hours, and you click a button only for it to take 10+ seconds to respond, you know this process.
+- Si alguna vez has trabajado en la optimización de una aplicación React y la has dejado abierta durante un par de horas, y haces clic en un botón solo para que tarde más de 10 segundos en responder, conoces este proceso.
 
-2. Even if V8 is highly optimized, React apps often aren't, with event listeners often not being unmounted, components being too large, static portions of components not being memoized, etc.
+2. Inlcuso si V8 está altamente optimizado, las aplicaciones React a menudo no lo están, con los event listeners a menudo no desmontados, los componentes son demasiado grandes, las porciones estáticas de los componentes no se memorizan, etc.
 
-  - All of these factors (even if they *are* often bugs and/or developer mishaps) increase memory usage, and some (like non-unmounted event listeners) even cause memory leaks. Yes, memory leaks. In a managed memory environment.
+- Todos estos factores (incluso si a menudo son errores y/o errores de los desarrolladores) aumentan el uso de memoria, y algunos (como los event listeners no desmontados) incluso causan fugas de memoria. Sí, fugas de memoria. En un entorno de memoria administrada.
 
-![Dynatrace benchmark (Node.js memory consumption over time with memory leak)](https://dt-cdn.net/wp-content/uploads/2015/11/DK_7.png)
-*Dynatrace has a great visualization of a Node JS app's memory usage over time when there's a memory leak. Even with garbage collection (the downward movements of the yellow line) getting more and more aggressive towards the end, memory usage (and allocations) just keeps going up.*
+![Benchmark de Dynatrace (Consumo de memoria de Node.js a lo largo del tiempo con fuga de memoria)](https://dt-cdn.net/wp-content/uploads/2015/11/DK_7.png)
+_Dynatrace tiene una gran visualización del uso de memoria de una aplicación Node JS a lo largo del tiempo cuando hay una fuga de memoria. Incluso con la recolección de basura (los movimientos hacia abajo de la línea amarilla) cada vez más agresiva hacia el final, el uso de memoria (y las asignaciones) sigue aumentando._
 
-Even Dan Abramov mentioned in a [podcast](https://www.youtube.com/watch?v=_gQ6oJb6SMg) that Meta engineers have written some very bad React code, so it isn't difficult to write "bad" React, especially given how easy it is to create memory in React with things like [closures](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures#performance_considerations) (functions written inside of `useEffect()` and `useState()`), or the necessity for `Array.prototype.map()` to loop over an array in JSX, which creates a clone of the original array in memory.
+Incluso Dan Abramov mencionó en un [podcast](https://www.youtube.com/watch?v=_gQ6oJb6SMg) que los ingenieros de Meta han escrito algunos códigos React muy malos, por lo que no es difícil escribir React "malo", especialmente dado lo fácil que es crear memoria en React con cosas como [closures](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures#performance_considerations) (funciones escritas dentro de `useEffect()` y `useState()`), o la necesidad de `Array.prototype.map()` para recorrer una matriz en JSX, lo que crea un clon de la matriz original en la memoria.
 
-So it's not that performant React is impossible. It's just that it's often not intuitive how to write the best performing component, and the feedback loop of performance testing often has to wait for real-world users with a variety of browsers and devices.
+Así que no es que tener rendimiento en React sea imposible, es solo que a menudo no es intuitivo cómo escribir el componente con mejor rendimiento, y el ciclo de retroalimentación de las pruebas de rendimiento a menudo tiene que esperar a los usuarios del mundo real con una variedad de navegadores y dispositivos.
 
-> Note: high performance Javascript *is* possible ([I highly recommend this talk from Colt McAnlis](https://www.youtube.com/watch?v=Op52liUjvSk)), but it's also difficult to achieve, because it requires things like [object pooling](https://en.wikipedia.org/wiki/Object_pool_pattern) and static arraylist allocations to get there.
+> Nota: el Javascript de alto rendimiento _es_ posible ([Recomiendo encarecidamente esta charla de Colt McAnlis](https://www.youtube.com/watch?v=Op52liUjvSk)), pero también es difícil de lograr, porque requiere cosas como [object pooling](https://en.wikipedia.org/wiki/Object_pool_pattern) y asignaciones estáticas de arraylist para llegar allí.
 >
-> Both of these techniques are hard to leverage in React which is componentized by nature and typically doesn't promote the usage of a large list of recycled global objects (hence Redux's large, immutable, *single* object store for example).
+> Algunos de estás técnicas son difíciles de aprovechar en React que es componentizado por naturaleza y típicamente no promueve el uso de una gran lista de objetos globales reciclados (de ahí la gran store inmutable de un solo objeto de Redux, por ejemplo).
 >
-> However, these optimization techniques are still often used under the hood for things like [virtualized lists](/docs/virtualization) which recycle DOM nodes in large lists whose rows go out of view. You can see more of these types of React-specific optimization techniques (specifically for low-end devices like TVs) in [this talk by Seungho Park from LG](https://portal.gitnation.org/contents/overcoming-performance-limitations-in-react-components-for-embedded-devices).
+> Sin embargo, estas técnicas de optimización todavía se usan a menudo bajo el capó para cosas como [listas virtualizadas](/docs/virtualization) que reciclan nodos DOM en grandes listas cuyas filas salen de la vista. Puedes ver más de estos tipos de técnicas de optimización específicas de React (específicamente para dispositivos de gama baja como las TVs) en [esta charla de Seungho Park de LG](https://portal.gitnation.org/contents/overcoming-performance-limitations-in-react-components-for-embedded-devices).
 
-## React With Million
+## React con Million
 
 Keep in mind that even though memory constraints are real, developers are often conscious of the amount of tabs or apps open while running their dev server, so we often won't notice them apart from a few buggy experiences that might prompt a refresh or a server restart in development. However, your users will probably notice more often than you, especially on older phones, tablets, laptops, since they aren't clearing their open apps/tabs for your app.
 
@@ -188,7 +198,7 @@ The memory hit you'd take by using Million compared to using vanilla Javascript 
 
 Couple that with the total operations your app is completing over its lifetime, and both performance and memory usage will vary dramatically when using purely a virtual DOM vs. a hybrid block DOM approach, especially once you consider state management, libraries/dependencies, etc. Of course, in Million's favor.
 
-## Wait, But What About _?
+## Wait, But What About \_?
 
 As with everything, there are tradeoffs when using Million and the block DOM approach. After all, there was a reason that React was invented and there are definitely still reasons to use it.
 
@@ -242,19 +252,19 @@ export function RecentTrades() {
 }
 ```
 
-Ignoring that there are probably more efficient ways to do this, this is a great example of where Million would *not* do well. The data is changing every second, the component being rendered depends on the data itself, and overall, there is nothing really static about this component.
+Ignoring that there are probably more efficient ways to do this, this is a great example of where Million would _not_ do well. The data is changing every second, the component being rendered depends on the data itself, and overall, there is nothing really static about this component.
 
-If you look at the returned HTML, you might think "Having an optimized `<For />` component would work great here!" However, in terms of Million's compiler (barring Million's `<For />` component) there is no way to statically analyze the returned list of elements, and in fact, cases like these are [why React was first brought about at Facebook](https://en.wikipedia.org/wiki/React_(software)#History) (the news section of their UI, a highly dynamic list).
+If you look at the returned HTML, you might think "Having an optimized `<For />` component would work great here!" However, in terms of Million's compiler (barring Million's `<For />` component) there is no way to statically analyze the returned list of elements, and in fact, cases like these are [why React was first brought about at Facebook](<https://en.wikipedia.org/wiki/React_(software)#History>) (the news section of their UI, a highly dynamic list).
 
 This is a great use case for React's runtime, because manipulating the DOM directly is expensive, and doing so every second for a large list of elements is expensive as well.
 
-However, it's quicker when using something *like* React, because it will only diff and rerender this granular part of the page vs. something traditionally server rendered which might replace the entire page. Because of this, Million is better suited to handle other static parts of the page to keep React's footprint smaller.
+However, it's quicker when using something _like_ React, because it will only diff and rerender this granular part of the page vs. something traditionally server rendered which might replace the entire page. Because of this, Million is better suited to handle other static parts of the page to keep React's footprint smaller.
 
 Does that mean only components this extreme should be ignored by Million and use React's runtime? Not necessarily. If your components even lean into this kind of use case where the component relies on highly dynamic aspects like constantly changing state, ternary-driven return values, or anything that can't comfortably fit in the "static and/or close-to-static" box, then Million might not work well.
 
 Again, there's a reason React was built, and there's a reason we're choosing to improve it, not create a new framework!
 
-## What *Will* Million Work Well On?
+## What _Will_ Million Work Well On?
 
 We'd definitely like to see Million pushed to the limits of where it can be used, but as for right now, there are certainly sweet spots where Million shines.
 
@@ -272,18 +282,18 @@ For example:
 import { For } from 'million/react';
 
 export default function App() {
-    const [items, setItems] = useState([1, 2, 3]);
+  const [items, setItems] = useState([1, 2, 3]);
 
-    return (
-        <>
-            <button onClick={() => setItems([...items, items.length + 1])}>
-                Add item
-            </button>
-            <ul>
-                <For each={items}>{(item) => <li>{item}</li>}</For>
-            </ul>
-        </>
-    );
+  return (
+    <>
+      <button onClick={() => setItems([...items, items.length + 1])}>
+        Add item
+      </button>
+      <ul>
+        <For each={items}>{(item) => <li>{item}</li>}</For>
+      </ul>
+    </>
+  );
 }
 ```
 
@@ -301,7 +311,7 @@ However, avoiding and reducing memory usage where possible is also an incredibly
 
 If each action that your user performs takes no time to complete and gives them instant feedback, then user experience feels more native, and that's typically where performance issues creep up if you're not careful, because input delay is typically highly influenced by memory usage.
 
-So is it necessary to use a virtual DOM to acheive this? We certainly *don't* think so. Especially if it means more Javascript to run, more objects to create, and more memory overhead to worry about on lower-end devices.
+So is it necessary to use a virtual DOM to acheive this? We certainly _don't_ think so. Especially if it means more Javascript to run, more objects to create, and more memory overhead to worry about on lower-end devices.
 
 This doesn't mean Million is a good fit for all use cases, nor will it solve all performance problems. In fact, we recommend to use it granularly, as in some cases (i.e. more dynamic data like we discussed), a virtual DOM will actually be more performant.
 
