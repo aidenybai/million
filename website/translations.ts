@@ -3,7 +3,7 @@ export const translations = {
     hero: {
       makeReact: 'Make React',
       faster: 'faster',
-      the: 'the',
+      the: 'The',
       dropIn: 'drop-in optimizing compiler',
       forReact:
         'for React. Gain big performance wins for UI and data heavy React apps. Dead simple to use – try it out',
