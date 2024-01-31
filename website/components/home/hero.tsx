@@ -22,6 +22,8 @@ export function Hero() {
   const handleClickWizard = () => {
     void navigator.clipboard.writeText('npx million@latest');
     setSubmitted(true);
+
+    setTimeout(() => setSubmitted(false), 1000);
   };
 
   return (
