@@ -7,7 +7,6 @@ import { generateUniqueName } from './utils/generate-unique-name';
 import { getDescriptiveName } from './utils/get-descriptive-name';
 import { getImportIdentifier } from './utils/get-import-specifier';
 import { getRootStatementPath } from './utils/get-root-statement-path';
-import { getServerMode } from './utils/get-server-mode';
 import { getValidImportDefinition } from './utils/get-valid-import-definition';
 import { isGuaranteedLiteral } from './utils/is-guaranteed-literal';
 import { isJSXComponentElement } from './utils/is-jsx-component-element';
@@ -241,7 +240,7 @@ function transformFunctionDeclaration(
               getImportIdentifier(
                 ctx,
                 path,
-                TRACKED_IMPORTS.block[getServerMode(ctx)],
+                TRACKED_IMPORTS.block[ctx.serverMode],
               ),
               [
                 t.functionExpression(
@@ -316,7 +315,7 @@ function transformVariableDeclarator(
         getImportIdentifier(
           ctx,
           path,
-          TRACKED_IMPORTS.block[getServerMode(ctx)],
+          TRACKED_IMPORTS.block[ctx.serverMode],
         ),
         [trueFuncExpr],
       );
@@ -329,7 +328,7 @@ function transformCallExpression(
   path: babel.NodePath<t.CallExpression>,
 ): void {
   const definition = getValidImportDefinition(ctx, path.get('callee'));
-  if (definition === REACT_IMPORTS.memo[getServerMode(ctx)]) {
+  if (definition === REACT_IMPORTS.memo[ctx.serverMode]) {
     const args = path.get('arguments');
     const arg = args[0];
 
@@ -358,7 +357,7 @@ function transformCallExpression(
                   getImportIdentifier(
                     ctx,
                     path,
-                    TRACKED_IMPORTS.block[getServerMode(ctx)],
+                    TRACKED_IMPORTS.block[ctx.serverMode],
                   ),
                   [trueFuncExpr.node],
                 ),
@@ -383,7 +382,7 @@ export function transformAuto(
       const mod = path.node.source.value;
       for (const importName in REACT_IMPORTS) {
         const definition =
-          REACT_IMPORTS[importName][getServerMode(ctx)];
+          REACT_IMPORTS[importName][ctx.serverMode];
         if (definition.source === mod) {
           registerImportDefinition(ctx, path, definition);
         }

@@ -47,4 +47,5 @@ export interface StateContext {
   };
   imports: Map<string, t.Identifier>;
   topLevelRSC: boolean;
+  serverMode: 'server' | 'client';
 }

@@ -1,9 +1,9 @@
 import type { PluginObj, PluginPass } from '@babel/core';
 import { transformAuto } from './auto.new';
 import { transformBlock } from './block.new';
-import { INVERSE_IMPORTS, TRACKED_IMPORTS, TrackedImports } from './constants.new';
+import type { TrackedImports } from './constants.new';
+import { INVERSE_IMPORTS, TRACKED_IMPORTS } from './constants.new';
 import type { CompilerOptions, StateContext } from './types';
-import { getServerMode } from './utils/get-server-mode';
 import { isUseClient } from './utils/mod';
 import { registerImportDefinition } from './utils/register-import-definition';
 
@@ -24,6 +24,7 @@ export function babel(): PluginObj<PluginState> {
         },
         imports: new Map(),
         topLevelRSC: false,
+        serverMode: this.opts.server ? 'server' : 'client',
       };
     },
     visitor: {
@@ -37,13 +38,12 @@ export function babel(): PluginObj<PluginState> {
         programPath.traverse({
           ImportDeclaration(path) {
             const mod = path.node.source.value;
-            const serverMode = getServerMode(ctx.state);
-            if (INVERSE_IMPORTS[serverMode].source === mod) {
-              path.node.source.value = INVERSE_IMPORTS[serverMode].target;
+            if (INVERSE_IMPORTS[ctx.state.serverMode].source === mod) {
+              path.node.source.value = INVERSE_IMPORTS[ctx.state.serverMode].target;
             }
             for (const importName in TRACKED_IMPORTS) {
               const definition =
-                TRACKED_IMPORTS[importName as keyof TrackedImports][serverMode];
+                TRACKED_IMPORTS[importName as keyof TrackedImports][ctx.state.serverMode];
               if (definition.source === mod) {
                 registerImportDefinition(ctx.state, path, definition);
               }

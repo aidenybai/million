@@ -8,7 +8,6 @@ import { generateUniqueName } from './utils/generate-unique-name';
 import { getDescriptiveName } from './utils/get-descriptive-name';
 import { getImportIdentifier } from './utils/get-import-specifier';
 import { getRootStatementPath } from './utils/get-root-statement-path';
-import { getServerMode } from './utils/get-server-mode';
 import { getValidImportDefinition } from './utils/get-valid-import-definition';
 import { isGuaranteedLiteral } from './utils/is-guaranteed-literal';
 import { isJSXComponentElement } from './utils/is-jsx-component-element';
@@ -152,7 +151,7 @@ function isJSXForElement(
    * starting with component-ish name
    */
   if (isPathValid(name, t.isJSXIdentifier) || isPathValid(name, t.isJSXMemberExpression)) {
-    return getValidImportDefinition(ctx, name) === TRACKED_IMPORTS.For[getServerMode(ctx)];
+    return getValidImportDefinition(ctx, name) === TRACKED_IMPORTS.For[ctx.serverMode];
   }
   return false;
 }
@@ -338,7 +337,7 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
   const generatedBlock = t.variableDeclaration(
     'const',
     [t.variableDeclarator(id, t.callExpression(
-      getImportIdentifier(ctx, path, HIDDEN_IMPORTS.compiledBlock[getServerMode(ctx)]),
+      getImportIdentifier(ctx, path, HIDDEN_IMPORTS.compiledBlock[ctx.serverMode]),
       [
         newComponent,
         t.objectExpression(options),
@@ -368,7 +367,7 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
 export function transformBlock(ctx: StateContext, path: babel.NodePath<t.CallExpression>): void {
   const definition = getValidImportDefinition(ctx, path.get('callee'));
   // Check first if the call is a valid `block` call
-  if (TRACKED_IMPORTS.block[getServerMode(ctx)] !== definition) {
+  if (TRACKED_IMPORTS.block[ctx.serverMode] !== definition) {
     return;
   }
   // Check if we should skip because the compiler
