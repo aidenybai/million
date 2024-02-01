@@ -10,7 +10,7 @@ import { RetroGrid } from '../retro-grid';
 export default function Wrapped(props) {
   const [copied, setCopied] = useState<boolean>(false);
   const [videoUrl, setVideoUrl] = useState<string>('');
-  const { progress, finish, start } = useMockProgress({ timeInterval: 100 });
+  const { progress, finish, start } = useMockProgress({ timeInterval: 2000 });
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- Not exactly unsafe, but we need to be careful
   const id = props.id as string;
 
