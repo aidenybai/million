@@ -14,6 +14,7 @@ import {
   childAt,
   replaceChild$,
   stringToDOM,
+  removeComments,
 } from './dom';
 import { renderToTemplate } from './template';
 import { AbstractBlock } from './types';
@@ -55,6 +56,7 @@ export const block = (
     renderToTemplate(unwrap ? unwrap(vnode) : vnode, edits),
     svg
   );
+  removeComments(root)
 
   return <T extends MillionProps>(
     props?: T | null,

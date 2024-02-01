@@ -13,7 +13,7 @@ import {
 } from './constants';
 
 if (typeof window === 'undefined') {
-  console.trace('here')
+  console.trace('here');
   throw new Error(
     'See http://million.dev/docs/install to install the compiler.'
   );
@@ -151,6 +151,24 @@ export const childAt = (el: HTMLElement, index: number) => {
     }
   }
   return child;
+};
+
+const visitedNodes = new WeakSet<Node>() 
+
+// React removes the comment in hydration but since we're hijacking the hydration, we should do it manually
+export const removeComments = (el: Node) => {
+  if (visitedNodes.has(el)) {
+    return
+  }
+  if (el.nodeType === 8) {
+    el.parentNode?.removeChild(el);
+  }
+  let child: ChildNode | null = firstChild$.call(el);
+  while (child) {
+    removeComments(child);
+    child = child.nextSibling;
+  }
+  visitedNodes.add(el)
 };
 
 export const insertText = (

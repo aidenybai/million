@@ -11,6 +11,7 @@ import {
 } from 'react';
 import { RENDER_SCOPE, SVG_RENDER_SCOPE } from '../react/constants';
 import type { MillionArrayProps, MillionPortal, MillionProps, Options } from '../types';
+import { renderReactScope } from '../react';
 
 let globalInfo;
 
@@ -33,6 +34,7 @@ export const block = <P extends MillionProps>(
         const el = ref.current;
 
         if (!el) return;
+        globalInfo.removeComments(el)
 
         const currentBlock = blockFactory(props, props?.key);
 
@@ -119,10 +121,11 @@ function Effect({ effect }: { effect: () => void }) {
 
 export const importSource = (callback: () => void) => {
   void import('../react')
-    .then(({ unwrap, INTERNALS, For }) => {
+    .then(({ unwrap, INTERNALS, For, removeComments }) => {
       globalInfo = {
         unwrap,
         For,
+        removeComments,
         ...INTERNALS,
       };
 
@@ -167,15 +170,6 @@ export const createRSCBoundary = <P extends MillionProps>(
 
 const wrap = (vnode: ReactNode): ReactNode => {
   return createElement(RENDER_SCOPE, { suppressHydrationWarning: true }, vnode);
-};
-
-export const renderReactScope = (
-  vnode: ReactNode,
-  _unstable: boolean,
-  _portals: MillionPortal[] | undefined,
-  _currentIndex: number,
-) => {
-  return wrap(vnode);
 };
 
 function isEqual(a: unknown, b: unknown): boolean {

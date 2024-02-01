@@ -6,7 +6,7 @@ import {
   patch as patchBlock,
 } from '../million/block';
 import { MapSet$, MapHas$ } from '../million/constants';
-import { queueMicrotask$ } from '../million/dom';
+import { queueMicrotask$, removeComments } from '../million/dom';
 import type { Options, MillionProps, MillionPortal } from '../types';
 import { processProps, unwrap } from './utils';
 import { Effect, RENDER_SCOPE, REGISTRY, SVG_RENDER_SCOPE } from './constants';
