@@ -192,7 +192,7 @@ const config: DocsThemeConfig = {
   head: () => {
     const { asPath, pathname, query } = useRouter();
     const id = String(query.id);
-    const videoUrl = `https://pub-b1235029eecc474d8684d000bda2959d.r2.dev/${id}.mp4`;
+    const videoUrl = `https://wrapped.million.dev/${id}.mp4`;
     const { frontMatter } = useConfig();
 
     const ogConfig = {
