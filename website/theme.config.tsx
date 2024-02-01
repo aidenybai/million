@@ -226,8 +226,6 @@ const config: DocsThemeConfig = {
         <meta property="og:description" content={description} />
         <meta name="twitter:site" content={`@${ogConfig.author.twitter}`} />
         <meta name="twitter:creator" content={`@${ogConfig.author.twitter}`} />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta property="twitter:image" content={ogUrl} />
         <meta property="twitter:title" content={title} />
         <meta property="twitter:description" content={description} />
         {pathname.startsWith('/wrapped/') ? (
@@ -243,8 +241,13 @@ const config: DocsThemeConfig = {
             <meta property="og:video:width" content="1280" />
             <meta property="og:video:height" content="720" />
           </>
-        ) : null}
-        <meta property="og:image" content={ogUrl} />
+        ) : (
+          <>
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta property="twitter:image" content={ogUrl} />
+            <meta property="og:image" content={ogUrl} />
+          </>
+        )}
 
         <link rel="shortcut icon" href={favicon} type="image/svg+xml" />
         <link rel="apple-touch-icon" href={favicon} type="image/svg+xml" />
