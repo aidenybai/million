@@ -231,10 +231,10 @@ export function compiledBlock(
       targets[i] = current[i]!.portal;
     }
 
-    return createElement(Fragment, {}, [
+    return createElement(Fragment, {},
       createElement(RenderBlock, derived),
       targets,
-    ]);
+    );
   } : (props: MillionProps) => createElement(RenderBlock, props);
 
   // TODO dev mode
