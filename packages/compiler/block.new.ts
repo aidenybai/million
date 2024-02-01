@@ -188,6 +188,31 @@ function extractJSXExpressionsFromJSXElement(
   return false;
 }
 
+function extractJSXChildren(
+  state: JSXStateContext,
+  children: babel.NodePath<t.JSXElement['children'][0]>[],
+): t.JSXElement['children'] {
+  const newChildren: t.JSXElement['children'] = [];
+  for (let i = 0, len = children.length; i < len; i++) {
+    const child = children[i];
+
+    if (isPathValid(child, t.isJSXElement)) {
+      extractJSXExpressions(state, child, false);
+    } else if (isPathValid(child, t.isJSXFragment)) {
+      Array.prototype.push.apply(newChildren, extractJSXChildren(state, child.get('children')));
+    } else if (isPathValid(child, t.isJSXSpreadChild)) {
+      extractJSXExpressionsFromJSXSpreadChild(state, child);
+    } else if (isPathValid(child, t.isJSXExpressionContainer)) {
+      extractJSXExpressionsFromJSXExpressionContainer(state, child, true);
+    }
+
+    if (child && !isPathValid(child, t.isJSXFragment)) {
+      newChildren.push(child.node);
+    }
+  }
+  return newChildren;
+}
+
 function extractJSXExpressions(
   state: JSXStateContext,
   path: babel.NodePath<t.JSXElement | t.JSXFragment>,
@@ -201,20 +226,14 @@ function extractJSXExpressions(
   if (isPathValid(path, t.isJSXElement) && extractJSXExpressionsFromJSXElement(state, path, top)) {
     return;
   }
-  const children = path.get('children');
-  for (let i = 0, len = children.length; i < len; i++) {
-    const child = children[i];
-
-    if (isPathValid(child, t.isJSXElement)) {
-      extractJSXExpressions(state, child, false);
-    } else if (isPathValid(child, t.isJSXFragment)) {
-      extractJSXExpressions(state, child, false);
-    } else if (isPathValid(child, t.isJSXSpreadChild)) {
-      extractJSXExpressionsFromJSXSpreadChild(state, child);
-    } else if (isPathValid(child, t.isJSXExpressionContainer)) {
-      extractJSXExpressionsFromJSXExpressionContainer(state, child, true);
-    }
+  if (isPathValid(path, t.isJSXFragment)) {
+    path.replaceWith(t.jsxElement(
+      t.jsxOpeningElement(t.jsxIdentifier('slot'), []),
+      t.jsxClosingElement(t.jsxIdentifier('slot')),
+      path.node.children,
+    ));
   }
+  path.node.children = extractJSXChildren(state, path.get('children'));
 }
 
 function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.JSXFragment>): void {
