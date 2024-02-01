@@ -8,10 +8,11 @@ import { generateUniqueName } from './utils/generate-unique-name';
 import { getDescriptiveName } from './utils/get-descriptive-name';
 import { getImportIdentifier } from './utils/get-import-specifier';
 import { getRootStatementPath } from './utils/get-root-statement-path';
+import { getServerMode } from './utils/get-server-mode';
 import { getValidImportDefinition } from './utils/get-valid-import-definition';
 import { isGuaranteedLiteral } from './utils/is-guaranteed-literal';
-import { unwrapPath } from './utils/unwrap-path';
 import { isJSXComponentElement } from './utils/is-jsx-component-element';
+import { unwrapPath } from './utils/unwrap-path';
 
 interface JSXStateContext {
   ctx: StateContext;
@@ -151,7 +152,7 @@ function isJSXForElement(
    * starting with component-ish name
    */
   if (isPathValid(name, t.isJSXIdentifier) || isPathValid(name, t.isJSXMemberExpression)) {
-    return getValidImportDefinition(ctx, name) === IMPORTS.For[ctx.server ? 'server' : 'client'];
+    return getValidImportDefinition(ctx, name) === IMPORTS.For[getServerMode(ctx)];
   }
   return false;
 }
@@ -255,7 +256,7 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
       : `JSX_${descriptiveName}`,
   );
 
-  if (ctx.hmr) {
+  if (ctx.options.hmr) {
     state.exprs.push(
       t.jsxAttribute(
         t.jsxIdentifier('_hmr'),
@@ -318,7 +319,7 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
   const generatedBlock = t.variableDeclaration(
     'const',
     [t.variableDeclarator(id, t.callExpression(
-      getImportIdentifier(ctx, path, HIDDEN_IMPORTS.compiledBlock[ctx.server ? 'server' : 'client']),
+      getImportIdentifier(ctx, path, HIDDEN_IMPORTS.compiledBlock[getServerMode(ctx)]),
       [
         newComponent,
         t.objectExpression(options),
@@ -348,7 +349,7 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
 export function transformBlock(ctx: StateContext, path: babel.NodePath<t.CallExpression>): void {
   const definition = getValidImportDefinition(ctx, path.get('callee'));
   // Check first if the call is a valid `block` call
-  if (IMPORTS.block[ctx.server ? 'server' : 'client'] !== definition) {
+  if (IMPORTS.block[getServerMode(ctx)] !== definition) {
     return;
   }
   // Check if we should skip because the compiler

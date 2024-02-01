@@ -1,5 +1,4 @@
 import type * as t from '@babel/types';
-import { Options } from './options';
 
 export interface NamedImportDefinition {
   name: string;
@@ -14,21 +13,35 @@ export interface DefaultImportDefinition {
 
 export type ImportDefinition = NamedImportDefinition | DefaultImportDefinition;
 
+
+export interface CompilerOptions {
+  hmr?: boolean;
+  server?: boolean;
+  auto?:
+    | boolean
+    | {
+        threshold?: number;
+        // @deprecated
+        skip?: (string | RegExp)[];
+        rsc?: boolean
+      };
+  /**
+   * @default true
+   */
+  log?: boolean | 'info';
+  /**
+   * @default false
+   */
+  rsc?: boolean;
+}
+
+
 export interface StateContext {
-  log: Options['log'];
-  auto: Options['auto'];
-  hmr: boolean;
-  server: boolean;
+  options: CompilerOptions;
   definitions: {
     identifiers: Map<t.Identifier, ImportDefinition>;
     namespaces: Map<t.Identifier, ImportDefinition[]>;
   };
   imports: Map<string, t.Identifier>;
-}
-
-export interface CompilerOptions {
-  log?: boolean;
-  hmr?: boolean;
-  server?: boolean;
-  auto?: boolean;
+  topLevelRSC: boolean;
 }

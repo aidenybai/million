@@ -7,13 +7,14 @@ import { generateUniqueName } from './utils/generate-unique-name';
 import { getDescriptiveName } from './utils/get-descriptive-name';
 import { getImportIdentifier } from './utils/get-import-specifier';
 import { getRootStatementPath } from './utils/get-root-statement-path';
+import { getServerMode } from './utils/get-server-mode';
 import { getValidImportDefinition } from './utils/get-valid-import-definition';
 import { isGuaranteedLiteral } from './utils/is-guaranteed-literal';
 import { isJSXComponentElement } from './utils/is-jsx-component-element';
+import { logImprovement } from './utils/log';
 import { registerImportDefinition } from './utils/register-import-definition';
 import { unwrapNode } from './utils/unwrap-node';
 import { unwrapPath } from './utils/unwrap-path';
-import { logImprovement } from './utils/log';
 
 interface JSXStateContext {
   bailout: boolean;
@@ -191,12 +192,12 @@ function shouldTransform(ctx: StateContext, name: string, path: babel.NodePath):
   if (isNaN(improvement) || !isFinite(improvement)) return false;
 
   const threshold =
-    typeof ctx.auto === 'object' && ctx.auto.threshold
-      ? ctx.auto.threshold
+    typeof ctx.options.auto === 'object' && ctx.options.auto.threshold
+      ? ctx.options.auto.threshold
       : 0.1;
 
   if (improvement <= threshold) return false;
-  if (!ctx.log || ctx.log === 'info') {
+  if (!ctx.options.log || ctx.options.log === 'info') {
     logImprovement(name, (improvement * 100).toFixed(0));
   }
 
@@ -231,7 +232,7 @@ function transformFunctionDeclaration(
               getImportIdentifier(
                 ctx,
                 path,
-                IMPORTS.block[ctx.server ? 'server' : 'client'],
+                IMPORTS.block[getServerMode(ctx)],
               ),
               [
                 t.functionExpression(
@@ -304,7 +305,7 @@ function transformVariableDeclarator(
         getImportIdentifier(
           ctx,
           path,
-          IMPORTS.block[ctx.server ? 'server' : 'client'],
+          IMPORTS.block[getServerMode(ctx)],
         ),
         [trueFuncExpr],
       );
@@ -317,7 +318,7 @@ function transformCallExpression(
   path: babel.NodePath<t.CallExpression>,
 ): void {
   const definition = getValidImportDefinition(ctx, path.get('callee'));
-  if (definition === REACT_IMPORTS.memo[ctx.server ? 'server' : 'client']) {
+  if (definition === REACT_IMPORTS.memo[getServerMode(ctx)]) {
     const args = path.get('arguments');
     const arg = args[0];
 
@@ -335,7 +336,7 @@ function transformCallExpression(
                 getImportIdentifier(
                   ctx,
                   path,
-                  IMPORTS.block[ctx.server ? 'server' : 'client'],
+                  IMPORTS.block[getServerMode(ctx)],
                 ),
                 [trueFuncExpr.node],
               ),
@@ -359,7 +360,7 @@ export function transformAuto(
       const mod = path.node.source.value;
       for (const importName in REACT_IMPORTS) {
         const definition =
-          REACT_IMPORTS[importName][ctx.server ? 'server' : 'client'];
+          REACT_IMPORTS[importName][getServerMode(ctx)];
         if (definition.source === mod) {
           registerImportDefinition(ctx, path, definition);
         }

@@ -1,5 +1,6 @@
 import type { ParserOptions } from '@babel/core';
 import { transformAsync } from '@babel/core';
+import type { FilterPattern } from '@rollup/pluginutils';
 import { createFilter } from '@rollup/pluginutils';
 import type { TransformResult, VitePlugin } from 'unplugin';
 import { createUnplugin } from 'unplugin';
@@ -7,10 +8,28 @@ import { MillionTelemetry } from '../telemetry';
 import { babel } from './babel.new';
 import { displayIntro } from './utils/log';
 // import { babel } from './babel';
-import type { Options } from './options';
+import { CompilerOptions } from './types';
 
 const DEFAULT_INCLUDE = '**/*.{jsx,tsx,ts,js,mjs,cjs}';
 const DEFAULT_EXCLUDE = 'node_modules/**/*.{jsx,tsx,ts,js,mjs,cjs}';
+
+export interface Options extends CompilerOptions {
+  filter?: {
+    include?: FilterPattern;
+    exclude?: FilterPattern;
+  };
+  /**
+   * @default 'react'
+   */
+  mode?: 'react' | 'vdom';
+  /**
+   * Million.js collects anonymous telemetry data about general usage. Participation is optional, and you may opt-out at any time.
+   * For more information, please see https://million.dev/telemetry.
+   * @default true
+   */
+  telemetry?: boolean;
+  MillionTelemetry?: MillionTelemetry;
+}
 
 // eslint-disable-next-line @typescript-eslint/default-param-last
 export const unplugin = createUnplugin((options: Options = {}, meta) => {
@@ -46,7 +65,7 @@ export const unplugin = createUnplugin((options: Options = {}, meta) => {
       rsc: options.rsc,
       log: options.log,
       auto: options.auto,
-      optimize: options.optimize,
+      // optimize: options.optimize,
     },
   });
 
@@ -71,7 +90,7 @@ export const unplugin = createUnplugin((options: Options = {}, meta) => {
             babel,
             {
               log: options.log,
-              mode: options.server ? 'server' : 'client',
+              mode: options.server,
               hmr: options.hmr,
               auto: options.auto,
             },
