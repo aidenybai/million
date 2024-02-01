@@ -1,4 +1,7 @@
 import { randomBytes } from 'node:crypto';
+import {
+  cyan,
+} from 'kleur/colors';
 import { isCI } from './utils/is-ci';
 import { GlobalConfig } from './config';
 import { post } from './post';
@@ -15,7 +18,7 @@ export class MillionTelemetry {
   private _anonymousProjectInfo: ProjectInfo | undefined;
   private config = new GlobalConfig({ name: 'million' });
   private isCI = isCI;
-  private improvement = false;
+  private alreadyShowedImprovement = false;
 
   constructor(private TELEMETRY_DISABLED = false) {
     this.TELEMETRY_DISABLED = TELEMETRY_DISABLED;
@@ -68,10 +71,17 @@ export class MillionTelemetry {
     this.config.clear();
   }
 
-  improvementReported(): boolean {
-    
-    return this.improvement;
+  showWrapped() {
+    if (this.alreadyShowedImprovement) return;
+    this.alreadyShowedImprovement = true;
+    // eslint-disable-next-line no-console
+    console.log(
+      `    - Wrapped: ${cyan(
+        `https://localhost:3000/wrapped/${this.anonymousSessionId}`,
+      )}`
+    );
   }
+
 
   record({ event, payload }: TelemetryEvent): Promise<void> {
     if (this.isDisabled) {
@@ -84,7 +94,7 @@ export class MillionTelemetry {
     };
 
     if (event === 'improvement') {
-      this.improvement = true;
+      this.showWrapped();
     }
 
     return post({

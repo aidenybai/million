@@ -81,23 +81,11 @@ export const displayIntro = (options: Options): void => {
     experiments.push('optimize');
   }
 
-  if (!options.MillionTelemetry) return;
-  if (!options.MillionTelemetry.improvementReported()) return;
-  const anonymousSessionId = options.MillionTelemetry.anonymousSessionId;
-
-
-  // FIXME: Need to add million.dev instead of localhost:3000
   let message = `\n  ${bold(
     magenta(`⚡ Million.js ${process.env.VERSION || ''}`),
   )}
   - Tip:     use ${dim('// million-ignore')} for errors
-  ${
-    anonymousSessionId
-      ? `- Wrapped: ${cyan(
-          `https://localhost:3000/wrapped/${anonymousSessionId}`,
-        )}`
-      : ''
-  }`;
+  - Hotline: ${cyan('https://million.dev/hotline')}\n`;
 
   if (experiments.length) {
     message += `\n  - Experiments (use at your own risk):
