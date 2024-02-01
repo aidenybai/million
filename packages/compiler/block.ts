@@ -2,7 +2,7 @@ import type { NodePath } from '@babel/core';
 import * as t from '@babel/types';
 import { createDirtyChecker } from './experimental/utils';
 import { optimize } from './experimental/optimize';
-import type { Info } from './babel.new';
+import type { Info } from './babel';
 import { NO_PX_PROPERTIES, SKIP_ANNOTATION, SVG_ELEMENTS } from './constants';
 import { findChild, findChildMultiple, findComment } from './utils/ast';
 import { evaluate } from './utils/evaluate';

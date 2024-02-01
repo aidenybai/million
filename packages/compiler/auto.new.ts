@@ -198,7 +198,7 @@ function shouldTransform(ctx: StateContext, name: string, path: babel.NodePath):
       : 0.1;
 
   if (improvement <= threshold) return false;
-  if (!ctx.options.log || ctx.options.log === 'info') {
+  if ((!ctx.options.log || ctx.options.log === 'info')) {
     logImprovement(
       name,
       improvement,

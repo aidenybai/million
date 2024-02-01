@@ -8,12 +8,12 @@ import { MillionTelemetry } from '../telemetry';
 import { babel } from './babel.new';
 import { displayIntro } from './utils/log';
 // import { babel } from './babel';
-import { CompilerOptions } from './types';
+import type { CompilerOptions } from './types';
 
 const DEFAULT_INCLUDE = '**/*.{jsx,tsx,ts,js,mjs,cjs}';
 const DEFAULT_EXCLUDE = 'node_modules/**/*.{jsx,tsx,ts,js,mjs,cjs}';
 
-export interface Options extends CompilerOptions {
+export interface Options extends Omit<CompilerOptions, 'telemetry'> {
   filter?: {
     include?: FilterPattern;
     exclude?: FilterPattern;
@@ -28,7 +28,6 @@ export interface Options extends CompilerOptions {
    * @default true
    */
   telemetry?: boolean;
-  MillionTelemetry?: MillionTelemetry;
 }
 
 // eslint-disable-next-line @typescript-eslint/default-param-last
@@ -53,9 +52,9 @@ export const unplugin = createUnplugin((options: Options = {}, meta) => {
     );
   }
 
-  options.MillionTelemetry = new MillionTelemetry(options.telemetry);
+  const telemetryInstance = new MillionTelemetry(options.telemetry);
 
-  void options.MillionTelemetry.record({
+  void telemetryInstance.record({
     event: 'compile',
     payload: {
       framework: meta.framework,
@@ -89,11 +88,12 @@ export const unplugin = createUnplugin((options: Options = {}, meta) => {
           [
             babel,
             {
-              MillionTelemetry: options.MillionTelemetry,
+              telemetry: telemetryInstance,
               log: options.log,
               mode: options.server,
               hmr: options.hmr,
               auto: options.auto,
+              rsc: options.rsc,
             },
           ],
         ],
