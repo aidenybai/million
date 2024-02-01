@@ -67,6 +67,17 @@ export interface TrackedImports {
   };
 }
 
+export const INVERSE_IMPORTS = {
+  client: {
+    source: 'million/react-server',
+    target: 'million/react',
+  },
+  server: {
+    source: 'million/react',
+    target: 'million/react-server',
+  }
+};
+
 export const TRACKED_IMPORTS: TrackedImports = {
   block: {
     client: {

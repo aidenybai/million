@@ -368,15 +368,8 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
 export function transformBlock(ctx: StateContext, path: babel.NodePath<t.CallExpression>): void {
   const definition = getValidImportDefinition(ctx, path.get('callee'));
   // Check first if the call is a valid `block` call
-  if (TRACKED_IMPORTS.block.server !== definition || TRACKED_IMPORTS.block.client !== definition) {
+  if (TRACKED_IMPORTS.block[getServerMode(ctx)] !== definition) {
     return;
-  }
-  if (ctx.options.server) {
-    if (TRACKED_IMPORTS.block.client === definition) {
-      path.get('callee').replaceWith(getImportIdentifier(ctx, path, TRACKED_IMPORTS.block.server));
-    }
-  } else if (TRACKED_IMPORTS.block.server === definition) {
-    path.get('callee').replaceWith(getImportIdentifier(ctx, path, TRACKED_IMPORTS.block.client));
   }
   // Check if we should skip because the compiler
   // can also output a `block` call. Without this,
