@@ -18,7 +18,6 @@ export const next = (
 ): any => {
   const millionConfig: Options = {
     mode: 'react',
-    server: true,
     ...overrideOptions,
   };
   return {
@@ -38,6 +37,7 @@ export const next = (
 
       config.plugins.unshift(
         webpack({
+          server: webpackOptions.isServer,
           log: webpackOptions.isServer,
           ...millionConfig,
         }),
