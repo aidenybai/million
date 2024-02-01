@@ -37,10 +37,10 @@ export function babel(): PluginObj<PluginState> {
         }
         programPath.traverse({
           ImportDeclaration(path) {
-            const mod = path.node.source.value;
-            if (INVERSE_IMPORTS[ctx.state.serverMode].source === mod) {
+            if (INVERSE_IMPORTS[ctx.state.serverMode].source === path.node.source.value) {
               path.node.source.value = INVERSE_IMPORTS[ctx.state.serverMode].target;
             }
+            const mod = path.node.source.value;
             for (const importName in TRACKED_IMPORTS) {
               const definition =
                 TRACKED_IMPORTS[importName as keyof TrackedImports][ctx.state.serverMode];
