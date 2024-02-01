@@ -56,7 +56,7 @@ export const NO_PX_PROPERTIES = [
   'strokeWidth',
 ];
 
-interface Imports {
+export interface TrackedImports {
   block: {
     client: ImportDefinition;
     server: ImportDefinition;
@@ -67,7 +67,7 @@ interface Imports {
   };
 }
 
-export const IMPORTS: Imports = {
+export const TRACKED_IMPORTS: TrackedImports = {
   block: {
     client: {
       kind: 'named',
@@ -94,7 +94,7 @@ export const IMPORTS: Imports = {
   },
 };
 
-interface HiddenImports {
+export interface HiddenImports {
   compiledBlock: {
     client: ImportDefinition;
     server: ImportDefinition;

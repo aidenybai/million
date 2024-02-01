@@ -1,6 +1,6 @@
 import * as t from '@babel/types';
 import { JSX_SKIP_ANNOTATION, SKIP_ANNOTATION } from './constants';
-import { HIDDEN_IMPORTS, IMPORTS, SVG_ELEMENTS } from './constants.new';
+import { HIDDEN_IMPORTS, SVG_ELEMENTS, TRACKED_IMPORTS } from './constants.new';
 import type { StateContext } from "./types";
 import { findComment } from './utils/ast';
 import { isComponent, isComponentishName, isPathValid } from './utils/checks';
@@ -152,7 +152,7 @@ function isJSXForElement(
    * starting with component-ish name
    */
   if (isPathValid(name, t.isJSXIdentifier) || isPathValid(name, t.isJSXMemberExpression)) {
-    return getValidImportDefinition(ctx, name) === IMPORTS.For[getServerMode(ctx)];
+    return getValidImportDefinition(ctx, name) === TRACKED_IMPORTS.For[getServerMode(ctx)];
   }
   return false;
 }
@@ -368,8 +368,15 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
 export function transformBlock(ctx: StateContext, path: babel.NodePath<t.CallExpression>): void {
   const definition = getValidImportDefinition(ctx, path.get('callee'));
   // Check first if the call is a valid `block` call
-  if (IMPORTS.block[getServerMode(ctx)] !== definition) {
+  if (TRACKED_IMPORTS.block.server !== definition || TRACKED_IMPORTS.block.client !== definition) {
     return;
+  }
+  if (ctx.options.server) {
+    if (TRACKED_IMPORTS.block.client === definition) {
+      path.get('callee').replaceWith(getImportIdentifier(ctx, path, TRACKED_IMPORTS.block.server));
+    }
+  } else if (TRACKED_IMPORTS.block.server === definition) {
+    path.get('callee').replaceWith(getImportIdentifier(ctx, path, TRACKED_IMPORTS.block.client));
   }
   // Check if we should skip because the compiler
   // can also output a `block` call. Without this,

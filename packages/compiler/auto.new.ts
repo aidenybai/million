@@ -1,6 +1,6 @@
 import type * as babel from '@babel/core';
 import * as t from '@babel/types';
-import { IMPORTS, REACT_IMPORTS } from './constants.new';
+import { REACT_IMPORTS, TRACKED_IMPORTS } from './constants.new';
 import type { StateContext } from './types';
 import { isComponentishName, isPathValid, isStatementTopLevel } from './utils/checks';
 import { generateUniqueName } from './utils/generate-unique-name';
@@ -241,7 +241,7 @@ function transformFunctionDeclaration(
               getImportIdentifier(
                 ctx,
                 path,
-                IMPORTS.block[getServerMode(ctx)],
+                TRACKED_IMPORTS.block[getServerMode(ctx)],
               ),
               [
                 t.functionExpression(
@@ -316,7 +316,7 @@ function transformVariableDeclarator(
         getImportIdentifier(
           ctx,
           path,
-          IMPORTS.block[getServerMode(ctx)],
+          TRACKED_IMPORTS.block[getServerMode(ctx)],
         ),
         [trueFuncExpr],
       );
@@ -358,7 +358,7 @@ function transformCallExpression(
                   getImportIdentifier(
                     ctx,
                     path,
-                    IMPORTS.block[getServerMode(ctx)],
+                    TRACKED_IMPORTS.block[getServerMode(ctx)],
                   ),
                   [trueFuncExpr.node],
                 ),

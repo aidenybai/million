@@ -1,9 +1,8 @@
 import type { PluginObj, PluginPass } from '@babel/core';
 import { transformAuto } from './auto.new';
 import { transformBlock } from './block.new';
-import { IMPORTS } from './constants.new';
+import { TRACKED_IMPORTS, TrackedImports } from './constants.new';
 import type { CompilerOptions, StateContext } from './types';
-import { getServerMode } from './utils/get-server-mode';
 import { isUseClient } from './utils/mod';
 import { registerImportDefinition } from './utils/register-import-definition';
 
@@ -37,11 +36,16 @@ export function babel(): PluginObj<PluginState> {
         programPath.traverse({
           ImportDeclaration(path) {
             const mod = path.node.source.value;
-            for (const importName in IMPORTS) {
-              const definition =
-                IMPORTS[importName][getServerMode(ctx.state)];
-              if (definition.source === mod) {
-                registerImportDefinition(ctx.state, path, definition);
+            for (const importName in TRACKED_IMPORTS) {
+              const serverDefinition =
+                TRACKED_IMPORTS[importName as keyof TrackedImports].server;
+              if (serverDefinition.source === mod) {
+                registerImportDefinition(ctx.state, path, serverDefinition);
+              }
+              const clientDefinition =
+                TRACKED_IMPORTS[importName as keyof TrackedImports].client;
+              if (clientDefinition.source === mod) {
+                registerImportDefinition(ctx.state, path, clientDefinition);
               }
             }
           },
