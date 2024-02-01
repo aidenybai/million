@@ -8,11 +8,11 @@ import { Blur } from '../home/hero';
 import { ShimmerButton } from '../home/shimmer-button';
 import { RetroGrid } from '../retro-grid';
 
-// eslint-disable-next-line import/no-default-export, @typescript-eslint/explicit-function-return-type -- This is the default export
+// eslint-disable-next-line import/no-default-export -- This is the default export
 export default function Wrapped(props) {
   const { progress, finish, start } = useMockProgress({ timeInterval: 2000 });
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access -- Not exactly unsafe, but we need to be careful
-  const id = props.id;
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- Not exactly unsafe, but we need to be careful
+  const id = props.id as string;
   const videoUrl = `https://telemetry.million.dev/api/v1/wrapped/${id}.mp4`;
   useEffect(start, []);
 
@@ -55,8 +55,7 @@ export default function Wrapped(props) {
                 glareEnable
                 tiltAngleYInitial={0}
                 glareMaxOpacity={0.1}
-                className="fix-safari-tilt shadow-lg w-full
-rounded-lg text-center bg-gradient-to-b from-zinc-200 to-white dark:from-zinc-700 dark:via-zinc-800 dark:to-darker p-px"
+                className="fix-safari-tilt shadow-lg w-full rounded-lg text-center bg-gradient-to-b from-zinc-200 to-white dark:from-zinc-700 dark:via-zinc-800 dark:to-darker p-px"
               >
                 <video
                   className="rounded-lg"
