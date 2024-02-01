@@ -30,7 +30,7 @@ export const unplugin = createUnplugin((options: Options = {}, meta) => {
   // Throws an error if `mode: 'preact'` or `mode: 'preact-server'` is used
   if (options.mode?.startsWith('preact')) {
     throw new Error(
-      'Preact is no longer maintained. Downgrade to a lower version for support',
+      'Preact is no longer maintained. Downgrade to a lower version (<= 2.x.x) for support',
     );
   }
 
@@ -40,6 +40,13 @@ export const unplugin = createUnplugin((options: Options = {}, meta) => {
     event: 'compile',
     payload: {
       framework: meta.framework,
+      mode: options.mode,
+      server: options.server,
+      hmr: options.hmr,
+      rsc: options.rsc,
+      log: options.log,
+      auto: options.auto,
+      optimize: options.optimize,
     },
   });
 
