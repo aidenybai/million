@@ -193,6 +193,7 @@ const config: DocsThemeConfig = {
     const { asPath, pathname, query } = useRouter();
     const id = String(query.id);
     const videoUrl = `https://wrapped.million.dev/${id}.mp4`;
+    const thumbUrl = `https://wrapped.million.dev/${id}.png`;
     const { frontMatter } = useConfig();
 
     const ogConfig = {
@@ -240,6 +241,7 @@ const config: DocsThemeConfig = {
             <meta property="og:video:type" content="video/mp4" />
             <meta property="og:video:width" content="1280" />
             <meta property="og:video:height" content="720" />
+            <meta property="og:image" content={thumbUrl} />
           </>
         ) : (
           <>
