@@ -12,7 +12,12 @@ interface PluginOptions {
   mode?: 'react' | 'vdom';
   auto?:
     | boolean
-    | { threshold?: number; skip?: (string | RegExp)[]; rsc?: boolean };
+    | {
+        threshold?: number;
+        // @deprecated
+        skip?: (string | RegExp)[];
+        rsc?: boolean
+      };
   /**
    * @default false
    */

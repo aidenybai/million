@@ -38,7 +38,7 @@ export const next = (
 
       config.plugins.unshift(
         webpack({
-          mute: webpackOptions.isServer,
+          log: webpackOptions.isServer,
           ...millionConfig,
         }),
       );

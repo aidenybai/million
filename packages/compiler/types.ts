@@ -1,4 +1,5 @@
 import type * as t from '@babel/types';
+import { Options } from './options';
 
 export interface NamedImportDefinition {
   name: string;
@@ -14,7 +15,7 @@ export interface DefaultImportDefinition {
 export type ImportDefinition = NamedImportDefinition | DefaultImportDefinition;
 
 export interface StateContext {
-  auto: boolean;
+  auto: Options['auto'];
   hmr: boolean;
   server: boolean;
   definitions: {
