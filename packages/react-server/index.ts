@@ -1,19 +1,18 @@
-import type { ComponentType, ForwardedRef, JSX, ReactPortal } from 'react';
+import type { ComponentType, ForwardedRef, JSX, ReactNode, ReactPortal } from 'react';
 import {
   Fragment,
   createElement,
   forwardRef,
+  isValidElement,
   memo,
   useCallback,
   useEffect,
   useRef,
   useState,
 } from 'react';
+import { createPortal } from 'react-dom'
 import { RENDER_SCOPE, SVG_RENDER_SCOPE } from '../react/constants';
-import { renderReactScope } from '../react/utils';
 import type { MillionArrayProps, MillionPortal, MillionProps, Options } from '../types';
-
-export { renderReactScope } from '../react/utils';
 
 let globalInfo;
 
@@ -166,6 +165,19 @@ export const createRSCBoundary = <P extends MillionProps>(
     ),
     () => true
   );
+};
+
+const wrap = (vnode: ReactNode): ReactNode => {
+  return createElement(RENDER_SCOPE, { suppressHydrationWarning: true }, vnode);
+};
+
+export const renderReactScope = (
+  vnode: ReactNode,
+  _unstable: boolean,
+  _portals: MillionPortal[] | undefined,
+  _currentIndex: number,
+) => {
+  return wrap(vnode);
 };
 
 function isEqual(a: unknown, b: unknown): boolean {
