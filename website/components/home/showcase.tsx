@@ -71,6 +71,7 @@ export const ShowcaseSlider = () => {
       <div className="slide-track-10 hover:pause mt-6 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5">
         {[...entries, ...entries, ...entries].map(({ image, name, url }, i) => (
           <a
+          key={i}
             href={`https://${url}`}
             target="_blank"
             className="pr-10 space-y-6 text-center w-[24rem] relative grayscale-[50%] opacity-90 hover:opacity-100 transition duration-200 hover:grayscale-0"
