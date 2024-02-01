@@ -241,7 +241,6 @@ const config: DocsThemeConfig = {
             <meta property="og:video:type" content="video/mp4" />
             <meta property="og:video:width" content="1280" />
             <meta property="og:video:height" content="720" />
-            <meta property="og:image" content={thumbUrl} />
           </>
         ) : (
           <>
