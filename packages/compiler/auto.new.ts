@@ -128,7 +128,13 @@ function shouldTransform(
 
   if (improvement <= threshold) return false;
   if (!ctx.log || ctx.log === 'info') {
-    logImprovement(name, (improvement * 100).toFixed(0));
+    logImprovement(
+      name,
+      improvement,
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      !ctx.log || ctx.log === 'info',
+      ctx.telemetry,
+    );
   }
 
   return true;

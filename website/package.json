@@ -24,6 +24,7 @@
     "dedent": "^0.7.0",
     "framer-motion": "^10.12.4",
     "million": "workspace:*",
+    "mock-progress-react": "^1.0.8",
     "next": "^14.0.2",
     "nextra": "^2.13.2",
     "nextra-theme-docs": "^2.13.2",

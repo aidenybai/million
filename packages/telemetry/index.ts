@@ -15,6 +15,7 @@ export class MillionTelemetry {
   private _anonymousProjectInfo: ProjectInfo | undefined;
   private config = new GlobalConfig({ name: 'million' });
   private isCI = isCI;
+  private improvement = false;
 
   constructor(private TELEMETRY_DISABLED = false) {
     this.TELEMETRY_DISABLED = TELEMETRY_DISABLED;
@@ -36,13 +37,13 @@ export class MillionTelemetry {
 
   private get anonymousId(): string {
     return this.getConfigWithFallback('telemetry_anonymousId', () =>
-      randomBytes(32).toString('hex'),
+      randomBytes(16).toString('hex'),
     );
   }
 
-  private get anonymousSessionId(): string {
+  get anonymousSessionId(): string {
     this._anonymousSessionId =
-      this._anonymousSessionId || randomBytes(32).toString('hex');
+      this._anonymousSessionId || randomBytes(16).toString('hex');
     return this._anonymousSessionId;
   }
 
@@ -67,6 +68,11 @@ export class MillionTelemetry {
     this.config.clear();
   }
 
+  improvementReported(): boolean {
+    
+    return this.improvement;
+  }
+
   record({ event, payload }: TelemetryEvent): Promise<void> {
     if (this.isDisabled) {
       return Promise.resolve();
@@ -76,6 +82,10 @@ export class MillionTelemetry {
       system: getSystemInfo(),
       project: this.anonymousProjectInfo,
     };
+
+    if (event === 'improvement') {
+      this.improvement = true;
+    }
 
     return post({
       event,

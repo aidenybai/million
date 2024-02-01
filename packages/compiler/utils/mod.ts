@@ -2,7 +2,7 @@ import { addNamed } from '@babel/helper-module-imports';
 import type { NodePath } from '@babel/core';
 import type * as t from '@babel/types';
 import type { Options } from '../options';
-import type { Info } from '../babel';
+import type { Info } from '../babel.new';
 
 export const resolveImportSource = (options: Options, source: string): string | null => {
   if (!source.startsWith('million/react')) return null;

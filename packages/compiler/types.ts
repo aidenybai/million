@@ -1,5 +1,6 @@
 import type * as t from '@babel/types';
 import { Options } from './options';
+import { MillionTelemetry } from 'packages/telemetry';
 
 export interface NamedImportDefinition {
   name: string;
@@ -15,6 +16,7 @@ export interface DefaultImportDefinition {
 export type ImportDefinition = NamedImportDefinition | DefaultImportDefinition;
 
 export interface StateContext {
+  MillionTelemetry: MillionTelemetry;
   log: Options['log'];
   auto: Options['auto'];
   hmr: boolean;
@@ -27,6 +29,7 @@ export interface StateContext {
 }
 
 export interface CompilerOptions {
+  MillionTelemetry: MillionTelemetry;
   log?: boolean;
   hmr?: boolean;
   server?: boolean;
