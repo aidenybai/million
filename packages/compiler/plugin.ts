@@ -13,6 +13,52 @@ import type { CompilerOptions } from './types';
 const DEFAULT_INCLUDE = '**/*.{jsx,tsx,ts,js,mjs,cjs}';
 const DEFAULT_EXCLUDE = 'node_modules/**/*.{jsx,tsx,ts,js,mjs,cjs}';
 
+
+async function compile(
+  id: string,
+  code: string,
+  options: Options,
+  telemetryInstance: MillionTelemetry,
+  isServer?: boolean,
+) {
+  displayIntro(options);
+  
+  const plugins: ParserOptions['plugins'] = ['jsx'];
+
+  if (/\.[mc]?tsx?$/i.test(id)) {
+    plugins.push('typescript');
+  }
+
+  const result = await transformAsync(code, {
+    plugins: [
+      [
+        babel,
+        {
+          telemetry: telemetryInstance,
+          log: options.log,
+          server: isServer,
+          hmr: options.hmr,
+          auto: options.auto,
+          rsc: options.rsc,
+        },
+      ],
+    ],
+    // plugins: [[babel, options]],
+    parserOpts: { plugins },
+    filename: id,
+    ast: false,
+    sourceFileName: id,
+    sourceMaps: true,
+    configFile: false,
+    babelrc: false,
+  });
+
+  if (result) {
+    return { code: result.code || '', map: result.map };
+  }
+  return null;
+}
+
 export interface Options extends Omit<CompilerOptions, 'telemetry'> {
   filter?: {
     include?: FilterPattern;
@@ -75,42 +121,7 @@ export const unplugin = createUnplugin((options: Options = {}, meta) => {
       return filter(id);
     },
     async transform(code: string, id: string): Promise<TransformResult> {
-      displayIntro(options);
-
-      const plugins: ParserOptions['plugins'] = ['jsx'];
-
-      if (/\.[mc]?tsx?$/i.test(id)) {
-        plugins.push('typescript');
-      }
-
-      const result = await transformAsync(code, {
-        plugins: [
-          [
-            babel,
-            {
-              telemetry: telemetryInstance,
-              log: options.log,
-              mode: options.server,
-              hmr: options.hmr,
-              auto: options.auto,
-              rsc: options.rsc,
-            },
-          ],
-        ],
-        // plugins: [[babel, options]],
-        parserOpts: { plugins },
-        filename: id,
-        ast: false,
-        sourceFileName: id,
-        sourceMaps: true,
-        configFile: false,
-        babelrc: false,
-      });
-
-      if (result) {
-        return { code: result.code || '', map: result.map };
-      }
-      return null;
+      return compile(id, code, options, telemetryInstance, options.server);
     },
     vite: {
       configResolved(config) {
@@ -126,6 +137,9 @@ export const unplugin = createUnplugin((options: Options = {}, meta) => {
         ]);
 
         options.hmr = config.env.DEV;
+      },
+      async transform(code, id, opts): Promise<TransformResult> {
+        return compile(id, code, options, telemetryInstance, opts?.ssr);
       },
     },
   };
