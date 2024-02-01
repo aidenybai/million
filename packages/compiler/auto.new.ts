@@ -12,6 +12,7 @@ import { getValidImportDefinition } from './utils/get-valid-import-definition';
 import { isGuaranteedLiteral } from './utils/is-guaranteed-literal';
 import { isJSXComponentElement } from './utils/is-jsx-component-element';
 import { logImprovement } from './utils/log';
+import { isUseClient } from './utils/mod';
 import { registerImportDefinition } from './utils/register-import-definition';
 import { unwrapNode } from './utils/unwrap-node';
 import { unwrapPath } from './utils/unwrap-path';
@@ -220,6 +221,8 @@ function transformFunctionDeclaration(
       // Might be component-like, but the only valid components
       // have zero or one parameter
       decl.params.length < 2 &&
+      // For RSC, only transform if it's a client component
+      (ctx.options.rsc ? (ctx.topLevelRSC || isUseClient(decl.body.directives)) : true ) &&
       // Check if the function should be transformed
       shouldTransform(ctx, decl.id.name, path)
     ) {
@@ -298,6 +301,8 @@ function transformVariableDeclarator(
       isComponentishName(identifier.name) &&
       // have zero or one parameter
       trueFuncExpr.params.length < 2 &&
+      // For RSC, only transform if it's a client component
+      (ctx.options.rsc ? (ctx.topLevelRSC || (t.isBlockStatement(trueFuncExpr.body) && isUseClient(trueFuncExpr.body.directives))) : true ) &&
       // Check if the function should be transformed
       shouldTransform(ctx, identifier.name, path)
     ) {
@@ -324,28 +329,40 @@ function transformCallExpression(
 
     const trueFuncExpr = unwrapPath(arg, isValidFunction);
     if (trueFuncExpr) {
-      const root = getRootStatementPath(trueFuncExpr);
-      const descriptiveName = getDescriptiveName(path, 'Anonymous');
-      const uid = generateUniqueName(trueFuncExpr, descriptiveName);
-      root.scope.registerDeclaration(
-        root.insertBefore(
-          t.variableDeclaration('const', [
-            t.variableDeclarator(
-              uid,
-              t.callExpression(
-                getImportIdentifier(
-                  ctx,
-                  path,
-                  IMPORTS.block[getServerMode(ctx)],
+      const descriptiveName = getDescriptiveName(trueFuncExpr, 'Anonymous');
+      if (
+        // For RSC, only transform if it's a client component
+        (
+          ctx.options.rsc
+            ? (
+              ctx.topLevelRSC ||
+              (t.isBlockStatement(trueFuncExpr.node.body) && isUseClient(trueFuncExpr.node.body.directives)
+            ))
+            : true
+        ) && shouldTransform(ctx, descriptiveName, path)
+      ) {
+        const root = getRootStatementPath(trueFuncExpr);
+        const uid = generateUniqueName(trueFuncExpr, descriptiveName);
+        root.scope.registerDeclaration(
+          root.insertBefore(
+            t.variableDeclaration('const', [
+              t.variableDeclarator(
+                uid,
+                t.callExpression(
+                  getImportIdentifier(
+                    ctx,
+                    path,
+                    IMPORTS.block[getServerMode(ctx)],
+                  ),
+                  [trueFuncExpr.node],
                 ),
-                [trueFuncExpr.node],
               ),
-            ),
-          ]),
-        )[0],
-      );
-
-      trueFuncExpr.replaceWith(uid);
+            ]),
+          )[0],
+        );
+  
+        trueFuncExpr.replaceWith(uid);
+      }
     }
   }
 }

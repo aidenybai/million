@@ -4,6 +4,7 @@ import { transformBlock } from './block.new';
 import { IMPORTS } from './constants.new';
 import type { CompilerOptions, StateContext } from "./types";
 import { getServerMode } from './utils/get-server-mode';
+import { isUseClient } from './utils/mod';
 import { registerImportDefinition } from './utils/register-import-definition';
 
 interface PluginState extends PluginPass {
@@ -27,6 +28,9 @@ export function babel(): PluginObj<PluginState> {
     },
     visitor: {
       Program(programPath, ctx) {
+        if (ctx.state.options.rsc) {
+          ctx.state.topLevelRSC = isUseClient(programPath.node.directives);
+        }
         if (ctx.state.options.auto) {
           transformAuto(ctx.state, programPath);
         }

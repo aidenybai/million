@@ -1,8 +1,8 @@
-import { addNamed } from '@babel/helper-module-imports';
 import type { NodePath } from '@babel/core';
+import { addNamed } from '@babel/helper-module-imports';
 import type * as t from '@babel/types';
-import type { Options } from '../options';
 import type { Info } from '../babel';
+import type { Options } from '../plugin';
 
 export const resolveImportSource = (options: Options, source: string): string | null => {
   if (!source.startsWith('million/react')) return null;
@@ -38,8 +38,7 @@ export const addImport = (
   return id;
 };
 
-export const isUseClient = (info: Info): boolean => {
-  const directives = info.programPath.node.directives;
+export const isUseClient = (directives: t.Directive[]): boolean => {
   const directivesLength = directives.length;
   if (!directivesLength) return false; // we assume it's server component only
   for (let i = 0; i < directivesLength; ++i) {
