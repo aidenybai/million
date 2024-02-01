@@ -176,39 +176,39 @@ Así que no es que tener rendimiento en React sea imposible, es solo que a menud
 
 ## React con Million
 
-Keep in mind that even though memory constraints are real, developers are often conscious of the amount of tabs or apps open while running their dev server, so we often won't notice them apart from a few buggy experiences that might prompt a refresh or a server restart in development. However, your users will probably notice more often than you, especially on older phones, tablets, laptops, since they aren't clearing their open apps/tabs for your app.
+Ten en mente que aunque las restricciones de memoria son reales, los desarrolladores a menudo son conscientes de la cantidad de pestañas o aplicaciones abiertas mientras ejecutan su servidor de desarrollo, por lo que a menudo no los notamos aparte de algunas experiencias con errores que podrían provocar una actualización o un reinicio del servidor en desarrollo. Sin embargo, tus usuarios probablemente lo notarán más a menudo que tú, especialmente en teléfonos, tabletas, computadoras portátiles más antiguas, ya que no están limpiando sus aplicaciones/pestañas abiertas para tu aplicación.
 
-So what does Million do differently that solves this problem?
+¿Entonces que hace Million de manera diferente que resuelve este problema?
 
-Well, Million is a compiler, and while I won't go into everything here (you can read more about the [block DOM](/blog/virtual-dom) and Million's [`block()` function](/blog/behind-the-block) at these links), Million can statically analyze your React code and automatically compile React components into tightly optimized [Higher Order Components](https://https://legacy.reactjs.org/docs/higher-order-components.html) which are then rendered by Million.
+Bueno, Million es un compilador, y aunque no entraré en detalle aquí (puedes leer más sobre el [block DOM](/blog/virtual-dom) y la función [`block()` de Million](/blog/behind-the-block) en estos enlaces), Million puede analizar estáticamente tu código de React y compilar automáticamente componentes de React en [Componentes de Orden Superior (HOC)](https://https://legacy.reactjs.org/docs/higher-order-components.html) que son renderizados por Million.
 
-Million uses techniques closer to fine-grained reactivity (shoutout [Solid JS](https://solidjs.com)) where observers are placed right on the necessary DOM nodes to track state changes among other optimizations, rather than using a virtual DOM.
+Million utiliza técnicas más cercanas a la reactividad de grano fino (un saludo a [Solid JS](https://solidjs.com)) donde los observadores se colocan directamente en los nodos DOM necesarios para rastrear los cambios de estado entre otras optimizaciones, en lugar de usar un DOM virtual.
 
-This allows Million's performance and memory overhead to be closer to optimized vanilla Javascript than even performance focused virtual DOMs like Preact or Inferno, but without having an abstraction layer on top of React. That is to say using Million doesn't mean moving your React app to use "React-compatible" libraries. It's just plain React that Million itself can automatically optimize via our [CLI](/docs/install).
+Esto le permite al rendimiento en memoria de Million estar cerca al de Javascript puro que está optimizado, incluso más que los virtual DOMs enfocados en el rendimiento como Preact o Inferno, pero sin tener una capa de abstracción sobre React. Es decir, usar Million no significa mover tu aplicación de React a usar librerías "compatibles con React". Es solo React puro que Million puede optimizar automáticamente a través de nuestra [CLI](/docs/install).
 
-> Keep in mind, Million isn't suitable for all use cases. We'll go into where Million does/doesn't fit in later on.
+> Ten en mente que, Million no es adecuado para todos los casos de uso. Hablaremos de dónde sí y dónde no en un momento.
 
-### Memory Usage
+### Uso de memoria
 
-In terms of memory usage, Million uses about 55% of the memory that React does on standby after the page loads, which is a substantial difference. It uses less than half the memory that React does for every single operation otherwise tested by [Krausest's JS Framework Benchmark](https://krausest.github.io/js-framework-benchmark/2023/table_chrome_113.0.5672.63.html), even on Chrome 113 (we're currently on 117).
+En términos de uso de memoria, Million utiliza alrededor del 55% de la memoria que React utiliza en espera después de que la página se carga, lo que es una diferencia sustancial. Utiliza menos de la mitad de la memoria que React para cada operación única probada por [El Benchmark de Frameworks JS de Krausest](https://krausest.github.io/js-framework-benchmark/2023/table_chrome_113.0.5672.63.html), incluso en Chrome 113 (actualmente estamos en 117).
 
-![memory benchmark for vanilla JS versus Million versus React](https://i.postimg.cc/RZj3CgZK/Screenshot-2023-09-29-at-12-13-41-AM.png)
+![benchmark de memoria para JS puro contra Million contra React](https://i.postimg.cc/3wz3Vt3t/Screenshot-2023-09-29-at-12-13-41-AM.png)
 
-The memory hit you'd take by using Million compared to using vanilla Javascript would be at most about 28% higher (15MB vs. 11.9MB) when adding 10,000 rows to a page (the heaviest operation in the benchmark), whereas React would use about 303% to complete the same task vs. vanilla Javascript (36.1 MB vs. 11.9 MB).
+La memoria que tomarías usando Million comparado a utilizar Javascript puro sería a lo mucho un 28% más alta (15MB vs 11.9MB) al agregar 10,000 filas a una página (la operación más pesada en el benchmark), mientras que React usaría alrededor de un 303% para completar la misma tarea vs Javascript puro (36.1 MB vs 11.9 MB).
 
-Couple that with the total operations your app is completing over its lifetime, and both performance and memory usage will vary dramatically when using purely a virtual DOM vs. a hybrid block DOM approach, especially once you consider state management, libraries/dependencies, etc. Of course, in Million's favor.
+Combina eso con las operaciones totales que tu aplicación tarde en completar a lo largo de su vida, y tanto el rendimiento como el uso de memoria variarán dramáticamente al usar un DOM virtual puro vs. un enfoque híbrido de DOM de bloques, especialmente una vez que consideres la gestión de estado, librerías/dependencias, etc. Por supuesto, en favor de Million.
 
-## Wait, But What About \_?
+## Espera, ¿Pero que hay de \_?
 
-As with everything, there are tradeoffs when using Million and the block DOM approach. After all, there was a reason that React was invented and there are definitely still reasons to use it.
+Como todas las cosas, hay ventajas y desventajas al usar Million y el enfoque de DOM de bloques. Después de todo, hubo una razón por la que se inventó React y definitivamente todavía hay razones para usarlo.
 
-### Dynamic Components
+### Componentes Dinámicos
 
-Let's say you have a highly dynamic component in which data is frequently changed.
+Digamos que tienes un componente altamente dinámico en el que los datos cambian con frecuencia.
 
-For example, maybe you have an application which is consuming stock market data, and you have a component that displays the most recent 1,000 stock trades. The component itself is a list that varies the list item component that's rendered per stock trade depending on whether it was a buy or sell.
+Por ejemplo, tal vez tengas una aplicación la cual consume datos del mercado de valores, y tienes un componente que muestra los 1,000 intercambios de acciones más recientes. El componente en sí es una lista que varía el componente de elemento de lista que se renderiza por intercambio de acciones dependiendo de si fue una compra o una venta.
 
-For simplicity, we'll assume it's already prepopulated with 1000 stock trades.
+Por simplicidad, asumiremos que ya está prellenado con 1,000 intercambios de acciones.
 
 ```jsx
 import { useState, useEffect } from "react";
@@ -217,16 +217,16 @@ import { BuyComponent, SellComponent } from "@/components/recent-trades"
 export function RecentTrades() {
     const [trades, setTrades] = useState([]);
     useEffect(() => {
-        // set a timer to make this event run every second
+        // coloca un contadar para que se actualice cada segundo
         const tradeTimer = setInterval(() => {
             let tradeRes = fetch("example.com/stocks/trades");
-            // errors? never heard of them
+            // ¿errores? nunca he escuchado de ellos
             tradeRes = JSON.parse(tradeRes);
             setTrades(previousList => {
-                // remove the amount of elements returned from
-                // our fetch call to stay at 1,000 elements
+                // remueve la cantidad de elementos que retorna
+                // nuestra petición para 1,000 elementos
                 previousList.slice(0, tradeRes.length);
-                // add the most recent elements
+                // añade los elementos nuevos
                 for (i, i < tradeRes.length, i++) {
                     previousList.push(tradeRes[i]);
                 };
@@ -242,8 +242,8 @@ export function RecentTrades() {
             {trades.map((trade, index) => (
                 <li key={index}>
                     {trade.includes("+") ?
-                        <BuyComponent>BUY: {trade}</BuyComponent>
-                        : <SellComponent>SELL: {trade}</SellComponent>
+                        <BuyComponent>COMPRA: {trade}</BuyComponent>
+                        : <SellComponent>VENTA: {trade}</SellComponent>
                     }
                 </li>
             ))}
@@ -252,31 +252,31 @@ export function RecentTrades() {
 }
 ```
 
-Ignoring that there are probably more efficient ways to do this, this is a great example of where Million would _not_ do well. The data is changing every second, the component being rendered depends on the data itself, and overall, there is nothing really static about this component.
+Ignorando que probablemente hay maneras más eficientes de hacer esto, este es un gran ejemplo de donde Million _no_ funcionaría bien. Los datos cambian cada segundo, el componente que se renderiza depende de los datos mismos, y en general, no hay nada realmente estático acerca de este componente.
 
-If you look at the returned HTML, you might think "Having an optimized `<For />` component would work great here!" However, in terms of Million's compiler (barring Million's `<For />` component) there is no way to statically analyze the returned list of elements, and in fact, cases like these are [why React was first brought about at Facebook](<https://en.wikipedia.org/wiki/React_(software)#History>) (the news section of their UI, a highly dynamic list).
+Si miras el HTML retornado, podrías pensar "¡Tener un componente `<For />` optimizado funcionaría genial aquí!" Sin embargo, en términos del compilador de Million (a excepción del componente `<For />` de Million) no hay manera de analizar estáticamente la lista de elementos retornados, y de hecho, casos como estos son [por qué React fue creado en Facebook](<https://en.wikipedia.org/wiki/React_(software)#History>) (la sección de noticias de su UI, una lista altamente dinámica).
 
-This is a great use case for React's runtime, because manipulating the DOM directly is expensive, and doing so every second for a large list of elements is expensive as well.
+Este es un gran caso de uso del entorno de ejecución de React, por que manipular el DOM directamente es costoso, y hacerlo cada segundo para una gran lista de elementos también es costoso.
 
-However, it's quicker when using something _like_ React, because it will only diff and rerender this granular part of the page vs. something traditionally server rendered which might replace the entire page. Because of this, Million is better suited to handle other static parts of the page to keep React's footprint smaller.
+Sin embargo, es más rápido cuando se usa algo _como_ React, porque solo difiere y vuelve a renderizar esta parte granular de la página vs. algo tradicionalmente renderizado del lado del servidor que podría reemplazar toda la página. Por esto, Million es mejor para manejar otras partes estáticas de la página para mantener el footprint de React más pequeño.
 
-Does that mean only components this extreme should be ignored by Million and use React's runtime? Not necessarily. If your components even lean into this kind of use case where the component relies on highly dynamic aspects like constantly changing state, ternary-driven return values, or anything that can't comfortably fit in the "static and/or close-to-static" box, then Million might not work well.
+¿Esto significa que solo los componentes mñas dinámicos deberían ser ignorados por Million y usar el entorno de ejecución de React? No necesariamente. Si tus componentes incluso se inclinan a este tipo de caso de uso donde el componente depende de aspectos altamente dinámicos como el estado que cambia constantemente, valores de retorno impulsados por ternarios, o cualquier cosa que no pueda encajar cómodamente en la caja de "estático y/o cercano a estático", entonces Million podría no funcionar bien.
 
-Again, there's a reason React was built, and there's a reason we're choosing to improve it, not create a new framework!
+De nuevo, hay una razón por la que React fue construido, y hay una razón por la que estamos eligiendo mejorarla, ¡no crear un nuevo framework!
 
-## What _Will_ Million Work Well On?
+## ¿Dónde Million _Va a_ funcionar bien?
 
-We'd definitely like to see Million pushed to the limits of where it can be used, but as for right now, there are certainly sweet spots where Million shines.
+Definitivamente nos gustaría ver a Million empujado a los límites de donde puede ser usado, pero por ahora, hay ciertamente puntos dulces donde Million brilla.
 
-Obviously, static components are great for Million, and those are easy to imagine, so I won't go too deep into them. These could be things like blogs, landing pages, applications with CRUD-type operations where the data isn't too dynamic, etc.
+Obviamente, los componentes estáticos son geniales para Million, y esos son fáciles de imaginar, así que no profundizaré demasiado en ellos. Estos podrían ser cosas como blogs, sitios web estáticos, aplicaciones con operaciones CRUD donde los datos no son demasiado dinámicos, etc.
 
-However, other great use cases for Million are applications with nested data, i.e. objects with lists of data inside. This is because nested data is typically a bit slow to render due to tree traversal (i.e. going through the entire tree of data to find the datapoint your application needs).
+Sin embargo, otros grandes casos de uso para Million son aplicaciones con datos anidados, es decir, objetos con listas de datos adentro. Esto es porque los datos anidados son típicamente un poco lentos de renderizar debido a la búsqueda de árbol (es decir, pasar por todo el árbol de datos para encontrar el punto de datos que tu aplicación necesita).
 
-Million is optimized for this use case with our `<For />` component which is made specifically for looping over arrays as efficiently as possible and (like we mentioned before) recycling DOM nodes as you scroll rather than creating and discarding them.
+Million esta optimizado para este caso de uso con nuestro componente `<For />` el cual fué hecho para recorrer arreglos de datos de manera eficiente y reciclar nodos del DOM mientras te desplazas en lugar de crear y descartarlos.
 
-This is one of the examples where even with dynamic, stateful data, performance can be optimized essentially for free by just using `<For />` rather than `Array.prototype.map()` and creating DOM nodes for each item in the mapped array.
+Este es uno de los ejemplos donde incluso con datos dinámicos, el rendimiento puede ser optimizado esencialmente sin costo solo usando `<For />` en lugar de `Array.prototype.map()` y creando nodos del DOM para cada elemento en el arreglo mapeado.
 
-For example:
+Por ejemplo:
 
 ```jsx
 import { For } from 'million/react';
@@ -287,7 +287,7 @@ export default function App() {
   return (
     <>
       <button onClick={() => setItems([...items, items.length + 1])}>
-        Add item
+        Añadir elemento
       </button>
       <ul>
         <For each={items}>{(item) => <li>{item}</li>}</For>
@@ -297,24 +297,24 @@ export default function App() {
 }
 ```
 
-Again, this performance can be gained almost for free with the only requirement being knowing how/when to use `<For />`.
+De nuevo, este rendimiento puede ser ganado casi gratuitamente con el único requerimiento de saber cómo y cuándo usar `<For />`.
 
-For example, server rendering tends to cause errors with hydration because we're not mapping array elements 1:1 with DOM nodes, and our server rendering algorithm differs to that of client rendering, but it's a great example of a dynamic, stateful component that can be optimized with Million with a bit of work!
+Por ejemplo, el renderizado del servidor tiende a causar errores con la hidratación porque no estamos mapeando los elementos del arreglo 1:1 con los nodos del DOM, y nuestro algoritmo de renderizado del servidor difiere al del renderizado del cliente, pero ¡es un gran ejemplo de un componente dinámico y con estado que puede ser optimizado con Million con un poco de trabajo!
 
-And although this example uses a custom component provided by Million, this is just an example of a specific use cases where Million can work well. However, as we went over before, non-list components that can be stateful and are relatively static work incredibly well with Million's compiler, such as CRUD-style components like forms, CMS-driven components like text blocks, landing pages, etc. (a.k.a. most applications that we work on as frontend developers, or at least I do).
+Y a pesar de que ese ejemplo utiliza un componente personalizado provisto por Million, este es solo un ejemplo de un caso de uso específico donde Million puede funcionar bien. Sin embargo, como mencionamos antes, los componentes no listados que pueden ser estatales y son relativamente estáticos funcionan increíblemente bien con el compilador de Million, como los componentes de estilo CRUD como formularios, componentes impulsados por CMS como bloques de texto, sitios web estáticos, etc. (también conocidos como la mayoría de las aplicaciones en las que trabajamos como desarrolladores frontend, o al menos yo).
 
-## Is It Worth Using Million?
+## ¿Vale la pena utilizar Million?
 
-We certainly think so. Lots of people, when optimizing for performance look at the easiest metrics to track: page speed. It's what you can measure right away on [pagespeed.web.dev](https://pagespeed.web.dev), and while that is certainly important, initial page load time usually won't be a big draw on user experience, especially when writing a Single Page Application which is optimized for between-page transitions, not full page loads.
+Definitivamente pensamos que sí. Muchas personas, al optimizar el rendimiento, miran las métricas más fáciles de rastrear: la velocidad de la página. Es lo que puedes medir de inmediato en [pagespeed.web.dev](https://pagespeed.web.dev), y aunque eso es ciertamente importante, el tiempo de carga inicial de la página generalmente no será un gran atractivo para la experiencia del usuario, especialmente al escribir una aplicación de una sola página que está optimizada para las transiciones entre páginas, no para las cargas completas de páginas.
 
-However, avoiding and reducing memory usage where possible is also an incredibly compelling use-case for using Million JS.
+Sin embargo, evitar y reducir el uso de memoria donde sea posible también es un caso de uso increíblemente convincente para usar Million JS.
 
-If each action that your user performs takes no time to complete and gives them instant feedback, then user experience feels more native, and that's typically where performance issues creep up if you're not careful, because input delay is typically highly influenced by memory usage.
+Si cada acción que el usuario realiza no toma tiempo en ser completada y les da retroalimentación instantánea, entonces la experiencia del usuario se siente más nativa, y eso es típicamente donde los problemas de rendimiento se cuelan si no tienes cuidado, porque el retraso de entrada típicamente está altamente influenciado por el uso de memoria.
 
-So is it necessary to use a virtual DOM to acheive this? We certainly _don't_ think so. Especially if it means more Javascript to run, more objects to create, and more memory overhead to worry about on lower-end devices.
+Entonces, ¿si es necesario usar el DOM virtual para lograr esto? Ciertamente _no_ pensamos que sea necesario. Especialmente si significa más Javascript para ejecutar, más objetos para crear y más sobrecarga de memoria para preocuparse en dispositivos de gama baja.
 
-This doesn't mean Million is a good fit for all use cases, nor will it solve all performance problems. In fact, we recommend to use it granularly, as in some cases (i.e. more dynamic data like we discussed), a virtual DOM will actually be more performant.
+Esto no significa que Million embona bien en todos los casos de uso, ni que resolverá todos los problemas de rendimiento. De hecho, recomendamos usarlo de manera granular, ya que en algunos casos (es decir, datos más dinámicos como discutimos), un DOM virtual será más eficiente.
 
-But having a tool in your toolbelt that requires almost no setup time or config will certainly get us closer to having React be a much more reliable, performant library to reach for when building an app that will live in the wild, outside of other devs' 8 core, 32GB machines.
+Pero teniendo una herramienta en tu cinturón que requiere casi ningún tiempo de configuración o configuración ciertamente nos acerca a tener React como una biblioteca mucho más confiable y de alto rendimiento para alcanzar cuando se construye una aplicación que vivirá en cualquier lado, fuera de las máquinas de 8 núcleos y 32GB de RAM de otros desarrolladores.
 
-Soon, we'll be doing benchmarks on common React templates to see how Million impacts memory and performance, so stay tuned!
+Pronto, haremos benchmarks en plantillas comunes de React para ver cómo Million impacta la memoria y el rendimiento, ¡así que mantente atento!
