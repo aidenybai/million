@@ -1,7 +1,5 @@
 import { randomBytes } from 'node:crypto';
-import {
-  cyan,
-} from 'kleur/colors';
+import { cyan } from 'kleur/colors';
 import { isCI } from './utils/is-ci';
 import { GlobalConfig } from './config';
 import { post } from './post';
@@ -71,17 +69,19 @@ export class MillionTelemetry {
     this.config.clear();
   }
 
-  showWrapped() {
+  showWrapped(): void {
     if (this.alreadyShowedImprovement) return;
     this.alreadyShowedImprovement = true;
-    // eslint-disable-next-line no-console
-    console.log(
-      `    - Wrapped: ${cyan(
-        `https://million.dev/wrapped/${this.anonymousSessionId}`,
-      )}`
-    );
+    
+    setTimeout(() => {
+      // eslint-disable-next-line no-console
+      console.log(
+        `   - Wrapped: ${cyan(
+          `https://million.dev/wrapped/${this.anonymousSessionId}`,
+        )}`,
+      );
+    }, 3000);
   }
-
 
   record({ event, payload }: TelemetryEvent): Promise<void> {
     if (this.isDisabled) {

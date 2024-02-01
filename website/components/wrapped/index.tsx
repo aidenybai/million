@@ -19,6 +19,16 @@ export default function Wrapped(props) {
   return (
     <main className="space-y-40 mb-40">
       <Head>
+        <meta property="og:type" content="video.other" />
+        <meta name="twitter:player:stream" content={videoUrl} />
+        <meta name="twitter:player:width" content="1280" />
+        <meta name="twitter:player:height" content="720" />
+        <meta property="og:video" content={videoUrl} />
+        <meta property="og:video:url" content={videoUrl} />
+        <meta property="og:video:secure_url" content={videoUrl} />
+        <meta property="og:video:type" content="video/mp4" />
+        <meta property="og:video:width" content="1280" />
+        <meta property="og:video:height" content="720" />
         <style
           type="text/css"
           dangerouslySetInnerHTML={{
@@ -74,8 +84,8 @@ export default function Wrapped(props) {
               <h1 className="mt-8 text-zinc-900 dark:text-white font-extrabold text-5xl md:text-6xl xl:text-7xl">
                 {progress === 100 ? (
                   <>
-                    It's{' '}
-                    <span className="gradient-text inline-block">Ready</span>{' '}
+                    Welcome to a faster{' '}
+                    <span className="gradient-text inline-block">future</span>{' '}
                   </>
                 ) : (
                   <>
@@ -88,7 +98,7 @@ export default function Wrapped(props) {
                 )}{' '}
               </h1>
               <p className="mt-8 text-xl text-zinc-600 dark:text-zinc-300 leading-8">
-                Ping{' '}
+                Tag{' '}
                 <Link href="https://twitter.com/milliondotjs">
                   <span className="gradient-text inline-block">
                     @milliondotjs
@@ -98,27 +108,34 @@ export default function Wrapped(props) {
                 <span className="font-medium dark:text-zinc-100">
                   X / Twitter
                 </span>{' '}
-                and share your gains! We'd love to quote you.
+                and share your gains! We'd love to retweet you.
               </p>
 
               <div className="mt-8 flex flex-wrap justify-center items-center gap-y-4 gap-x-6">
-              <button
+                <button
                   className="relative w-full sm:w-max flex gap-1 items-center justify-center transition-all shadow-[0_0_0_1px_rgba(255,255,255,0.2)_inset] bg-black rounded-[100px] px-8 py-[11.5px] w-[165px] transition-all  hover:scale-105 duration-300"
-                  onClick={() => window.open(`https://twitter.com/intent/tweet?text=I just wrapped my website with Million.js and it's amazing! Check it out at https://million.dev/wrapped/${id}.mp4`, '_blank')}
+                  onClick={() =>
+                    window.open(
+                      `https://twitter.com/intent/tweet?text=My website is part ofI just wrapped my website with @milliondotjs and it's amazing! Check it out at https://million.dev/wrapped/${id}.mp4`,
+                      '_blank',
+                    )
+                  }
                 >
-                <span className ="relative whitespace-pre text-center text-base font-semibold leading-none tracking-tight text-white z-10">Share on</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="white"
-                  className="feather feather-twitter pt-1"
-                >
-                  <path d="M16.99 0H20.298L13.071 8.26L21.573 19.5H14.916L9.702 12.683L3.736 19.5H0.426L8.156 10.665L0 0H6.826L11.539 6.231L16.99 0ZM15.829 17.52H17.662L5.83 1.876H3.863L15.829 17.52Z"></path>
-                </svg>
+                  <span className="relative whitespace-pre text-center text-base font-semibold leading-none tracking-tight text-white z-10">
+                    Share on
+                  </span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="white"
+                    className="feather feather-twitter pt-1"
+                  >
+                    <path d="M16.99 0H20.298L13.071 8.26L21.573 19.5H14.916L9.702 12.683L3.736 19.5H0.426L8.156 10.665L0 0H6.826L11.539 6.231L16.99 0ZM15.829 17.52H17.662L5.83 1.876H3.863L15.829 17.52Z"></path>
+                  </svg>
                 </button>
-              
+
                 <ShimmerButton
                   className="relative w-full sm:w-max flex items-center justify-center transition-all hover:shadow-[0_0_0_3px_rgba(255,255,255,0.3)_inset]"
                   background="radial-gradient(ellipse 80% 70% at 50% 120%, #b28ce2, #892fda)"

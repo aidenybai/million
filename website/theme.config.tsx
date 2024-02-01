@@ -230,20 +230,6 @@ const config: DocsThemeConfig = {
         <meta property="twitter:image" content={ogUrl} />
         <meta property="twitter:title" content={title} />
         <meta property="twitter:description" content={description} />
-        {pathname.startsWith('/wrapped/') ? (
-          <>
-            <meta property="og:type" content="video.other" />
-            <meta name="twitter:player:stream" content={videoUrl} />
-            <meta name="twitter:player:width" content="1280" />
-            <meta name="twitter:player:height" content="720" />
-            <meta property="og:video" content={videoUrl} />
-            <meta property="og:video:url" content={videoUrl} />
-            <meta property="og:video:secure_url" content={videoUrl} />
-            <meta property="og:video:type" content="video/mp4" />
-            <meta property="og:video:width" content="1280" />
-            <meta property="og:video:height" content="720" />
-          </>
-        ) : null}
         <meta property="og:image" content={ogUrl} />
 
         <link rel="shortcut icon" href={favicon} type="image/svg+xml" />
