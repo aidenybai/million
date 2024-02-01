@@ -13,6 +13,7 @@ import {
 } from './constants';
 
 if (typeof window === 'undefined') {
+  console.trace('here')
   throw new Error(
     'See http://million.dev/docs/install to install the compiler.'
   );
