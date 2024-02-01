@@ -9,11 +9,26 @@ import { RetroGrid } from '../retro-grid';
 // eslint-disable-next-line import/no-default-export -- This is the default export
 export default function Wrapped(props) {
   const [copied, setCopied] = useState<boolean>(false);
+  const [videoUrl, setVideoUrl] = useState<string>('');
   const { progress, finish, start } = useMockProgress({ timeInterval: 100 });
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- Not exactly unsafe, but we need to be careful
   const id = props.id as string;
-  const videoUrl = `https://telemetry.million.dev/api/v1/wrapped/${id}.mp4`;
-  useEffect(start, []);
+
+  useEffect(() => {
+    start();
+    void fetch(`https://telemetry.million.dev/api/v1/wrapped/${id}.mp4`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- ghello
+        setVideoUrl(json.url as string);
+        finish();
+      });
+  }, [id]);
 
   return (
     <main className="space-y-40 mb-40">
@@ -69,7 +84,7 @@ export default function Wrapped(props) {
                 glareMaxOpacity={0.1}
                 className="fix-safari-tilt shadow-lg w-full rounded-lg text-center bg-gradient-to-b from-zinc-200 to-white dark:from-zinc-700 dark:via-zinc-800 dark:to-darker p-px"
               >
-                {id ? (
+                {id && videoUrl.length > 0 ? (
                   <video
                     className="rounded-lg"
                     crossOrigin="anonymous"
