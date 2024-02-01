@@ -55,11 +55,11 @@ export default function Wrapped(props) {
           }}
         ></style>
       </Head>
-      <div className="relative pb-10 border-b border-b-[#ffffff1a]">
+      <div className="relativepb-10 border-b border-b-[#ffffff1a] h-screen">
         <Blur />
         <RetroGrid />
         <Container>
-          <div className="relative pt-4 md:pt-12 ml-auto">
+          <div className="relative pt-20 md:pt-12 ml-auto">
             <div className="lg:w-[70%] text-center mx-auto">
               <Tilt
                 tiltMaxAngleX={2}
@@ -90,7 +90,7 @@ export default function Wrapped(props) {
                     max={100}
                   ></progress>
                 )}
-                <div className="flex justify-center items-center divide-x divide-[#202025] border-top border-[#202025]">
+                <div className="flex flex-col md:flex-row justify-center items-center divide-x divide-[#202025] border-top border-[#202025] rounded-bl-lg">
                   <button
                     className="relative w-full flex gap-1 items-center justify-center transition-all bg-black px-10 py-[11.5px] h-[64px] hover:bg-[#090909] "
                     onClick={() =>
@@ -175,7 +175,7 @@ export default function Wrapped(props) {
                     )}
                   </button>
                   <button
-                    className="relative w-full flex gap-1 items-center justify-center bg-black px-8 py-[11.5px] h-[64px] hover:bg-[#090909]"
+                    className="relative w-full flex gap-1 items-center justify-center bg-black px-8 py-[11.5px] h-[64px] hover:bg-[#090909] rounded-br-lg"
                     onClick={() => {
                       window.open(videoUrl, '_blank');
                     }}
