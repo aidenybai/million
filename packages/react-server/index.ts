@@ -1,3 +1,4 @@
+import type { ComponentType, ForwardedRef, JSX, ReactPortal } from 'react';
 import {
   Fragment,
   createElement,
@@ -8,10 +9,9 @@ import {
   useRef,
   useState,
 } from 'react';
-import type { ForwardedRef , ReactPortal, ComponentType , JSX } from 'react';
 import { RENDER_SCOPE, SVG_RENDER_SCOPE } from '../react/constants';
-import type { MillionArrayProps, MillionProps, Options, MillionPortal } from '../types';
 import { renderReactScope } from '../react/utils';
+import type { MillionArrayProps, MillionPortal, MillionProps, Options } from '../types';
 
 export { renderReactScope } from '../react/utils';
 
@@ -192,9 +192,9 @@ export function compiledBlock(
   render: (props: MillionProps) => JSX.Element,
   { portals, ...options }: CompiledBlockOptions,
 ): ComponentType<MillionProps> {
-  const RenderBlock = block<MillionProps>((props) => render(props.v), {
+  const RenderBlock = block<MillionProps>((props) => render(props), {
     ...options,
-    name: `Inner(CompiledBlock(${options.name}))`,
+    name: `CompiledBlock(Inner(${options.name}))`,
     shouldUpdate: shouldCompiledBlockUpdate,
   });
 
@@ -229,7 +229,7 @@ export function compiledBlock(
 
   // TODO dev mode
   if (options.name) {
-    Component.displayName = `Outer(CompiledBlock(Million(${options.name})))`;
+    Component.displayName = `Million(CompiledBlock(Outer(${options.name})))`;
   }
 
   return Component;
