@@ -139,7 +139,10 @@ export const unplugin = createUnplugin((options: Options = {}, meta) => {
         options.hmr = config.env.DEV;
       },
       async transform(code, id, opts): Promise<TransformResult> {
-        return compile(id, code, options, telemetryInstance, opts?.ssr);
+        if (filter(id)) {
+          return compile(id, code, options, telemetryInstance, opts?.ssr);
+        }
+        return null;
       },
     },
   };
