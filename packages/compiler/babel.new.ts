@@ -2,7 +2,7 @@ import type { PluginObj, PluginPass } from '@babel/core';
 import { transformAuto } from './auto.new';
 import { transformBlock } from './block.new';
 import { IMPORTS } from './constants.new';
-import type { CompilerOptions, StateContext } from "./types";
+import type { CompilerOptions, StateContext } from './types';
 import { getServerMode } from './utils/get-server-mode';
 import { isUseClient } from './utils/mod';
 import { registerImportDefinition } from './utils/register-import-definition';
@@ -38,12 +38,13 @@ export function babel(): PluginObj<PluginState> {
           ImportDeclaration(path) {
             const mod = path.node.source.value;
             for (const importName in IMPORTS) {
-              const definition = IMPORTS[importName][getServerMode(ctx.state)];
+              const definition =
+                IMPORTS[importName][getServerMode(ctx.state)];
               if (definition.source === mod) {
                 registerImportDefinition(ctx.state, path, definition);
               }
             }
-          }
+          },
         });
       },
       CallExpression(path, ctx) {

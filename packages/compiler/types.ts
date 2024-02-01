@@ -1,4 +1,5 @@
 import type * as t from '@babel/types';
+import { MillionTelemetry } from 'packages/telemetry';
 
 export interface NamedImportDefinition {
   name: string;
@@ -37,6 +38,7 @@ export interface CompilerOptions {
 
 
 export interface StateContext {
+  MillionTelemetry: MillionTelemetry;
   options: CompilerOptions;
   definitions: {
     identifiers: Map<t.Identifier, ImportDefinition>;

@@ -89,6 +89,7 @@ export const unplugin = createUnplugin((options: Options = {}, meta) => {
           [
             babel,
             {
+              MillionTelemetry: options.MillionTelemetry,
               log: options.log,
               mode: options.server,
               hmr: options.hmr,

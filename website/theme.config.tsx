@@ -95,7 +95,9 @@ const config: DocsThemeConfig = {
           }
           span:hover {
             mask-position: 100%;
-            transition: mask-position 1s ease, -webkit-mask-position 1s ease;
+            transition:
+              mask-position 1s ease,
+              -webkit-mask-position 1s ease;
           }
         `}</style>
       </span>
@@ -188,7 +190,9 @@ const config: DocsThemeConfig = {
     extraContent: <TwitterXIcon />,
   },
   head: () => {
-    const { asPath, pathname } = useRouter();
+    const { asPath, pathname, query } = useRouter();
+    const id = String(query.id);
+    const videoUrl = `https://telemetry.million.dev/api/v1/wrapped/${id}.mp4`;
     const { frontMatter } = useConfig();
 
     const ogConfig = {
@@ -226,6 +230,20 @@ const config: DocsThemeConfig = {
         <meta property="twitter:image" content={ogUrl} />
         <meta property="twitter:title" content={title} />
         <meta property="twitter:description" content={description} />
+        {pathname.startsWith('/wrapped/') ? (
+          <>
+            <meta property="og:type" content="video.other" />
+            <meta name="twitter:player:stream" content={videoUrl} />
+            <meta name="twitter:player:width" content="1280" />
+            <meta name="twitter:player:height" content="720" />
+            <meta property="og:video" content={videoUrl} />
+            <meta property="og:video:url" content={videoUrl} />
+            <meta property="og:video:secure_url" content={videoUrl} />
+            <meta property="og:video:type" content="video/mp4" />
+            <meta property="og:video:width" content="1280" />
+            <meta property="og:video:height" content="720" />
+          </>
+        ) : null}
         <meta property="og:image" content={ogUrl} />
 
         <link rel="shortcut icon" href={favicon} type="image/svg+xml" />
@@ -281,5 +299,4 @@ const config: DocsThemeConfig = {
   primarySaturation: 0,
 };
 
-// eslint-disable-next-line import/no-default-export
 export default config;
