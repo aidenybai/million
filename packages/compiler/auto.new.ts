@@ -2,121 +2,190 @@ import type * as babel from '@babel/core';
 import * as t from '@babel/types';
 import { IMPORTS, REACT_IMPORTS } from './constants.new';
 import type { StateContext } from './types';
-import { isComponentishName, isStatementTopLevel } from './utils/checks';
+import { isComponentishName, isPathValid, isStatementTopLevel } from './utils/checks';
 import { generateUniqueName } from './utils/generate-unique-name';
 import { getDescriptiveName } from './utils/get-descriptive-name';
 import { getImportIdentifier } from './utils/get-import-specifier';
 import { getRootStatementPath } from './utils/get-root-statement-path';
 import { getValidImportDefinition } from './utils/get-valid-import-definition';
+import { isGuaranteedLiteral } from './utils/is-guaranteed-literal';
+import { isJSXComponentElement } from './utils/is-jsx-component-element';
 import { registerImportDefinition } from './utils/register-import-definition';
 import { unwrapNode } from './utils/unwrap-node';
 import { unwrapPath } from './utils/unwrap-path';
-import { isAttributeUnsupported } from './utils/jsx';
 import { logImprovement } from './utils/log';
 
-function shouldTransform(
-  ctx: StateContext,
-  name: string,
-  path: babel.NodePath,
-): boolean {
-  let bailout = false;
+interface JSXStateContext {
+  bailout: boolean;
 
-  let elements = 0;
-  let attributes = 0;
-  let components = 0;
-  let text = 0;
-  let expressions = 0;
-  let returns = 0;
+  elements: number;
+  attributes: number;
+  components: number;
+  text: number;
+  returns: number;
+}
+
+
+function measureExpression(
+  state: JSXStateContext,
+  expr: babel.NodePath<t.Expression>,
+  portal: boolean,
+): void {
+  const unwrappedJSX = unwrapPath(expr, t.isJSXElement);
+  if (unwrappedJSX) {
+    measureJSXExpressions(state, unwrappedJSX);
+    return;
+  }
+  const unwrappedFragment = unwrapPath(expr, t.isJSXFragment);
+  if (unwrappedFragment) {
+    measureJSXExpressions(state, unwrappedFragment);
+    return;
+  }
+  if (isGuaranteedLiteral(expr.node)) {
+    return;
+  }
+  if (portal) {
+    state.components++;
+  } else {
+    state.attributes++;
+  }
+}
+
+function measureJSXSpreadChild(
+  state: JSXStateContext,
+  path: babel.NodePath<t.JSXSpreadChild>,
+): void {
+  measureExpression(state, path.get('expression'), false);
+}
+
+function measureJSXExpressionContainer(
+  state: JSXStateContext,
+  path: babel.NodePath<t.JSXExpressionContainer>,
+  portal: boolean,
+): void {
+  const expr = path.get('expression');
+  if (isPathValid(expr, t.isExpression)) {
+    measureExpression(state, expr, portal);
+  }
+}
+
+function measureJSXAttribute(
+  state: JSXStateContext,
+  attr: babel.NodePath<t.JSXAttribute>,
+): void {
+  const value = attr.get('value');
+  if (isPathValid(value, t.isJSXElement)) {
+    measureJSXExpressions(state, value);
+  } else if (isPathValid(value, t.isJSXFragment)) {
+    measureJSXExpressions(state, value);
+  } else if (isPathValid(value, t.isJSXExpressionContainer)) {
+    measureJSXExpressionContainer(state, value, false);
+  }
+}
+
+function measureJSXSpreadAttribute(
+  state: JSXStateContext,
+  attr: babel.NodePath<t.JSXSpreadAttribute>,
+): void {
+  measureExpression(state, attr.get('argument'), false);
+}
+
+function measureJSXAttributes(
+  state: JSXStateContext,
+  attrs: babel.NodePath<t.JSXAttribute | t.JSXSpreadAttribute>[],
+): void {
+  // TODO handle specific attributes
+  for (let i = 0, len = attrs.length; i < len; i++) {
+    const attr = attrs[i];
+
+    if (isPathValid(attr, t.isJSXAttribute)) {
+      measureJSXAttribute(state, attr);
+    } else if (isPathValid(attr, t.isJSXSpreadAttribute)) {
+      measureJSXSpreadAttribute(state, attr);
+    }
+  }
+}
+
+function measureJSXElement(
+  state: JSXStateContext,
+  path: babel.NodePath<t.JSXElement>,
+): boolean {
+  const openingElement = path.get('openingElement');
+  /**
+   * If this is a component element, move the JSX expression
+   * to the expression array.
+   */
+  if (isJSXComponentElement(path)) {
+    state.components++;
+    return true;
+  }
+  /**
+   * Otherwise, continue extracting in attributes
+   */
+  state.elements++;
+  measureJSXAttributes(state, openingElement.get('attributes'));
+  return false;
+}
+
+function measureJSXExpressions(
+  state: JSXStateContext,
+  path: babel.NodePath<t.JSXElement | t.JSXFragment>,
+): void {
+  if (isPathValid(path, t.isJSXElement) && measureJSXElement(state, path)) {
+    return;
+  }
+  const children = path.get('children');
+  for (let i = 0, len = children.length; i < len; i++) {
+    const child = children[i];
+
+    if (isPathValid(child, t.isJSXElement)) {
+      measureJSXExpressions(state, child);
+    } else if (isPathValid(child, t.isJSXFragment)) {
+      measureJSXExpressions(state, child);
+    } else if (isPathValid(child, t.isJSXSpreadChild)) {
+      measureJSXSpreadChild(state, child);
+    } else if (isPathValid(child, t.isJSXExpressionContainer)) {
+      measureJSXExpressionContainer(state, child, true);
+    } else if (isPathValid(child, t.isJSXText)) {
+      if (child.node.value.trim() !== '') state.text++;
+    }
+  }
+}
+
+function shouldTransform(ctx: StateContext, name: string, path: babel.NodePath): boolean {
+  const state: JSXStateContext = {
+    bailout: false,
+    elements: 0,
+    components: 0,
+    attributes: 0,
+    text: 0,
+    returns: 0,
+  };
 
   path.traverse({
     JSXElement(innerPath) {
-      const type = innerPath.node.openingElement.name;
-      if (t.isJSXMemberExpression(type)) {
-        const isContext =
-          t.isJSXIdentifier(type.object) &&
-          isComponentishName(type.property.name) &&
-          type.property.name === 'Provider';
-        const isSpecialElement = t.isJSXIdentifier(type.object);
-
-        if (isContext) {
-          bailout = true;
-          innerPath.stop();
-          return;
-        }
-
-        if (isSpecialElement) {
-          components++;
-          innerPath.skip();
-          return;
-        }
-      }
-      if (t.isJSXIdentifier(type) && isComponentishName(type.name)) {
-        components++;
-        innerPath.skip();
-        return;
-      }
-
-      elements++;
-    },
-    JSXSpreadChild(innerPath) {
-      components++;
+      measureJSXExpressions(state, innerPath);
       innerPath.skip();
     },
-    JSXExpressionContainer(path) {
-      if (t.isJSXEmptyExpression(path.node.expression)) return;
-
-      if (
-        t.isCallExpression(path.node.expression) &&
-        t.isMemberExpression(path.node.expression.callee) &&
-        t.isIdentifier(path.node.expression.callee.property, { name: 'map' })
-      ) {
-        return;
-      }
-
-      if (t.isConditionalExpression(path.node.expression)) {
-        components++;
-        path.skip();
-        return;
-      }
-
-      if (!t.isLiteral(path.node.expression)) expressions++;
-      if (!t.isJSXAttribute(path.parent)) path.skip();
-    },
-    JSXSpreadAttribute(path) {
-      components++;
-      path.skip();
-    },
-    JSXAttribute(path) {
-      const attribute = path.node;
-      // twin.macro + styled-components / emotion support
-      if (isAttributeUnsupported(attribute) || attribute.name.name === 'ref') {
-        components++;
-        path.skip();
-        return;
-      }
-      if (!t.isLiteral(attribute.value)) attributes++;
-    },
-    JSXText(path) {
-      if (path.node.value.trim() !== '') text++;
+    JSXFragment(innerPath) {
+      measureJSXExpressions(state, innerPath);
+      innerPath.skip();
     },
     ReturnStatement(innerPath) {
       if (innerPath.scope.uid !== path.scope.uid) return;
-      returns++;
-      if (returns > 1) {
-        bailout = true;
+      state.returns++;
+      if (state.returns > 1) {
+        state.bailout = true;
         innerPath.stop();
       }
     },
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (bailout) return false;
+  if (state.bailout) return false;
 
-  const good = elements + attributes + text;
-
+  const good = state.elements + state.attributes + state.text;
   if (good < 5) return false;
-
-  const bad = components + expressions;
+  const bad = state.components;
   const improvement = (good - bad) / (good + bad);
 
   if (isNaN(improvement) || !isFinite(improvement)) return false;

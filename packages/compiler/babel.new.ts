@@ -15,9 +15,9 @@ export function babel(): PluginObj<PluginState> {
     name: 'million',
     pre(): void {
       this.state = {
-        telemetry: this.opts.telemetry,
+        MillionTelemetry: this.opts.MillionTelemetry,
         log: this.opts.log,
-        auto: this.opts.auto ?? false,
+        auto: this.opts.auto,
         hmr: this.opts.hmr ?? false,
         server: this.opts.server ?? false,
         definitions: {
