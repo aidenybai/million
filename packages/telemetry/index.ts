@@ -77,7 +77,7 @@ export class MillionTelemetry {
     // eslint-disable-next-line no-console
     console.log(
       `    - Wrapped: ${cyan(
-        `https://localhost:3000/wrapped/${this.anonymousSessionId}`,
+        `https://telemetry.million.dev/wrapped/${this.anonymousSessionId}`,
       )}`
     );
   }
