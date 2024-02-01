@@ -11,9 +11,14 @@ import {
 } from 'react';
 import { RENDER_SCOPE, SVG_RENDER_SCOPE } from '../react/constants';
 import type { MillionArrayProps, MillionPortal, MillionProps, Options } from '../types';
-import { renderReactScope } from '../react';
+import { renderReactScope } from '../react/utils';
+import { useSSRSafeId } from './utils';
+// import { renderReactScope } from '../react';
 
 let globalInfo;
+
+const isClient = typeof window !== 'undefined'
+const isServer = !isClient
 
 export const block = <P extends MillionProps>(
   Component: ComponentType<P>,
@@ -121,10 +126,11 @@ function Effect({ effect }: { effect: () => void }) {
 
 export const importSource = (callback: () => void) => {
   void import('../react')
-    .then(({ unwrap, INTERNALS, For, removeComments }) => {
+    .then(({ unwrap, INTERNALS, For, compiledBlock, removeComments }) => {
       globalInfo = {
         unwrap,
         For,
+        compiledBlock,
         removeComments,
         ...INTERNALS,
       };
@@ -135,6 +141,7 @@ export const importSource = (callback: () => void) => {
       throw new Error('Failed to load Million.js');
     });
 };
+const thrown = new Map<string, string>();
 
 export const createSSRBoundary = <P extends MillionProps>(
   Component: ComponentType<P>,
@@ -142,6 +149,20 @@ export const createSSRBoundary = <P extends MillionProps>(
   ref: ForwardedRef<unknown>,
   svg = false
 ) => {
+  const id = useSSRSafeId();
+  // if (isClient) {
+  //   console.log(id)
+  //   console.log(document.getElementById(id))
+  //   console.log(document.getElementById(id)?.innerHTML)
+  // }
+
+  // debugger
+  // if (isClient && !thrown.has(id)) {
+  //   const html = document.getElementById(id)?.innerHTML!
+  //   thrown.set(id, html)
+  //   throw Promise.resolve()
+  // }
+
   const ssrProps =
     typeof window === 'undefined'
       ? {
@@ -152,6 +173,7 @@ export const createSSRBoundary = <P extends MillionProps>(
   return createElement(svg ? SVG_RENDER_SCOPE : RENDER_SCOPE, {
     suppressHydrationWarning: true,
     ref,
+    id,
     ...ssrProps,
   });
 };
@@ -171,6 +193,15 @@ export const createRSCBoundary = <P extends MillionProps>(
 const wrap = (vnode: ReactNode): ReactNode => {
   return createElement(RENDER_SCOPE, { suppressHydrationWarning: true }, vnode);
 };
+
+// export const renderReactScope = (
+//   vnode: ReactNode,
+//   _unstable: boolean,
+//   _portals: MillionPortal[] | undefined,
+//   _currentIndex: number,
+// ) => {
+//   return wrap(vnode);
+// };
 
 function isEqual(a: unknown, b: unknown): boolean {
   // Faster than Object.is
@@ -211,12 +242,13 @@ export function compiledBlock(
 
     for (let i = 0; i < portalCount; i++) {
       const index = portals[i]!;
-      derived[index] = renderReactScope(
-        derived[index] as JSX.Element,
-        false,
-        current,
-        i,
-      );
+      // debugger
+      // derived[index] = renderReactScope(
+      //   derived[index] as JSX.Element,
+      //   false,
+      //   current,
+      //   i,
+      // );
     }
 
     const targets: ReactPortal[] = [];
@@ -238,3 +270,63 @@ export function compiledBlock(
 
   return Component;
 }
+
+
+export const SSRBoundary = <P extends MillionProps>(
+  {
+    Component,
+    props,
+  }: {
+    Component: ComponentType<P>;
+    props: P;
+  },
+) => {
+  const children =
+    isServer ? createElement<P>(Component, props) : null;
+  const id = useSSRSafeId();
+
+  const el = createElement(
+    Fragment,
+    null,
+    createHydrationBoundary(id, 'start', isServer),
+    createElement(Suspend, {
+      children,
+      id,
+    }),
+    createHydrationBoundary(id, 'end', isServer),
+  );
+  return el;
+};
+
+// const thrown = new Map();
+
+function Suspend({
+  children,
+  id,
+}: PropsWithChildren<{ id: string }>): ReactNode {
+  if (isServer) {
+    return children;
+  }
+
+  let html = '';
+  const startTemplate = document.getElementById(`start-${id}`);
+  const endTemplate = document.getElementById(`end-${id}`);
+  if (!thrown.has(id) && startTemplate && endTemplate) {
+    let el = startTemplate.nextElementSibling;
+    while (el && el !== endTemplate) {
+      html += el.outerHTML;
+      el = el.nextElementSibling;
+    }
+    startTemplate.remove();
+    endTemplate.remove();
+    thrown.set(id, parse(html));
+    throw Promise.resolve();
+  }
+  // we can return null to avoid parsing but this would cause a flashing
+  return thrown.get(id);
+}
+
+const createHydrationBoundary = (id: string, phase: 'start' | 'end', isSSR: boolean) => {
+  // TODO: Better to use html commnts which are not allowed in React
+  return isSSR ? createElement('template', { id: `${phase}-${id}` }) : null;
+};
