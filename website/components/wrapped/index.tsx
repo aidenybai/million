@@ -100,7 +100,7 @@ export default function Wrapped(props) {
                   </video>
                 ) : (
                   <progress
-                    className="rounded-lg h-[420px] w-[100%] bg-transparent"
+                    className="rounded-lg h-[400px] w-[100%] bg-transparent"
                     value={progress}
                     max={100}
                   ></progress>
