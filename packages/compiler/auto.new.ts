@@ -13,6 +13,7 @@ import { isJSXComponentElement } from './utils/is-jsx-component-element';
 import { registerImportDefinition } from './utils/register-import-definition';
 import { unwrapNode } from './utils/unwrap-node';
 import { unwrapPath } from './utils/unwrap-path';
+import { logImprovement } from './utils/log';
 
 interface JSXStateContext {
   bailout: boolean;
@@ -151,7 +152,7 @@ function measureJSXExpressions(
   }
 }
 
-function shouldTransform(ctx: StateContext, path: babel.NodePath): boolean {
+function shouldTransform(ctx: StateContext, name: string, path: babel.NodePath): boolean {
   const state: JSXStateContext = {
     bailout: false,
     elements: 0,
@@ -183,15 +184,23 @@ function shouldTransform(ctx: StateContext, path: babel.NodePath): boolean {
   if (state.bailout) return false;
 
   const good = state.elements + state.attributes + state.text;
+  if (good < 5) return false;
   const bad = state.components;
   const improvement = (good - bad) / (good + bad);
+
+  if (isNaN(improvement) || !isFinite(improvement)) return false;
 
   const threshold =
     typeof ctx.auto === 'object' && ctx.auto.threshold
       ? ctx.auto.threshold
       : 0.1;
 
-  return isNaN(improvement) || improvement <= threshold || good < 5;
+  if (improvement <= threshold) return false;
+  if (!ctx.log || ctx.log === 'info') {
+    logImprovement(name, (improvement * 100).toFixed(0));
+  }
+
+  return true;
 }
 
 function transformFunctionDeclaration(
@@ -211,7 +220,7 @@ function transformFunctionDeclaration(
       // have zero or one parameter
       decl.params.length < 2 &&
       // Check if the function should be transformed
-      shouldTransform(ctx, path)
+      shouldTransform(ctx, decl.id.name, path)
     ) {
       const newPath = program.unshiftContainer(
         'body',
@@ -284,10 +293,12 @@ function transformVariableDeclarator(
       // Must not be async or generator
       !(trueFuncExpr.async || trueFuncExpr.generator) &&
       // Might be component-like, but the only valid components
+      t.isIdentifier(identifier) &&
+      isComponentishName(identifier.name) &&
       // have zero or one parameter
       trueFuncExpr.params.length < 2 &&
       // Check if the function should be transformed
-      shouldTransform(ctx, path)
+      shouldTransform(ctx, identifier.name, path)
     ) {
       path.node.init = t.callExpression(
         getImportIdentifier(
