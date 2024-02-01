@@ -15,9 +15,10 @@ export function babel(): PluginObj<PluginState> {
     name: 'million',
     pre(): void {
       this.state = {
-        auto: this.opts.auto ?? false,
+        auto: this.opts.auto,
         hmr: this.opts.hmr ?? false,
         server: this.opts.server ?? false,
+        log: this.opts.log,
         definitions: {
           identifiers: new Map(),
           namespaces: new Map(),
