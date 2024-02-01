@@ -3,14 +3,12 @@ import {
   Fragment,
   createElement,
   forwardRef,
-  isValidElement,
   memo,
   useCallback,
   useEffect,
   useRef,
   useState,
 } from 'react';
-import { createPortal } from 'react-dom'
 import { RENDER_SCOPE, SVG_RENDER_SCOPE } from '../react/constants';
 import type { MillionArrayProps, MillionPortal, MillionProps, Options } from '../types';
 
