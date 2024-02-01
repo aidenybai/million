@@ -36,6 +36,7 @@ const MillionArray = <T>({
   memo,
   scoped,
 }: MillionArrayProps<T>): ReturnType<typeof createElement> => {
+  scoped = false
   const container = useContainer<HTMLElement>(); // usable when there's no parent other than the root element
   const parentRef = useNearestParent<HTMLElement>();
 
