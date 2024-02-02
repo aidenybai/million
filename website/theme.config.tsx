@@ -274,8 +274,8 @@ const config: DocsThemeConfig = {
     dismissible: true,
     key: `version-${packageJson.version}`,
     text: (
-      <a href="https://github.com/aidenybai/million" target="_blank">
-        Go give a ⭐ to Million.js v{packageJson.version} on GitHub! ➡️
+      <a href="https://million.dev/blog/million-3" target="_blank">
+        Announcing Million 3 →
       </a>
     ),
   },

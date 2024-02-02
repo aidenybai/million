@@ -4,11 +4,10 @@ date: FEB 2, 2024
 description: Compiler overhaul, dynamic linter, runtime improvements!
 ---
 
-import Image from 'next/image';
 import { Tabs, Tab } from 'nextra-theme-docs';
 
-<div className="flex justify-center">
-  <Image src="/v3-banner.svg" width={350} height={130} />
+<div className="flex justify-center mt-5">
+  <img src="/v3-banner.svg" width="100%" />
 </div>
 
 <div className="flex flex-col items-center gap-4">
@@ -26,28 +25,61 @@ After many months of development (_and one [soft launch](https://twitter.com/aid
 
 Million.js is an optimizing compiler for React. Traditionally, React uses the virtual DOM, which often makes the browser do lots of extra work to compute DOM operations. As your website grows, this can lead to sluggish load and render times.
 
-Instead, Million.js compiles down your React components a custom runtime. Instead of
+Instead, Million.js compiles down your React components a custom runtime. This results in much [faster reconciliation](https://million.dev/docs), allowing you to write very data heavy user interfaces without sacrificing performance.
 
-Million 1 & 2 was
+Million 1 & 2 were experiments to see whether it was possible to use a compiler to make React faster – we were blown away by the results. Million 3 is a stability upgrade to make the developer experience even better.
 
-https://www.youtube.com/watch?v=dJeC6rIr0X8&t=112s&pp=ygUaYWlkZW4gYmFpIG1pbGlvbi5qcyBkcm9wanM%3D
+Million 3 is a complete rewrite of the compiler. The team has been dead set on maximizing compatibility with the React ecosystem, while also providing a more efficient and faster runtime. Just upgrade to see what we mean – significantly faster user experience with no changes to your codebase.
+
+<div className="mt-3 flex justify-center">
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/VkezQMb1DHw?si=dHe45lhM2uTOBQP9" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+</div>
 
 ## What's new
 
 ### Performance
 
-In old Million, hydration was coarse.
+In old Million, hydration was coarse. When a component is SSRed, hydration occurs, and the entire component is hydrated. This is slow and inefficient, especially as your React app gets larger.
 
+In Million 3, we've introduced a new hydration system that only hydrates the parts of the component that need it. This means that your components will hydrate much faster, and your users will see a much faster time-to-interactive.
+
+Here's a comparison:
+
+<Tabs items={['Old', 'New (Million 3)']}>
+<Tab>
+Normally, React SSR will hydrate the entire component (👎 ❌)
+
+```jsx {1-4}
+<div>
+  <h1>Hello, world!</h1>
+  <button onClick={handleClick}>{count}</button>
+</div>
+```
+</Tab>
+
+<Tab>
+Million 3 only hydrates `handleClick` and `count` (✨ ✅)
+
+```jsx /\{count\}/ /\{handleClick\}/
+<div>
+  <h1>Hello, world!</h1>
+  <button onClick={handleClick}>{count}</button>
+</div>
+```
+</Tab>
+</Tabs>
 
 ### Stability
 
-better TypeScript support
-better macro inference (you can now do import `{ block as someBlock }` or million.block
-automatic displayName generation
-better portal handling and code output
-support for code branching in block
+Million 3 is a complete rewrite of the compiler. We've taken the time to re-architect the compiler to be more stable, more predictable, and more maintainable. This means that you can expect fewer bugs, better error messages, and a more consistent developer experience.
 
-## Million Linter
+Among these changes are: better TypeScript support, better import inference, multiple return and conditional support, and better portal handling.
+
+In the next few minor releases, we will be focusing on improving the performance of the compiler, reducing time to build.
+
+### Docs & i18n upgrade
+
+The official [million.dev](https://million.dev) site has gotten an overhaul. We've added a new i18n system, so the site is now available in multiple languages! The documentation has been reorganized to show automatic mode as the default, and manual mode as an advanced feature.
 
 ## Upgrading to version 3
 
@@ -57,13 +89,18 @@ Your current 2.x.x code should work with 3.x.x with no changes. To upgrade, simp
 npx million@latest
 ```
 
+That's all!
+
 ## The road ahead
 
+The future of Million is to be the de-facto performance toolset for the web. In the coming weeks, the Million team will ship a suite of developer tools to redefine how frontend engineering teams approach <span className="underline decoration-wavy text-amber-500 decoration-amber-600">debugging</span>, fixing, and maintaining web performance.
+
+We have a simple thesis for the web – we can build tools that can make existing tooling fast and easy to use. We plan to start with React, then extend to backend, mobile, and other platforms.
+
+I extend an [open invitation](mailto:aiden@million.dev) to join us in this journey. Because ultimately, we're just getting started.
 
 ## Acknowledgements
 
-Thank you
+Thank you to the many contributors who made this release possible. Special thanks to [@lxsmnsyc](https://twitter.com/lxsmnsyc), [@asleMammadam](https://twitter.com/asleMammadam), [@nisargptel](https://twitter.com/nisargptel), [@fiveseveny](https://twitter.com/fiveseveny), [@melindachang](https://github.com/melindachang) for their contributions to this release.
 
-First and foremost, thank you to all of the many Svelte maintainers and contributors who made this release possible. Developers contributing multiple PRs to this release were @dummdidumm, @gtm-nayan, @benmccann, @tanhauhau, @Karlinator, and @ngtr6788. Also, thank you to the many community members who donated to the Svelte OpenCollective - these donations sponsored the site overhaul completed by PuruVJ as well as a number of recent fixes from @gtm-nayan.
-
-Finally, thank you to the various library maintainers from across the ecosystem who helped prepare for this release. Thank you to @jessebeach for the help in getting out new versions of aria-query and axobject-query, @jreinhold for ensuring compatibility with Storybook, and @yanick for updating svelte-testing-library. And to ensure things stay working, the svelte-ecosystem-ci setup by @dominikg — which was modeled off his similar work for Vite — has been helping to test against major projects in the ecosystem on an ongoing basis.
+Feel free to ask questions and reach out to us on [Twitter](https://twitter.com/milliondotjs) or [GitHub](https://github.com/aidenybai/million).
