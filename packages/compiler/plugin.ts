@@ -134,6 +134,8 @@ export const unplugin = createUnplugin((options: Options = {}, meta) => {
           'vite:react-jsx',
           // https://github.com/preactjs/preset-vite/blob/main/src/index.ts
           'vite:preact-jsx',
+          // https://github.com/vitejs/vite-plugin-react-swc/blob/main/src/index.ts
+          'vite:react-swc',
         ]);
 
         options.hmr = config.env.DEV;
