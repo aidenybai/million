@@ -222,7 +222,7 @@ const config: DocsThemeConfig = {
       ogUrl = `https://telemetry.million.dev/api/v1/og/wrapped/${
         query.id
       }.mp4?name=${encodeURIComponent(query?.name as any)}`;
-      title = query?.name + ' Wrapped | Million.js';
+      title = (query?.name ?? "My React app") + ' Wrapped | Million.js';
     }
 
     return (
@@ -294,7 +294,7 @@ const config: DocsThemeConfig = {
     }
 
     if (pathname.startsWith('/wrapped/')) {
-      return { title: query?.name + ' Wrapped | Million.js' };
+      return { title: (query?.name ?? "My React app")  + ' Wrapped | Million.js' };
     }
 
     return { titleTemplate: `%s | Million.js` };
