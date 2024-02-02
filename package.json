@@ -87,7 +87,8 @@
         "types": "./dist/packages/types.d.ts",
         "default": "./dist/packages/types.cjs"
       }
-    }
+    },
+    "./*": "./*"
   },
   "main": "dist/packages/million.mjs",
   "jsdelivr": "dist/packages/million.mjs",
