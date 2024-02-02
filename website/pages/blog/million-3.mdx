@@ -4,8 +4,6 @@ date: FEB 2, 2024
 description: Compiler overhaul, dynamic linter, runtime improvements!
 ---
 
-import { Tabs, Tab } from 'nextra-theme-docs';
-
 <div className="flex justify-center mt-5">
   <img src="/v3-banner.svg" width="100%" />
 </div>
@@ -14,72 +12,64 @@ import { Tabs, Tab } from 'nextra-theme-docs';
 
 # Announcing Million 3
 
-  <small>[AIDEN BAI](https://twitter.com/aidenybai) FEB 2 2024</small>
+  <small>[AIDEN BAI](https://twitter.com/aidenybai), [NISARG PATEL](https://twitter.com/nisargptel), [JOHN YANG](https://twitter.com/fiveseveny) – FEB 2 2024</small>
 </div>
 
 ---
 
-After many months of development (_and one [soft launch](https://twitter.com/aidenybai/status/1732812329434423647) later_), we're **so excited** to finally release Million 3. Many hundreds of hours have gone into this release by the Million community, including the core team, contributors, and many Discord members who have helped us test and provide feedback.
+After many months of development (_and one [soft launch](https://twitter.com/aidenybai/status/1732812329434423647) later_), we are **so excited** to finally release Million 3. Thousands of hours have gone into this release by the Million community, including the core team, contributors, and many Discord members who have helped us test and provide feedback.
 
 ## What is Million?
 
-Million.js is an optimizing compiler for React. Traditionally, React uses the virtual DOM, which often makes the browser do lots of extra work to compute DOM operations. As your website grows, this can lead to sluggish load and render times.
+Million is an optimizing compiler for React. The React virtual DOM represents the user interface (UI) as a tree. Every time a component (node) renders, React traverses the virtual DOM tree to update the UI, resulting in `O(n)` time complexity. As your website grows, this can lead to sluggish user experiences.
 
-Instead, Million.js compiles down your React components a custom runtime. This results in much [faster reconciliation](https://million.dev/docs), allowing you to write very data heavy user interfaces without sacrificing performance.
+Million takes a fundamentally different approach. It still represents a UI as a tree, but it discriminates between nodes. In an application, some nodes will never change (static text, images, etc.), while others will change frequently (user input, dynamic data, etc.). Instead of traversing every node, Million uses a compiler to directly update dynamic nodes, resulting in `O(1)` time complexity.
 
-Million 1 & 2 were experiments to see whether it was possible to use a compiler to make React faster – we were blown away by the results. Million 3 is a stability upgrade to make the developer experience even better.
+Since launching Million 1 & 2, we have found that this approach works exceptionally well for data-heavy UIs, like dashboard with real-time information. However, there were certain caveats – some common libraries were not compatible, non-deterministic returns could not be optimized, and the compiler was not as stable as we would like.
 
-Million 3 is a complete rewrite of the compiler. The team has been dead set on maximizing compatibility with the React ecosystem, while also providing a more efficient and faster runtime. Just upgrade to see what we mean – significantly faster user experience with no changes to your codebase.
+Million 3 is a signficant update that solves these issues. We believe that Million 3 is the best way to build React applications, and we are excited to share it with you.
 
 <div className="mt-3 flex justify-center">
   <iframe width="560" height="315" src="https://www.youtube.com/embed/VkezQMb1DHw?si=dHe45lhM2uTOBQP9" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 </div>
 
-## What's new
+## What's new?
 
 ### Performance
 
-In old Million, hydration was coarse. When a component is SSRed, hydration occurs, and the entire component is hydrated. This is slow and inefficient, especially as your React app gets larger.
-
-In Million 3, we've introduced a new hydration system that only hydrates the parts of the component that need it. This means that your components will hydrate much faster, and your users will see a much faster time-to-interactive.
-
-Here's a comparison:
-
-<Tabs items={['Old', 'New (Million 3)']}>
-<Tab>
-Normally, React SSR will hydrate the entire component (👎 ❌)
-
-```jsx {1-4}
-<div>
-  <h1>Hello, world!</h1>
-  <button onClick={handleClick}>{count}</button>
-</div>
-```
-</Tab>
-
-<Tab>
-Million 3 only hydrates `handleClick` and `count` (✨ ✅)
+The biggest challenge with Million 2 was hydration. In React, hydration is the process of attaching event listeners to the server-rendered HTML – making the page interactive. Just like how the virtual DOM needs to be traversed, hydration is also `O(n)` time complexity. This means that as your application grows, hydration can become a bottleneck.
 
 ```jsx /\{count\}/ /\{handleClick\}/
+// Normally, React SSR will traverse every node in the component (👎 ❌)
 <div>
   <h1>Hello, world!</h1>
   <button onClick={handleClick}>{count}</button>
 </div>
 ```
-</Tab>
-</Tabs>
+
+In Million 3, we have introduced a new hydration system that only traverses the parts of the component that are dynamic, resulting in `O(d)` time complexity (where `d` is the number of dynamic nodes, `d` ≤ `n`).
+
+```jsx /\{count\}/ /\{handleClick\}/
+// Million 3 only hydrates `handleClick` and `count` (✨ ✅)
+<div>
+  <h1>Hello, world!</h1>
+  <button onClick={handleClick}>{count}</button>
+</div>
+```
+
+We are also currently working on removing `<slot>` elements. In Million 2, this was necessary to mount blocks and portals properly, but often resulted in extra memory overhead and issues with parent-dependent styling (such as `flex-box` or `grid`). We expect to ship a full revamp of this system in the next minor release.
 
 ### Stability
 
-Million 3 is a complete rewrite of the compiler. We've taken the time to re-architect the compiler to be more stable, more predictable, and more maintainable. This means that you can expect fewer bugs, better error messages, and a more consistent developer experience.
+One of the major focuses of this release was to improve the stability of the developer experience.
 
-Among these changes are: better TypeScript support, better import inference, multiple return and conditional support, and better portal handling.
+Million 3 is a complete rewrite of the compiler. We have refactored based on correctness, to cover significantly more edge cases. These include: better TypeScript support, multiple returns, conditionals support, and handling of nested React components. This means that you can expect a more seamless and stable experience when using Million 3.
 
-In the next few minor releases, we will be focusing on improving the performance of the compiler, reducing time to build.
+In the next few minor releases, we will be focusing on improving the performance of the compiler. This will make Million 3.x even faster and more reliable.
 
 ### Docs & i18n upgrade
 
-The official [million.dev](https://million.dev) site has gotten an overhaul. We've added a new i18n system, so the site is now available in multiple languages! The documentation has been reorganized to show automatic mode as the default, and manual mode as an advanced feature.
+The official [million.dev](https://million.dev) site has gotten an overhaul. We have added a new i18n system, so the site is now available in multiple languages! In addition, the documentation has been reorganized to show automatic mode as the default and manual mode as an advanced feature.
 
 ## Upgrading to version 3
 
@@ -93,15 +83,19 @@ That's all!
 
 ## The road ahead
 
-The future of Million is to be the de-facto performance toolset for the web. In the coming weeks, the Million team will ship a suite of developer tools to redefine how frontend engineering teams approach <span className="underline decoration-wavy text-amber-500 decoration-amber-600">debugging</span>, fixing, and maintaining web performance.
+In the coming weeks, the Million team will ship a suite of developer tools to redefine how frontend engineering teams approach <span className="underline decoration-wavy text-amber-500 decoration-amber-600">debugging</span>, fixing, and maintaining web performance. Our mission is to enable developers to deliver fast software effortlessly: with any system, on any platform.
 
-Today, dealing with performance issues is a nightmare. The status quo is navigating through React Devtools, `Profiler`, Chrome Devtools, `why-did-you-render`, Forget, and the lot. This is a fundamentally broken experience – causing months of wasted developer productivity, and millions of dollars in lost revenue.
+Today, dealing with performance issues is a nightmare. The status quo is navigating through React Devtools, `Profiler`, Chrome Devtools, `why-did-you-render`, Forget, and the lot. This is a fundamentally broken experience, leading to some developers spending more time debugging rerenders than shipping features.
 
-Even traditional players, like Next.js, who attempt to innovate on the front by providing better developer experience and performance fail at a fundamentally simple idea – not everyone uses a React framework.
+Even within the React ecosystem, there is a basic lack of understanding on how to enable developers to build and maintain fast applications. Frameworks like Next.js and Gatsby have made it easier to build performant websites, but they can't optimize inefficiently implemented code. Hosting services scale as your application grows, but they can't fix a poorly designed architecture.
 
-At Million, we have a simple thesis for the web – we can build tools that can make existing tooling fast and easy to use. Developers should think only of shipping features and fixing bugs – not of performance. We plan to start with React, then extend to backend, mobile, and other platforms.
+We need to build tools that make it easy to deliver fast applications, regardless of the framework, platform, or the size of your engineering team.
 
-I extend an [open invitation](mailto:aiden@million.dev) to join us in this journey. Because ultimately, we're just getting started.
+At Million, we have a simple thesis for software performance – we can build tools that make *existing* tooling fast and easy to use. Developers should think only of shipping features and fixing bugs – not keeping their apps fast. We plan to start with React, then extend to the roader frontend, backend, and other platforms.
+
+I invite you to join Million on this journey. We are looking for talented frontend (dev tools) and pl/ml engineers to join us in the Bay Area. If you are interested, please email [aiden@million.dev](aiden@million.dev) with your resume and something you built using Million.
+
+Let's make the future of software fast, together.
 
 ## Acknowledgements
 

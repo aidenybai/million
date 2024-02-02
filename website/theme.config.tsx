@@ -212,10 +212,13 @@ const config: DocsThemeConfig = {
         : pathname;
     const canonical = new URL(asPath, 'https://million.dev').toString();
 
-    const ogUrl =
-      pathname === '/'
-        ? `https://million.dev/default-og.png`
-        : `https://million.dev/api/og?title=${title}&description=${description}&note=${note}`;
+    let ogUrl = `https://million.dev/default-og.png`;
+
+    if (pathname.includes('million-3')) {
+      ogUrl = `https://million.dev/v3-thumbnail.png`;
+    } else {
+      ogUrl = `https://million.dev/api/og?title=${title}&description=${description}&note=${note}`;
+    }
 
     return (
       <>
@@ -231,7 +234,7 @@ const config: DocsThemeConfig = {
         {pathname.startsWith('/wrapped/') ? (
           <>
             <meta property="og:type" content="video.other" />
-            <meta property="twitter:card" content="player"/>
+            <meta property="twitter:card" content="player" />
             <meta name="twitter:player:stream" content={videoUrl} />
             <meta name="twitter:player:width" content="1280" />
             <meta name="twitter:player:height" content="720" />
