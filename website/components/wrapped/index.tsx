@@ -151,7 +151,7 @@ export default function Wrapped(props) {
                 )}
                 <div className="grid grid-rows-4 grid-cols-1 sm:grid-cols-4 sm:grid-rows-1 justify-center items-center divide-x divide-[#42424C] border-top border-[#202025]">
                   <button
-                    className="relative w-full flex gap-2  items-center justify-center transition-all bg-black px-10 py-[11.5px] h-[64px] hover:bg-[#090909] rounded-bl-lg james"
+                    className="relative w-full flex gap-2  items-center justify-center transition-all bg-black px-10 py-[11.5px] h-[64px] hover:bg-[#090909] md:rounded-bl-lg james"
                     onClick={() => {
                       setMode((prev) =>
                         prev === 'default' ? 'customize' : 'default',
