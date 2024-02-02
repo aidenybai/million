@@ -8,7 +8,7 @@ import { useMockProgress } from './useMockProgress';
 // eslint-disable-next-line import/no-default-export -- This is the default export
 export default function Wrapped(props) {
   const [mode, setMode] = useState<'default' | 'customize'>('default');
-  const [name, setName] = useState<string>('');
+  const [name, setName] = useState<string>('My React app');
   const [copied, setCopied] = useState<boolean>(false);
   const [videoUrl, setVideoUrl] = useState<string>('');
   const { progress, finish, start } = useMockProgress({
@@ -23,6 +23,8 @@ export default function Wrapped(props) {
     if (url.searchParams.has('name')) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- asd
       setName(url.searchParams.get('name')!);
+    } else {
+      setNameName('My React app');
     }
   }, []);
 
@@ -203,16 +205,6 @@ export default function Wrapped(props) {
                           className="relative w-full flex gap-1 items-center justify-center transition-all bg-black px-10 py-[11.5px] h-[64px] hover:bg-[#090909] rounded-br-lg w-[300px]"
                           type="submit"
                         >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="22"
-                            height="22"
-                            viewBox="0 0 24 24"
-                            fill="white"
-                            className="feather feather-twitter pt-1"
-                          >
-                            <path d="M16.99 0H20.298L13.071 8.26L21.573 19.5H14.916L9.702 12.683L3.736 19.5H0.426L8.156 10.665L0 0H6.826L11.539 6.231L16.99 0ZM15.829 17.52H17.662L5.83 1.876H3.863L15.829 17.52Z"></path>
-                          </svg>
                           <div className="relative whitespace-pre text-center text-lg font-semibold leading-none tracking-tight text-white z-10">
                             Generate
                           </div>
