@@ -95,9 +95,7 @@ const config: DocsThemeConfig = {
           }
           span:hover {
             mask-position: 100%;
-            transition:
-              mask-position 1s ease,
-              -webkit-mask-position 1s ease;
+            transition: mask-position 1s ease, -webkit-mask-position 1s ease;
           }
         `}</style>
       </span>
@@ -219,9 +217,12 @@ const config: DocsThemeConfig = {
     } else {
       ogUrl = `https://million.dev/api/og?title=${title}&description=${description}&note=${note}`;
     }
-    if (pathname.startsWith('/wrapped/')) {
-      ogUrl = `https://telemetry.million.dev/api/v1/og/wrapped/${query.id}.mp4?name=${encodeURIComponent(query?.name as any)}`
-      title = query?.name + " Wrapped" 
+    const isWrapped = pathname.startsWith('/wrapped/');
+    if (isWrapped) {
+      ogUrl = `https://telemetry.million.dev/api/v1/og/wrapped/${
+        query.id
+      }.mp4?name=${encodeURIComponent(query?.name as any)}`;
+      title = query?.name + ' Wrapped';
     }
 
     return (
@@ -233,6 +234,7 @@ const config: DocsThemeConfig = {
         <meta property="og:description" content={description} />
         <meta name="twitter:site" content={`@${ogConfig.author.twitter}`} />
         <meta name="twitter:creator" content={`@${ogConfig.author.twitter}`} />
+        {isWrapped ? <meta property="og:title" content={title} /> : null}
         <meta property="twitter:title" content={title} />
         <meta property="twitter:description" content={description} />
         <meta name="twitter:card" content="summary_large_image" />
@@ -291,8 +293,6 @@ const config: DocsThemeConfig = {
   primarySaturation: 0,
 };
 
-
-
 export function hash(str: string): number {
   let hashy = 0;
   for (let i = 0, len = str.length; i < len; i++) {
@@ -302,6 +302,5 @@ export function hash(str: string): number {
   }
   return hashy;
 }
-
 
 export default config;
