@@ -1,7 +1,7 @@
 import type { NodePath } from '@babel/core';
 import { addNamed } from '@babel/helper-module-imports';
 import type * as t from '@babel/types';
-import type { Info } from '../babel.new';
+import type { Info } from '../babel';
 import type { Options } from '../plugin';
 
 export const resolveImportSource = (options: Options, source: string): string | null => {

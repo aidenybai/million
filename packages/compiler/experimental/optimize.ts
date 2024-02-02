@@ -2,7 +2,7 @@ import * as t from '@babel/types';
 import { addNamed } from '@babel/helper-module-imports';
 import type { NodePath } from '@babel/core';
 import { EventFlag } from '../../million/constants';
-import type { Info } from '../babel.new';
+import type { Info } from '../babel';
 import { addImport } from '../utils/mod';
 import { getUniqueId } from '../utils/id';
 import { hoistElements, renderToString, renderToTemplate } from './render';

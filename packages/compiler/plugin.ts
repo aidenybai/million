@@ -5,7 +5,7 @@ import { createFilter } from '@rollup/pluginutils';
 import type { TransformResult, VitePlugin } from 'unplugin';
 import { createUnplugin } from 'unplugin';
 import { MillionTelemetry } from '../telemetry';
-import { babel } from './babel.new';
+import { babel } from './babel';
 import { displayIntro } from './utils/log';
 // import { babel } from './babel';
 import type { CompilerOptions } from './types';

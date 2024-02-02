@@ -8,7 +8,7 @@ import {
 } from './utils/jsx';
 import { deopt, catchError } from './utils/log';
 import { findChild } from './utils/ast';
-import type { Info } from './babel.new';
+import type { Info } from './babel';
 import { transformBlock } from './block';
 import { getUniqueId } from './utils/id';
 

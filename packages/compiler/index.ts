@@ -1,5 +1,5 @@
 import { existsSync } from 'node:fs';
-import { babel } from './babel.new';
+import { babel } from './babel';
 import type { Options } from './plugin';
 import { unplugin } from './plugin';
 
