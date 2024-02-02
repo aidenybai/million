@@ -110,7 +110,7 @@
   ],
   "scripts": {
     "build": "unbuild",
-    "bump": "pnpm build && pnpm test && publint --strict && bumpp",
+    "bump": "pnpm build && pnpm test && pnpm lint && bumpp",
     "cleanup": "prettier --write ./**/*.{ts,tsx}",
     "lint": "eslint ./packages --ext .ts --cache",
     "lint:fix": "pnpm lint --fix",
@@ -142,7 +142,6 @@
     "eslint-config-prettier": "^8.10.0",
     "jsdom": "^21.1.2",
     "prettier": "^3.1.1",
-    "publint": "^0.1.16",
     "rollup": "^4.9.2",
     "rollup-plugin-banner2": "^1.2.2",
     "source-map": "^0.7.4",
