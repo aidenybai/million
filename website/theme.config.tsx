@@ -220,6 +220,9 @@ const config: DocsThemeConfig = {
     } else {
       ogUrl = `https://million.dev/api/og?title=${title}&description=${description}&note=${note}`;
     }
+    if (pathname.startsWith('/wrapped/')) {
+      ogUrl = `https://telemetry.million.dev/api/v1/og/wrapped/${query.id}.mp4?name=${encodeURIComponent(query?.name as any)}`
+    }
 
     return (
       <>
@@ -232,28 +235,9 @@ const config: DocsThemeConfig = {
         <meta name="twitter:creator" content={`@${ogConfig.author.twitter}`} />
         <meta property="twitter:title" content={title} />
         <meta property="twitter:description" content={description} />
-        {pathname.startsWith('/wrapped/') ? (
-          <>
-            <meta property="og:type" content="video.other" />
-            <meta property="twitter:card" content="player" />
-            <meta name="twitter:player:stream" content={videoUrl} />
-            <meta name="twitter:player:width" content="1280" />
-            <meta name="twitter:player:height" content="720" />
-            <meta property="og:video" content={videoUrl} />
-            <meta property="og:video:url" content={videoUrl} />
-            <meta property="og:video:secure_url" content={videoUrl} />
-            <meta property="og:video:type" content="video/mp4" />
-            <meta property="og:video:width" content="1280" />
-            <meta property="og:video:height" content="720" />
-          </>
-        ) : (
-          <>
-            <meta name="twitter:card" content="summary_large_image" />
-            <meta property="twitter:image" content={ogUrl} />
-            <meta property="og:image" content={ogUrl} />
-          </>
-        )}
-
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta property="twitter:image" content={ogUrl} />
+        <meta property="og:image" content={ogUrl} />
         <link rel="shortcut icon" href={favicon} type="image/svg+xml" />
         <link rel="apple-touch-icon" href={favicon} type="image/svg+xml" />
         <meta name="apple-mobile-web-app-title" content={title} />
