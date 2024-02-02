@@ -316,7 +316,7 @@ export function hash(str: string): number {
     hashy = (hashy << 5) - hashy + chr;
     hashy |= 0; // Convert to 32bit integer
   }
-  return hash;
+  return hashy;
 }
 
 
