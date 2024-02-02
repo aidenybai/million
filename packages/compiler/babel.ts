@@ -4,7 +4,7 @@ import { transformBlock } from './block';
 import type { TrackedImports } from './constants';
 import { INVERSE_IMPORTS, TRACKED_IMPORTS } from './constants';
 import type { CompilerOptions, StateContext } from './types';
-import { isUseClient } from './utils/mod';
+import { isUseClient } from './utils/is-use-client';
 import { registerImportDefinition } from './utils/register-import-definition';
 
 interface PluginState extends PluginPass {

@@ -3,7 +3,7 @@ import { addNamed } from '@babel/helper-module-imports';
 import type { NodePath } from '@babel/core';
 import { EventFlag } from '../../million/constants';
 import type { Info } from '../babel';
-import { addImport } from '../utils/mod';
+import { addImport } from '../utils/is-use-client';
 import { getUniqueId } from '../utils/id';
 import { hoistElements, renderToString, renderToTemplate } from './render';
 import { createDirtyChecker, createEdit } from './utils';

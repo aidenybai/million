@@ -11,7 +11,7 @@ import { getValidImportDefinition } from './utils/get-valid-import-definition';
 import { isGuaranteedLiteral } from './utils/is-guaranteed-literal';
 import { isJSXComponentElement } from './utils/is-jsx-component-element';
 import { logImprovement } from './utils/log';
-import { isUseClient } from './utils/mod';
+import { isUseClient } from './utils/is-use-client';
 import { registerImportDefinition } from './utils/register-import-definition';
 import { unwrapNode } from './utils/unwrap-node';
 import { unwrapPath } from './utils/unwrap-path';
