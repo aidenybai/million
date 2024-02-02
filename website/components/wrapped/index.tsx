@@ -70,7 +70,7 @@ export default function Wrapped(props) {
           }}
         ></style>
       </Head>
-      <div className="relativepb-10 border-b border-b-[#ffffff1a] h-screen">
+      <div className="relative pb-10 border-b border-b-[#ffffff1a] h-screen">
         <Blur />
         <RetroGrid />
         <Container>
@@ -110,7 +110,7 @@ export default function Wrapped(props) {
                     className="relative w-full flex gap-1 items-center justify-center transition-all bg-black px-10 py-[11.5px] h-[64px] hover:bg-[#090909] "
                     onClick={() =>
                       window.open(
-                        `https://twitter.com/intent/tweet?text=My website is part ofI just wrapped my website with @milliondotjs and it's amazing! Check it out at https://million.dev/wrapped/${id}.mp4`,
+                        `https://twitter.com/intent/tweet?text=My website is part ofI just wrapped my website with @milliondotjs and it's amazing! Check it out at https://wrapped.million.dev/${id}.mp4`,
                         '_blank',
                       )
                     }
@@ -134,7 +134,7 @@ export default function Wrapped(props) {
                     onClick={() => {
                       // Copy to clipboard
                       void navigator.clipboard.writeText(
-                        `https://million.dev/wrapped/${id}.mp4`,
+                        `https://wrapped.million.dev/${id}.mp4`,
                       );
                       setCopied(true);
 
@@ -168,7 +168,7 @@ export default function Wrapped(props) {
                     ) : (
                       <>
                         <svg
-                          className=" pt-[1px]"
+                          className="pt-[1px]"
                           fill="none"
                           height={22}
                           shapeRendering="geometricPrecision"
