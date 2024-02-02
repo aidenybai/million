@@ -222,7 +222,7 @@ const config: DocsThemeConfig = {
       ogUrl = `https://telemetry.million.dev/api/v1/og/wrapped/${
         query.id
       }.mp4?name=${encodeURIComponent(query?.name as any)}`;
-      title = query?.name + ' Wrapped';
+      title = query?.name + ' Wrapped | Million.js';
     }
 
     return (
@@ -234,7 +234,6 @@ const config: DocsThemeConfig = {
         <meta property="og:description" content={description} />
         <meta name="twitter:site" content={`@${ogConfig.author.twitter}`} />
         <meta name="twitter:creator" content={`@${ogConfig.author.twitter}`} />
-        {isWrapped ? <meta property="og:title" content={title} /> : null}
         <meta property="twitter:title" content={title} />
         <meta property="twitter:description" content={description} />
         <meta name="twitter:card" content="summary_large_image" />
@@ -282,14 +281,14 @@ const config: DocsThemeConfig = {
     component: null,
   },
   useNextSeoProps() {
-    const { asPath, pathname } = useRouter();
+    const { asPath, pathname, query } = useRouter();
 
     if (['/', '/docs'].includes(asPath)) {
       return { titleTemplate: 'Million.js' };
     }
 
     if (pathname.startsWith('/wrapped/')) {
-      return
+      return { title: query?.name + ' Wrapped | Million.js' };
     }
 
     return { titleTemplate: `%s | Million.js` };
