@@ -193,7 +193,6 @@ const config: DocsThemeConfig = {
     const { asPath, pathname, query } = useRouter();
     const id = String(query.id);
     const name = String(query.name);
-    const videoUrl = `https://wrapped.million.dev/${id}${hash(name)}.mp4`;
     const { frontMatter } = useConfig();
 
     const ogConfig = {
@@ -205,7 +204,7 @@ const config: DocsThemeConfig = {
       favicon: '/favicon.svg',
     };
     const favicon = String(ogConfig.favicon);
-    const title = String(frontMatter.title || ogConfig.title);
+    let title = String(frontMatter.title || ogConfig.title);
     const description = String(frontMatter.description || ogConfig.description);
     const note =
       (frontMatter.date as string | undefined) ?? pathname === '/'
@@ -222,6 +221,7 @@ const config: DocsThemeConfig = {
     }
     if (pathname.startsWith('/wrapped/')) {
       ogUrl = `https://telemetry.million.dev/api/v1/og/wrapped/${query.id}.mp4?name=${encodeURIComponent(query?.name as any)}`
+      title = query?.name + " Wrapped" 
     }
 
     return (
