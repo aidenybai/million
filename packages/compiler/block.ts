@@ -1,6 +1,6 @@
 import * as t from '@babel/types';
 import { JSX_SKIP_ANNOTATION, SKIP_ANNOTATION } from './constants';
-import { HIDDEN_IMPORTS, SVG_ELEMENTS, TRACKED_IMPORTS } from './constants.new';
+import { HIDDEN_IMPORTS, SVG_ELEMENTS, TRACKED_IMPORTS } from './constants';
 import type { StateContext } from "./types";
 import { findComment } from './utils/ast';
 import { isComponent, isComponentishName, isPathValid } from './utils/checks';

@@ -1,6 +1,6 @@
 import type * as babel from '@babel/core';
 import * as t from '@babel/types';
-import { REACT_IMPORTS, TRACKED_IMPORTS } from './constants.new';
+import { REACT_IMPORTS, TRACKED_IMPORTS } from './constants';
 import type { StateContext } from './types';
 import { isComponentishName, isPathValid, isStatementTopLevel } from './utils/checks';
 import { generateUniqueName } from './utils/generate-unique-name';
