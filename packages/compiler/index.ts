@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
-import { unplugin } from './plugin';
-import type { Options } from './options';
 import { babel } from './babel';
+import type { Options } from './plugin';
+import { unplugin } from './plugin';
 
 export const vite = unplugin.vite;
 export const webpack = unplugin.webpack;
@@ -18,7 +18,6 @@ export const next = (
 ): any => {
   const millionConfig: Options = {
     mode: 'react',
-    server: true,
     ...overrideOptions,
   };
   return {
@@ -38,7 +37,8 @@ export const next = (
 
       config.plugins.unshift(
         webpack({
-          mute: webpackOptions.isServer,
+          server: webpackOptions.isServer,
+          log: webpackOptions.isServer,
           ...millionConfig,
         }),
       );

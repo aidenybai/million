@@ -1,15 +1,83 @@
-import { createUnplugin } from 'unplugin';
-import { createFilter } from '@rollup/pluginutils';
+import type { BabelFileResult, ParserOptions } from '@babel/core';
 import { transformAsync } from '@babel/core';
-import type { TransformResult, VitePlugin } from 'unplugin';
-import type { ParserOptions } from '@babel/core';
+import type { FilterPattern } from '@rollup/pluginutils';
+import { createFilter } from '@rollup/pluginutils';
+import type { VitePlugin } from 'unplugin';
+import { createUnplugin } from 'unplugin';
 import { MillionTelemetry } from '../telemetry';
-import { displayIntro } from './utils/log';
 import { babel } from './babel';
-import type { Options } from './options';
+import { displayIntro } from './utils/log';
+// import { babel } from './babel';
+import type { CompilerOptions } from './types';
 
 const DEFAULT_INCLUDE = '**/*.{jsx,tsx,ts,js,mjs,cjs}';
 const DEFAULT_EXCLUDE = 'node_modules/**/*.{jsx,tsx,ts,js,mjs,cjs}';
+
+interface CompilerOutput {
+  code: BabelFileResult['code'];
+  map: BabelFileResult['map'];
+}
+
+async function compile(
+  id: string,
+  code: string,
+  options: Options,
+  telemetryInstance: MillionTelemetry,
+  isServer?: boolean,
+): Promise<CompilerOutput> {
+  displayIntro(options);
+  
+  const plugins: ParserOptions['plugins'] = ['jsx'];
+
+  if (/\.[mc]?tsx?$/i.test(id)) {
+    plugins.push('typescript');
+  }
+
+  const result = await transformAsync(code, {
+    plugins: [
+      [
+        babel,
+        {
+          telemetry: telemetryInstance,
+          log: options.log,
+          server: isServer,
+          hmr: options.hmr,
+          auto: options.auto,
+          rsc: options.rsc,
+        },
+      ],
+    ],
+    // plugins: [[babel, options]],
+    parserOpts: { plugins },
+    filename: id,
+    ast: false,
+    sourceFileName: id,
+    sourceMaps: true,
+    configFile: false,
+    babelrc: false,
+  });
+  if (!result) {
+    throw new Error('invariant');
+  }
+  return { code: result.code || '', map: result.map };
+}
+
+export interface Options extends Omit<CompilerOptions, 'telemetry'> {
+  filter?: {
+    include?: FilterPattern;
+    exclude?: FilterPattern;
+  };
+  /**
+   * @default 'react'
+   */
+  mode?: 'react' | 'vdom';
+  /**
+   * Million.js collects anonymous telemetry data about general usage. Participation is optional, and you may opt-out at any time.
+   * For more information, please see https://million.dev/telemetry.
+   * @default true
+   */
+  telemetry?: boolean;
+}
 
 // eslint-disable-next-line @typescript-eslint/default-param-last
 export const unplugin = createUnplugin((options: Options = {}, meta) => {
@@ -29,16 +97,23 @@ export const unplugin = createUnplugin((options: Options = {}, meta) => {
   // Throws an error if `mode: 'preact'` or `mode: 'preact-server'` is used
   if (options.mode?.startsWith('preact')) {
     throw new Error(
-      'Preact is no longer maintained. Downgrade to a lower version for support',
+      'Preact is no longer maintained. Downgrade to a lower version (<= 2.x.x) for support',
     );
   }
 
-  options.MillionTelemetry = new MillionTelemetry(options.telemetry);
+  const telemetryInstance = new MillionTelemetry(options.telemetry);
 
-  void options.MillionTelemetry.record({
+  void telemetryInstance.record({
     event: 'compile',
     payload: {
       framework: meta.framework,
+      mode: options.mode,
+      server: options.server,
+      hmr: options.hmr,
+      rsc: options.rsc,
+      log: options.log,
+      auto: options.auto,
+      // optimize: options.optimize,
     },
   });
 
@@ -48,30 +123,12 @@ export const unplugin = createUnplugin((options: Options = {}, meta) => {
     transformInclude(id: string): boolean {
       return filter(id);
     },
-    async transform(code: string, id: string): Promise<TransformResult> {
-      displayIntro(options);
-
-      const plugins: ParserOptions['plugins'] = ['jsx'];
-
-      if (/\.[mc]?tsx?$/i.test(id)) {
-        plugins.push('typescript');
-      }
-
-      const result = await transformAsync(code, {
-        plugins: [[babel, options]],
-        parserOpts: { plugins },
-        filename: id,
-        ast: false,
-        sourceFileName: id,
-        sourceMaps: true,
-        configFile: false,
-        babelrc: false,
-      });
-
-      if (result) {
-        return { code: result.code || '', map: result.map };
-      }
-      return null;
+    async transform(code: string, id: string) {
+      const result = await compile(id, code, options, telemetryInstance, options.server);
+      return {
+        code: result.code || '',
+        map: result.map,
+      };
     },
     vite: {
       configResolved(config) {
@@ -84,9 +141,21 @@ export const unplugin = createUnplugin((options: Options = {}, meta) => {
           'vite:react-jsx',
           // https://github.com/preactjs/preset-vite/blob/main/src/index.ts
           'vite:preact-jsx',
+          // https://github.com/vitejs/vite-plugin-react-swc/blob/main/src/index.ts
+          'vite:react-swc',
         ]);
 
         options.hmr = config.env.DEV;
+      },
+      async transform(code, id, opts) {
+        if (filter(id)) {
+          const result = await compile(id, code, options, telemetryInstance, opts?.ssr);
+          return {
+            code: result.code || '',
+            map: result.map,
+          };
+        }
+        return null;
       },
     },
   };

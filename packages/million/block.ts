@@ -14,6 +14,7 @@ import {
   childAt,
   replaceChild$,
   stringToDOM,
+  removeComments,
 } from './dom';
 import { renderToTemplate } from './template';
 import { AbstractBlock } from './types';
@@ -44,7 +45,7 @@ export const block = (
   fn: (props?: MillionProps) => VElement,
   unwrap?: (vnode: VElement) => VNode,
   shouldUpdate?: (oldProps: MillionProps, newProps: MillionProps) => boolean,
-  svg?: boolean
+  svg?: boolean,
 ) => {
   const vnode = fn(HOLE_PROXY);
   const edits: Edit[] = [];
@@ -55,6 +56,7 @@ export const block = (
     renderToTemplate(unwrap ? unwrap(vnode) : vnode, edits),
     svg
   );
+  removeComments(root)
 
   return <T extends MillionProps>(
     props?: T | null,

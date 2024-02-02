@@ -13,7 +13,9 @@ async function runMillionWizard(): Promise<void> {
     packageName: 'million',
     alreadyInstalled: isMillionAlreadyInstalled,
   });
-  await handleConfigFile();
+  if (!isMillionAlreadyInstalled) {
+    await handleConfigFile();
+  }
 }
 
 async function main(): Promise<void> {

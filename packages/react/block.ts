@@ -6,24 +6,24 @@ import {
   patch as patchBlock,
 } from '../million/block';
 import { MapSet$, MapHas$ } from '../million/constants';
-import { queueMicrotask$ } from '../million/dom';
+import { queueMicrotask$, removeComments } from '../million/dom';
 import type { Options, MillionProps, MillionPortal } from '../types';
 import { processProps, unwrap } from './utils';
 import { Effect, RENDER_SCOPE, REGISTRY, SVG_RENDER_SCOPE } from './constants';
 
 export const block = <P extends MillionProps>(
   fn: ComponentType<P> | null,
-  options: Options | null | undefined = {}
+  options: Options<P> | null | undefined = {}
 ) => {
-  let block: ReturnType<typeof createBlock> | null = options?.block;
+  let blockTarget: ReturnType<typeof createBlock> | null = options?.block;
   const defaultType = options?.svg ? SVG_RENDER_SCOPE : RENDER_SCOPE;
 
   if (fn) {
-    block = createBlock(
+    blockTarget = createBlock(
       fn as any,
       unwrap as any,
-      options?.shouldUpdate,
-      options?.svg
+      options?.shouldUpdate as Parameters<typeof createBlock>[2],
+      options?.svg,
     );
   }
 
@@ -41,7 +41,7 @@ export const block = <P extends MillionProps>(
 
     const effect = useCallback(() => {
       if (!ref.current) return;
-      const currentBlock = block!(props, props.key);
+      const currentBlock = blockTarget!(props, props.key);
       if (hmrTimestamp && ref.current.textContent) {
         ref.current.textContent = '';
       }
@@ -53,7 +53,7 @@ export const block = <P extends MillionProps>(
           queueMicrotask$(() => {
             patchBlock(
               currentBlock,
-              block!(props, props.key, options?.shouldUpdate)
+              blockTarget!(props, props.key, options?.shouldUpdate  as Parameters<typeof createBlock>[2])
             );
           });
         };
@@ -83,6 +83,15 @@ export const block = <P extends MillionProps>(
 
   if (!MapHas$.call(REGISTRY, MillionBlock)) {
     MapSet$.call(REGISTRY, MillionBlock, block);
+  }
+
+
+  // TODO add dev guard
+  if (options?.name) {
+    if (fn) {
+      fn.displayName = `Million(Render(${options.name}))`;
+    }
+    MillionBlock.displayName = `Million(Block(${options.name}))`;
   }
 
   return MillionBlock<P>;

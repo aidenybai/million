@@ -7,6 +7,15 @@
       "layout": "raw"
     }
   },
+  "wrapped": {
+    "type": "page",
+    "theme": {
+      "layout": "full",
+      "sidebar": false,
+      "toc": false,
+      "pagination": false
+    }
+  },
   "docs": {
     "type": "page",
     "title": "Docs"

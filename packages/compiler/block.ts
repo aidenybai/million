@@ -1,1402 +1,438 @@
-import type { NodePath } from '@babel/core';
 import * as t from '@babel/types';
-import { createDirtyChecker } from './experimental/utils';
-import { optimize } from './experimental/optimize';
-import type { Info } from './babel';
-import { NO_PX_PROPERTIES, SKIP_ANNOTATION, SVG_ELEMENTS } from './constants';
-import { findChild, findChildMultiple, findComment } from './utils/ast';
-import { evaluate } from './utils/evaluate';
-import { getUniqueId } from './utils/id';
-import {
-  handleTopLevelFragment,
-  isAttributeUnsupported,
-  isComponent,
-  isJSXFragment,
-  isSensitiveJSXElement,
-  isStaticAttributeValue,
-  trimJSXChildren,
-} from './utils/jsx';
-import { deopt, warn } from './utils/log';
-import { addImport, isUseClient } from './utils/mod';
-import { dedupeObjectProperties } from './utils/object';
+import { HIDDEN_IMPORTS, JSX_SKIP_ANNOTATION, SKIP_ANNOTATION, SVG_ELEMENTS, TRACKED_IMPORTS } from './constants';
+import type { StateContext } from "./types";
+import { findComment } from './utils/ast';
+import { isComponent, isComponentishName, isPathValid } from './utils/checks';
+import { generateUniqueName } from './utils/generate-unique-name';
+import { getDescriptiveName } from './utils/get-descriptive-name';
+import { getImportIdentifier } from './utils/get-import-specifier';
+import { getRootStatementPath } from './utils/get-root-statement-path';
+import { getValidImportDefinition } from './utils/get-valid-import-definition';
+import { isGuaranteedLiteral } from './utils/is-guaranteed-literal';
+import { isJSXComponentElement } from './utils/is-jsx-component-element';
+import { unwrapPath } from './utils/unwrap-path';
 
-export type HoistedMap = Record<
-  string,
-  {
-    id: t.Identifier;
-    value: t.Expression | null;
-  }
->;
+interface JSXStateContext {
+  ctx: StateContext;
+  // The source of array values
+  source: t.Identifier;
+  // The expressions from the JSX moved into an array
+  exprs: t.JSXAttribute[];
+  keys: t.Expression[];
+}
 
-export const transformBlock = (
-  callExpressionPath: NodePath<t.CallExpression>,
-  info: Info,
-  unstable = false
-): void => {
-  if (!info.imports.source) return;
+function pushExpression(
+  state: JSXStateContext,
+  expr: t.Expression,
+): string {
+  const key = `v${state.exprs.length}`;
+  state.exprs.push(t.jsxAttribute(t.jsxIdentifier(key), t.jsxExpressionContainer(t.cloneNode(expr))));
+  return key;
+}
 
-  const callExpression = callExpressionPath.node;
-
-  if (
-    // skip annotation indicates transformed block
-    findComment(callExpression, SKIP_ANNOTATION) ||
-    !t.isIdentifier(callExpression.callee) ||
-    // alias check (e.g. import { block as b } from 'million/react')
-    !info.imports.aliases.block?.has(callExpression.callee.name) ||
-    !info.imports.block
-  ) {
+function pushExpressionAndReplace(
+  state: JSXStateContext,
+  target: babel.NodePath<t.Expression>,
+  top: boolean,
+  portal: boolean,
+): void {
+  if (isGuaranteedLiteral(target.node)) {
     return;
   }
-
-  const rawComponent = callExpression.arguments[0];
-  const publicComponent =
-    t.isVariableDeclarator(callExpressionPath.parent) &&
-    t.isIdentifier(callExpressionPath.parent.id)
-      ? callExpressionPath.parent.id
-      : null;
-
-  if (
-    !t.isIdentifier(rawComponent) &&
-    !t.isFunctionDeclaration(rawComponent) &&
-    !t.isFunctionExpression(rawComponent) &&
-    !t.isArrowFunctionExpression(rawComponent)
-  ) {
-    throw deopt(
-      'Unsupported argument for block. Make sure blocks consume a component ' +
-        'function or component reference',
-      info.filename,
-      callExpressionPath
-    );
+  const key = pushExpression(state, target.node);
+  const expr = t.memberExpression(state.source, t.identifier(key));
+  target.replaceWith(top ? expr : t.jsxExpressionContainer(expr));
+  if (portal) {
+    state.keys.push(t.stringLiteral(key));
   }
+}
 
-  if (t.isIdentifier(rawComponent) && info.blocks.has(rawComponent.name)) {
-    callExpressionPath.replaceWith(rawComponent);
+function extractJSXExpressionsFromExpression(
+  state: JSXStateContext,
+  expr: babel.NodePath<t.Expression>,
+  portal: boolean,
+): void {
+  const unwrappedJSX = unwrapPath(expr, t.isJSXElement);
+  if (unwrappedJSX) {
+    extractJSXExpressions(state, unwrappedJSX, true)
     return;
   }
-
-  /**
-   * Replaces `export default block(Component)` with
-   * const default$ = block(Component);
-   * export default default$;
-   */
-  const exportDefaultPath = callExpressionPath.parentPath;
-  if (exportDefaultPath.isExportDefaultDeclaration()) {
-    let name: string;
-    if (t.isIdentifier(rawComponent)) {
-      name = rawComponent.name;
-    } else if (
-      t.isFunctionExpression(rawComponent) &&
-      t.isIdentifier(rawComponent.id)
-    ) {
-      name = rawComponent.id.name;
-    } else {
-      name = 'default$';
-    }
-
-    const exportId = getUniqueId(info.programPath, name);
-    const paths = exportDefaultPath.insertBefore(
-      t.variableDeclaration('let', [
-        t.variableDeclarator(exportId, callExpression),
-      ])
-    );
-    exportDefaultPath.replaceWith(t.exportDefaultDeclaration(exportId));
-
-    callExpressionPath.scope.registerDeclaration(paths[0]);
-    callExpressionPath.scope.registerDeclaration(exportDefaultPath);
-
-    // this "creates" a new callExpressionPath, so it will be picked up again on the
-    // next visitor call. no need to continue.
+  const unwrappedFragment = unwrapPath(expr, t.isJSXFragment);
+  if (unwrappedFragment) {
+    extractJSXExpressions(state, unwrappedFragment, true)
     return;
   }
+  // TODO Skip if the value is static
+  pushExpressionAndReplace(state, expr, true, portal);
+}
 
+function extractJSXExpressionsFromJSXSpreadChild(
+  state: JSXStateContext,
+  path: babel.NodePath<t.JSXSpreadChild>,
+): void {
+  extractJSXExpressionsFromExpression(state, path.get('expression'), false);
+}
+
+function extractJSXExpressionsFromJSXExpressionContainer(
+  state: JSXStateContext,
+  path: babel.NodePath<t.JSXExpressionContainer>,
+  portal: boolean,
+): void {
+  const expr = path.get('expression');
+  if (isPathValid(expr, t.isExpression)) {
+    extractJSXExpressionsFromExpression(state, expr, portal);
+  }
+}
+
+function extractJSXExpressionsFromJSXAttribute(
+  state: JSXStateContext,
+  attr: babel.NodePath<t.JSXAttribute>,
+): void {
+  const value = attr.get('value');
+  if (isPathValid(value, t.isJSXElement)) {
+    extractJSXExpressions(state, value, false);
+  } else if (isPathValid(value, t.isJSXFragment)) {
+    extractJSXExpressions(state, value, false);
+  } else if (isPathValid(value, t.isJSXExpressionContainer)) {
+    extractJSXExpressionsFromJSXExpressionContainer(state, value, false);
+  }
+}
+
+function extractJSXExpressionsFromJSXSpreadAttribute(
+  state: JSXStateContext,
+  attr: babel.NodePath<t.JSXSpreadAttribute>,
+): void {
+  extractJSXExpressionsFromExpression(state, attr.get('argument'), false);
+}
+
+function extractJSXExpressionsFromJSXAttributes(
+  state: JSXStateContext,
+  attrs: babel.NodePath<t.JSXAttribute | t.JSXSpreadAttribute>[],
+): void {
+  // TODO handle specific attributes
+  for (let i = 0, len = attrs.length; i < len; i++) {
+    const attr = attrs[i];
+
+    if (isPathValid(attr, t.isJSXAttribute)) {
+      extractJSXExpressionsFromJSXAttribute(state, attr);
+    } else if (isPathValid(attr, t.isJSXSpreadAttribute)) {
+      extractJSXExpressionsFromJSXSpreadAttribute(state, attr);
+    }
+  }
+}
+
+function isJSXSVGElement(
+  path: babel.NodePath<t.JSXElement>,
+): boolean {
+  const openingElement = path.get('openingElement');
+  const name = openingElement.get('name');
   /**
-   * Normally, we assume the Component to be a identifier (e.g. block(Component)) that
-   * references a function. However, it's possible that the user passes an anonymous
-   * function (e.g. block(() => <div />)). In this case, we need to hoist the function
-   * declaration to the top of the scope and replace the anonymous function with the
-   * identifier of the hoisted function.
-   *
-   * ```js
-   * block(() => <div />)
-   *
-   * // becomes
-   *
-   * const anonymous = () => <div />;
-   *
-   * block(anonymous)
-   * ```
+   * Only valid component elements are member expressions and identifiers
+   * starting with component-ish name
    */
+  if (isPathValid(name, t.isJSXIdentifier)) {
+    if (SVG_ELEMENTS.includes(name.node.name)) {
+      return true;
+    }
+  }
+  return false;
+}
 
-  if (
-    t.isFunctionExpression(rawComponent) ||
-    t.isArrowFunctionExpression(rawComponent)
-  ) {
-    const name =
-      t.isFunctionExpression(rawComponent) && t.isIdentifier(rawComponent.id)
-        ? rawComponent.id.name
-        : publicComponent?.name || 'Anonymous';
-    const anonymousComponentId = getUniqueId(callExpressionPath, name);
+function isJSXForElement(
+  ctx: StateContext,
+  path: babel.NodePath<t.JSXElement>,
+): boolean {
 
-    /**
-     * Replaces function expression with identifier
-     * `block(() => ...)` to `block(anonymous)`
-     */
+  const openingElement = path.get('openingElement');
+  const name = openingElement.get('name');
+  /**
+   * Only valid component elements are member expressions and identifiers
+   * starting with component-ish name
+   */
+  if (isPathValid(name, t.isJSXIdentifier) || isPathValid(name, t.isJSXMemberExpression)) {
+    return getValidImportDefinition(ctx, name) === TRACKED_IMPORTS.For[ctx.serverMode];
+  }
+  return false;
+}
 
-    // TODO: check this
-    const paths = callExpressionPath.parentPath.parentPath?.insertBefore(
-      t.variableDeclaration('let', [
-        t.variableDeclarator(anonymousComponentId, rawComponent),
-      ])
-    );
+function transformJSXForElement(
+  ctx: StateContext,
+  path: babel.NodePath<t.JSXElement>,
+): void {
+  if (isJSXForElement(ctx, path)) {
+    path.node.openingElement.attributes.push(t.jsxAttribute(t.jsxIdentifier('scoped')));
+  }
+}
 
-    if (paths) {
-      callExpressionPath.scope.registerDeclaration(paths[0]);
+function extractJSXExpressionsFromJSXElement(
+  state: JSXStateContext,
+  path: babel.NodePath<t.JSXElement>,
+  top: boolean,
+): boolean {
+  const openingElement = path.get('openingElement');
+  /**
+   * If this is a component element, move the JSX expression
+   * to the expression array.
+   */
+  if (isJSXComponentElement(path)) {
+    transformJSXForElement(state.ctx, path);
+    pushExpressionAndReplace(state, path, top, true);
+    return true;
+  }
+  /**
+   * Otherwise, continue extracting in attributes
+   */
+  extractJSXExpressionsFromJSXAttributes(state, openingElement.get('attributes'));
+  return false;
+}
+
+function extractJSXChildren(
+  state: JSXStateContext,
+  children: babel.NodePath<t.JSXElement['children'][0]>[],
+): t.JSXElement['children'] {
+  const newChildren: t.JSXElement['children'] = [];
+  for (let i = 0, len = children.length; i < len; i++) {
+    const child = children[i];
+
+    if (isPathValid(child, t.isJSXElement)) {
+      extractJSXExpressions(state, child, false);
+    } else if (isPathValid(child, t.isJSXFragment)) {
+      Array.prototype.push.apply(newChildren, extractJSXChildren(state, child.get('children')));
+    } else if (isPathValid(child, t.isJSXSpreadChild)) {
+      extractJSXExpressionsFromJSXSpreadChild(state, child);
+    } else if (isPathValid(child, t.isJSXExpressionContainer)) {
+      extractJSXExpressionsFromJSXExpressionContainer(state, child, true);
     }
 
-    callExpressionPath.replaceWith(
-      t.callExpression(callExpression.callee, [anonymousComponentId])
-    );
+    if (child && !isPathValid(child, t.isJSXFragment)) {
+      newChildren.push(child.node);
+    }
+  }
+  return newChildren;
+}
 
-    // this "creates" a new callExpressionPath, so it will be picked up again on the
-    // next visitor call. no need to continue.
+function extractJSXExpressions(
+  state: JSXStateContext,
+  path: babel.NodePath<t.JSXElement | t.JSXFragment>,
+  top: boolean,
+): void {
+  /**
+   * Check if JSX should be skipped for children extraction
+   * We only do this since Component elements
+   * cannot be in the compiledBlock JSX
+   */
+  if (isPathValid(path, t.isJSXElement) && extractJSXExpressionsFromJSXElement(state, path, top)) {
     return;
   }
-
-  const componentDeclarationPath = callExpressionPath.scope.getBinding(
-    rawComponent.name
-  )!.path as NodePath<t.VariableDeclarator | t.FunctionDeclaration>;
-
-  // handles forwardRef
-  if (componentDeclarationPath.isVariableDeclarator()) {
-    const initPath = componentDeclarationPath.get(
-      'init'
-    ) as NodePath<t.CallExpression>;
-    const init = initPath.node;
-
-    if (
-      t.isCallExpression(init) &&
-      findChild(
-        initPath,
-        'Identifier',
-        (p) => p.isIdentifier() && p.node.name === 'forwardRef'
-      )
-    ) {
-      const forwardRefComponent = init.arguments[0];
-      const isId = t.isIdentifier(forwardRefComponent);
-      const isFunction = t.isFunctionExpression(forwardRefComponent);
-      const isArrowFunction = t.isArrowFunctionExpression(forwardRefComponent);
-      if (isId || isFunction || isArrowFunction) {
-        let name = publicComponent?.name || 'Anonymous';
-        if (isId) {
-          name = forwardRefComponent.name;
-        } else if (isFunction && t.isIdentifier(forwardRefComponent.id)) {
-          name = forwardRefComponent.id.name;
-        }
-
-        const anonymousComponentId = getUniqueId(info.programPath, name);
-        componentDeclarationPath.replaceWithMultiple([
-          t.variableDeclaration('let', [
-            t.variableDeclarator(
-              anonymousComponentId,
-              t.callExpression(callExpression.callee, [forwardRefComponent])
-            ),
-          ]),
-          t.variableDeclaration('let', [
-            t.variableDeclarator(
-              componentDeclarationPath.node.id,
-              anonymousComponentId
-            ),
-          ]),
-        ]);
-
-        // TODO: check this
-        const { parent } = callExpressionPath;
-        if (
-          t.isVariableDeclarator(parent) &&
-          'arguments' in callExpression &&
-          t.isIdentifier(callExpression.arguments[0])
-        ) {
-          callExpressionPath.parentPath.replaceWith(
-            t.variableDeclarator(callExpression.arguments[0])
-          );
-        }
-
-        // this "creates" a new callExpressionPath, so it will be picked up again on the
-        // next visitor call. no need to continue.
-        return;
-      }
-    }
+  if (isPathValid(path, t.isJSXFragment)) {
+    path.replaceWith(t.jsxElement(
+      t.jsxOpeningElement(t.jsxIdentifier('slot'), []),
+      t.jsxClosingElement(t.jsxIdentifier('slot')),
+      path.node.children,
+    ));
   }
+  path.node.children = extractJSXChildren(state, path.get('children'));
+}
 
-  const componentDeclaration = componentDeclarationPath.node;
-  const componentName =
-    rawComponent.name ||
-    (t.isIdentifier(componentDeclaration.id)
-      ? componentDeclaration.id.name
-      : null);
-
-  const isVariableDeclarator =
-    t.isVariableDeclarator(componentDeclaration) &&
-    (t.isArrowFunctionExpression(componentDeclaration.init) ||
-      t.isFunctionExpression(componentDeclaration.init));
-  const isFunctionDeclaration = t.isFunctionDeclaration(componentDeclaration);
-
+function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.JSXFragment>): void {
   /**
-   * If the function body directly returns a JSX element (i.e., not wrapped in a BlockStatement),
-   * we transform the JSX return into a BlockStatement before passing it to `transformComponent()`.
-   *
-   * ```jsx
-   * const Component = () => <div></div>
-   *
-   * // becomes
-   * const Component = () => {
-   *   return <div></div>
-   * }
-   * ```
+   * For top-level JSX, we skip at elements that are constructed from components
    */
-  if (isVariableDeclarator) {
-    const bodyPath = componentDeclarationPath.get('init.body') as NodePath;
-    if (!bodyPath.isBlockStatement() && bodyPath.isExpression()) {
-      bodyPath.replaceWith(
-        t.blockStatement([t.returnStatement(bodyPath.node)])
-      );
-    }
+  // if (isPathValid(path, t.isJSXElement) && isJSXComponentElement(path)) {
+  if (findComment(path.node, JSX_SKIP_ANNOTATION)) {
+    path.skip();
+    return;
   }
-
-  if (t.isImportSpecifier(componentDeclaration)) {
-    throw deopt(
-      'You are using a component imported from another file. The component ' +
-        'must be colocated in the same file as the block.',
-      info.filename,
-      componentDeclarationPath
-    );
-  } else if (!isVariableDeclarator && !isFunctionDeclaration) {
-    throw deopt(
-      'You can only use block() with a function declaration or arrow function.',
-      info.filename,
-      callExpressionPath
-    );
-  }
-
-  const componentBodyPath = (
-    isVariableDeclarator
-      ? componentDeclarationPath.get('init.body')
-      : componentDeclarationPath.get('body')
-  ) as NodePath<t.BlockStatement>;
-
-  /**
-   * We can extract the block statement from the component function body
-   * by accessing the `body` property of the function declaration / variable declarator:
-   *
-   * ```js
-   *
-   * function Component() {
-   *                     ^ componentBody
-   *  return <div />;
-   *  ^ componentBody.body => [returnStatement]
-   * }
-   */
-  if (!componentBodyPath.isBlockStatement()) {
-    throw deopt(
-      'Expected a block statement function() { /* block */ } in your function ' +
-        'body. Make sure you are using a function declaration or arrow function.',
-      info.filename,
-      callExpressionPath
-    );
-  }
-
-  /**
-   * We need to make sure that the component function doesn't contain early returns.
-   * This is because we need to be able to extract the JSX from the component function body.
-   * If there are multiple return statements, we can't be sure which one is the correct one.
-   *
-   * ```js
-   * function Component() {
-   *  if (condition) {
-   *    return <div />; <-- this is an illegal early return
-   *  }
-   *  return <span />;
-   * }
-   */
-  const statementsInBody = componentBodyPath.get('body').length;
-
-  const returnStatementPaths = findChildMultiple<t.ReturnStatement>(
-    componentBodyPath,
-    'ReturnStatement'
-  );
-
-  if (!returnStatementPaths.length) {
-    throw deopt(
-      'Expected a return statement in your component',
-      info.filename,
-      componentBodyPath
-    );
-  }
-
-  if (returnStatementPaths.length > 1) {
-    throw deopt(
-      'Expected only one return statement in your component',
-      info.filename,
-      componentBodyPath
-    );
-  }
-
-  const returnStatementPath = returnStatementPaths[0]!;
-  const returnStatement = returnStatementPath.node;
-
-  if (isJSXFragment(returnStatement.argument)) {
-    handleTopLevelFragment(returnStatement);
-  }
-
-  const hoistedMap: HoistedMap = {};
-  const mutations: (() => void)[] = [];
-  const portal = {
-    index: -1,
-    id: getUniqueId(componentBodyPath, 'portal'),
+  const state: JSXStateContext = {
+    ctx,
+    source: path.scope.generateUidIdentifier('props'),
+    exprs: [],
+    keys: [],
   };
 
-  if (!t.isJSXElement(returnStatement.argument)) {
-    throw deopt(null, info.filename, callExpressionPath);
-  }
+  /**
+   * Begin extracting expressions/portals
+   */
+  extractJSXExpressions(state, path, !(
+    isPathValid(path.parentPath, t.isJSXElement)
+    || isPathValid(path.parentPath, t.isJSXFragment)
+    || isPathValid(path.parentPath, t.isJSXAttribute)
+  ));
 
   /**
-   * The compiler splits the original Component into two, in order to conform to the runtime API:
-   *
-   * A puppet component, which holds a stateless and deterministic f(props) => JSX,
-   * and creates the block from that function:
-
-   * ```js
-   * const puppet = block(({ foo }) => {
-   *  return ...
-   * })
-   * ```
-   *
-   * A master component, which holds the data / state and passes it down to
-   * the block:
-   *
-   * ```js
-   * const master = (props) => {
-   *  const [foo, setFoo] = useState(0);
-   *  return puppet({
-   *    foo,
-   *    bar: props.bar
-   *  })
-   * }
-   * ```
+   * Get the nearest descriptive name
    */
-  let masterComponentId = componentName
-    ? t.identifier(componentName)
-    : getUniqueId(callExpressionPath, 'Anonymous');
-  const puppetComponentId = getUniqueId(
-    callExpressionPath,
-    `Block_${componentName || ''}`
-  );
-
-  const layers: t.JSXElement[] = extractLayers({
-    returnStatement,
-    jsx: returnStatement.argument,
-    jsxPath: returnStatementPath.get('argument') as NodePath<t.JSXElement>,
-    layers: [],
-  });
-  // This function will automatically populate the `dynamics` for us:
-
-  if (
-    t.isJSXIdentifier(returnStatement.argument.openingElement.name) &&
-    isComponent(returnStatement.argument.openingElement.name.name)
-  ) {
-    throw deopt(null, info.filename, callExpressionPath);
-  }
-  transformJSX(
-    hoistedMap,
-    mutations,
-    portal,
-    info,
-    {
-      jsx: returnStatement.argument,
-      jsxPath: returnStatementPath.get('argument') as NodePath<t.JSXElement>,
-      componentBodyPath,
-      isRoot: true,
-    },
-    unstable
-  );
-
-  const hoisted = Object.values(hoistedMap);
-  if (!hoisted.length && info.options.server) {
-    throw deopt(null, info.filename, callExpressionPath);
-  }
-
-  const isCallable =
-    statementsInBody === 1 && layers.length === 0 && portal.index === -1;
-
+  const descriptiveName = getDescriptiveName(path, 'Anonymous');
   /**
-   * ```js
-   * const puppet = block(({ foo }) => {
-   *  return ...
-   * }, { shouldUpdate: (oldProps, newProps) => oldProps.foo !== newProps.foo })
-   * ```
+   * Generate a new name based on the descriptive name
    */
-
-  const len = hoisted.length;
-  const holes = new Array(len);
-  const objectProperties = new Array(len);
-  const puppetJsxAttributes = new Array(len);
-  const data: { id: t.Identifier; value: t.Expression | null }[] = [];
-  for (let i = 0; i < len; ++i) {
-    const { id, value } = hoisted[i]!;
-    holes[i] = id.name;
-    objectProperties[i] = t.objectProperty(id, id, false, true);
-    puppetJsxAttributes[i] = t.jsxAttribute(
-      t.jsxIdentifier(id.name),
-      t.jsxExpressionContainer(id)
-    );
-    if (!value) continue;
-    data.push({ id, value });
-  }
-
-  const originalObjectExpression = callExpression.arguments[1] as
-    | t.ObjectExpression
-    | undefined;
-
-  const originalOptions: Record<string, any> = {};
-
-  if (originalObjectExpression) {
-    for (
-      let i = 0, j = originalObjectExpression.properties.length;
-      i < j;
-      ++i
-    ) {
-      const prop = originalObjectExpression.properties[i]!;
-      if (t.isObjectProperty(prop) && t.isIdentifier(prop.key)) {
-        originalOptions[prop.key.name] = prop.value;
-      }
-    }
-  }
-
-  const compiledOptions: t.ObjectProperty[] = [];
-
-  const argument = returnStatement.argument;
-  if (
-    t.isJSXElement(argument) &&
-    t.isJSXIdentifier(argument.openingElement.name) &&
-    SVG_ELEMENTS.includes(argument.openingElement.name.name)
-  ) {
-    originalOptions.svg = true;
-  }
-
-  if (originalOptions.svg) {
-    compiledOptions.push(
-      t.objectProperty(
-        t.identifier('svg'),
-        t.booleanLiteral(originalOptions.svg)
-      )
-    );
-  }
-
-  if (info.options.server && isUseClient(info)) {
-    compiledOptions.push(
-      t.objectProperty(
-        t.identifier('rsc'),
-        t.booleanLiteral(true)
-      )
-    );
-  }
-
-  const shouldUpdate =
-    originalOptions.shouldUpdate ?? createDirtyChecker(holes);
-  if (shouldUpdate) {
-    compiledOptions.push(
-      t.objectProperty(t.identifier('shouldUpdate'), shouldUpdate)
-    );
-  }
-
-  const puppetFn = t.arrowFunctionExpression(
-    objectProperties.length ? [t.objectPattern(objectProperties)] : [],
-    t.blockStatement([returnStatement])
+  const id = generateUniqueName(
+    path,
+    isComponentishName(descriptiveName)
+      ? descriptiveName
+      : `JSX_${descriptiveName}`,
   );
 
-  const puppetBlock = t.callExpression(callExpression.callee, [
-    puppetFn,
-    compiledOptions.length
-      ? t.objectExpression(dedupeObjectProperties(compiledOptions))
-      : t.nullLiteral(),
-  ]);
-
-  t.addComment(puppetBlock, 'leading', SKIP_ANNOTATION);
-
-  if (portal.index !== -1) {
-    const useState = addImport(componentBodyPath, 'useState', 'react', info);
-    data.unshift({
-      id: portal.id,
-      value: t.memberExpression(
-        t.callExpression(useState, [
-          t.arrowFunctionExpression(
-            [],
-            t.objectExpression([
-              t.objectProperty(
-                t.identifier('$'),
-                t.newExpression(t.identifier('Array'), [
-                  t.numericLiteral(portal.index + 1),
-                ])
-              ),
-            ])
-          ),
-        ]),
-        t.numericLiteral(0),
-        true
-      ),
-    });
-  }
-
-  if (data.length) {
-    returnStatementPath.insertBefore(
-      t.variableDeclaration(
-        'let',
-        data.map(({ id, value }) => {
-          return t.variableDeclarator(id, value);
-        })
-      )
-    );
-  }
-
-  if (info.options.hmr) {
-    puppetJsxAttributes.push(
+  if (ctx.options.hmr) {
+    state.exprs.push(
       t.jsxAttribute(
         t.jsxIdentifier('_hmr'),
-        t.stringLiteral(String(Date.now()))
-      )
+        t.stringLiteral(String(Date.now())),
+      ),
     );
   }
+  /**
+   * The following are arguments for the new render function
+   */
+  const args: t.Identifier[] = [];
 
   /**
-   * We want to change the Component's return from our original JSX
-   * to the puppet call:
-   *
-   * ```js
-   * const Component = (props) => {
-   *  const [foo, setFoo] = useState(0);
-   *  return <div>example...</div>
-   * }
-   * ```
-   *
-   * becomes:
-   *
-   * ```js
-   * const Component = (props) => {
-   *  const [foo, setFoo] = useState(0);
-   *  return puppet({
-   *    foo,
-   *    bar: props.bar
-   *  });
-   * }
-   * ```
+   * If there are any extracted expressions, declare the argument
    */
-  let puppetCall: any = t.jsxElement(
-    t.jsxOpeningElement(
-      t.jsxIdentifier(puppetComponentId.name),
-      puppetJsxAttributes,
-      true
-    ),
-    null,
-    []
-  );
-
-  if (portal.index !== -1) {
-    const portalChildren = getUniqueId(returnStatementPath, 'P');
-    returnStatementPath.insertBefore(
-      t.variableDeclaration('let', [
-        t.variableDeclarator(
-          portalChildren,
-          t.newExpression(t.identifier('Array'), [
-            t.numericLiteral(portal.index + 1),
-          ])
-        ),
-      ])
-    );
-    returnStatementPath.insertBefore(
-      t.forStatement(
-        t.variableDeclaration('let', [
-          t.variableDeclarator(t.identifier('i'), t.numericLiteral(0)),
-          t.variableDeclarator(
-            t.identifier('l'),
-            t.memberExpression(
-              t.memberExpression(portal.id, t.identifier('$')),
-              t.identifier('length')
-            )
-          ),
-        ]),
-        t.binaryExpression('<', t.identifier('i'), t.identifier('l')),
-        t.updateExpression('++', t.identifier('i'), true),
-        t.expressionStatement(
-          t.assignmentExpression(
-            '=',
-            t.memberExpression(portalChildren, t.identifier('i'), true),
-            t.optionalMemberExpression(
-              t.memberExpression(
-                t.memberExpression(portal.id, t.identifier('$')),
-                t.identifier('i'),
-                true
-              ),
-              t.identifier('portal'),
-              undefined,
-              true
-            )
-          )
-        )
-      )
-    );
-    returnStatementPath.insertBefore(
-      t.callExpression(
-        t.memberExpression(t.identifier('console'), t.identifier('log')),
-        [t.stringLiteral('P'), t.identifier('P')]
-      )
-    );
-    puppetCall = t.jsxFragment(t.jsxOpeningFragment(), t.jsxClosingFragment(), [
-      puppetCall,
-      t.jsxExpressionContainer(portalChildren),
-    ]);
-  }
-
-  if (layers.length) {
-    let parent: t.JSXElement | t.JSXFragment | undefined;
-    let current: t.JSXElement | t.JSXFragment | undefined;
-    for (let i = 0, j = layers.length; i < j; ++i) {
-      const layer = layers[i]!;
-      if (!current) {
-        current = layer;
-        parent = current;
-        continue;
-      }
-      current.children = [layer];
-      current = layer;
-    }
-    current!.children = [puppetCall];
-    puppetCall = parent;
-  }
-
-  returnStatementPath.replaceWith(t.returnStatement(puppetCall));
-
-  // We run these later to mutate the JSX
-  for (let i = 0, j = mutations.length; i < j; ++i) {
-    mutations[i]?.();
-  }
-
-  /**
-   * Component becomes our master component
-   *
-   * ```js
-   * const Component = (props) => {
-   * ```
-   *
-   * becomes:
-   *
-   * ```js
-   * const master = (props) => {
-   * ```
-   */
-  // export^3 const^2 Block^1 = block(Component)
-  const exportNamedPath = callExpressionPath.parentPath.parentPath?.parentPath;
-  const isCallExpressionExported = exportNamedPath?.isExportNamedDeclaration();
-
-  if (isCallExpressionExported && publicComponent) {
-    masterComponentId = publicComponent;
-    const paths = exportNamedPath.replaceWith(
-      t.exportNamedDeclaration(null, [
-        t.exportSpecifier(publicComponent, publicComponent),
-      ])
-    );
-    callExpressionPath.scope.registerDeclaration(paths[0]);
+  if (state.exprs.length) {
+    args.push(state.source);
   } else {
-    if (
-      t.isIdentifier(componentDeclaration.id) &&
-      componentName === masterComponentId.name
-    ) {
-      masterComponentId = getUniqueId(
-        componentDeclarationPath,
-        masterComponentId.name
-      );
-    }
-    callExpressionPath.replaceWith(masterComponentId);
+    path.scope.removeBinding(state.source.name);
   }
-  componentDeclaration.id = masterComponentId;
 
-  componentDeclarationPath.parentPath.insertBefore(
-    t.variableDeclaration('let', [
-      t.variableDeclarator(puppetComponentId, puppetBlock),
-    ])
+  /**
+   * The new "render" function
+   */
+  const newComponent = t.arrowFunctionExpression(
+    args,
+    path.node,
   );
 
-  if (isCallable) {
-    componentDeclarationPath.parentPath.insertAfter(
-      t.expressionStatement(
-        t.assignmentExpression(
-          '=',
-          t.memberExpression(masterComponentId, t.identifier('_c')),
-          t.booleanLiteral(true)
-        )
-      )
-    );
-  }
-
-  if (t.isIdentifier(rawComponent)) {
-    info.blocks.set(rawComponent.name, masterComponentId);
-  }
-
-  if (info.options.optimize || findComment(callExpression, '@optimize')) {
-    const { variables, blockFactory } = optimize(
-      callExpressionPath,
-      info,
-      holes,
-      returnStatement.argument
-    );
-
-    callExpressionPath.parentPath.insertBefore(variables);
-
-    const puppetBlockArguments = puppetBlock.arguments;
-
-    puppetBlockArguments[0] = t.nullLiteral();
-    puppetBlockArguments[1] = t.objectExpression([
-      t.objectProperty(t.identifier('block'), blockFactory),
-    ]);
-  }
-};
-
-export const extractLayers = ({
-  returnStatement,
-  jsx,
-  jsxPath,
-  layers,
-}: {
-  returnStatement: t.ReturnStatement;
-  jsx: t.JSXElement;
-  jsxPath: NodePath<t.JSXElement>;
-  layers: t.JSXElement[];
-}): t.JSXElement[] => {
-  const type = jsx.openingElement.name;
-  if (
-    (t.isJSXIdentifier(type) && isComponent(type.name)) ||
-    t.isJSXMemberExpression(type)
-  ) {
-    trimJSXChildren(jsx);
-    const firstChild = jsx.children[0];
-    if (jsx.children.length === 1 && t.isJSXElement(firstChild)) {
-      jsxPath.replaceWith(firstChild);
-      returnStatement.argument = firstChild;
-      jsx.children = [];
-      layers.push(jsx);
-
-      return extractLayers({
-        returnStatement,
-        jsx: firstChild,
-        jsxPath,
-        layers,
-      });
-    }
-  }
-  return layers;
-};
-
-export const transformJSX = (
-  hoisted: HoistedMap,
-  mutations: (() => void)[],
-  portal: {
-    index: number;
-    id: t.Identifier;
-  },
-  info: Info,
-  {
-    jsx,
-    jsxPath,
-    componentBodyPath,
-    isRoot,
-  }: {
-    jsx: t.JSXElement;
-    jsxPath: NodePath<t.JSXElement>;
-    componentBodyPath: NodePath<t.BlockStatement>;
-    isRoot: boolean;
-  },
-  unstable: boolean
-): HoistedMap => {
   /**
-   * Populates `dynamics` with a new entry.
-   *
-   * A dynamic can be of two types:
-   *
-   * 1. Has identifier but no expression:
-   *    <div>{foo}</div>
-   *
-   * 2. Has expression but no identifier:
-   *    <div>{foo + 1}</div>
+   * Following are the `compiledBlock` options
    */
-  const createDynamic = (
-    identifier: t.Identifier | null,
-    expression: t.Expression | null,
-    path: NodePath | null,
-    callback: (() => void) | null
-  ): t.Identifier | undefined => {
-    if (expression && path) {
-      // check for ids:
-      const hasValidId = findChild<t.Identifier>(
-        path,
-        'Identifier',
-        (p: NodePath<t.Identifier>) => {
-          return path.scope.hasBinding(p.node.name);
-        }
-      );
-      if (!hasValidId) return;
-    }
+  const options = [
+    // TODO add dev mode
+    t.objectProperty(
+      t.identifier('name'),
+      t.stringLiteral(id.name),
+    ),
+  ];
 
-    /**
-     * We need to generate some arbitrary id for expressions, since
-     * the runtime doesn't allow lone expressions:
-     *
-     * ```js
-     * <div>{foo + 1}</div>
-     * ```
-     *
-     * becomes:
-     *
-     * ```
-     * _1$ = foo + 1
-     *
-     * <div>{_1$}</div>
-     * ```
-     */
-    const id = identifier || componentBodyPath.scope.generateUidIdentifier('');
+  /**
+   * If there are any portals, declare them in the options
+   */
+  if (state.keys.length) {
+    options.push(t.objectProperty(
+      t.identifier('portals'),
+      t.arrayExpression(state.keys),
+    ));
+  }
+  if (isPathValid(path, t.isJSXElement) && isJSXSVGElement(path)) {
+    options.push(t.objectProperty(
+      t.identifier('svg'),
+      t.booleanLiteral(true),
+    ));
+  }
 
-    if (!hoisted[id.name]) {
-      hoisted[id.name] = { value: expression, id };
-    }
-    // Sometimes, we require a mutation to the JSX. We defer this for later use.
-    mutations.push(callback!);
-    return id;
-  };
+  /**
+   * Generate the new compiledBlock
+   */
+  const generatedBlock = t.variableDeclaration(
+    'const',
+    [t.variableDeclarator(id, t.callExpression(
+      getImportIdentifier(ctx, path, HIDDEN_IMPORTS.compiledBlock[ctx.serverMode]),
+      [
+        newComponent,
+        t.objectExpression(options),
+      ],
+    ))],
+  );
 
-  let renderReactScope: t.Identifier | null = null;
-  const createPortal = (
-    callback: () => void,
-    _arguments: (
-      | t.Expression
-      | t.ArgumentPlaceholder
-      | t.JSXNamespacedName
-      | t.SpreadElement
-    )[]
-  ): t.Identifier | undefined => {
-    renderReactScope ??= addImport(
-      jsxPath,
-      'renderReactScope',
-      info.imports.source || 'million/react',
-      info
-    );
-    const index = ++portal.index;
+  const rootPath = getRootStatementPath(path);
+  rootPath.scope.registerDeclaration(
+    rootPath.insertBefore(generatedBlock)[0]
+  );
 
-    const refCurrent = t.memberExpression(portal.id, t.identifier('$'));
-    const nestedRender = t.callExpression(renderReactScope, [
-      ..._arguments,
-      refCurrent,
-      t.numericLiteral(index),
-      t.booleanLiteral(Boolean(info.options.server)),
-    ]);
-    const id = createDynamic(null, nestedRender, null, callback);
-    return id;
-  };
+  path.replaceWith(
+    t.addComment(
+      t.jsxElement(
+        t.jsxOpeningElement(t.jsxIdentifier(id.name), state.exprs, true),
+        t.jsxClosingElement(t.jsxIdentifier(id.name)),
+        [],
+        true,
+      ),
+      'leading',
+      JSX_SKIP_ANNOTATION,
+    ),
+  );
+}
 
-  const type = jsx.openingElement.name;
+export function transformBlock(ctx: StateContext, path: babel.NodePath<t.CallExpression>): void {
+  const definition = getValidImportDefinition(ctx, path.get('callee'));
+  // Check first if the call is a valid `block` call
+  if (TRACKED_IMPORTS.block[ctx.serverMode] !== definition) {
+    return;
+  }
+  // Check if we should skip because the compiler
+  // can also output a `block` call. Without this,
+  // compiler will suffer a recursion.
+  if (findComment(path.node, SKIP_ANNOTATION)) {
+    return;
+  }
+  const args = path.get('arguments');
+  // Make sure that we have at least one argument,
+  // and that argument is a component.
+  if (args.length <= 0) {
+    return;
+  }
+  const identifier = unwrapPath(args[0]!, t.isIdentifier);
+  // Handle identifiers differently
+  if (identifier) {
+    return;
+  }
+  const component = unwrapPath(args[0]!, isComponent);
+  if (!component) {
+    return;
+  }
+  // Transform all top-level JSX (aka the JSX owned by the component)
+  component.traverse({
+    JSXElement(childPath) {
+      const functionParent = childPath.getFunctionParent();
+      if (functionParent === component) {
+        transformJSX(ctx, childPath);
+      }
+    },
+    JSXFragment(childPath) {
+      const functionParent = childPath.getFunctionParent();
+      if (functionParent === component) {
+        transformJSX(ctx, childPath);
+      }
+    },
+  });
 
-  // if (!t.isJSXElement(jsx) && !t.isJSXFragment(jsx) && isRoot) {
-  //   throw deopt(null, callExpressionPath);
+  // TODO this isn't a good check
+  // if (isPathValid(component, t.isArrowFunctionExpression) && t.isExpression(component.node.body)) {
+  //   const root = getRootStatementPath(component);
+  //   const descriptiveName = getDescriptiveName(component, 'Anonymous');
+  //   const uniqueName = generateUniqueName(
+  //     component, 
+  //     isComponentishName(descriptiveName)
+  //       ? descriptiveName
+  //       : `JSX_${descriptiveName}`,
+  //   );
+  //   root.insertBefore([
+  //     t.variableDeclaration('const', [
+  //       t.variableDeclarator(uniqueName, component.node),
+  //     ]),
+  //     t.expressionStatement(
+  //       t.assignmentExpression(
+  //         '=',
+  //         t.memberExpression(
+  //           uniqueName,
+  //           t.identifier('_c'),
+  //         ),
+  //         t.booleanLiteral(true),
+  //       ),
+  //     ),
+  //   ]);
+  //   path.replaceWith(uniqueName);
+  // } else {
+    path.replaceWith(component);
   // }
-
-  /**
-   * If the JSX type is Capitalized, we assume it's a component. We then turn that
-   * JSX into the raw function calls and hoist it as a dynamic with a `renderScope`:
-   *
-   * ```js
-   * <Component foo={bar} />
-   * ```
-   *
-   * becomes:
-   *
-   * ```js
-   * _1$ = renderReactScope(createElement(Component, { foo: bar }))
-   *
-   * {_1$}
-   * ```
-   *
-   * This is where Million.js defers to React to handle the rendering,
-   * as components are basically impossible to statically analyze while
-   * handing all the edge cases.
-   */
-  if (t.isJSXIdentifier(type) && isComponent(type.name)) {
-    // TODO: Add a warning for using components that are not block or For
-    // warn(
-    //   'Components will cause degraded performance. Ideally, you should use DOM elements instead.',
-    //   jsxPath,
-    //   options.mute,
-    // );
-
-    const id = createPortal(() => {
-      jsxPath.replaceWith(
-        isRoot ? t.expressionStatement(id!) : t.jsxExpressionContainer(id!)
-      );
-    }, [
-      jsx,
-      type.name === 'For'
-        ? t.booleanLiteral(false)
-        : t.booleanLiteral(unstable),
-    ]);
-
-    return hoisted;
-  }
-  if (t.isJSXMemberExpression(type)) {
-    const id = createPortal(() => {
-      jsxPath.replaceWith(
-        isRoot ? t.expressionStatement(id!) : t.jsxExpressionContainer(id!)
-      );
-    }, [jsx, t.booleanLiteral(unstable)]);
-
-    return hoisted;
-  }
-
-  /**
-   * Now, it's time to handle the DOM element case.
-   */
-  const { attributes } = jsx.openingElement;
-
-  for (let i = 0, j = attributes.length; i < j; i++) {
-    const attribute = attributes[i]!;
-
-    if (t.isJSXSpreadAttribute(attribute)) {
-      const spreadPath = jsxPath.get(
-        `openingElement.attributes.${i}.argument`
-      ) as NodePath<t.JSXSpreadChild>;
-      warn(
-        'Spread attributes are not fully supported.',
-        info.filename,
-        spreadPath
-      );
-
-      const id = createPortal(() => {
-        jsxPath.replaceWith(
-          isRoot ? t.expressionStatement(id!) : t.jsxExpressionContainer(id!)
-        );
-      }, [jsx, t.booleanLiteral(unstable)]);
-
-      return hoisted;
-    }
-
-    if (
-      t.isJSXIdentifier(attribute.name) &&
-      attribute.name.name === 'style' &&
-      t.isJSXExpressionContainer(attribute.value) &&
-      t.isObjectExpression(attribute.value.expression)
-    ) {
-      const styleObject = attribute.value.expression;
-      const properties = styleObject.properties;
-
-      let hasDynamic = false;
-      for (let l = 0, k = properties.length; l < k; l++) {
-        const property = properties[l]!;
-        if (t.isObjectProperty(property)) {
-          if (property.computed) {
-            // TODO: possibly explore style object extraction in the future.
-            throw deopt(
-              'Computed properties are not supported in style objects.',
-              info.filename,
-              jsxPath
-            );
-          }
-
-          const value = property.value;
-          if (t.isBooleanLiteral(value) || t.isNullLiteral(value)) {
-            if (t.isNullLiteral(value) || !value.value) {
-              properties.splice(l, 1);
-              l -= 2;
-              // checked={true} -> checked="checked"
-            } else if (t.isIdentifier(property.key)) {
-              property.value = t.stringLiteral(property.key.name);
-            }
-          }
-
-          if (
-            t.isNumericLiteral(value) &&
-            t.isIdentifier(property.key) &&
-            !NO_PX_PROPERTIES.includes(property.key.name)
-          ) {
-            property.value = t.stringLiteral(`${value.value}px`);
-          }
-
-          if (t.isIdentifier(value)) {
-            createDynamic(value, null, null, null);
-            hasDynamic = true;
-          } else if (t.isLiteral(value) && !t.isTemplateLiteral(value)) {
-            if (t.isStringLiteral(value)) {
-              property.value = value;
-            }
-          } else {
-            const expressionPath = jsxPath.get(
-              `openingElement.attributes.${i}.value.expression.properties.${l}.value`
-            ) as NodePath<t.Expression>;
-
-            const id = createDynamic(
-              null,
-              value as t.Expression,
-              expressionPath,
-              () => {
-                if (id) property.value = id;
-              }
-            );
-            hasDynamic = true;
-          }
-        } else {
-          hasDynamic = true;
-        }
-      }
-      if (!hasDynamic) {
-        mutations.push(() => {
-          if (portal.index !== -1) return;
-          attribute.value = t.stringLiteral(
-            styleObject.properties
-              .map((property) => {
-                if (t.isObjectProperty(property)) {
-                  const value = property.value;
-                  const key = property.key;
-                  if (t.isIdentifier(key) && t.isLiteral(value)) {
-                    let kebabKey = '';
-                    for (let i = 0, j = key.name.length; i < j; ++i) {
-                      const char = key.name.charCodeAt(i);
-                      if (char < 97) {
-                        // If letter is uppercase
-                        kebabKey += `-${String.fromCharCode(char + 32)}`;
-                      } else {
-                        kebabKey += key.name[i];
-                      }
-                    }
-                    if (
-                      t.isNullLiteral(value) ||
-                      t.isRegExpLiteral(value) ||
-                      t.isTemplateLiteral(value)
-                    )
-                      return '';
-                    return `${kebabKey}:${String(value.value)}`;
-                  }
-                }
-                return null;
-              })
-              .filter((property) => property)
-              .join(';')
-          );
-        });
-      }
-      continue;
-    }
-
-    if (t.isJSXExpressionContainer(attribute.value)) {
-      const attributeValue = attribute.value;
-      const expressionPath = jsxPath.get(
-        `openingElement.attributes.${i}.value.expression`
-      ) as NodePath<t.Expression>;
-      const { ast: expression, err } = evaluate(
-        attributeValue.expression,
-        expressionPath.scope
-      );
-
-      if (
-        t.isJSXIdentifier(attribute.name) &&
-        isAttributeUnsupported(attribute)
-      ) {
-        const id = createPortal(() => {
-          jsxPath.replaceWith(
-            isRoot ? t.expressionStatement(id!) : t.jsxExpressionContainer(id!)
-          );
-        }, [jsx, t.booleanLiteral(unstable)]);
-
-        return hoisted;
-      }
-
-      if (!err) attributeValue.expression = expression;
-
-      if (t.isIdentifier(expression)) {
-        if (attribute.name.name === 'ref') {
-          const id = createPortal(() => {
-            jsxPath.replaceWith(
-              isRoot
-                ? t.expressionStatement(id!)
-                : t.jsxExpressionContainer(id!)
-            );
-          }, [jsx, t.booleanLiteral(unstable)]);
-
-          return hoisted;
-        }
-        createDynamic(expression, null, null, null);
-      } else if (isStaticAttributeValue(expression)) {
-        if (t.isStringLiteral(expression)) {
-          attribute.value = expression;
-        }
-        // if other type of literal, do nothing
-      } else {
-        const id = createDynamic(
-          null,
-          expression as t.Expression,
-          expressionPath,
-          () => {
-            if (id) attributeValue.expression = id;
-          }
-        );
-      }
-    }
-  }
-
-  for (let i = 0; i < jsx.children.length; i++) {
-    const child = jsx.children[i]!;
-
-    if (t.isJSXText(child)) continue;
-
-    if (t.isJSXSpreadChild(child)) {
-      const spreadPath = jsxPath.get(
-        `children.${i}`
-      ) as NodePath<t.JSXSpreadChild>;
-      warn(
-        'Spread children are not fully supported.',
-        info.filename,
-        spreadPath
-      );
-      const id = createPortal(() => {
-        jsxPath.replaceWith(t.jsxExpressionContainer(id!));
-      }, [jsx, t.booleanLiteral(unstable)]);
-
-      continue;
-    }
-
-    if (isJSXFragment(child)) {
-      /**
-       * Removes fragment and "spreads out" children at that index:
-       *
-       * ```js
-       * <div>
-       *  <one />
-       *  <>
-       *    <two />
-       *    <three />
-       *  </>
-       *  <four />
-       * </div>
-       * ```
-       *
-       * becomes:
-       *
-       * ```js
-       * <div>
-       *  <one />
-       *  <two />
-       *  <three />
-       *  <four />
-       * </div>
-       * ```
-       */
-      jsx.children.splice(i, 1);
-      jsx.children.splice(i, 0, ...child.children);
-      i--; // revisit this index since we inserted new children
-      continue;
-    }
-
-    if (t.isJSXExpressionContainer(child)) {
-      const expressionPath = jsxPath.get(
-        `children.${i}.expression`
-      ) as NodePath<t.Expression>;
-      const { ast: expression, err } = evaluate(
-        child.expression,
-        expressionPath.scope
-      );
-
-      if (!err) child.expression = expression;
-
-      if (
-        t.isLiteral(expression) &&
-        !t.isTemplateLiteral(expression) // `${foo} test` will be a template literal
-      ) {
-        if (t.isStringLiteral(expression)) {
-          child.expression = expression;
-        }
-        continue;
-      }
-
-      if (t.isIdentifier(expression)) {
-        createDynamic(expression, null, null, null);
-        continue;
-      }
-
-      if (t.isJSXElement(expression)) {
-        const type = expression.openingElement.name;
-        if (t.isJSXIdentifier(type) && !isComponent(type.name)) {
-          /**
-           * Handles raw JSX elements as expressions:
-           *
-           * ```js
-           * <div>{<nested />}</div>
-           * ```
-           */
-          transformJSX(
-            hoisted,
-            mutations,
-            portal,
-            info,
-            {
-              jsx: expression,
-              jsxPath: jsxPath.get(`children.${i}`) as NodePath<t.JSXElement>,
-              componentBodyPath,
-              isRoot: false,
-            },
-            unstable
-          );
-          jsx.children[i] = expression;
-          continue;
-        }
-        if (t.isJSXMemberExpression(type)) {
-          const id = createPortal(() => {
-            jsx.children[i] = t.jsxExpressionContainer(id!);
-          }, [expression, t.booleanLiteral(unstable)]);
-
-          continue;
-        }
-      }
-
-      if (t.isExpression(expression)) {
-        if (!err) child.expression = expression;
-        /**
-         * Handles JSX lists and converts them to optimized <For /> components:
-         *
-         * ```js
-         * <div>{[1, 2, 3].map(i => <div>{i}</div>)}</div>
-         * ```
-         *
-         * becomes:
-         *
-         * ```js
-         * <div><For each={[1, 2, 3]}>{i => <div>{i}</div>}</For></div>
-         * ```
-         */
-        const expressionPath = jsxPath.get(
-          `children.${i}.expression`
-        ) as NodePath<t.Expression>;
-        const hasSensitive =
-          expressionPath.parentPath.isJSXExpressionContainer() &&
-          t.isJSXElement(expressionPath.parentPath.parent) &&
-          isSensitiveJSXElement(expressionPath.parentPath.parent);
-
-        if (
-          t.isCallExpression(expression) &&
-          t.isMemberExpression(expression.callee) &&
-          t.isIdentifier(expression.callee.property, { name: 'map' }) &&
-          !hasSensitive
-        ) {
-          const For = addImport(
-            jsxPath,
-            'For',
-            info.imports.source || 'million/react',
-            info
-          );
-          const jsxFor = t.jsxIdentifier(For.name);
-          const newJsxArrayIterator = t.jsxElement(
-            t.jsxOpeningElement(jsxFor, [
-              t.jsxAttribute(
-                t.jsxIdentifier('each'),
-                t.jsxExpressionContainer(expression.callee.object)
-              ),
-            ]),
-            t.jsxClosingElement(jsxFor),
-            [t.jsxExpressionContainer(expression.arguments[0] as t.Expression)]
-          );
-
-          const id = createPortal(() => {
-            jsx.children[i] = t.jsxExpressionContainer(id!);
-          }, [newJsxArrayIterator, t.booleanLiteral(unstable)]);
-
-          continue;
-        }
-
-        /**
-         * Handles JSX conditionals and shoves them into a render scope:
-         *
-         * ```js
-         * <div>{condition ? <div /> : <span />}</div>
-         * ```
-         *
-         * becomes:
-         *
-         * ```js
-         * _1$ = renderReactScope(condition ? <div /> : <span />);
-         *
-         * <div>{_1$}</div>
-         * ```
-         */
-        if (
-          t.isConditionalExpression(expression) ||
-          t.isLogicalExpression(expression)
-        ) {
-          warn(
-            'Conditional expressions will degrade performance. We recommend using deterministic returns instead.',
-            info.filename,
-            expressionPath,
-            info.options.log
-          );
-
-          const id = createPortal(() => {
-            jsx.children[i] = t.jsxExpressionContainer(id!);
-          }, [expression, t.booleanLiteral(unstable)]);
-
-          continue;
-        }
-
-        let foundJsxInExpression = false;
-        expressionPath.traverse({
-          JSXElement(path) {
-            foundJsxInExpression = true;
-            path.stop();
-          },
-          JSXFragment(path) {
-            foundJsxInExpression = true;
-            path.stop();
-          },
-        });
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        if (foundJsxInExpression) {
-          const id = createPortal(() => {
-            if (hasSensitive) {
-              return jsxPath.replaceWith(
-                isRoot
-                  ? t.expressionStatement(id!)
-                  : t.jsxExpressionContainer(id!)
-              );
-            }
-            jsx.children[i] = t.jsxExpressionContainer(id!);
-          }, [hasSensitive ? jsx : expression, t.booleanLiteral(unstable)]);
-
-          continue;
-        }
-
-        const id = createDynamic(null, expression, expressionPath, () => {
-          if (id) child.expression = id;
-        });
-      }
-
-      continue;
-    }
-
-    const jsxChildPath = jsxPath.get(`children.${i}`);
-
-    transformJSX(
-      hoisted,
-      mutations,
-      portal,
-      info,
-      {
-        jsx: child,
-        jsxPath: jsxChildPath as NodePath<t.JSXElement>,
-        componentBodyPath,
-        isRoot: false,
-      },
-      unstable
-    );
-  }
-  return hoisted;
-};
+}
