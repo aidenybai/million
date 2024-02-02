@@ -1,8 +1,8 @@
-import type { ParserOptions } from '@babel/core';
+import type { BabelFileResult, ParserOptions } from '@babel/core';
 import { transformAsync } from '@babel/core';
 import type { FilterPattern } from '@rollup/pluginutils';
 import { createFilter } from '@rollup/pluginutils';
-import type { TransformResult, VitePlugin } from 'unplugin';
+import type { VitePlugin } from 'unplugin';
 import { createUnplugin } from 'unplugin';
 import { MillionTelemetry } from '../telemetry';
 import { babel } from './babel';
@@ -13,6 +13,10 @@ import type { CompilerOptions } from './types';
 const DEFAULT_INCLUDE = '**/*.{jsx,tsx,ts,js,mjs,cjs}';
 const DEFAULT_EXCLUDE = 'node_modules/**/*.{jsx,tsx,ts,js,mjs,cjs}';
 
+interface CompilerOutput {
+  code: BabelFileResult['code'];
+  map: BabelFileResult['map'];
+}
 
 async function compile(
   id: string,
@@ -20,7 +24,7 @@ async function compile(
   options: Options,
   telemetryInstance: MillionTelemetry,
   isServer?: boolean,
-) {
+): Promise<CompilerOutput> {
   displayIntro(options);
   
   const plugins: ParserOptions['plugins'] = ['jsx'];
@@ -52,11 +56,10 @@ async function compile(
     configFile: false,
     babelrc: false,
   });
-
-  if (result) {
-    return { code: result.code || '', map: result.map };
+  if (!result) {
+    throw new Error('invariant');
   }
-  return null;
+  return { code: result.code || '', map: result.map };
 }
 
 export interface Options extends Omit<CompilerOptions, 'telemetry'> {
@@ -120,8 +123,12 @@ export const unplugin = createUnplugin((options: Options = {}, meta) => {
     transformInclude(id: string): boolean {
       return filter(id);
     },
-    async transform(code: string, id: string): Promise<TransformResult> {
-      return compile(id, code, options, telemetryInstance, options.server);
+    async transform(code: string, id: string) {
+      const result = await compile(id, code, options, telemetryInstance, options.server);
+      return {
+        code: result.code || '',
+        map: result.map,
+      };
     },
     vite: {
       configResolved(config) {
@@ -140,9 +147,13 @@ export const unplugin = createUnplugin((options: Options = {}, meta) => {
 
         options.hmr = config.env.DEV;
       },
-      async transform(code, id, opts): Promise<TransformResult> {
+      async transform(code, id, opts) {
         if (filter(id)) {
-          return compile(id, code, options, telemetryInstance, opts?.ssr);
+          const result = await compile(id, code, options, telemetryInstance, opts?.ssr);
+          return {
+            code: result.code || '',
+            map: result.map,
+          };
         }
         return null;
       },

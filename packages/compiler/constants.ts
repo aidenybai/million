@@ -2,6 +2,7 @@ import type { ImportDefinition } from "./types";
 
 export const RENDER_SCOPE = 'slot';
 export const SKIP_ANNOTATION = '@million skip';
+export const JSX_SKIP_ANNOTATION = '@million jsx-skip';
 export const SVG_ELEMENTS = [
   'circle',
   'ellipse',
