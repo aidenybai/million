@@ -72,11 +72,11 @@ export class MillionTelemetry {
   showWrapped(): void {
     if (this.alreadyShowedImprovement) return;
     this.alreadyShowedImprovement = true;
-    
+
     setTimeout(() => {
       // eslint-disable-next-line no-console
       console.log(
-        `   - Wrapped: ${cyan(
+        ` 🎁 Million Wrapped: ${cyan(
           `https://million.dev/wrapped/${this.anonymousSessionId}`,
         )}`,
       );
