@@ -95,9 +95,7 @@ const config: DocsThemeConfig = {
           }
           span:hover {
             mask-position: 100%;
-            transition:
-              mask-position 1s ease,
-              -webkit-mask-position 1s ease;
+            transition: mask-position 1s ease, -webkit-mask-position 1s ease;
           }
         `}</style>
       </span>
@@ -192,7 +190,7 @@ const config: DocsThemeConfig = {
   head: () => {
     const { asPath, pathname, query } = useRouter();
     const id = String(query.id);
-    const videoUrl = `https://wrapped.million.dev/${id}.mp4`;
+    const name = String(query.name);
     const { frontMatter } = useConfig();
 
     const ogConfig = {
@@ -204,7 +202,7 @@ const config: DocsThemeConfig = {
       favicon: '/favicon.svg',
     };
     const favicon = String(ogConfig.favicon);
-    const title = String(frontMatter.title || ogConfig.title);
+    let title = String(frontMatter.title || ogConfig.title);
     const description = String(frontMatter.description || ogConfig.description);
     const note =
       (frontMatter.date as string | undefined) ?? pathname === '/'
@@ -219,6 +217,13 @@ const config: DocsThemeConfig = {
     } else {
       ogUrl = `https://million.dev/api/og?title=${title}&description=${description}&note=${note}`;
     }
+    const isWrapped = pathname.startsWith('/wrapped/');
+    if (isWrapped) {
+      ogUrl = `https://telemetry.million.dev/api/v1/og/wrapped/${
+        query.id
+      }.mp4?name=${encodeURIComponent(query?.name as any)}`;
+      title = query?.name + ' Wrapped | Million.js';
+    }
 
     return (
       <>
@@ -231,28 +236,9 @@ const config: DocsThemeConfig = {
         <meta name="twitter:creator" content={`@${ogConfig.author.twitter}`} />
         <meta property="twitter:title" content={title} />
         <meta property="twitter:description" content={description} />
-        {pathname.startsWith('/wrapped/') ? (
-          <>
-            <meta property="og:type" content="video.other" />
-            <meta property="twitter:card" content="player" />
-            <meta name="twitter:player:stream" content={videoUrl} />
-            <meta name="twitter:player:width" content="1280" />
-            <meta name="twitter:player:height" content="720" />
-            <meta property="og:video" content={videoUrl} />
-            <meta property="og:video:url" content={videoUrl} />
-            <meta property="og:video:secure_url" content={videoUrl} />
-            <meta property="og:video:type" content="video/mp4" />
-            <meta property="og:video:width" content="1280" />
-            <meta property="og:video:height" content="720" />
-          </>
-        ) : (
-          <>
-            <meta name="twitter:card" content="summary_large_image" />
-            <meta property="twitter:image" content={ogUrl} />
-            <meta property="og:image" content={ogUrl} />
-          </>
-        )}
-
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta property="twitter:image" content={ogUrl} />
+        <meta property="og:image" content={ogUrl} />
         <link rel="shortcut icon" href={favicon} type="image/svg+xml" />
         <link rel="apple-touch-icon" href={favicon} type="image/svg+xml" />
         <meta name="apple-mobile-web-app-title" content={title} />
@@ -295,15 +281,29 @@ const config: DocsThemeConfig = {
     component: null,
   },
   useNextSeoProps() {
-    const { asPath } = useRouter();
+    const { asPath, pathname, query } = useRouter();
 
     if (['/', '/docs'].includes(asPath)) {
       return { titleTemplate: 'Million.js' };
+    }
+
+    if (pathname.startsWith('/wrapped/')) {
+      return { title: query?.name + ' Wrapped | Million.js' };
     }
 
     return { titleTemplate: `%s | Million.js` };
   },
   primarySaturation: 0,
 };
+
+export function hash(str: string): number {
+  let hashy = 0;
+  for (let i = 0, len = str.length; i < len; i++) {
+    const chr = str.charCodeAt(i);
+    hashy = (hashy << 5) - hashy + chr;
+    hashy |= 0; // Convert to 32bit integer
+  }
+  return hashy;
+}
 
 export default config;

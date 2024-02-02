@@ -11,8 +11,14 @@ import {
 } from 'react';
 import { RENDER_SCOPE, SVG_RENDER_SCOPE } from '../react/constants';
 import type { MillionArrayProps, MillionPortal, MillionProps, Options } from '../types';
+import { renderReactScope } from '../react/utils';
+import { useSSRSafeId } from './utils';
+// import { renderReactScope } from '../react';
 
 let globalInfo;
+
+const isClient = typeof window !== 'undefined'
+const isServer = !isClient
 
 export const block = <P extends MillionProps>(
   Component: ComponentType<P>,
@@ -33,6 +39,7 @@ export const block = <P extends MillionProps>(
         const el = ref.current;
 
         if (!el) return;
+        globalInfo.removeComments(el)
 
         const currentBlock = blockFactory(props, props?.key);
 
@@ -119,10 +126,12 @@ function Effect({ effect }: { effect: () => void }) {
 
 export const importSource = (callback: () => void) => {
   void import('../react')
-    .then(({ unwrap, INTERNALS, For }) => {
+    .then(({ unwrap, INTERNALS, For, compiledBlock, removeComments }) => {
       globalInfo = {
         unwrap,
         For,
+        compiledBlock,
+        removeComments,
         ...INTERNALS,
       };
 
@@ -165,19 +174,6 @@ export const createRSCBoundary = <P extends MillionProps>(
   );
 };
 
-const wrap = (vnode: ReactNode): ReactNode => {
-  return createElement(RENDER_SCOPE, { suppressHydrationWarning: true }, vnode);
-};
-
-export const renderReactScope = (
-  vnode: ReactNode,
-  _unstable: boolean,
-  _portals: MillionPortal[] | undefined,
-  _currentIndex: number,
-) => {
-  return wrap(vnode);
-};
-
 function isEqual(a: unknown, b: unknown): boolean {
   // Faster than Object.is
   // eslint-disable-next-line no-self-compare
@@ -212,29 +208,34 @@ export function compiledBlock(
 
   const Component: ComponentType<MillionProps> = portals && portalCount > 0 ? (props: MillionProps) => {
     const [current] = useState<MillionPortal[]>(() => []);
+    // const [firstRender, setFirstRender] = useState(true)
 
     const derived = {...props};
 
     for (let i = 0; i < portalCount; i++) {
-      const index = portals[i]!;
-      derived[index] = renderReactScope(
-        derived[index] as JSX.Element,
-        false,
-        current,
-        i,
-      );
+      // const index = portals[i]!;
+      // derived[index] = renderReactScope(
+      //   derived[index] as JSX.Element,
+      //   false,
+      //   current,
+      //   i,
+      // );
     }
+    const [targets] = useState<ReactPortal[]>([])
 
-    const targets: ReactPortal[] = [];
-
+    // useEffect(() => {
+    //   // showing targets for the first render causes hydration error!
+    //   // setFirstRender(false)
+    // })
     for (let i = 0, len = current.length; i < len; i++) {
       targets[i] = current[i]!.portal;
     }
 
-    return createElement(Fragment, {}, [
+    return createElement(Fragment, {},
       createElement(RenderBlock, derived),
-      targets,
-    ]);
+      // TODO: This should be uncommented, but doing that, value.reset would fail as it is undefined. This should be revisited
+      // !firstRender ? targets : undefined,
+    );
   } : (props: MillionProps) => createElement(RenderBlock, props);
 
   // TODO dev mode

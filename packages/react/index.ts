@@ -10,6 +10,8 @@ export const INTERNALS = {
   mount,
 };
 
+export {removeComments} from '../million/dom' 
+
 export {
   compiledBlock,
 } from './compiled-block';
