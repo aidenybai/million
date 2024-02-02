@@ -16,7 +16,7 @@ export default defineBuildConfig({
     './packages/react-server',
     './packages/types',
   ],
-  declaration: false,
+  declaration: true,
   clean: true,
   failOnWarn: false,
   rollup: {
