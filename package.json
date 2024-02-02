@@ -27,7 +27,6 @@
     "url": "https://aidenybai.com"
   },
   "sideEffects": false,
-  "type": "module",
   "exports": {
     ".": {
       "import": {
