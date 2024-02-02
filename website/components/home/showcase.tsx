@@ -75,7 +75,7 @@ export const ShowcaseSlider = () => {
             key={url}
             href={`https://${url}`}
             target="_blank"
-            className="pr-10 space-y-6 text-center w-[24rem] relative grayscale-[50%] opacity-90 hover:opacity-100 transition duration-200 hover:grayscale-0"
+            className="pr-10 space-y-6 tex-center w-[24rem] relative grayscale-[50%] opacity-90 hover:opacity-100 transition duration-200 hover:grayscale-0"
           >
             <Image
               src={image}

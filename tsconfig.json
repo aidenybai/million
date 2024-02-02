@@ -11,8 +11,7 @@
     "noImplicitAny": false,
     "paths": {
       // Make sure the root d.ts isn't picked up by TS locally
-      "react": ["node_modules/react"],
-      "preact": ["node_modules/preact"],
+      "react": ["node_modules/react"]
     },
     "types": ["vitest/globals"]
   },

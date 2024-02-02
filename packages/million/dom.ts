@@ -19,7 +19,6 @@ if (typeof window === 'undefined') {
 }
 
 export const document$ = document;
-export const queueMicrotask$ = queueMicrotask;
 export const template$ = document$.createElement('template');
 
 // Taken from ivi (https://github.com/localvoid/ivi/blob/43cdf6f747dc782883ca73bdb5b4e21fa9c27655/packages/ivi/src/client/core.ts#L29C1-L29C1)
@@ -152,6 +151,24 @@ export const childAt = (el: HTMLElement, index: number) => {
   return child;
 };
 
+const visitedNodes = new WeakSet<Node>();
+
+// React removes the comment in hydration but since we're hijacking the hydration, we should do it manually
+export const removeComments = (el: Node) => {
+  if (visitedNodes.has(el)) {
+    return;
+  }
+  if (el.nodeType === 8) {
+    el.parentNode?.removeChild(el);
+  }
+  let child: ChildNode | null = firstChild$.call(el);
+  while (child) {
+    removeComments(child);
+    child = child.nextSibling;
+  }
+  visitedNodes.add(el);
+};
+
 export const insertText = (
   el: HTMLElement,
   value: string,
@@ -226,5 +243,14 @@ export const setAttribute = (
     setAttribute$.call(el, name, String(value));
   } else {
     removeAttribute$.call(el, name);
+  }
+
+  const isInput = el instanceof HTMLInputElement;
+  const isSelect = el instanceof HTMLSelectElement;
+  const isTextArea = el instanceof HTMLTextAreaElement;
+
+  if (name === 'value' && (isInput || isSelect || isTextArea)) {
+    setAttribute$.call(el, name, String(value));
+    el.value = value as string;
   }
 };

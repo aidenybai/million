@@ -1,8 +1,0 @@
-{
-  "private": true,
-  "main": "./index.ts",
-  "module": "./index.ts",
-  "dependencies": {
-    "preact": "^10.15.0"
-  }
-}

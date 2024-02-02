@@ -6,6 +6,7 @@ import TextsLogo from '../../public/texts.webp';
 import HackClubLogo from '../../public/hackclub.svg';
 import OpenSaucedLogo from '../../public/opensauced.svg';
 import MetamaskLogo from '../../public/metamask.svg';
+import { RetroGrid } from '../retro-grid';
 import { useTranslations } from '../../hooks/use-translations';
 import { Container } from './container';
 import { ShimmerButton } from './shimmer-button';
@@ -23,12 +24,15 @@ export function Hero() {
     void navigator.clipboard.writeText('npx million@latest');
     setSubmitted(true);
 
-    setTimeout(() => setSubmitted(false), 1000);
+    setTimeout(() => {
+      setSubmitted(false);
+    }, 1000);
   };
 
   return (
-    <div className="relative">
+    <div className="relative pb-10 border-b border-b-[#ffffff1a]">
       <Blur />
+      <RetroGrid className="opacity-20 " />
       <Container>
         <div className="relative pt-20 md:pt-36 ml-auto">
           <div className="lg:w-[70%] text-center mx-auto">
@@ -116,6 +120,8 @@ export function Hero() {
             </button>
           </div>
         </div>
+      </Container>
+      <Container>
         <div className="lg:w-2/3 text-center mx-auto">
           <Companies />
         </div>
@@ -212,10 +218,10 @@ export function Companies() {
       </div>
       <div className="slider">
         <div className="slide-track-5 hover:pause mt-6 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 justify-around items-center">
-          {[...entries, ...entries].map(({ component, url }) => (
+          {[...entries, ...entries].map(({ component, url }, i) => (
             <div
-              key={url}
               className="w-[12rem] relative grayscale opacity-60 hover:opacity-100 transition duration-200 hover:grayscale-0"
+              key={i}
             >
               <a
                 href={url}

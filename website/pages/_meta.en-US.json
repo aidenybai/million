@@ -7,6 +7,15 @@
       "layout": "raw"
     }
   },
+  "wrapped": {
+    "type": "page",
+    "theme": {
+      "layout": "full",
+      "sidebar": false,
+      "toc": false,
+      "pagination": false
+    }
+  },
   "docs": {
     "type": "page",
     "title": "Docs"
@@ -27,6 +36,14 @@
     "display": "hidden",
     "type": "page",
     "title": "Foundation",
+    "theme": {
+      "typesetting": "article"
+    }
+  },
+  "telemetry": {
+    "display": "hidden",
+    "type": "page",
+    "title": "Telemetry",
     "theme": {
       "typesetting": "article"
     }
@@ -52,6 +69,10 @@
       "foundation": {
         "title": "Foundation",
         "href": "/foundation"
+      },
+      "telemetry": {
+        "title": "Telemetry",
+        "href": "/telemetry"
       },
       "research": {
         "title": "Research",

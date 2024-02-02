@@ -8,7 +8,7 @@ interface ShimmerButtonProps {
   background?: string;
   className?: string;
   children?: React.ReactNode;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- props
   [key: string]: any; // ...props
 }
 

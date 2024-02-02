@@ -1,14 +1,17 @@
-import type { block as createBlock } from '../million';
 import type { ReactPortal } from 'react';
+import type { block as createBlock } from '../million';
 
 export type MillionProps = Record<string, any>;
 
-export interface Options {
-  shouldUpdate?: (oldProps: MillionProps, newProps: MillionProps) => boolean;
+export interface Options<T extends MillionProps> {
+  name?: string;
+  shouldUpdate?: (oldProps: T, newProps: T) => boolean;
   block?: any;
   ssr?: boolean;
   svg?: boolean;
   as?: string;
+  rsc?: boolean;
+  compiled?: boolean;
 }
 
 export interface MillionArrayProps<T> {
@@ -18,6 +21,8 @@ export interface MillionArrayProps<T> {
   ssr?: boolean;
   svg?: boolean;
   as?: string;
+  html?: string;
+  rsc?: boolean;
   [key: string]: any;
 }
 

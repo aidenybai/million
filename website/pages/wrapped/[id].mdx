@@ -1,0 +1,13 @@
+import Wrapped from '../../components/wrapped';
+import { useData } from 'nextra/data';
+
+export const getServerSideProps = (params) => {
+  return { props: { ssg: { id: params.query.id } } };
+};
+
+export const Parent = () => {
+  const data = useData();
+  return <Wrapped {...data} />;
+};
+
+<Parent />
