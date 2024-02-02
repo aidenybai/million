@@ -1,6 +1,6 @@
 import type { PluginObj, PluginPass } from '@babel/core';
 import { transformAuto } from './auto.new';
-import { transformBlock } from './block.new';
+import { transformBlock } from './block';
 import type { TrackedImports } from './constants.new';
 import { INVERSE_IMPORTS, TRACKED_IMPORTS } from './constants.new';
 import type { CompilerOptions, StateContext } from './types';
