@@ -39,7 +39,7 @@ Million 3 is a signficant update that solves these issues. We believe that Milli
 
 The biggest challenge with Million 2 was hydration. In React, hydration is the process of attaching event listeners to the server-rendered HTML – making the page interactive. Just like how the virtual DOM needs to be traversed, hydration is also `O(n)` time complexity. This means that as your application grows, hydration can become a bottleneck.
 
-```jsx /\{count\}/ /\{handleClick\}/
+```jsx 2-5
 // Normally, React SSR will traverse every node in the component (👎 ❌)
 <div>
   <h1>Hello, world!</h1>
