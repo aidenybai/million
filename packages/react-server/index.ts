@@ -1,4 +1,4 @@
-import type { ComponentType, ForwardedRef, JSX, ReactNode, ReactPortal } from 'react';
+import type { ComponentType, ForwardedRef, JSX, ReactPortal } from 'react';
 import {
   Fragment,
   createElement,
@@ -10,19 +10,18 @@ import {
   useState,
 } from 'react';
 import { RENDER_SCOPE, SVG_RENDER_SCOPE } from '../react/constants';
-import type { MillionArrayProps, MillionPortal, MillionProps, Options } from '../types';
-import { renderReactScope } from '../react/utils';
-import { useSSRSafeId } from './utils';
-// import { renderReactScope } from '../react';
+import type {
+  MillionArrayProps,
+  MillionPortal,
+  MillionProps,
+  Options,
+} from '../types';
 
 let globalInfo;
 
-const isClient = typeof window !== 'undefined'
-const isServer = !isClient
-
 export const block = <P extends MillionProps>(
   Component: ComponentType<P>,
-  options: Options<P> = {}
+  options: Options<P> = {},
 ): ComponentType<P> => {
   let blockFactory = globalInfo ? globalInfo.block(Component, options) : null;
 
@@ -39,7 +38,7 @@ export const block = <P extends MillionProps>(
         const el = ref.current;
 
         if (!el) return;
-        globalInfo.removeComments(el)
+        globalInfo.removeComments(el);
 
         const currentBlock = blockFactory(props, props?.key);
 
@@ -57,7 +56,7 @@ export const block = <P extends MillionProps>(
             Component,
             globalInfo.unwrap,
             options.shouldUpdate,
-            options.svg
+            options.svg,
           );
 
           init();
@@ -77,7 +76,7 @@ export const block = <P extends MillionProps>(
       createElement(Effect, { effect }),
       rscBoundary
         ? createElement(rscBoundary, { ...props, ref } as any)
-        : createSSRBoundary<P>(Component as any, props!, ref, options.svg)
+        : createSSRBoundary<P>(Component as any, props!, ref, options.svg),
     );
     return vnode;
   }
@@ -107,7 +106,7 @@ export function For<T>({ each, children, ssr, svg }: MillionArrayProps<T>) {
     return createElement(
       svg ? SVG_RENDER_SCOPE : RENDER_SCOPE,
       { suppressHydrationWarning: true },
-      ...each.map(children)
+      ...each.map(children),
     );
   }
 
@@ -146,7 +145,7 @@ export const createSSRBoundary = <P extends MillionProps>(
   Component: ComponentType<P>,
   props: P,
   ref: ForwardedRef<unknown>,
-  svg = false
+  svg = false,
 ) => {
   const ssrProps =
     typeof window === 'undefined'
@@ -164,13 +163,13 @@ export const createSSRBoundary = <P extends MillionProps>(
 
 export const createRSCBoundary = <P extends MillionProps>(
   Component: ComponentType<P>,
-  svg = false
+  svg = false,
 ) => {
   return memo(
     forwardRef((props: P, ref) =>
-      createSSRBoundary(Component, props, ref, svg)
+      createSSRBoundary(Component, props, ref, svg),
     ),
-    () => true
+    () => true,
   );
 };
 
@@ -180,7 +179,10 @@ function isEqual(a: unknown, b: unknown): boolean {
   return a === b || (a !== a && b !== b);
 }
 
-function shouldCompiledBlockUpdate(prev: MillionProps, next: MillionProps): boolean {
+function shouldCompiledBlockUpdate(
+  prev: MillionProps,
+  next: MillionProps,
+): boolean {
   for (const key in prev) {
     if (!isEqual(prev[key], next[key])) {
       return true;
@@ -189,7 +191,8 @@ function shouldCompiledBlockUpdate(prev: MillionProps, next: MillionProps): bool
   return false;
 }
 
-interface CompiledBlockOptions extends Omit<Options<MillionProps>, 'shouldUpdate'> {
+interface CompiledBlockOptions
+  extends Omit<Options<MillionProps>, 'shouldUpdate'> {
   portals?: string[];
 }
 
@@ -206,37 +209,42 @@ export function compiledBlock(
 
   const portalCount = portals?.length || 0;
 
-  const Component: ComponentType<MillionProps> = portals && portalCount > 0 ? (props: MillionProps) => {
-    const [current] = useState<MillionPortal[]>(() => []);
-    // const [firstRender, setFirstRender] = useState(true)
+  const Component: ComponentType<MillionProps> =
+    portals && portalCount > 0
+      ? (props: MillionProps) => {
+          const [current] = useState<MillionPortal[]>(() => []);
+          // const [firstRender, setFirstRender] = useState(true)
 
-    const derived = {...props};
+          const derived = { ...props };
 
-    for (let i = 0; i < portalCount; i++) {
-      // const index = portals[i]!;
-      // derived[index] = renderReactScope(
-      //   derived[index] as JSX.Element,
-      //   false,
-      //   current,
-      //   i,
-      // );
-    }
-    const [targets] = useState<ReactPortal[]>([])
+          for (let i = 0; i < portalCount; i++) {
+            // const index = portals[i]!;
+            // derived[index] = renderReactScope(
+            //   derived[index] as JSX.Element,
+            //   false,
+            //   current,
+            //   i,
+            // );
+          }
+          const [targets] = useState<ReactPortal[]>([]);
 
-    // useEffect(() => {
-    //   // showing targets for the first render causes hydration error!
-    //   // setFirstRender(false)
-    // })
-    for (let i = 0, len = current.length; i < len; i++) {
-      targets[i] = current[i]!.portal;
-    }
+          // useEffect(() => {
+          //   // showing targets for the first render causes hydration error!
+          //   // setFirstRender(false)
+          // })
+          for (let i = 0, len = current.length; i < len; i++) {
+            targets[i] = current[i]!.portal;
+          }
 
-    return createElement(Fragment, {},
-      createElement(RenderBlock, derived),
-      // TODO: This should be uncommented, but doing that, value.reset would fail as it is undefined. This should be revisited
-      // !firstRender ? targets : undefined,
-    );
-  } : (props: MillionProps) => createElement(RenderBlock, props);
+          return createElement(
+            Fragment,
+            {},
+            createElement(RenderBlock, derived),
+            // TODO: This should be uncommented, but doing that, value.reset would fail as it is undefined. This should be revisited
+            // !firstRender ? targets : undefined,
+          );
+        }
+      : (props: MillionProps) => createElement(RenderBlock, props);
 
   // TODO dev mode
   if (options.name) {

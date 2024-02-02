@@ -1,8 +1,10 @@
 import * as t from '@babel/types';
-import type { ImportDefinition, StateContext } from "../types";
+import type { ImportDefinition, StateContext } from '../types';
 import { unwrapNode } from './unwrap-node';
 
-function isValidIdentifier(node: t.Node): node is t.Identifier | t.JSXIdentifier {
+function isValidIdentifier(
+  node: t.Node,
+): node is t.Identifier | t.JSXIdentifier {
   return t.isIdentifier(node) || t.isJSXIdentifier(node);
 }
 
@@ -12,7 +14,9 @@ function getValidImportDefinitionFromIdentifier(
 ): ImportDefinition | undefined {
   const id = unwrapNode(path.node, isValidIdentifier);
   if (id) {
-    const binding = path.scope.getBindingIdentifier(id.name);
+    const binding = path.scope.getBindingIdentifier(id.name) as
+      | t.Identifier
+      | undefined;
     // babel kinda fcked up
     if (binding) {
       return ctx.definitions.identifiers.get(binding);
@@ -34,7 +38,9 @@ function getValidImportDefinitionFromMemberExpression(
   if (!object) {
     return undefined;
   }
-  const binding = path.scope.getBindingIdentifier(object.name);
+  const binding = path.scope.getBindingIdentifier(object.name) as
+    | t.Identifier
+    | undefined;
   if (!binding) {
     return undefined;
   }
@@ -66,7 +72,9 @@ function getValidImportDefinitionFromJSXMemberExpression(
   if (!object) {
     return undefined;
   }
-  const binding = path.scope.getBindingIdentifier(object.name);
+  const binding = path.scope.getBindingIdentifier(object.name) as
+    | t.Identifier
+    | undefined;
   if (!binding) {
     return undefined;
   }

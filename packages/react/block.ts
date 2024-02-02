@@ -6,14 +6,13 @@ import {
   patch as patchBlock,
 } from '../million/block';
 import { MapSet$, MapHas$ } from '../million/constants';
-import { queueMicrotask$, removeComments } from '../million/dom';
 import type { Options, MillionProps, MillionPortal } from '../types';
 import { processProps, unwrap } from './utils';
 import { Effect, RENDER_SCOPE, REGISTRY, SVG_RENDER_SCOPE } from './constants';
 
 export const block = <P extends MillionProps>(
   fn: ComponentType<P> | null,
-  options: Options<P> | null | undefined = {}
+  options: Options<P> | null | undefined = {},
 ) => {
   let blockTarget: ReturnType<typeof createBlock> | null = options?.block;
   const defaultType = options?.svg ? SVG_RENDER_SCOPE : RENDER_SCOPE;
@@ -29,7 +28,7 @@ export const block = <P extends MillionProps>(
 
   const MillionBlock = <P extends MillionProps>(
     props: P,
-    forwardedRef: Ref<any>
+    forwardedRef: Ref<any>,
   ) => {
     const hmrTimestamp = props._hmr;
     const ref = useRef<HTMLElement>(null);
@@ -46,16 +45,16 @@ export const block = <P extends MillionProps>(
         ref.current.textContent = '';
       }
       if (patch.current === null || hmrTimestamp) {
-        queueMicrotask$(() => {
-          mount$.call(currentBlock, ref.current!, null);
-        });
+        mount$.call(currentBlock, ref.current, null);
         patch.current = (props: P) => {
-          queueMicrotask$(() => {
-            patchBlock(
-              currentBlock,
-              blockTarget!(props, props.key, options?.shouldUpdate  as Parameters<typeof createBlock>[2])
-            );
-          });
+          patchBlock(
+            currentBlock,
+            blockTarget!(
+              props,
+              props.key,
+              options?.shouldUpdate as Parameters<typeof createBlock>[2],
+            ),
+          );
         };
       }
     }, []);
@@ -84,7 +83,6 @@ export const block = <P extends MillionProps>(
   if (!MapHas$.call(REGISTRY, MillionBlock)) {
     MapSet$.call(REGISTRY, MillionBlock, block);
   }
-
 
   // TODO add dev guard
   if (options?.name) {

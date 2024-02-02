@@ -13,14 +13,12 @@ import {
 } from './constants';
 
 if (typeof window === 'undefined') {
-  console.trace('here');
   throw new Error(
-    'See http://million.dev/docs/install to install the compiler.'
+    'See http://million.dev/docs/install to install the compiler.',
   );
 }
 
 export const document$ = document;
-export const queueMicrotask$ = queueMicrotask;
 export const template$ = document$.createElement('template');
 
 // Taken from ivi (https://github.com/localvoid/ivi/blob/43cdf6f747dc782883ca73bdb5b4e21fa9c27655/packages/ivi/src/client/core.ts#L29C1-L29C1)
@@ -51,7 +49,7 @@ export const HTM_TEMPLATE_CONTENT = HTM_TEMPLATE.content;
 const _SVG_TEMPLATE = /**@__PURE__*/ document$.createElement('template');
 export const SVG_TEMPLATE = /**@__PURE__*/ document$.createElementNS(
   'http://www.w3.org/2000/svg',
-  'svg'
+  'svg',
 );
 /**@__PURE__*/ _SVG_TEMPLATE.content.appendChild(SVG_TEMPLATE);
 
@@ -78,7 +76,7 @@ export const nextSibling$ = getOwnPropertyDescriptor$(node$, 'nextSibling')!
   .get!;
 export const characterDataSet$ = getOwnPropertyDescriptor$(
   characterData$,
-  'data'
+  'data',
 )!.set!;
 
 export const stringToDOM = (content: string, svg?: boolean) => {
@@ -93,7 +91,7 @@ document$[EVENTS_REGISTRY] = new Set$();
 export const createEventListener = (
   el: HTMLElement,
   name: string,
-  value?: EventListener
+  value?: EventListener,
 ) => {
   let event = name.toLowerCase();
   let capture = false;
@@ -126,7 +124,7 @@ export const createEventListener = (
           el = el.parentNode;
         }
       },
-      { capture }
+      { capture },
     );
     SetAdd$.call(document$[EVENTS_REGISTRY], event);
   }
@@ -153,12 +151,12 @@ export const childAt = (el: HTMLElement, index: number) => {
   return child;
 };
 
-const visitedNodes = new WeakSet<Node>() 
+const visitedNodes = new WeakSet<Node>();
 
 // React removes the comment in hydration but since we're hijacking the hydration, we should do it manually
 export const removeComments = (el: Node) => {
   if (visitedNodes.has(el)) {
-    return
+    return;
   }
   if (el.nodeType === 8) {
     el.parentNode?.removeChild(el);
@@ -168,13 +166,13 @@ export const removeComments = (el: Node) => {
     removeComments(child);
     child = child.nextSibling;
   }
-  visitedNodes.add(el)
+  visitedNodes.add(el);
 };
 
 export const insertText = (
   el: HTMLElement,
   value: string,
-  index: number
+  index: number,
 ): Text => {
   const node = document$.createTextNode(value);
   const child = childAt(el, index);
@@ -189,7 +187,7 @@ export const setText = (el: Text, value: string) => {
 export const setStyleAttribute = (
   el: HTMLElement,
   name: string,
-  value?: string | boolean | number | null
+  value?: string | boolean | number | null,
 ) => {
   if (typeof value !== 'number' || IS_NON_DIMENSIONAL.test(name)) {
     el.style[name] = value;
@@ -208,7 +206,7 @@ export const setStyleAttribute = (
 export const setSvgAttribute = (
   el: HTMLElement,
   name: string,
-  value?: string | boolean | null
+  value?: string | boolean | null,
 ) => {
   name = name.replace(/xlink(?:H|:h)/, 'h').replace(/sName$/, 's');
   if (name.startsWith('xmlns')) {
@@ -221,7 +219,7 @@ export const setSvgAttribute = (
 export const setAttribute = (
   el: HTMLElement,
   name: string,
-  value?: string | boolean | null
+  value?: string | boolean | null,
 ): void => {
   const isValueNully = value === undefined || value === null;
   value = isValueNully ? '' : value;
