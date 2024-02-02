@@ -1,7 +1,7 @@
 {
   "introduction": "Introduction",
   "install": "Installation",
-  "automatic": "Automatic",
-  "manual-mode": "Manual Mode",
+  "automatic": "Mode automatique",
+  "manual-mode": "Mode Manuel",
   "internals": "Internals"
 }

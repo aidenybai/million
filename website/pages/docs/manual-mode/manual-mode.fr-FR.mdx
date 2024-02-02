@@ -1,6 +1,6 @@
 ---
-title: 'Manual Mode Tutorial'
-description: 'Learn how to use Million.js in Manual mode'
+title: 'Tutoriel du Mode Manuel'
+description: 'Apprenez à utiliser Million.js en mode manuel'
 ---
 
 import { Callout, Tabs, Tab, Cards, Card } from 'nextra-theme-docs';
@@ -19,23 +19,23 @@ import { CombinedBlockExample } from '../../../components/back-in-block/combined
 
 </MobileView>
 
-# Manual mode Tutorial
+# Tutoriel du Mode Manuel
 
 <AutomaticModeWarning />
 
-Let's learn how you can integrate Million.js into your React applications.
+Apprenons comment intégrer Million.js dans vos applications React.
 
-Million.js assumes that you're already familiar with and you're using React. If you're not, is is recommended you check out [react.dev](https://react.dev/) first.
+Million.js suppose que vous êtes déjà familier avec React et que vous l'utilisez. Si ce n'est pas le cas, il est recommandé de consulter [react.dev](https://react.dev/) au préalable.
 
 <Callout type="info">
-**You will learn:**
-- How to use [`block(){:jsx}`](/docs/manual-mode/block) to convert React components into blocks
-- How to use `<For />{:jsx}` for efficiently rendering lists
-- When to use `block(){:jsx}` and `<For />{:jsx}`
-- The limitations of blocks
+**Vous apprendrez:**
+- Comment utiliser [`block(){:jsx}`](/docs/manual-mode/block) pour convertir des composants React en blocs
+- Comment utiliser `<For />{:jsx}` pour rendre efficacement des listes
+- Quand utiliser `block(){:jsx}` et `<For />{:jsx}`
+- Les limitations des blocs
 </Callout>
 
-Blocks can be used just like a normal React component:
+Les blocs peuvent être utilisés comme un composant React normal :
 
 ```jsx {5}
 export default function App() {
@@ -50,7 +50,7 @@ export default function App() {
 
 <BrowserView>
 
-Have a look at the result:
+Jetez un œil au résultat :
 
 <Box previewOnly code={`
   import { block } from 'million/react';
@@ -75,13 +75,13 @@ return (
 
 </BrowserView>
 
-With that in hand, let's build an app.
+Avec cela en main, construisons une application.
 
-## Data Grid Example
+## Exemple de grille de données
 
-One use case of blocks is rendering lists of data efficiently. In this example, let's build a data grid in React.
+Un cas d'utilisation des blocs est le rendu efficace de listes de données. Dans cet exemple, construisons une grille de données en React.
 
-You have access to the prebuilt components `<Table />{:jsx}` and `<Input />{:jsx}` from your fake user interface (UI) library. You can then store the number of rows you want to display in a `useState(){:jsx}` hook.
+Vous avez accès aux composants préconstruits `<Table />{:jsx}` et `<Input />{:jsx}` de votre fausse bibliothèque d'interface utilisateur (UI). Vous pouvez ensuite stocker le nombre de lignes que vous souhaitez afficher dans un hook `useState(){:jsx}`.
 
 ```jsx
 function App() {
@@ -96,14 +96,14 @@ function App() {
 }
 ```
 
-But wait! You made a grid but you have no data. Let's say you can grab some array of arbitrary data from a function called `buildData(rows){:jsx}`:
+Mais attendez ! Vous avez créé une grille, mais vous n'avez pas de données. Disons que vous pouvez obtenir un tableau de données arbitraires à partir d'une fonction appelée `buildData(rows)`:
 
 ```jsx
 const data = buildData(100);
 // returns [{ adjective: '...', color: '...', noun: '...' }, ... x100]
 ```
 
-Now, you can render the data in our table using `Array.map(){:jsx}`:
+Maintenant, vous pouvez rendre les données dans notre tableau en utilisant `Array.map(){:jsx}` :
 
 ```jsx {3, 9-15}
 function App() {
@@ -158,15 +158,15 @@ const data = buildData(rows);
 export default App;
 `} />
 
-You can see that it performs pretty well. From 0-100, there's virtually no lag, but once you get higher than 500 or so, there's a noticable delay in rendering.
+Vous pouvez voir que cela fonctionne assez bien. De 0 à 100, il n'y a pratiquement aucun délai, mais une fois que vous atteignez plus de 500 environ, il y a un retard perceptible dans le rendu.
 
-React is great because you can declaratively write great UI and get pretty good performance. But the data grid you just made is a rudimentary example, and is not necessarily representative of most React applications.
+React est génial car vous pouvez écrire de manière déclarative une superbe interface utilisateur et obtenir des performances assez bonnes. Cependant, la grille de données que vous venez de créer est un exemple rudimentaire et ne représente pas nécessairement la plupart des applications React.
 
-### More realistic rendering
+### Rendu plus réaliste
 
-In the following example, you add `lotsOfElements` (an array of a lot of blank elements) to each row. you can also add a lag radar to monitor page performance.
+Dans l'exemple suivant, vous ajoutez `lotsOfElements` (un tableau de nombreux éléments vides) à chaque ligne. Vous pouvez également ajouter un radar de délai pour surveiller les performances de la page.
 
-Try changing the input value up and down from 0 to 1000. Notice how React _really struggles_ when rendering a lot of elements.
+Essayez de changer la valeur de l'entrée de haut en bas de 0 à 1000. Remarquez comment React a _a vraiment du mal_ lors du rendu de nombreux éléments.
 
 <Box code={`
   import { useState } from 'react';
@@ -200,11 +200,11 @@ export default App;
 
 </BrowserView>
 
-### Just `block` it
+### Utilisez simplement `block`
 
-In the following example, you can use `block(){:jsx}` and `<For />{:jsx}` in order to optimize rendering.
+Dans l'exemple suivant, vous pouvez utiliser `block()` et `<For />` pour optimiser le rendu.
 
-First, you need to abstract the `<tr>{:jsx}` into its own component.
+Tout d'abord, vous devez abstraire `<tr>{:jsx}` dans son propre composant.
 
 ```jsx
 data.map(({ adjective, color, noun }) => (
@@ -230,7 +230,7 @@ function Row({ adjective, color, noun }) {
 }
 ```
 
-Then, you can wrap it with `block(){:jsx}` in order to optimize the `<Row />{:jsx}` component.
+Ensuite, vous pouvez l'encapsuler avec `block(){:jsx}` pour optimiser le composant `<Row />{:jsx}`.
 
 ```jsx {3, 14}
 import { block } from 'million/react';
@@ -247,7 +247,7 @@ const RowBlock = block(function Row({ adjective, color, noun }) {
 });
 ```
 
-Once, you've optimized a row, you will need to render it as a list:
+Une fois que vous avez optimisé une ligne, vous devrez la rendre sous forme de liste :
 
 ```jsx
 data.map(({ adjective, color, noun }) => (
@@ -255,11 +255,11 @@ data.map(({ adjective, color, noun }) => (
 ));
 ```
 
-**BUT WAIT!** You can actually use Million.js' built-in rendering solution.
+**MAIS ATTENDEZ!** Vous pouvez en fait utiliser la solution de rendu intégrée de Million.js.
 
-### Optimized List Rendering
+### Rendu de liste optimisé
 
-The `<For />{:jsx}` component is used to render a list of blocks. It takes an array as the `each` prop and a function as its children. The function is called for each item in the array and is passed the item and its index as arguments.
+Le composant `<For />{:jsx}` est utilisé pour rendre une liste de blocs. Il prend un tableau en tant que prop `each` et une fonction en tant qu'enfants. La fonction est appelée pour chaque élément du tableau et reçoit l'élément et son index en tant qu'arguments.
 
 <Callout type="info">
 **`<For />{:jsx}` Component**
@@ -269,9 +269,9 @@ Example: `<For each={[1, 2, 3]}>{(item, index) => myBlock({ item, index })}</For
 
 </Callout>
 
-It's the best way to loop over an array (uses [`mapArray(){:jsx}`](/docs/internals/map-array) under the hood). As the array changes, `<For />{:jsx}` updates or moves items in the DOM rather than recreating them. Let's look at an example:
+C'est la meilleure façon de parcourir un tableau (utilise [`mapArray(){:jsx}`](/docs/internals/map-array) en interne). Lorsque le tableau change, `<For />{:jsx}` met à jour ou déplace les éléments dans le DOM plutôt que de les recréer. Regardons un exemple :
 
-With this in mind, you can rewrite your table to use `<For />{:jsx}`:
+Avec cela à l'esprit, vous pouvez réécrire votre tableau pour utiliser `<For />{:jsx}` :
 
 ```jsx {3, 4, 5, 6, 7}
 import { For } from 'million/react';
@@ -285,9 +285,9 @@ import { For } from 'million/react';
 
 <BrowserView>
 
-Now that we've integrated Million.js, let's check the new example out.
+Maintenant que nous avons intégré Million.js, examinons le nouvel exemple.
 
-Notice when you change the input value, the lag radar shows significantly less lag than the pure React example. With a [faster underlying virtual DOM](/blog/virtual-dom), Million.js can take a lot of the pain out of rendering large lists.
+Remarquez que lorsque vous changez la valeur de l'entrée, le radar de délai montre significativement moins de retard que l'exemple React pur.Avec un [DOM virtuel sous-jacent plus rapide](/blog/virtual-dom), Million.js peut atténuer une grande partie de la difficulté du rendu de grandes listes.
 
 <Box code={`
   import { useState } from 'react';
@@ -298,15 +298,14 @@ Notice when you change the input value, the lag radar shows significantly less l
 const RowBlock = block(
 function Row({ adjective, color, noun }) {
 return (
+
 <tr>
-<td>{adjective}</td>
-<td>{color}</td>
-<td>{noun}</td>
-{...lotsOfElements}
+  <td>{adjective}</td>
+  <td>{color}</td>
+  <td>{noun}</td>
+  {...lotsOfElements}
 </tr>
-);
-}
-);
+); } );
 
 function App() {
 const [rows, setRows] = useState(1);
@@ -332,19 +331,20 @@ export default App;
 
 </BrowserView>
 
-## Hitting the limit
+## Atteindre la limite
 
 <Callout type="warning">
-  This section is a bit more advanced. If you want a list of limitations, check
-  out the [Rules of Blocks](/docs/rules). Or, if you just want to start
-  integrating Million.js, check out the [installation guide](/docs/install).
+  Cette section est un peu plus avancée. Si vous souhaitez obtenir une liste des
+  limitations, consultez les [règles des Blocs](/docs/rules). Ou, si vous voulez
+  simplement commencer à intégrer Million.js, consultez le [guide
+  d'installation](/docs/install).
 </Callout>
 
-Blocks are great for rendering large lists, data grids, and many other use cases. Under the hood, they render with the Million.js virtual DOM instead of React.
+Les blocs sont excellents pour le rendu de grandes listes, de grilles de données et de nombreux autres cas d'utilisation. Sous le capot, ils rendent avec le DOM virtuel de Million.js au lieu de React.
 
 <details>
   <summary>
-    <strong>Deep Dive:</strong> How does it work?
+    <strong>Plongée approfondie :</strong> Comment cela fonctionne-t-il ?
   </summary>
   <Tabs items={['React', 'Million.js']}>
     <Tab>
@@ -356,19 +356,19 @@ Blocks are great for rendering large lists, data grids, and many other use cases
   </Tabs>
 </details>
 
-Using a block can allow us to capture potential performance gains. However, you should always use best judgement, as blocks are not a silver bullet. Here are some general guidelines to follow:
+L'utilisation d'un bloc peut nous permettre de saisir des gains de performances potentiels. Cependant, vous devriez toujours utiliser votre meilleur jugement, car les blocs ne sont pas une solution miracle. Voici quelques lignes directrices générales à suivre :
 
-- **Static views**: Blocks perform best when there's not that much dynamic data. Since static parts of the React tree need to be unnecessary rerendered when dynamic data changes by React, blocks can directly skip to what's dynamic.
-- **Nested data**: Blocks are great for rendering nested data. Million.js turns tree traversal from `O(tree)` to `O(1)`, allowing for fast access and changes.
+- **Vues statiques**:  Les blocs fonctionnent mieux lorsqu'il n'y a pas beaucoup de données dynamiques. Étant donné que les parties statiques de l'arbre React doivent être inutilement rendues à nouveau lorsque les données dynamiques changent, les blocs peuvent directement sauter à ce qui est dynamique.
+- **Données imbriquées**: Les blocs sont excellents pour le rendu de données imbriquées. Million.js transforme la traversée de l'arbre de `O(arbre)` à `O(1)`, permettant un accès et des modifications rapides.
 
-Looking for the full guidelines? Check out [Rules of Blocks](/docs/rules).
+Vous recherchez des directives détaillées ? Consultez [Règles des Blocs.](/docs/rules).
 
-## Next Steps
+## Étapes suivantes
 
-By now, you know the basics of how to integrate Million.js into your application!
+À présent, vous connaissez les bases de l'intégration de Million.js dans votre application !
 
-Check out the [installation guide](/docs/install) to put them into practice and start using blocks.
+Consultez le [guide d'installation](/docs/install) pour les mettre en pratique et commencer à utiliser les blocs.
 
 ---
 
-_This page is directly inspired by [React's "Quick Start" page](https://react.dev/learn)._
+_Cette page est directement inspirée de la page ["Quick Start" de React](https://react.dev/learn)._

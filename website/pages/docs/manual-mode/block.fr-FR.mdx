@@ -1,6 +1,6 @@
 ---
 title: 'block()'
-description: 'Million.js introduces the concept of a Block. Blocks are a way for React components to be rendered using the Million.js virtual DOM.'
+description: 'Million.js introduit le concept de Bloc. Les Blocs sont une manière de rendre les composants React en utilisant le DOM virtuel de Million.js.'
 ---
 
 import { Callout, Tabs, Tab } from 'nextra-theme-docs';
@@ -10,12 +10,12 @@ import { AutomaticModeWarning } from '../../../components/automatic-mode-warning
 
 # `block(){:jsx}`
 
-**Syntax:** `block((props) => vnode){:jsx}`\
-**Example:** `block((props) => <div>{props.foo}</div>){:jsx}`
+**Syntaxe:** `block((props) => vnode){:jsx}`\
+**Exemple:** `block((props) => <div>{props.foo}</div>){:jsx}`
 
-Million.js is a library that enables you to create _blocks_. A block is a special [Higher Order Component (HOC)](https://legacy.reactjs.org/docs/higher-order-components.html) that can be used as a React component but is hyper-optimized for rendering speed.
+Million.js est une bibliothèque qui vous permet de créer des _blocs_. Un bloc est un [composant d'ordre supérieur (HOC)](https://legacy.reactjs.org/docs/higher-order-components.html) spécial qui peut être utilisé comme un composant React, mais qui est hyper-optimisé pour la vitesse de rendu.
 
-Blocks are essentially components wrapped by `block(){:jsx}`.
+Les blocs sont essentiellement des composants enveloppés par `block(){:jsx}`.
 
 <Tabs items={['Javascript', 'Typescript',]} storageKey="selected-language">
   <Tab>
@@ -33,12 +33,8 @@ Blocks are essentially components wrapped by `block(){:jsx}`.
 
   <Tab>
     <Callout type="info">
-    You must make your Props use `type` instead of `interface`, as this is the [officially recognized
-    behavior](https://github.com/microsoft/TypeScript/issues/15300#issuecomment-332366024)
-    by the TypeScript team. Alternatively, if you want to use interfaces you can
-    add `[key: string]: any` as per [this Stack Overflow
-    comment](https://stackoverflow.com/questions/37006008/typescript-index-signature-is-missing-in-type/65473225#65473225).
-
+    Vous devez faire en sorte que vos Props utilisent `type` au lieu de `interface`, car c'est le [comportement officiellement reconnu](https://github.com/microsoft/TypeScript/issues/15300#issuecomment-332366024)
+    par l'équipe TypeScript. Alternativement, si vous préférez utiliser des interfaces, vous pouvez ajouter `[key: string]: any` comme indiqué dans [ce commentaire sur Stack Overflow.](https://stackoverflow.com/questions/37006008/typescript-index-signature-is-missing-in-type/65473225#65473225).
     </Callout>
 
     ```jsx
@@ -61,10 +57,9 @@ Blocks are essentially components wrapped by `block(){:jsx}`.
   </Tab>
 </Tabs>
 
+## Balises personnalisées
 
-## Custom Tags
-
-The `as` prop can be used to specify the tag name of the For. By default, it is `slot`.
+La propriété `as` peut être utilisée pour spécifier le nom de la balise pour la directive `For`. Par défaut, c'est `slot`.
 
 ```jsx
 import { block } from 'million/react';
@@ -77,9 +72,9 @@ const LionBlock = block(
 );
 ```
 
-## Using Block With SSR
+## Utilisation de bloc avec SSR
 
-If you are using Million.js on the server, you may encounter a hydration mismatch error. This is because Million.js uses a different algorithm for rendering on the server than it does on the client. To fix this, you can disable SSR.
+Si vous utilisez Million.js côté serveur, vous pouvez rencontrer une erreur de désynchronisation de l'hydratation. Cela est dû au fait que Million.js utilise un algorithme différent pour le rendu côté serveur par rapport au rendu côté client. Pour résoudre ce problème, vous pouvez désactiver le SSR.
 
 ```jsx
 const NoSSRBlock = block(
@@ -90,7 +85,7 @@ const NoSSRBlock = block(
 );
 ```
 
-## Rules of blocks
+## Règles des blocs
 
   <Callout type="warning">
     <code><strong>\[Million.js\]</strong> You did something wrong!</code>
@@ -104,27 +99,30 @@ const NoSSRBlock = block(
 
   </Callout>
 
-There are three common reasons you might be seeing it:
+Il existe trois raisons courantes pour lesquelles vous pourriez le voir :
 
-1. Breaking [rules of blocks](/docs/manual-mode/block#breaking-rules-of-blocks)
-2. Not [adding the compiler](/docs/manual-mode/block#using-the-compiler)
-3. Encountering [unsupported behavior](/docs/manual-mode/block#unsupported-behavior)
+1. Enfreindre [les règles des blocs](/docs/manual-mode/block#breaking-rules-of-blocks)
+2. Ne pas [ajouter le compilateur](/docs/manual-mode/block#using-the-compiler)
+3. Rencontrer [un comportement non pris en charge](/docs/manual-mode/block#unsupported-behavior)
 
-## Breaking Rules of Blocks
+## Enfreindre les règles des blocs
 
-You may have heard of ["progressive enhancement,"](https://developer.mozilla.org/en-US/docs/Glossary/Progressive_Enhancement) which is the idea that tools progressively use features based on what is supported. Similarly, Million.js has "progressive degradation," or the concept that if you use features that are not supported, it will degrade to default React rendering gracefully.
+Vous avez peut-être entendu parler de ["l'amélioration progressive"](https://developer.mozilla.org/en-US/docs/Glossary/Progressive_Enhancement), qui est l'idée selon laquelle les outils utilisent progressivement des fonctionnalités en fonction de ce qui est pris en charge. De manière similaire, Million.js a la "dégradation progressive" ou le concept selon lequel, si vous utilisez des fonctionnalités qui ne sont pas prises en charge, elle se dégradera élégamment vers le rendu React par défaut.
 
-This section highlights some of the possible warnings you might encounter using blocks. Note that this is not an exhaustive list.
+Cette section met en évidence certains des avertissements possibles que vous pourriez rencontrer en utilisant des blocs. Notez que cette liste n'est pas exhaustive.
 
 {' '}
+
 <Callout type="info">
-  This section presents idiomatic patterns to use blocks. It is not a list of
-  errors, your application will still work if you don't follow these patterns.
+  Cette section présente des motifs idiomatiques pour utiliser les blocs. Ce
+  n'est pas une liste d'erreurs, votre application fonctionnera toujours si vous
+  ne suivez pas ces motifs.
 </Callout>
 
-### Declaring blocks
+### Déclaration des blocs
 
 {' '}
+
 <Callout type="warning">
   <code>
     <strong>[Million.js]</strong> Block needs to be defined as a variable
@@ -132,7 +130,7 @@ This section highlights some of the possible warnings you might encounter using 
   </code>
 </Callout>
 
-The above usually occurs when you have a block that is not declared as a variable. This prevents the compiler from analyzing the block correctly.
+Ce problème survient généralement lorsque vous avez un bloc qui n'est pas déclaré en tant que variable. Cela empêche le compilateur d'analyser correctement le bloc.
 
 ```jsx
 console.log(block(() => <div />)) // ❌ Wrong
@@ -145,9 +143,10 @@ console.log(Block);
 export default Block;
 ```
 
-### Calling `block()`
+### Appel `block()`
 
 {' '}
+
 <Callout type="warning">
   <code>
     <strong>[Million.js]</strong> Found unsupported argument for block. Make
@@ -156,7 +155,7 @@ export default Block;
   </code>
 </Callout>
 
-The above usually occurs when you have an actual JSX component like `<Component />{:jsx}` passed into the `block(){:jsx}` function instead of a reference to the Component itself.
+Cela se produit généralement lorsque vous avez un composant JSX réel comme `<Component />{:jsx}` passé dans la fonction `block(){:jsx}` au lieu d'une référence au composant lui-même.
 
 ```jsx
 const BadBlock = block(<Component />); // ❌ Wrong
@@ -164,9 +163,10 @@ const BadBlock = block(<Component />); // ❌ Wrong
 const GoodBlock = block(App); // ✅ Correct
 ```
 
-### Using `<For />` instead of `map()`
+### Utiliser `<For />` au lieu de `map()`
 
 {' '}
+
 <Callout type="warning">
   <code>
     <strong>[Million.js]</strong>
@@ -175,7 +175,7 @@ const GoodBlock = block(App); // ✅ Correct
   </code>
 </Callout>
 
-The above will occur when you use `<Array>.map` within a block. This is not ideal, especially if the component that holds the list is a block. The right pattern is to remove the block on the current component and use a `<For />` component instead for the children.
+Cela se produira lorsque vous utilisez `<Array>.map` à l'intérieur d'un bloc. Ce n'est pas idéal, surtout si le composant qui contient la liste est un bloc. Le bon motif est de supprimer le bloc sur le composant actuel et d'utiliser plutôt un composant `<For />` pour les enfants.
 
 ```jsx
 <div>
@@ -191,7 +191,7 @@ The above will occur when you use `<Array>.map` within a block. This is not idea
 </For>
 ```
 
-### Deterministic returns
+### Retours déterministes
 
   <div className="flex gap-3">
   <Callout type="warning">
@@ -209,9 +209,9 @@ The above will occur when you use `<Array>.map` within a block. This is not idea
   </Callout>
   </div>
 
-Returns must be "deterministic," meaning there can only be one return statement at the end of the block that returns a stable tree.
+Les retours doivent être "déterministes", ce qui signifie qu'il ne peut y avoir qu'une seule instruction de retour à la fin du bloc qui renvoie un arbre stable.
 
-Some examples of non-deterministic returns:
+Quelques exemples de retours non déterministes:
 
 ```jsx
 function Component() {
@@ -228,9 +228,10 @@ function Component() {
 const ComponentBlock = block(Component);
 ```
 
-### UI Component libraries 🙅‍♀️
+### Bibliothèques de composants d'interface utilisateur 🙅‍♀️
 
 {' '}
+
 <Callout type="warning">
   <code>
     <strong>[Million.js]</strong>
@@ -239,9 +240,9 @@ const ComponentBlock = block(Component);
   </code>
 </Callout>
 
-Many React applications use UI component libraries like Material UI, Chakra UI, or Tailwind UI. These libraries are great, but they are not optimized for Million.js.
+De nombreuses applications React utilisent des bibliothèques de composants d'interface utilisateur telles que Material UI, Chakra UI ou Tailwind UI. Ces bibliothèques sont excellentes, mais elles ne sont pas optimisées pour Million.js.
 
-Million.js requires that you use DOM elements instead of components. This is because components can introduce non-deterministic returns, which can cause degraded performance.
+Million.js exige que vous utilisiez des éléments DOM plutôt que des composants. Cela est dû au fait que les composants peuvent introduire des retours non déterministes, ce qui peut entraîner une dégradation des performances.
 
 ```jsx
 // ❌ Bad
@@ -260,9 +261,10 @@ Million.js requires that you use DOM elements instead of components. This is bec
 </div>
 ```
 
-### Spread attributes/children
+### Propagation d'attributs/enfants
 
 {' '}
+
 <Callout type="warning">
   <code>
     <strong>[Million.js]</strong>
@@ -270,7 +272,7 @@ Million.js requires that you use DOM elements instead of components. This is bec
   </code>
 </Callout>
 
-You can't use spread attributes/children that change safely or reference a binding within the component inside Million.js, as they can introduce non-deterministic returns.
+Vous ne pouvez pas utiliser en toute sécurité la propagation d'attributs/enfants qui changent ou font référence à une liaison à l'intérieur du composant dans Million.js, car cela peut introduire des retours non déterministes.
 
 ```jsx
 const arr = ['Hello'];
@@ -281,9 +283,10 @@ const arr = ['Hello'];
 arr.push('World');
 ```
 
-### Unsupported import
+### Importation non prise en charge
 
 {' '}
+
 <Callout type="error">
   <code>
     <strong>[Million.js]</strong>
@@ -291,7 +294,7 @@ arr.push('World');
   </code>
 </Callout>
 
-This may be caused by importing the block from the wrong place. Make sure you import the block from `million/react` instead of `million`.
+Cela peut être causé par l'importation du bloc depuis le mauvais emplacement. Assurez-vous d'importer le bloc depuis `million/react` plutôt que `million`.
 
 ```jsx
 import { block } from 'million'; // ❌ Wrong
@@ -299,9 +302,10 @@ import { block } from 'million'; // ❌ Wrong
 import { block } from 'million/react'; // ✅ Correct
 ```
 
-### Using the compiler
+### Utilisation du compilateur
 
 {' '}
+
 <Callout type="error">
   <code>
     <strong>Warning: </strong>
@@ -310,15 +314,16 @@ import { block } from 'million/react'; // ✅ Correct
   </code>
 </Callout>
 
-You may have forgot to use the compiler, a necessary part in ensuring that your JSX is compiled to Million.js compatible code. You can view the instructions at [the installation guide](/docs/getting-started/install).
+Vous avez peut-être oublié d'utiliser le compilateur, une partie nécessaire pour garantir que votre JSX est compilé en code compatible avec Million.js. Vous pouvez consulter les instructions dans [le guide d'installation](/docs/getting-started/install).
 
-On a side note, Million.js is technically usable without the compiler, but it's significantly more limited in scope, and there is a more limited set of features available. This is not recommended.
+En passant, Million.js est techniquement utilisable sans le compilateur, mais cela limite considérablement sa portée, et il existe un ensemble plus restreint de fonctionnalités disponibles. Cela n'est pas recommandé.
 
-### Unsupported behavior
+### Comportement non pris en charge
 
 {' '}
+
 <Callout type="error">
   <code>Uncaught Error: ??? :(</code>
 </Callout>
 
-If none of this worked, please [create an issue](https://github.com/aidenybai/million/issues/new?assignees=aidenybai&labels=bug&projects=&template=bug_report.md&title=bug%3A+) and we'll try to help. Try to create a small reproducing example — you might discover the problem as you're doing it.
+Si aucune de ces solutions n'a fonctionné, veuillez [créer un issue](https://github.com/aidenybai/million/issues/new?assignees=aidenybai&labels=bug&projects=&template=bug_report.md&title=bug%3A+), et nous essaierons de vous aider. Essayez de créer un petit exemple reproductible — vous pourriez découvrir le problème pendant le processus.

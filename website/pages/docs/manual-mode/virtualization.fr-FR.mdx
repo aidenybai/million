@@ -1,31 +1,30 @@
 ---
-title: 'Virtualization'
-description: 'List virtualization allows you to render large lists without performance issues.'
+title: 'Virtualisation'
+description: 'La virtualisation de liste vous permet de rendre de grandes listes sans problème de performances.'
 ---
 
 import { Callout, Tabs, Tab, Steps } from 'nextra-theme-docs';
 import { AutomaticModeWarning } from '../../../components/automatic-mode-warning';
 
-# Virtualization
+# Virtualisation
 
 <AutomaticModeWarning />
 
-Million.js works with [TanStack Virtual](https://tanstack.com/virtual/v3/docs/guide/introduction). TanStack Virtual is a headless UI utility for virtualizing long lists of elements in React. Together, you can automatically use blocks within virtualized lists.
+Million.js fonctionne avec [TanStack Virtual](https://tanstack.com/virtual/v3/docs/guide/introduction). TanStack Virtual est un utilitaire d'interface utilisateur sans tête pour la virtualisation de longues listes d'éléments dans React. Ensemble, vous pouvez automatiquement utiliser des blocs dans des listes virtualisées.
 
-## Why Virtualize?
+## Pourquoi virtualiser ?
 
-Virtualization is a technique for efficiently rendering large lists of items. It only renders the items that are currently visible to the user instead of rendering all of them. This dramatically reduces the number of DOM nodes that need to be created and updated which has a huge performance benefit.
+La virtualisation est une technique permettant de rendre efficacement de grandes listes d'éléments. Elle ne rend que les éléments actuellement visibles par l'utilisateur au lieu de tous les rendre. Cela réduit considérablement le nombre de nœuds DOM à créer et à mettre à jour, ce qui offre un énorme avantage en termes de performances.
 
 <Callout type="info">
-  Want to compare Million.js vs React virtualization? Check out [this
-  demo!](https://million-tanstack-virtual.vercel.app/)
+  Vous voulez comparer Million.js avec React virtualization? Consultez [cette demo!](https://million-tanstack-virtual.vercel.app/)
 </Callout>
 
 ![Virtualization diagram](/virtualized.png)
 
 ## Installation
 
-You can easily install it via this command:
+Vous pouvez facilement l'installer avec cette commande :
 
 <Tabs items={['npm', 'pnpm', 'yarn', 'bun']} storageKey="selected-pkg-manager">
   {/* prettier-ignore */}
@@ -54,9 +53,9 @@ You can easily install it via this command:
   </Tab>
 </Tabs>
 
-## Example
+## Exemple
 
-Here is just a quick example of what it looks like to virtualize a long list within a `div` using TanStack Virtual with Million.js:
+Voici juste un exemple rapide de ce à quoi cela ressemble de virtualiser une longue liste dans une `div` en utilisant TanStack Virtual avec Million.js :
 
 ```jsx
 import { useRef } from 'react';
