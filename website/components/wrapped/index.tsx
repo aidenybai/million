@@ -163,6 +163,7 @@ export default function Wrapped(props) {
                   </button>
                   <button
                     className="relative w-full flex gap-1 items-center justify-center transition-all bg-black px-10 py-[11.5px] h-[64px] hover:bg-[#090909] "
+
                     onClick={() =>
                       window.open(
                         `https://twitter.com/intent/tweet?text=My website is part ofI just wrapped my website with @milliondotjs and it's amazing! Check it out at https://wrapped.million.dev/${id}.mp4`,
