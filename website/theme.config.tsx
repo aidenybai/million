@@ -192,7 +192,8 @@ const config: DocsThemeConfig = {
   head: () => {
     const { asPath, pathname, query } = useRouter();
     const id = String(query.id);
-    const videoUrl = `https://wrapped.million.dev/${id}.mp4`;
+    const name = String(query.name);
+    const videoUrl = `https://wrapped.million.dev/${id}${hash(name)}.mp4`;
     const { frontMatter } = useConfig();
 
     const ogConfig = {
@@ -305,5 +306,18 @@ const config: DocsThemeConfig = {
   },
   primarySaturation: 0,
 };
+
+
+
+export function hash(str: string): number {
+  let hashy = 0;
+  for (let i = 0, len = str.length; i < len; i++) {
+    const chr = str.charCodeAt(i);
+    hashy = (hashy << 5) - hashy + chr;
+    hashy |= 0; // Convert to 32bit integer
+  }
+  return hash;
+}
+
 
 export default config;
