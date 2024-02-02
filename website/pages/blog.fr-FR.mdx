@@ -1,0 +1,66 @@
+---
+title: Blog
+description: Les dernières mises à jour et publications de l'équipe Million.js.
+---
+
+import { getPagesUnderRoute } from 'nextra/context';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import filterRouteLocale from 'nextra/filter-route-locale';
+
+export function BlogHeader() {
+  return (
+    <div className="max-w-screen-lg mx-auto pt-4 pb-8 mb-16 border-b border-gray-400 border-opacity-20 text-center">
+      <h1>
+        <span className="font-bold leading-tight lg:text-5xl">Blog</span>
+      </h1>
+      <p className="text-center text-gray-500 dark:text-gray-400 font-space-grotesk">
+        
+Les dernières mises à jour et publications de l'équipe Million.js.
+      </p>
+    </div>
+  );
+}
+
+export function BlogIndex() {
+  const { locale, defaultLocale } = useRouter();
+
+const blogArticles = filterRouteLocale(
+getPagesUnderRoute("/blog"),
+locale,
+defaultLocale,
+)
+.sort((a, b) => {
+return (
+new Date(b.frontMatter?.date || 0).getTime() -
+new Date(a.frontMatter?.date || 0).getTime()
+);
+})
+.map((page) => {
+return (
+
+<div key={page.route} className="mb-10">
+  <Link
+    href={page.route}
+    style={{ color: 'inherit', textDecoration: 'none' }}
+    className="block font-semibold mt-8 text-2xl"
+    tabIndex="0"
+  >
+    {page.frontMatter?.title || page.name}
+  </Link>
+  <p className="opacity-80" style={{ marginTop: '.5rem' }}>
+    {page.frontMatter?.description}{' '}
+    <span className="inline-block nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font] font-bold">
+      <Link href={page.route} tabIndex="-1">
+        {'Voir plus →'}
+      </Link>
+    </span>
+  </p>
+  {page.frontMatter?.date ? (
+    <p className="opacity-50 text-sm mt-2">{page.frontMatter.date}</p>
+  ) : null}
+</div>
+); }); return blogArticles; }
+
+<BlogHeader />
+<BlogIndex />

@@ -1,0 +1,37 @@
+---
+title: 'mapArray()'
+description: "La función mapArray se utiliza para crear una lista de bloques. Es la mejor manera de recorrer un arreglo."
+---
+
+import { Callout } from 'nextra-theme-docs';
+
+<Callout type="warning">
+  Esta función forma parte de la API interna. Deberías utilizarla **solo** si estás creando tu propio *framework*. No es recomendada para uso general.
+</Callout>
+
+<br />
+
+# `mapArray(){:jsx}`
+
+**Sintaxis:** `mapArray(Block[]){:jsx}`\
+**Ejemplo:** `mapArray([block, block, block]){:jsx}`
+
+
+La función mapArray se utiliza para crear una lista de bloques (blocks). Es la mejor manera de renderizar una vista que se deriva de datos provenientes de un array. A medida que cambia el array, `mapArray(){:jsx}` actualiza o mueve elementos en el DOM en lugar de recrearlos. Veamos un ejemplo:
+
+```jsx
+import { block, patch, mapArray } from 'million';
+
+const oldList = [1, 2, 3];
+const newList = [3, 2, 1];
+const list = block(({ item }) => {
+  return <div>{item}</div>;
+});
+
+// actualiza la lista de manera eficiente (solo 2 movimientos en lugar de 3 actualizaciones)
+patch(
+  document.body,
+  mapArray(oldList.map((item) => list({ item }))),
+  mapArray(newList.map((item) => list({ item }))),
+);
+```

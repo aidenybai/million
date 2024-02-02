@@ -1,0 +1,324 @@
+---
+title: 'block()'
+description: 'Million.js presenta el concepto de Bloque. Los Bloques son una forma de que los componentes de React se representen utilizando el DOM virtual de Million.js.'
+---
+
+import { Callout, Tabs, Tab } from 'nextra-theme-docs';
+import { AutomaticModeWarning } from '../../../components/automatic-mode-warning';
+
+<AutomaticModeWarning />
+
+# `block(){:jsx}`
+
+**Sintaxis:** `block((props) => vnode){:jsx}`\
+**Ejemplo:** `block((props) => <div>{props.foo}</div>){:jsx}`
+
+Million.js es una biblioteca que te permite crear _bloques_ (blocks). Un bloque es un [Componente de Orden Superior (HOC, por sus siglas en inglés)](https://legacy.reactjs.org/docs/higher-order-components.html) especial que se puede utilizar como un componente de React, pero está hiperoptimizado para la velocidad de renderización.
+
+Los bloques (blocks) son esencialmente componentes envueltos por `block(){:jsx}`.
+
+<Tabs items={['Javascript', 'Typescript',]} storageKey="selected-language">
+  <Tab>
+    ```jsx
+    import { block } from 'million/react';
+
+    const LionBlock = block(function Lion() {
+      return <img src="https://million.dev/lion.svg" />;
+    });
+
+    export default LionBlock;
+    ```
+
+  </Tab>
+
+  <Tab>
+    <Callout type="info">
+      Debes hacer que tus Props utilicen `type` en lugar de `interface`, ya que este es el [comportamiento oficialmente reconocido](https://github.com/microsoft/TypeScript/issues/15300#issuecomment-332366024) por el equipo de TypeScript.
+      Como alternativa, si deseas utilizar interfaces, puedes agregar `[key: string]: any` según este [comentario en Stack Overflow](https://stackoverflow.com/questions/37006008/typescript-index-signature-is-missing-in-type/65473225#65473225).
+    </Callout>
+
+    ```jsx
+    type Props = {
+      nombre: string,
+    };
+
+    const Lion: React.FC<Props> = ({ nombre }) => {
+      return (
+        <div>Hola {nombre}</div>
+        <img src="https://million.dev/lion.svg" />;
+      )
+    };
+    const LionBlock = block(Lion);
+
+    export default LionBlock;
+
+    ```
+
+  </Tab>
+</Tabs>
+
+
+## Etiquetas Personalizadas
+
+La propiedad `as` se puede utilizar para especificar el nombre de la etiqueta de For. Por defecto, es `slot`.
+
+```jsx
+import { block } from 'million/react';
+
+const LionBlock = block(
+  function Lion() {
+    return <img src="https://million.dev/lion.svg" />;
+  },
+  { as: 'div' },
+);
+```
+
+## Utilizando Block con SSR (Renderización del Lado del Servidor)
+
+Si estás utilizando Million.js en el servidor, es posible que te encuentres con un error de desincronización en la hidratación (hydration mismatch error).
+Esto se debe a que Million.js utiliza un algoritmo diferente para la representación en el servidor que en el cliente. Para solucionarlo, puedes desactivar la renderización del lado del servidor (SSR).
+
+```jsx
+const NoSSRBlock = block(
+  function NoSSR() {
+    return <div>{Math.random()}</div>;
+  },
+  { ssr: false },
+);
+```
+
+## Reglas de los bloques
+
+  <Callout type="warning">
+    <code><strong>\[Million.js\]</strong> You did something wrong!</code>
+
+    ```jsx showLineNumbers filename="App.jsx" {2}
+    <div>
+      <YourBlock>Uh oh...</YourBlock>
+                ^
+    </div>
+    ```
+
+  </Callout>
+
+Hay tres razones comunes por las que podrías estar viendo este error:
+
+1. Romper las [reglas de los bloques](/docs/manual-mode/block#breaking-rules-of-blocks)
+2. No [agregar el compilador](/docs/manual-mode/block#using-the-compiler)
+3. Encontrarse con [comportamientos no soportados](/docs/manual-mode/block#unsupported-behavior)
+
+## Rompiendo las reglas de los Bloques
+
+
+Puede que hayas oído hablar de ["mejora progresiva" ("progressive enhancement" en ingles)](https://developer.mozilla.org/en-US/docs/Glossary/Progressive_Enhancement), que es la idea de que las herramientas utilizan progresivamente funciones según lo que esté soportado. De manera similar, Million.js tiene "degradación progresiva" o el concepto de que si utilizas funciones que no están soportadas, se degradará a la renderización predeterminada de React.
+
+Esta sección destaca algunas de las posibles advertencias que podrías encontrar al utilizar bloques. Ten en cuenta que esta lista no es exhaustiva.
+
+{' '}
+<Callout type="info">
+  Esta sección presenta patrones idiomáticos para usar bloques.
+  No es una lista de errores; tu aplicación seguirá funcionando aunque no sigas estos patrones.
+</Callout>
+
+### Declarando bloques
+
+{' '}
+<Callout type="warning">
+  <code>
+    <strong>[Million.js]</strong> Block needs to be defined as a variable
+    declaration.
+  </code>
+</Callout>
+
+Lo anterior suele ocurrir cuando tienes un bloque que no está declarado como una variable. Esto evita que el compilador analice correctamente el bloque.
+
+```jsx
+console.log(block(() => <div />)) // ❌ Incorrecto
+export default block(() => <div />) // ❌ Incorrecto
+
+// 👇👇👇
+
+const Block = block(() => <div />) // ✅ Correcto
+console.log(Block);
+export default Block;
+```
+
+### Llamando a `block()`
+
+{' '}
+<Callout type="warning">
+  <code>
+    <strong>[Million.js]</strong> Found unsupported argument for block. Make
+    sure blocks consume a reference to a component function or the direct
+    declaration.
+  </code>
+</Callout>
+
+Lo anterior suele ocurrir cuando tienes un componente JSX real, como `<Component />{:jsx}`, pasado a la función `block(){:jsx}`, en lugar de pasar una referencia del propio componente.
+
+```jsx
+const BadBlock = block(<Component />); // ❌ Incorrecto
+
+const GoodBlock = block(App); // ✅ Correcto
+```
+
+### Usando `<For />` en vez de `map()`
+
+{' '}
+<Callout type="warning">
+  <code>
+    <strong>[Million.js]</strong>
+    Array.map() will degrade performance. We recommend removing the block on the
+    current component and using a `<For />` component instead
+  </code>
+</Callout>
+
+Lo anterior ocurrirá cuando uses `<Array>.map` dentro de un bloque. Esto no es ideal, especialmente si el componente que contiene la lista es un bloque. El patrón correcto es eliminar el bloque en el componente actual y, en su lugar, utilizar un componente `<For />` para los elementos hijos.
+
+```jsx
+<div>
+  {items.map((item) => (
+    <div key={item}>{item}</div>
+  ))}
+</div>
+
+// 👇👇👇
+
+<For each={items}>
+  {(item) => <div key={item}>{item}</div>}
+</For>
+```
+
+### Resultados determinísticos
+
+  <div className="flex gap-3">
+  <Callout type="warning">
+    <code>
+    <strong>[Million.js]</strong>
+    Conditional expressions will degrade performance. We recommend using
+    deterministic returns instead.
+    </code>
+  </Callout>
+
+  <Callout type="error">
+    <code>
+    Uncaught Error: Rendered fewer hooks than expected. This may be caused by an accidental early return statement.
+    </code>
+  </Callout>
+  </div>
+
+
+Las devoluciones ("returns" en inglés) deben ser "determinísticas", lo que significa que solo puede haber una declaración de retorno al final del bloque que devuelva un árbol estable.
+
+Algunos ejemplos de devoluciones no determinísticas:
+
+```jsx
+function Component() {
+  const [count, setCount] = useState(initial.count);
+
+  if (count > 10) {
+    return <div>Too many clicks!</div>; // ❌ Incorrecto
+  }
+
+  // ❌ Incorrecto
+  return count > 5 ? 'Count is greater than 5' : <div>Count is {count}.</div>;
+}
+
+const ComponentBlock = block(Component);
+```
+
+### Librerías de componentes UI 🙅‍♀️
+
+{' '}
+<Callout type="warning">
+  <code>
+    <strong>[Million.js]</strong>
+    Components will cause degraded performance. Ideally, you should use DOM elements
+    instead.
+  </code>
+</Callout>
+
+Muchas aplicaciones de React utilizan librerías de componentes UI de usuario como Material UI, Chakra UI o Tailwind UI. Estas bibliotecas son excelentes, pero no están optimizadas para Million.js.
+
+Million.js requiere que uses elementos del DOM en lugar de componentes. Esto se debe a que los componentes pueden introducir devoluciones no determinísticas, lo que puede provocar un rendimiento degradado.
+
+```jsx
+// ❌ Mal
+<Stack>
+  <Text>¡Hola! ¿Cómo están mis compañeros componentes?</Text>
+</Stack>
+
+// 🤨 Quizás
+<div>
+  <Text>¡Hola! ¿Cómo están mis compañeros componentes?</Text>
+</div>
+
+// ✅ Bien
+<div>
+  <p>¡Hola! ¿Cómo están mis compañeros componentes?</p>
+</div>
+```
+
+### Spread attributes/children
+
+{' '}
+<Callout type="warning">
+  <code>
+    <strong>[Million.js]</strong>
+    Spread attributes/children are not fully supported
+  </code>
+</Callout>
+
+No puedes utilizar atributos o elementos hijos que cambien de manera segura, ni hacer referencia a un enlace ("binding" en inglés) dentro del componente en Million.js, ya que pueden introducir devoluciones no determinísticas.
+
+```jsx
+const arr = ['Hello'];
+
+<div>{...arr}</div>; // Bien si el array nunca cambia
+
+// ❌ Mal
+arr.push('World');
+```
+
+### Importación no compatible
+
+{' '}
+<Callout type="error">
+  <code>
+    <strong>[Million.js]</strong>
+    Found unsupported import for block. Make sure blocks are imported from million/react.
+  </code>
+</Callout>
+
+Esto podría deberse a que estás importando el bloque desde el lugar incorrecto. Asegúrate de importar el bloque desde `million/react` en lugar de `million`.
+
+```jsx
+import { block } from 'million'; // ❌ Incorrecto
+
+import { block } from 'million/react'; // ✅ Correcto
+```
+
+### Using the compiler
+
+{' '}
+<Callout type="error">
+  <code>
+    <strong>Warning: </strong>
+    Invalid Hook Call. Hooks can only be called inside of the body of a function
+    component.
+  </code>
+</Callout>
+
+Puede que hayas olvidado usar el compilador, una parte necesaria para asegurarte de que tu JSX se compile a código compatible con Million.js. Puedes ver las instrucciones en la [guía de instalación](/docs/getting-started/install).
+
+Cabe destacar que Million.js es técnicamente utilizable sin el compilador, pero su alcance es significativamente más limitado y hay un conjunto más reducido de funcionalidades disponibles. Por lo cual no es recomendado.
+
+### Comportamiento no compatible
+
+{' '}
+<Callout type="error">
+  <code>Uncaught Error: ??? :(</code>
+</Callout>
+
+
+Si ninguno de estos pasos funcionó, por favor [crea un "issue"](https://github.com/aidenybai/million/issues/new?assignees=aidenybai&labels=bug&projects=&template=bug_report.md&title=bug%3A+) y trataremos de ayudarte. Intenta crear un ejemplo pequeño que reproduzca el problema; es posible que encuentres la solución mientras lo haces."

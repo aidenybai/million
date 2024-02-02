@@ -225,12 +225,6 @@ git checkout -b <your-branch-name>
 
 The project is a mono repo containing the codes for the **website**, the **core Million.js package**, the **playground**, and the **tests**.
 
-To run the project locally, you need to run the development server:
-
-```bash
-pnpm run dev
-```
-
 If you want to run the website locally, you need to `cd` into the website folder before running the development server:
 
 ```bash

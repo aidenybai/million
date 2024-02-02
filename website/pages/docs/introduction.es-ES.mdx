@@ -1,0 +1,159 @@
+import { Disclosures } from '../../components/home/faq';
+import { Callout, Tab, Tabs } from 'nextra-theme-docs';
+import Link from 'next/link';
+import dynamic from 'next/dynamic';
+
+export const Demo = dynamic(() =>
+  import('../../components/demo').then((mod) => mod.Demo),
+);
+
+# Introducción
+
+Millions.js es un compilador de optimización extremadamente rápido y liviano que hace que los [componentes](https://react.dev) sean hasta un [_**70% más rápidos**_](https://krausest.github.io/js-framework-benchmark/current.html).
+
+**En resumen:** Imagina componentes de [React](https://react.dev) ejecutándose a la velocidad de JavaScript puro.
+
+## ¿Por qué Million.js?
+
+
+Para entender por qué utilizar Million.js, necesitamos comprender cómo React actualiza interfaces. Cuando cambian el estado o las propiedades de una aplicación, React realiza una actualización en dos partes: renderización y reconciliación.
+
+Para ilustrar esto, supongamos que este es nuestro componente `App`:
+
+```jsx
+function App() {
+  const [count, setCount] = useState(0);
+  const increment = () => setCount(count + 1);
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={increment}>Increment</button>
+    </div>
+  );
+}
+```
+
+En este componente `App`, cuando hacemos clic en el botón, el estado `count` se actualizará y, consecuentemente, la etiqueta `<p>` se actualizará para reflejar el nuevo valor. Analicemos esto.
+
+### Renderización
+
+El primer paso es la renderización. La renderización es el proceso de generar un *snapshot* del componente actual. Puedes imaginarlo como simplemente llamar a la función App y almacenar su resultado en una variable. Así es como se vería el *snapshot* de `App`:
+
+```jsx
+const snapshot = App();
+
+// snapshot =
+<div>
+  <p>Count: 1</p>
+  <button onClick={increment}>Increment</button>
+</div>;
+```
+
+### Reconciliación
+
+Para actualizar la interfaz y reflejar el nuevo estado, React necesita comparar el *snapshot* anterior con el nuevo (llamado "diffing"). El *reconciliador* de React analizará cada elemento del *snapshot* anterior y lo comparará con el nuevo. Si el elemento es el mismo, lo omitirá. Si el elemento es diferente, lo actualizará.
+
+- La etiqueta `<div>` es la misma, así que no necesita ser actualizada. ✅
+  - La etiqueta `<p>` es la misma, así que no necesita ser actualizada. ✅
+    - El texto dentro de `<p>` es diferente, por lo que necesita ser actualizado. ⚠
+  - La etiqueta `<button>` es la misma, así que no necesita ser actualizada. ✅
+    - La propiedad `onClick` es la misma, así que no necesita ser actualizada. ✅
+    - El texto dentro de `<button>` es la mismo, así que no necesita ser actualizado. ✅
+
+_(total: 6 diff checks)_
+
+```diff
+<div>
+-  <p>Count: 0</p>
++  <p>Count: 1</p>
+  <button onClick={increment}>Increment</button>
+</div>
+```
+
+Desde aquí, podemos ver que la etiqueta `<p>` necesita ser actualizada. React, por lo tanto, actualizará el nodo de `<p>` en el DOM para reflejar el nuevo valor.
+
+```jsx
+<p>.innerHTML = `Count: ${count}`;
+```
+
+### Cómo Million.js acelera esto
+
+React es lento.
+
+
+El problema con la *reconciliación* de React es que se vuelve exponencialmente más lenta a medida que aumenta la cantidad de elementos JSX. Con este simple componente `App`, solo necesita comparar algunos elementos. En una aplicación React del mundo real, fácilmente puedes tener cientos de elementos, ralentizando las actualizaciones de la interfaz.
+
+Million.js resuelve omitiendo completamente el paso de comparación y actualizando directamente el nodo del DOM.
+
+Aquí tienes un ejemplo conceptual de cómo funciona el *reconciliador* de Million.js:
+
+```jsx
+function App() {
+  const [count, setCount] = useState(0);
+  const increment = () => setCount(count + 1);
+
+  // generado por el compilador
+  if (count !== prevCount) {
+    <p>.innerHTML = `Count: ${count}`;
+  }
+
+  <button>.onclick = increment;
+
+  // ...
+}
+```
+
+Observa que cuando `count` se actualiza, Million.js actualizará directamente el nodo DOM. Million.js transforma la *reconciliación* de React de `O(n^3)` (tiempo cúbico) a `O(1)` (tiempo constante).
+
+> ¿Qué tan rápido es? [**→ Ver las pruebas de rendimiento**](https://krausest.github.io/js-framework-benchmark/current.html)
+
+## Configuración en segundos
+
+La interfaz de línea de comandos (CLI) de Million.js instalará automáticamente el paquete y configurará tu proyecto por ti.
+
+<Tabs items={['npm', 'pnpm', 'yarn', 'bun']} storageKey="selected-manager">
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  npx million@latest
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  pnpx million@latest
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  yarn add million@latest
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  bunx million@latest
+  ```
+  </Tab>
+</Tabs>
+
+<Callout type="info">
+Million.js es compatible con React 16 y versiones posteriores. Si estás utilizando una versión más antigua de React, deberás realizar una actualización primero.
+</Callout>
+
+¡Eso es todo! Tu proyecto ahora está en funcionamiento con Million.js 🎉
+
+## Million.js vs. React
+
+
+Lo siguiente es una demostración que utiliza [*renderización basada en claves* (key-based
+rendering)](https://react.dev/learn/rendering-lists#keeping-list-items-in-order-with-key) para mostrar cómo se compara el rendimiento de Million.js con el de React.
+
+<br />
+
+<Demo />
+
+## ¿Alguna pregunta?
+
+Si tienes alguna pregunta o necesitas soporte, no dudes en hacerlas en [Discord](https://million.dev/chat) o abrir un *issue* en [GitHub](https://github.com/aidenybai/million).

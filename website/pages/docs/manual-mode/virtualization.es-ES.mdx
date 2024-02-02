@@ -1,0 +1,107 @@
+---
+title: 'Virtualización'
+description: 'La virtualización de listas te permite renderizar listas grandes sin problemas de rendimiento.'
+---
+
+import { Callout, Tabs, Tab, Steps } from 'nextra-theme-docs';
+import { AutomaticModeWarning } from '../../../components/automatic-mode-warning';
+
+# Virtualización
+
+<AutomaticModeWarning />
+
+Million.js funciona con [TanStack Virtual](https://tanstack.com/virtual/v3/docs/guide/introduction). TanStack Virtual es una utilidad de interfaz de usuario sin interfaz gráfica (headless UI) para virtualizar listas largas de elementos en React. Juntos, puedes utilizar automáticamente bloques dentro de listas virtualizadas.
+
+## ¿Por qué virtualizar?
+
+La virtualización es una técnica para renderizar de manera eficiente grandes listas de elementos. Solo renderiza los elementos que están actualmente visibles para el usuario en lugar de renderizar todos. Esto reduce drásticamente la cantidad de nodos del DOM que deben crearse y actualizarse, lo que ofrece un gran beneficio en rendimiento.
+
+<Callout type="info">
+  ¿Quieres comparar Million.js con la virtualización de React? [¡Echa un vistazo a esta demostración!](https://million-tanstack-virtual.vercel.app/)
+</Callout>
+
+![Diagrama de Virtualización](/virtualized.png)
+
+## Instalación
+
+Puedes instalarlo fácilmente mediante este comando:
+
+<Tabs items={['npm', 'pnpm', 'yarn', 'bun']} storageKey="selected-pkg-manager">
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  npm install @tanstack/react-virtual@beta
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  pnpm install @tanstack/react-virtual@beta
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  yarn add @tanstack/react-virtual@beta
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  bun add @tanstack/react-virtual@beta
+  ```
+  </Tab>
+</Tabs>
+
+## Ejemplo
+
+Veamos un ejemplo rápido de cómo sería virtualizar una larga lista dentro de un `div` usando TanStack Virtual con Million.js:
+
+```jsx
+import { useRef } from 'react';
+import { For } from 'million/react';
+import { useVirtualizer } from '@tanstack/react-virtual';
+
+function App() {
+  const parentRef = useRef();
+
+  const rowVirtualizer = useVirtualizer({
+    count: 10000,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 35,
+  });
+
+  return (
+    <>
+      <div ref={parentRef} style={{ height: `400px`, overflow: 'auto' }}>
+        <For
+          each={rowVirtualizer.getVirtualItems()}
+          style={{
+            height: `${rowVirtualizer.getTotalSize()}px`,
+            width: '100%',
+            position: 'relative',
+          }}
+          as="div"
+        >
+          {(virtualItem) => (
+            <div
+              key={virtualItem.key}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                fontSize: '20px',
+                height: `${virtualItem.size}px`,
+                transform: `translateY(${virtualItem.start}px)`,
+              }}
+            >
+              Row {virtualItem.index} {/* "Row" -> "lista" en español */}
+            </div>
+          )}
+        </For>
+      </div>
+    </>
+  );
+}
+```

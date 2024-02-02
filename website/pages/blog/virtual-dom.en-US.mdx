@@ -1,0 +1,276 @@
+---
+title: 'Virtual DOM: Back in Block'
+date: MAY 1, 2023
+description: A deep dive into the block virtual DOM and how Million.js uses it.
+---
+
+import Image from 'next/image';
+import YouTube from 'react-youtube';
+import { VDomExample } from '../../components/back-in-block/vdom';
+import { StaticAnalysisExample } from '../../components/back-in-block/static-analysis';
+import { BlockVDomExample } from '../../components/back-in-block/block-vdom';
+import { CountExample } from '../../components/back-in-block/count';
+import { Callout } from 'nextra-theme-docs';
+import { Chart } from '../../components/chart';
+import { CarbonAds } from '../../components/ad';
+
+<div className="flex justify-center">
+  <a href="https://www.youtube.com/watch?v=2-fR2rrmw3I">
+    <Image src="/back-in-block.png" width={350} height={130} />
+  </a>
+</div>
+
+<div className="flex flex-col items-center gap-4">
+
+# Virtual DOM: Back in Block
+
+  <small>[AIDEN BAI](https://aidenybai.com) MAY 1 2023</small>
+</div>
+
+---
+
+<Callout type="info">
+  Want to watch a 30 second summary by Fireship? [**Watch it
+  here**](https://youtu.be/VkezQMb1DHw?t=73">).
+</Callout>
+
+<br />
+
+<div className="lg:w-7/12 text-center mx-auto flex justify-center">
+  <YouTube
+    className="youtubeContainer"
+    videoId="VkezQMb1DHw"
+    opts={{ start: 73 }}
+  />
+</div>
+
+---
+
+A little over four years ago, Rich Harris released [Virtual DOM is pure overhead](https://svelte.dev/blog/virtual-dom-is-pure-overhead), analyzing the performance of traditional virtual DOM manipulation.<a href="#0"><sup>[0]</sup></a>
+
+> <sup id="#0">[0]</sup> "you've probably heard the phrase 'the virtual DOM is fast',
+> often said to mean that it's faster than the real DOM. It's a surprisingly resilient
+> meme" - Harris, 2018
+
+In his article "Virtual DOM is pure overhead," Rich Harris argues that the virtual DOM, a widely praised feature of frameworks like React, is not as efficient as many developers believe. He goes on to critique the way it works and presents an alternative approach.
+
+But what followed years after was the emergence of a new meme: that the virtual DOM **is pure overhead**. The meme became so resilient that it turned the "no virtual DOM" framework movement from an iconoclastic subgroup to a fully fledged crusade.
+
+Thus, the virtual DOM was relegated to the "annoying cousin nobody likes but has to invite to family gatherings" status. It became necessary evil, a performance tax that we had to pay for the convenience of declarative UIs.
+
+Until now.
+
+<CarbonAds />
+
+## Origin story
+
+The virtual DOM was created to address performance issues caused by frequent manipulation of the real DOM. It is a lightweight, in-memory representation of the real DOM, which can be later used as a reference to update the actual web page.
+
+When a component is rendered, the virtual DOM calculates the difference between the new state and the previous state (a process called "diffing") and makes the minimal set of changes to the real DOM to bring it in sync with the updated virtual DOM (a process called "reconciliation").
+
+### Visual Example
+
+Let's say we're given some React component `<Numbers />{:jsx}`:
+
+```jsx
+function Numbers() {
+  return (
+    <foo>
+      <bar>
+        <baz />
+      </bar>
+      <boo />
+    </foo>
+  );
+}
+```
+
+When React renders this component, it will go through the process of diffing (checking for changes) and reconciliation (updating the DOM). The process looks something like this:
+
+<VDomExample />
+
+### The problem
+
+In the previous example, you can see that diffing depends on the size of the tree, ultimately resulting in the bottleneck of the virtual DOM. The more nodes you have, the more time it takes to diff.
+
+With newer frameworks like Svelte, the virtual DOM isn't even used because of the performance overhead. Instead, Svelte uses a technique called "dirty checking" to determine what has changed. Fine-grained reactivity frameworks like SolidJS take this a step further by pinpointing exactly what has changed and updating only that part of the DOM.
+
+## The Block Virtual DOM
+
+In 2022, [Blockdom](https://github.com/ged-odoo/blockdom) was released. Taking a fundamentally different approach, Blockdom introduced the idea of a "block virtual DOM."
+
+The Block virtual DOM takes a different approach to diffing, and can be broken down into two parts:
+
+1. **Static Analysis**: The virtual DOM is analyzed to extract dynamic parts of the tree into an "Edit Map," or the list of the "edits" (mappings) of the dynamic parts of the virtual DOM to the state.
+
+2. **Dirty Checking**: The state (**not** the virtual DOM tree) is diffed to determine what has changed. If the state has changed, the DOM is updated directly via the Edit Map.
+
+<Callout type="info">
+
+**TL;DR: Diff the data, not the DOM.**
+
+Why? The size of the data is generally much smaller than the size of the DOM. It also can be much simpler to diff data values than to diff full DOM nodes.
+
+</Callout>
+
+Since Million.js takes a similar approach to Blockdom, we'll be using Million.js syntax for the rest of this article.
+
+### Counter Example
+
+Let's take a look at a simple counter example and how it would be handled with Million.js:
+
+```jsx {7-8,13-14}
+import { useState } from 'react';
+import { block } from 'million/react';
+
+function Count() {
+  const [count, setCount] = useState(0);
+
+  const node1 = count + 1;
+  const node2 = count + 2;
+
+  return (
+    <div>
+      <ul>
+        <li>{node1}</li>
+        <li>{node2}</li>
+      </ul>
+      <button
+        onClick={() => {
+          setCount(count + 1);
+        }}
+      >
+        Increment Count
+      </button>
+    </div>
+  );
+}
+const CountBlock = block(Count);
+```
+
+<CountExample />
+
+### Static Analysis
+
+The static analysis step can occur at compile time or the first thing at runtime, depending on whether you use Million.js' experimental compiler or not.
+
+This step is responsible for extracting dynamic parts of the virtual DOM into the Edit Map.
+
+<StaticAnalysisExample />
+
+### Dirty Checking
+
+After the Edit Map is created, the dirty checking step can begin. This step is responsible for determining what has changed in the state, and updating the DOM accordingly.
+
+<BlockVDomExample />
+
+You can see that the dirty checking example takes much less computation than the diffing step. This is because the dirty checking step is only concerned with the state, not the virtual DOM, as each virtual node might need many levels of recursion to determine if it has changed, state just needs a shallow equality check.
+
+## Is this technique effective?
+
+**Yes, but it's not a silver bullet.** [(View latest benchmark)](https://krausest.github.io/js-framework-benchmark/2023/table_chrome_112.0.5615.49.html)
+
+<Chart />
+
+Million.js sports pretty high performance and is able to outperform React in the JavaScript Framework Benchmark. But it's important to understand how Million.js can be fast in this case.
+
+The JavaScript Framework Benchmark is a benchmark that tests the performance of frameworks by rendering a large table of rows and columns. The benchmark is designed to test the performance of highly unrealistic performance tests (like adding/replacing 1000 rows), and is not necessarily representative of real world applications.
+
+So where can Million.js or the block virtual DOM be used?
+
+### Lots of static content with little dynamic content
+
+Block virtual DOM is best used when there is a lot of static content with little dynamic content. The biggest advantage the block virtual DOM has is that it doesn't need to think about the static parts of the virtual DOM, so if it can skip over a lot of static content, it can be very fast.
+
+For example, the block virtual DOM would be much faster than the regular virtual DOM in this case:
+
+```jsx {3}
+// ✅ Good
+<div>
+  <div>{dynamic}</div>
+  Lots and lots of static content...
+</div>
+```
+
+But you may not see much difference between the block virtual DOM and the regular virtual DOM if you have a lot of dynamic content:
+
+```jsx {3-7}
+// ❌ Bad
+<div>
+  <div>{dynamic}</div>
+  <div>{dynamic}</div>
+  <div>{dynamic}</div>
+  <div>{dynamic}</div>
+  <div>{dynamic}</div>
+</div>
+```
+
+If you're building an admin dashboard, or a website of components with lots of static content, the block virtual DOM might be a good fit for you. But if you're building a website where the computation it takes to diff the data is significantly greater than the computation it takes to diff the virtual DOM, you might not see much of a difference.
+
+For example, this component would be a **bad** candidate for the block virtual DOM, since there are more data values to diff than there are virtual DOM nodes:
+
+```jsx
+// 5 data values to diff
+function Component({ a, b, c, d, e }) {
+  // 1 virtual DOM node to diff
+  return <div>{a + b + c + d + e}</div>;
+}
+```
+
+### "Stable" UI trees
+
+The block virtual DOM is also good for "stable" UI trees, or UI trees that don't change much. This is because the Edit Map is only created once, and shouldn't need to be recreated on every render.
+
+For example, the following component would be a good candidate for the block virtual DOM:
+
+```jsx
+function Component() {
+  // ✅ Good, because deterministic / stable return
+  return <div>{dynamic}</div>;
+}
+```
+
+But this component might be _slower_ than the regular virtual DOM:
+
+```jsx
+function Component() {
+  // ❌ Bad, because non-deterministic / unstable return
+  return Math.random() > 0.5 ? <div>{dynamic}</div> : <p>sad</p>;
+}
+```
+
+If you need to use undeterministic / unstable returns that follow a "List-like" shape, you can use the [`<For />{:jsx}`](/docs/quickstart#for-) component to help you:
+
+```jsx
+function Component() {
+  return <For each={items}>{(item) => <div>{item}</div>}</For>;
+}
+```
+
+Notice how there is a limitation on how the application UI can be structured. "Stable" returns mean that components with non-list-like dynamic shapes (like a conditional return in the same component) are not allowed.
+
+### Use granularly
+
+One of the biggest mistakes beginners make is using the block virtual DOM everywhere. This is a bad idea, because the block virtual DOM is not a silver bullet, and is not always faster than the regular virtual DOM.
+
+Instead, you should recognize certain patterns where the block virtual DOM is faster, and use it only in those cases. For example, you might use the block virtual DOM for a large table, but use the regular virtual DOM for a small form with a little static content.
+
+## Closing Thoughts
+
+The block virtual DOM offers a fresh perspective on the virtual DOM concept, providing an alternative approach to managing updates and minimizing overhead. Despite its potential, it is not a one-size-fits-all solution, and developers should evaluate the specific needs and performance requirements of their applications before deciding whether to adopt this approach.
+
+For many applications, the conventional virtual DOM may be sufficient, and there may be no need to switch to the block virtual DOM or other performance-focused frameworks. If your application runs smoothly without performance issues on most devices, it might not be worth the time and effort to transition to a different framework. It's essential to carefully weigh the trade-offs and evaluate your application's unique requirements before making any major changes to your tech stack.
+
+That said, I'm excited to see what the future holds for it. Are you too? ([Go build your own!](https://github.com/aidenybai/hundred#readme))
+
+[Discuss on Twitter](https://twitter.com/search?q=https%3A%2F%2Fmillion.dev%2Fblog%2Fvirtual-dom) | [Edit on GitHub](https://github.com/aidenybai/million/blob/main/website/pages/blog/virtual-dom.mdx)
+
+### Acknowledgements
+
+- [Seb Lorber](https://twitter.com/sebastienlorber) for suggesting this post idea
+- [Jesse Pense](https://twitter.com/JessePence5) for helping read and edit the post
+- [Dan Jutan](https://twitter.com/jutanium) for making the [fastest investment of 2023](https://twitter.com/jutanium/status/1652907080330665984)
+- [Rich Harris](https://twitter.com/Rich_Harris)'s "Virtual DOM is pure overhead"
+- [Dan Abramov](https://twitter.com/dan_abramov)'s "React as a UI runtime"
+- [Ryan Carniato](https://twitter.com/RyanCarniato)'s "Components are Pure Overhead"
+- [Chung Wu](https://twitter.com/chungwu)'s "How React server components work: an in-depth guide"

@@ -2,6 +2,7 @@ import Tilt from 'react-parallax-tilt';
 import Link from 'next/link';
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
+import { useTranslations } from '../../hooks/use-translations';
 import { Container } from './container';
 import { Blur } from './hero';
 
@@ -11,6 +12,7 @@ const Showdown = dynamic(() =>
 );
 
 export function About() {
+  const { about } = useTranslations();
   return (
     <>
       <div>
@@ -21,18 +23,17 @@ export function About() {
             </div>
             <div className="md:w-7/12 lg:w-1/2">
               <h2 className="text-3xl font-bold text-zinc-900 md:text-4xl dark:text-white">
-                React at the speed of raw JS
+                {about.rawJs}
               </h2>
               <p className="text-lg my-8 text-zinc-600 dark:text-zinc-300">
-                Million.js optimizes React, improving its performance. It stands
-                out as one of the top performers in the{' '}
+                {about.rawJsDescription}{' '}
                 <a
                   href="https://krausest.github.io/js-framework-benchmark/2023/table_chrome_112.0.5615.49.html"
                   target="_blank"
                   rel="noreferrer"
                   className="nx-text-primary-600 underline decoration-from-font [text-underline-position:from-font]"
                 >
-                  JS Framework Benchmark
+                  {about.jsBenchmark}
                 </a>
                 .
               </p>
@@ -43,10 +44,10 @@ export function About() {
                   </div>
                   <div className="w-5/6">
                     <h4 className="font-semibold text-lg text-zinc-700 dark:text-purple-300">
-                      Up to 70% faster* than React.
+                      {about.seventyPercent}
                     </h4>
                     <p className="text-zinc-500 text-sm dark:text-zinc-400">
-                      * - Benchmarks may not represent real-world performance.
+                      {about.benchmarkWarning}
                     </p>
                   </div>
                 </div>
@@ -56,20 +57,16 @@ export function About() {
                   </div>
                   <div className="w-5/6">
                     <h4 className="font-semibold text-lg text-zinc-700 dark:text-purple-300">
-                      Integrate and ship in minutes.
+                      {about.integrate}
                     </h4>
                     <p className="text-zinc-500 text-sm dark:text-zinc-400">
-                      No need to learn a new framework. Works with your existing
-                      React components.
+                      {about.noNeedLearn}
                     </p>
                   </div>
                 </div>
               </div>
               <p className="mt-10 text-xs bg-gradient-to-b dark:from-zinc-500 dark:to-[#111] dark:hover:to-zinc-500 inline-block text-transparent bg-clip-text from-zinc-500 to-white hover:to-zinc-500 opacity-40 hover:opacity-50 transition-opacity">
-                Note: Benchmarks (via JS Framework Benchmark) do not represent
-                real-life performance. Million.js does have some limitations.
-                Performance improvements may be more noticeable with apps that
-                include more data / UI components.
+                {about.benchmarkNote}
               </p>
             </div>
           </div>
@@ -78,60 +75,57 @@ export function About() {
       <div className="relative">
         <Container>
           <h3 className="text-2xl text-center font-bold text-zinc-900 dark:text-white md:text-3xl lg:text-4xl">
-            What's in Million.js?
+            {about.whatsInMillionJS}
           </h3>
           <p className="mt-3 text-center text-zinc-600 dark:text-zinc-300 md:text-md lg:text-lg">
-            The tools to make React faster, automatically.
+            {about.toolsToMakeReactFaster}
           </p>
           <div className="relative mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             <Card
-              title="Block Virtual DOM"
+              title={about.blockVirtualDom}
               icon={<BoxIcon />}
               description={
                 <>
-                  Million.js introduces a novel{' '}
+                  {about.millionIntroduces}{' '}
                   <Link
                     href="/blog/virtual-dom"
                     className="underline nx-text-primary-600"
                   >
-                    "block" virtual DOM.
+                    {about.blockVirtualDomQuote}
                   </Link>{' '}
-                  It's significantly faster than React's virtual DOM, as it
-                  diffs data instead of the DOM.
+                  {about.blockVirtualDomDescription}
                 </>
               }
             />
             <Card
-              title="Supercharged Compiler"
+              title={about.superchargedCompiler}
               icon={<LightBulbIcon />}
               description={
                 <>
-                  Million.js uses a{' '}
+                  {about.millionUses}{' '}
                   <Link
                     href="/blog/behind-the-block"
                     className="underline nx-text-primary-600"
                   >
-                    custom compiler
+                    {about.customCompiler}
                   </Link>{' '}
-                  that automatically optimizes your React components on the
-                  server.
+                  {about.automaticallyOptimizes}
                 </>
               }
             />
             <Card
-              title="Automatic Mode"
+              title={about.automaticMode}
               icon={<ThumbsUpIcon />}
               description={
                 <>
-                  Tired of learning new frameworks and big migrations?
-                  Million.js ships{' '}
+                  {about.tiredOf}{' '}
                   <Link
                     href="/docs/automatic"
                     className="underline nx-text-primary-600"
                   >
-                    a drop-in automatic mode
+                    {about.dropIn}
                   </Link>{' '}
-                  to make your React apps faster, without any code changes.
+                  {about.makeReactFaster}
                 </>
               }
             />
@@ -145,6 +139,7 @@ export function About() {
 
 function Graphic() {
   const [showShowdown, setShowShowdown] = useState(false);
+  const { about } = useTranslations();
 
   const handleClick = () => {
     setShowShowdown(!showShowdown);
@@ -155,23 +150,23 @@ function Graphic() {
       {!showShowdown ? (
         <div className="bg-white p-4 pb-6 dark:bg-zinc-900 rounded-lg">
           <div className="w-full">
-            <p className="font-bold text-lg">JS Framework Benchmark</p>
+            <p className="font-bold text-lg">{about.jsBenchmark}</p>
             <p className="text-md mt-1 text-zinc-700 dark:text-zinc-400">
-              Geometric mean of all benchmarks (higher is better)
+              {about.higherBetter}
             </p>
             <Chart />
           </div>
           <div className="text-sm text-zinc-400">
-            Based on{' '}
+            {about.basedOn}{' '}
             <a
               href="https://krausest.github.io/js-framework-benchmark/2023/table_chrome_112.0.5615.49.html"
               target="_blank"
               rel="noreferrer"
               className="text-zinc-500 underline decoration-from-font [text-underline-position:from-font]"
             >
-              JS Framework Benchmark data
+              {about.benchmarkData}
             </a>{' '}
-            (Chrome 102)
+            {about.chromeVersion}
           </div>
         </div>
       ) : (

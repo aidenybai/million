@@ -1,0 +1,70 @@
+---
+title: '<For />'
+description: 'Aprende a renderizar listas de bloques en Million.'
+---
+
+import { AutomaticModeWarning } from '../../../components/automatic-mode-warning';
+
+# `<For>{:jsx}`
+
+<AutomaticModeWarning />
+
+**Sintaxis:** `<For each={array}>{(item, index) => Block}</For>{:jsx}`\
+**Ejemplo:** `<For each={[1, 2, 3]}>{(item) => myBlock({ item })}</For>{:jsx}`
+
+El componente `<For />{:jsx}` se utiliza para renderizar una lista de bloques (blocks). Acepta un array en la propiedad each y una función como "elemento" hijo. La función es llamada una vez por cada elemento (item) que hay en el array y recibe el elemento y su índice como argumentos.
+
+Es la mejor manera de iterar sobre un array. A medida que el array cambia, `<For />{:jsx}` actualiza o mueve los elementos ("items" en inglés) en el DOM en lugar de recrearlos. Veamos un ejemplo:
+
+```jsx
+import { For } from 'million/react';
+
+function App() {
+  const [items, setItems] = useState([1, 2, 3]);
+
+  return (
+    <>
+      <button onClick={() => setItems([...items, items.length + 1])}>
+        Add item
+      </button>
+      <ul>
+        <For each={items}>{(item) => <li>{item}</li>}</For>
+      </ul>
+    </>
+  );
+}
+
+export default App;
+```
+
+## Etiquetas personalizadas
+
+La propiedad `as` se puede utilizar para especificar el nombre de la etiqueta (elemento HTML) para el componente For. Por defecto, es `slot`.
+
+```jsx
+<For each={items} as="div">
+  {(item) => <li>{item}</li>}
+</For>
+```
+
+## Optimizando `<For />` con `memo`
+
+Internamente, `<For />` no reutilizará bloques para evitar comportamientos desconocidos. Esto significa que si tienes un `<For />` con 1000 elementos, recreará 1000 bloques.
+
+Sin embargo, si sabes que tus elementos no dependen de ningún valor excepto el `item` (elemento) pasado a la función, puedes utilizar la propiedad `memo` para indicarle a Million que reutilice bloques. Esto mejorará el rendimiento y reducirá el uso de memoria.
+
+```jsx
+<For each={items} memo>
+  {(item) => <li>{item}</li>}
+</For>
+```
+
+## Usando For con SSR
+
+Si estás utilizando Million.js en el servidor, es posible que te encuentres con un error de inconsistencia en el proceso de hidratación ("hydration mismatch error" en inglés). Esto se debe a que Million.js utiliza un algoritmo diferente para renderizar en el servidor que en el cliente. Para solucionar esto, puedes desactivar la renderización del lado del servidor (SSR).
+
+```jsx
+<For each={[Math.random(), Math.random(), Math.random()]} ssr={false}>
+  {(item) => <li>{item}</li>}
+</For>
+```

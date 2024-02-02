@@ -1,0 +1,76 @@
+---
+title: "block()"
+description: "Una función que crea un componente sin estado."
+---
+
+import { Callout } from 'nextra-theme-docs';
+
+{' '}
+<Callout type="warning">
+  Esta función forma parte de la API interna. Deberías utilizarla **solo** si estás creando tu propio *framework*.
+</Callout>
+
+{' '}
+<br />
+
+
+# `block(){:jsx}`
+
+**Sintaxis:** `block((props) => vnode){:jsx}`\
+**Ejemplo:** `block((props) => <div>{props.foo}</div>){:jsx}`
+
+La función `block` (*bloque* en español) instancia un `Block` (un "componente" sin estado). Acepta una función que contiene un objeto `props` como parámetro y que devuelve un `VNode`.
+
+### Reglas de uso
+
+##### `props` es un objeto inmutable con valores primitivos o valores de tipo `Block`.
+
+```jsx
+someBlock({
+  one: '1', // ✅
+  two: 1 + 1, // ✅
+  three: true, // ✅
+  four: Date.now(), // ✅
+  five: anotherBlock({ crewmate: true }), // ✅
+  six: { imposter: true }, // ❌
+  seven: new Date(), // ❌
+});
+```
+
+##### Top level values of `props` may not be interpolated with other values.
+
+Los `props` son llenados con valores inmutables de tipo `Hole`. Estos valores se reemplazan con los valores reales cuando la función `block(){:jsx}` es llamada.
+
+```jsx
+// Anatomía de un `Hole`
+{
+  $: 'prop';
+}
+
+// Ejemplo:
+block((props) => {
+  console.log(props.foo); // { $: 'foo' } ✅
+  console.log(props.foo + ' bar'); // { $: 'foo' } + ' bar' ❌
+  return <div>{props.foo}</div>;
+});
+```
+
+Algunos ejemplos de esta regla:
+
+```jsx
+block((props) => {
+  const { favorite } = props.favorite; // ❌
+  <div className={props.className /* ✅ */}>
+    {props.hello /* ✅ */}
+    {Date.now() /* ✅ */}
+    <button
+      onClick={() => {
+        console.log(props.world); /* ❌ (No se permiten "holes" dentro de eventos) */
+      }}
+    >
+      {props.count + 1 /* ❌ */}
+      {props.foo.toString() /* ❌ */}
+    </button>
+  </div>;
+});
+```

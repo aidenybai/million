@@ -1,0 +1,44 @@
+---
+title: 'patch()'
+description: 'The patch function is used to rerender a bloque with another bloque.'
+---
+
+import { Callout } from 'nextra-theme-docs';
+
+<Callout type="warning">
+  Esta función forma parte de la API interna. Deberías utilizarla **solo** si estás creando tu propio *framework*. No es recomendada para uso general.
+</Callout>
+
+<br />
+
+# `patch(){:jsx}`
+
+**Sintaxis:** `patch(oldBlock, newBlock){:jsx}`\
+**Ejemplo:** `patch(block1, block2){:jsx}`
+
+La función `patch` se utiliza para volver a renderizar un bloque con otro bloque. El `oldBlock` (bloque viejo) es el block que se volverá a renderizar, y el `newBlock` (bloque nuevo) representa la nueva versión del DOM.
+
+<Callout>
+  Los bloques deben derivarse de la misma función al usar `patch()`. Esto asegura que el rendimiento no se vea afectado negativamente.
+</Callout>
+
+```jsx
+import { block, mount, patch, fragment } from 'million';
+
+const display = block(({ text }) => {
+  return <p>{text}</p>;
+});
+
+// Vamos a aplicar un "patch" a este bloque para las actualizaciones.
+const main = display({ text: 'Hello' });
+
+mount(main, document.getElementById('root'));
+
+patch(main, display({ text: 'World' }));
+
+const bigDisplay = block(({ text }) => {
+  return <h1 style={{ color: 'red' }}>{text}</h1>;
+});
+
+patch(main, bigDisplay({ text: 'World' })); // ineficiente, pero funciona.
+```

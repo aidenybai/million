@@ -1,0 +1,58 @@
+---
+title: 'Présentation de Million.js 3.0'
+date: DEC 7, 2023
+description: Amélioration des performances pour le compilateur et l'exécution
+---
+
+<div className="flex flex-col items-center gap-4">
+
+# Présentation de Million.js 3.0
+
+  <small>[AIDEN BAI](https://aidenybai.com) DEC 7 2023</small>
+</div>
+
+---
+
+Après de nombreux mois de travail acharné, je suis ravi de vous annoncer la sortie de Million 3.0. au cours de la semaine prochaine, nous allons déployer une version officielle. Vous pourrez bientôt profiter de nombreuses nouvelles fonctionnalités et améliorations apportées à la bibliothèque.
+
+Même si nous modifions le fonctionnement interne, Million 3.0 devrait être une mise à jour transparente pour tous. Vous pouvez passer à la dernière version sans effectuer de changements de code.
+
+Si vous n'avez pas encore essayé Million.js, vous pouvez [consulter la documentation](/docs/quickstart) pour commencer. Ou, lancez simplement `npx million@latest` pour démarrer. Million.js est un compilateur qui transforme votre code React existant en un DOM virtuel hyperoptimisé. C'est une alternative plug-and-play à React qui est plus rapide et plus compacte.
+
+## Quelles sont les nouveautés ?
+
+### Temps de compilation plus rapide
+
+Cette version comprend une refonte complète du compilateur pour le rendre plus efficace, lisible et scalable. Nos tests initiaux montrent une amélioration significative par rapport à la version précédente : environ 34 % plus rapide (3.2s -> 2.1s) pour la compilation initiale et environ 82 % (1.1s -> 0.2s) pour les changements de code sur un projet de taille moyenne avec Next.js.
+
+Nous avons également intégré une suite de tests approfondie pour nous assurer que le compilateur fonctionne conformément aux attentes. Cela nous permettra de repérer les erreurs et les régressions plus facilement à l'avenir.
+
+Cela nous donne la possibilité de prendre en charge davantage de fonctionnalités et d'optimisations à l'avenir sans compromettre l'expérience des développeurs. Restez attentifs aux nouveaux outils de diagnostique, au sidecar et aux gadgets d'IA qui arriveront bientôt 👀
+
+### Temps d'exécution plus rapide
+
+Million 3.0 refactorise la manière dont la réhydratation est effectuée. Au lieu de remplacer le DOM aux limites des composants, Million.js peut maintenant cibler la réhydratation de manière précise, ce qui se traduit par des temps de réhydratation nettement plus rapides au sein des blocs.
+
+Nous travaillons également sur la suppression de la dépendance aux éléments `<slot>` pour le montage des blocs. Pour de nombreux projets, cela représente une réduction significative du nombre inutile de nœuds DOM, améliorant la conciliation et réduisant l'utilisation de la mémoire.
+
+Avec ces changements, nous constatons une amélioration initiale d'environ 100 % (2s -> 1s) dans les temps de réhydratation (ralentissement du CPU 4x) et beaucoup moins de génération d'éléments `<slot>` pour un projet de taille moyenne avec Next.js.
+
+## Migration vers Million.js 3.0
+
+La migration est facile. Mettez simplement à jour vos dépendances vers la dernière version de Million.js. Exécutez simplement `npm install million@latest` (ou votre gestionnaire de paquets préféré) pour commencer.
+
+## Les prochaines étapes
+
+L'avenir de Million.js est de devenir l'ensemble d'outils de performance de facto pour le web. Dans les semaines à venir, nous livrerons des outils extrêmement puissants et novateurs pour vous aider à construire des sites web plus rapides.
+
+En plus des nouvelles fonctionnalités, nous lancerons un nouveau site web et une documentation pour vous aider à démarrer. Nous fournirons également un nouvel évier de cuisine pour mettre en valeur certaines des nouvelles fonctionnalités.
+
+## Remerciements
+
+Merci à tous ceux qui ont [contribué à Million.js](https://github.com/aidenybai/million/contributors).
+
+Un grand merci à [@toby_solutions](https://twitter.com/toby_solutions) pour son aide à maintenir le site web et l'évier de cuisine, à [@felpix\_](https://twitter.com/felpix_) pour gérer le compte Twitter de Million.js, et à [@nisargptel](https://twitter.com/nisargptel) pour la réalisation de la vidéo de présentation.
+
+Si vous avez des questions, n'hésitez pas à me contacter sur [Twitter](https://twitter.com/aidenybai) ou [GitHub](https://github.com/aidenybai/million).
+
+Profitez bien 🎉

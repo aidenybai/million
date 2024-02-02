@@ -12,6 +12,24 @@ const withNextra = nextra({
  */
 const nextConfig = {
   transpilePackages: ['react-tweet'],
+  i18n: {
+    locales: ['en-US', 'zh-CN', 'es-ES', 'fr-FR'],
+    defaultLocale: 'en-US',
+  },
+  async redirects() {
+    return [
+      {
+        source: '/docs.([a-zA-Z-]+)',
+        destination: '/docs/introduction',
+        statusCode: 302,
+      },
+      {
+        source: '/chat',
+        destination: 'https://discord.gg/QezWCDeYfH',
+        statusCode: 302,
+      },
+    ];
+  },
 };
 
 // eslint-disable-next-line import/no-default-export  -- Next.js requires default export

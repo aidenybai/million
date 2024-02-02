@@ -1,0 +1,81 @@
+---
+title: 'Million.js v2.5.1'
+date: JUL 21, 2023
+description: Virtualiser le DOM virtuel
+---
+
+import Image from 'next/image';
+import { Callout, Tab, Tabs } from 'nextra-theme-docs';
+import { Tweet } from 'react-tweet';
+import { CarbonAds } from '../../components/ad';
+import { Bounties } from '../../components/bounties';
+
+<div className="flex flex-col items-center gap-4">
+
+# Million.js v2.5.1
+
+  <small>[AIDEN BAI](https://aidenybai.com) JUL 21 2023</small>
+</div>
+
+---
+
+<Bounties />
+
+Million.js v2.5.1 apporte de nombreuses nouvelles fonctionnalités et corrections de bugs ! Assurez-vous de mettre à jour votre version de Million.js vers la dernière :
+
+<Tabs items={['npm', 'pnpm', 'yarn']} storageKey="selected-pkg-manager">
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  npm install million@latest
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  pnpm install million@latest
+  ```
+  </Tab>
+  {/* prettier-ignore */}
+  <Tab>
+  ```bash copy
+  yarn add million@latest
+  ```
+  </Tab>
+</Tabs>
+
+Let's dig straight into it:
+
+<CarbonAds />
+
+## Virtualisation
+
+La semaine dernière, j'ai publié un aperçu de la virtualisation de Million.js dans React. Cette semaine, je suis heureux d'annoncer que la virtualisation est désormais disponible dans Million.js via TanStack Virtual ! Vous pouvez consulter le guide sur la virtualisation [ici](/docs/virtualization) pour commencer.
+
+<Callout type="info">
+  Vous voulez comparer Million.js avec la virtualisation de React ? Consultez
+  [ce démo !](https://million-tanstack-virtual.vercel.app/)
+</Callout>
+
+<Tweet id="1680005514821001216" />
+
+## Analytique
+
+Million.js prend en charge une nouvelle option `analytics`, qui vous permet de vous connecter au compilateur et d'obtenir un aperçu des blocs. Voici un exemple de base de la façon dont vous pouvez l'utiliser :
+
+```js
+const ComponentBlock = block(Component, {
+  analytics: ({ traversals, data }) => {
+    const percentImprovement = Math.round(
+      ((traversals - data.traversals) / traversals) * 100,
+    );
+    console.log(
+      `Million.js is reducing reconciliation by ${percentImprovement}%`,
+    );
+  },
+});
+```
+
+## Plus
+
+Vous pouvez consulter la version complète ici : [https://github.com/aidenybai/million/releases/tag/v2.5.1](https://github.com/aidenybai/million/releases/tag/v2.5.1)

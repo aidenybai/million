@@ -1,0 +1,73 @@
+{
+  "index": {
+    "type": "page",
+    "title": "Million.js",
+    "display": "hidden",
+    "theme": {
+      "layout": "raw"
+    }
+  },
+  "docs": {
+    "type": "page",
+    "title": "Documentación"
+  },
+  "blog": {
+    "type": "page",
+    "title": "Blog"
+  },
+  "showcase": {
+    "type": "page",
+    "title": "Ejemplos",
+    "theme": {
+      "typesetting": "article",
+      "layout": "full"
+    }
+  },
+  "foundation": {
+    "display": "hidden",
+    "type": "page",
+    "title": "Fundación",
+    "theme": {
+      "typesetting": "article"
+    }
+  },
+  "faq": {
+    "type": "page",
+    "title": "FAQ",
+    "theme": {
+      "layout": "raw"
+    }
+  },
+  "ai": {
+    "type": "page",
+    "title": "IA",
+    "theme": {
+      "layout": "raw"
+    }
+  },
+  "more": {
+    "title": "Más",
+    "type": "menu",
+    "items": {
+      "foundation": {
+        "title": "Fundación",
+        "href": "/foundation"
+      },
+      "research": {
+        "title": "Investigación",
+        "href": "https://dl.acm.org/doi/10.1145/3555776.3577683",
+        "newWindow": true
+      },
+      "demo": {
+        "title": "Demo",
+        "href": "https://demo.million.dev",
+        "newWindow": true
+      },
+      "hundred": {
+        "title": "Construye el tuyo",
+        "href": "https://github.com/aidenybai/hundred",
+        "newWindow": true
+      }
+    }
+  }
+}

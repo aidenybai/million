@@ -1,0 +1,29 @@
+---
+title: 'mount()'
+description: 'Montar un bloque en un elemento del DOM.'
+---
+
+import { Callout } from 'nextra-theme-docs';
+
+<Callout type="warning">
+  Esta función forma parte de la API interna. Deberías utilizarla **solo** si estás creando tu propio *framework*. No es recomendada para uso general.
+</Callout>
+
+<br />
+
+# `mount(){:jsx}`
+
+**Sintaxis:** `mount(Block, el){:jsx}`\
+**Ejemplo:** `mount(block, document.getElementById('root')){:jsx}`
+
+La función `mount` se utiliza para montar un bloque (block) en un elemento del DOM (imagina `ReactDOM.render()` en React). Toma dos argumentos: el bloque (block) que se va a montar y el elemento del DOM en el que se va a montar.
+
+```jsx
+import { block, mount } from 'million';
+
+const display = block(({ text }) => {
+  return <p>{text}</p>;
+});
+
+const element = mount(display, document.getElementById('root'));
+```

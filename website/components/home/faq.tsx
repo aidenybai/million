@@ -1,150 +1,22 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Disclosure, Transition } from '@headlessui/react';
+import { useTranslations } from 'hooks/use-translations';
 import { Container } from './container';
 
-const faq = [
-  {
-    question: <>How is it fast?</>,
-    answer: (
-      <>
-        It uses a novel approach to the virtual DOM called the block virtual DOM.
-        You can read more on what the block virtual DOM is with{' '}
-        <Link
-          className="nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]"
-          href="/blog/virtual-dom"
-        >
-          Virtual DOM: Back in Block
-        </Link>{' '}
-        and how we make it happen in React with{' '}
-        <Link
-          className="nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]"
-          href="/blog/behind-the-block"
-        >
-          Behind the block()
-        </Link>
-        .
-      </>
-    ),
-  },
-  {
-    question: (
-      <>
-        How does it compare to{' '}
-        <code
-          className="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10"
-          dir="ltr"
-          data-language="jsx"
-          data-theme="default"
-        >
-          <span className="line">[insert fast JS framework]</span>
-        </code>
-      </>
-    ),
-    answer: (
-      <>
-        Depends on what you're asking. If you're asking about performance, you
-        can view a subjective truth with the{' '}
-        <a
-          href="https://krausest.github.io/js-framework-benchmark/current.html"
-          target="_blank"
-          className="nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]"
-        >
-          JS Framework Benchmark
-        </a>
-        . If you're asking about features, it depends. Million.js' main use case
-        is for optimizing UI / data heavy React applications. Ultimately you
-        should be choosing the framework that works best for you, your team, and
-        your project.
-      </>
-    ),
-  },
-  {
-    question: <> Does it work with Preact, Next.js, etc.?</>,
-    answer: (
-      <>
-        If it uses React or Preact, then probably. You can reference the full
-        list of supported tools on the{' '}
-        <Link
-          className="nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]"
-          href="/docs/install"
-        >
-          Installation Guide
-        </Link>
-        .
-      </>
-    ),
-  },
-  {
-    question: <>What are the limitations?</>,
-    answer: (
-      <>
-        You can view the list of current limitations in the{' '}
-        <Link
-          className="nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]"
-          href="/docs/rules"
-        >
-          Rules of Blocks
-        </Link>
-        . We are actively working on removing these limitations. It's also
-        important to note that your application may not need Million.js – if
-        your app is not UI heavy, you may not see much performance improvement.
-      </>
-    ),
-  },
-  {
-    question: <>Is this just memo?</>,
-    answer: (
-      <>
-        While React provides memoization utilities, Million.js takes a
-        drastically different approach. Instead of trying to reduce and avoid
-        rerendering, it makes the render process faster. Because fundamentally,
-        memoization is a band-aid, especially if you have a lot of dynamic data.
-        You can check out our blog article
-        <Link
-          className="nx-text-primary-600 px-1 nx-underline nx-decoration-from-font [text-underline-position:from-font]"
-          href="/blog/virtual-dom"
-        >
-          Virtual DOM: Back in Block
-        </Link>
-        to learn more about how Million works with React under the hood.
-      </>
-    ),
-  },
-  {
-    question: <>What is the logo supposed to be?</>,
-    answer: (
-      <>
-        He's <b>Mil the Lion!</b> He's the friendly mascot of the Million.js
-        project. (
-        <i>
-          don't worry, he doesn't bite, but he will <b>byte!</b>
-        </i>
-        )
-        <Image
-          src="./lion.svg"
-          width={300}
-          height={200}
-          className="mt-5"
-          alt="Mil the lion"
-        />
-      </>
-    ),
-  },
-];
-
 export function FAQ() {
+  const { faqs } = useTranslations();
+
   return (
-    <div className="mt-32" id="faq">
+    <div id="faq">
       <Container>
-        <div className="mt-32 flex flex-col gap-12 lg:flex-row">
+        <div className="flex flex-col gap-12 lg:flex-row">
           <div className="text-center lg:w-5/12 lg:pl-12 lg:text-left">
             <h2 className="text-2xl font-bold text-gray-800 dark:text-white md:text-3xl lg:text-4xl">
-              Frequently asked questions
+              {faqs.frequently}
             </h2>
             <p className="mt-4 text-gray-600 dark:text-gray-300">
-              You can find more specific information about the library by
-              digging into the documentation and reading our blog articles.
+              {faqs.description}
             </p>
           </div>
           <div className="lg:w-7/12">
@@ -157,6 +29,123 @@ export function FAQ() {
 }
 
 export function Disclosures({ full = false }) {
+  const { faqs } = useTranslations();
+  const faq = [
+    {
+      question: <>{faqs.fast}</>,
+      answer: (
+        <>
+          {faqs.novelApproach}{' '}
+          <Link
+            className="nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]"
+            href="/blog/virtual-dom"
+          >
+            {faqs.virtualDom}
+          </Link>{' '}
+          {faqs.makeItHappen}{' '}
+          <Link
+            className="nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]"
+            href="/blog/behind-the-block"
+          >
+            {faqs.block}
+          </Link>
+          .
+        </>
+      ),
+    },
+    {
+      question: (
+        <>
+          {faqs.compare}{' '}
+          <code
+            className="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10"
+            dir="ltr"
+            data-language="jsx"
+            data-theme="default"
+          >
+            <span className="line">{faqs.JSFramework}</span>
+          </code>
+        </>
+      ),
+      answer: (
+        <>
+          {faqs.depends}{' '}
+          <a
+            href="https://krausest.github.io/js-framework-benchmark/current.html"
+            target="_blank"
+            className="nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]"
+          >
+            {faqs.benchmark}
+          </a>
+          . {faqs.useCase}
+        </>
+      ),
+    },
+    {
+      question: <>{faqs.doesItWork}</>,
+      answer: (
+        <>
+          {faqs.probably}{' '}
+          <Link
+            className="nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]"
+            href="/docs/install"
+          >
+            {faqs.guide}
+          </Link>
+          .
+        </>
+      ),
+    },
+    {
+      question: <>{faqs.limitations}</>,
+      answer: (
+        <>
+          {faqs.viewList}{' '}
+          <Link
+            className="nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]"
+            href="/docs/manual-mode/block#rules-of-blocks"
+          >
+            {faqs.rulesOfBlocks}
+          </Link>
+          . {faqs.importantNote}
+        </>
+      ),
+    },
+    {
+      question: <>{faqs.isItMemo}</>,
+      answer: (
+        <>
+          {faqs.memoization}
+          <Link
+            className="nx-text-primary-600 px-1 nx-underline nx-decoration-from-font [text-underline-position:from-font]"
+            href="/blog/virtual-dom"
+          >
+            {faqs.backInBlock}
+          </Link>
+          {faqs.learnMore}
+        </>
+      ),
+    },
+    {
+      question: <>{faqs.logo}</>,
+      answer: (
+        <>
+          {faqs.he} <b>{faqs.milTheLion}</b> {faqs.friendlyMascot} (
+          <i>
+            {faqs.nobite} <b>{faqs.byte}</b>
+          </i>
+          )
+          <Image
+            src="./lion.svg"
+            width={300}
+            height={200}
+            className="mt-5"
+            alt="Mil the lion"
+          />
+        </>
+      ),
+    },
+  ];
   return (
     <div className="divide-y divide-zinc-200 border-y border-zinc-200 dark:divide-zinc-800 dark:border-zinc-800">
       {faq.map((item, i) => (

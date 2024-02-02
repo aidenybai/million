@@ -5,19 +5,20 @@ import HackClub from '../../pages/showcase/hackclub.jpeg';
 import DonaAI from '../../pages/showcase/dona-ai.jpeg';
 import LLMReport from '../../pages/showcase/llm-report.png';
 import Texts from '../../pages/showcase/texts.png';
+import { useTranslations } from '../../hooks/use-translations';
 import { Container } from './container';
 
 export function Showcase() {
+  const { showCase } = useTranslations();
   return (
     <div className="my-42 relative">
       <Container>
         <div className="mb-16">
           <h2 className="mb-4 text-center text-2xl font-bold text-gray-800 dark:text-white md:text-4xl">
-            Faster than the rest
+            {showCase.faster}
           </h2>
           <p className="mt-3 text-center text-zinc-600 dark:text-zinc-300 md:text-md lg:text-lg">
-            Witness MillionJS in production where it creates a better user
-            experiences.
+            {showCase.witness}
           </p>
         </div>
 
@@ -29,7 +30,7 @@ export function Showcase() {
             className="relative flex h-11 w-full items-center justify-center px-6 before:absolute before:inset-0 before:rounded-full before:border before:border-transparent before:bg-purple-600/10 before:bg-gradient-to-b before:transition before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 dark:before:border-zinc-700 dark:before:bg-zinc-800 sm:w-max"
           >
             <span className="relative text-base font-semibold text-purple-600 dark:text-white">
-              View the Million.js showcase
+              {showCase.showCase}
             </span>
           </Link>
         </div>
@@ -71,10 +72,10 @@ export const ShowcaseSlider = () => {
       <div className="slide-track-10 hover:pause mt-6 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5">
         {[...entries, ...entries, ...entries].map(({ image, name, url }, i) => (
           <a
-          key={i}
+            key={url}
             href={`https://${url}`}
             target="_blank"
-            className="pr-10 space-y-6 text-center w-[24rem] relative grayscale-[50%] opacity-90 hover:opacity-100 transition duration-200 hover:grayscale-0"
+            className="pr-10 space-y-6 tex-center w-[24rem] relative grayscale-[50%] opacity-90 hover:opacity-100 transition duration-200 hover:grayscale-0"
           >
             <Image
               src={image}
@@ -95,4 +96,3 @@ export const ShowcaseSlider = () => {
     </div>
   );
 };
-
