@@ -231,7 +231,7 @@ const config: DocsThemeConfig = {
         {pathname.startsWith('/wrapped/') ? (
           <>
             <meta property="og:type" content="video.other" />
-            <meta name="twitter:card" content="player" />
+            <meta property="twitter:card" content="player"/>
             <meta name="twitter:player:stream" content={videoUrl} />
             <meta name="twitter:player:width" content="1280" />
             <meta name="twitter:player:height" content="720" />
