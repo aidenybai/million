@@ -1,3 +1,10 @@
+/**
+ * THIS FILE IS DEPRECATED
+ * 
+ * The file is no longer being used due to a broader 
+ * compilation process that covers this. This is only
+ * preserved for future references.
+ */
 import * as t from '@babel/types';
 import type { NodePath } from '@babel/core';
 import {
