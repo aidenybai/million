@@ -1,306 +1,403 @@
+import type * as babel from '@babel/core';
 import * as t from '@babel/types';
-import type { NodePath } from '@babel/core';
-import { catchError, logIgnore, logImprovement } from './utils/log';
-import { addImport } from './utils/mod';
-import type { Info } from './babel';
-import { isAttributeUnsupported, isComponent } from './utils/jsx';
-import { transformBlock } from './block';
+import { REACT_IMPORTS, TRACKED_IMPORTS } from './constants.new';
+import type { StateContext } from './types';
+import { isComponentishName, isPathValid, isStatementTopLevel } from './utils/checks';
+import { generateUniqueName } from './utils/generate-unique-name';
+import { getDescriptiveName } from './utils/get-descriptive-name';
+import { getImportIdentifier } from './utils/get-import-specifier';
+import { getRootStatementPath } from './utils/get-root-statement-path';
+import { getValidImportDefinition } from './utils/get-valid-import-definition';
+import { isGuaranteedLiteral } from './utils/is-guaranteed-literal';
+import { isJSXComponentElement } from './utils/is-jsx-component-element';
+import { logImprovement } from './utils/log';
+import { isUseClient } from './utils/mod';
+import { registerImportDefinition } from './utils/register-import-definition';
+import { unwrapNode } from './utils/unwrap-node';
+import { unwrapPath } from './utils/unwrap-path';
 
-// TODO: for rsc, need to find children files without 'use client' but are client components
-// https://nextjs.org/docs/app/building-your-application/rendering/client-components#using-client-components-in-nextjs
-//
-// TODO: add support for <For> for .maps
-export const parseAuto = (
-  path: NodePath<t.FunctionDeclaration | t.VariableDeclarator>,
-  info: Info
-): void => {
-  if (!info.options.auto) return;
+interface JSXStateContext {
+  bailout: boolean;
 
-  const rawComponent = path.node;
+  elements: number;
+  attributes: number;
+  components: number;
+  text: number;
+  returns: number;
+}
 
-  const isInProgramScope =
-    t.isIdentifier(rawComponent.id) &&
-    info.programPath.scope.hasOwnBinding(rawComponent.id.name);
 
-  if (!isInProgramScope) return;
-
-  if (
-    t.isCallExpression(path.parent) &&
-    t.isIdentifier(path.parent.callee, { name: 'block' }) // probably need a import level check later
-  )
+function measureExpression(
+  state: JSXStateContext,
+  expr: babel.NodePath<t.Expression>,
+  portal: boolean,
+): void {
+  const unwrappedJSX = unwrapPath(expr, t.isJSXElement);
+  if (unwrappedJSX) {
+    measureJSXExpressions(state, unwrappedJSX);
     return;
-
-  let componentPath: NodePath<
-    t.FunctionDeclaration | t.FunctionExpression | t.ArrowFunctionExpression
-  >;
-
-  // Next.js React Server Components support
-  if (typeof info.options.auto === 'object' && info.options.auto.rsc) {
-    const directives = info.programPath.node.directives;
-    if (!directives.length) return; // we assume it's server component only
-    const hasUseClientDirective = directives.some((directive) => {
-      return directive.value.value === 'use client';
-    });
-    if (!hasUseClientDirective) return;
   }
-
-  if (t.isVariableDeclarator(rawComponent)) {
-    if (
-      !t.isArrowFunctionExpression(rawComponent.init) &&
-      !t.isFunctionExpression(rawComponent.init)
-    ) {
-      return;
-    }
-    // it's possible that the component is a block
-    // probably need a import level check later)
-    if (
-      t.isCallExpression(rawComponent.init) &&
-      t.isIdentifier(rawComponent.init, { name: 'block' })
-    )
-      return;
-    if (rawComponent.init.async) return; // RSC / Loader
-
-    componentPath = path.get('init') as NodePath<
-      t.FunctionExpression | t.ArrowFunctionExpression
-    >;
+  const unwrappedFragment = unwrapPath(expr, t.isJSXFragment);
+  if (unwrappedFragment) {
+    measureJSXExpressions(state, unwrappedFragment);
+    return;
+  }
+  if (isGuaranteedLiteral(expr.node)) {
+    return;
+  }
+  if (portal) {
+    state.components++;
   } else {
-    componentPath = path as NodePath<t.FunctionDeclaration>;
+    state.attributes++;
   }
+}
 
-  if (!t.isIdentifier(rawComponent.id)) return;
-  if (!isComponent(rawComponent.id.name)) return;
+function measureJSXSpreadChild(
+  state: JSXStateContext,
+  path: babel.NodePath<t.JSXSpreadChild>,
+): void {
+  measureExpression(state, path.get('expression'), false);
+}
 
-  const globalPath = path.findParent(
-    (path) => path.parentPath?.isProgram() || path.isProgram()
-  )!;
-  const comment =
-    rawComponent.leadingComments?.[0] ||
-    path.parent.leadingComments?.[0] ||
-    globalPath.node.leadingComments?.[0];
+function measureJSXExpressionContainer(
+  state: JSXStateContext,
+  path: babel.NodePath<t.JSXExpressionContainer>,
+  portal: boolean,
+): void {
+  const expr = path.get('expression');
+  if (isPathValid(expr, t.isExpression)) {
+    measureExpression(state, expr, portal);
+  }
+}
 
-  if (comment?.value.includes('million-ignore')) {
-    logIgnore(rawComponent.id.name);
+function measureJSXAttribute(
+  state: JSXStateContext,
+  attr: babel.NodePath<t.JSXAttribute>,
+): void {
+  const value = attr.get('value');
+  if (isPathValid(value, t.isJSXElement)) {
+    measureJSXExpressions(state, value);
+  } else if (isPathValid(value, t.isJSXFragment)) {
+    measureJSXExpressions(state, value);
+  } else if (isPathValid(value, t.isJSXExpressionContainer)) {
+    measureJSXExpressionContainer(state, value, false);
+  }
+}
+
+function measureJSXSpreadAttribute(
+  state: JSXStateContext,
+  attr: babel.NodePath<t.JSXSpreadAttribute>,
+): void {
+  measureExpression(state, attr.get('argument'), false);
+}
+
+function measureJSXAttributes(
+  state: JSXStateContext,
+  attrs: babel.NodePath<t.JSXAttribute | t.JSXSpreadAttribute>[],
+): void {
+  // TODO handle specific attributes
+  for (let i = 0, len = attrs.length; i < len; i++) {
+    const attr = attrs[i];
+
+    if (isPathValid(attr, t.isJSXAttribute)) {
+      measureJSXAttribute(state, attr);
+    } else if (isPathValid(attr, t.isJSXSpreadAttribute)) {
+      measureJSXSpreadAttribute(state, attr);
+    }
+  }
+}
+
+function measureJSXElement(
+  state: JSXStateContext,
+  path: babel.NodePath<t.JSXElement>,
+): boolean {
+  const openingElement = path.get('openingElement');
+  /**
+   * If this is a component element, move the JSX expression
+   * to the expression array.
+   */
+  if (isJSXComponentElement(path)) {
+    state.components++;
+    return true;
+  }
+  /**
+   * Otherwise, continue extracting in attributes
+   */
+  state.elements++;
+  measureJSXAttributes(state, openingElement.get('attributes'));
+  return false;
+}
+
+function measureJSXExpressions(
+  state: JSXStateContext,
+  path: babel.NodePath<t.JSXElement | t.JSXFragment>,
+): void {
+  if (isPathValid(path, t.isJSXElement) && measureJSXElement(state, path)) {
     return;
   }
+  const children = path.get('children');
+  for (let i = 0, len = children.length; i < len; i++) {
+    const child = children[i];
 
-  const blockStatementPath = componentPath.get(
-    'body'
-  ) as NodePath<t.BlockStatement>;
-  const returnStatementPath = blockStatementPath
-    .get('body')
-    .find((path) => path.isReturnStatement());
-
-  if (!returnStatementPath?.has('argument')) return;
-  const argumentPath = returnStatementPath.get('argument') as NodePath<
-    t.JSXElement | t.JSXFragment
-  >;
-
-  if (!argumentPath.isJSXElement() && !argumentPath.isJSXFragment()) {
-    return;
+    if (isPathValid(child, t.isJSXElement)) {
+      measureJSXExpressions(state, child);
+    } else if (isPathValid(child, t.isJSXFragment)) {
+      measureJSXExpressions(state, child);
+    } else if (isPathValid(child, t.isJSXSpreadChild)) {
+      measureJSXSpreadChild(state, child);
+    } else if (isPathValid(child, t.isJSXExpressionContainer)) {
+      measureJSXExpressionContainer(state, child, true);
+    } else if (isPathValid(child, t.isJSXText)) {
+      if (child.node.value.trim() !== '') state.text++;
+    }
   }
+}
 
-  const componentInfo = {
+function shouldTransform(ctx: StateContext, name: string, path: babel.NodePath): boolean {
+  const state: JSXStateContext = {
     bailout: false,
     elements: 0,
-    attributes: 0,
     components: 0,
+    attributes: 0,
     text: 0,
-    expressions: 0,
-    depth: 0,
     returns: 0,
   };
 
-  const skipIds: (string | RegExp)[] = [];
-
-  if (typeof info.options.auto === 'object' && info.options.auto.skip) {
-    skipIds.push(...info.options.auto.skip);
-  }
-
-  blockStatementPath.traverse({
-    Identifier(path) {
-      if (
-        skipIds.some((id) =>
-          typeof id === 'string'
-            ? path.node.name === id
-            : id.test(path.node.name)
-        )
-      ) {
-        componentInfo.bailout = true;
-        path.stop();
-
-      }
+  path.traverse({
+    JSXElement(innerPath) {
+      measureJSXExpressions(state, innerPath);
+      innerPath.skip();
     },
-    JSXElement(path) {
-      const type = path.node.openingElement.name;
-      if (t.isJSXMemberExpression(type)) {
-        const isContext =
-          t.isJSXIdentifier(type.object) &&
-          isComponent(type.property.name) &&
-          type.property.name === 'Provider';
-        const isSpecialElement = t.isJSXIdentifier(type.object);
-
-        if (isContext) {
-          componentInfo.bailout = true;
-          path.stop();
-          return;
-        }
-
-        if (isSpecialElement) {
-          componentInfo.components++;
-          path.skip();
-          return;
-        }
-      }
-      if (t.isJSXIdentifier(type) && isComponent(type.name)) {
-        componentInfo.components++;
-        path.skip();
-        return;
-      }
-
-      componentInfo.elements++;
+    JSXFragment(innerPath) {
+      measureJSXExpressions(state, innerPath);
+      innerPath.skip();
     },
-    JSXSpreadChild(path) {
-      componentInfo.components++;
-      path.skip();
-    },
-    JSXExpressionContainer(path) {
-      if (t.isJSXEmptyExpression(path.node.expression)) return;
-
-      if (
-        t.isCallExpression(path.node.expression) &&
-        t.isMemberExpression(path.node.expression.callee) &&
-        t.isIdentifier(path.node.expression.callee.property, { name: 'map' })
-      ) {
-        return;
-      }
-
-      if (t.isConditionalExpression(path.node.expression)) {
-        componentInfo.components++;
-        path.skip();
-        return;
-      }
-
-      if (!t.isLiteral(path.node.expression)) componentInfo.expressions++;
-      if (!t.isJSXAttribute(path.parent)) path.skip();
-    },
-    JSXSpreadAttribute(path) {
-      componentInfo.components++;
-      path.skip();
-    },
-    JSXAttribute(path) {
-      const attribute = path.node;
-      // twin.macro + styled-components / emotion support
-      if (isAttributeUnsupported(attribute) || attribute.name.name === 'ref') {
-        componentInfo.components++;
-        path.skip();
-        return;
-      }
-      if (!t.isLiteral(attribute.value)) componentInfo.attributes++;
-    },
-    JSXText(path) {
-      if (path.node.value.trim() !== '') componentInfo.text++;
-    },
-    ReturnStatement(path) {
-      if (path.scope !== returnStatementPath.scope) return;
-      componentInfo.returns++;
-      if (componentInfo.returns > 1) {
-        componentInfo.bailout = true;
-        path.stop();
-
+    ReturnStatement(innerPath) {
+      if (innerPath.scope.uid !== path.scope.uid) return;
+      state.returns++;
+      if (state.returns > 1) {
+        state.bailout = true;
+        innerPath.stop();
       }
     },
   });
 
-  const good =
-    componentInfo.elements + componentInfo.attributes + componentInfo.text;
-  const bad = componentInfo.components + componentInfo.expressions;
+  if (state.bailout) return false;
+
+  const good = state.elements + state.attributes + state.text;
+  if (good < 5) return false;
+  const bad = state.components;
   const improvement = (good - bad) / (good + bad);
 
+  if (isNaN(improvement) || !isFinite(improvement)) return false;
+
   const threshold =
-    typeof info.options.auto === 'object' && info.options.auto.threshold
-      ? info.options.auto.threshold
+    typeof ctx.options.auto === 'object' && ctx.options.auto.threshold
+      ? ctx.options.auto.threshold
       : 0.1;
 
+  if (improvement <= threshold) return false;
+  if ((!ctx.options.log || ctx.options.log === 'info')) {
+    logImprovement(
+      name,
+      improvement,
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      !ctx.options.log || ctx.options.log === 'info',
+      ctx.options.telemetry,
+    );
+  }
+
+  return true;
+}
+
+function transformFunctionDeclaration(
+  ctx: StateContext,
+  program: babel.NodePath<t.Program>,
+  path: babel.NodePath<t.FunctionDeclaration>,
+): void {
+  if (isStatementTopLevel(path)) {
+    const decl = path.node;
+    // Check if declaration is FunctionDeclaration
+    if (
+      // Check if the declaration has an identifier, and then check
+      decl.id &&
+      // if the name is component-ish
+      isComponentishName(decl.id.name) &&
+      // Might be component-like, but the only valid components
+      // have zero or one parameter
+      decl.params.length < 2 &&
+      // For RSC, only transform if it's a client component
+      (ctx.options.rsc ? (ctx.topLevelRSC || isUseClient(decl.body.directives)) : true ) &&
+      // Check if the function should be transformed
+      shouldTransform(ctx, decl.id.name, path)
+    ) {
+      const newPath = program.unshiftContainer(
+        'body',
+        t.variableDeclaration('const', [
+          t.variableDeclarator(
+            decl.id,
+            t.callExpression(
+              getImportIdentifier(
+                ctx,
+                path,
+                TRACKED_IMPORTS.block[ctx.serverMode],
+              ),
+              [
+                t.functionExpression(
+                  decl.id,
+                  decl.params,
+                  decl.body,
+                  decl.generator,
+                  decl.async,
+                ),
+              ],
+            ),
+          ),
+        ]),
+      )[0];
+      program.scope.registerDeclaration(newPath);
+      newPath.skip();
+      if (path.parentPath.isExportNamedDeclaration()) {
+        path.parentPath.replaceWith(
+          t.exportNamedDeclaration(undefined, [
+            t.exportSpecifier(decl.id, decl.id),
+          ]),
+        );
+      } else if (path.parentPath.isExportDefaultDeclaration()) {
+        path.replaceWith(decl.id);
+      } else {
+        path.remove();
+      }
+    }
+  }
+}
+
+function isValidFunction(
+  node: t.Node,
+): node is t.ArrowFunctionExpression | t.FunctionExpression {
+  return t.isArrowFunctionExpression(node) || t.isFunctionExpression(node);
+}
+
+function transformVariableDeclarator(
+  ctx: StateContext,
+  program: babel.NodePath<t.Program>,
+  path: babel.NodePath<t.VariableDeclarator>,
+): void {
   if (
-    isNaN(improvement) ||
-    improvement <= threshold ||
-    componentInfo.bailout ||
-    good < 5
+    path.parentPath.isVariableDeclaration() &&
+    !isStatementTopLevel(path.parentPath)
   ) {
     return;
   }
-
-  const improvementFormatted = isFinite(improvement)
-    ? (improvement * 100).toFixed(0)
-    : '∞';
-
-  if (!info.options.log || info.options.log === 'info') {
-    logImprovement(rawComponent.id.name, improvementFormatted);
+  const identifier = path.node.id;
+  if (!t.isIdentifier(identifier)) {
+    return;
   }
-
-  const block = info.programPath.scope.hasBinding('block')
-    ? t.identifier('block')
-    : addImport(path, 'block', info.imports.source!, info);
-
-  const rewrittenComponentNode = t.variableDeclaration('const', [
-    t.variableDeclarator(
-      rawComponent.id,
-      t.callExpression(block, [
-        t.isFunctionDeclaration(componentPath.node)
-          ? t.functionExpression(
-              rawComponent.id,
-              componentPath.node.params,
-              componentPath.node.body
-            )
-          : componentPath.node,
-      ])
-    ),
-  ]);
-
-  let rewrittenVariableDeclarationPath: NodePath<t.VariableDeclaration>;
-
-  if (path.parentPath.isExportNamedDeclaration()) {
-    path.parentPath.replaceWith(
-      t.exportNamedDeclaration(null, [
-        t.exportSpecifier(rawComponent.id, rawComponent.id),
-      ])
-    );
-    rewrittenVariableDeclarationPath = path.parentPath.insertBefore(
-      rewrittenComponentNode
-    )[0];
-  } else if (path.parentPath.isExportDefaultDeclaration()) {
-    path.replaceWith(rawComponent.id);
-    rewrittenVariableDeclarationPath = path.parentPath.insertBefore(
-      rewrittenComponentNode
-    )[0];
-  } else if (path.isVariableDeclarator()) {
-    rewrittenVariableDeclarationPath = path.parentPath.replaceWith(
-      rewrittenComponentNode
-    )[0];
-  } else {
-    rewrittenVariableDeclarationPath = path.replaceWith(
-      rewrittenComponentNode
-    )[0];
+  const init = path.get('init');
+  if (isComponentishName(identifier.name) && init.node) {
+    const trueFuncExpr = unwrapNode(init.node, isValidFunction);
+    // Check for valid FunctionExpression or ArrowFunctionExpression
+    if (
+      trueFuncExpr &&
+      // Must not be async or generator
+      !(trueFuncExpr.async || trueFuncExpr.generator) &&
+      // Might be component-like, but the only valid components
+      t.isIdentifier(identifier) &&
+      isComponentishName(identifier.name) &&
+      // have zero or one parameter
+      trueFuncExpr.params.length < 2 &&
+      // For RSC, only transform if it's a client component
+      (ctx.options.rsc ? (ctx.topLevelRSC || (t.isBlockStatement(trueFuncExpr.body) && isUseClient(trueFuncExpr.body.directives))) : true ) &&
+      // Check if the function should be transformed
+      shouldTransform(ctx, identifier.name, path)
+    ) {
+      path.node.init = t.callExpression(
+        getImportIdentifier(
+          ctx,
+          path,
+          TRACKED_IMPORTS.block[ctx.serverMode],
+        ),
+        [trueFuncExpr],
+      );
+    }
   }
+}
 
-  const rewrittenComponentPath = rewrittenVariableDeclarationPath.get(
-    'declarations.0.init'
-  ) as NodePath<t.CallExpression>;
+function transformCallExpression(
+  ctx: StateContext,
+  path: babel.NodePath<t.CallExpression>,
+): void {
+  const definition = getValidImportDefinition(ctx, path.get('callee'));
+  if (definition === REACT_IMPORTS.memo[ctx.serverMode]) {
+    const args = path.get('arguments');
+    const arg = args[0];
 
-  rewrittenComponentPath.scope.crawl();
-
-  const log = info.options.log;
-  const blocks = info.blocks;
-  if (log !== true) {
-    info.options.log = 'info';
+    const trueFuncExpr = unwrapPath(arg, isValidFunction);
+    if (trueFuncExpr) {
+      const descriptiveName = getDescriptiveName(trueFuncExpr, 'Anonymous');
+      if (
+        // For RSC, only transform if it's a client component
+        (
+          ctx.options.rsc
+            ? (
+              ctx.topLevelRSC ||
+              (t.isBlockStatement(trueFuncExpr.node.body) && isUseClient(trueFuncExpr.node.body.directives)
+            ))
+            : true
+        ) && shouldTransform(ctx, descriptiveName, path)
+      ) {
+        const root = getRootStatementPath(trueFuncExpr);
+        const uid = generateUniqueName(trueFuncExpr, descriptiveName);
+        root.scope.registerDeclaration(
+          root.insertBefore(
+            t.variableDeclaration('const', [
+              t.variableDeclarator(
+                uid,
+                t.callExpression(
+                  getImportIdentifier(
+                    ctx,
+                    path,
+                    TRACKED_IMPORTS.block[ctx.serverMode],
+                  ),
+                  [trueFuncExpr.node],
+                ),
+              ),
+            ]),
+          )[0],
+        );
+  
+        trueFuncExpr.replaceWith(uid);
+      }
+    }
   }
+}
 
-  info.blocks = new Map();
-
-  catchError(() => {
-    transformBlock(rewrittenComponentPath, info, false);
-  }, 'info');
-
-  info.options.log = log;
-  info.blocks = blocks;
-};
+export function transformAuto(
+  ctx: StateContext,
+  program: babel.NodePath<t.Program>,
+): void {
+  // First, identify the HOCs
+  program.traverse({
+    ImportDeclaration(path) {
+      const mod = path.node.source.value;
+      for (const importName in REACT_IMPORTS) {
+        const definition =
+          REACT_IMPORTS[importName][ctx.serverMode];
+        if (definition.source === mod) {
+          registerImportDefinition(ctx, path, definition);
+        }
+      }
+    },
+  });
+  program.traverse({
+    FunctionDeclaration(path) {
+      transformFunctionDeclaration(ctx, program, path);
+    },
+    VariableDeclarator(path) {
+      transformVariableDeclarator(ctx, program, path);
+    },
+    CallExpression(path) {
+      transformCallExpression(ctx, path);
+    },
+  });
+}
