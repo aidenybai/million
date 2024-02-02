@@ -282,10 +282,14 @@ const config: DocsThemeConfig = {
     component: null,
   },
   useNextSeoProps() {
-    const { asPath } = useRouter();
+    const { asPath, pathname } = useRouter();
 
     if (['/', '/docs'].includes(asPath)) {
       return { titleTemplate: 'Million.js' };
+    }
+
+    if (pathname.startsWith('/wrapped/')) {
+      return
     }
 
     return { titleTemplate: `%s | Million.js` };
