@@ -16,7 +16,7 @@ export default function Wrapped(props) {
     autoComplete: false,
   });
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- Not exactly unsafe, but we need to be careful
-  const id = props.id as string;
+  const id = (props.id as string).split('.')[0];
 
   useEffect(() => {
     const url = new URL(globalThis.window.location.href);
