@@ -152,7 +152,7 @@ export default function Wrapped(props) {
                     onClick={() => {
                       const newIncludeName = !includeName;
                       setIncludeName(newIncludeName);
-                      const url = new URL(window.location);
+                      const url = new URL(window.location.href);
                       url.searchParams.set('include-name', `${newIncludeName}`);
                       window.history.pushState(null, '', url.toString());
                     }}
