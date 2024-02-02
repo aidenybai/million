@@ -241,9 +241,9 @@ export default function Wrapped(props) {
                       <button
                         className="relative w-full flex gap-1 items-center justify-center bg-black px-8 py-[11.5px] h-[64px] hover:bg-[#090909]  md:rounded-bl-none"
                         onClick={() => {
-                          // Copy to clipboard
+                          // Copy current url to clipboard
                           void navigator.clipboard.writeText(
-                            `https://wrapped.million.dev/${id}.mp4`,
+                            window.location.href,
                           );
                           setCopied(true);
 
@@ -333,4 +333,14 @@ export default function Wrapped(props) {
       </div>
     </main>
   );
+}
+
+export function hash(str: string): number {
+  let hashy = 0;
+  for (let i = 0, len = str.length; i < len; i++) {
+    const chr = str.charCodeAt(i);
+    hashy = (hashy << 5) - hashy + chr;
+    hashy |= 0; // Convert to 32bit integer
+  }
+  return hashy;
 }
