@@ -219,7 +219,7 @@ export default function Wrapped(props) {
                         className="relative w-full flex gap-1 items-center justify-center transition-all bg-black px-10 py-[11.5px] h-[64px] hover:bg-[#090909] "
                         onClick={() =>
                           window.open(
-                            `https://twitter.com/intent/tweet?text=I just ran npx million@latest and it made my react app faster! Check it out at https://wrapped.million.dev/${id}?name=${name}.mp4`,
+                            'https://twitter.com/intent/tweet?text=' + encodeURIComponent(`I just ran npx million@latest and it made my react app faster! Check it out at ${window.location.href}`),
                             '_blank',
                           )
                         }
