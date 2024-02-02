@@ -4,7 +4,7 @@
  * JS Framework Benchmark implementation
  */
 
-import { addNamed } from '@babel/helper-module-imports';
+// import { addNamed } from '@babel/helper-module-imports';
 import * as t from '@babel/types';
 import type { NodePath } from '@babel/core';
 import {
