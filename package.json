@@ -110,7 +110,7 @@
   ],
   "scripts": {
     "build": "unbuild",
-    "bump": "pnpm build && pnpm test && pnpm lint && publint --strict && bumpp",
+    "bump": "pnpm build && pnpm test && publint --strict && bumpp",
     "cleanup": "prettier --write ./**/*.{ts,tsx}",
     "lint": "eslint ./packages --ext .ts --cache",
     "lint:fix": "pnpm lint --fix",
