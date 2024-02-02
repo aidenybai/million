@@ -1,34 +1,63 @@
-import { useMockProgress } from 'mock-progress-react';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import Tilt from 'react-parallax-tilt';
 import { Container } from '../home/container';
 import { Blur } from '../home/hero';
 import { RetroGrid } from '../retro-grid';
+import clsx from 'clsx';
+import { useMockProgress } from './useMockProgress';
 
 // eslint-disable-next-line import/no-default-export -- This is the default export
 export default function Wrapped(props) {
+  const [includeName, setIncludeName] = useState(false);
   const [copied, setCopied] = useState<boolean>(false);
   const [videoUrl, setVideoUrl] = useState<string>('');
-  const { progress, finish, start } = useMockProgress({ timeInterval: 2000 });
+  const { progress, finish, start } = useMockProgress({
+    timeInterval: 2000,
+    autoComplete: false,
+  });
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- Not exactly unsafe, but we need to be careful
   const id = props.id as string;
 
   useEffect(() => {
+    setIncludeName(() => {
+      const url = new URL(globalThis.window.location.href);
+      if (!url.searchParams.has('include-name')) {
+        return true;
+      }
+      if (url.searchParams.get('include-name') === 'true') {
+        return true;
+      } else {
+        return false;
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    setVideoUrl('');
     start();
-    void fetch(`https://telemetry.million.dev/api/v1/wrapped/${id}.mp4`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+    const abortController = new AbortController();
+
+    void fetch(
+      `https://telemetry.million.dev/api/v1/wrapped/${id}.mp4${
+        includeName ? '?include-name=true' : ''
+      }`,
+      {
+        signal: abortController.signal,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    )
       .then((res) => res.json())
       .then((json) => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- ghello
         setVideoUrl(json.url as string);
         finish();
       });
-  }, [id]);
+    return () => abortController.abort();
+  }, [id, includeName]);
 
   return (
     <main className="space-y-40 -mb-8">
@@ -103,18 +132,41 @@ export default function Wrapped(props) {
                   </video>
                 ) : (
                   <progress
-                    className="rounded-lg h-[400px] w-[100%] bg-transparent"
+                    className="rounded-lg mb-[-6px] w-full bg-transparent h-auto"
+                    style={{ aspectRatio: '1280 / 720' }}
                     value={progress}
                     max={100}
                   ></progress>
                 )}
                 <div className="flex flex-col md:flex-row justify-center items-center divide-x divide-[#42424C] border-top border-[#202025]">
                   <button
-                    className="relative w-full flex gap-2 items-center justify-center transition-all bg-[#1B1B1B] px-10 py-[11.5px] h-[64px] hover:bg-[#090909] rounded-bl-lg transition-color"
+                    suppressHydrationWarning
+                    className={
+                      'relative w-full flex gap-1 items-center justify-center bg-black px-8 py-[11.5px] h-[64px] hover:bg-[#090909] rounded-bl-none md:rounded-bl-lg'
+                    }
+                    style={{
+                      background: includeName
+                        ? 'radial-gradient(ellipse 80% 70% at 50% 120%, #b28ce2, #892fda)'
+                        : undefined,
+                    }}
+                    onClick={() => {
+                      const newIncludeName = !includeName;
+                      setIncludeName(newIncludeName);
+                      const url = new URL(window.location);
+                      url.searchParams.set('include-name', `${newIncludeName}`);
+                      window.history.pushState(null, '', url.toString());
+                    }}
+                  >
+                    <div className="relative whitespace-pre text-center text-base font-semibold leading-none tracking-tight text-white z-10">
+                      Project Name
+                    </div>
+                  </button>
+                  <button
+                    className="relative w-full flex gap-1 items-center justify-center transition-all bg-black px-10 py-[11.5px] h-[64px] hover:bg-[#090909] "
                     onClick={() =>
                       window.open(
                         `https://twitter.com/intent/tweet?text=My website is part ofI just wrapped my website with @milliondotjs and it's amazing! Check it out at https://wrapped.million.dev/${id}.mp4`,
-                        '_blank',
+                        '_blank'
                       )
                     }
                   >
@@ -137,7 +189,7 @@ export default function Wrapped(props) {
                     onClick={() => {
                       // Copy to clipboard
                       void navigator.clipboard.writeText(
-                        `https://wrapped.million.dev/${id}.mp4`,
+                        `https://wrapped.million.dev/${id}.mp4`
                       );
                       setCopied(true);
 
@@ -193,7 +245,7 @@ export default function Wrapped(props) {
                     )}
                   </button>
                   <button
-                    className="relative w-full flex gap-2 items-center justify-center bg-[#1B1B1B] px-8 py-[11.5px] h-[64px] hover:bg-[#090909] rounded-br-lg transition-color"
+                    className="relative w-full flex gap-1 items-center justify-center bg-black px-8 py-[11.5px] h-[64px] hover:bg-[#090909] rounded-b-lg md:rounded-bl-none"
                     onClick={() => {
                       window.open(videoUrl, '_blank');
                     }}
