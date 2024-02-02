@@ -31,7 +31,7 @@ export default function Wrapped(props) {
   }, [id]);
 
   return (
-    <main className="space-y-40 mb-40">
+    <main className="space-y-40 -mb-8">
       <Head>
         <style
           type="text/css"
@@ -70,13 +70,16 @@ export default function Wrapped(props) {
           }}
         ></style>
       </Head>
-      <div className="relative pb-10 border-b border-b-[#ffffff1a] h-screen">
+      <div className="relative pb-10 border-b border-b-[#ffffff1a] h-screen md:flex md:align-center ">
         <Blur />
-        <RetroGrid />
-        <Container>
-          <div className="relative pt-20 md:pt-12 ml-auto">
-            <div className="lg:w-[70%] text-center mx-auto">
+        <div className="opacity-20">
+          <RetroGrid />
+        </div>
+        <div className="max-w-7xl mx-auto px-6 md:px-12 xl:px-6 md:flex pt-40 md:pt-0">
+          <div className="relative m-auto">
+            <div className="lg:w-[90%] text-center mx-auto ">
               <Tilt
+                gyroscope={true}
                 tiltMaxAngleX={2}
                 tiltMaxAngleY={4}
                 glareEnable
@@ -86,7 +89,7 @@ export default function Wrapped(props) {
               >
                 {id && videoUrl.length > 0 ? (
                   <video
-                    className="rounded-lg"
+                    className="rounded-t-lg"
                     crossOrigin="anonymous"
                     width="1280"
                     height="720"
@@ -105,9 +108,9 @@ export default function Wrapped(props) {
                     max={100}
                   ></progress>
                 )}
-                <div className="flex flex-col md:flex-row justify-center items-center divide-x divide-[#202025] border-top border-[#202025] rounded-bl-lg">
+                <div className="flex flex-col md:flex-row justify-center items-center divide-x divide-[#42424C] border-top border-[#202025]">
                   <button
-                    className="relative w-full flex gap-1 items-center justify-center transition-all bg-black px-10 py-[11.5px] h-[64px] hover:bg-[#090909] "
+                    className="relative w-full flex gap-2 items-center justify-center transition-all bg-[#1B1B1B] px-10 py-[11.5px] h-[64px] hover:bg-[#090909] rounded-bl-lg transition-color"
                     onClick={() =>
                       window.open(
                         `https://twitter.com/intent/tweet?text=My website is part ofI just wrapped my website with @milliondotjs and it's amazing! Check it out at https://wrapped.million.dev/${id}.mp4`,
@@ -125,12 +128,12 @@ export default function Wrapped(props) {
                     >
                       <path d="M16.99 0H20.298L13.071 8.26L21.573 19.5H14.916L9.702 12.683L3.736 19.5H0.426L8.156 10.665L0 0H6.826L11.539 6.231L16.99 0ZM15.829 17.52H17.662L5.83 1.876H3.863L15.829 17.52Z"></path>
                     </svg>
-                    <div className="relative whitespace-pre text-center text-base font-semibold leading-none tracking-tight text-white z-10">
+                    <div className="relative whitespace-pre text-center text-lg font-semibold leading-none tracking-tight text-white z-10">
                       Post
                     </div>
                   </button>
                   <button
-                    className="relative w-full flex gap-1 items-center justify-center bg-black px-8 py-[11.5px] h-[64px] hover:bg-[#090909]"
+                    className="relative w-full flex gap-2 items-center justify-center bg-[#1B1B1B] px-8 py-[11.5px] h-[64px] hover:bg-[#090909] transition-color"
                     onClick={() => {
                       // Copy to clipboard
                       void navigator.clipboard.writeText(
@@ -161,7 +164,7 @@ export default function Wrapped(props) {
                         >
                           <path d="M20 6L9 17l-5-5" />
                         </svg>
-                        <div className="relative whitespace-pre text-center text-base font-semibold leading-none tracking-tight text-white z-10">
+                        <div className="relative whitespace-pre text-center text-lg font-semibold leading-none tracking-tight text-white z-10">
                           Copied!
                         </div>
                       </>
@@ -183,14 +186,14 @@ export default function Wrapped(props) {
                           <path d="M6 17C4.89543 17 4 16.1046 4 15V5C4 3.89543 4.89543 3 6 3H13C13.7403 3 14.3866 3.4022 14.7324 4M11 21H18C19.1046 21 20 20.1046 20 19V9C20 7.89543 19.1046 7 18 7H11C9.89543 7 9 7.89543 9 9V19C9 20.1046 9.89543 21 11 21Z" />
                         </svg>
 
-                        <div className="relative whitespace-pre text-center text-base font-semibold leading-none tracking-tight text-white z-10">
+                        <div className="relative whitespace-pre text-center text-lg font-semibold leading-none tracking-tight text-white z-10">
                           Copy URL
                         </div>
                       </>
                     )}
                   </button>
                   <button
-                    className="relative w-full flex gap-1 items-center justify-center bg-black px-8 py-[11.5px] h-[64px] hover:bg-[#090909] rounded-br-lg"
+                    className="relative w-full flex gap-2 items-center justify-center bg-[#1B1B1B] px-8 py-[11.5px] h-[64px] hover:bg-[#090909] rounded-br-lg transition-color"
                     onClick={() => {
                       window.open(videoUrl, '_blank');
                     }}
@@ -210,7 +213,7 @@ export default function Wrapped(props) {
                       />
                     </svg>
 
-                    <div className="relative whitespace-pre text-center text-base font-semibold leading-none tracking-tight text-white z-10">
+                    <div className="relative whitespace-pre text-center text-lg font-semibold leading-none tracking-tight text-white z-10">
                       Download
                     </div>
                   </button>
@@ -218,7 +221,7 @@ export default function Wrapped(props) {
               </Tilt>
             </div>
           </div>
-        </Container>
+        </div>
       </div>
     </main>
   );
