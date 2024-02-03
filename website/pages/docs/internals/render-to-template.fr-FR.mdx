@@ -1,23 +1,22 @@
 ---
 title: 'renderToTemplate()'
-description: 'The renderToTemplate function is used to render a virtual DOM node to a string. This is used to create the template for the block and works tangentially with stringToDOM.'
+description: 'La fonction renderToTemplate est utilisée pour rendre un nœud de DOM virtuel sous forme de chaîne de caractères. Cela est utilisé pour créer le modèle du bloc et fonctionne de manière tangentielle avec stringToDOM.'
 ---
 
 import { Callout } from 'nextra-theme-docs';
 
 <Callout type="warning">
-  **This function is part of the internal API.** It is intended for developers
-  creating their own frameworks. It is not recommended for general use.
+  **Cette fonction fait partie de l'API interne.** Elle est destinée aux développeurs qui créent leurs propres frameworks. Il n'est pas recommandé de l'utiliser généralement.
 </Callout>
 
 <br />
 
 # `renderToTemplate(){:jsx}`
 
-**Syntax:** `renderToTemplate(vnode, edits){:jsx}`\
-**Example:** `renderToTemplate(<div>Hello World</div>, []){:jsx}`
+**Syntaxe:** `renderToTemplate(vnode, edits){:jsx}`\
+**Exemple:** `renderToTemplate(<div>Hello World</div>, []){:jsx}`
 
-The `renderToTemplate()` function is used to render a virtual DOM node to a string. This is used to create the template for the block and works tangentially with [`stringToDOM(){:jsx}`](/docs/internals/string-to-dom).
+La fonction `renderToTemplate()` est utilisée pour rendre un nœud de DOM virtuel sous forme de chaîne de caractères. Cela est utilisé pour créer le modèle du bloc et fonctionne de manière tangentielle avec [`stringToDOM(){:jsx}`](/docs/internals/string-to-dom).
 
 ```jsx
 import { renderToTemplate } from 'million';
@@ -30,9 +29,9 @@ console.log(template); // '<div>Hello World</div>'
 console.log(edits); // []
 ```
 
-## Holes in templates
+## Les trous dans les modèles
 
-You can also pass in Holes to the `renderToTemplate()` function. This will return the template with edits.
+Vous pouvez également passer des trous à la fonction `renderToTemplate()`. Cela renverra le modèle avec les modifications.
 
 ```jsx
 import { renderToTemplate } from 'million';

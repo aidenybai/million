@@ -1,27 +1,25 @@
 ---
 title: 'patch()'
-description: 'The patch function is used to rerender a block with another block.'
+description: 'La fonction patch est utilisée pour rerendre un bloc avec un autre bloc.'
 ---
 
 import { Callout } from 'nextra-theme-docs';
 
 <Callout type="warning">
-  **This function is part of the internal API.** It is intended for developers
-  creating their own frameworks. It is not recommended for general use.
+  **Cette fonction fait partie de l'API interne.** Elle est destinée aux développeurs qui créent leurs propres frameworks. Il n'est pas recommandé de l'utiliser généralement.
 </Callout>
 
 <br />
 
 # `patch(){:jsx}`
 
-**Syntax:** `patch(oldBlock, newBlock){:jsx}`\
-**Example:** `patch(block1, block2){:jsx}`
+**Syntaxe:** `patch(oldBlock, newBlock){:jsx}`\
+**Exemple:** `patch(block1, block2){:jsx}`
 
-The `patch` function is used to rerender a block with another block. The `oldBlock` is the block that will be rerendered, and the `newBlock` represents the new version of the DOM.
+La fonction `patch` est utilisée pour rerendre un bloc avec un autre bloc. Le `oldBlock`  est le bloc qui sera rerendu, et le `newBlock` représente la nouvelle version du DOM.
 
 <Callout>
-  Blocks must be derived from the same function when using `patch()`. This
-  ensures performance is not negatively impacted.
+  Les blocs doivent être dérivés de la même fonction lors de l'utilisation de `patch()`. Cela garantit que les performances ne sont pas impactées négativement.
 </Callout>
 
 ```jsx
