@@ -3,6 +3,11 @@ import { babel } from './babel';
 import type { Options } from './plugin';
 import { unplugin } from './plugin';
 
+const memoizedExistsSync = (path: string) => {
+  const cachedResult = new Map();
+  return () => cachedResult.get(path) ?? cachedResult.set(path, existsSync(path)).get(path);
+};
+
 export const vite = unplugin.vite;
 export const webpack = unplugin.webpack;
 export const rollup = unplugin.rollup;
@@ -15,11 +20,13 @@ export const next = (
     webpack?: (config: Record<string, any>, options: any) => any;
   } = {},
   overrideOptions: Options = {},
-): any => {
-  const millionConfig: Options = {
+) => {
+  const millionConfig = {
     mode: 'react',
     ...overrideOptions,
+    rsc: nextConfig.appDir ?? memoizedExistsSync(`${nextConfig.basePath || ''}/app`)(),
   };
+
   return {
     ...nextConfig,
     webpack(
@@ -29,12 +36,6 @@ export const next = (
         isServer: boolean;
       },
     ) {
-      if (millionConfig.rsc === undefined) {
-        millionConfig.rsc =
-          nextConfig.appDir ??
-          existsSync(`${webpackOptions.dir}${nextConfig.basePath || ''}/app`);
-      }
-
       config.plugins.unshift(
         webpack({
           server: webpackOptions.isServer,
@@ -50,6 +51,7 @@ export const next = (
     },
   };
 };
+
 export { babel };
 
 export default {
