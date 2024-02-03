@@ -1,5 +1,6 @@
 {
   "name": "million",
+  "type": "module",
   "version": "3.0.2",
   "description": "Make React Faster. Automatically.",
   "keywords": [
