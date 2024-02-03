@@ -1,1 +1,0 @@
-# `million/react-server`

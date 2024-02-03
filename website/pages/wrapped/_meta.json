@@ -1,0 +1,11 @@
+{
+  "*": {
+    "display": "hidden",
+    "theme": {
+      "layout": "full",
+      "toc": false,
+      "sidebar": false,
+      "pagination": false
+    }
+  }
+}

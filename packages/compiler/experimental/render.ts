@@ -1,5 +1,6 @@
 import * as t from '@babel/types';
-import { addNamed } from '@babel/helper-module-imports';
+// import { addNamed } from '@babel/helper-module-imports';
+import type { NodePath } from '@babel/core';
 import {
   X_CHAR,
   EventFlag,
@@ -9,9 +10,8 @@ import {
   ChildFlag,
 } from '../../million/constants';
 import type { IrEdit, IrPrunedNode, IrTreeNode } from './types';
-import type { NodePath } from '@babel/core';
 
-export const renderToString = (node: t.JSXElement) => {
+export const renderToString = (node: t.JSXElement): string => {
   const type = node.openingElement.name as t.JSXIdentifier;
   const attributes = node.openingElement.attributes;
 
@@ -63,7 +63,7 @@ export const renderToTemplate = (
   edits: IrEdit[],
   path: number[] = [],
   holes: string[] = [],
-) => {
+): t.JSXElement => {
   const attributesLength = node.openingElement.attributes.length;
   const current: IrEdit = {
     path, // The location of the edit in in the virtual node tree
@@ -248,7 +248,10 @@ export const hoistElements = (
   paths: number[][],
   path: NodePath<t.CallExpression>,
   sourceName: string,
-) => {
+): {
+  declarators: t.VariableDeclarator[];
+  accessedIds: t.Identifier[];
+} => {
   const createTreeNode = (): IrTreeNode => ({
     children: [],
     path: undefined,
@@ -282,7 +285,7 @@ export const hoistElements = (
     }
   }
 
-  const prune = (node: IrTreeNode, parent: IrPrunedNode) => {
+  const prune = (node: IrTreeNode, parent: IrPrunedNode): void => {
     let prev = parent;
     for (let i = 0, j = node.children.length; i < j; i++) {
       const treeNode = node.children[i];
@@ -305,7 +308,7 @@ export const hoistElements = (
   const root = createPrunedNode(0);
   prune(tree, root);
 
-  const getId = () => path.scope.generateUidIdentifier('el$');
+  const getId = (): t.Identifier => path.scope.generateUidIdentifier('el$');
   const firstChild = addNamed(path, 'firstChild$', sourceName);
   const nextSibling = addNamed(path, 'nextSibling$', sourceName);
 
@@ -318,7 +321,7 @@ export const hoistElements = (
     node: IrPrunedNode,
     prev: t.Identifier | t.CallExpression,
     isParent?: boolean,
-  ) => {
+  ): void => {
     if (isParent) {
       prev = t.callExpression(
         t.memberExpression(firstChild, t.identifier('call')),

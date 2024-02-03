@@ -1,29 +1,31 @@
 import { Fragment, createElement, isValidElement } from 'react';
 import { createPortal } from 'react-dom';
-import { REGISTRY, RENDER_SCOPE } from './constants';
 import type { ComponentProps, ReactNode, Ref } from 'react';
 import type { VNode } from '../million';
 import type { MillionPortal } from '../types';
+import { REGISTRY, RENDER_SCOPE } from './constants';
 
 // TODO: access perf impact of this
 export const processProps = (
   props: ComponentProps<any>,
   ref: Ref<any>,
   portals: MillionPortal[],
-) => {
+): ComponentProps<any> => {
   const processedProps: ComponentProps<any> = { ref };
 
   let currentIndex = 0;
 
   for (const key in props) {
     const value = props[key];
-    if (isValidElement(value)) {
+    if (
+      isValidElement(value) ||
+      (Array.isArray(value) && value.length && isValidElement(value[0]))
+    ) {
       processedProps[key] = renderReactScope(
         value,
         false,
         portals,
         currentIndex++,
-        false,
       );
 
       continue;
@@ -34,27 +36,35 @@ export const processProps = (
   return processedProps;
 };
 
+const wrap = (vnode: ReactNode): ReactNode => {
+  return createElement(RENDER_SCOPE, { suppressHydrationWarning: true }, vnode);
+};
+
 export const renderReactScope = (
   vnode: ReactNode,
   unstable: boolean,
   portals: MillionPortal[] | undefined,
   currentIndex: number,
-  server: boolean,
 ) => {
   const el = portals?.[currentIndex]?.current;
-  if (typeof window === 'undefined' || (server && !el)) {
-    return createElement(
-      RENDER_SCOPE,
-      { suppressHydrationWarning: true },
-      vnode,
-    );
-  }
 
-  if (
+  const isBlock =
     isValidElement(vnode) &&
     typeof vnode.type === 'function' &&
-    '__block_callable__' in vnode.type
-  ) {
+    '_c' in vnode.type;
+  const isCallable = isBlock && (vnode.type as any)._c;
+
+  if (typeof window === 'undefined') {
+    if (isBlock) {
+      if (isCallable) {
+        return vnode;
+      }
+      return wrap(wrap(vnode));
+    }
+    return wrap(vnode);
+  }
+
+  if (isCallable) {
     const puppetComponent = (vnode.type as any)(vnode.props);
     if (REGISTRY.has(puppetComponent.type)) {
       const puppetBlock = REGISTRY.get(puppetComponent.type)!;
@@ -66,13 +76,16 @@ export const renderReactScope = (
 
   const current = el ?? document.createElement(RENDER_SCOPE);
   const reactPortal = createPortal(vnode, current);
+
   const millionPortal = {
     foreign: true as const,
     current,
     portal: reactPortal,
     unstable,
   };
-  if (portals) portals[currentIndex] = millionPortal;
+  if (portals) {
+    portals[currentIndex] = millionPortal;
+  }
 
   return millionPortal;
 };

@@ -1,39 +1,32 @@
 {
   "name": "million",
-  "version": "2.6.4",
+  "version": "3.0.2",
   "description": "Make React Faster. Automatically.",
-  "main": "dist/packages/million.mjs",
-  "module": "dist/packages/million.mjs",
-  "jsdelivr": "dist/packages/million.mjs",
-  "unpkg": "dist/packages/million.mjs",
-  "types": "dist/packages/million.d.ts",
-  "scripts": {
-    "build": "unbuild",
-    "cleanup": "prettier --write ./**/*.{ts,tsx}",
-    "lint": "eslint ./packages --ext .ts --cache",
-    "lint:fix": "pnpm lint --fix",
-    "test": "vitest run --coverage",
-    "test:dev": "vitest watch",
-    "bump": "pnpm build && pnpm test && pnpm lint && publint --strict && bumpp"
+  "keywords": [
+    "million",
+    "virtualdom",
+    "vdom",
+    "library",
+    "web",
+    "ui",
+    "browser"
+  ],
+  "homepage": "https://million.dev",
+  "bugs": {
+    "url": "https://github.com/aidenybai/million/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/aidenybai/million.git"
   },
-  "files": [
-    "dist/**/*",
-    "packages/cli/dist/index.js",
-    "react.d.ts",
-    "jsx-runtime.d.ts",
-    "compiler.d.ts",
-    "react-server.d.ts",
-    "preact.d.ts",
-    "preact-server.d.ts",
-    "types.d.ts"
-  ],
-  "bin": {
-    "million": "./packages/cli/dist/index.js"
+  "funding": "https://github.com/sponsors/aidenybai",
+  "license": "MIT",
+  "author": {
+    "name": "Aiden Bai",
+    "email": "hello@aidenybai.com",
+    "url": "https://aidenybai.com"
   },
+  "sideEffects": false,
   "exports": {
     ".": {
       "import": {
@@ -85,26 +78,6 @@
         "default": "./dist/packages/react-server.cjs"
       }
     },
-    "./preact": {
-      "import": {
-        "types": "./dist/packages/preact.d.mts",
-        "default": "./dist/packages/preact.mjs"
-      },
-      "require": {
-        "types": "./dist/packages/preact.d.ts",
-        "default": "./dist/packages/preact.cjs"
-      }
-    },
-    "./preact-server": {
-      "import": {
-        "types": "./dist/packages/preact-server.d.mts",
-        "default": "./dist/packages/preact-server.mjs"
-      },
-      "require": {
-        "types": "./dist/packages/preact-server.d.ts",
-        "default": "./dist/packages/preact-server.cjs"
-      }
-    },
     "./types": {
       "import": {
         "types": "./dist/packages/types.d.mts",
@@ -114,67 +87,70 @@
         "types": "./dist/packages/types.d.ts",
         "default": "./dist/packages/types.cjs"
       }
-    }
+    },
+    "./*": "./*"
   },
-  "packageManager": "pnpm@8.1.1",
-  "sideEffects": false,
-  "keywords": [
-    "million",
-    "virtualdom",
-    "vdom",
-    "library",
-    "web",
-    "ui",
-    "browser"
+  "main": "dist/packages/million.mjs",
+  "jsdelivr": "dist/packages/million.mjs",
+  "unpkg": "dist/packages/million.mjs",
+  "module": "dist/packages/million.mjs",
+  "types": "dist/packages/million.d.ts",
+  "bin": {
+    "million": "./packages/cli/dist/index.js"
+  },
+  "files": [
+    "dist/**/*",
+    "packages/cli/dist/index.js",
+    "react.d.ts",
+    "jsx-runtime.d.ts",
+    "compiler.d.ts",
+    "react-server.d.ts",
+    "types.d.ts"
   ],
-  "funding": "https://github.com/sponsors/aidenybai",
-  "author": {
-    "name": "Aiden Bai",
-    "email": "hello@aidenybai.com",
-    "url": "https://aidenybai.com"
+  "scripts": {
+    "build": "unbuild",
+    "bump": "pnpm build && pnpm test && pnpm lint && bumpp",
+    "cleanup": "prettier --write ./**/*.{ts,tsx}",
+    "lint": "eslint ./packages --ext .ts --cache",
+    "lint:fix": "pnpm lint --fix",
+    "test": "vitest run --coverage",
+    "test:dev": "vitest watch"
   },
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/aidenybai/million/issues"
-  },
-  "homepage": "https://github.com/aidenybai/million",
   "prettier": "@vercel/style-guide/prettier",
   "dependencies": {
-    "@babel/core": "^7.21.0",
-    "@babel/generator": "^7.22.7",
-    "@babel/plugin-syntax-jsx": "^7.21.4",
-    "@babel/plugin-syntax-typescript": "^7.21.4",
-    "@babel/types": "^7.21.3",
+    "@babel/core": "^7.23.7",
+    "@babel/types": "^7.23.6",
+    "@rollup/pluginutils": "^5.1.0",
     "kleur": "^4.1.5",
-    "rollup": "^3.28.0",
-    "unplugin": "^1.3.1"
+    "undici": "^6.3.0",
+    "unplugin": "^1.6.0"
   },
   "devDependencies": {
-    "@rollup/plugin-replace": "^5.0.2",
-    "@types/babel__core": "^7.20.0",
-    "@types/babel__generator": "^7.6.4",
-    "@types/babel-types": "^7.0.11",
-    "@types/node": "^18.14.1",
-    "@typescript-eslint/eslint-plugin": "^5.53.0",
-    "@typescript-eslint/parser": "^5.53.0",
-    "@vercel/style-guide": "^3.0.0",
-    "@vitejs/plugin-react": "^4.0.0",
-    "@vitest/coverage-v8": "^0.32.0",
-    "bumpp": "^9.2.0",
-    "c8": "^7.13.0",
+    "@rollup/plugin-replace": "^5.0.5",
+    "@types/babel__core": "^7.20.5",
+    "@types/node": "^18.19.4",
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
+    "@typescript-eslint/parser": "^5.62.0",
+    "@vercel/style-guide": "^5.1.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "@vitest/coverage-v8": "^1.1.1",
+    "babel-plugin-tester": "^11.0.4",
+    "bumpp": "^9.2.1",
+    "c8": "^7.14.0",
     "esbuild": "^0.14.54",
-    "eslint": "^8.34.0",
-    "eslint-config-prettier": "^8.6.0",
-    "jsdom": "^21.1.0",
-    "prettier": "^2.8.4",
-    "publint": "^0.1.12",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^8.10.0",
+    "jsdom": "^21.1.2",
+    "prettier": "^3.1.1",
+    "rollup": "^4.9.2",
     "rollup-plugin-banner2": "^1.2.2",
     "source-map": "^0.7.4",
-    "tslib": "^2.5.0",
-    "typescript": "^5.1.6",
-    "unbuild": "2.0.0-rc.0",
-    "vite": "^4.4.9",
-    "vite-tsconfig-paths": "^4.2.0",
-    "vitest": "0.32.0"
-  }
+    "tslib": "^2.6.2",
+    "typescript": "^5.3.3",
+    "unbuild": "2.0.0",
+    "vite": "^5.0.12",
+    "vite-tsconfig-paths": "^4.2.3",
+    "vitest": "1.0.1"
+  },
+  "packageManager": "pnpm@8.1.1"
 }

@@ -36,6 +36,9 @@ export abstract class AbstractBlock {
   /* edits */ e?: Edit[];
   /* el */ l?: HTMLElement | null;
   /* getElements */ g?: ((root: HTMLElement) => HTMLElement[]) | null;
+  /* _shouldUpdate */ _u?:
+    | ((oldProps: MillionProps, newProps: MillionProps) => boolean)
+    | null;
   /* _parent */ _t?: HTMLElement | null;
   /* props */ d?: MillionProps | null;
   /* key */ k?: string | null;
@@ -44,17 +47,18 @@ export abstract class AbstractBlock {
   /* mount */ abstract m(
     parent?: HTMLElement,
     refNode?: Node | null,
+    hydrateNode?: Node | null
   ): HTMLElement;
   /* move */ abstract v(
     block: AbstractBlock | null,
-    refNode: Node | null,
+    refNode: Node | null
   ): void;
   /* remove */ abstract x(): void;
-  /* toString */ abstract s(): string;
   /* shouldUpdate */ abstract u(
     oldProps: MillionProps,
-    newProps: MillionProps,
+    newProps: MillionProps
   ): boolean;
+  /* toString */ abstract s(): string;
   /* parent */ abstract t(): HTMLElement | null | undefined;
 }
 

@@ -1,16 +1,13 @@
 import '../styles/global.css';
 import { Analytics } from '@vercel/analytics/react';
-import { SpeedInsights } from "@vercel/speed-insights/next"
-import { LiveProvider } from '../components/live';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export default function App({ Component, pageProps }) {
   return (
-    <LiveProvider>
-      <main>
-        <Component {...pageProps} />
-        <Analytics />
-        <SpeedInsights />
-      </main>
-    </LiveProvider>
+    <main>
+      <Component {...pageProps} />
+      <Analytics />
+      <SpeedInsights />
+    </main>
   );
 }

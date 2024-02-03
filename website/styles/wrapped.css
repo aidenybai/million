@@ -1,0 +1,7 @@
+.nextra-sidebar-container {
+  display: none;
+}
+
+article > main {
+  padding: 0;
+}
