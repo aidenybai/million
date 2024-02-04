@@ -4,8 +4,11 @@ date: FEB 2, 2024
 description: Compiler overhaul, stability improvements, and the road ahead.
 ---
 
+import Thumbnail from '../../public/v3-thumbnail.png';
+import Image from "next/image"
+
 <div className="flex justify-center mt-5">
-  <img src="/v3-thumbnail.png" width="100%" />
+  <Image src={Thumbnail} width="100%" />
 </div>
 
 <div className="flex flex-col items-center gap-4">
@@ -30,7 +33,15 @@ Since launching Million 1 & 2, we have found that this approach works exceptiona
 Million 3 is a signficant update that solves these issues. We believe that Million 3 is the best way to build React applications, and we are excited to share it with you.
 
 <div className="mt-3 flex justify-center">
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/VkezQMb1DHw?si=dHe45lhM2uTOBQP9" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+  <iframe
+    width="560"
+    height="315"
+    src="https://www.youtube.com/embed/VkezQMb1DHw?si=dHe45lhM2uTOBQP9"
+    title="YouTube video player"
+    frameBorder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowFullscreen
+  ></iframe>
 </div>
 
 ## What's new?
@@ -49,7 +60,7 @@ The biggest challenge with Million 2 was hydration. In React, hydration is the p
 
 In Million 3, we have introduced a new hydration system that only traverses the parts of the component that are dynamic, resulting in `O(d)` time complexity (where `d` is the number of dynamic nodes, `d` ≤ `n`).
 
-```jsx /\{count\}/ /\{handleClick\}/
+```jsx /{count}/ /{handleClick}/
 // Million 3 only hydrates `handleClick` and `count` (✨ ✅)
 <div>
   <h1>Hello, world!</h1>
@@ -91,7 +102,7 @@ Even within the React ecosystem, there is a basic lack of understanding on how t
 
 We need to build tools that make it easy to deliver fast applications, regardless of the framework, platform, or the size of your engineering team.
 
-At Million, we have a simple thesis for software performance – we can build tools that make *existing* tooling fast and easy to use. Developers should think only of shipping features and fixing bugs – not keeping their apps fast. We plan to start with React, then extend to the roader frontend, backend, and other platforms.
+At Million, we have a simple thesis for software performance – we can build tools that make _existing_ tooling fast and easy to use. Developers should think only of shipping features and fixing bugs – not keeping their apps fast. We plan to start with React, then extend to the roader frontend, backend, and other platforms.
 
 I invite you to join Million on this journey. We are looking for talented frontend (dev tools) and pl/ml engineers to join us in the Bay Area. If you are interested, please email [aiden@million.dev](aiden@million.dev) with your resume and something you built using Million.
 
