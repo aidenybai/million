@@ -220,8 +220,9 @@ const config: DocsThemeConfig = {
     const isWrapped = pathname.startsWith('/wrapped/');
     if (isWrapped) {
       const name = query?.name ?? 'My React app';
+      const id = (query.id as string).split('.')[0];
       ogUrl = `https://telemetry.million.dev/api/v1/og/wrapped/${
-        query.id
+        id
       }.mp4?name=${encodeURIComponent(name as any)}`;
       title = name + ' Wrapped | Million.js';
     }
