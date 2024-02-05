@@ -4,6 +4,7 @@ import Tilt from 'react-parallax-tilt';
 import { Blur } from '../home/hero';
 import { RetroGrid } from '../retro-grid';
 import { useMockProgress } from './useMockProgress';
+import { track } from '@vercel/analytics';
 
 // eslint-disable-next-line import/no-default-export -- This is the default export
 export default function Wrapped(props) {
@@ -29,6 +30,7 @@ export default function Wrapped(props) {
   }, []);
 
   const setNameName = (newName: string): void => {
+    track('wrapped/set-name');
     setName(newName);
     const url = new URL(window.location.href);
     url.searchParams.set('name', newName);
@@ -36,6 +38,7 @@ export default function Wrapped(props) {
   };
 
   useEffect(() => {
+    track('wrapped/generate-video');
     setVideoUrl('');
     start();
     const abortController = new AbortController();
@@ -219,7 +222,10 @@ export default function Wrapped(props) {
                         className="relative w-full flex gap-1 items-center justify-center transition-all bg-black px-10 py-[11.5px] h-[64px] hover:bg-[#090909] "
                         onClick={() =>
                           window.open(
-                            'https://twitter.com/intent/tweet?text=' + encodeURIComponent(`I just ran npx million@latest and it made my react app faster! Check it out at ${window.location.href}`),
+                            'https://twitter.com/intent/tweet?text=' +
+                              encodeURIComponent(
+                                `I just ran npx million@latest and it made my react app faster! Check it out at ${window.location.href} #millionwrapped`,
+                              ),
                             '_blank',
                           )
                         }
@@ -241,6 +247,7 @@ export default function Wrapped(props) {
                       <button
                         className="relative w-full flex gap-1 items-center justify-center bg-black px-8 py-[11.5px] h-[64px] hover:bg-[#090909]  md:rounded-bl-none"
                         onClick={() => {
+                          track('wrapped/copy-url');
                           // Copy current url to clipboard
                           void navigator.clipboard.writeText(
                             window.location.href,
@@ -301,6 +308,7 @@ export default function Wrapped(props) {
                       <button
                         className="relative w-full flex gap-1 items-center justify-center bg-black px-8 py-[11.5px] h-[64px] hover:bg-[#090909] rounded-b-lg md:rounded-bl-none"
                         onClick={() => {
+                          track('wrapped/download');
                           window.open(videoUrl, '_blank');
                         }}
                       >
