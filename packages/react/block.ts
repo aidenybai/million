@@ -1,14 +1,14 @@
-import { createElement, Fragment, useCallback, useMemo, useRef } from 'react';
 import type { ComponentType, Ref } from 'react';
+import { Fragment, createElement, useCallback, useMemo, useRef } from 'react';
 import {
   block as createBlock,
   mount$,
   patch as patchBlock,
 } from '../million/block';
-import { MapSet$, MapHas$ } from '../million/constants';
-import type { Options, MillionProps, MillionPortal } from '../types';
+import { MapHas$, MapSet$ } from '../million/constants';
+import type { MillionPortal, MillionProps, Options } from '../types';
+import { Effect, REGISTRY, RENDER_SCOPE, SVG_RENDER_SCOPE } from './constants';
 import { processProps, unwrap } from './utils';
-import { Effect, RENDER_SCOPE, REGISTRY, SVG_RENDER_SCOPE } from './constants';
 
 export const block = <P extends MillionProps>(
   fn: ComponentType<P> | null,
@@ -65,17 +65,14 @@ export const block = <P extends MillionProps>(
 
     const childrenSize = portalRef.current.length;
     const children = new Array(childrenSize);
-
-    children[0] = marker;
-    children[1] = createElement(Effect, {
-      effect,
-      deps: hmrTimestamp ? [hmrTimestamp] : [],
-    });
     for (let i = 0; i < childrenSize; ++i) {
-      children[i + 2] = portalRef.current[i]?.portal;
+      children[i] = portalRef.current[i]?.portal;
     }
 
-    const vnode = createElement(Fragment, { children });
+    const vnode = createElement(Fragment, {}, marker, createElement(Effect, {
+      effect,
+      deps: hmrTimestamp ? [hmrTimestamp] : [],
+    }), children);
 
     return vnode;
   };
