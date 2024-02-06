@@ -14,6 +14,7 @@ export const block = <P extends MillionProps>(
   fn: ComponentType<P> | null,
   options: Options<P> | null | undefined = {},
 ) => {
+  console.log('here')
   let blockTarget: ReturnType<typeof createBlock> | null = options?.block;
   const defaultType = options?.svg ? SVG_RENDER_SCOPE : RENDER_SCOPE;
 
