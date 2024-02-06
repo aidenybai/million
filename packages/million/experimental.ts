@@ -1,1 +1,3 @@
-export const experimental_noSlot = false
+export const experimental_options = {
+  noSlot: false
+}

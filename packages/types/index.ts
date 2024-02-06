@@ -12,6 +12,7 @@ export interface Options<T extends MillionProps> {
   as?: string;
   rsc?: boolean;
   compiled?: boolean;
+  experimental_noSlot?: boolean
 }
 
 export interface MillionArrayProps<T> {
