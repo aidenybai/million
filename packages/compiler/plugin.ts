@@ -27,7 +27,19 @@ async function compile(
 ): Promise<CompilerOutput> {
   displayIntro(options);
   
-  const plugins: ParserOptions['plugins'] = ['jsx'];
+  const plugins: ParserOptions['plugins'] = [
+    'jsx',
+    // import { example } from 'example' with { example: true };
+    'importAttributes',
+    // () => throw example
+    'throwExpressions',
+    // You know what this is
+    'decorators',
+    // const { #example: example } = this;
+    'destructuringPrivate',
+    // using example = myExample()
+    'explicitResourceManagement',
+  ];
 
   if (/\.[mc]?tsx?$/i.test(id)) {
     plugins.push('typescript');
