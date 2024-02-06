@@ -10,7 +10,7 @@ import { displayIntro } from './utils/log';
 // import { babel } from './babel';
 import type { CompilerOptions } from './types';
 
-const DEFAULT_INCLUDE = '**/*.{jsx,tsx,ts,js,mjs,cjs}';
+const DEFAULT_INCLUDE = '**/*.{jsx,tsx}';
 const DEFAULT_EXCLUDE = 'node_modules/**/*.{jsx,tsx,ts,js,mjs,cjs}';
 
 interface CompilerOutput {
