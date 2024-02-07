@@ -63,6 +63,16 @@ export const translations = {
         "Welcome to the Million.js community. Let's build something great.",
       getStarted: 'Get started →',
     },
+    ai:{
+      youWrIteCode: 'You write code.',
+      weMakeItFast: 'We make it fast',
+      description:
+      {
+        tool:'A GitHub bot to detect, diagnose, and fix slow components in your React application',
+        automaticallyBold:'– automatically',
+        goal: 'Designed for companies that want to ship fast and stay fast.',
+      },
+    },
   },
   'fr-FR': {
     hero: {
@@ -127,6 +137,16 @@ export const translations = {
       welcome:
         "Bienvenue dans la communauté Million.js. Construisons quelque chose d'incroyable.",
       getStarted: 'Commencer →',
+    },
+    ai:{
+      youWrIteCode: 'Vous écrivez du code.',
+      weMakeItFast: "Nous l'optimison",
+      description:
+      {
+        tool:'Un bot GitHub pour détecter, diagnostiquer et réparer les composants lents dans votre application React',
+        automaticallyBold:'automatiquement',
+        goal: 'Conçu pour les entreprises qui veulent livrer rapidement et rester rapides.',
+      },
     },
   },
   'es-ES': {
