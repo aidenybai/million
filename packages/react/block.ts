@@ -54,14 +54,13 @@ export const block = <P extends MillionProps>(
         ref.current.textContent = '';
       }
       if (noSlot) {
-        debugger
         ref.current = (parentRef.current ?? container.current) as HTMLElement;
         if (ref.current.childNodes.length) {
-          throw new Error(`\`experimental_options.noSlot\` does not support having siblings at the moment.
+          console.error(new Error(`\`experimental_options.noSlot\` does not support having siblings at the moment.
 The block element should be the only child of the \`${
             (cloneNode$.call(ref.current) as HTMLElement).outerHTML
           }\` element.
-To avoid this error, \`experimental_options.noSlot\` should be false`);
+To avoid this error, \`experimental_options.noSlot\` should be false`));
         }
       }
       if (patch.current === null || hmrTimestamp) {
@@ -83,7 +82,7 @@ To avoid this error, \`experimental_options.noSlot\` should be false`);
     }, []);
 
     const marker = useMemo(() => {
-      if (experimental_options.noSlot) {
+      if (noSlot) {
         return null
       }
       return createElement(options?.as ?? defaultType, { ref });
