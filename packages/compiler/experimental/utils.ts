@@ -45,6 +45,7 @@ export const chainOrLogic = (
 export const createDirtyChecker = (holes: string[]) => {
   const oldProps = t.identifier('a');
   const newProps = t.identifier('b');
+  if (holes.length === 0) return null;
   return t.arrowFunctionExpression(
     [oldProps, newProps],
     chainOrLogic(
@@ -53,9 +54,9 @@ export const createDirtyChecker = (holes: string[]) => {
         return t.binaryExpression(
           '!==',
           t.optionalMemberExpression(oldProps, id, false, true),
-          t.optionalMemberExpression(newProps, id, false, true),
+          t.optionalMemberExpression(newProps, id, false, true)
         );
-      }),
-    ),
+      })
+    )
   );
 };

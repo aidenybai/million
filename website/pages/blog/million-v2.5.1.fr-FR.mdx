@@ -1,7 +1,7 @@
 ---
 title: 'Million.js v2.5.1'
 date: JUL 21, 2023
-description: Virtualizing the Virtual DOM
+description: Virtualiser le DOM virtuel
 ---
 
 import Image from 'next/image';
@@ -9,7 +9,6 @@ import { Callout, Tab, Tabs } from 'nextra-theme-docs';
 import { Tweet } from 'react-tweet';
 import { CarbonAds } from '../../components/ad';
 import { Bounties } from '../../components/bounties';
-
 
 <div className="flex flex-col items-center gap-4">
 
@@ -22,7 +21,7 @@ import { Bounties } from '../../components/bounties';
 
 <Bounties />
 
-Million.js v2.5.1 brings a ton of new features and bug fixes! Make sure to upgrade your Million.js version to latest:
+Million.js v2.5.1 apporte de nombreuses nouvelles fonctionnalités et corrections de bugs ! Assurez-vous de mettre à jour votre version de Million.js vers la dernière :
 
 <Tabs items={['npm', 'pnpm', 'yarn']} storageKey="selected-pkg-manager">
   {/* prettier-ignore */}
@@ -49,20 +48,20 @@ Let's dig straight into it:
 
 <CarbonAds />
 
-## Virtualization
+## Virtualisation
 
-Last week, I released a sneak peek of Million.js virtualizing in React. This week, I'm happy to announce that virtualization is now available in Million.js via TanStack Virtual! You can check out the virtualizing guide [here](/docs/virtualization) to get started.
+La semaine dernière, j'ai publié un aperçu de la virtualisation de Million.js dans React. Cette semaine, je suis heureux d'annoncer que la virtualisation est désormais disponible dans Million.js via TanStack Virtual ! Vous pouvez consulter le guide sur la virtualisation [ici](/docs/virtualization) pour commencer.
 
 <Callout type="info">
-  Want to compare Million.js vs React virtualization? Check out [this
-  demo!](https://million-tanstack-virtual.vercel.app/)
+  Vous voulez comparer Million.js avec la virtualisation de React ? Consultez
+  [ce démo !](https://million-tanstack-virtual.vercel.app/)
 </Callout>
 
 <Tweet id="1680005514821001216" />
 
-## Analytics
+## Analytique
 
-Million.js supports a new `analytics` option, where you can hook into the compiler and get insight into blocks. Here's a basic example of how you can use it:
+Million.js prend en charge une nouvelle option `analytics`, qui vous permet de vous connecter au compilateur et d'obtenir un aperçu des blocs. Voici un exemple de base de la façon dont vous pouvez l'utiliser :
 
 ```js
 const ComponentBlock = block(Component, {
@@ -77,6 +76,6 @@ const ComponentBlock = block(Component, {
 });
 ```
 
-## More
+## Plus
 
-You can view the full release here: [https://github.com/aidenybai/million/releases/tag/v2.5.1](https://github.com/aidenybai/million/releases/tag/v2.5.1)
+Vous pouvez consulter la version complète ici : [https://github.com/aidenybai/million/releases/tag/v2.5.1](https://github.com/aidenybai/million/releases/tag/v2.5.1)

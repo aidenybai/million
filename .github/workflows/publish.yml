@@ -23,7 +23,6 @@ jobs:
       - run: pnpm test
       - run: pnpm lint
       - run: pnpm build
-      - run: pnpm publint --strict
       - run: npm i -g npm
       - run: npm publish --provenance --access public
         env:

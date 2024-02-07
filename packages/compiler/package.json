@@ -2,15 +2,17 @@
   "private": true,
   "main": "./index.ts",
   "module": "./index.ts",
-  "dependencies": {
-    "@babel/helper-module-imports": "^7.18.6",
-    "@babel/helper-plugin-utils": "^7.20.2",
-    "@babel/types": "^7.21.3",
-    "unplugin": "^1.3.0"
-  },
   "devDependencies": {
-    "@types/babel-types": "^7.0.11",
-    "@types/babel__helper-module-imports": "^7.18.0",
-    "@types/babel__helper-plugin-utils": "^7.10.0"
+    "@rollup/pluginutils": "^5.0.5",
+    "@types/babel-types": "^7.0.15",
+    "@types/babel__core": "^7.20.5",
+    "@types/babel__generator": "^7.6.8",
+    "@types/babel__helper-module-imports": "^7.18.3",
+    "@types/which-pm-runs": "^1.0.2"
+  },
+  "dependencies": {
+    "ci-info": "^4.0.0",
+    "is-docker": "^3.0.0",
+    "which-pm-runs": "^1.1.0"
   }
 }

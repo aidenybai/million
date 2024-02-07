@@ -1,8 +1,8 @@
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 import * as clack from '@clack/prompts';
-import { abort } from './utils';
 import type { PackageDotJson } from '../types';
+import { abort } from './utils';
 
 /**
  * Get the package.json dependencies and devDependencies

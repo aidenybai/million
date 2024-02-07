@@ -3,7 +3,7 @@ export const translations = {
     hero: {
       makeReact: 'Make React',
       faster: 'faster',
-      the: 'the',
+      the: 'The',
       dropIn: 'drop-in optimizing compiler',
       forReact:
         'for React. Gain big performance wins for UI and data heavy React apps. Dead simple to use – try it out',
@@ -62,6 +62,45 @@ export const translations = {
       welcome:
         "Welcome to the Million.js community. Let's build something great.",
       getStarted: 'Get started →',
+    },
+    faqs: {
+      frequently: 'Frequently asked questions',
+      description:
+        'You can find more specific information about the library by digging into the documentation and reading our blog articles.',
+      fast: 'How is it fast?',
+      novelApproach:
+        'It uses a novel approach to the virtual DOM called the block virtual DOM. You can read more on what the block virtual DOM is with',
+      virtualDom: 'Virtual DOM: Back in Block',
+      makeItHappen: 'and how we make it happen in React with',
+      block: 'Behind the block()',
+      compare: 'How does it compare to',
+      JSFramework: '[insert fast JS framework]',
+      depends:
+        "Depends on what you're asking. If you're asking about performance, you can view a subjective truth with the",
+      benchmark: 'JS Framework Benchmark',
+      useCase:
+        "If you're asking about features, it depends. Million.js' main use case is for optimizing UI / data heavy React applications. Ultimately you should be choosing the framework that works best for you, your team, and  your project.",
+      doesItWork: 'Does it work with Preact, Next.js, etc.?',
+      probably:
+        'If it uses React or Preact, then probably. You can reference the full list of supported tools on the',
+      guide: 'Installation Guide',
+      limitations: 'What are the limitations?',
+      viewList: 'You can view the list of current limitations in the',
+      rulesOfBlocks: 'Rules of Blocks',
+      importantNote:
+        "We are actively working on removing these limitations. It's also  important to note that your application may not need Million.js – if your app is not UI heavy, you may not see much performance improvement.",
+      isItMemo: 'Is this just memo?',
+      memoization:
+        ' While React provides memoization utilities, Million.js takes a drastically different approach. Instead of trying to reduce and avoid rerendering, it makes the render process faster. Because fundamentally, memoization is a band-aid, especially if you have a lot of dynamic data. You can check out our blog article',
+      backInBlock: 'Virtual DOM: Back in Block',
+      learnMore:
+        'to learn more about how Million works with React under the hood.',
+      logo: 'What is the logo supposed to be?',
+      he: "He's",
+      milTheLion: 'Mil the Lion!',
+      friendlyMascot: "He's the friendly mascot of the Million.js project.",
+      nobite: "don't worry, he doesn't bite, but he will",
+      byte: 'byte!',
     },
     ai:{
       youWrIteCode: 'You write code.',
@@ -138,15 +177,45 @@ export const translations = {
         "Bienvenue dans la communauté Million.js. Construisons quelque chose d'incroyable.",
       getStarted: 'Commencer →',
     },
-    ai:{
-      youWrIteCode: 'Vous écrivez du code.',
-      weMakeItFast: "Nous l'optimison",
+    faqs: {
+      frequently: 'Foire aux questions',
       description:
-      {
-        tool:'Un bot GitHub pour détecter, diagnostiquer et réparer les composants lents dans votre application React',
-        automaticallyBold:'automatiquement',
-        goal: 'Conçu pour les entreprises qui veulent livrer rapidement et rester rapides.',
-      },
+        'Vous pouvez trouver des informations plus spécifiques sur la bibliothèque en creusant dans la documentation et en lisant nos articles de blog.',
+      fast: "Comment est-ce que c'est rapide?",
+      novelApproach:
+        "Il utilise une nouvelle approche du DOM virtuel appelée DOM virtuel en bloc. Vous pouvez en savoir plus sur ce qu'est le bloc DOM virtuel avec",
+      virtualDom: 'DOM virtuel : Retour dans le bloc',
+      makeItHappen: 'Et comment nous y parvenons dans React avec',
+      block: 'Derrière le bloc()',
+      compare: 'Comment se compare-t-il à',
+      JSFramework: '[Insérer un framework JS rapide]',
+      depends:
+        'Cela dépend de ce que vous demandez. Si vous posez des questions sur la performance, vous pouvez voir une vérité subjective avec le',
+      benchmark: 'JS Framework Benchmark.',
+      useCase:
+        "Si vous posez des questions sur les fonctionnalités, cela dépend. Le principal cas d'utilisation de Million.js est d'optimiser l'interface utilisateur / les applications React lourdes de données. En fin de compte, vous devriez choisir le cadre qui fonctionne le mieux pour vous, votre équipe et votre projet.",
+      doesItWork: 'Fonctionne-t-il avec Preact, Next.js, etc.?',
+      probably:
+        "S'il utilise React ou Preact, alors probablement. Vous pouvez consulter la liste complète des outils pris en charge sur le",
+      guide: "Guide d'installation",
+      limitations: 'Quelles sont les limites?',
+      viewList:
+        'Vous pouvez consulter la liste des limitations actuelles dans le',
+      rulesOfBlocks: 'Règles des blocs',
+      importantNote:
+        "Nous travaillons activement à la suppression de ces limitations. Il est également important de noter que votre application peut ne pas avoir besoin de Million.js - si votre application n'est pas lourde en matière d'interface utilisateur, il se peut que vous ne voyiez pas beaucoup d'amélioration des performances.",
+      isItMemo: 'Est-ce juste un mémo?',
+      memoization:
+        "Alors que React fournit des utilitaires de mémorisation, Million.js adopte une approche radicalement différente. Au lieu d'essayer de réduire et d'éviter le rendu, cela rend le processus de rendu plus rapide. Parce que fondamentalement, la mémorisation est un bandement, surtout si vous avez beaucoup de données dynamiques. Vous pouvez consulter notre article de blog",
+      backInBlock: 'DOM virtuel : Retour dans le bloc',
+      learnMore:
+        'Pour en savoir plus sur le fonctionnement de Million avec React sous le capot.',
+      logo: 'Quel est censé être le logo ?',
+      he: 'Il est',
+      milTheLion: 'Mil le Lion !',
+      friendlyMascot: "C'est la mascotte amicale du projet Million.js",
+      nobite: 'Ne vous inquiétez pas, il ne mord pas, mais il le fera',
+      byte: 'byte!',
     },
   },
   'es-ES': {
@@ -213,6 +282,45 @@ export const translations = {
         "Welcome to the Million.js community. Let's build something great.",
       getStarted: 'Get started →',
     },
+    faqs: {
+      frequently: 'Frequently asked questions',
+      description:
+        'You can find more specific information about the library by digging into the documentation and reading our blog articles.',
+      fast: 'How is it fast?',
+      novelApproach:
+        'It uses a novel approach to the virtual DOM called the block virtual DOM. You can read more on what the block virtual DOM is with',
+      virtualDom: 'Virtual DOM: Back in Block',
+      makeItHappen: 'and how we make it happen in React with',
+      block: 'Behind the block()',
+      compare: 'How does it compare to',
+      JSFramework: '[insert fast JS framework]',
+      depends:
+        "Depends on what you're asking. If you're asking about performance, you can view a subjective truth with the",
+      benchmark: 'JS Framework Benchmark',
+      useCase:
+        "If you're asking about features, it depends. Million.js' main use case is for optimizing UI / data heavy React applications. Ultimately you should be choosing the framework that works best for you, your team, and  your project.",
+      doesItWork: 'Does it work with Preact, Next.js, etc.?',
+      probably:
+        'If it uses React or Preact, then probably. You can reference the full list of supported tools on the',
+      guide: 'Installation Guide',
+      limitations: 'What are the limitations?',
+      viewList: 'You can view the list of current limitations in the',
+      rulesOfBlocks: 'Rules of Blocks',
+      importantNote:
+        "We are actively working on removing these limitations. It's also  important to note that your application may not need Million.js – if your app is not UI heavy, you may not see much performance improvement.",
+      isItMemo: 'Is this just memo?',
+      memoization:
+        ' While React provides memoization utilities, Million.js takes a drastically different approach. Instead of trying to reduce and avoid rerendering, it makes the render process faster. Because fundamentally, memoization is a band-aid, especially if you have a lot of dynamic data. You can check out our blog article',
+      backInBlock: 'Virtual DOM: Back in Block',
+      learnMore:
+        'to learn more about how Million works with React under the hood.',
+      logo: 'What is the logo supposed to be?',
+      he: "He's",
+      milTheLion: 'Mil the Lion!',
+      friendlyMascot: "He's the friendly mascot of the Million.js project.",
+      nobite: "don't worry, he doesn't bite, but he will",
+      byte: 'byte!',
+    },
   },
   'zh-CN': {
     hero: {
@@ -277,6 +385,45 @@ export const translations = {
       welcome:
         "Welcome to the Million.js community. Let's build something great.",
       getStarted: 'Get started →',
+    },
+    faqs: {
+      frequently: 'Frequently asked questions',
+      description:
+        'You can find more specific information about the library by digging into the documentation and reading our blog articles.',
+      fast: 'How is it fast?',
+      novelApproach:
+        'It uses a novel approach to the virtual DOM called the block virtual DOM. You can read more on what the block virtual DOM is with',
+      virtualDom: 'Virtual DOM: Back in Block',
+      makeItHappen: 'and how we make it happen in React with',
+      block: 'Behind the block()',
+      compare: 'How does it compare to',
+      JSFramework: '[insert fast JS framework]',
+      depends:
+        "Depends on what you're asking. If you're asking about performance, you can view a subjective truth with the",
+      benchmark: 'JS Framework Benchmark',
+      useCase:
+        "If you're asking about features, it depends. Million.js' main use case is for optimizing UI / data heavy React applications. Ultimately you should be choosing the framework that works best for you, your team, and  your project.",
+      doesItWork: 'Does it work with Preact, Next.js, etc.?',
+      probably:
+        'If it uses React or Preact, then probably. You can reference the full list of supported tools on the',
+      guide: 'Installation Guide',
+      limitations: 'What are the limitations?',
+      viewList: 'You can view the list of current limitations in the',
+      rulesOfBlocks: 'Rules of Blocks',
+      importantNote:
+        "We are actively working on removing these limitations. It's also  important to note that your application may not need Million.js – if your app is not UI heavy, you may not see much performance improvement.",
+      isItMemo: 'Is this just memo?',
+      memoization:
+        ' While React provides memoization utilities, Million.js takes a drastically different approach. Instead of trying to reduce and avoid rerendering, it makes the render process faster. Because fundamentally, memoization is a band-aid, especially if you have a lot of dynamic data. You can check out our blog article',
+      backInBlock: 'Virtual DOM: Back in Block',
+      learnMore:
+        'to learn more about how Million works with React under the hood.',
+      logo: 'What is the logo supposed to be?',
+      he: "He's",
+      milTheLion: 'Mil the Lion!',
+      friendlyMascot: "He's the friendly mascot of the Million.js project.",
+      nobite: "don't worry, he doesn't bite, but he will",
+      byte: 'byte!',
     },
   },
 } as const;

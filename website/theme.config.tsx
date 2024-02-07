@@ -188,7 +188,9 @@ const config: DocsThemeConfig = {
     extraContent: <TwitterXIcon />,
   },
   head: () => {
-    const { asPath, pathname } = useRouter();
+    const { asPath, pathname, query } = useRouter();
+    const id = String(query.id);
+    const name = String(query.name);
     const { frontMatter } = useConfig();
 
     const ogConfig = {
@@ -200,7 +202,7 @@ const config: DocsThemeConfig = {
       favicon: '/favicon.svg',
     };
     const favicon = String(ogConfig.favicon);
-    const title = String(frontMatter.title || ogConfig.title);
+    let title = String(frontMatter.title || ogConfig.title);
     const description = String(frontMatter.description || ogConfig.description);
     const note =
       (frontMatter.date as string | undefined) ?? pathname === '/'
@@ -208,10 +210,22 @@ const config: DocsThemeConfig = {
         : pathname;
     const canonical = new URL(asPath, 'https://million.dev').toString();
 
-    const ogUrl =
-      pathname === '/'
-        ? `https://million.dev/default-og.png`
-        : `https://million.dev/api/og?title=${title}&description=${description}&note=${note}`;
+    let ogUrl = `https://million.dev/default-og.png`;
+
+    if (pathname.includes('million-3')) {
+      ogUrl = `https://million.dev/v3-thumbnail.png`;
+    } else {
+      ogUrl = `https://million.dev/api/og?title=${title}&description=${description}&note=${note}`;
+    }
+    const isWrapped = pathname.startsWith('/wrapped/');
+    if (isWrapped) {
+      const name = query?.name ?? 'My React app';
+      const id = (query.id as string).split('.')[0];
+      ogUrl = `https://telemetry.million.dev/api/v1/og/wrapped/${
+        id
+      }.mp4?name=${encodeURIComponent(name as any)}`;
+      title = name + ' Wrapped | Million.js';
+    }
 
     return (
       <>
@@ -222,12 +236,11 @@ const config: DocsThemeConfig = {
         <meta property="og:description" content={description} />
         <meta name="twitter:site" content={`@${ogConfig.author.twitter}`} />
         <meta name="twitter:creator" content={`@${ogConfig.author.twitter}`} />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta property="twitter:image" content={ogUrl} />
         <meta property="twitter:title" content={title} />
         <meta property="twitter:description" content={description} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta property="twitter:image" content={ogUrl} />
         <meta property="og:image" content={ogUrl} />
-
         <link rel="shortcut icon" href={favicon} type="image/svg+xml" />
         <link rel="apple-touch-icon" href={favicon} type="image/svg+xml" />
         <meta name="apple-mobile-web-app-title" content={title} />
@@ -252,8 +265,8 @@ const config: DocsThemeConfig = {
     dismissible: true,
     key: `version-${packageJson.version}`,
     text: (
-      <a href="https://github.com/aidenybai/million" target="_blank">
-        Go give a ⭐ to Million.js v{packageJson.version} on GitHub! ➡️
+      <a href="https://million.dev/blog/million-3" target="_blank">
+        Announcing Million 3 →
       </a>
     ),
   },
@@ -272,14 +285,20 @@ const config: DocsThemeConfig = {
   i18n: [
     { locale: 'en-US', text: 'English' },
     // { locale: 'zh-CN', text: 'Chinese' },
-    // { locale: 'es-ES', text: 'Español' },
-    { locale: 'fr-FR', text: 'Français' },
+    { locale: 'es-ES', text: 'Español' },
+    // { locale: 'fr-FR', text: 'Français' },
   ],
   useNextSeoProps() {
-    const { asPath } = useRouter();
+    const { asPath, pathname, query } = useRouter();
 
     if (['/', '/docs'].includes(asPath)) {
       return { titleTemplate: 'Million.js' };
+    }
+
+    if (pathname.startsWith('/wrapped/')) {
+      return {
+        title: (query?.name ?? 'My React app') + ' Wrapped | Million.js',
+      };
     }
 
     return { titleTemplate: `%s | Million.js` };
@@ -287,5 +306,14 @@ const config: DocsThemeConfig = {
   primarySaturation: 0,
 };
 
-// eslint-disable-next-line import/no-default-export
+export function hash(str: string): number {
+  let hashy = 0;
+  for (let i = 0, len = str.length; i < len; i++) {
+    const chr = str.charCodeAt(i);
+    hashy = (hashy << 5) - hashy + chr;
+    hashy |= 0; // Convert to 32bit integer
+  }
+  return hashy;
+}
+
 export default config;

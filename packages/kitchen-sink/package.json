@@ -17,7 +17,6 @@
     "@emoji-mart/data": "^1.1.2",
     "@emoji-mart/react": "^1.1.1",
     "@hello-pangea/dnd": "^16.3.0",
-    "@material-ui/core": "^4.12.4",
     "@reduxjs/toolkit": "^1.9.6",
     "@tanstack/react-query": "^4.32.6",
     "@tanstack/react-virtual": "3.0.0-beta.54",

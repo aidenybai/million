@@ -1,17 +1,17 @@
 ---
-title: 'Installation'
+title: 'Instalación'
 description: 'How to install Million.js into your React project'
 ---
 
 import { Callout, Tabs, Tab, Steps } from 'nextra-theme-docs';
 
-# Installation
+# Instalación
 
-Million.js assumes that you have an existing React project. To learn about how to create a React app, please see [React's documentation](https://react.dev).
+Million.js asume que ya tienes un proyecto React existente. Para obtener información sobre cómo crear una aplicación con React, consulta la [documentación de React](https://react.dev).
 
-## Install via CLI
+## Instalación via CLI
 
-The Million.js CLI will automatically install the package and configure your project for you.
+La interfaz de línea de comandos (CLI) de Million.js instalará automáticamente el paquete y configurará tu proyecto por ti.
 
 <Tabs items={['npm', 'pnpm', 'yarn', 'bun']} storageKey="selected-manager">
   {/* prettier-ignore */}
@@ -42,24 +42,23 @@ The Million.js CLI will automatically install the package and configure your pro
 
 
 <Callout type="info">
-  Million.js is compatible with React 16 and above. If you're using an older
-  version of React, you'll need to upgrade first.
+Million.js es compatible con React 16 y versiones posteriores. Si estás utilizando una versión más antigua de React, deberás realizar una actualización primero.
+
+También deberá asegurarse de tener Node.js 18 y superior.
 </Callout>
 
-That's it! Your project is now running on Million.js 🎉
+¡Eso es todo! Tu proyecto ahora está en funcionamiento con Million.js 🎉
 
-## Install manually
+## Instalar manualmente
 
-If you have issues [installing via the CLI](#install-via-cli), or you have a custom setup, you can
-install Million.js manually.
+Si encuentras problemas al [instalar a través de la CLI](#install-via-cli), o si tienes una configuración personalizada, puedes instalar Million.js manualmente.
 
-Notice that there are two modes you can choose: **Automatic** and **Manual**:
+Ten en cuenta que hay dos modos entre los que puedes elegir: **Automático** y **Manual**:
 
-- **Automatic mode** will automatically configure, analyze, and optimize your project for you.
-This is the recommended mode.
+- El **modo automático** configurará, analizará y optimizará automáticamente tu proyecto por ti. Este es el modo recomendado.
 
-- **Manual mode** will require you to write code to [optimize certain parts of
-your project](/docs/manual-mode/manual-mode). This mode is recommended for advanced users who want to have more control over their project.
+- El **modo Manual** requerirá que escribas código para [optimizar ciertas partes de tu proyecto](/docs/manual-mode/manual-mode).
+Este modo es recomendado para usuarios avanzados que deseen tener un mayor control sobre su proyecto.
 
 <Tabs items={['Automatic', 'Manual']} storageKey="mode">
 
@@ -67,7 +66,7 @@ your project](/docs/manual-mode/manual-mode). This mode is recommended for advan
 
 <Steps>
 
-### Install Million.js
+### Instala Million.js
 
 <Tabs items={['npm', 'pnpm', 'yarn', 'bun']} storageKey="selected-pkg-manager">
   {/* prettier-ignore */}
@@ -96,11 +95,12 @@ your project](/docs/manual-mode/manual-mode). This mode is recommended for advan
   </Tab>
 </Tabs>
 
-### Add the compiler to your application
+### Agrega el compilador a tu aplicación
 
 <Tabs items={['Next.js', 'Astro', 'Gatsby', 'Vite','Remix', 'Create React App', 'Webpack', 'Rollup']} storageKey="selected-bundler-compiler">
 <Tab>
-Million.js is supported within the `/app` ("use client" components only) and `/pages`
+
+Million.js es compatible dentro de los directorios `/app` (solo componentes "use client") y `/pages`.
 
 ```js filename="next.config.mjs"
 import million from "million/compiler";
@@ -111,7 +111,7 @@ const nextConfig = {
 };
 
 const millionConfig = {
-  auto: true,// if you're using RSC: auto: { rsc: true },
+  auto: true,// Si estas usando RSC: auto: { rsc: true },
 };
 
 export default million.next(nextConfig, millionConfig);
@@ -169,7 +169,7 @@ export default defineConfig({
 
 <Tab>
   <Callout type="warning">
-    If you are using a [Create React App (CRA)](https://create-react-app.dev/) Setup, you will need to [configure Craco](https://craco.js.org/docs/getting-started/) before proceeding.
+    Si estas usando [Create React App (CRA)](https://create-react-app.dev/), necesitaras [configurar Craco](https://craco.js.org/docs/getting-started/) antes de proceder.
   </Callout>
 
 ```js filename="craco.config.js"
@@ -212,7 +212,7 @@ export default {
 
 <Steps>
 
-### Install Million.js
+### Instala Million.js
 
 
 <Tabs items={['npm', 'pnpm', 'yarn', 'bun']} storageKey="selected-pkg-manager">
@@ -243,11 +243,12 @@ npm install million
   </Tab>
 </Tabs>
 
-### Add the compiler to your application
+### Agrega el compilador a tu aplicación
 
 <Tabs items={['Next.js', 'Astro', 'Gatsby', 'Vite', 'Remix', 'Create React App', 'Webpack', 'Rollup']} storageKey="selected-bundler-compiler">
 <Tab>
-Million.js is supported within the `/app` ("use client" components only) and `/pages`
+
+Million.js es compatible dentro de los directorios `/app` (solo componentes "use client") y `/pages`.
 
 ```js filename="next.config.mjs"
 import million from "million/compiler";
@@ -312,7 +313,7 @@ export default defineConfig({
 
 <Tab>
 <Callout type="warning">
-  If you are using a [Create React App (CRA)](https://create-react-app.dev/) Setup, you will need to [configure Craco](https://craco.js.org/docs/getting-started/) before proceeding.
+  Si estas usando [Create React App (CRA)](https://create-react-app.dev/), necesitaras [configurar Craco](https://craco.js.org/docs/getting-started/) antes de proceder.
 </Callout>
 ```js filename="craco.config.js"
 const million = require("million/compiler");

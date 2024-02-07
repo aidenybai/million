@@ -1,12 +1,12 @@
-import { exec } from 'child_process';
-import * as path from 'path';
+import { exec } from 'node:child_process';
+import * as path from 'node:path';
 import { setTimeout as sleep } from 'node:timers/promises';
 import { detect } from '@antfu/ni';
 import * as clack from '@clack/prompts';
 import chalk from 'chalk';
+import type { PackageManager } from '../types';
 import { abort, abortIfCancelled } from './utils';
 import { npm, pnpm, yarn, bun, packageManagers } from './constants';
-import type { PackageManager } from '../types';
 import { isPackageInstalled } from './package-json';
 
 /**

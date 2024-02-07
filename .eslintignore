@@ -3,3 +3,4 @@
 dist/
 node_modules/
 packages/kitchen-sink
+*.old.ts

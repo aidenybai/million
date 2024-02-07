@@ -12,7 +12,7 @@
     <tbody>
       <tr>
         <td>
-          <a href="https://million.dev/docs">📚 Read the docs</a>
+          <a href="https://million.dev/docs/introduction">📚 Read the docs</a>
         </td>
         <td>
           <a href="https://www.youtube.com/watch?v=VkezQMb1DHw">🎦 Watch video</a>
@@ -140,7 +140,7 @@ function App() {
 }
 ```
 
-Notice how when the `count` is updated, Million.js will directly update the DOM node. Million.js turns React reconciliation from `O(n^3)` (cubic time) to `O(1)` (constant time).
+Notice how when the `count` is updated, Million.js will directly update the DOM node. Million.js turns React reconciliation from `O(n)` (linear time) to `O(1)` (constant time).
 
 > How fast is it? [**→ View the benchmarks**](https://krausest.github.io/js-framework-benchmark/current.html)
 

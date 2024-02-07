@@ -4,8 +4,9 @@
  * JS Framework Benchmark implementation
  */
 
-import { addNamed } from '@babel/helper-module-imports';
+// import { addNamed } from '@babel/helper-module-imports';
 import * as t from '@babel/types';
+import type { NodePath } from '@babel/core';
 import {
   hoistElements,
   renderToString,
@@ -13,8 +14,7 @@ import {
 } from '../experimental/render';
 import { chainOrLogic } from '../experimental/utils';
 import type { IrEdit, IrEditBase } from '../experimental/types';
-import type { NodePath } from '@babel/core';
-import type { Options } from '../plugin';
+import type { Options } from '../options';
 
 export const visitor =
   (options: Options = {}) =>
@@ -64,7 +64,7 @@ export const visitor =
         const { declarators, accessedIds } = hoistElements(
           paths,
           path,
-          importSource.source.value,
+          importSource.source.value
         );
 
         const editsArray = t.arrayExpression(
@@ -86,11 +86,11 @@ export const visitor =
                   t.objectProperty(t.identifier('i'), index ?? t.nullLiteral()),
                   t.objectProperty(
                     t.identifier('l'),
-                    listener ?? t.nullLiteral(),
+                    listener ?? t.nullLiteral()
                   ),
                   t.objectProperty(t.identifier('p'), value ?? t.nullLiteral()),
                   t.objectProperty(t.identifier('b'), value ?? t.nullLiteral()),
-                ]),
+                ])
               );
             }
 
@@ -108,11 +108,11 @@ export const visitor =
                   t.objectProperty(t.identifier('i'), index ?? t.nullLiteral()),
                   t.objectProperty(
                     t.identifier('l'),
-                    listener ?? t.nullLiteral(),
+                    listener ?? t.nullLiteral()
                   ),
                   t.objectProperty(t.identifier('p'), value ?? t.nullLiteral()),
                   t.objectProperty(t.identifier('b'), value ?? t.nullLiteral()),
-                ]),
+                ])
               );
             }
 
@@ -120,16 +120,16 @@ export const visitor =
               t.objectProperty(t.identifier('p'), t.nullLiteral()),
               t.objectProperty(
                 t.identifier('e'),
-                t.arrayExpression(editsProperties),
+                t.arrayExpression(editsProperties)
               ),
               t.objectProperty(
                 t.identifier('i'),
                 initsProperties.length
                   ? t.arrayExpression(initsProperties)
-                  : t.nullLiteral(),
+                  : t.nullLiteral()
               ),
             ]);
-          }),
+          })
         );
 
         const stringToDOM = addNamed(
@@ -138,7 +138,7 @@ export const visitor =
           importSource.source.value,
           {
             nameHint: 'stringToDOM$',
-          },
+          }
         );
 
         const shouldUpdateExists =
@@ -161,17 +161,17 @@ export const visitor =
                       t.identifier('oldProps'),
                       key,
                       false,
-                      true,
+                      true
                     ),
                     t.optionalMemberExpression(
                       t.identifier('newProps'),
                       key,
                       false,
-                      true,
-                    ),
+                      true
+                    )
                   );
-                }),
-            ),
+                })
+            )
           );
         }
 
@@ -192,16 +192,16 @@ export const visitor =
                     raw: renderToString(template),
                   }),
                 ],
-                [],
+                []
               ),
-            ]),
+            ])
           ),
           t.variableDeclarator(editsVariable, editsArray),
           t.variableDeclarator(
             shouldUpdateVariable,
             shouldUpdateExists
               ? t.nullLiteral()
-              : (shouldUpdate as t.Identifier | t.ArrowFunctionExpression),
+              : (shouldUpdate as t.Identifier | t.ArrowFunctionExpression)
           ),
           t.variableDeclarator(
             getElementsVariable,
@@ -211,9 +211,9 @@ export const visitor =
                   t.blockStatement([
                     t.variableDeclaration('const', declarators),
                     t.returnStatement(t.arrayExpression(accessedIds)),
-                  ]),
+                  ])
                 )
-              : t.nullLiteral(),
+              : t.nullLiteral()
           ),
         ]);
         const BlockClass = addNamed(path, 'Block', importSource.source.value, {
@@ -235,20 +235,17 @@ export const visitor =
                 t.logicalExpression(
                   '??',
                   t.identifier('key'),
-                  t.memberExpression(
-                    t.identifier('props'),
-                    t.identifier('key'),
-                  ),
+                  t.memberExpression(t.identifier('props'), t.identifier('key'))
                 ),
                 t.logicalExpression(
                   '??',
                   t.identifier('shouldUpdate'),
-                  shouldUpdateVariable,
+                  shouldUpdateVariable
                 ),
                 getElementsVariable,
-              ]),
+              ])
             ),
-          ]),
+          ])
         );
 
         path.parentPath.parentPath?.insertBefore(variables);
