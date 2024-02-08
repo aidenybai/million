@@ -136,8 +136,8 @@ export const importSource = (callback: () => void) => {
 
       callback();
     })
-    .catch(() => {
-      throw new Error('Failed to load Million.js');
+    .catch((e) => {
+      throw new Error('Failed to load Million.js: ' + e);
     });
 };
 
