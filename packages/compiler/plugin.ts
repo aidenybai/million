@@ -136,6 +136,7 @@ export const unplugin = createUnplugin((options: Options = {}, meta) => {
       return filter(id);
     },
     async transform(code: string, id: string) {
+      console.log('id', id)
       const result = await compile(id, code, options, telemetryInstance, options.server);
       return {
         code: result.code || '',
