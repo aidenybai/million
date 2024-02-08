@@ -10,6 +10,7 @@ import { RetroGrid } from '../retro-grid';
 import { useTranslations } from '../../hooks/use-translations';
 import { Container } from './container';
 import { ShimmerButton } from './shimmer-button';
+import { track } from '@vercel/analytics';
 
 const CountUp = dynamic(() => import('react-countup'), {
   loading: () => <span>70</span>,
@@ -21,6 +22,7 @@ export function Hero() {
   const [submitted, setSubmitted] = useState<boolean>(false);
 
   const handleClickWizard = () => {
+    track('homepage/clicked-npx-wizard');
     void navigator.clipboard.writeText('npx million@latest');
     setSubmitted(true);
 
