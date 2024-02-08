@@ -1,5 +1,5 @@
-import type { ComponentType, Ref } from 'react';
-import { Fragment, createElement, useCallback, useMemo, useRef } from 'react';
+import { createContext, createElement, Fragment, useCallback, useContext, useMemo, useRef } from 'react';
+import type { ComponentType, Ref, Dispatch, SetStateAction } from 'react';
 import {
   block as createBlock,
   mount$,
@@ -15,6 +15,7 @@ import { useContainer, useNearestParent } from './its-fine';
 import { cloneNode$ } from '../million/dom';
 
 experimental_options.noSlot = true;
+export const mountContext = createContext<Dispatch<SetStateAction<boolean>> | null>(null)
 
 export const block = <P extends MillionProps>(
   fn: ComponentType<P> | null,
@@ -37,6 +38,7 @@ export const block = <P extends MillionProps>(
     props: P,
     forwardedRef: Ref<any>
   ) => {
+    const mount = useContext(mountContext)
     const container = useContainer<HTMLElement>(); // usable when there's no parent other than the root element
     const parentRef = useNearestParent<HTMLElement>();
     const hmrTimestamp = props._hmr;
@@ -55,6 +57,10 @@ export const block = <P extends MillionProps>(
       }
       if (noSlot) {
         ref.current = (parentRef.current ?? container.current) as HTMLElement;
+        if (props.scoped) {
+          // in portals, parentRef is not the proper parent
+          ref.current = container.current!
+        }
         if (ref.current.childNodes.length) {
           console.error(new Error(`\`experimental_options.noSlot\` does not support having siblings at the moment.
 The block element should be the only child of the \`${
@@ -75,6 +81,7 @@ To avoid this error, \`experimental_options.noSlot\` should be false`));
             )
           );
         };
+        mount?.(true)
       }
       return () => {
         removeBlock.call(currentBlock)

@@ -4,6 +4,7 @@ import type { block as createBlock } from '../million';
 export type MillionProps = Record<string, any>;
 
 export interface Options<T extends MillionProps> {
+  scoped?: true;
   name?: string;
   shouldUpdate?: (oldProps: T, newProps: T) => boolean;
   block?: any;

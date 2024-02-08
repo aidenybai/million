@@ -75,7 +75,6 @@ export const renderReactScope = (
   }
 
   const current = el ?? document.createElement(RENDER_SCOPE);
-  console.log(current, vnode)
   const reactPortal = createPortal(vnode, current);
 
   const millionPortal = {

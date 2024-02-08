@@ -3,7 +3,7 @@ import type { ReactPortal, ComponentType, JSX } from 'react';
 import { createElement, useState, Fragment, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import type { MillionPortal, MillionProps, Options } from '../types';
-import { block } from './block';
+import { block, mountContext } from './block';
 import { renderReactScope } from './utils';
 import { experimental_options } from '../million/experimental';
 
@@ -47,6 +47,7 @@ export function compiledBlock(
     portals && portalCount > 0
       ? (props: MillionProps) => {
           const [current] = useState<MillionPortal[]>(() => []);
+          const [mounted, mount] = useState(false);
 
           let derived = { ...props };
 
@@ -69,20 +70,11 @@ export function compiledBlock(
             targets[i] = current[i]!.portal;
           }
 
-          const documentFragment = document.createElement('template');
-          const targetNode = noSlot
-            ? createPortal(
-                createElement(Fragment, { children: targets }),
-                documentFragment
-              )
-            : targets;
-    console.log(targetNode)
-
           return createElement(
-            Fragment,
-            {},
+            mountContext.Provider,
+            { value: mount },
             createElement(RenderBlock, derived),
-            targetNode
+            mounted ? targets : null
           );
         }
       : (props: MillionProps) => createElement(RenderBlock, props);
