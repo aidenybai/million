@@ -102,6 +102,15 @@ export const translations = {
       nobite: "don't worry, he doesn't bite, but he will",
       byte: 'byte!',
     },
+    ai: {
+      youWriteCode: 'You write code.',
+      weMakeItFast: 'We make it fast',
+      description: {
+        tool: 'A GitHub bot to detect, diagnose, and fix slow components in your React application',
+        automaticallyBold: '– automatically',
+        goal: 'Designed for companies that want to ship fast and stay fast.',
+      },
+    },
   },
   'fr-FR': {
     hero: {
@@ -310,6 +319,15 @@ export const translations = {
       friendlyMascot: "He's the friendly mascot of the Million.js project.",
       nobite: "don't worry, he doesn't bite, but he will",
       byte: 'byte!',
+    },
+    ai: {
+      youWriteCode: 'Escribes código.',
+      weMakeItFast: 'Lo hacemos rápido',
+      description: {
+        tool: 'Un bot de GitHub para detectar, diagnosticar y reparar componentes lentos en su aplicación React',
+        automaticallyBold: '– automáticamente',
+        goal: 'Diseñado para empresas que desean realizar envíos rápidos y mantenerse rápidos.',
+      },
     },
   },
   'zh-CN': {

@@ -1,8 +1,12 @@
 import { useEffect } from 'react';
 import YouTube from 'react-youtube';
 import { Container } from '../home/container';
+import { useTranslations } from 'hooks/use-translations';
 
 export function Hero() {
+
+  const { ai } = useTranslations();
+
   useEffect(() => {
     const script = document.createElement('script');
     script.src =
@@ -20,18 +24,15 @@ export function Hero() {
         <div className="relative pt-16 md:pt-28 ml-auto">
           <div className="lg:w-[70%] text-center mx-auto">
             <h1 className="text-zinc-900 dark:text-white font-bold text-5xl md:text-6xl xl:text-7xl">
-              You write code.
+            {ai.youWriteCode}
               <br />
               <span className="gradient-text inline-block">
-                We make it fast
+               {ai.weMakeItFast}
               </span>
             </h1>
             <p className="mt-8 text-xl text-zinc-600 dark:text-zinc-300 leading-8">
-              A GitHub bot to detect, diagnose, and fix slow components in your
-              React application{' '}
-              <span className="font-semibold">– automatically</span>. Designed
-              for companies that want to ship fast and stay fast.
-            </p>
+            {ai.description.tool}{' '}
+              <span className="font-semibold">– {ai.description.automaticallyBold} </span>. {ai.description.goal}.      </p>
             <div className="mt-8 flex flex-wrap justify-center gap-y-4 gap-x-6">
               <div
                 id="getWaitlistContainer"
