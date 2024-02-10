@@ -16,7 +16,6 @@ import { cloneNode$ } from '../million/dom';
 
 experimental_options.noSlot = true;
 export const mountContext = createContext<Dispatch<SetStateAction<boolean>> | null>(null)
-export const scopedContext = createContext<string[]>([])
 
 export const block = <P extends MillionProps>(
   fn: ComponentType<P> | null,

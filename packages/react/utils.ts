@@ -1,15 +1,17 @@
-import { Fragment, createElement, isValidElement } from 'react';
+import { Fragment, createContext, createElement, isValidElement } from 'react';
 import { createPortal } from 'react-dom';
 import type { ComponentProps, ReactNode, Ref } from 'react';
 import type { VNode } from '../million';
 import type { MillionPortal } from '../types';
 import { REGISTRY, RENDER_SCOPE } from './constants';
 
+export const scopedContext = createContext<boolean>(false)
+
 // TODO: access perf impact of this
 export const processProps = (
   props: ComponentProps<any>,
   ref: Ref<any>,
-  portals: MillionPortal[],
+  portals: MillionPortal[]
 ): ComponentProps<any> => {
   const processedProps: ComponentProps<any> = { ref };
 
@@ -25,7 +27,7 @@ export const processProps = (
         value,
         false,
         portals,
-        currentIndex++,
+        currentIndex++
       );
 
       continue;
@@ -45,6 +47,7 @@ export const renderReactScope = (
   unstable: boolean,
   portals: MillionPortal[] | undefined,
   currentIndex: number,
+  scoped?: boolean
 ) => {
   const el = portals?.[currentIndex]?.current;
 
@@ -75,7 +78,10 @@ export const renderReactScope = (
   }
 
   const current = el ?? document.createElement(RENDER_SCOPE);
-  const reactPortal = createPortal(vnode, current);
+  const reactPortal = createPortal(
+    createElement(scopedContext.Provider, { value: scoped }, vnode),
+    current
+  );
 
   const millionPortal = {
     foreign: true as const,
@@ -115,7 +121,7 @@ export const unwrap = (vnode: JSX.Element | null): VNode => {
   const children = vnode.props?.children;
   if (children !== undefined && children !== null) {
     props.children = flatten(vnode.props.children).map((child) =>
-      unwrap(child),
+      unwrap(child)
     );
   }
 

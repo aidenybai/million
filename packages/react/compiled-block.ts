@@ -9,8 +9,8 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import type { MillionPortal, MillionProps, Options } from '../types';
-import { block, mountContext, scopedContext } from './block';
-import { renderReactScope } from './utils';
+import { block, mountContext } from './block';
+import { renderReactScope, scopedContext } from './utils';
 import { experimental_options } from '../million/experimental';
 
 function isEqual(a: unknown, b: unknown): boolean {
@@ -44,19 +44,17 @@ export function compiledBlock(
   const blockName = `CompiledBlock(Inner(${options.name}))`;
   const RenderBlock = block<MillionProps>((props) => render(props), {
     ...options,
+    scoped: undefined,
     name: blockName,
     shouldUpdate: shouldCompiledBlockUpdate,
   });
-  const scopedBlocks = options.scoped ?? [];
 
   const portalCount = portals?.length || 0;
 
   const Component: ComponentType<MillionProps> =
     portals && portalCount > 0
       ? (props: MillionProps) => {
-          const scoped = options?.name
-            ? useContext(scopedContext).includes(options.name)
-            : false;
+          const scoped = useContext(scopedContext);
           const [current] = useState<MillionPortal[]>(() => []);
           const [mounted, mount] = useState(false);
 
@@ -68,11 +66,10 @@ export function compiledBlock(
               derived[index] as JSX.Element,
               false,
               current,
-              i
+              i,
+              options.scoped?.includes(index)
             );
-            // if (!noSlot) {
             derived[index] = scope;
-            // }
           }
 
           const targets: ReactPortal[] = [];
@@ -82,14 +79,10 @@ export function compiledBlock(
           }
 
           return createElement(
-            scopedContext.Provider,
-            { value: scopedBlocks },
-            createElement(
-              mountContext.Provider,
-              { value: mount },
-              createElement(RenderBlock, derived),
-              mounted ? targets : null
-            )
+            mountContext.Provider,
+            { value: mount },
+            createElement(RenderBlock, derived),
+            mounted ? targets : null
           );
         }
       : (props: MillionProps) => createElement(RenderBlock, props);

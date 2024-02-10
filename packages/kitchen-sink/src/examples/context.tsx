@@ -56,7 +56,7 @@ const App_1 = _compiledBlock(_props2 => <div>
   </div>, {
   name: "App_1",
   portals: ["v0"],
-  scoped: ['Context_1']
+  scoped: ["v0"],
 });
 const App = () => {
   const [theme, setTheme] = useState('light');
