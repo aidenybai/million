@@ -1,9 +1,15 @@
 // The following code are for the compield `block` components
 import type { ReactPortal, ComponentType, JSX } from 'react';
-import { createElement, useState, Fragment, useEffect } from 'react';
+import {
+  createElement,
+  useState,
+  Fragment,
+  useEffect,
+  useContext,
+} from 'react';
 import { createPortal } from 'react-dom';
 import type { MillionPortal, MillionProps, Options } from '../types';
-import { block, mountContext } from './block';
+import { block, mountContext, scopedContext } from './block';
 import { renderReactScope } from './utils';
 import { experimental_options } from '../million/experimental';
 
@@ -28,28 +34,33 @@ function shouldCompiledBlockUpdate(
 interface CompiledBlockOptions
   extends Omit<Options<MillionProps>, 'shouldUpdate'> {
   portals?: string[];
+  scoped?: string[];
 }
 
 export function compiledBlock(
   render: (props: MillionProps) => JSX.Element,
   { portals, ...options }: CompiledBlockOptions
 ): ComponentType<MillionProps> {
-  const noSlot = options?.experimental_noSlot ?? experimental_options.noSlot;
+  const blockName = `CompiledBlock(Inner(${options.name}))`;
   const RenderBlock = block<MillionProps>((props) => render(props), {
     ...options,
-    name: `CompiledBlock(Inner(${options.name}))`,
+    name: blockName,
     shouldUpdate: shouldCompiledBlockUpdate,
   });
+  const scopedBlocks = options.scoped ?? [];
 
   const portalCount = portals?.length || 0;
 
   const Component: ComponentType<MillionProps> =
     portals && portalCount > 0
       ? (props: MillionProps) => {
+          const scoped = options?.name
+            ? useContext(scopedContext).includes(options.name)
+            : false;
           const [current] = useState<MillionPortal[]>(() => []);
           const [mounted, mount] = useState(false);
 
-          let derived = { ...props };
+          let derived = { ...props, scoped };
 
           for (let i = 0; i < portalCount; i++) {
             const index = portals[i]!;
@@ -71,10 +82,14 @@ export function compiledBlock(
           }
 
           return createElement(
-            mountContext.Provider,
-            { value: mount },
-            createElement(RenderBlock, derived),
-            mounted ? targets : null
+            scopedContext.Provider,
+            { value: scopedBlocks },
+            createElement(
+              mountContext.Provider,
+              { value: mount },
+              createElement(RenderBlock, derived),
+              mounted ? targets : null
+            )
           );
         }
       : (props: MillionProps) => createElement(RenderBlock, props);
