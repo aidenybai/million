@@ -11,7 +11,7 @@ import type { MillionPortal, MillionProps, Options } from '../types';
 import { Effect, REGISTRY, RENDER_SCOPE, SVG_RENDER_SCOPE } from './constants';
 import { processProps, unwrap } from './utils';
 import { experimental_options } from '../million/experimental';
-import { useContainer, useNearestParent } from './its-fine';
+import { useContainer, useFiber, useNearestParent } from './its-fine';
 import { cloneNode$ } from '../million/dom';
 
 experimental_options.noSlot = true;
@@ -56,10 +56,11 @@ export const block = <P extends MillionProps>(
         ref.current.textContent = '';
       }
       if (noSlot) {
-        ref.current = (parentRef.current ?? container.current) as HTMLElement;
-        if (props.scoped) {
+        ref.current = (parentRef.current?.el ?? container.current?.el) as HTMLElement;
+        // the parentRef depth is only bigger than container depth when we're in a portal, where the portal el is closer than the jsx parent
+        if (props.scoped || parentRef.current!.depth > container.current!.depth) {
           // in portals, parentRef is not the proper parent
-          ref.current = container.current!
+          ref.current = container.current?.el!
         }
         if (ref.current.childNodes.length) {
           console.error(new Error(`\`experimental_options.noSlot\` does not support having siblings at the moment.
@@ -81,7 +82,7 @@ To avoid this error, \`experimental_options.noSlot\` should be false`));
             )
           );
         };
-        mount?.(true)
+        // mount?.(true)
       }
       return () => {
         removeBlock.call(currentBlock)

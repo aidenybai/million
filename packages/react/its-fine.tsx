@@ -89,19 +89,22 @@ export function useFiber(): Fiber {
  *
  * In react-dom, this would be a DOM element; in react-three-fiber this would be an instance descriptor.
  */
-export function useNearestParent<T = any>(
+export function useNearestParent<T extends any,B extends {el: T, depth: number} = {el: T, depth: number}>(
   /** An optional element type to filter to. */
   type?: keyof JSX.IntrinsicElements,
-): React.MutableRefObject<T | undefined> {
+): React.MutableRefObject<B | undefined> {
   const fiber = useFiber();
-  const parentRef = useRef<T>();
+  const parentRef = useRef<B>({ el: null as any, depth: 0 } as B);
 
   useLayoutEffect(() => {
-    parentRef.current = traverse(
+    parentRef.current.el = traverse(
       fiber,
-      (node) =>
-        typeof node.type === 'string' &&
-        (type === undefined || node.type === type),
+      (node) => {
+        parentRef.current.depth++
+        
+        return typeof node.type === 'string' &&
+        (type === undefined || node.type === type)
+      },
       true,
     )?.stateNode;
   }, [fiber]);
@@ -114,14 +117,17 @@ export function useNearestParent<T = any>(
  *
  * In react-dom, a container will point to the root DOM element; in react-three-fiber, it will point to the root Zustand store.
  */
-export function useContainer<T = any>(): React.MutableRefObject<T | undefined> {
+export function useContainer<T extends any,B extends {el: T, depth: number} = {el: T, depth: number}>(): React.MutableRefObject<B | undefined> {
   const fiber = useFiber();
-  const rootRef = useRef<T>();
+  const rootRef = useRef<B>({ el: null as any, depth: 0 } as B);
 
   useLayoutEffect(() => {
-    rootRef.current = traverse(
+    rootRef.current.el = traverse(
       fiber,
-      (node) => node.stateNode?.containerInfo != null,
+      (node) => {
+        rootRef.current.depth++
+        return node.stateNode?.containerInfo != null
+      },
       true,
     )?.stateNode.containerInfo;
   }, [fiber]);

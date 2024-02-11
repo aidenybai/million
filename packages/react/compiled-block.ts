@@ -82,7 +82,7 @@ export function compiledBlock(
             mountContext.Provider,
             { value: mount },
             createElement(RenderBlock, derived),
-            mounted ? targets : null
+            targets
           );
         }
       : (props: MillionProps) => createElement(RenderBlock, props);

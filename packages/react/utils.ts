@@ -91,6 +91,7 @@ export const renderReactScope = (
   };
   if (portals) {
     portals[currentIndex] = millionPortal;
+    console.trace('set portal', [...portals], millionPortal)
   }
 
   return millionPortal;
