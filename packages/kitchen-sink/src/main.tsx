@@ -25,13 +25,18 @@ type Module = { default: ComponentType<any> };
             .replace('.tsx', '')
             .replace('.jsx', ''),
           mod as () => Promise<Module>,
-        ] as const,
-    ),
+        ] as const
+    )
   );
   const loadedModules: LazyExoticComponent<ComponentType<any>>[] = [];
 
   function App() {
-    const [selected, setSelected] = useState<number>(-1);
+    const [selected, setSelected] = useState<number>(() => {
+      const index = +window.location.pathname.split('/')[1] ?? -1;
+
+      loadedModules[index] = lazy(() => modules[index]![1]());
+      return index;
+    });
 
     const [sidebarOpened, setSidebarOpened] = useState(false);
 
@@ -105,6 +110,7 @@ type Module = { default: ComponentType<any> };
                     onClick={async () => {
                       isMobile && setSidebarOpened(false);
                       setSelected(index);
+                      window.history.pushState(undefined, '', '/' + index);
                       loadedModules[index] = lazy(() => modules[index]![1]());
                     }}
                     key={key}

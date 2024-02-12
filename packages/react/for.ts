@@ -57,7 +57,6 @@ const MillionArray = <T>({
   // console.log(portals.current, ref.current)
 
   useEffect(() => {
-    debugger
     if (!ref.current || fragmentRef.current) return;
 
     // queueMicrotask$(() => {
