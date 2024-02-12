@@ -14,7 +14,7 @@ import { experimental_options } from '../million/experimental';
 import { useContainer, useFiber, useNearestParent } from './its-fine';
 import { cloneNode$ } from '../million/dom';
 
-experimental_options.noSlot = true;
+// experimental_options.noSlot = true;
 export const mountContext = createContext<Dispatch<SetStateAction<boolean>> | null>(null)
 
 export const block = <P extends MillionProps>(
