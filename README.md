@@ -48,7 +48,7 @@ The Million.js CLI will automatically install the package and configure your pro
 npx million@latest
 ```
 
-Once your down, just run your project and information should show up in your command line!
+Once you're down, just run your project and information should show up in your command line!
 
 > Having issues installing? [**→ View the installation guide**](https://million.dev/docs/install)
 
