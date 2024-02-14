@@ -18,6 +18,8 @@ interface CompilerOutput {
   map: BabelFileResult['map'];
 }
 
+let ssr = false
+
 async function compile(
   id: string,
   code: string,
@@ -25,6 +27,11 @@ async function compile(
   telemetryInstance: MillionTelemetry,
   isServer?: boolean,
 ): Promise<CompilerOutput> {
+  if (isServer) {
+    // for frameworks like remix, even for client, we need to return react-server
+    ssr = true
+  }
+  
   displayIntro(options);
   
   const plugins: ParserOptions['plugins'] = [
@@ -52,7 +59,7 @@ async function compile(
         {
           telemetry: telemetryInstance,
           log: options.log,
-          server: isServer,
+          server: ssr,
           hmr: options.hmr,
           auto: options.auto,
           rsc: options.rsc,
