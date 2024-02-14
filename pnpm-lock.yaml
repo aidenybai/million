@@ -171,6 +171,22 @@ importers:
         specifier: ^1.0.2
         version: 1.0.2
 
+  packages/experimental:
+    dependencies:
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.2.0(react@18.2.0)
+    devDependencies:
+      '@types/react':
+        specifier: ^18.0.28
+        version: 18.2.38
+      '@types/react-dom':
+        specifier: ^18.2.6
+        version: 18.2.17
+
   packages/jsx-runtime: {}
 
   packages/kitchen-sink:
