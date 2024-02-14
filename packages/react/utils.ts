@@ -47,7 +47,6 @@ export const renderReactScope = (
   unstable: boolean,
   portals: MillionPortal[] | undefined,
   currentIndex: number,
-  scoped?: boolean
 ) => {
   const el = portals?.[currentIndex]?.current;
 
@@ -79,7 +78,7 @@ export const renderReactScope = (
 
   const current = el ?? document.createElement(RENDER_SCOPE);
   const reactPortal = createPortal(
-    createElement(scopedContext.Provider, { value: scoped }, vnode),
+    vnode,
     current
   );
 

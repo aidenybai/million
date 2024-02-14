@@ -10,8 +10,8 @@ import { MapHas$, MapSet$ } from '../million/constants';
 import type { MillionPortal, MillionProps, Options } from '../types';
 import { Effect, REGISTRY, RENDER_SCOPE, SVG_RENDER_SCOPE } from './constants';
 import { processProps, unwrap } from './utils';
-import { experimental_options } from '../million/experimental';
-import { useContainer, useFiber, useNearestParent } from './its-fine';
+import { experimental_options } from '../experimental';
+import { useContainer, useNearestParent } from './its-fine';
 import { cloneNode$ } from '../million/dom';
 
 // experimental_options.noSlot = true;
@@ -38,7 +38,7 @@ export const block = <P extends MillionProps>(
     props: P,
     forwardedRef: Ref<any>
   ) => {
-    const mount = useContext(mountContext)
+    // const mount = useContext(mountContext)
     const container = useContainer<HTMLElement>(); // usable when there's no parent other than the root element
     const parentRef = useNearestParent<HTMLElement>();
     const hmrTimestamp = props._hmr;

@@ -1,0 +1,72 @@
+---
+title: 'Experimental'
+description: 'Experimental features for Million'
+---
+
+import { Callout, Tab, Tabs } from 'nextra-theme-docs';
+
+# Experimental Options
+
+Million.js tries to experiment with different features by having experimental flags. This ensures that users have a good experience with those features before delivering them as stable features. 
+
+Another reason for experimental options is to see if a certain feature is deliverable in a complete package. 
+
+## No `<slot />` 
+
+Million.js wraps blocks and their reactive props (portals) with `<slot />` tags so that it gets full control over the rendering! 
+
+In the case of props, each block has no responsibility over the props it takes since they come from a different source. What it does in this case is that it wraps those props with `<slot />` and passes the rendering of those props to React.js. It should be noted that this does not apply to any prop.   
+
+This experimental flag tries to achieve the removal of slots so that users would not be bothered with unexpected broken styles and `<slot />` elements.
+
+### `block`
+
+> For now, only blocks are supported in `noSlot` mode. Props are yet to be supported.
+
+For [auto](/docs/automatic) mode, `noSlot` mode can be activated simply by adding this to your entry file:
+
+
+```js
+import { experimental_options } from 'million/experimental';
+
+experimental_options.noSlot = true
+// now `noSlot` mode is activated across your application  
+
+function Lion() {
+  return <img src="https://million.dev/lion.svg" />;
+}
+``` 
+
+You can also pass the `experimental_noSlot` to the block function which is useful for manual mode.
+
+```js
+import { block } from 'million/react';
+ 
+const LionBlock = block(
+  function Lion() {
+    return <img src="https://million.dev/lion.svg" />;
+  },
+  { experimental_noSlot: true },
+);	
+```
+
+<Callout type="warning">
+`noSlot` blocks do not support having siblings in their parents because handling non-block elements and elements that Million.js does not have any control over is challenging.
+
+```jsx
+<div>
+  <span>first child</span>
+  <LionBlock /> {/* ❌ Wrong */}
+</div>
+
+// 👇👇👇
+
+<div>
+  <span>first child</span>
+  <div>
+    <LionBlock /> {/* ✅ Correct */}
+  </div>
+</div>
+```
+
+</Callout>

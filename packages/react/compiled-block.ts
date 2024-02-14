@@ -3,15 +3,11 @@ import type { ReactPortal, ComponentType, JSX } from 'react';
 import {
   createElement,
   useState,
-  Fragment,
-  useEffect,
   useContext,
 } from 'react';
-import { createPortal } from 'react-dom';
 import type { MillionPortal, MillionProps, Options } from '../types';
 import { block, mountContext } from './block';
 import { renderReactScope, scopedContext } from './utils';
-import { experimental_options } from '../million/experimental';
 
 function isEqual(a: unknown, b: unknown): boolean {
   // Faster than Object.is
@@ -34,7 +30,6 @@ function shouldCompiledBlockUpdate(
 interface CompiledBlockOptions
   extends Omit<Options<MillionProps>, 'shouldUpdate'> {
   portals?: string[];
-  scoped?: string[];
 }
 
 export function compiledBlock(
@@ -67,7 +62,6 @@ export function compiledBlock(
               false,
               current,
               i,
-              options.scoped?.includes(index)
             );
             derived[index] = scope;
           }
