@@ -1,7 +1,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as clack from '@clack/prompts';
-import chalk from 'chalk';
+import { bold, cyan, green } from 'kleur/colors';
 import type { BuildTool } from '../types';
 import { buildTools } from './constants';
 import { abortIfCancelled, getNextRouter } from './utils';
@@ -17,11 +17,9 @@ export function detectBuildTool(): BuildTool | null {
        * Check for all extensions
        */
       if (fs.existsSync(path.join(process.cwd(), fileName))) {
-        const currentbuildTool = { ...buildTool, configFilePath: fileName };
-        clack.log.success(
-          `Detected ${chalk.bold(currentbuildTool.name)} project.`
-        );
-        return currentbuildTool;
+        const currentBuildTool = { ...buildTool, configFilePath: fileName };
+        clack.log.success(`Detected ${bold(currentBuildTool.name)} project.`);
+        return currentBuildTool;
       }
     }
   }
@@ -54,7 +52,7 @@ export async function handleConfigFile(): Promise<void> {
     // Modify existing config file
     clack.note(
       `found existing ${detectedBuildTool.configFilePath} file.`,
-      `Transforming ${chalk.cyan(detectedBuildTool.configFilePath)}`
+      `Transforming ${cyan(detectedBuildTool.configFilePath)}`
     );
     await telemetry.record({
       event: 'cli',
@@ -80,8 +78,8 @@ export async function handleConfigFile(): Promise<void> {
     const nextRouter: 'app' | 'pages' = await getNextRouter();
 
     clack.note(
-      `at ${chalk.green(targetFilePath)}`,
-      `Created ${chalk.green(buildTool.configFilePath)} file`
+      `at ${green(targetFilePath)}`,
+      `Created ${green(buildTool.configFilePath)} file`
     );
 
     nextRouter === 'app'
@@ -98,8 +96,8 @@ export async function handleConfigFile(): Promise<void> {
      * Create config file for build tools other than 'next'
      */
     clack.note(
-      `at ${chalk.green(targetFilePath)}`,
-      `Created ${chalk.green(buildTool.configFilePath)} file`
+      `at ${green(targetFilePath)}`,
+      `Created ${green(buildTool.configFilePath)} file`
     );
     await fs.promises.writeFile(targetFilePath, buildTool.configFileContent);
   }
