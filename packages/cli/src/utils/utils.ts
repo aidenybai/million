@@ -35,10 +35,14 @@ export function abort(message?: string, status?: number): never {
  * Get the next router to use.
  */
 export async function getNextRouter(): Promise<'app' | 'pages'> {
-  if (fs.existsSync('src/app') || fs.existsSync('app')) {
-    return 'app';
-  } else if (fs.existsSync('src/pages') || fs.existsSync('pages')) {
+  if (fs.existsSync('pages')) {
     return 'pages';
+  } else if (fs.existsSync('app')) {
+    return 'app';
+  } else if (fs.existsSync('src/pages')) {
+    return 'pages';
+  } else if (fs.existsSync('src/app')) {
+    return 'app';
   }
   const selectedRouter: 'app' | 'pages' = await abortIfCancelled(
     clack.select({

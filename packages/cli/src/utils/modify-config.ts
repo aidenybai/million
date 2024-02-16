@@ -172,13 +172,13 @@ function detectModuleType(fileContent: string): 'cjs' | 'esm' | 'unknown' {
 }
 
 async function wrapExportCode(
-  buildtool: BuildTool,
+  buildTool: BuildTool,
   oldExportExpression: string,
   auto = true
 ): Promise<string> {
   // let [firstPart, ...rest]: string[] = [];
 
-  switch (buildtool.name) {
+  switch (buildTool.name) {
     case 'next':
       /**
        * million.next(nextConfig, millionConfig);
