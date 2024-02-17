@@ -7,13 +7,13 @@ import { Callout, Tab, Tabs } from 'nextra-theme-docs';
 
 # Experimental Options
 
-Million.js tries to experiment with different features by having experimental flags. This ensures that users have a good experience with those features before delivering them as stable features. 
+Million.js has various experimental features that can be toggled through experimental flags. This is to ensure that these features are tested and provide a positive experience prior to their official release as stable features.
 
-Another reason for experimental options is to see if a certain feature is deliverable in a complete package. 
+Additionally, these experimental options serve to evaluate whether a specific feature can be fully integrated and delivered as part of the complete package.
 
 ## No `<slot />` 
 
-Million.js wraps blocks and their reactive props (portals) with `<slot />` tags so that it gets full control over the rendering! 
+Million.js wraps blocks and their reactive props (portals) with [`<slot />`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/slot) HTML tags so that it gets full control over the rendering! 
 
 In the case of props, each block has no responsibility over the props it takes since they come from a different source. What it does in this case is that it wraps those props with `<slot />` and passes the rendering of those props to React.js. It should be noted that this does not apply to any prop.   
 
@@ -37,7 +37,7 @@ function Lion() {
 }
 ``` 
 
-You can also pass the `experimental_noSlot` to the block function which is useful for manual mode.
+In [manual](/docs/manual-mode/block) mode, the `experimental_noSlot` can be passed to the block function.
 
 ```js
 import { block } from 'million/react';
