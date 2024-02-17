@@ -12,24 +12,20 @@ description: Some progress in removing the <slot /> elements around Million.js b
 
 ---
 
-- Why it's here
-- The feature
-- Limitations
-
-If you've used Million.js for a while, you've probably noticed there are `<slot />` elements wrapping your Million.js components. The reasoning behind that was slightly mentioned in the [Behind The Block](/blog/behind-the-block) blog post but we're going to touch on that and dicuss the ways we're going to try to avoid it.
+If you've used Million.js for a while, you've probably noticed there are `<slot />` HTML elements wrapping your Million.js components. The reasoning behind that was slightly mentioned in the [Behind The Block](/blog/behind-the-block) blog post but we're going to touch on that and discuss the ways we're going to try avoiding it.
 
 ## History
 
-The key point in Million.js is that it takes over the rendering step of a specifc component or a chunk of your React app and then handles it itself and mounts it to the DOM directly rather than letting React do anything on that end.
+The key point of Million.js is that it takes over the rendering step of a specifc component or a chunk of your React app and then handles it itself and mounts it to the DOM directly rather than letting React do anything on that end.
 
 
 ![React to Million mount](/react-to-million.png)
 
-The `Loader` component here is the bridge between Million and React! Or in other words, it's the `<slot />` element. Having `<slot />` would stop us worrying about non-Million siblings or siblings that come from other blocks. In general, it makes rendering much easier for Million.  
+The `Loader` component here is the bridge between Million and React! Or in other words, it's the `<slot />` element. Having `<slot />` would stop us from worrying about non-Million siblings or siblings that come from other blocks. In other words, it makes rendering much easier for Million.  
 
 
 ## Issues
-This approach works flawlessly, but there are few issues being reported which are completely fair. 
+This approach works for rendering, but there are a few issues being reported which are completely fair.
 ### Broken Styles
 
 In the process of adding the Million compiler, people often face this issue where the styles they used to apply do not work anymore since they did not expect there are few `slot`s have been added here and there.
@@ -51,15 +47,15 @@ function Lion() {
 
 ### Unpredictable Structure
 
-The users would find it hard to predict where `<slot />` elements are going to be appended, specially when they adopt the [auto](/docs/automatic) mode. 
+The users would find it hard to predict where `<slot />` elements are going to be appended, especially when they adopt the [auto](/docs/automatic) mode. 
 
-`<slot />` are also wrapped around some of the props in auto mode because the compiler might decide that the rendering those prps might be handled better by React rather than Million. We call those "React render scope"s which are just [React portals](https://react.dev/reference/react-dom/createPortal).
+`<slot />` are also wrapped around some of the props in auto mode because the compiler might decide that the rendering of those props might be handled by React rather than Million. We call those "React render scope"s which are just [React portals](https://react.dev/reference/react-dom/createPortal).
  
 ## Solution
 
 After 30 days of failed [trial](https://github.com/aidenybai/million/pull/858) for removing the need for `<slot />`, I found out this is not an easy thing to do. It was hard to predict React's behaviour, having siblings caused bugs, portals were not being rendered in right position and many complicated issues like that.
 
-So the decision was to take this step by step as an experimentation and tackling each API (block, For, ...) seperately so we see how far can we go with this. 
+So the decision was to take this step by step as an experimentation and tackling each API (block, For, ...) separately so we see how far can we go with this. 
 
 Now million offers an experimental flag to enable the `noSlot` mode which avoids wrapping million blocks with `<slot />` elements. 
 
@@ -90,3 +86,9 @@ function Lion() {
 ```
   
 For more information around the limitations, refer to the [docs](/docs/experimental). 
+
+## What's next
+- `noSlot` in <For />
+- `noSlot` in React Render Scopes
+
+As we experimented with different implementations for the next steps, it's not apparent which implementation is the ideal and the best implementation Million.js can make. So we need more time to experiment with them so the best results are delivered to the users.
