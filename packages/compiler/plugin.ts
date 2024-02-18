@@ -26,7 +26,7 @@ async function compile(
   isServer?: boolean,
 ): Promise<CompilerOutput> {
   displayIntro(options);
-  
+
   const plugins: ParserOptions['plugins'] = [
     'jsx',
     // import { example } from 'example' with { example: true };
@@ -136,11 +136,21 @@ export const unplugin = createUnplugin((options: Options = {}, meta) => {
       return filter(id);
     },
     async transform(code: string, id: string) {
-      const result = await compile(id, code, options, telemetryInstance, options.server);
-      return {
-        code: result.code || '',
-        map: result.map,
-      };
+      try {
+        const result = await compile(
+          id,
+          code,
+          options,
+          telemetryInstance,
+          options.server,
+        );
+        return {
+          code: result.code || '',
+          map: result.map,
+        };
+      } catch (_err) {
+        return null;
+      }
     },
     vite: {
       configResolved(config) {
@@ -160,14 +170,24 @@ export const unplugin = createUnplugin((options: Options = {}, meta) => {
         options.hmr = config.env.DEV;
       },
       async transform(code, id, opts) {
-        if (filter(id)) {
-          const result = await compile(id, code, options, telemetryInstance, opts?.ssr);
-          return {
-            code: result.code || '',
-            map: result.map,
-          };
+        try {
+          if (filter(id)) {
+            const result = await compile(
+              id,
+              code,
+              options,
+              telemetryInstance,
+              opts?.ssr,
+            );
+            return {
+              code: result.code || '',
+              map: result.map,
+            };
+          }
+          return null;
+        } catch (_err) {
+          return null;
         }
-        return null;
       },
     },
   };
