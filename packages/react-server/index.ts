@@ -1,4 +1,11 @@
-import type { ComponentType, ForwardedRef, JSX, ReactPortal } from 'react';
+import type {
+  ComponentType,
+  ForwardedRef,
+  JSX,
+  PropsWithChildren,
+  ReactNode,
+  ReactPortal,
+} from 'react';
 import {
   Fragment,
   createElement,
@@ -16,13 +23,19 @@ import type {
   MillionProps,
   Options,
 } from '../types';
+import parse from 'html-react-parser';
+import { experimental_options } from '../experimental';
+import { useSSRSafeId } from './utils';
+import { useContainer, useNearestParent } from '../react/its-fine';
+// import { cloneNode$ } from '../million/dom';
 
 let globalInfo;
 
 export const block = <P extends MillionProps>(
   Component: ComponentType<P>,
-  options: Options<P> = {},
+  options: Options<P> = {}
 ): ComponentType<P> => {
+  const noSlot = options?.experimental_noSlot ?? experimental_options.noSlot;
   let blockFactory = globalInfo ? globalInfo.block(Component, options) : null;
 
   const rscBoundary = options.rsc
@@ -30,14 +43,33 @@ export const block = <P extends MillionProps>(
     : null;
 
   function MillionBlockLoader(props?: P) {
-    const ref = useRef<HTMLElement>(null);
+    const container = useContainer<HTMLElement>(); // usable when there's no parent other than the root element
+    const parentRef = useNearestParent<HTMLElement>();
+    const id = useSSRSafeId();
+    const ref = useRef<HTMLElement | null>(null);
     const patch = useRef<((props: P) => void) | null>(null);
 
     const effect = useCallback(() => {
       const init = (): void => {
-        const el = ref.current;
+        if (!ref.current && !noSlot) return;
 
-        if (!el) return;
+        if (noSlot) {
+          ref.current = (parentRef.current?.el ?? container.current?.el) as HTMLElement;
+          // the parentRef depth is only bigger than container depth when we're in a portal, where the portal el is closer than the jsx parent
+          if (props.scoped || parentRef.current!.depth > container.current!.depth) {
+            // in portals, parentRef is not the proper parent
+            ref.current = container.current?.el!
+          }
+  //         if (ref.current.childNodes.length) {
+  //           console.error(new Error(`\`experimental_options.noSlot\` does not support having siblings at the moment.
+  // The block element should be the only child of the \`${
+  //             (cloneNode$.call(ref.current) as HTMLElement).outerHTML
+  //           }\` element.
+  // To avoid this error, \`experimental_options.noSlot\` should be false`));
+  //         }
+        }
+        const el = ref.current!
+
         globalInfo.removeComments(el);
 
         const currentBlock = blockFactory(props, props?.key);
@@ -56,7 +88,7 @@ export const block = <P extends MillionProps>(
             Component,
             globalInfo.unwrap,
             options.shouldUpdate,
-            options.svg,
+            options.svg
           );
 
           init();
@@ -76,7 +108,14 @@ export const block = <P extends MillionProps>(
       createElement(Effect, { effect }),
       rscBoundary
         ? createElement(rscBoundary, { ...props, ref } as any)
-        : createSSRBoundary<P>(Component as any, props!, ref, options.svg),
+        : createSSRBoundary<P>(
+            Component as any,
+            props!,
+            ref,
+            noSlot,
+            id,
+            options.svg
+          )
     );
     return vnode;
   }
@@ -106,7 +145,7 @@ export function For<T>({ each, children, ssr, svg }: MillionArrayProps<T>) {
     return createElement(
       svg ? SVG_RENDER_SCOPE : RENDER_SCOPE,
       { suppressHydrationWarning: true },
-      ...each.map(children),
+      ...each.map(children)
     );
   }
 
@@ -145,14 +184,30 @@ export const createSSRBoundary = <P extends MillionProps>(
   Component: ComponentType<P>,
   props: P,
   ref: ForwardedRef<unknown>,
-  svg = false,
+  noSlot: boolean,
+  id: string,
+  svg = false
 ) => {
-  const ssrProps =
-    typeof window === 'undefined'
-      ? {
-          children: createElement<P>(Component, props),
-        }
-      : { dangerouslySetInnerHTML: { __html: '' } };
+  const isServer = typeof window === 'undefined';
+  if (noSlot) {
+    console.log(id)
+    return createElement(
+      Fragment,
+      null,
+      createHydrationBoundary(id, 'start', isServer),
+
+      createElement(Suspend, {
+        children: createElement<P>(Component, props),
+        id,
+      }),
+      createHydrationBoundary(id, 'end', isServer)
+    );
+  }
+  const ssrProps = isServer
+    ? {
+        children: createElement<P>(Component, props),
+      }
+    : { dangerouslySetInnerHTML: { __html: '' } };
 
   return createElement(svg ? SVG_RENDER_SCOPE : RENDER_SCOPE, {
     suppressHydrationWarning: true,
@@ -161,15 +216,52 @@ export const createSSRBoundary = <P extends MillionProps>(
   });
 };
 
+const thrown = new Map();
+
+function Suspend({
+  children,
+  id,
+}: PropsWithChildren<{ id: string }>): ReactNode {
+  if (typeof window === 'undefined') {
+    return children;
+  }
+
+  let html = '';
+  const startTemplate = document.getElementById(`start-${id}`);
+  const endTemplate = document.getElementById(`end-${id}`);
+  if (!thrown.has(id) && startTemplate && endTemplate) {
+    let el = startTemplate.nextElementSibling;
+    while (el && el !== endTemplate) {
+      html += el.outerHTML;
+      el = el.nextElementSibling;
+    }
+    startTemplate.remove();
+    endTemplate.remove();
+    thrown.set(id, parse(html));
+    throw Promise.resolve();
+  }
+  // we can return null to avoid parsing but this would cause a flashing
+  return thrown.get(id);
+}
+
+const createHydrationBoundary = (
+  id: string,
+  phase: 'start' | 'end',
+  isSSR: boolean
+) => {
+  // TODO: Better to use html commnts which are not allowed in React
+  return isSSR ? createElement('template', { id: `${phase}-${id}` }) : null;
+};
+
 export const createRSCBoundary = <P extends MillionProps>(
   Component: ComponentType<P>,
-  svg = false,
+  svg = false
 ) => {
   return memo(
     forwardRef((props: P, ref) =>
-      createSSRBoundary(Component, props, ref, svg),
+      createSSRBoundary(Component, props, ref, svg)
     ),
-    () => true,
+    () => true
   );
 };
 
@@ -181,7 +273,7 @@ function isEqual(a: unknown, b: unknown): boolean {
 
 function shouldCompiledBlockUpdate(
   prev: MillionProps,
-  next: MillionProps,
+  next: MillionProps
 ): boolean {
   for (const key in prev) {
     if (!isEqual(prev[key], next[key])) {
@@ -199,7 +291,7 @@ interface CompiledBlockOptions
 // TODO Fix SSR
 export function compiledBlock(
   render: (props: MillionProps) => JSX.Element,
-  { portals, ...options }: CompiledBlockOptions,
+  { portals, ...options }: CompiledBlockOptions
 ): ComponentType<MillionProps> {
   const RenderBlock = block<MillionProps>((props) => render(props), {
     ...options,
@@ -239,7 +331,7 @@ export function compiledBlock(
           return createElement(
             Fragment,
             {},
-            createElement(RenderBlock, derived),
+            createElement(RenderBlock, derived)
             // TODO: This should be uncommented, but doing that, value.reset would fail as it is undefined. This should be revisited
             // !firstRender ? targets : undefined,
           );
