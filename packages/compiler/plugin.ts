@@ -10,7 +10,7 @@ import { displayIntro } from './utils/log';
 // import { babel } from './babel';
 import type { CompilerOptions } from './types';
 
-const DEFAULT_INCLUDE = '**/*.{jsx,tsx,ts,js,mjs,cjs}';
+const DEFAULT_INCLUDE = '**/*.{jsx,tsx}';
 const DEFAULT_EXCLUDE = 'node_modules/**/*.{jsx,tsx,ts,js,mjs,cjs}';
 
 interface CompilerOutput {
@@ -26,8 +26,20 @@ async function compile(
   isServer?: boolean,
 ): Promise<CompilerOutput> {
   displayIntro(options);
-  
-  const plugins: ParserOptions['plugins'] = ['jsx'];
+
+  const plugins: ParserOptions['plugins'] = [
+    'jsx',
+    // import { example } from 'example' with { example: true };
+    'importAttributes',
+    // () => throw example
+    'throwExpressions',
+    // You know what this is
+    'decorators',
+    // const { #example: example } = this;
+    'destructuringPrivate',
+    // using example = myExample()
+    'explicitResourceManagement',
+  ];
 
   if (/\.[mc]?tsx?$/i.test(id)) {
     plugins.push('typescript');
@@ -124,11 +136,21 @@ export const unplugin = createUnplugin((options: Options = {}, meta) => {
       return filter(id);
     },
     async transform(code: string, id: string) {
-      const result = await compile(id, code, options, telemetryInstance, options.server);
-      return {
-        code: result.code || '',
-        map: result.map,
-      };
+      try {
+        const result = await compile(
+          id,
+          code,
+          options,
+          telemetryInstance,
+          options.server,
+        );
+        return {
+          code: result.code || '',
+          map: result.map,
+        };
+      } catch (_err) {
+        return null;
+      }
     },
     vite: {
       configResolved(config) {
@@ -148,14 +170,24 @@ export const unplugin = createUnplugin((options: Options = {}, meta) => {
         options.hmr = config.env.DEV;
       },
       async transform(code, id, opts) {
-        if (filter(id)) {
-          const result = await compile(id, code, options, telemetryInstance, opts?.ssr);
-          return {
-            code: result.code || '',
-            map: result.map,
-          };
+        try {
+          if (filter(id)) {
+            const result = await compile(
+              id,
+              code,
+              options,
+              telemetryInstance,
+              opts?.ssr,
+            );
+            return {
+              code: result.code || '',
+              map: result.map,
+            };
+          }
+          return null;
+        } catch (_err) {
+          return null;
         }
-        return null;
       },
     },
   };

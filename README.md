@@ -140,7 +140,7 @@ function App() {
 }
 ```
 
-Notice how when the `count` is updated, Million.js will directly update the DOM node. Million.js turns React reconciliation from `O(n^3)` (cubic time) to `O(1)` (constant time).
+Notice how when the `count` is updated, Million.js will directly update the DOM node. Million.js turns React reconciliation from `O(n)` (linear time) to `O(1)` (constant time).
 
 > How fast is it? [**→ View the benchmarks**](https://krausest.github.io/js-framework-benchmark/current.html)
 

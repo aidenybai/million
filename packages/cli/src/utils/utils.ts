@@ -1,14 +1,14 @@
 import * as fs from 'node:fs';
 import * as clack from '@clack/prompts';
 import * as diff from 'diff';
-import chalk from 'chalk';
+import { bold, cyan, dim, green, red } from 'kleur/colors';
 import type { BuildTool } from '../types';
 
 /**
  * Abort the process if the user cancels the input prompt.
  */
 export async function abortIfCancelled<T>(
-  input: T | Promise<T>,
+  input: T | Promise<T>
 ): Promise<Exclude<T, symbol>> {
   if (clack.isCancel(await input)) {
     clack.cancel('Million setup cancelled.');
@@ -24,9 +24,9 @@ export async function abortIfCancelled<T>(
 export function abort(message?: string, status?: number): never {
   clack.outro(
     message ??
-      `${chalk.red('Setup failed.')}\nReport a bug at ${chalk.cyan(
-        'https://github.com/aidenybai/million/issues',
-      )}`,
+      `${red('Setup failed.')}\nReport a bug at ${cyan(
+        'https://github.com/aidenybai/million/issues'
+      )}`
   );
   return process.exit(status ?? 1);
 }
@@ -35,10 +35,14 @@ export function abort(message?: string, status?: number): never {
  * Get the next router to use.
  */
 export async function getNextRouter(): Promise<'app' | 'pages'> {
-  if (fs.existsSync('src/app') || fs.existsSync('app')) {
-    return 'app';
-  } else if (fs.existsSync('src/pages') || fs.existsSync('pages')) {
+  if (fs.existsSync('pages')) {
     return 'pages';
+  } else if (fs.existsSync('app')) {
+    return 'app';
+  } else if (fs.existsSync('src/pages')) {
+    return 'pages';
+  } else if (fs.existsSync('src/app')) {
+    return 'app';
   }
   const selectedRouter: 'app' | 'pages' = await abortIfCancelled(
     clack.select({
@@ -53,7 +57,7 @@ export async function getNextRouter(): Promise<'app' | 'pages'> {
           value: 'pages',
         },
       ],
-    }),
+    })
   );
   return selectedRouter;
 }
@@ -62,7 +66,7 @@ export function highlightCodeDifferences(
   oldCode: string,
   newCode: string,
   detectedBuildTool: BuildTool,
-  CONTEXT_SIZE = 1,
+  CONTEXT_SIZE = 1
 ): void {
   const differences = diff.diffWords(oldCode, newCode);
 
@@ -79,9 +83,9 @@ export function highlightCodeDifferences(
     let res = '';
 
     if (part.added) {
-      res = chalk.bold.green(part.value);
+      res = bold(green(part.value));
     } else if (part.removed) {
-      res = chalk.red(part.value);
+      res = red(part.value);
     } else if (isContextEnd && isContextStart) {
       const split = part.value.split('\n');
       if (split.length - 1 > 2 * CONTEXT_SIZE) {
@@ -91,7 +95,7 @@ export function highlightCodeDifferences(
           split.slice(-CONTEXT_SIZE - 1).join('\n'),
         ].join('\n');
       } else {
-        res = chalk.dim(part.value);
+        res = dim(part.value);
       }
     } else if (isContextEnd) {
       res = part.value
@@ -109,6 +113,6 @@ export function highlightCodeDifferences(
   });
   clack.note(
     highlightedCode,
-    `Take a look at changes in ${chalk.cyan(detectedBuildTool.configFilePath)}`,
+    `Take a look at changes in ${cyan(detectedBuildTool.configFilePath)}`
   );
 }

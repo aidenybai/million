@@ -3,7 +3,7 @@ import * as path from 'node:path';
 import { setTimeout as sleep } from 'node:timers/promises';
 import { detect } from '@antfu/ni';
 import * as clack from '@clack/prompts';
-import chalk from 'chalk';
+import { bold, cyan, dim, red } from 'kleur/colors';
 import type { PackageManager } from '../types';
 import { abort, abortIfCancelled } from './utils';
 import { npm, pnpm, yarn, bun, packageManagers } from './constants';
@@ -29,7 +29,7 @@ export async function detectPackageManger(): Promise<PackageManager | null> {
       return bun;
     default:
       return null;
-  } 
+  }
 }
 
 /**
@@ -54,9 +54,7 @@ async function getPackageManager(): Promise<PackageManager> {
   const detectedPackageManager = await detectPackageManger();
   await sleep(1000);
   s.stop(
-    `${chalk.bold(
-      detectedPackageManager?.label || 'No package manager',
-    )} detected.`,
+    `${bold(detectedPackageManager?.label || 'No package manager')} detected.`
   );
 
   if (detectedPackageManager) {
@@ -70,11 +68,9 @@ async function getPackageManager(): Promise<PackageManager> {
         options: packageManagers.map((packageManager) => ({
           value: packageManager,
           label: packageManager.label,
-          hint: `Be sure you have ${chalk.bold(
-            packageManager.label,
-          )} installed.`,
+          hint: `Be sure you have ${bold(packageManager.label)} installed.`,
         })),
-      }),
+      })
     );
 
   return selectedPackageManager;
@@ -96,10 +92,10 @@ export async function installPackage({
   if (alreadyInstalled && askBeforeUpdating) {
     const shouldUpdatePackage = await abortIfCancelled(
       clack.confirm({
-        message: `The ${chalk.bold.cyan(
-          packageName,
+        message: `The ${bold(
+          cyan(packageName)
         )} package is already installed. Do you want to update it to the latest version?`,
-      }),
+      })
     );
 
     if (!shouldUpdatePackage) {
@@ -108,12 +104,12 @@ export async function installPackage({
   }
 
   const packageManager = await getPackageManager();
-  
+
   const s = clack.spinner();
   s.start(
-    `${alreadyInstalled ? 'Updating' : 'Installing'} ${chalk.bold.cyan(
-      packageName,
-    )} with ${chalk.bold(packageManager.label)}.`,
+    `${alreadyInstalled ? 'Updating' : 'Installing'} ${bold(
+      cyan(packageName)
+    )} with ${bold(packageManager.label)}.`
   );
 
   try {
@@ -121,46 +117,50 @@ export async function installPackage({
 
     await sleep(1000);
 
-    const installed = await isPackageInstalled()
+    const installed = await isPackageInstalled();
 
-    if(!installed) {
-
-      s.stop();  
+    if (!installed) {
+      s.stop();
 
       const shouldUseLegacyPeerDeps = await clack.confirm({
-        message: `The ${chalk.bold.cyan(
-          packageName,
+        message: `The ${bold(
+          cyan(packageName)
         )} package did not install, would you like to use the "--legacy-peer-deps" flag?`,
-      })
-  
+      });
+
       if (!shouldUseLegacyPeerDeps) {
-        throw new Error('Please try again  or refer docs to install manually: https://million.dev/docs/install')
+        throw new Error(
+          'Please try again  or refer docs to install manually: https://million.dev/docs/install'
+        );
       }
 
-      installPackageWithPackageManager(packageManager, packageName, '--legacy-peer-deps');
+      installPackageWithPackageManager(
+        packageManager,
+        packageName,
+        '--legacy-peer-deps'
+      );
 
       s.start(
-        `${alreadyInstalled ? 'Updating' : 'Installing'} ${chalk.bold.cyan(
-          packageName,
-        )} with ${chalk.bold(packageManager.label)} and the "--legacy-peer-deps" flag.`,
+        `${alreadyInstalled ? 'Updating' : 'Installing'} ${bold(
+          cyan(packageName)
+        )} with ${bold(
+          packageManager.label
+        )} and the "--legacy-peer-deps" flag.`
       );
 
       await sleep(1000);
-
     }
 
     s.stop(
-      `${alreadyInstalled ? 'Updated' : 'Installed'} ${chalk.bold.cyan(
-        packageName,
-      )} with ${chalk.bold(packageManager.label)}.`,
+      `${alreadyInstalled ? 'Updated' : 'Installed'} ${bold(
+        cyan(packageName)
+      )} with ${bold(packageManager.label)}.`
     );
-
-
   } catch (e) {
     clack.log.error(
-      `${chalk.red('Error during installation.')}\n\n${chalk.dim(
-        'Please try again or refer docs to install manually: https://million.dev/docs/install',
-      )}`,
+      `${red('Error during installation.')}\n\n${dim(
+        'Please try again or refer docs to install manually: https://million.dev/docs/install'
+      )}`
     );
     s.stop('Installation failed.');
     return abort();
