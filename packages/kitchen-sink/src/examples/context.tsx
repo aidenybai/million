@@ -5,7 +5,7 @@ import { block } from 'million/react';
 // experimental_options.noSlot = true
 const ThemeContext = createContext('light');
 
-const Context = block(({onClick}) => {
+const Context = block(({ onClick }) => {
   const theme = useContext(ThemeContext);
 
   return (
@@ -26,10 +26,12 @@ const App = block(() => {
 
   return (
     <div>
-    <ThemeContext.Provider value={theme}>
-      <Context onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')} />
-    </ThemeContext.Provider>
-  </div>
+      <ThemeContext.Provider value={theme}>
+        <Context
+          onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+        />
+      </ThemeContext.Provider>
+    </div>
   );
 });
 

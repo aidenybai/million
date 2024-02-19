@@ -89,7 +89,10 @@ export function useFiber(): Fiber {
  *
  * In react-dom, this would be a DOM element; in react-three-fiber this would be an instance descriptor.
  */
-export function useNearestParent<T extends any,B extends {el: T, depth: number} = {el: T, depth: number}>(
+export function useNearestParent<
+  T extends any,
+  B extends { el: T; depth: number } = { el: T; depth: number },
+>(
   /** An optional element type to filter to. */
   type?: keyof JSX.IntrinsicElements,
 ): React.MutableRefObject<B | undefined> {
@@ -100,10 +103,12 @@ export function useNearestParent<T extends any,B extends {el: T, depth: number} 
     parentRef.current.el = traverse(
       fiber,
       (node) => {
-        parentRef.current.depth++
-        
-        return typeof node.type === 'string' &&
-        (type === undefined || node.type === type)
+        parentRef.current.depth++;
+
+        return (
+          typeof node.type === 'string' &&
+          (type === undefined || node.type === type)
+        );
       },
       true,
     )?.stateNode;
@@ -117,7 +122,10 @@ export function useNearestParent<T extends any,B extends {el: T, depth: number} 
  *
  * In react-dom, a container will point to the root DOM element; in react-three-fiber, it will point to the root Zustand store.
  */
-export function useContainer<T extends any,B extends {el: T, depth: number} = {el: T, depth: number}>(): React.MutableRefObject<B | undefined> {
+export function useContainer<
+  T extends any,
+  B extends { el: T; depth: number } = { el: T; depth: number },
+>(): React.MutableRefObject<B | undefined> {
   const fiber = useFiber();
   const rootRef = useRef<B>({ el: null as any, depth: 0 } as B);
 
@@ -125,8 +133,8 @@ export function useContainer<T extends any,B extends {el: T, depth: number} = {e
     rootRef.current.el = traverse(
       fiber,
       (node) => {
-        rootRef.current.depth++
-        return node.stateNode?.containerInfo != null
+        rootRef.current.depth++;
+        return node.stateNode?.containerInfo != null;
       },
       true,
     )?.stateNode.containerInfo;

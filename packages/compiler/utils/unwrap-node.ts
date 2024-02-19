@@ -1,10 +1,9 @@
 import type * as t from '@babel/types';
 import { isNestedExpression } from './checks';
 
-type TypeCheck<K> =
-  K extends (node: t.Node) => node is (infer U extends t.Node)
-    ? U
-    : never;
+type TypeCheck<K> = K extends ((node: t.Node) => node is infer U extends t.Node)
+  ? U
+  : never;
 
 type TypeFilter = (node: t.Node) => boolean;
 

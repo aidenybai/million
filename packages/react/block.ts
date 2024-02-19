@@ -1,27 +1,24 @@
-import { createContext, createElement, Fragment, useCallback, useContext, useMemo, useRef } from 'react';
-import type { ComponentType, Ref, Dispatch, SetStateAction } from 'react';
+import { createElement, Fragment, useCallback, useMemo, useRef } from 'react';
+import type { ComponentType, Ref } from 'react';
 import {
   block as createBlock,
   mount$,
   patch as patchBlock,
-  remove$ as removeBlock
+  remove$ as removeBlock,
 } from '../million/block';
 import { MapHas$, MapSet$ } from '../million/constants';
 import type { MillionPortal, MillionProps, Options } from '../types';
+import { experimental_options } from '../experimental';
+import { cloneNode$ } from '../million/dom';
 import { Effect, REGISTRY, RENDER_SCOPE, SVG_RENDER_SCOPE } from './constants';
 import { processProps, unwrap } from './utils';
-import { experimental_options } from '../experimental';
 import { useContainer, useNearestParent } from './its-fine';
-import { cloneNode$ } from '../million/dom';
-
-// experimental_options.noSlot = true;
-export const mountContext = createContext<Dispatch<SetStateAction<boolean>> | null>(null)
 
 export const block = <P extends MillionProps>(
   fn: ComponentType<P> | null,
-  options: Options<P> | null | undefined = {}
+  options: Options<P> | null | undefined = {},
 ) => {
-  const noSlot = options?.experimental_noSlot ?? experimental_options.noSlot
+  const noSlot = options?.experimental_noSlot ?? experimental_options.noSlot;
   let blockTarget: ReturnType<typeof createBlock> | null = options?.block;
   const defaultType = options?.svg ? SVG_RENDER_SCOPE : RENDER_SCOPE;
 
@@ -30,15 +27,14 @@ export const block = <P extends MillionProps>(
       fn as any,
       unwrap as any,
       options?.shouldUpdate as Parameters<typeof createBlock>[2],
-      options?.svg
+      options?.svg,
     );
   }
 
   const MillionBlock = <P extends MillionProps>(
     props: P,
-    forwardedRef: Ref<any>
+    forwardedRef: Ref<any>,
   ) => {
-    // const mount = useContext(mountContext)
     const container = useContainer<HTMLElement>(); // usable when there's no parent other than the root element
     const parentRef = useNearestParent<HTMLElement>();
     const hmrTimestamp = props._hmr;
@@ -52,22 +48,27 @@ export const block = <P extends MillionProps>(
     const effect = useCallback(() => {
       if (!ref.current && !noSlot) return;
       const currentBlock = blockTarget!(props, props.key);
-      if (hmrTimestamp && ref.current && ref.current.textContent) {
+      if (hmrTimestamp && ref.current?.textContent) {
         ref.current.textContent = '';
       }
       if (noSlot) {
-        ref.current = (parentRef.current?.el ?? container.current?.el) as HTMLElement;
+        ref.current = (parentRef.current?.el ?? container.current?.el)!;
         // the parentRef depth is only bigger than container depth when we're in a portal, where the portal el is closer than the jsx parent
-        if (props.scoped || parentRef.current!.depth > container.current!.depth) {
+        if (
+          props.scoped ||
+          parentRef.current!.depth > container.current!.depth
+        ) {
           // in portals, parentRef is not the proper parent
-          ref.current = container.current?.el!
+          ref.current = container.current?.el!;
         }
         if (ref.current.childNodes.length) {
-          console.error(new Error(`\`experimental_options.noSlot\` does not support having siblings at the moment.
+          console.error(
+            new Error(`\`experimental_options.noSlot\` does not support having siblings at the moment.
 The block element should be the only child of the \`${
-            (cloneNode$.call(ref.current) as HTMLElement).outerHTML
-          }\` element.
-To avoid this error, \`experimental_options.noSlot\` should be false`));
+              (cloneNode$.call(ref.current) as HTMLElement).outerHTML
+            }\` element.
+To avoid this error, \`experimental_options.noSlot\` should be false`),
+          );
         }
       }
       if (patch.current === null || hmrTimestamp) {
@@ -78,20 +79,20 @@ To avoid this error, \`experimental_options.noSlot\` should be false`));
             blockTarget!(
               props,
               props.key,
-              options?.shouldUpdate as Parameters<typeof createBlock>[2]
-            )
+              options?.shouldUpdate as Parameters<typeof createBlock>[2],
+            ),
           );
         };
         // mount?.(true)
       }
       return () => {
-        removeBlock.call(currentBlock)
-      }
+        removeBlock.call(currentBlock);
+      };
     }, []);
 
     const marker = useMemo(() => {
       if (noSlot) {
-        return null
+        return null;
       }
       return createElement(options?.as ?? defaultType, { ref });
     }, []);
@@ -102,10 +103,16 @@ To avoid this error, \`experimental_options.noSlot\` should be false`));
       children[i] = portalRef.current[i]?.portal;
     }
 
-    const vnode = createElement(Fragment, {}, marker, createElement(Effect, {
-      effect,
-      deps: hmrTimestamp ? [hmrTimestamp] : [],
-    }), children);
+    const vnode = createElement(
+      Fragment,
+      {},
+      marker,
+      createElement(Effect, {
+        effect,
+        deps: hmrTimestamp ? [hmrTimestamp] : [],
+      }),
+      children,
+    );
 
     return vnode;
   };

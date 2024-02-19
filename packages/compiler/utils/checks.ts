@@ -53,7 +53,9 @@ export function isComponentishName(name: string): boolean {
   return name[0] >= 'A' && name[0] <= 'Z';
 }
 
-export function isStatementTopLevel(path: babel.NodePath<t.Statement>): boolean {
+export function isStatementTopLevel(
+  path: babel.NodePath<t.Statement>,
+): boolean {
   let blockParent = path.scope.getBlockParent();
   const programParent = path.scope.getProgramParent();
   // a FunctionDeclaration binding refers to itself as the block parent

@@ -25,8 +25,8 @@ type Module = { default: ComponentType<any> };
             .replace('.tsx', '')
             .replace('.jsx', ''),
           mod as () => Promise<Module>,
-        ] as const
-    )
+        ] as const,
+    ),
   );
   const loadedModules: LazyExoticComponent<ComponentType<any>>[] = [];
 

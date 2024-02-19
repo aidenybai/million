@@ -50,10 +50,8 @@ const VirtualBoard: React.FC = () => {
   const [undoStack, setUndoStack] = useState<CoordinateType[]>([]);
   const [redoStack, setRedoStack] = useState<CoordinateType[]>([]);
 
-  const isChrome = /Chrome/.test(navigator.userAgent) 
+  const isChrome = /Chrome/.test(navigator.userAgent);
   const isFirefox = /Firefox/.test(navigator.userAgent);
-
-
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const textInputRef = useRef<HTMLInputElement>(null);
@@ -375,7 +373,7 @@ const VirtualBoard: React.FC = () => {
           style={{
             padding: isChrome ? '0' : isFirefox ? '2px' : undefined,
             width: isChrome ? '50px' : isFirefox ? '50px' : undefined,
-            height: isChrome ? '33px' : isFirefox ? '30px' : undefined
+            height: isChrome ? '33px' : isFirefox ? '30px' : undefined,
           }}
           onChange={handleColorChange}
         />
@@ -397,7 +395,10 @@ const VirtualBoard: React.FC = () => {
           onClick={handleText}
           width={800}
           height={600}
-          style={{ border: '2px solid black', cursor: mode === 'draw' ? 'crosshair' : 'default' }}
+          style={{
+            border: '2px solid black',
+            cursor: mode === 'draw' ? 'crosshair' : 'default',
+          }}
         />
         <div className="textInputFunctionality">
           {textInput.show && (

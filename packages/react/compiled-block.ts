@@ -1,12 +1,8 @@
 // The following code are for the compield `block` components
 import type { ReactPortal, ComponentType, JSX } from 'react';
-import {
-  createElement,
-  useState,
-  useContext,
-} from 'react';
+import { createElement, useState, useContext, Fragment } from 'react';
 import type { MillionPortal, MillionProps, Options } from '../types';
-import { block, mountContext } from './block';
+import { block } from './block';
 import { renderReactScope, scopedContext } from './utils';
 
 function isEqual(a: unknown, b: unknown): boolean {
@@ -17,7 +13,7 @@ function isEqual(a: unknown, b: unknown): boolean {
 
 function shouldCompiledBlockUpdate(
   prev: MillionProps,
-  next: MillionProps
+  next: MillionProps,
 ): boolean {
   for (const key in prev) {
     if (!isEqual(prev[key], next[key])) {
@@ -34,7 +30,7 @@ interface CompiledBlockOptions
 
 export function compiledBlock(
   render: (props: MillionProps) => JSX.Element,
-  { portals, ...options }: CompiledBlockOptions
+  { portals, ...options }: CompiledBlockOptions,
 ): ComponentType<MillionProps> {
   const blockName = `CompiledBlock(Inner(${options.name}))`;
   const RenderBlock = block<MillionProps>((props) => render(props), {
@@ -51,9 +47,8 @@ export function compiledBlock(
       ? (props: MillionProps) => {
           const scoped = useContext(scopedContext);
           const [current] = useState<MillionPortal[]>(() => []);
-          const [mounted, mount] = useState(false);
 
-          let derived = { ...props, scoped };
+          const derived = { ...props, scoped };
 
           for (let i = 0; i < portalCount; i++) {
             const index = portals[i]!;
@@ -73,10 +68,10 @@ export function compiledBlock(
           }
 
           return createElement(
-            mountContext.Provider,
-            { value: mount },
+            Fragment,
+            null,
             createElement(RenderBlock, derived),
-            targets
+            targets,
           );
         }
       : (props: MillionProps) => createElement(RenderBlock, props);

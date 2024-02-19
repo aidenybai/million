@@ -1,8 +1,7 @@
-import * as babel from '@babel/core';
+import type * as babel from '@babel/core';
 import * as t from '@babel/types';
-import { isPathValid } from "./checks";
+import { isPathValid } from './checks';
 import { isAttributeUnsupported } from './jsx';
-
 
 export function isJSXComponentElement(
   path: babel.NodePath<t.JSXElement>,

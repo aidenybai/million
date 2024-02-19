@@ -11,8 +11,7 @@ export const post = async (body: Record<string, any>): Promise<any> => {
       headers: { 'content-type': 'application/json' },
     });
     return response;
-  }
-  catch (error) { 
+  } catch (error) {
     //
   }
-}
+};

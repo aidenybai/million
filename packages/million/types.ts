@@ -47,16 +47,16 @@ export abstract class AbstractBlock {
   /* mount */ abstract m(
     parent?: HTMLElement,
     refNode?: Node | null,
-    hydrateNode?: Node | null
+    hydrateNode?: Node | null,
   ): HTMLElement;
   /* move */ abstract v(
     block: AbstractBlock | null,
-    refNode: Node | null
+    refNode: Node | null,
   ): void;
   /* remove */ abstract x(): void;
   /* shouldUpdate */ abstract u(
     oldProps: MillionProps,
-    newProps: MillionProps
+    newProps: MillionProps,
   ): boolean;
   /* toString */ abstract s(): string;
   /* parent */ abstract t(): HTMLElement | null | undefined;

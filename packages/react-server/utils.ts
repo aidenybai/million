@@ -13,8 +13,7 @@
 // We must avoid a circular dependency with @react-aria/utils, and this useLayoutEffect is
 // guarded by a check that it only runs on the client side.
 // eslint-disable-next-line rulesdir/useLayoutEffectRule
-import type {
-  ReactNode} from 'react';
+import type { ReactNode } from 'react';
 import React, {
   JSX,
   useContext,
@@ -186,9 +185,7 @@ function useModernSSRSafeId(defaultId?: string): string {
 // Use React.useId in React 18 if available, otherwise fall back to our old implementation.
 /** @private */
 export const useSSRSafeId =
-  typeof React.useId === 'function'
-    ? useModernSSRSafeId
-    : useLegacySSRSafeId;
+  typeof React.useId === 'function' ? useModernSSRSafeId : useLegacySSRSafeId;
 
 function getSnapshot() {
   return false;
