@@ -148,8 +148,9 @@ export const unplugin = createUnplugin((options: Options = {}, meta) => {
           code: result.code || '',
           map: result.map,
         };
-      } catch (_err) {
-        return null;
+      } catch (err) {
+        console.error(err);
+        return { code: '' };
       }
     },
     vite: {
