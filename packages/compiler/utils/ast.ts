@@ -13,8 +13,10 @@ export const findComment = (node: t.Node, comment: string) => {
 };
 
 export const shouldBeIgnored = (path: NodePath<t.Node>) => {
-  if (path.node.leadingComments?.some((c) => c.value.includes(IGNORE_ANNOTATION))) {
-    return true 
+  for (const comment of path.node.leadingComments ?? []) {
+    if (comment.value.includes(IGNORE_ANNOTATION)) {
+      return true
+    }
   }
   if (path.parentPath) {
     return shouldBeIgnored(path.parentPath)
