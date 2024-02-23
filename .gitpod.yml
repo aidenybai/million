@@ -16,11 +16,13 @@ tasks:
   - name: Run test directory
     command: |
       cd test
+      pnpm install
       pnpm run test
     openMode: split-right
 
   - name: Run Website directory
     command: |
+      pnpm install
       pnpm run dev
     openMode: split-right
 
