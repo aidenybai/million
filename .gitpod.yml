@@ -11,20 +11,17 @@ tasks:
     command: |
       cd packages
       echo ""
-    openMode: split-right
 
   - name: Run test directory
     command: |
       cd test
       pnpm install
       pnpm run test
-    openMode: split-right
 
   - name: Run Website directory
     command: |
       pnpm install
       pnpm run dev
-    openMode: split-right
 
 ports:
   - name: Website
