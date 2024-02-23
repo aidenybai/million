@@ -6,20 +6,25 @@ tasks:
       node -v 
       pnpm -v
       pnpm install
+      gp sync-done pnpm-global-install
   
-  - name: Run Packages directory
+  - name: Packages directory
+    init: gp sync-await pnpm-global-install
     command: |
       cd packages
       echo ""
 
-  - name: Run test directory
+  - name: Test directory
+    init: gp sync-await pnpm-global-install
     command: |
       cd test
       pnpm install
       pnpm run test
 
-  - name: Run Website directory
+  - name: Website directory
+    init: gp sync-await pnpm-global-install
     command: |
+      cd website
       pnpm install
       pnpm run dev
 
