@@ -10,16 +10,14 @@ tasks:
   - name: Run Packages directory
     command: |
       cd packages
-      pnpm run dev
+      echo ""
     openMode: split-right
-
 
   - name: Run test directory
     command: |
       cd test
       pnpm run test
     openMode: split-right
-
 
   - name: Run Website directory
     command: |
@@ -29,4 +27,5 @@ tasks:
 ports:
   - name: Website
     port: 3000
+    visibility: public
     onOpen: open-browser
