@@ -42,15 +42,16 @@ const TodoList = () => {
 //* <For /> for iterating over the list & block() for optimizing
 const List = block(({ tasks, setTasks }: { tasks: any[]; setTasks: any }) => {
   const toggleTaskCompletion = (index: number) => {
-    const updatedTasks = [...tasks];
-    updatedTasks[index].completed = !updatedTasks[index].completed;
-    setTasks(updatedTasks);
+    setTasks(
+      tasks.map((task) =>
+        task.id === index ? { ...task, completed: !task.completed } : task,
+      ),
+    );
   };
 
   const removeTask = (index: number) => {
     const updatedTasks = tasks.filter((task) => task.id !== index);
     setTasks(updatedTasks);
-    console.log(updatedTasks);
   };
 
   return (

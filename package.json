@@ -58,6 +58,16 @@
         "default": "./dist/packages/compiler.cjs"
       }
     },
+    "./experimental": {
+      "import": {
+        "types": "./dist/packages/experimental.d.mts",
+        "default": "./dist/packages/experimental.mjs"
+      },
+      "require": {
+        "types": "./dist/packages/experimental.d.ts",
+        "default": "./dist/packages/experimental.cjs"
+      }
+    },
     "./react": {
       "import": {
         "types": "./dist/packages/react.d.mts",

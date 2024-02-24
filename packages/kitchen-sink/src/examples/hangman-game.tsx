@@ -477,8 +477,18 @@ export default function App() {
     min-height: 100vh;
     max-width: 800px;
 
-    font-family: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-      Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
+    font-family:
+      Inter,
+      -apple-system,
+      BlinkMacSystemFont,
+      Segoe UI,
+      Roboto,
+      Oxygen,
+      Ubuntu,
+      Cantarell,
+      Fira Sans,
+      Droid Sans,
+      Helvetica Neue,
       sans-serif;
     position: relative;
     padding-bottom: 10px;
