@@ -1,0 +1,72 @@
+---
+title: 'Experimental'
+description: 'Experimental features for Million'
+---
+
+import { Callout, Tab, Tabs } from 'nextra-theme-docs';
+
+# Experimental Options
+
+Million.js has various experimental features that can be toggled through experimental flags. This is to ensure that these features are tested and provide a positive experience prior to their official release as stable features.
+
+Additionally, these experimental options serve to evaluate whether a specific feature can be fully integrated and delivered as part of the complete package.
+
+## No `<slot />` 
+
+Million.js wraps blocks and their reactive props (portals) with [`<slot />`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/slot) HTML tags so that it gets full control over the rendering! 
+
+In the case of props, each block has no responsibility over the props it takes since they come from a different source. What it does in this case is that it wraps those props with `<slot />` and passes the rendering of those props to React.js. It should be noted that this does not apply to any prop.   
+
+This experimental flag tries to achieve the removal of slots so that users would not be bothered with unexpected broken styles and `<slot />` elements.
+
+### `block`
+
+> For now, only blocks are supported in `noSlot` mode. Props are yet to be supported.
+
+For [auto](/docs/automatic) mode, `noSlot` mode can be activated simply by adding this to your entry file:
+
+
+```js
+import { experimental_options } from 'million/experimental';
+
+experimental_options.noSlot = true
+// now `noSlot` mode is activated across your application  
+
+function Lion() {
+  return <img src="https://million.dev/lion.svg" />;
+}
+``` 
+
+In [manual](/docs/manual-mode/block) mode, the `experimental_noSlot` can be passed to the block function.
+
+```js
+import { block } from 'million/react';
+ 
+const LionBlock = block(
+  function Lion() {
+    return <img src="https://million.dev/lion.svg" />;
+  },
+  { experimental_noSlot: true },
+);	
+```
+
+<Callout type="warning">
+`noSlot` blocks do not support having siblings in their parents because handling non-block elements and elements that Million.js does not have any control over is challenging.
+
+```jsx
+<div>
+  <span>first child</span>
+  <LionBlock /> {/* ❌ Wrong */}
+</div>
+
+// 👇👇👇
+
+<div>
+  <span>first child</span>
+  <div>
+    <LionBlock /> {/* ✅ Correct */}
+  </div>
+</div>
+```
+
+</Callout>

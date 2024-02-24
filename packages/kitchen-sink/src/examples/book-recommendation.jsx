@@ -1,4 +1,4 @@
-import { block } from 'million/react';
+import { block, For } from 'million/react';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import axios from 'axios';
@@ -130,8 +130,8 @@ const BookRecommendation = block(() => {
             gap: '1.2rem',
           }}
         >
-          {books.map((book, index) => (
-            <Book
+          <For each={books}>
+            {(book, index) => <Book
               key={index}
               author={
                 book?.volumeInfo.authors && book?.volumeInfo.authors.join(', ')
@@ -139,8 +139,8 @@ const BookRecommendation = block(() => {
               image={book?.volumeInfo?.imageLinks?.thumbnail}
               title={book?.volumeInfo.title}
               url={book?.volumeInfo.previewLink}
-            />
-          ))}
+            />}
+          </For>
         </div>
       </section>
     </main>

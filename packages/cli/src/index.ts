@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 
 import { intro, outro } from '@clack/prompts';
-import chalk from 'chalk';
+import { bold, green, magenta } from 'kleur/colors';
 import { installPackage } from './utils/package-manager.js';
 import { abort } from './utils/utils.js';
 import { handleConfigFile } from './utils/config.js';
@@ -21,18 +21,16 @@ async function runMillionWizard(): Promise<void> {
 async function main(): Promise<void> {
   intro(showWelcomeScreen());
   await runMillionWizard();
-  outro(`${chalk.bold.green('✓ ')} You're all set!`);
+  outro(`${bold(green('✓ '))} You're all set!`);
 }
 
 main().catch(() => {
   abort(
-    'Failed to setup Million.js, refer to the docs for manual setup: https://million.dev/docs/install'
+    'Failed to setup Million.js, refer to the docs for manual setup: https://million.dev/docs/install',
   );
 });
 
 function showWelcomeScreen(): string {
-  const text = chalk.magentaBright(
-    `⚡ Million.js ${process.env.VERSION || ''}`
-  );
+  const text = magenta(`⚡ Million.js ${process.env.VERSION || ''}`);
   return text;
 }

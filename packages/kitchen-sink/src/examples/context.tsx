@@ -1,9 +1,11 @@
 import { useState, createContext, useContext } from 'react';
 import { block } from 'million/react';
+// import { experimental_options } from 'million/experimental'
 
+// experimental_options.noSlot = true
 const ThemeContext = createContext('light');
 
-const Context = block(({onClick}) => {
+const Context = block(({ onClick }) => {
   const theme = useContext(ThemeContext);
 
   return (
@@ -23,9 +25,13 @@ const App = block(() => {
   const [theme, setTheme] = useState('light');
 
   return (
-    <ThemeContext.Provider value={theme}>
-      <Context onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')} />
-    </ThemeContext.Provider>
+    <div>
+      <ThemeContext.Provider value={theme}>
+        <Context
+          onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+        />
+      </ThemeContext.Provider>
+    </div>
   );
 });
 

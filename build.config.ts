@@ -11,6 +11,7 @@ const version = JSON.parse(
 export default defineBuildConfig({
   entries: [
     './packages/million',
+    './packages/experimental',
     './packages/jsx-runtime',
     './packages/compiler',
     './packages/react',

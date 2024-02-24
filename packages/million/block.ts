@@ -38,7 +38,7 @@ const HOLE_PROXY = new Proxy(
     get(_, key: string): Hole {
       return { $: key };
     },
-  }
+  },
 );
 
 export const block = (
@@ -54,17 +54,17 @@ export const block = (
   // Edits are instructions for how to update the DOM given some props
   const root = stringToDOM(
     renderToTemplate(unwrap ? unwrap(vnode) : vnode, edits),
-    svg
+    svg,
   );
-  removeComments(root)
+  removeComments(root);
 
   return <T extends MillionProps>(
     props?: T | null,
     key?: string,
     shouldUpdateCurrentBlock?: (
       oldProps: MillionProps,
-      newProps: MillionProps
-    ) => boolean
+      newProps: MillionProps,
+    ) => boolean,
   ) => {
     return new Block(
       root,
@@ -72,7 +72,7 @@ export const block = (
       props,
       key ?? props?.key ?? null,
       shouldUpdateCurrentBlock ?? shouldUpdate ?? null,
-      null
+      null,
     );
   };
 };
@@ -80,7 +80,7 @@ export const block = (
 export const mount = (
   block: AbstractBlock,
   parent?: HTMLElement,
-  hydrateNode?: HTMLElement
+  hydrateNode?: HTMLElement,
 ): HTMLElement => {
   if ('b' in block && parent) {
     return arrayMount$.call(block, parent, null);
@@ -88,7 +88,10 @@ export const mount = (
   return mount$.call(block, parent, null, hydrateNode);
 };
 
-export const patch = (oldBlock: AbstractBlock, newBlock: AbstractBlock): HTMLElement => {
+export const patch = (
+  oldBlock: AbstractBlock,
+  newBlock: AbstractBlock,
+): HTMLElement => {
   if ('b' in oldBlock || 'b' in newBlock) {
     arrayPatch$.call(oldBlock, newBlock as ArrayBlock);
   }
@@ -115,7 +118,7 @@ export class Block extends AbstractBlock {
     shouldUpdate?:
       | ((oldProps: MillionProps, newProps: MillionProps) => boolean)
       | null,
-    getElements?: ((root: HTMLElement) => HTMLElement[]) | null
+    getElements?: ((root: HTMLElement) => HTMLElement[]) | null,
   ) {
     super();
     this.r = root;
@@ -137,7 +140,7 @@ export class Block extends AbstractBlock {
   m(
     parent?: HTMLElement,
     refNode: Node | null = null,
-    hydrateNode?: HTMLElement | null
+    hydrateNode?: HTMLElement | null,
   ): HTMLElement {
     if (this.l) return this.l;
     // cloneNode(true) uses less memory than recursively creating new nodes
@@ -187,7 +190,7 @@ export class Block extends AbstractBlock {
             el,
             // eslint-disable-next-line eqeqeq
             value == null || value === false ? '' : String(value),
-            edit.i!
+            edit.i!,
           );
         } else if (edit.t & EventFlag) {
           const patch = createEventListener(el, edit.n!, value);
@@ -289,7 +292,7 @@ export class Block extends AbstractBlock {
           setText(
             el[TEXT_NODE_CACHE][k],
             // eslint-disable-next-line eqeqeq
-            newValue == null || newValue === false ? '' : String(newValue)
+            newValue == null || newValue === false ? '' : String(newValue),
           );
         } else if (edit.t & AttributeFlag) {
           setAttribute(el, edit.n!, newValue);
@@ -335,7 +338,7 @@ const getCurrentElement = (
   path: number[],
   root: HTMLElement,
   cache?: HTMLElement[],
-  key?: number
+  key?: number,
 ): HTMLElement => {
   const pathLength = path.length;
   if (!pathLength) return root;

@@ -19,7 +19,7 @@ export const trimJSXChildren = (jsx: t.JSXElement | t.JSXFragment) => {
 };
 
 export const dedupeJSXAttributes = (
-  attributes: (t.JSXAttribute | t.JSXSpreadAttribute)[]
+  attributes: (t.JSXAttribute | t.JSXSpreadAttribute)[],
 ) => {
   const seen = new Set<string>();
   for (let i = attributes.length - 1; i >= 0; i--) {
@@ -58,7 +58,7 @@ export const isComponent = (name: string) => {
 };
 
 export const isJSXFragment = (
-  node: t.Node | null | undefined
+  node: t.Node | null | undefined,
 ): node is t.JSXFragment | t.JSXElement => {
   if (!t.isJSXElement(node)) return t.isJSXFragment(node);
 
@@ -119,7 +119,7 @@ export const handleTopLevelFragment = (returnStatement: t.ReturnStatement) => {
     returnStatement.argument = t.jsxElement(
       t.jsxOpeningElement(renderScopeId, []),
       t.jsxClosingElement(renderScopeId),
-      jsx.children
+      jsx.children,
     );
     return;
   }
