@@ -24,6 +24,7 @@ import type {
   MillionProps,
   Options,
 } from '../types';
+import { renderReactScope } from '../react/utils';
 import { experimental_options } from '../experimental';
 import { useContainer, useNearestParent } from '../react/its-fine';
 import { useSSRSafeId } from './utils';
@@ -179,8 +180,8 @@ export const importSource = (callback: () => void) => {
 
       callback();
     })
-    .catch(() => {
-      throw new Error('Failed to load Million.js');
+    .catch((e) => {
+      throw new Error('Failed to load Million.js: ' + e);
     });
 };
 
@@ -309,25 +310,25 @@ export function compiledBlock(
     portals && portalCount > 0
       ? (props: MillionProps) => {
           const [current] = useState<MillionPortal[]>(() => []);
-          // const [firstRender, setFirstRender] = useState(true)
+          const [firstRender, setFirstRender] = useState(true)
 
           const derived = { ...props };
 
           for (let i = 0; i < portalCount; i++) {
-            // const index = portals[i]!;
-            // derived[index] = renderReactScope(
-            //   derived[index] as JSX.Element,
-            //   false,
-            //   current,
-            //   i,
-            // );
+            const index = portals[i]!;
+            derived[index] = renderReactScope(
+              derived[index] as JSX.Element,
+              false,
+              current,
+              i,
+            );
           }
           const [targets] = useState<ReactPortal[]>([]);
 
-          // useEffect(() => {
-          //   // showing targets for the first render causes hydration error!
-          //   // setFirstRender(false)
-          // })
+          useEffect(() => {
+            // showing targets for the first render causes hydration error!
+            setFirstRender(false)
+          })
           for (let i = 0, len = current.length; i < len; i++) {
             targets[i] = current[i]!.portal;
           }
@@ -337,7 +338,7 @@ export function compiledBlock(
             {},
             createElement(RenderBlock, derived),
             // TODO: This should be uncommented, but doing that, value.reset would fail as it is undefined. This should be revisited
-            // !firstRender ? targets : undefined,
+            !firstRender ? targets : undefined,
           );
         }
       : (props: MillionProps) => createElement(RenderBlock, props);
