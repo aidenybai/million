@@ -8,7 +8,7 @@ export function generateUniqueName(
   let uid;
   let i = 1;
   do {
-    uid = name + '_' + i;
+    uid = `${name}_${i}`;
     i++;
   } while (
     path.scope.hasLabel(uid) ||

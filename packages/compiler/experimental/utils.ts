@@ -54,9 +54,9 @@ export const createDirtyChecker = (holes: string[]) => {
         return t.binaryExpression(
           '!==',
           t.optionalMemberExpression(oldProps, id, false, true),
-          t.optionalMemberExpression(newProps, id, false, true)
+          t.optionalMemberExpression(newProps, id, false, true),
         );
-      })
-    )
+      }),
+    ),
   );
 };

@@ -1,6 +1,9 @@
-import type { NodePath } from "@babel/core";
+import type { NodePath } from '@babel/core';
 
-export function getDescriptiveName(path: NodePath, defaultName: string): string {
+export function getDescriptiveName(
+  path: NodePath,
+  defaultName: string,
+): string {
   let current: babel.NodePath | null = path;
   while (current) {
     switch (current.node.type) {

@@ -1,7 +1,7 @@
-import * as fs from 'node:fs';
 import * as path from 'node:path';
-import chalk from 'chalk';
+import * as fs from 'node:fs';
 import * as clack from '@clack/prompts';
+import { cyan, red, yellow } from 'kleur/colors';
 import type { BuildTool } from '../types';
 import {
   abort,
@@ -30,7 +30,7 @@ export async function modifyConfigFile(
     configFileContent.includes('million') ||
     configFileContent.includes('million/compiler')
       ? abort(
-          `${chalk.red(
+          `${red(
             `Million.js is already configured in ${detectedBuildTool.configFilePath}.`,
           )}\n Please refer docs: https://million.dev/docs/install#use-the-compiler if facing any errors.`,
         )
@@ -111,9 +111,9 @@ export async function modifyConfigFile(
        * */
 
       return abort(
-        `${chalk.yellow(
+        `${yellow(
           `Could not detect module type for ${detectedBuildTool.configFilePath}.`,
-        )}\nPlease refer docs to setup manually:${chalk.cyan(
+        )}\nPlease refer docs to setup manually:${cyan(
           'https://million.dev/docs/install#use-the-compiler',
         )} `,
       );
@@ -132,7 +132,7 @@ export async function modifyConfigFile(
       });
 
       return abort(
-        `Reverted the changes. \nPlease refer docs for manual setup: ${chalk.cyan(
+        `Reverted the changes. \nPlease refer docs for manual setup: ${cyan(
           `https://million.dev/docs/install#use-the-compiler`,
         )}`,
       );
@@ -172,13 +172,13 @@ function detectModuleType(fileContent: string): 'cjs' | 'esm' | 'unknown' {
 }
 
 async function wrapExportCode(
-  buildtool: BuildTool,
+  buildTool: BuildTool,
   oldExportExpression: string,
   auto = true,
 ): Promise<string> {
   // let [firstPart, ...rest]: string[] = [];
 
-  switch (buildtool.name) {
+  switch (buildTool.name) {
     case 'next':
       /**
        * million.next(nextConfig, millionConfig);
