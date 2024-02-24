@@ -19,6 +19,7 @@ import { isUseClient } from './utils/is-use-client';
 import { registerImportDefinition } from './utils/register-import-definition';
 import { unwrapNode } from './utils/unwrap-node';
 import { unwrapPath } from './utils/unwrap-path';
+import { shouldBeIgnored } from './utils/ast';
 
 interface JSXStateContext {
   bailout: boolean;
@@ -223,6 +224,9 @@ function transformFunctionDeclaration(
   path: babel.NodePath<t.FunctionDeclaration>,
 ): void {
   if (isStatementTopLevel(path)) {
+    if (shouldBeIgnored(path)) {
+      return
+    }
     const decl = path.node;
     // Check if declaration is FunctionDeclaration
     if (
@@ -298,6 +302,9 @@ function transformVariableDeclarator(
   ) {
     return;
   }
+  if (shouldBeIgnored(path)) {
+    return
+  }
   const identifier = path.node.id;
   if (!t.isIdentifier(identifier)) {
     return;
@@ -336,6 +343,9 @@ function transformCallExpression(
   ctx: StateContext,
   path: babel.NodePath<t.CallExpression>,
 ): void {
+  if (shouldBeIgnored(path)) {
+    return
+  }
   const definition = getValidImportDefinition(ctx, path.get('callee'));
   if (definition === REACT_IMPORTS.memo[ctx.serverMode]) {
     const args = path.get('arguments');

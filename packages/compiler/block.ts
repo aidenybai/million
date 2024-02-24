@@ -1,13 +1,7 @@
 import * as t from '@babel/types';
-import {
-  HIDDEN_IMPORTS,
-  JSX_SKIP_ANNOTATION,
-  SKIP_ANNOTATION,
-  SVG_ELEMENTS,
-  TRACKED_IMPORTS,
-} from './constants';
-import type { StateContext } from './types';
-import { findComment } from './utils/ast';
+import { HIDDEN_IMPORTS, JSX_SKIP_ANNOTATION, SKIP_ANNOTATION, SVG_ELEMENTS, TRACKED_IMPORTS } from './constants';
+import type { StateContext } from "./types";
+import { findComment, shouldBeIgnored } from './utils/ast';
 import { isComponent, isComponentishName, isPathValid } from './utils/checks';
 import { generateUniqueName } from './utils/generate-unique-name';
 import { getDescriptiveName } from './utils/get-descriptive-name';
@@ -385,10 +379,10 @@ function transformJSX(
   );
 }
 
-export function transformBlock(
-  ctx: StateContext,
-  path: babel.NodePath<t.CallExpression>,
-): void {
+export function transformBlock(ctx: StateContext, path: babel.NodePath<t.CallExpression>): void {
+  if (shouldBeIgnored(path)) {
+    return;
+  }
   const definition = getValidImportDefinition(ctx, path.get('callee'));
   // Check first if the call is a valid `block` call
   if (TRACKED_IMPORTS.block[ctx.serverMode] !== definition) {

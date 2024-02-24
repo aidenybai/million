@@ -1,4 +1,6 @@
+import type { NodePath } from '@babel/core';
 import type * as t from '@babel/types';
+import { IGNORE_ANNOTATION } from '../constants';
 
 export const findComment = (node: t.Node, comment: string) => {
   const comments = node.leadingComments;
@@ -9,3 +11,16 @@ export const findComment = (node: t.Node, comment: string) => {
     }
   }
 };
+
+export const shouldBeIgnored = (path: NodePath<t.Node>) => {
+  for (const comment of path.node.leadingComments ?? []) {
+    if (comment.value.includes(IGNORE_ANNOTATION)) {
+      return true
+    }
+  }
+  if (path.parentPath) {
+    return shouldBeIgnored(path.parentPath)
+  }
+  return false
+}
+
