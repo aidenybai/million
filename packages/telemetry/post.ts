@@ -1,5 +1,12 @@
 import { fetch } from 'undici';
 
+if (
+  !('markResourceTiming' in performance) ||
+  typeof performance['markResourceTiming'] !== 'function'
+) {
+  performance['markResourceTiming'] = () => {}
+}
+
 const MILLION_TELEMETRY_ENDPOINT =
   'https://telemetry.million.dev/api/v1/record';
 
