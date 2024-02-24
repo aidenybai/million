@@ -171,7 +171,7 @@ export class Block extends AbstractBlock {
           if (value && typeof value === 'object' && 'foreign' in value) {
             if (hydrateNode) {
               const child = childAt(el, edit.i!);
-              value.reset(child);
+              // value.reset(child);
             }
 
             const targetEl = value.current;
@@ -278,6 +278,7 @@ export class Block extends AbstractBlock {
             typeof newValue === 'object' &&
             'foreign' in newValue
           ) {
+            debugger
             const targetEl = el[TEXT_NODE_CACHE][k];
             if (newValue.unstable && oldValue !== newValue) {
               const newTargetEl = newValue.current;

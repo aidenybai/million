@@ -46,6 +46,7 @@ export const block = <P extends MillionProps>(
     const container = useContainer<HTMLElement>(); // usable when there's no parent other than the root element
     const parentRef = useNearestParent<HTMLElement>();
     const id = useSSRSafeId();
+    const initializedRef = useRef(false)
     const ref = useRef<HTMLElement | null>(null);
     const patch = useRef<((props: P) => void) | null>(null);
 
@@ -87,8 +88,12 @@ export const block = <P extends MillionProps>(
 
       if (blockFactory && globalInfo) {
         init();
-      } else {
+      } else if (!initializedRef.current) {
+        initializedRef.current = true
         importSource(() => {
+          if (!initializedRef.current) {
+            return
+          }
           blockFactory = globalInfo.block(
             Component,
             globalInfo.unwrap,
@@ -101,6 +106,7 @@ export const block = <P extends MillionProps>(
       }
 
       return () => {
+        initializedRef.current = false
         blockFactory = null;
       };
     }, []);
@@ -165,6 +171,7 @@ export function For<T>({ each, children, ssr, svg }: MillionArrayProps<T>) {
 function Effect({ effect }: { effect: () => void }) {
   useEffect(effect, []);
   return null;
+  // return 'here';
 }
 
 export const importSource = (callback: () => void) => {
@@ -185,6 +192,9 @@ export const importSource = (callback: () => void) => {
     });
 };
 
+if (typeof window !== 'undefined') {
+ importSource(() => {}) 
+}
 export const createSSRBoundary = <P extends MillionProps>(
   Component: ComponentType<P>,
   props: P,
@@ -230,7 +240,7 @@ function Suspend({
     return children;
   }
 
-  debugger;
+  debugger
   let html = '';
   const startTemplate = document.getElementById(`start-${id}`);
   const endTemplate = document.getElementById(`end-${id}`);
@@ -331,7 +341,7 @@ export function compiledBlock(
           useEffect(() => {
             // showing targets for the first render causes hydration error!
             setFirstRender(false)
-          })
+          }, [])
           for (let i = 0, len = current.length; i < len; i++) {
             targets[i] = current[i]!.portal;
           }
