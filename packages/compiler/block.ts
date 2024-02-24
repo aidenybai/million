@@ -21,12 +21,14 @@ interface JSXStateContext {
   keys: t.Expression[];
 }
 
-function pushExpression(
-  state: JSXStateContext,
-  expr: t.Expression,
-): string {
+function pushExpression(state: JSXStateContext, expr: t.Expression): string {
   const key = `v${state.exprs.length}`;
-  state.exprs.push(t.jsxAttribute(t.jsxIdentifier(key), t.jsxExpressionContainer(t.cloneNode(expr))));
+  state.exprs.push(
+    t.jsxAttribute(
+      t.jsxIdentifier(key),
+      t.jsxExpressionContainer(t.cloneNode(expr)),
+    ),
+  );
   return key;
 }
 
@@ -54,12 +56,12 @@ function extractJSXExpressionsFromExpression(
 ): void {
   const unwrappedJSX = unwrapPath(expr, t.isJSXElement);
   if (unwrappedJSX) {
-    extractJSXExpressions(state, unwrappedJSX, true)
+    extractJSXExpressions(state, unwrappedJSX, true);
     return;
   }
   const unwrappedFragment = unwrapPath(expr, t.isJSXFragment);
   if (unwrappedFragment) {
-    extractJSXExpressions(state, unwrappedFragment, true)
+    extractJSXExpressions(state, unwrappedFragment, true);
     return;
   }
   // TODO Skip if the value is static
@@ -121,9 +123,7 @@ function extractJSXExpressionsFromJSXAttributes(
   }
 }
 
-function isJSXSVGElement(
-  path: babel.NodePath<t.JSXElement>,
-): boolean {
+function isJSXSVGElement(path: babel.NodePath<t.JSXElement>): boolean {
   const openingElement = path.get('openingElement');
   const name = openingElement.get('name');
   /**
@@ -142,15 +142,20 @@ function isJSXForElement(
   ctx: StateContext,
   path: babel.NodePath<t.JSXElement>,
 ): boolean {
-
   const openingElement = path.get('openingElement');
   const name = openingElement.get('name');
   /**
    * Only valid component elements are member expressions and identifiers
    * starting with component-ish name
    */
-  if (isPathValid(name, t.isJSXIdentifier) || isPathValid(name, t.isJSXMemberExpression)) {
-    return getValidImportDefinition(ctx, name) === TRACKED_IMPORTS.For[ctx.serverMode];
+  if (
+    isPathValid(name, t.isJSXIdentifier) ||
+    isPathValid(name, t.isJSXMemberExpression)
+  ) {
+    return (
+      getValidImportDefinition(ctx, name) ===
+      TRACKED_IMPORTS.For[ctx.serverMode]
+    );
   }
   return false;
 }
@@ -160,7 +165,9 @@ function transformJSXForElement(
   path: babel.NodePath<t.JSXElement>,
 ): void {
   if (isJSXForElement(ctx, path)) {
-    path.node.openingElement.attributes.push(t.jsxAttribute(t.jsxIdentifier('scoped')));
+    path.node.openingElement.attributes.push(
+      t.jsxAttribute(t.jsxIdentifier('scoped')),
+    );
   }
 }
 
@@ -182,7 +189,10 @@ function extractJSXExpressionsFromJSXElement(
   /**
    * Otherwise, continue extracting in attributes
    */
-  extractJSXExpressionsFromJSXAttributes(state, openingElement.get('attributes'));
+  extractJSXExpressionsFromJSXAttributes(
+    state,
+    openingElement.get('attributes'),
+  );
   return false;
 }
 
@@ -197,7 +207,10 @@ function extractJSXChildren(
     if (isPathValid(child, t.isJSXElement)) {
       extractJSXExpressions(state, child, false);
     } else if (isPathValid(child, t.isJSXFragment)) {
-      Array.prototype.push.apply(newChildren, extractJSXChildren(state, child.get('children')));
+      Array.prototype.push.apply(
+        newChildren,
+        extractJSXChildren(state, child.get('children')),
+      );
     } else if (isPathValid(child, t.isJSXSpreadChild)) {
       extractJSXExpressionsFromJSXSpreadChild(state, child);
     } else if (isPathValid(child, t.isJSXExpressionContainer)) {
@@ -221,20 +234,28 @@ function extractJSXExpressions(
    * We only do this since Component elements
    * cannot be in the compiledBlock JSX
    */
-  if (isPathValid(path, t.isJSXElement) && extractJSXExpressionsFromJSXElement(state, path, top)) {
+  if (
+    isPathValid(path, t.isJSXElement) &&
+    extractJSXExpressionsFromJSXElement(state, path, top)
+  ) {
     return;
   }
   if (isPathValid(path, t.isJSXFragment)) {
-    path.replaceWith(t.jsxElement(
-      t.jsxOpeningElement(t.jsxIdentifier('slot'), []),
-      t.jsxClosingElement(t.jsxIdentifier('slot')),
-      path.node.children,
-    ));
+    path.replaceWith(
+      t.jsxElement(
+        t.jsxOpeningElement(t.jsxIdentifier('slot'), []),
+        t.jsxClosingElement(t.jsxIdentifier('slot')),
+        path.node.children,
+      ),
+    );
   }
   path.node.children = extractJSXChildren(state, path.get('children'));
 }
 
-function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.JSXFragment>): void {
+function transformJSX(
+  ctx: StateContext,
+  path: babel.NodePath<t.JSXElement | t.JSXFragment>,
+): void {
   /**
    * For top-level JSX, we skip at elements that are constructed from components
    */
@@ -253,11 +274,15 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
   /**
    * Begin extracting expressions/portals
    */
-  extractJSXExpressions(state, path, !(
-    isPathValid(path.parentPath, t.isJSXElement)
-    || isPathValid(path.parentPath, t.isJSXFragment)
-    || isPathValid(path.parentPath, t.isJSXAttribute)
-  ));
+  extractJSXExpressions(
+    state,
+    path,
+    !(
+      isPathValid(path.parentPath, t.isJSXElement) ||
+      isPathValid(path.parentPath, t.isJSXFragment) ||
+      isPathValid(path.parentPath, t.isJSXAttribute)
+    ),
+  );
 
   /**
    * Get the nearest descriptive name
@@ -298,56 +323,47 @@ function transformJSX(ctx: StateContext, path: babel.NodePath<t.JSXElement | t.J
   /**
    * The new "render" function
    */
-  const newComponent = t.arrowFunctionExpression(
-    args,
-    path.node,
-  );
+  const newComponent = t.arrowFunctionExpression(args, path.node);
 
   /**
    * Following are the `compiledBlock` options
    */
   const options = [
     // TODO add dev mode
-    t.objectProperty(
-      t.identifier('name'),
-      t.stringLiteral(id.name),
-    ),
+    t.objectProperty(t.identifier('name'), t.stringLiteral(id.name)),
   ];
 
   /**
    * If there are any portals, declare them in the options
    */
   if (state.keys.length) {
-    options.push(t.objectProperty(
-      t.identifier('portals'),
-      t.arrayExpression(state.keys),
-    ));
+    options.push(
+      t.objectProperty(t.identifier('portals'), t.arrayExpression(state.keys)),
+    );
   }
   if (isPathValid(path, t.isJSXElement) && isJSXSVGElement(path)) {
-    options.push(t.objectProperty(
-      t.identifier('svg'),
-      t.booleanLiteral(true),
-    ));
+    options.push(t.objectProperty(t.identifier('svg'), t.booleanLiteral(true)));
   }
 
   /**
    * Generate the new compiledBlock
    */
-  const generatedBlock = t.variableDeclaration(
-    'const',
-    [t.variableDeclarator(id, t.callExpression(
-      getImportIdentifier(ctx, path, HIDDEN_IMPORTS.compiledBlock[ctx.serverMode]),
-      [
-        newComponent,
-        t.objectExpression(options),
-      ],
-    ))],
-  );
+  const generatedBlock = t.variableDeclaration('const', [
+    t.variableDeclarator(
+      id,
+      t.callExpression(
+        getImportIdentifier(
+          ctx,
+          path,
+          HIDDEN_IMPORTS.compiledBlock[ctx.serverMode],
+        ),
+        [newComponent, t.objectExpression(options)],
+      ),
+    ),
+  ]);
 
   const rootPath = getRootStatementPath(path);
-  rootPath.scope.registerDeclaration(
-    rootPath.insertBefore(generatedBlock)[0]
-  );
+  rootPath.scope.registerDeclaration(rootPath.insertBefore(generatedBlock)[0]);
 
   path.replaceWith(
     t.addComment(
@@ -414,7 +430,7 @@ export function transformBlock(ctx: StateContext, path: babel.NodePath<t.CallExp
   //   const root = getRootStatementPath(component);
   //   const descriptiveName = getDescriptiveName(component, 'Anonymous');
   //   const uniqueName = generateUniqueName(
-  //     component, 
+  //     component,
   //     isComponentishName(descriptiveName)
   //       ? descriptiveName
   //       : `JSX_${descriptiveName}`,
@@ -436,6 +452,6 @@ export function transformBlock(ctx: StateContext, path: babel.NodePath<t.CallExp
   //   ]);
   //   path.replaceWith(uniqueName);
   // } else {
-    path.replaceWith(component);
+  path.replaceWith(component);
   // }
 }

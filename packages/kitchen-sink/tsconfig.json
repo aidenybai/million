@@ -22,6 +22,7 @@
 
     "paths": {
       "million/react": ["../react"],
+      "million/experimental": ["../experimental"],
       "million/react-server": ["../react-server"]
     }
   },

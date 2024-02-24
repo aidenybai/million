@@ -38,7 +38,7 @@ export async function detectPackageManger(): Promise<PackageManager | null> {
 export function installPackageWithPackageManager(
   packageManager: PackageManager,
   packageName: string,
-  flag = ''
+  flag = '',
 ): void {
   exec(`${packageManager.installCommand} ${packageName}@latest ${flag}`);
 }
@@ -54,7 +54,7 @@ async function getPackageManager(): Promise<PackageManager> {
   const detectedPackageManager = await detectPackageManger();
   await sleep(1000);
   s.stop(
-    `${bold(detectedPackageManager?.label || 'No package manager')} detected.`
+    `${bold(detectedPackageManager?.label || 'No package manager')} detected.`,
   );
 
   if (detectedPackageManager) {
@@ -70,7 +70,7 @@ async function getPackageManager(): Promise<PackageManager> {
           label: packageManager.label,
           hint: `Be sure you have ${bold(packageManager.label)} installed.`,
         })),
-      })
+      }),
     );
 
   return selectedPackageManager;
@@ -93,9 +93,9 @@ export async function installPackage({
     const shouldUpdatePackage = await abortIfCancelled(
       clack.confirm({
         message: `The ${bold(
-          cyan(packageName)
+          cyan(packageName),
         )} package is already installed. Do you want to update it to the latest version?`,
-      })
+      }),
     );
 
     if (!shouldUpdatePackage) {
@@ -108,8 +108,8 @@ export async function installPackage({
   const s = clack.spinner();
   s.start(
     `${alreadyInstalled ? 'Updating' : 'Installing'} ${bold(
-      cyan(packageName)
-    )} with ${bold(packageManager.label)}.`
+      cyan(packageName),
+    )} with ${bold(packageManager.label)}.`,
   );
 
   try {
@@ -124,28 +124,28 @@ export async function installPackage({
 
       const shouldUseLegacyPeerDeps = await clack.confirm({
         message: `The ${bold(
-          cyan(packageName)
+          cyan(packageName),
         )} package did not install, would you like to use the "--legacy-peer-deps" flag?`,
       });
 
       if (!shouldUseLegacyPeerDeps) {
         throw new Error(
-          'Please try again  or refer docs to install manually: https://million.dev/docs/install'
+          'Please try again  or refer docs to install manually: https://million.dev/docs/install',
         );
       }
 
       installPackageWithPackageManager(
         packageManager,
         packageName,
-        '--legacy-peer-deps'
+        '--legacy-peer-deps',
       );
 
       s.start(
         `${alreadyInstalled ? 'Updating' : 'Installing'} ${bold(
-          cyan(packageName)
+          cyan(packageName),
         )} with ${bold(
-          packageManager.label
-        )} and the "--legacy-peer-deps" flag.`
+          packageManager.label,
+        )} and the "--legacy-peer-deps" flag.`,
       );
 
       await sleep(1000);
@@ -153,14 +153,14 @@ export async function installPackage({
 
     s.stop(
       `${alreadyInstalled ? 'Updated' : 'Installed'} ${bold(
-        cyan(packageName)
-      )} with ${bold(packageManager.label)}.`
+        cyan(packageName),
+      )} with ${bold(packageManager.label)}.`,
     );
   } catch (e) {
     clack.log.error(
       `${red('Error during installation.')}\n\n${dim(
-        'Please try again or refer docs to install manually: https://million.dev/docs/install'
-      )}`
+        'Please try again or refer docs to install manually: https://million.dev/docs/install',
+      )}`,
     );
     s.stop('Installation failed.');
     return abort();

@@ -1,4 +1,11 @@
-import type { ComponentType, ForwardedRef, JSX, ReactPortal } from 'react';
+import type {
+  ComponentType,
+  ForwardedRef,
+  JSX,
+  PropsWithChildren,
+  ReactNode,
+  ReactPortal,
+} from 'react';
 import {
   Fragment,
   createElement,
@@ -9,6 +16,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import parse from 'html-react-parser';
 import { RENDER_SCOPE, SVG_RENDER_SCOPE } from '../react/constants';
 import type {
   MillionArrayProps,
@@ -16,6 +24,10 @@ import type {
   MillionProps,
   Options,
 } from '../types';
+import { renderReactScope } from '../react/utils';
+import { experimental_options } from '../experimental';
+import { useContainer, useNearestParent } from '../react/its-fine';
+import { useSSRSafeId } from './utils';
 
 let globalInfo;
 
@@ -23,6 +35,7 @@ export const block = <P extends MillionProps>(
   Component: ComponentType<P>,
   options: Options<P> = {},
 ): ComponentType<P> => {
+  const noSlot = options.experimental_noSlot ?? experimental_options.noSlot;
   let blockFactory = globalInfo ? globalInfo.block(Component, options) : null;
 
   const rscBoundary = options.rsc
@@ -30,14 +43,38 @@ export const block = <P extends MillionProps>(
     : null;
 
   function MillionBlockLoader(props?: P) {
-    const ref = useRef<HTMLElement>(null);
+    const container = useContainer<HTMLElement>(); // usable when there's no parent other than the root element
+    const parentRef = useNearestParent<HTMLElement>();
+    const id = useSSRSafeId();
+    const ref = useRef<HTMLElement | null>(null);
     const patch = useRef<((props: P) => void) | null>(null);
 
     const effect = useCallback(() => {
       const init = (): void => {
-        const el = ref.current;
+        if (!ref.current && !noSlot) return;
 
-        if (!el) return;
+        if (noSlot) {
+          ref.current = (parentRef.current?.el ?? container.current?.el)!;
+          // the parentRef depth is only bigger than container depth when we're in a portal, where the portal el is closer than the jsx parent
+          if (
+            props.scoped ||
+            parentRef.current!.depth > container.current!.depth
+          ) {
+            // in portals, parentRef is not the proper parent
+            ref.current = container.current?.el!;
+          }
+          if (ref.current.childNodes.length) {
+            console.error(
+              new Error(`\`experimental_options.noSlot\` does not support having siblings at the moment.
+  The block element should be the only child of the \`${
+    (ref.current.cloneNode() as HTMLElement).outerHTML
+  }\` element.
+  To avoid this error, \`experimental_options.noSlot\` should be false`),
+            );
+          }
+        }
+        const el = ref.current!;
+
         globalInfo.removeComments(el);
 
         const currentBlock = blockFactory(props, props?.key);
@@ -76,7 +113,14 @@ export const block = <P extends MillionProps>(
       createElement(Effect, { effect }),
       rscBoundary
         ? createElement(rscBoundary, { ...props, ref } as any)
-        : createSSRBoundary<P>(Component as any, props!, ref, options.svg),
+        : createSSRBoundary<P>(
+            Component as any,
+            props!,
+            ref,
+            noSlot,
+            id,
+            options.svg,
+          ),
     );
     return vnode;
   }
@@ -136,8 +180,8 @@ export const importSource = (callback: () => void) => {
 
       callback();
     })
-    .catch(() => {
-      throw new Error('Failed to load Million.js');
+    .catch((e) => {
+      throw new Error('Failed to load Million.js: ' + e);
     });
 };
 
@@ -145,20 +189,73 @@ export const createSSRBoundary = <P extends MillionProps>(
   Component: ComponentType<P>,
   props: P,
   ref: ForwardedRef<unknown>,
+  noSlot: boolean,
+  id: string,
   svg = false,
 ) => {
-  const ssrProps =
-    typeof window === 'undefined'
-      ? {
-          children: createElement<P>(Component, props),
-        }
-      : { dangerouslySetInnerHTML: { __html: '' } };
+  const isServer = typeof window === 'undefined';
+  if (noSlot) {
+    return createElement(
+      Fragment,
+      null,
+      createHydrationBoundary(id, 'start', isServer),
+
+      createElement(Suspend, {
+        children: createElement<P>(Component, props),
+        id,
+      }),
+      createHydrationBoundary(id, 'end', isServer),
+    );
+  }
+  const ssrProps = isServer
+    ? {
+        children: createElement<P>(Component, props),
+      }
+    : { dangerouslySetInnerHTML: { __html: '' } };
 
   return createElement(svg ? SVG_RENDER_SCOPE : RENDER_SCOPE, {
     suppressHydrationWarning: true,
     ref,
     ...ssrProps,
   });
+};
+
+const thrown = new Map();
+
+function Suspend({
+  children,
+  id,
+}: PropsWithChildren<{ id: string }>): ReactNode {
+  if (typeof window === 'undefined') {
+    return children;
+  }
+
+  debugger;
+  let html = '';
+  const startTemplate = document.getElementById(`start-${id}`);
+  const endTemplate = document.getElementById(`end-${id}`);
+  if (!thrown.has(id) && startTemplate && endTemplate) {
+    let el = startTemplate.nextElementSibling;
+    while (el && el !== endTemplate) {
+      html += el.outerHTML;
+      el = el.nextElementSibling;
+    }
+    startTemplate.remove();
+    endTemplate.remove();
+    thrown.set(id, parse(html));
+    throw Promise.resolve();
+  }
+  // we can return null to avoid parsing but this would cause a flashing
+  return thrown.get(id);
+}
+
+const createHydrationBoundary = (
+  id: string,
+  phase: 'start' | 'end',
+  isSSR: boolean,
+) => {
+  // TODO: Better to use html commnts which are not allowed in React
+  return isSSR ? createElement('template', { id: `${phase}-${id}` }) : null;
 };
 
 export const createRSCBoundary = <P extends MillionProps>(
@@ -213,25 +310,25 @@ export function compiledBlock(
     portals && portalCount > 0
       ? (props: MillionProps) => {
           const [current] = useState<MillionPortal[]>(() => []);
-          // const [firstRender, setFirstRender] = useState(true)
+          const [firstRender, setFirstRender] = useState(true)
 
           const derived = { ...props };
 
           for (let i = 0; i < portalCount; i++) {
-            // const index = portals[i]!;
-            // derived[index] = renderReactScope(
-            //   derived[index] as JSX.Element,
-            //   false,
-            //   current,
-            //   i,
-            // );
+            const index = portals[i]!;
+            derived[index] = renderReactScope(
+              derived[index] as JSX.Element,
+              false,
+              current,
+              i,
+            );
           }
           const [targets] = useState<ReactPortal[]>([]);
 
-          // useEffect(() => {
-          //   // showing targets for the first render causes hydration error!
-          //   // setFirstRender(false)
-          // })
+          useEffect(() => {
+            // showing targets for the first render causes hydration error!
+            setFirstRender(false)
+          })
           for (let i = 0, len = current.length; i < len; i++) {
             targets[i] = current[i]!.portal;
           }
@@ -241,7 +338,7 @@ export function compiledBlock(
             {},
             createElement(RenderBlock, derived),
             // TODO: This should be uncommented, but doing that, value.reset would fail as it is undefined. This should be revisited
-            // !firstRender ? targets : undefined,
+            !firstRender ? targets : undefined,
           );
         }
       : (props: MillionProps) => createElement(RenderBlock, props);

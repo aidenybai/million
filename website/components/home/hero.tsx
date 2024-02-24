@@ -50,7 +50,7 @@ export function Hero() {
                 {hero.dropIn}
               </span>{' '}
               {hero.forReact}{' '}
-              <Link href="/docs" className="font-medium hover:underline">
+              <Link href="/docs/introduction" className="font-medium hover:underline">
                 {hero.now}
               </Link>
               !

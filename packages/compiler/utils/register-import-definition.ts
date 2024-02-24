@@ -1,5 +1,5 @@
 import * as t from '@babel/types';
-import { ImportDefinition, StateContext } from '../types';
+import type { ImportDefinition, StateContext } from '../types';
 
 function getImportSpecifierName(specifier: t.ImportSpecifier): string {
   if (t.isIdentifier(specifier.imported)) {
@@ -29,20 +29,16 @@ export function registerImportDefinition(
       }
       current.push(definition);
       ctx.definitions.namespaces.set(specifier.local, current);
-    } else if (!(specifier.importKind === 'typeof' || specifier.importKind === 'type')) {
+    } else if (
+      !(specifier.importKind === 'typeof' || specifier.importKind === 'type')
+    ) {
       const key = getImportSpecifierName(specifier);
       if (
-        (
-          definition.kind === 'named'
-          && key === definition.name
-        )
-        || (
-          definition.kind === 'default'
-          && key === 'default'
-        )
+        (definition.kind === 'named' && key === definition.name) ||
+        (definition.kind === 'default' && key === 'default')
       ) {
         ctx.definitions.identifiers.set(specifier.local, definition);
-      } 
+      }
     }
   }
 }

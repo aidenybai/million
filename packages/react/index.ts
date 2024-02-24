@@ -10,11 +10,9 @@ export const INTERNALS = {
   mount,
 };
 
-export {removeComments} from '../million/dom' 
+export { removeComments } from '../million/dom';
 
-export {
-  compiledBlock,
-} from './compiled-block';
+export { compiledBlock } from './compiled-block';
 
 if (typeof window !== 'undefined') {
   (window as any).__MILLION_DATA__ = {

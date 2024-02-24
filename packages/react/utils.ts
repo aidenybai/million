@@ -1,9 +1,11 @@
-import { Fragment, createElement, isValidElement } from 'react';
+import { Fragment, createContext, createElement, isValidElement } from 'react';
 import { createPortal } from 'react-dom';
 import type { ComponentProps, ReactNode, Ref } from 'react';
 import type { VNode } from '../million';
 import type { MillionPortal } from '../types';
 import { REGISTRY, RENDER_SCOPE } from './constants';
+
+export const scopedContext = createContext<boolean>(false);
 
 // TODO: access perf impact of this
 export const processProps = (
