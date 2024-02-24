@@ -39,7 +39,7 @@ export const block = <P extends MillionProps>(
   let blockFactory = globalInfo ? globalInfo.block(Component, options) : null;
 
   const rscBoundary = options.rsc
-    ? createRSCBoundary(Component, options.svg)
+    ? createRSCBoundary(Component, noSlot,  options.svg)
     : null;
 
   function MillionBlockLoader(props?: P) {
@@ -57,7 +57,7 @@ export const block = <P extends MillionProps>(
           ref.current = (parentRef.current?.el ?? container.current?.el)!;
           // the parentRef depth is only bigger than container depth when we're in a portal, where the portal el is closer than the jsx parent
           if (
-            props.scoped ||
+            props?.scoped ||
             parentRef.current!.depth > container.current!.depth
           ) {
             // in portals, parentRef is not the proper parent
@@ -260,11 +260,14 @@ const createHydrationBoundary = (
 
 export const createRSCBoundary = <P extends MillionProps>(
   Component: ComponentType<P>,
+  noSlot: boolean,
   svg = false,
 ) => {
   return memo(
-    forwardRef((props: P, ref) =>
-      createSSRBoundary(Component, props, ref, svg),
+    forwardRef((props: P, ref) => {
+      const id = useSSRSafeId();
+      return createSSRBoundary(Component, props, ref, noSlot, id, svg)
+    }
     ),
     () => true,
   );
