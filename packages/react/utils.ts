@@ -77,6 +77,8 @@ export const renderReactScope = (
   }
 
   const current = el ?? document.createElement(RENDER_SCOPE);
+  // TODO: this el is different from what we have in ssr'ed one so we need to assign an id or something like that
+  console.log(el)
   const reactPortal = createPortal(vnode, current);
 
   const millionPortal = {

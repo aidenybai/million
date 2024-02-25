@@ -3,6 +3,7 @@ import type {
   ForwardedRef,
   JSX,
   PropsWithChildren,
+  ReactElement,
   ReactNode,
   ReactPortal,
 } from 'react';
@@ -106,7 +107,7 @@ export const block = <P extends MillionProps>(
       }
 
       return () => {
-        initializedRef.current = false
+        // initializedRef.current = false
         blockFactory = null;
       };
     }, []);
@@ -171,7 +172,6 @@ export function For<T>({ each, children, ssr, svg }: MillionArrayProps<T>) {
 function Effect({ effect }: { effect: () => void }) {
   useEffect(effect, []);
   return null;
-  // return 'here';
 }
 
 export const importSource = (callback: () => void) => {
@@ -195,6 +195,7 @@ export const importSource = (callback: () => void) => {
 if (typeof window !== 'undefined') {
  importSource(() => {}) 
 }
+const ssrElementsMap = new Map<string, ReactElement>()
 export const createSSRBoundary = <P extends MillionProps>(
   Component: ComponentType<P>,
   props: P,
@@ -217,17 +218,24 @@ export const createSSRBoundary = <P extends MillionProps>(
       createHydrationBoundary(id, 'end', isServer),
     );
   }
+  // console.log(globalThis.)
   const ssrProps = isServer
     ? {
         children: createElement<P>(Component, props),
       }
-    : { dangerouslySetInnerHTML: { __html: '' } };
+    : { dangerouslySetInnerHTML: { __html: document?.getElementById(id)!.innerHTML } };
+  if (ssrElementsMap.has(id)) {
+    return ssrElementsMap.get(id)!
+  }
 
-  return createElement(svg ? SVG_RENDER_SCOPE : RENDER_SCOPE, {
+  const el = createElement(svg ? SVG_RENDER_SCOPE : RENDER_SCOPE, {
     suppressHydrationWarning: true,
     ref,
+    id, 
     ...ssrProps,
   });
+  ssrElementsMap.set(id, el)
+  return el
 };
 
 const thrown = new Map();
