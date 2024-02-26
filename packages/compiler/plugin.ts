@@ -156,6 +156,7 @@ export const unplugin = createUnplugin((options: Options = {}, meta) => {
           map: result.map,
         };
       } catch (err) {
+        // eslint-disable-next-line no-console
         console.error(err);
         return { code: '' };
       }

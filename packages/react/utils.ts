@@ -84,7 +84,7 @@ export const renderReactScope = (
     foreign: true as const,
     current,
     portal: reactPortal,
-    reset: (child: Node) => child.childNodes.forEach((cn) => child.removeChild(cn)),
+    reset: (child: Node) => { child.childNodes.forEach((cn) => child.removeChild(cn)) },
     unstable,
   };
   if (portals) {

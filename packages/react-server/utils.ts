@@ -1,3 +1,4 @@
+/* eslint-disable */
 /*
  * Copyright 2020 Adobe. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -15,10 +16,7 @@
 // eslint-disable-next-line rulesdir/useLayoutEffectRule
 import type { ReactNode } from 'react';
 import React, {
-  JSX,
   useContext,
-  useLayoutEffect,
-  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -195,7 +193,7 @@ function getServerSnapshot() {
   return true;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 function subscribe(onStoreChange: () => void): () => void {
   // noop
   return () => {};

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { fetch } from 'undici';
 
 if (
