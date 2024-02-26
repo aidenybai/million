@@ -225,7 +225,7 @@ function transformFunctionDeclaration(
 ): void {
   if (isStatementTopLevel(path)) {
     if (shouldBeIgnored(path)) {
-      return
+      return;
     }
     const decl = path.node;
     // Check if declaration is FunctionDeclaration
@@ -303,7 +303,7 @@ function transformVariableDeclarator(
     return;
   }
   if (shouldBeIgnored(path)) {
-    return
+    return;
   }
   const identifier = path.node.id;
   if (!t.isIdentifier(identifier)) {
@@ -344,7 +344,7 @@ function transformCallExpression(
   path: babel.NodePath<t.CallExpression>,
 ): void {
   if (shouldBeIgnored(path)) {
-    return
+    return;
   }
   const definition = getValidImportDefinition(ctx, path.get('callee'));
   if (definition === REACT_IMPORTS.memo[ctx.serverMode]) {

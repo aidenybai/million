@@ -39,7 +39,11 @@ export const processProps = (
 };
 
 const wrap = (vnode: ReactNode, key?: string): ReactNode => {
-  return createElement(RENDER_SCOPE, { suppressHydrationWarning: true, id: key }, vnode);
+  return createElement(
+    RENDER_SCOPE,
+    { suppressHydrationWarning: true, id: key },
+    vnode,
+  );
 };
 
 export const renderReactScope = (
@@ -47,7 +51,7 @@ export const renderReactScope = (
   unstable: boolean,
   portals: MillionPortal[] | undefined,
   currentIndex: number,
-  key?: string
+  key?: string,
 ) => {
   const el = portals?.[currentIndex]?.current;
 
@@ -77,14 +81,23 @@ export const renderReactScope = (
     }
   }
 
-  const current = el ?? (key ? document.getElementById(key) : null) ?? document.createElement(RENDER_SCOPE);
-  const reactPortal = createPortal(createElement(Fragment, { children: vnode }), current, key);
+  const current =
+    el ??
+    (key ? document.getElementById(key) : null) ??
+    document.createElement(RENDER_SCOPE);
+  const reactPortal = createPortal(
+    createElement(Fragment, { children: vnode }),
+    current,
+    key,
+  );
 
   const millionPortal = {
     foreign: true as const,
     current,
     portal: reactPortal,
-    reset: (child: Node) => { child.childNodes.forEach((cn) => child.removeChild(cn)) },
+    reset: (child: Node) => {
+      child.childNodes.forEach((cn) => child.removeChild(cn));
+    },
     unstable,
   };
   if (portals) {

@@ -5,7 +5,7 @@ if (
   !('markResourceTiming' in performance) ||
   typeof performance['markResourceTiming'] !== 'function'
 ) {
-  performance['markResourceTiming'] = () => {}
+  performance['markResourceTiming'] = () => {};
 }
 
 const MILLION_TELEMETRY_ENDPOINT =

@@ -15,11 +15,7 @@
 // guarded by a check that it only runs on the client side.
 // eslint-disable-next-line rulesdir/useLayoutEffectRule
 import type { ReactNode } from 'react';
-import React, {
-  useContext,
-  useRef,
-  useState,
-} from 'react';
+import React, { useContext, useRef, useState } from 'react';
 
 // To support SSR, the auto incrementing id counter is stored in a context. This allows
 // it to be reset on every request to ensure the client and server are consistent.
@@ -193,7 +189,6 @@ function getServerSnapshot() {
   return true;
 }
 
- 
 function subscribe(onStoreChange: () => void): () => void {
   // noop
   return () => {};

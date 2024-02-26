@@ -1,6 +1,12 @@
 import * as t from '@babel/types';
-import { HIDDEN_IMPORTS, JSX_SKIP_ANNOTATION, SKIP_ANNOTATION, SVG_ELEMENTS, TRACKED_IMPORTS } from './constants';
-import type { StateContext } from "./types";
+import {
+  HIDDEN_IMPORTS,
+  JSX_SKIP_ANNOTATION,
+  SKIP_ANNOTATION,
+  SVG_ELEMENTS,
+  TRACKED_IMPORTS,
+} from './constants';
+import type { StateContext } from './types';
 import { findComment, shouldBeIgnored } from './utils/ast';
 import { isComponent, isComponentishName, isPathValid } from './utils/checks';
 import { generateUniqueName } from './utils/generate-unique-name';
@@ -379,7 +385,10 @@ function transformJSX(
   );
 }
 
-export function transformBlock(ctx: StateContext, path: babel.NodePath<t.CallExpression>): void {
+export function transformBlock(
+  ctx: StateContext,
+  path: babel.NodePath<t.CallExpression>,
+): void {
   if (shouldBeIgnored(path)) {
     return;
   }
