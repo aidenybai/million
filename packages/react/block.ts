@@ -8,6 +8,7 @@ import {
 } from '../million/block';
 import { MapHas$, MapSet$ } from '../million/constants';
 import type { MillionPortal, MillionProps, Options } from '../types';
+// eslint-disable-next-line camelcase
 import { experimental_options } from '../experimental';
 import { cloneNode$ } from '../million/dom';
 import { Effect, REGISTRY, RENDER_SCOPE, SVG_RENDER_SCOPE } from './constants';
@@ -18,6 +19,7 @@ export const block = <P extends MillionProps>(
   fn: ComponentType<P> | null,
   options: Options<P> | null | undefined = {},
 ) => {
+  // eslint-disable-next-line camelcase
   const noSlot = options?.experimental_noSlot ?? experimental_options.noSlot;
   let blockTarget: ReturnType<typeof createBlock> | null = options?.block;
   const defaultType = options?.svg ? SVG_RENDER_SCOPE : RENDER_SCOPE;
@@ -56,12 +58,15 @@ export const block = <P extends MillionProps>(
         // the parentRef depth is only bigger than container depth when we're in a portal, where the portal el is closer than the jsx parent
         if (
           props.scoped ||
-          parentRef.current!.depth > container.current!.depth
+          (parentRef.current &&
+            container.current &&
+            parentRef.current.depth > container.current.depth)
         ) {
           // in portals, parentRef is not the proper parent
-          ref.current = container.current?.el!;
+          ref.current = container.current!.el!;
         }
         if (ref.current.childNodes.length) {
+          // eslint-disable-next-line no-console
           console.error(
             new Error(`\`experimental_options.noSlot\` does not support having siblings at the moment.
 The block element should be the only child of the \`${

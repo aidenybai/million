@@ -3,6 +3,7 @@ import type {
   ForwardedRef,
   JSX,
   PropsWithChildren,
+  ReactElement,
   ReactNode,
   ReactPortal,
 } from 'react';
@@ -13,6 +14,7 @@ import {
   memo,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
 } from 'react';
@@ -25,6 +27,7 @@ import type {
   Options,
 } from '../types';
 import { renderReactScope } from '../react/utils';
+// eslint-disable-next-line camelcase
 import { experimental_options } from '../experimental';
 import { useContainer, useNearestParent } from '../react/its-fine';
 import { useSSRSafeId } from './utils';
@@ -35,17 +38,19 @@ export const block = <P extends MillionProps>(
   Component: ComponentType<P>,
   options: Options<P> = {},
 ): ComponentType<P> => {
+  // eslint-disable-next-line camelcase
   const noSlot = options.experimental_noSlot ?? experimental_options.noSlot;
   let blockFactory = globalInfo ? globalInfo.block(Component, options) : null;
 
   const rscBoundary = options.rsc
-    ? createRSCBoundary(Component, noSlot,  options.svg)
+    ? createRSCBoundary(Component, noSlot, options.svg)
     : null;
 
   function MillionBlockLoader(props?: P) {
     const container = useContainer<HTMLElement>(); // usable when there's no parent other than the root element
     const parentRef = useNearestParent<HTMLElement>();
     const id = useSSRSafeId();
+    const initializedRef = useRef(false);
     const ref = useRef<HTMLElement | null>(null);
     const patch = useRef<((props: P) => void) | null>(null);
 
@@ -58,12 +63,15 @@ export const block = <P extends MillionProps>(
           // the parentRef depth is only bigger than container depth when we're in a portal, where the portal el is closer than the jsx parent
           if (
             props?.scoped ||
-            parentRef.current!.depth > container.current!.depth
+            (parentRef.current &&
+              container.current &&
+              parentRef.current.depth > container.current.depth)
           ) {
             // in portals, parentRef is not the proper parent
-            ref.current = container.current?.el!;
+            ref.current = container.current!.el;
           }
           if (ref.current.childNodes.length) {
+            // eslint-disable-next-line no-console
             console.error(
               new Error(`\`experimental_options.noSlot\` does not support having siblings at the moment.
   The block element should be the only child of the \`${
@@ -87,8 +95,12 @@ export const block = <P extends MillionProps>(
 
       if (blockFactory && globalInfo) {
         init();
-      } else {
+      } else if (!initializedRef.current) {
+        initializedRef.current = true;
         importSource(() => {
+          if (!initializedRef.current) {
+            return;
+          }
           blockFactory = globalInfo.block(
             Component,
             globalInfo.unwrap,
@@ -101,6 +113,7 @@ export const block = <P extends MillionProps>(
       }
 
       return () => {
+        // initializedRef.current = false
         blockFactory = null;
       };
     }, []);
@@ -181,10 +194,15 @@ export const importSource = (callback: () => void) => {
       callback();
     })
     .catch((e) => {
-      throw new Error('Failed to load Million.js: ' + e);
+      throw new Error(`Failed to load Million.js: ${e}`);
     });
 };
 
+if (typeof window !== 'undefined') {
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  importSource(() => {});
+}
+const ssrElementsMap = new Map<string, ReactElement>();
 export const createSSRBoundary = <P extends MillionProps>(
   Component: ComponentType<P>,
   props: P,
@@ -211,13 +229,23 @@ export const createSSRBoundary = <P extends MillionProps>(
     ? {
         children: createElement<P>(Component, props),
       }
-    : { dangerouslySetInnerHTML: { __html: '' } };
+    : {
+        dangerouslySetInnerHTML: {
+          __html: document.getElementById(id)!.innerHTML,
+        },
+      };
+  if (ssrElementsMap.has(id)) {
+    return ssrElementsMap.get(id)!;
+  }
 
-  return createElement(svg ? SVG_RENDER_SCOPE : RENDER_SCOPE, {
+  const el = createElement(svg ? SVG_RENDER_SCOPE : RENDER_SCOPE, {
     suppressHydrationWarning: true,
     ref,
+    id,
     ...ssrProps,
   });
+  ssrElementsMap.set(id, el);
+  return el;
 };
 
 const thrown = new Map();
@@ -230,7 +258,6 @@ function Suspend({
     return children;
   }
 
-  debugger;
   let html = '';
   const startTemplate = document.getElementById(`start-${id}`);
   const endTemplate = document.getElementById(`end-${id}`);
@@ -243,6 +270,7 @@ function Suspend({
     startTemplate.remove();
     endTemplate.remove();
     thrown.set(id, parse(html));
+    // eslint-disable-next-line @typescript-eslint/no-throw-literal
     throw Promise.resolve();
   }
   // we can return null to avoid parsing but this would cause a flashing
@@ -266,9 +294,8 @@ export const createRSCBoundary = <P extends MillionProps>(
   return memo(
     forwardRef((props: P, ref) => {
       const id = useSSRSafeId();
-      return createSSRBoundary(Component, props, ref, noSlot, id, svg)
-    }
-    ),
+      return createSSRBoundary(Component, props, ref, noSlot, id, svg);
+    }),
     () => true,
   );
 };
@@ -312,8 +339,9 @@ export function compiledBlock(
   const Component: ComponentType<MillionProps> =
     portals && portalCount > 0
       ? (props: MillionProps) => {
+          const id = useSSRSafeId();
           const [current] = useState<MillionPortal[]>(() => []);
-          const [firstRender, setFirstRender] = useState(true)
+          const [firstRender, setFirstRender] = useState(true);
 
           const derived = { ...props };
 
@@ -324,14 +352,15 @@ export function compiledBlock(
               false,
               current,
               i,
+              `${id}:${index}`,
             );
           }
-          const [targets] = useState<ReactPortal[]>([]);
+          const targets: ReactPortal[] = [];
 
-          useEffect(() => {
+          useLayoutEffect(() => {
             // showing targets for the first render causes hydration error!
-            setFirstRender(false)
-          })
+            setFirstRender(false);
+          }, []);
           for (let i = 0, len = current.length; i < len; i++) {
             targets[i] = current[i]!.portal;
           }
@@ -340,7 +369,6 @@ export function compiledBlock(
             Fragment,
             {},
             createElement(RenderBlock, derived),
-            // TODO: This should be uncommented, but doing that, value.reset would fail as it is undefined. This should be revisited
             !firstRender ? targets : undefined,
           );
         }

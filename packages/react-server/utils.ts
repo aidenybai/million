@@ -1,3 +1,4 @@
+/* eslint-disable */
 /*
  * Copyright 2020 Adobe. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -14,14 +15,7 @@
 // guarded by a check that it only runs on the client side.
 // eslint-disable-next-line rulesdir/useLayoutEffectRule
 import type { ReactNode } from 'react';
-import React, {
-  JSX,
-  useContext,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { useContext, useRef, useState } from 'react';
 
 // To support SSR, the auto incrementing id counter is stored in a context. This allows
 // it to be reset on every request to ensure the client and server are consistent.
@@ -195,7 +189,6 @@ function getServerSnapshot() {
   return true;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function subscribe(onStoreChange: () => void): () => void {
   // noop
   return () => {};
