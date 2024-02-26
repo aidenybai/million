@@ -2,7 +2,11 @@ import type * as babel from '@babel/core';
 import * as t from '@babel/types';
 import { REACT_IMPORTS, TRACKED_IMPORTS } from './constants';
 import type { StateContext } from './types';
-import { isComponentishName, isPathValid, isStatementTopLevel } from './utils/checks';
+import {
+  isComponentishName,
+  isPathValid,
+  isStatementTopLevel,
+} from './utils/checks';
 import { generateUniqueName } from './utils/generate-unique-name';
 import { getDescriptiveName } from './utils/get-descriptive-name';
 import { getImportIdentifier } from './utils/get-import-specifier';
@@ -15,6 +19,7 @@ import { isUseClient } from './utils/is-use-client';
 import { registerImportDefinition } from './utils/register-import-definition';
 import { unwrapNode } from './utils/unwrap-node';
 import { unwrapPath } from './utils/unwrap-path';
+import { shouldBeIgnored } from './utils/ast';
 
 interface JSXStateContext {
   bailout: boolean;
@@ -25,7 +30,6 @@ interface JSXStateContext {
   text: number;
   returns: number;
 }
-
 
 function measureExpression(
   state: JSXStateContext,
@@ -153,7 +157,11 @@ function measureJSXExpressions(
   }
 }
 
-function shouldTransform(ctx: StateContext, name: string, path: babel.NodePath): boolean {
+function shouldTransform(
+  ctx: StateContext,
+  name: string,
+  path: babel.NodePath,
+): boolean {
   const state: JSXStateContext = {
     bailout: false,
     elements: 0,
@@ -197,7 +205,7 @@ function shouldTransform(ctx: StateContext, name: string, path: babel.NodePath):
       : 0.1;
 
   if (improvement <= threshold) return false;
-  if ((!ctx.options.log || ctx.options.log === 'info')) {
+  if (!ctx.options.log || ctx.options.log === 'info') {
     logImprovement(
       name,
       improvement,
@@ -216,6 +224,9 @@ function transformFunctionDeclaration(
   path: babel.NodePath<t.FunctionDeclaration>,
 ): void {
   if (isStatementTopLevel(path)) {
+    if (shouldBeIgnored(path)) {
+      return;
+    }
     const decl = path.node;
     // Check if declaration is FunctionDeclaration
     if (
@@ -227,7 +238,9 @@ function transformFunctionDeclaration(
       // have zero or one parameter
       decl.params.length < 2 &&
       // For RSC, only transform if it's a client component
-      (ctx.options.rsc ? (ctx.topLevelRSC || isUseClient(decl.body.directives)) : true ) &&
+      (ctx.options.rsc
+        ? ctx.topLevelRSC || isUseClient(decl.body.directives)
+        : true) &&
       // Check if the function should be transformed
       shouldTransform(ctx, decl.id.name, path)
     ) {
@@ -289,6 +302,9 @@ function transformVariableDeclarator(
   ) {
     return;
   }
+  if (shouldBeIgnored(path)) {
+    return;
+  }
   const identifier = path.node.id;
   if (!t.isIdentifier(identifier)) {
     return;
@@ -307,16 +323,16 @@ function transformVariableDeclarator(
       // have zero or one parameter
       trueFuncExpr.params.length < 2 &&
       // For RSC, only transform if it's a client component
-      (ctx.options.rsc ? (ctx.topLevelRSC || (t.isBlockStatement(trueFuncExpr.body) && isUseClient(trueFuncExpr.body.directives))) : true ) &&
+      (ctx.options.rsc
+        ? ctx.topLevelRSC ||
+          (t.isBlockStatement(trueFuncExpr.body) &&
+            isUseClient(trueFuncExpr.body.directives))
+        : true) &&
       // Check if the function should be transformed
       shouldTransform(ctx, identifier.name, path)
     ) {
       path.node.init = t.callExpression(
-        getImportIdentifier(
-          ctx,
-          path,
-          TRACKED_IMPORTS.block[ctx.serverMode],
-        ),
+        getImportIdentifier(ctx, path, TRACKED_IMPORTS.block[ctx.serverMode]),
         [trueFuncExpr],
       );
     }
@@ -327,6 +343,9 @@ function transformCallExpression(
   ctx: StateContext,
   path: babel.NodePath<t.CallExpression>,
 ): void {
+  if (shouldBeIgnored(path)) {
+    return;
+  }
   const definition = getValidImportDefinition(ctx, path.get('callee'));
   if (definition === REACT_IMPORTS.memo[ctx.serverMode]) {
     const args = path.get('arguments');
@@ -337,14 +356,12 @@ function transformCallExpression(
       const descriptiveName = getDescriptiveName(trueFuncExpr, 'Anonymous');
       if (
         // For RSC, only transform if it's a client component
-        (
-          ctx.options.rsc
-            ? (
-              ctx.topLevelRSC ||
-              (t.isBlockStatement(trueFuncExpr.node.body) && isUseClient(trueFuncExpr.node.body.directives)
-            ))
-            : true
-        ) && shouldTransform(ctx, descriptiveName, path)
+        (ctx.options.rsc
+          ? ctx.topLevelRSC ||
+            (t.isBlockStatement(trueFuncExpr.node.body) &&
+              isUseClient(trueFuncExpr.node.body.directives))
+          : true) &&
+        shouldTransform(ctx, descriptiveName, path)
       ) {
         const root = getRootStatementPath(trueFuncExpr);
         const uid = generateUniqueName(trueFuncExpr, descriptiveName);
@@ -365,7 +382,7 @@ function transformCallExpression(
             ]),
           )[0],
         );
-  
+
         trueFuncExpr.replaceWith(uid);
       }
     }
@@ -381,8 +398,7 @@ export function transformAuto(
     ImportDeclaration(path) {
       const mod = path.node.source.value;
       for (const importName in REACT_IMPORTS) {
-        const definition =
-          REACT_IMPORTS[importName][ctx.serverMode];
+        const definition = REACT_IMPORTS[importName][ctx.serverMode];
         if (definition.source === mod) {
           registerImportDefinition(ctx, path, definition);
         }

@@ -8,7 +8,7 @@ import type { BuildTool } from '../types';
  * Abort the process if the user cancels the input prompt.
  */
 export async function abortIfCancelled<T>(
-  input: T | Promise<T>
+  input: T | Promise<T>,
 ): Promise<Exclude<T, symbol>> {
   if (clack.isCancel(await input)) {
     clack.cancel('Million setup cancelled.');
@@ -25,8 +25,8 @@ export function abort(message?: string, status?: number): never {
   clack.outro(
     message ??
       `${red('Setup failed.')}\nReport a bug at ${cyan(
-        'https://github.com/aidenybai/million/issues'
-      )}`
+        'https://github.com/aidenybai/million/issues',
+      )}`,
   );
   return process.exit(status ?? 1);
 }
@@ -57,7 +57,7 @@ export async function getNextRouter(): Promise<'app' | 'pages'> {
           value: 'pages',
         },
       ],
-    })
+    }),
   );
   return selectedRouter;
 }
@@ -66,7 +66,7 @@ export function highlightCodeDifferences(
   oldCode: string,
   newCode: string,
   detectedBuildTool: BuildTool,
-  CONTEXT_SIZE = 1
+  CONTEXT_SIZE = 1,
 ): void {
   const differences = diff.diffWords(oldCode, newCode);
 
@@ -113,6 +113,6 @@ export function highlightCodeDifferences(
   });
   clack.note(
     highlightedCode,
-    `Take a look at changes in ${cyan(detectedBuildTool.configFilePath)}`
+    `Take a look at changes in ${cyan(detectedBuildTool.configFilePath)}`,
   );
 }

@@ -26,7 +26,7 @@ async function main(): Promise<void> {
 
 main().catch(() => {
   abort(
-    'Failed to setup Million.js, refer to the docs for manual setup: https://million.dev/docs/install'
+    'Failed to setup Million.js, refer to the docs for manual setup: https://million.dev/docs/install',
   );
 });
 

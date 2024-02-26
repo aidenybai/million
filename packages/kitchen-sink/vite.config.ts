@@ -14,6 +14,7 @@ export default defineConfig({
   resolve: {
     alias: {
       'million/react': path.resolve(__dirname, '../react'),
+      'million/experimental': path.resolve(__dirname, '../experimental'),
       'million/react-server': path.resolve(__dirname, '../react-server'),
     },
   },

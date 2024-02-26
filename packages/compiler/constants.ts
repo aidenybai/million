@@ -1,7 +1,8 @@
-import type { ImportDefinition } from "./types";
+import type { ImportDefinition } from './types';
 
 export const RENDER_SCOPE = 'slot';
 export const SKIP_ANNOTATION = '@million skip';
+export const IGNORE_ANNOTATION = 'million-ignore';
 export const JSX_SKIP_ANNOTATION = '@million jsx-skip';
 export const SVG_ELEMENTS = [
   'circle',
@@ -76,7 +77,7 @@ export const INVERSE_IMPORTS = {
   server: {
     source: 'million/react',
     target: 'million/react-server',
-  }
+  },
 };
 
 export const TRACKED_IMPORTS: TrackedImports = {
@@ -132,7 +133,7 @@ interface ReactImports {
   memo: {
     client: ImportDefinition;
     server: ImportDefinition;
-  }
+  };
 }
 
 export const REACT_IMPORTS: ReactImports = {

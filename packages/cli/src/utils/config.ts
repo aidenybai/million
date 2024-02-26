@@ -38,7 +38,7 @@ export async function getBuildTool(): Promise<BuildTool> {
         value: buildTool,
         label: buildTool.label,
       })),
-    })
+    }),
   );
 
   return selectedBuildTool;
@@ -52,7 +52,7 @@ export async function handleConfigFile(): Promise<void> {
     // Modify existing config file
     clack.note(
       `found existing ${detectedBuildTool.configFilePath} file.`,
-      `Transforming ${cyan(detectedBuildTool.configFilePath)}`
+      `Transforming ${cyan(detectedBuildTool.configFilePath)}`,
     );
     await telemetry.record({
       event: 'cli',
@@ -79,17 +79,17 @@ export async function handleConfigFile(): Promise<void> {
 
     clack.note(
       `at ${green(targetFilePath)}`,
-      `Created ${green(buildTool.configFilePath)} file`
+      `Created ${green(buildTool.configFilePath)} file`,
     );
 
     nextRouter === 'app'
       ? await fs.promises.writeFile(
           targetFilePath,
-          buildTool.configFileContentRSC!
+          buildTool.configFileContentRSC!,
         )
       : await fs.promises.writeFile(
           targetFilePath,
-          buildTool.configFileContent
+          buildTool.configFileContent,
         );
   } else {
     /**
@@ -97,7 +97,7 @@ export async function handleConfigFile(): Promise<void> {
      */
     clack.note(
       `at ${green(targetFilePath)}`,
-      `Created ${green(buildTool.configFilePath)} file`
+      `Created ${green(buildTool.configFilePath)} file`,
     );
     await fs.promises.writeFile(targetFilePath, buildTool.configFileContent);
   }
