@@ -108,12 +108,6 @@ The `packages` folder contains all the code related to the Million.js package, b
 - `react` and `react-server` - This folder contains the Million.js support package for React
 - `types` - This folder contains all the shared types between packages
 
-To run the project locally, run the following commands:
-
-```bash
-pnpm install
-pnpm run dev
-```
 
 #### 2. `test` folder
 
@@ -151,6 +145,13 @@ pnpm install
 cd website  # Takes you to the website mono-repo
 pnpm run dev
 ```
+
+#### Gitpod
+
+You can use [Gitpod](https://gitpod.io) to get a workspace configured to contribute on MillionJS.
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/aidenybai/million)
+
 
 [🔝 Back to top](#table-of-content)
 
