@@ -14,6 +14,7 @@ import {
   memo,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
 } from 'react';
@@ -248,7 +249,6 @@ function Suspend({
     return children;
   }
 
-  debugger
   let html = '';
   const startTemplate = document.getElementById(`start-${id}`);
   const endTemplate = document.getElementById(`end-${id}`);
@@ -330,6 +330,7 @@ export function compiledBlock(
   const Component: ComponentType<MillionProps> =
     portals && portalCount > 0
       ? (props: MillionProps) => {
+          const id = useSSRSafeId();
           const [current] = useState<MillionPortal[]>(() => []);
           const [firstRender, setFirstRender] = useState(true)
 
@@ -342,11 +343,12 @@ export function compiledBlock(
               false,
               current,
               i,
+              `${id}:${index}`
             );
           }
-          const [targets] = useState<ReactPortal[]>([]);
+          const targets: ReactPortal[] = []
 
-          useEffect(() => {
+          useLayoutEffect(() => {
             // showing targets for the first render causes hydration error!
             setFirstRender(false)
           }, [])
@@ -358,7 +360,6 @@ export function compiledBlock(
             Fragment,
             {},
             createElement(RenderBlock, derived),
-            // TODO: This should be uncommented, but doing that, value.reset would fail as it is undefined. This should be revisited
             !firstRender ? targets : undefined,
           );
         }

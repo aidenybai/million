@@ -38,8 +38,8 @@ export const processProps = (
   return processedProps;
 };
 
-const wrap = (vnode: ReactNode): ReactNode => {
-  return createElement(RENDER_SCOPE, { suppressHydrationWarning: true }, vnode);
+const wrap = (vnode: ReactNode, key?: string): ReactNode => {
+  return createElement(RENDER_SCOPE, { suppressHydrationWarning: true, id: key }, vnode);
 };
 
 export const renderReactScope = (
@@ -47,6 +47,7 @@ export const renderReactScope = (
   unstable: boolean,
   portals: MillionPortal[] | undefined,
   currentIndex: number,
+  key?: string
 ) => {
   const el = portals?.[currentIndex]?.current;
 
@@ -61,9 +62,9 @@ export const renderReactScope = (
       if (isCallable) {
         return vnode;
       }
-      return wrap(wrap(vnode));
+      return wrap(wrap(vnode), key);
     }
-    return wrap(vnode);
+    return wrap(vnode, key);
   }
 
   if (isCallable) {
@@ -76,15 +77,14 @@ export const renderReactScope = (
     }
   }
 
-  const current = el ?? document.createElement(RENDER_SCOPE);
-  // TODO: this el is different from what we have in ssr'ed one so we need to assign an id or something like that
-  console.log(el)
-  const reactPortal = createPortal(vnode, current);
+  const current = el ?? (key ? document.getElementById(key) : null) ?? document.createElement(RENDER_SCOPE);
+  const reactPortal = createPortal(createElement(Fragment, { children: vnode }), current, key);
 
   const millionPortal = {
     foreign: true as const,
     current,
     portal: reactPortal,
+    reset: (child: Node) => child.childNodes.forEach((cn) => child.removeChild(cn)),
     unstable,
   };
   if (portals) {
