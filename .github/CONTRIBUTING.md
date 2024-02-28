@@ -148,7 +148,7 @@ pnpm run dev
 
 #### Gitpod
 
-You can use [Gitpod](https://gitpod.io) to get a workspace configured to contribute on MillionJS.
+You can use [Gitpod](https://gitpod.io) to get a workspace configured to contribute on MillionJS. You only have to create a variable `MY_LIVEBLOCKS_KEY` on your [Gitpod profile](https://gitpod.io/user/variables) containing an API key on your Liveblocks account.
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/aidenybai/million)
 
