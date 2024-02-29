@@ -23,7 +23,7 @@ It’s launch time. After three months and hundreds of commits, we invite you to
 
 Get started in one command by running this in any React app:
 
-```sh
+```bash copy
 npx @million/lint@latest
 ```
 
@@ -217,7 +217,7 @@ As for React & Chrome Devtools, they are simply unusable if you don't know what 
 
 ### Compiler or runtime?
 
-JavaScript compilers enable us to perform static analysis on source code. For performance optimization, static analysis is great for breath – by writing rules, developers can surface problems across the entire code base. This is why ESLint is so great. The tradeoff is that we can't predict how slow an operation will be without actually running it, making it impossible to implement Million Lint solely as a compiler.
+JavaScript compilers enable us to perform static analysis on source code. For performance optimization, static analysis is great for breadth – by writing rules, developers can surface problems across the entire code base. This is why ESLint is so great. The tradeoff is that we can't predict how slow an operation will be without actually running it, making it impossible to implement Million Lint solely as a compiler.
 
 Another approach is thus instrumenting at runtime. The advantage here is we can directly run the app and get rendering information (via the [React Fiber](https://blog.logrocket.com/deep-dive-react-fiber/)), so many of the complexity challenges with static analysis are instantly solved. However, the tradeoff with runtime is that you don’t have the original source (unless you use source maps, which are painful and slow). "Which hook or prop caused this change?" "Which part of the component re-rendered?" We couldn’t answer these questions without the source code.
 
@@ -306,11 +306,13 @@ After capturing the renders, we extend the compiler to asynchronously collect bu
 
 Lastly, we made **Lint++**, which feeds the collected information into a language model to discover optimization opportunities. So even if you don’t know what you’re doing – Million Lint will show you how!
 
-[video of **Lint++**]
+<div className="pt-6">
+<video src="/lint/lint-plus-plus.mp4" controls />
+</div>
 
 ## How good is Lint++?
 
-Measuring the objective quality of **Lint++** requires a non-trivial dataset, so we are working on an open-source React web app optimization benchmark for code-gen models (coming soon!). For now, we have tested **Lint++** on a dozen in-production products between our friends. For a public example, **Lint++** was able to identify and suggest the correct fix to every problem in [a slow, educational React app](https://github.com/3perf/react-workshop-ra) our friend [Ivan Akulov](https://twitter.com/iamakulov) built.
+Measuring the objective quality of **Lint++** requires a non-trivial dataset, so we are working on an open source React web app optimization benchmark for code-gen models (coming soon!). For now, we have tested **Lint++** on a dozen in-production products between our friends. For a public example, **Lint++** was able to identify and suggest the correct fix to every problem in [a slow, educational React app](https://github.com/3perf/react-workshop-ra) our friend [Ivan Akulov](https://twitter.com/iamakulov) built.
 
 After running **Lint++** on Ivan's `notes` app, it labeled the following problems across 6 components:
 
@@ -321,9 +323,9 @@ After running **Lint++** on Ivan's `notes` app, it labeled the following problem
 - Suggesting `use-context-selector` > `useContext`
 - Moving context providers up the tree
 
-We invited an engineer who's never seen the code base before to try speed up the `notes` app. Using Million Lint, he 3x the performance of the main page after ~15 minutes of work.
+We invited an engineer who's never seen the code base before to try speed up the `notes` app. Using Million Lint, he 3x'd the performance of the main page after ~15 minutes of work.
 
-<div className="pt-4">
+<div className="pt-6">
 <video src="/lint/comparison.mp4" controls />
 </div>
 
@@ -331,40 +333,30 @@ Of course, `notes` is a small app, and Million Lint wouldn't always find the bes
 
 ## How will we make money from this?
 
-We don’t yet. We raised enough capital from an amazing set of investors that actually care about developer tools.
+In the next few weeks, we will open source the Million Lint compiler and the VSCode extension. Both the compiler and in-editor annotations are free to use forever. Our focus is to build a great developer tool, and we believe that the best way to build a great developer tool is to build it in the open.
 
-We will make money selling software (that makes your software faster) for more than they cost to make and maintain.
+To earn a living, we will charge the **Lint++** service at $20 per month for 100 lints. For more frequent users, we are still working on the details, but the idea is to charge based on the number of lints you translate to code. We believe this aligns our incentives with yours: we only make money when we make your app faster.
 
-Million Lint follows a freemium model. In-editor annotations will remain forever free (+ open source soon!). Linting will start with a 1 month free trial, and then $20/month after.
+## The road to Million Lint 1.0
 
-If we do succeed, we are one step closer to solving the current state of web performance. Our final goal with Million is to enable web apps to self optimize without the need of humans to intervene. We want to empower developers to ship features and fix bugs faster, without needing to think about performance.
+We are still in the very early days of experimentation! Million Lints focuses on solving unnecessary re-renders right now (but we understand this is [not a problem](https://react.dev/blog/2024/02/15/react-labs-what-we-have-been-working-on-february-2024) for long 🫡) and will move on to handling slow-downs arising from the React ecosystem: state managers, animations, bundle sizes, waterfalls, etc. Our eventual goal is to create a toolchain which keeps your whole web infrastructure fast, automatically - frontend to backend.
 
-## The road to 1.0
-
-We have a lot of work to do. We’re starting by helping you fix rendering issues now (but we understand this is [not a problem](https://react.dev/blog/2024/02/15/react-labs-what-we-have-been-working-on-february-2024) for long), and moving on to handling application code of the React ecosystem: such as state managers, animations, bundle sizes, waterfalls, etc.
-
-Most importantly though, [we need your feedback](https://million.dev/chat) to help us make the best possible web performance developer tool. Try it out, and let us know which pieces are missing.
-
-Once we’re ready, we’ll open source for the benefit of the community.
+We would like to [invite you on this journey](https://million.dev/chat) with us to make the best possible web performance developer tool. Million Lint is our very first step. Try it out and let us know what pieces are missing!
 
 ## How can I help?
 
-Try Million Lint out today! [Let us know your feedback!](https://million.dev/chat)
+We are looking for talented frontend and pl/ml engineers to join us in the Bay Area.
 
-We are looking for talented frontend (dev tools) and pl/ml engineers to join us in the Bay Area.
-
-We need to build tools that make it easy to deliver fast applications, regardless of the framework, platform, or the size of your engineering team.
-
-At Million, we have a simple thesis for software performance – we can build tools that make *existing* tooling fast and easy to use. Developers should think only of shipping features and fixing bugs – not keeping their apps fast. We plan to start with React, then extend to the roader frontend, backend, and other platforms.
+At Million, we have a simple thesis for software performance – we can build tools that make *anyone* a performance expert. Developers should think only of shipping features and fixing bugs – not keeping their code fast. We plan to start with React, then extend to the broader frontend, backend, and other platforms.
 
 If you feel like you missed the beginning of Million.js, get in on this. The fun of the beginning is how much you get to shape 🔜 [My email](mailto:aiden@million.dev)
 
 <br />
 
-<div className="flex flex-col items-center gap-4">
+<div className="flex flex-col items-center gap-4 pt-4">
   <Image src="/lint/team.png" alt="the Million team" height={450} width={600} />
   <small>
-    _The Million team + [Ivan Akulov](https://twitter.com/iamakulov) fixing
+    _the Million team + [Ivan Akulov](https://twitter.com/iamakulov) fixing
     React performance one step at a time. Join us!_
   </small>
 </div>
