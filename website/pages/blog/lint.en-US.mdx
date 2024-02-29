@@ -1,28 +1,27 @@
 ---
 title: Million Lint is in public beta
 date: FEB 29, 2024
-description: We’d love to have your feedback
+description: We couldn't wait to share it with you!
 ---
 
 import { Steps, Callout, Tabs, Tab } from 'nextra-theme-docs';
 import Image from 'next/image';
 
-<div className="flex flex-col items-center gap-4">
+<div className="flex flex-col items-center gap-2 pt-8">
 
-  <Image src="/lint/logo.png" alt="Million Lint" height={200} width={400} />
+<Image src="/lint/logo.png" alt="Million Lint" height={520} width={1200} />
 
 # Million Lint is in public beta
 
-
-    <small>[AIDEN BAI](https://twitter.com/aidenybai), [NISARG PATEL](https://twitter.com/nisargptel), [JOHN YANG](https://twitter.com/fiveseveny) – FEB 29 2024</small>
+<small>[Aiden Bai](https://twitter.com/aidenybai), [John Yang](https://twitter.com/fiveseveny), [Nisarg Patel](https://twitter.com/nisargptel) – February 29, 2024</small>
 
 </div>
 
 ---
 
-It’s launch time. After three months & hundreds of commits, we invite you to try out Million Lint. It’s not finished – there are a few known bugs and several missing features – but we're really happy with how it's shaping up and can't wait for you to try it.
+It’s launch time. After three months and hundreds of commits, we invite you to try out **Million Lint**. The experience is not finished – there are a few known bugs and several missing features – but we are really happy with how it's shaping up and couldn't wait to share it with you.
 
-Get started by running this in any React app:
+Get started in one command by running this in any React app:
 
 ```sh
 npx @million/lint@latest
@@ -30,7 +29,7 @@ npx @million/lint@latest
 
 <details>
   <summary>
-    Installation failed? Click here to see the guide.
+    Set up failed? Click here to follow the guide.
   </summary>
 
 <Steps>
@@ -64,9 +63,9 @@ npx @million/lint@latest
   </Tab>
 </Tabs>
 
-### Install the VSCode extension
+### Install VSCode extension
 
-Go to the [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=million.million-lint) and install the extension.
+Go to the [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=million.million-lint) and install the Million Lint extension.
 
 ### Add the compiler to your application
 
@@ -75,7 +74,7 @@ Go to the [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemNa
 Million.js is supported within the `/app` ("use client" components only) and `/pages`
 
 ```js filename="next.config.mjs"
-import MillionLint from "@million/lint";
+import MillionLint from '@million/lint';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -108,7 +107,7 @@ exports.onCreateWebpackConfig = ({ actions }) => {
     plugins: [MillionLint.webpack()],
   });
 };
-```
+````
 </Tab>
 
 <Tab>
@@ -120,7 +119,7 @@ import { defineConfig } from "vite";
 export default defineConfig({
   plugins: [MillionLint.vite(), react()],
 });
-```
+````
 </Tab>
 
 <Tab>
@@ -141,7 +140,7 @@ export default defineConfig({
   </Callout>
 
 ```js filename="craco.config.js"
-const MillionLint = require("@million/lint");
+const MillionLint = require('@million/lint');
 
 module.exports = {
   plugins: [MillionLint.craco({ legacyHmr: true })],
@@ -179,9 +178,9 @@ Let us know if you have any [questions or feedback](https://million.dev/chat)!
 
 ## What is Million Lint?
 
-Million Lint is a VSCode extension that helps make your React website fast.
+Million Lint is a VSCode extension that keeps your React website fast. We identify slow code and provide suggestions to fix it. It’s like ESLint, but for performance!
 
-Most developers try to use tools like React Devtools to find slow code. Unfortunately, most lack the knowledge to properly manage the complexity.
+Many developers try to use tools like React Devtools to find unnecessary renders. Unfortunately, most lack the knowledge to properly manage the complexity.
 
 See the difference between React Devtools and Million Lint:
 
@@ -192,82 +191,62 @@ _Feeling lost? Yeah, us too (+99% of all devs)_
 
 ![React Profiler Flamegraph](/lint/profiler.jpeg)
 
-
 </Tab>
 
 <Tab>
-Get profile information within VSCode!
+_Get profile information within VSCode!_
 
 <video src="/lint/renders.mp4" controls autoPlay />
-
 
 </Tab>
 
 </Tabs>
 
-Complicated tools means developers give up. You insert `console.log` everywhere in a frenzied attempt to figure out the issue. You find some promising leads, but nothing works. Eventually, the slow code never gets fixed, problems pile up, and the end users are hurt. Everyone is left frustrated.
+Complicated tools means developers give up. Every developer knows this experience: we insert `console.log` everywhere, catch some promising leads, but nothing happens before "time runs out." Eventually, the slow/buggy code never gets fixed, problems pile up on a backlog, and our end users are hurt.
 
-With websites getting [slower every year](https://www.debugbear.com/blog/is-the-web-getting-slower), we risk [leaving behind the majority](https://infrequently.org/series/performance-inequality/) of the world, exacerbating the divide between the rich and poor. I personally do not want “You must have the latest MacBook” to ever be the world we live in.
+Are there no better ways to surface performance issues?
 
-The goal of Million Lint is to commoditize web performance.
+### You vs. profilers
 
-## You vs. the universe
+Existing instrumentation tools (Sentry, Datadog, etc.) show you the “entire universe” of web data. This can include every function call, network request, user interaction, core web vital, screenshot, memory … a dizzying amount of information to process. As such, these tools have interfaces that are overwhelming.
 
-Existing instrumentation tools (Sentry, Datadog, etc.) show you the “entire universe” of data. This includes every: function call, network requests, user interactions, core web vitals, screenshots, memory… a dizzying amount of information to process.
+As for React & Chrome Devtools, they are simply unusable if you don't know what you are doing. And even if you do, it is hard to tell which part of the component re-rendered, or which hook or prop caused this change. Unless you are an expert, the current experience of performance debugging is hostile to most developers.
 
-As such, these tools have interfaces that are overwhelming and make it difficult to find what you need.
+### Compiler or runtime?
 
-The same applies with React & Chrome Devtools. They’re terrible if you have no idea what you’re doing (most of us).
+JavaScript compilers enable us to perform static analysis on source code. For performance optimization, static analysis is great for breath – by writing rules, developers can surface problems across the entire code base. This is why ESLint is so great. The tradeoff is that we can't predict how slow an operation will be without actually running it, making it impossible to implement Million Lint solely as a compiler.
 
-We realized that this is suboptimal – even anti-developer in many cases. Unless you are an expert, the current state of performance tooling is not well designed for most developers.
+Another approach is thus instrumenting at runtime. The advantage here is we can directly run the app and get rendering information (via the [React Fiber](https://blog.logrocket.com/deep-dive-react-fiber/)), so many of the complexity challenges with static analysis are instantly solved. However, the tradeoff with runtime is that you don’t have the original source (unless you use source maps, which are painful and slow). "Which hook or prop caused this change?" "Which part of the component re-rendered?" We couldn’t answer these questions without the source code.
 
-Our hypothesis: Don’t filter down the “whole universe,” start with the data you need (”an atom”) and build up from there.
+### In search of a better way
 
-We do this by designing instrumentation specifically for React apps.
+So we went back to the drawing board. For Million Lint, we asked ourselves: how can we have the best of both worlds? We needed to create an profiling experience that didn’t hog build time or runtime; then, support a debugging flow that helped developers find performance problems fast.
 
-## Compiler or runtime?
+Our answer is dynamic analysis – using both static analysis and runtime analysis where it makes sense. Instead of filtering top-down, we follow the necessary data flow to understand each component render and build up from there. This resulted in our custom instrumentation library, designed specifically for React apps.
 
-JavaScript compilers enable you to perform static analysis on source code. One advantage is you can provide better authoring experience or runtime performance.
+## _import MillionCompiler from '@million/lint';_
 
-In the context of performance, static analysis can be very powerful – you get access to the entire source code. This is why ESLint is so great – you can create a wide variety of rules and processes to get what you want.
+The Million Lint experience starts with a compiler running dynamic analysis on individual React components.
 
-The tradeoff is it’s very difficult to predict how slow an application will be without running it, making it impossible to implement Million Lint solely as a compiler.
-
-Another approach is processing this data at runtime. The advantage here is you can directly run the app and get rendering information (via [React Fiber](https://blog.logrocket.com/deep-dive-react-fiber/)). Many of the complexity challenges with static analysis are instantly solved.
-
-The tradeoff with runtime is you don’t have the original source (unless you use source maps, which are painful and slow). Which hook or prop caused this change? Which part of the component re-rendered?
-
-## In search of a better way
-
-We went back to the drawing board. We wanted to create something that didn’t hog build time or runtime, and simultaneously helped developers figure out performance problems fast. Over-reliance on either methodology and eating the downsides felt backwards.
-
-Our answer to these questions is dynamic analysis – using both static analysis and runtime analysis where it makes sense.
-
-## Dynamic analysis
-
-The main idea about dynamic analysis is you can share and balance processing cost across compile and runtime, while inheriting the advantages of both.
-
-The role of the compiler is to inject handlers:
+First, the compiler inject handlers:
 
 <Tabs items={['Compiled', 'Raw source']}>
 <Tab>
 ```jsx /Million.capture/
 function App({ start }) {
-  Million.capture({ start }); // ✨ inject
 
-  const [count, setCount] = Million.capture(useState)(start); // ✨ inject
+  Million.capture({ start });  // ✨ inject
+  const [count, setCount] = Million.capture(useState)(start);  // ✨ inject
 
   useEffect(
     () => {
-      console.log('double: ', count * 2);
+      console.log("double: ", count * 2);
     },
-    Million.capture([count]), // ✨ inject
+    Million.capture([count]),  // ✨ inject
   );
 
-  return (
-    Million.capture(  // ✨ inject
-      <Button onClick={() => setCount(count + 1)}>{count}</Button>,
-    )
+  return Million.capture(  // ✨ inject
+    <Button onClick={() => setCount(count + 1)}>{count}</Button>,
   );
 }
 ```
@@ -275,6 +254,7 @@ function App({ start }) {
 <Tab>
 ```jsx
 function App({ start }) {
+
   const [count, setCount] = useState(start);
 
   useEffect(() => {
@@ -284,25 +264,26 @@ function App({ start }) {
   return <Button onClick={() => setCount(count + 1)}>{count}</Button>;
 }
 ```
+
 </Tab>
 </Tabs>
 
-During runtime, they capture render, timing, and metadata as you interact with your web app. You get runtime profiling from running the app, and have access to the source code thanks to the compiler!
+During runtime, these inject handlers capture render, timing, and metadata information as you interact with your web app in dev mode. With this approach, we can get runtime profiling from running the app, and have access to the source code thanks to the JavaScript compiler!
 
 ```jsx
-//  psuedo code of collected data:
+// psuedo code of collected data:
 [
   {
     kind: 'state',
-    count: 1,
+    count: 7,
     time: 0.1,
-    changes: [{ prev: 0, next: 1 }],
+    changes: [{ prev: 0, next: 8 }, ...],
   },
-  // so on...
+  // and so on...
 ];
 ```
 
-Additionally, the compiler can asynchronously collect bundle, network, and state manager information without build time overhead.
+After capturing the renders, we extended the compiler to asynchronously collect bundle, network, and state manager information without build time overhead.
 
 This allows us to show in-editor annotations, like:
 
@@ -378,8 +359,9 @@ If you feel like you missed the beginning of Million.js, get in on this. The fun
 <br />
 
 <div className="flex flex-col items-center gap-4">
-  <Image src="/lint/team.png" alt="Million team" height={300} width={400} />
+  <Image src="/lint/team.png" alt="the Million team" height={450} width={600} />
   <small>
-  _The Million team + [Ivan Akulov](https://twitter.com/iamakulov) fixing React performance one step at a time. Join us!_
+    _The Million team + [Ivan Akulov](https://twitter.com/iamakulov) fixing
+    React performance one step at a time. Join us!_
   </small>
 </div>
