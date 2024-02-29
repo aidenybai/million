@@ -271,7 +271,7 @@ function App({ start }) {
 </Tab>
 </Tabs>
 
-During runtime, these inject handlers capture render, timing, and metadata information as you interact with your web app in dev mode. With this approach, we can get runtime profiling from running the app, and have access to the source code thanks to the JavaScript compiler!
+During runtime, these inject handlers capture render, timing, and metadata information as you interact with your web app in dev mode. With this approach, we can get runtime profiling data from running the app, while keeping access to the source code thanks to the JavaScript compiler!
 
 ```jsx
 // psuedo code of collected data:
@@ -286,7 +286,7 @@ During runtime, these inject handlers capture render, timing, and metadata infor
 ];
 ```
 
-After capturing the renders, we extended the compiler to asynchronously collect bundle, network, and state manager information without build time overhead. These real-time insights are then fed into the VSCode extension, where you can see the collected information and suggestions to fix it.
+After capturing the renders, we extend the compiler to asynchronously collect bundle, network, and state manager information without build time overhead. These real-time insights are then fed into the VSCode extension, where you can see the collected information and suggestions to fix it.
 
 <Tabs items={['Render information', 'Bundle sizes']}>
 
@@ -306,28 +306,28 @@ After capturing the renders, we extended the compiler to asynchronously collect 
 
 Lastly, we made **Lint++**, which feeds the collected information into a language model to discover optimization opportunities. So even if you don’t know what you’re doing – Million Lint will show you how!
 
-[video of lint++]
+[video of **Lint++**]
 
-## How good is it?
+## How good is Lint++?
 
-Measuring the objective quality of Lint++ requires a non-trivial dataset, so we are working on an open-source React web app optimization benchmark for code-gen models (coming soon!). For now, we have tested Lint++ on a dozen in-production products between our friends. For a public example, Lint++ was able to identify and suggest the correct fix to every problem in [a slow, educational React app](https://github.com/3perf/react-workshop-ra) our friend [Ivan Akulov](https://twitter.com/iamakulov) built.
+Measuring the objective quality of **Lint++** requires a non-trivial dataset, so we are working on an open-source React web app optimization benchmark for code-gen models (coming soon!). For now, we have tested **Lint++** on a dozen in-production products between our friends. For a public example, **Lint++** was able to identify and suggest the correct fix to every problem in [a slow, educational React app](https://github.com/3perf/react-workshop-ra) our friend [Ivan Akulov](https://twitter.com/iamakulov) built.
 
-After running Lint++ on the notes-editor app, it labeled the following problems across 6 components:
+After running **Lint++** on Ivan's `notes` app, it labeled the following problems across 6 components:
 
 - Unstable reference as prop optimization
 - Memoizing expensive components
 - Caching inline functions
 - Suggesting virtualization
-- Suggesting `use-context-selector` > useContext
+- Suggesting `use-context-selector` > `useContext`
 - Moving context providers up the tree
 
-We invited an engineer who's never seen the code base before to try speed up the notes-editor app. Using Million Lint, he 3x the performance of the main page after ~15 minutes of work.
+We invited an engineer who's never seen the code base before to try speed up the `notes` app. Using Million Lint, he 3x the performance of the main page after ~15 minutes of work.
 
 <div className="pt-4">
 <video src="/lint/comparison.mp4" controls />
 </div>
 
-Of course, notes-editor is a small app, and Million Lint wouldn't always find the best fix for every problem. We are working hard to expand its net – try and please let us know about your experience!
+Of course, `notes` is a small app, and Million Lint wouldn't always find the best fix for every problem. We are working hard to improve its quality – try and please let us know about your experience!
 
 ## How will we make money from this?
 
