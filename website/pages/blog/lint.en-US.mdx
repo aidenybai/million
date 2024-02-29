@@ -74,25 +74,25 @@ Go to the [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemNa
 Million.js is supported within the `/app` ("use client" components only) and `/pages`
 
 ```js filename="next.config.mjs"
-import MillionLint from '@million/lint';
+import MillionCompiler from '@million/lint';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
 };
 
-export default MillionLint.next()(nextConfig);
+export default MillionCompiler.next()(nextConfig);
 ```
 </Tab>
 
 <Tab>
 ```js filename="astro.config.mjs"
 import { defineConfig } from "astro/config";
-import MillionLint from "@million/lint";
+import MillionCompiler from "@million/lint";
 
 export default defineConfig({
    vite: {
-     plugins: [MillionLint.vite()],
+     plugins: [MillionCompiler.vite()],
    },
 });
 ```
@@ -100,11 +100,11 @@ export default defineConfig({
 
 <Tab>
 ```js filename="gatsby-node.js"
-const MillionLint = require("@million/lint");
+const MillionCompiler = require("@million/lint");
 
 exports.onCreateWebpackConfig = ({ actions }) => {
   actions.setWebpackConfig({
-    plugins: [MillionLint.webpack()],
+    plugins: [MillionCompiler.webpack()],
   });
 };
 ````
@@ -112,12 +112,12 @@ exports.onCreateWebpackConfig = ({ actions }) => {
 
 <Tab>
 ```js filename="vite.config.js"
-import MillionLint from "@million/lint";
+import MillionCompiler from "@million/lint";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  plugins: [MillionLint.vite(), react()],
+  plugins: [MillionCompiler.vite(), react()],
 });
 ````
 </Tab>
@@ -125,11 +125,11 @@ export default defineConfig({
 <Tab>
 ```js filename="vite.config.js"
 import { unstable_vitePlugin as remix } from "@remix-run/dev";
-import MillionLint from "@million/lint";
+import MillionCompiler from "@million/lint";
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  plugins: [MillionLint.vite(), remix()],
+  plugins: [MillionCompiler.vite(), remix()],
 });
 ```
 </Tab>
@@ -140,29 +140,30 @@ export default defineConfig({
   </Callout>
 
 ```js filename="craco.config.js"
-const MillionLint = require('@million/lint');
+const MillionCompiler = require('@million/lint');
 
 module.exports = {
-  plugins: [MillionLint.craco({ legacyHmr: true })],
+  plugins: [MillionCompiler.craco({ legacyHmr: true })],
 };
 ```
 </Tab>
 
 <Tab>
 ```js filename="webpack.config.js"
-const MillionLint = require("@million/lint");
+const MillionCompiler = require("@million/lint");
+
 module.exports = {
-  plugins: [MillionLint.webpack()],
+  plugins: [MillionCompiler.webpack()],
 };
 ```
 </Tab>
 
 <Tab>
 ```js filename="rollup.config.js"
-import MillionLint from "@million/lint";
+import MillionCompiler from "@million/lint";
 
 export default {
-  plugins: [MillionLint.rollup()],
+  plugins: [MillionCompiler.rollup()],
 };
 ```
 </Tab>
@@ -196,7 +197,9 @@ _Feeling lost? Yeah, us too (+99% of all devs)_
 <Tab>
 _Get profile information within VSCode!_
 
+<div className="pt-4">
 <video src="/lint/renders.mp4" controls autoPlay />
+</div>
 
 </Tab>
 
@@ -283,9 +286,7 @@ During runtime, these inject handlers capture render, timing, and metadata infor
 ];
 ```
 
-After capturing the renders, we extended the compiler to asynchronously collect bundle, network, and state manager information without build time overhead.
-
-This allows us to show in-editor annotations, like:
+After capturing the renders, we extended the compiler to asynchronously collect bundle, network, and state manager information without build time overhead. These real-time insights are then fed into the VSCode extension, where you can see the collected information and suggestions to fix it.
 
 <Tabs items={['Render information', 'Bundle sizes']}>
 
@@ -303,19 +304,15 @@ This allows us to show in-editor annotations, like:
 
 </Tabs>
 
-In addition, you can use **Lint++**, which feeds the collected information into a language model to discover optimization opportunities. So even if you don’t know what you’re doing – Million Lint will show you how!
+Lastly, we made **Lint++**, which feeds the collected information into a language model to discover optimization opportunities. So even if you don’t know what you’re doing – Million Lint will show you how!
 
 [video of lint++]
 
 ## How good is it?
 
-Measuring an "objective" improvement here is hard (it's supposed to help you find issues!). We haven't done any real benchmarking yet, but I played around with it on [an example app](https://github.com/3perf/react-workshop-ra).
+Measuring the objective quality of Lint++ requires a non-trivial dataset, so we are working on an open-source React web app optimization benchmark for code-gen models (coming soon!). For now, we have tested Lint++ on a dozen in-production products between our friends. For a public example, Lint++ was able to identify and suggest the correct fix to every problem in [a slow, educational React app](https://github.com/3perf/react-workshop-ra) our friend [Ivan Akulov](https://twitter.com/iamakulov) built.
 
-Using Million Lint is very intuitive! This is me speeding up a notes editor app by 3x with Million Lint after ~20 or so minutes of work.
-
-<video src="/lint/comparison.mp4" controls />
-
-The types of performance suggestions from **Lint++** I saw:
+After running Lint++ on the notes-editor app, it labeled the following problems across 6 components:
 
 - Unstable reference as prop optimization
 - Memoizing expensive components
@@ -324,7 +321,13 @@ The types of performance suggestions from **Lint++** I saw:
 - Suggesting `use-context-selector` > useContext
 - Moving context providers up the tree
 
-This is just a preview of the capabilities! We’re hoping to expand to more than just rendering – try and let us know what to add!
+We invited an engineer who's never seen the code base before to try speed up the notes-editor app. Using Million Lint, he 3x the performance of the main page after ~15 minutes of work.
+
+<div className="pt-4">
+<video src="/lint/comparison.mp4" controls />
+</div>
+
+Of course, notes-editor is a small app, and Million Lint wouldn't always find the best fix for every problem. We are working hard to expand its net – try and please let us know about your experience!
 
 ## How will we make money from this?
 
