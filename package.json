@@ -1,7 +1,7 @@
 {
   "name": "million",
   "type": "module",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "Make React Faster. Automatically.",
   "keywords": [
     "million",
@@ -57,6 +57,16 @@
       "require": {
         "types": "./dist/packages/compiler.d.ts",
         "default": "./dist/packages/compiler.cjs"
+      }
+    },
+    "./experimental": {
+      "import": {
+        "types": "./dist/packages/experimental.d.mts",
+        "default": "./dist/packages/experimental.mjs"
+      },
+      "require": {
+        "types": "./dist/packages/experimental.d.ts",
+        "default": "./dist/packages/experimental.cjs"
       }
     },
     "./react": {

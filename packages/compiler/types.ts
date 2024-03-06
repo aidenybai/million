@@ -14,7 +14,6 @@ export interface DefaultImportDefinition {
 
 export type ImportDefinition = NamedImportDefinition | DefaultImportDefinition;
 
-
 export interface CompilerOptions {
   hmr?: boolean;
   server?: boolean;
@@ -24,7 +23,7 @@ export interface CompilerOptions {
         threshold?: number;
         // @deprecated
         skip?: (string | RegExp)[];
-        rsc?: boolean
+        rsc?: boolean;
       };
   /**
    * @default true
@@ -37,7 +36,6 @@ export interface CompilerOptions {
 
   telemetry: MillionTelemetry;
 }
-
 
 export interface StateContext {
   options: CompilerOptions;

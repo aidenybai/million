@@ -8,6 +8,8 @@
       "typesetting": "article"
     }
   },
+  "lint": "Million Lint is in public beta",
+  "block-noSlot": "Blocks with noSlot Mode",
   "million-3": "Announcing Million.js 3.0",
   "million-beyond-speed": "Million Beyond 'Speed'",
   "million-v2.5.3": "Million.js v2.5.3",

@@ -95,7 +95,9 @@ const config: DocsThemeConfig = {
           }
           span:hover {
             mask-position: 100%;
-            transition: mask-position 1s ease, -webkit-mask-position 1s ease;
+            transition:
+              mask-position 1s ease,
+              -webkit-mask-position 1s ease;
           }
         `}</style>
       </span>
@@ -221,9 +223,9 @@ const config: DocsThemeConfig = {
     if (isWrapped) {
       const name = query?.name ?? 'My React app';
       const id = (query.id as string).split('.')[0];
-      ogUrl = `https://telemetry.million.dev/api/v1/og/wrapped/${
-        id
-      }.mp4?name=${encodeURIComponent(name as any)}`;
+      ogUrl = `https://telemetry.million.dev/api/v1/og/wrapped/${id}.mp4?name=${encodeURIComponent(
+        name as any,
+      )}`;
       title = name + ' Wrapped | Million.js';
     }
 
@@ -265,8 +267,8 @@ const config: DocsThemeConfig = {
     dismissible: true,
     key: `version-${packageJson.version}`,
     text: (
-      <a href="https://million.dev/blog/million-3" target="_blank">
-        Announcing Million 3 →
+      <a href="https://million.dev/blog/lint" target="_blank">
+        Million Lint is in public beta →
       </a>
     ),
   },

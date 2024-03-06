@@ -54,6 +54,7 @@ const MillionArray = <T>({
     createElement(as ?? defaultType, { ...rest, ref }),
     ...portals.current.map((p) => p.portal),
   );
+  // console.log(portals.current, ref.current)
 
   useEffect(() => {
     if (!ref.current || fragmentRef.current) return;
@@ -104,7 +105,7 @@ const createChildren = <T>(
       if (!currentCache.block) {
         currentCache.block = MapGet$.call(REGISTRY, vnode.type)!;
       }
-      children[i] = currentCache.block!(vnode.props, i);
+      children[i] = currentCache.block!(vnode.props, portals, i);
       continue;
     }
 
@@ -122,6 +123,7 @@ const createChildren = <T>(
     const block = createBlock((props?: MillionProps) => props?.scope);
     const currentBlock = (
       props: MillionProps,
+      portals: { current: MillionPortal[] },
       index: number,
     ): ReturnType<typeof block> => {
       return block(
@@ -139,7 +141,7 @@ const createChildren = <T>(
 
     MapSet$.call(REGISTRY, vnode.type, currentBlock);
     currentCache.block = currentBlock as any;
-    children[i] = currentBlock(vnode.props, i);
+    children[i] = currentBlock(vnode.props, portals, i);
   }
   currentCache.each = each;
   currentCache.children = children;

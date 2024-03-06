@@ -48,16 +48,33 @@
       "typesetting": "article"
     }
   },
+  "privacy": {
+    "display": "hidden",
+    "type": "page",
+    "title": "Privacy Policy",
+    "theme": {
+      "typesetting": "article"
+    }
+  },
+  "code-policy": {
+    "display": "hidden",
+    "type": "page",
+    "title": "Code Policy",
+    "theme": {
+      "typesetting": "article"
+    }
+  },
+  "terms": {
+    "display": "hidden",
+    "type": "page",
+    "title": "Terms of Service",
+    "theme": {
+      "typesetting": "article"
+    }
+  },
   "faq": {
     "type": "page",
     "title": "FAQ",
-    "theme": {
-      "layout": "raw"
-    }
-  },
-  "ai": {
-    "type": "page",
-    "title": "AI",
     "theme": {
       "layout": "raw"
     }
@@ -66,28 +83,21 @@
     "title": "More",
     "type": "menu",
     "items": {
-      "foundation": {
-        "title": "Foundation",
-        "href": "/foundation"
+      "privacy": {
+        "title": "Privacy Policy",
+        "href": "/privacy"
+      },
+      "code-policy": {
+        "title": "Code Policy",
+        "href": "/code-policy"
+      },
+      "terms": {
+        "title": "Terms of Service",
+        "href": "/terms"
       },
       "telemetry": {
         "title": "Telemetry",
         "href": "/telemetry"
-      },
-      "research": {
-        "title": "Research",
-        "href": "https://dl.acm.org/doi/10.1145/3555776.3577683",
-        "newWindow": true
-      },
-      "demo": {
-        "title": "Live demo",
-        "href": "https://demo.million.dev",
-        "newWindow": true
-      },
-      "hundred": {
-        "title": "Build your own",
-        "href": "https://github.com/aidenybai/hundred",
-        "newWindow": true
       }
     }
   }

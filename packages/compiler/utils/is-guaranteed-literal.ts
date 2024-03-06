@@ -31,14 +31,25 @@ export function isGuaranteedLiteral(node: t.Expression): node is t.Literal {
       }
       return isGuaranteedLiteral(node.argument);
     case 'ConditionalExpression':
-      return isGuaranteedLiteral(node.test)
-        && isGuaranteedLiteral(node.consequent)
-        && isGuaranteedLiteral(node.alternate);
+      return (
+        isGuaranteedLiteral(node.test) &&
+        isGuaranteedLiteral(node.consequent) &&
+        isGuaranteedLiteral(node.alternate)
+      );
     case 'BinaryExpression':
-      if (node.operator === 'in' || node.operator === 'instanceof' || node.operator === '|>') {
+      if (
+        node.operator === 'in' ||
+        node.operator === 'instanceof' ||
+        node.operator === '|>'
+      ) {
         return false;
       }
-      return t.isExpression(node.left) && isGuaranteedLiteral(node.left) && t.isExpression(node.right) && isGuaranteedLiteral(node.right);
+      return (
+        t.isExpression(node.left) &&
+        isGuaranteedLiteral(node.left) &&
+        t.isExpression(node.right) &&
+        isGuaranteedLiteral(node.right)
+      );
     case 'LogicalExpression':
       return isGuaranteedLiteral(node.left) && isGuaranteedLiteral(node.right);
     default:

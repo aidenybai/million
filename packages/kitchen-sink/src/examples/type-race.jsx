@@ -68,20 +68,20 @@ function HealthBar({ status, time, score, currentStc, stopGame }) {
   );
 }
 
+const TextBlock = block(({ text, className }) => (
+  <div className={className}>{text}</div>
+));
+
+
 function TypingArea({
   currentStc,
   nextStc,
   status,
-  time,
   onSentenceCompleted,
 }) {
   const [displayedText, setDisplayedText] = useState([
     { text: 'Test your typing skills!', className: 'type-none' },
   ]);
-
-  const TextBlock = block(({ text, className }) => (
-    <div className={className}>{text}</div>
-  ));
 
   useEffect(() => {
     if (status == 1) {
@@ -240,7 +240,6 @@ const TypeRace = () => {
         currentStc={currentStc}
         nextStc={nextStc}
         status={status}
-        time={time}
         onSentenceCompleted={onSentenceCompleted}
       />
       <hr />

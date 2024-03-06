@@ -105,7 +105,6 @@ const DataConverter: React.FC = block(() => {
           type="number"
           value={state.convertedValue}
           disabled
-          
         />
         <select
           style={{
