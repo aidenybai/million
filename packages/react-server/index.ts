@@ -232,7 +232,7 @@ export const createSSRBoundary = <P extends MillionProps>(
       }
     : {
         dangerouslySetInnerHTML: {
-          __html: document.getElementById(id)!.innerHTML,
+          __html: document.getElementById(id)?.innerHTML || "",
         },
       };
   if (ssrElementsMap.has(id)) {
