@@ -1,5 +1,6 @@
 import ArticleWrapper from './article-wrapper';
 import one from '../../public/lint/1.png';
+import two from '../../public/lint/2.png';
 
 export default function Platform(props: React.HTMLAttributes<HTMLDivElement>) {
   return (
@@ -27,7 +28,7 @@ export default function Platform(props: React.HTMLAttributes<HTMLDivElement>) {
           <PlatformCard
             heading="Use lint++ to help you fix slow code"
             subheading="Not sure how to optimize React components? Use lint++ to turn hours of debugging into minutes!"
-            art={one}
+            art={two}
           />
         </div>
       </div>
