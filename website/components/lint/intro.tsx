@@ -5,6 +5,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { BorderBeam } from './border-beam';
 import ReactPlayer from 'react-player';
+import { Blur } from '../home/hero';
 
 export const leftSvgInfo = [
   {
@@ -150,10 +151,12 @@ export default function Intro(props: React.HTMLAttributes<HTMLDivElement>) {
               'radial-gradient(rgb(16, 16, 16) 40%, rgb(16, 16, 16) 50%, rgba(16, 16, 16, 0.6) 64%, rgba(16, 16, 16, 0) 70%, rgba(16, 16, 16, 0) 80%)',
           }}
         >
-          <h1 className="px-[24px] text-center text-5xl font-semibold not-italic leading-[3.05rem] tracking-[-0.16rem] sm:px-0 sm:text-[4rem] sm:leading-[4.05rem]">
+          <h1 className="px-[24px] text-center text-5xl font-semibold not-italic leading-[3.3rem] tracking-[-0.16rem] sm:px-0 sm:text-[4rem] sm:leading-[4.3rem]">
             you write code
             <br />
-            <span className="text-[#af72d8]">we make fast</span>
+            <span className="text-[#af72d8]">
+              we make it <span className="gradient-text">fast</span>
+            </span>
           </h1>
           <h5 className="max-w-[450px] text-center text-[#D9D9D9]">
             Million Lint is a IDE extension that helps you identify and fix slow
