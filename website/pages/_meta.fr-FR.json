@@ -38,9 +38,9 @@
       "layout": "raw"
     }
   },
-  "ai": {
+  "lint": {
     "type": "page",
-    "title": "AI",
+    "title": "Lint",
     "theme": {
       "layout": "raw"
     }

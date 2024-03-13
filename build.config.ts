@@ -31,6 +31,7 @@ export default defineBuildConfig({
         options.plugins.push(banner(() => `'use client';\n`) as any);
         options.plugins.push(
           replace({
+            preventAssignment: true,
             'process.env.VERSION': JSON.stringify(version),
           }),
         );

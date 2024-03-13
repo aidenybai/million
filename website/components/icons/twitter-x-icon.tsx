@@ -1,3 +1,5 @@
+import GitHubButton from 'react-github-btn';
+
 export function TwitterXIcon() {
   return (
     <>
@@ -31,19 +33,16 @@ export function TwitterXIcon() {
           `}
         </style>
       </a>
-      <a
-        href="https://github.com/sponsors/aidenybai"
-        target="_blank"
-        className="hidden sm:block"
+      <GitHubButton
+        href="https://github.com/aidenybai/million"
+        data-color-scheme="no-preference: light; light: light; dark: dark;"
+        data-icon="octicon-star"
+        data-size="large"
+        data-show-count="true"
+        aria-label="Star aidenybai/million on GitHub"
       >
-        <iframe
-          src="https://github.com/sponsors/aidenybai/button"
-          title="Sponsor aidenybai"
-          height="32"
-          width="114"
-          className="rounded-md border-0 dark:invert invert-0"
-        ></iframe>
-      </a>
+        Star
+      </GitHubButton>
     </>
   );
 }

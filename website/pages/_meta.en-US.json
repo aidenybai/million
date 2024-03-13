@@ -79,6 +79,13 @@
       "layout": "raw"
     }
   },
+  "lint": {
+    "type": "page",
+    "title": "Lint",
+    "theme": {
+      "layout": "raw"
+    }
+  },
   "more": {
     "title": "More",
     "type": "menu",
