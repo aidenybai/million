@@ -23,14 +23,13 @@
 import {
   useRef,
   useState,
-  useMemo,
-  createElement,
+  useEffect,
   useLayoutEffect as uLE,
 } from 'react';
 import type ReactReconciler from 'react-reconciler';
 
 // avoid hydration errors in server
-const useLayoutEffect = typeof window === 'undefined' ? () => {} : uLE;
+const useLayoutEffect = typeof window === 'undefined' ? useEffect : uLE;
 
 /**
  * Represents a react-internal Fiber node.

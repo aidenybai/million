@@ -14,7 +14,7 @@ import {
   memo,
   useCallback,
   useEffect,
-  useLayoutEffect,
+  useLayoutEffect as uLE,
   useRef,
   useState,
 } from 'react';
@@ -32,6 +32,7 @@ import { experimental_options } from '../experimental';
 import { useContainer, useNearestParent } from '../react/its-fine';
 import { useSSRSafeId } from './utils';
 
+const useLayoutEffect = typeof window === 'undefined' ? useEffect : uLE;
 let globalInfo;
 
 export const block = <P extends MillionProps>(
@@ -231,7 +232,7 @@ export const createSSRBoundary = <P extends MillionProps>(
       }
     : {
         dangerouslySetInnerHTML: {
-          __html: document.getElementById(id)!.innerHTML,
+          __html: document.getElementById(id)?.innerHTML || "",
         },
       };
   if (ssrElementsMap.has(id)) {
