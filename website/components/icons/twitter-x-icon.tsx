@@ -33,16 +33,6 @@ export function TwitterXIcon() {
           `}
         </style>
       </a>
-      <GitHubButton
-        href="https://github.com/aidenybai/million"
-        data-color-scheme="no-preference: light; light: light; dark: dark;"
-        data-icon="octicon-star"
-        data-size="large"
-        data-show-count="true"
-        aria-label="Star aidenybai/million on GitHub"
-      >
-        Star
-      </GitHubButton>
     </>
   );
 }
