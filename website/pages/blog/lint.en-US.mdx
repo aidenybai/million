@@ -81,7 +81,9 @@ const nextConfig = {
   reactStrictMode: true,
 };
 
-export default MillionCompiler.next()(nextConfig);
+export default MillionCompiler.next({ 
+  rsc: true // if used in the app router mode
+})(nextConfig);
 ```
 </Tab>
 
