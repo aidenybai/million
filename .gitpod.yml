@@ -1,0 +1,30 @@
+image: gitpod/workspace-full
+
+tasks:
+  - name: Verification about Node and PNPM version & install dependencies
+    init: |
+      node -v 
+      pnpm -v
+      pnpm install
+      gp sync-done pnpm-global-install
+
+  - name: Test directory
+    init: gp sync-await pnpm-global-install
+    command: |
+      cd test
+      pnpm install
+      pnpm run test
+
+  - name: Website directory
+    init: gp sync-await pnpm-global-install
+    command: |
+      cd website
+      echo "NEXT_PUBLIC_LIVEBLOCKS_PUBLIC_KEY=$MY_LIVEBLOCKS_KEY" > .env
+      pnpm install
+      pnpm run dev
+
+ports:
+  - name: Website
+    port: 3000
+    visibility: public
+    onOpen: open-browser
