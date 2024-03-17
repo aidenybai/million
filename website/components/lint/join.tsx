@@ -22,7 +22,7 @@ export default function Join(props: React.HTMLAttributes<HTMLDivElement>) {
 
           <Link href="/blog/lint">
             <button className="clickable mt-4 flex w-full items-center justify-center gap-1 rounded-xl border border-solid border-[color:rgba(255,255,255,0.10)] bg-[#af72d8]/80 px-[14px] py-[8px] text-sm font-[500] text-white !transition-transform hover:scale-105">
-              <span className="pr-1">Read our annoucement →</span>
+              <span className="pr-1">Read our announcement →</span>
             </button>
           </Link>
         </div>
