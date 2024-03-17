@@ -1,3 +1,4 @@
+import getAttributeAlias from './alias';
 import {
   X_CHAR,
   VOID_ELEMENTS,
@@ -61,8 +62,11 @@ export const renderToTemplate = (
     if (name === 'key' || name === 'ref' || name === 'children') {
       continue;
     }
+
+    const alias = getAttributeAlias(name);
+    if (alias) name = alias;
+
     if (name === 'className') name = 'class';
-    if (name === 'htmlFor') name = 'for';
 
     if (name.startsWith('on')) {
       const isValueHole = '$' in value;
