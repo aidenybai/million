@@ -32,7 +32,8 @@ export const next = (
       if (millionConfig.rsc === undefined) {
         millionConfig.rsc =
           nextConfig.appDir ??
-          existsSync(`${webpackOptions.dir}${nextConfig.basePath || ''}/app`);
+          (existsSync(`${webpackOptions.dir}/app`) ||
+            existsSync(`${webpackOptions.dir}/src/app`));
       }
 
       config.plugins.unshift(
