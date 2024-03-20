@@ -94,6 +94,6 @@ const aliases = new Map([
   ['xHeight', 'x-height'],
 ]);
 
-export default function (name: string): string {
+export default function getAttributeAlias(name: string): string {
   return aliases.get(name) || name;
 }
