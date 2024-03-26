@@ -114,7 +114,6 @@ export const catchError = (
 export const logImprovement = (
   component: string,
   improvement: number,
-  stdout: boolean,
   telemetry: MillionTelemetry,
 ): void => {
   void telemetry.record({
@@ -125,14 +124,13 @@ export const logImprovement = (
   const improvementFormatted = isFinite(improvement)
     ? (improvement * 100).toFixed(0)
     : '∞';
-  if (stdout) {
-    // eslint-disable-next-line no-console
-    console.log(
-      `${magenta(' ⚡ ')}${yellow(`<${component}>`)} now renders ${green(
-        underline(`~${improvementFormatted}%`),
-      )} faster`,
-    );
-  }
+
+  // eslint-disable-next-line no-console
+  console.log(
+    `${magenta(' ⚡ ')}${yellow(`<${component}>`)} now renders ${green(
+      underline(`~${improvementFormatted}%`),
+    )} faster`,
+  );
 };
 
 export const logIgnore = (component: string): void => {

@@ -100,6 +100,10 @@ export interface Options extends Omit<CompilerOptions, 'telemetry'> {
 
 // eslint-disable-next-line @typescript-eslint/default-param-last
 export const unplugin = createUnplugin((options: Options = {}, meta) => {
+  if (!options.log) {
+    options.log = true;
+  }
+
   const filter = createFilter(
     options.filter?.include || DEFAULT_INCLUDE,
     options.filter?.exclude || DEFAULT_EXCLUDE,
