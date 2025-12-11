@@ -25,7 +25,7 @@
     "framer-motion": "^10.16.5",
     "million": "workspace:*",
     "mock-progress-react": "^1.0.8",
-    "next": "^14.1.0",
+    "next": "14.2.34",
     "nextra": "^2.13.3",
     "nextra-theme-docs": "^2.13.3",
     "postcss": "^8.4.21",
